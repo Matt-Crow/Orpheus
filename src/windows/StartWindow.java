@@ -9,7 +9,7 @@ public class StartWindow  extends JFrame{
 	public StartWindow(){
 		setTitle("Orpheus");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(1000, 1000);
+		setSize(600, 400);
 		
 		draw = new StartCanvas();
 		setContentPane(draw);
