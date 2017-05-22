@@ -6,13 +6,14 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-
-import resources.Op;
-
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.AbstractAction;
+
+import java.util.ArrayList;
+
+import resources.Op;
 
 @SuppressWarnings("serial")
 public class StartCanvas extends JPanel{
@@ -29,6 +30,8 @@ public class StartCanvas extends JPanel{
 		title.setOpaque(true);
 		add(title);
 		
+		ArrayList<JButton> buttons = new ArrayList<>();
+		
 		JButton about = new JButton(new AbstractAction("About this game"){
 			@Override
 			public void actionPerformed(ActionEvent e){
@@ -36,11 +39,7 @@ public class StartCanvas extends JPanel{
 				Op.dp();
 			}
 		});
-		about.setLayout(null);
-		about.setBounds(0, 200, 200, 200);
-		about.setBackground(Color.blue);
-		about.setOpaque(true);
-		add(about);
+		buttons.add(about);
 		
 		JButton play = new JButton(new AbstractAction("Play"){
 			@Override
@@ -51,11 +50,7 @@ public class StartCanvas extends JPanel{
 				frame.dispose();
 			}
 		});
-		play.setLayout(null);
-		play.setBounds(200, 200, 200, 200);
-		play.setBackground(Color.red);
-		play.setOpaque(true);
-		add(play);
+		buttons.add(play);
 		
 		JButton how = new JButton(new AbstractAction("How to play"){
 			@Override
@@ -64,11 +59,24 @@ public class StartCanvas extends JPanel{
 				Op.dp();
 			}
 		});
-		how.setLayout(null);
-		how.setBounds(400, 200, 200, 200);
-		how.setBackground(Color.green);
-		how.setOpaque(true);
-		add(how);
+		buttons.add(how);
+		
+		ArrayList<Color> colors = new ArrayList<>();
+		colors.add(Color.blue);
+		colors.add(Color.red);
+		colors.add(Color.green);
+		
+		int x = 0;
+		
+		for(JButton button : buttons){
+			button.setLayout(null);
+			button.setOpaque(true);
+			button.setBorderPainted(false);
+			button.setBounds(x * 200, 200, 200, 200);
+			button.setBackground(colors.get(x));
+			add(button);
+			x += 1;
+		}
 	}
 	
 	public void paintComponent(Graphics g){

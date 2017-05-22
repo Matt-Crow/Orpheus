@@ -1,5 +1,4 @@
 package initializers;
-import resources.Op;
 import windows.StartWindow;
 
 public class Run {
