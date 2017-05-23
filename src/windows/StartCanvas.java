@@ -44,8 +44,7 @@ public class StartCanvas extends JPanel{
 		JButton play = new JButton(new AbstractAction("Play"){
 			@Override
 			public void actionPerformed(ActionEvent e){
-				Op.add("hi");
-				Op.dp();
+				new MainWindow();
 				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(p);
 				frame.dispose();
 			}
