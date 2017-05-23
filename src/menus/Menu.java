@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import javax.swing.JButton;
+import javax.swing.JPanel;
 
 public class Menu {
 	private String text;
@@ -29,14 +30,28 @@ public class Menu {
 	public void setMaxY(int y){
 		maxY = y;
 	}
-	
-	public void draw(Graphics g){
+	public void set(JPanel j){
 		JButton button = new JButton(text);
 		button.setLayout(null);
 		button.setOpaque(true);
 		button.setBorderPainted(false);
 		button.setBounds(x, y, 200, 200);
 		button.setBackground(Color.gray);
-		add(button);
+		j.add(button);
+	}
+	public void draw(Graphics g){
+		if(!clicked){
+			return;
+		}
+		//draw a rectangle here
+		int rENDx = x + width;
+		if(rENDx > maxX){
+			rENDx = maxX;
+		}
+		int rENDy = y + height;
+		if(rENDy > maxY){
+			rENDy = maxY;
+		}
+		//rect(x, y, rENDx, rENDy)
 	}
 }
