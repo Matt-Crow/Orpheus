@@ -15,5 +15,5 @@ public class EasyButton extends JButton{
 	}
 	public void addTo(JPanel j){
 		j.add(this);
-	}
+	}	
 }

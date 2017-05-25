@@ -5,9 +5,10 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.AbstractAction;
+
+import resources.EasyButton;;
 
 @SuppressWarnings("serial")
 public class MainCanvas extends JPanel{
@@ -17,20 +18,15 @@ public class MainCanvas extends JPanel{
 		setLayout(null);
 		setBackground(Color.black);
 		
-		JButton quit = new JButton(new AbstractAction("Quit"){
-			@Override
+		EasyButton b = new EasyButton("Quit", 0, 0, 100, 100, Color.red);
+		b.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				new StartWindow();
 				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(p);
 				frame.dispose();
 			}
 		});
-		quit.setLayout(null);
-		quit.setOpaque(true);
-		quit.setBorderPainted(false);
-		quit.setBounds(0, 0, 100, 100);
-		quit.setBackground(Color.red);
-		add(quit);
+		b.addTo(this);
 	}
 	
 	public void paintComponent(Graphics g){

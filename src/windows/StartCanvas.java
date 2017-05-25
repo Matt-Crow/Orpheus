@@ -7,13 +7,11 @@ import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.JLabel;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.AbstractAction;
 
-import java.util.ArrayList;
-
 import resources.Op;
+import resources.EasyButton;
 
 @SuppressWarnings("serial")
 public class StartCanvas extends JPanel{
@@ -30,52 +28,34 @@ public class StartCanvas extends JPanel{
 		title.setOpaque(true);
 		add(title);
 		
-		ArrayList<JButton> buttons = new ArrayList<>();
-		
-		JButton about = new JButton(new AbstractAction("About this game"){
-			@Override
+		EasyButton about = new EasyButton("About this game", 0, 200, 200, 200, Color.blue);
+		about.addActionListener(new AbstractAction("About this game"){
 			public void actionPerformed(ActionEvent e){
 				Op.add("about");
 				Op.dp();
 			}
 		});
-		buttons.add(about);
+		about.addTo(this);
 		
-		JButton play = new JButton(new AbstractAction("Play"){
-			@Override
+		EasyButton play = new EasyButton("Play", 200, 200, 200, 200, Color.red);
+				
+		play.addActionListener(new AbstractAction("Play"){
 			public void actionPerformed(ActionEvent e){
 				new MainWindow();
 				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(p);
 				frame.dispose();
 			}
 		});
-		buttons.add(play);
+		play.addTo(this);
 		
-		JButton how = new JButton(new AbstractAction("How to play"){
-			@Override
+		EasyButton how = new EasyButton("How to play", 400, 200, 200, 200, Color.green);
+		how.addActionListener(new AbstractAction("How to play"){
 			public void actionPerformed(ActionEvent e){
 				Op.add("how");
 				Op.dp();
 			}
 		});
-		buttons.add(how);
-		
-		ArrayList<Color> colors = new ArrayList<>();
-		colors.add(Color.blue);
-		colors.add(Color.red);
-		colors.add(Color.green);
-		
-		int x = 0;
-		
-		for(JButton button : buttons){
-			button.setLayout(null);
-			button.setOpaque(true);
-			button.setBorderPainted(false);
-			button.setBounds(x * 200, 200, 200, 200);
-			button.setBackground(colors.get(x));
-			add(button);
-			x += 1;
-		}
+		how.addTo(this);
 	}
 	
 	public void paintComponent(Graphics g){
