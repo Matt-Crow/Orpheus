@@ -3,6 +3,9 @@ package windows;
 import javax.swing.JFrame;
 
 public class StartWindow  extends JFrame{
+	/**
+	 * Startwindow is used as a 'launcher' for the game
+	 */
 	public static final long serialVersionUID = 1L;
 	StartCanvas draw;
 	

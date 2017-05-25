@@ -3,6 +3,10 @@ package windows;
 import javax.swing.JFrame;
 
 public class MainWindow extends JFrame{
+	/**
+	 * Mainwindow is the lobby window used for the game, featuring the customizer and battle options
+	 */
+	
 	public static final long serialVersionUID = 1L;
 	MainCanvas draw;
 	
