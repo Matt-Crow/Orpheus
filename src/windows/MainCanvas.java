@@ -8,12 +8,14 @@ import javax.swing.SwingUtilities;
 import javax.swing.JFrame;
 import javax.swing.AbstractAction;
 
-import resources.EasyButton;;
+import resources.EasyButton;
+import menus.Menu;
 
 @SuppressWarnings("serial")
 public class MainCanvas extends JPanel{
 	public static final long serialVersionUID = 1L;
 	JPanel p = this;
+	Menu m;
 	public MainCanvas(){
 		setLayout(null);
 		setBackground(Color.black);
@@ -27,9 +29,12 @@ public class MainCanvas extends JPanel{
 			}
 		});
 		b.addTo(this);
+		m = new Menu("Hi", 500, 1000);
+		m.open();
 	}
 	
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
+		m.draw(g);
 	}
 }

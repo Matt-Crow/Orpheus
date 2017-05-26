@@ -6,52 +6,48 @@ import java.awt.Graphics;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import java.util.ArrayList;
+
 public class Menu {
 	private String text;
-	private int x;
-	private int y;
-	private int maxX;
-	private int maxY;
 	private int width;
 	private int height;
 	private boolean clicked;
+	private ArrayList<Object> contents;
 	
-	public Menu(String text, int x, int y, int w, int h){
+	public Menu(String text, int w, int h){
 		this.text = text;
-		this.x = x;
-		this.y = y;
 		width = w;
 		height = h;
 		clicked = false;
+		contents = new ArrayList<>();
 	}
-	public void setMaxX(int x){
-		maxX = x;
+	public void open(){
+		clicked = true;
 	}
-	public void setMaxY(int y){
-		maxY = y;
+	public void close(){
+		clicked = false;
 	}
 	public void set(JPanel j){
 		JButton button = new JButton(text);
-		button.setLayout(null);
-		button.setOpaque(true);
-		button.setBorderPainted(false);
-		button.setBounds(x, y, 200, 200);
-		button.setBackground(Color.gray);
 		j.add(button);
 	}
 	public void draw(Graphics g){
 		if(!clicked){
 			return;
 		}
-		//draw a rectangle here
-		int rENDx = x + width;
-		if(rENDx > maxX){
-			rENDx = maxX;
+		g.setColor(Color.green);
+		g.fillRect(0, height / 10, width, height);
+		int x = 0;
+		int y = height / 10;
+		for(Object item : contents){
+			if (x > width){
+				x = 0;
+				y += 100;
+			}
+			g.setColor(Color.white);
+			g.fillRect(x + 10, y + 10, width / 5, height / 5);
+			x += 100;
 		}
-		int rENDy = y + height;
-		if(rENDy > maxY){
-			rENDy = maxY;
-		}
-		//rect(x, y, rENDx, rENDy)
 	}
 }
