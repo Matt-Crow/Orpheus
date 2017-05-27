@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import resources.Op;
+
 import java.util.ArrayList;
 
 public class Menu {
@@ -22,21 +24,20 @@ public class Menu {
 		clicked = false;
 		contents = new ArrayList<>();
 	}
-	public void open(){
-		clicked = true;
-	}
-	public void close(){
-		clicked = false;
+	public void toggle(){
+		clicked = !clicked;
 	}
 	public void set(JPanel j){
 		JButton button = new JButton(text);
 		j.add(button);
 	}
 	public void draw(Graphics g){
+		Op.add("drawing menu");
+		Op.dp();
 		if(!clicked){
 			return;
 		}
-		g.setColor(Color.green);
+		g.setColor(Color.gray);
 		g.fillRect(0, height / 10, width, height);
 		int x = 0;
 		int y = height / 10;

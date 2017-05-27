@@ -30,7 +30,15 @@ public class MainCanvas extends JPanel{
 		});
 		b.addTo(this);
 		m = new Menu("Hi", 500, 1000);
-		m.open();
+		EasyButton openMenu1 = new EasyButton("Menu 1", 100, 0, 100, 100, Color.green);
+		openMenu1.addActionListener(new AbstractAction(){
+			public void actionPerformed(ActionEvent e){
+				m.toggle();
+				repaint();
+			}
+		});
+		openMenu1.addTo(this);
+	
 	}
 	
 	public void paintComponent(Graphics g){
