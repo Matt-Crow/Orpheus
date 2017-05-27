@@ -9,13 +9,16 @@ import javax.swing.JFrame;
 import javax.swing.AbstractAction;
 
 import resources.EasyButton;
-import menus.Menu;
+import resources.Menu;
 
 @SuppressWarnings("serial")
 public class MainCanvas extends JPanel{
 	public static final long serialVersionUID = 1L;
 	JPanel p = this;
-	Menu m;
+	Menu classes;
+	Menu actives;
+	Menu passives;
+	
 	public MainCanvas(){
 		setLayout(null);
 		setBackground(Color.black);
@@ -29,20 +32,43 @@ public class MainCanvas extends JPanel{
 			}
 		});
 		b.addTo(this);
-		m = new Menu("Hi", 500, 1000);
+		
+		classes = new Menu("Hi", 500, 1000);
 		EasyButton openMenu1 = new EasyButton("Menu 1", 100, 0, 100, 100, Color.green);
 		openMenu1.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				m.toggle();
+				classes.toggle();
+				repaint();
+			}
+		});
+		
+		actives = new Menu("Hi", 500, 1000);
+		EasyButton openMenu2 = new EasyButton("Menu 2", 200, 0, 100, 100, Color.green);
+		openMenu2.addActionListener(new AbstractAction(){
+			public void actionPerformed(ActionEvent e){
+				actives.toggle();
+				repaint();
+			}
+		});
+		
+		passives = new Menu("Hi", 500, 1000);
+		EasyButton openMenu3 = new EasyButton("Menu 3", 300, 0, 100, 100, Color.green);
+		openMenu3.addActionListener(new AbstractAction(){
+			public void actionPerformed(ActionEvent e){
+				passives.toggle();
 				repaint();
 			}
 		});
 		openMenu1.addTo(this);
+		openMenu2.addTo(this);
+		openMenu3.addTo(this);
 	
 	}
 	
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		m.draw(g);
+		classes.draw(g);
+		actives.draw(g);
+		passives.draw(g);
 	}
 }
