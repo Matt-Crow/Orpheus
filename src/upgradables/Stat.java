@@ -2,7 +2,7 @@ package upgradables;
 import resources.Op;
 
 public class Stat {
-	private String name;
+	public String name;
 	private double baseValue;
 	private double maxValue;
 	private double step;
@@ -10,12 +10,14 @@ public class Stat {
 	private double value;
 	
 	public Stat(String n, double base, double maxRelativeToMin){
+		name = n;
 		baseValue = base;
 		maxValue = baseValue * maxRelativeToMin;
-		step = maxValue - base / 10;
+		step = (maxValue - base) / 10;
 		level = 0;
 	}
 	public Stat(String n, double val){
+		name = n;
 		baseValue = val;
 		maxValue = val;
 		step = 0;
