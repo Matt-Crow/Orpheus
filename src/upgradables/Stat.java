@@ -1,6 +1,7 @@
 package upgradables;
 import resources.Op;
 
+//add boosts
 public class Stat {
 	public String name;
 	private double baseValue;
