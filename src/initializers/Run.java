@@ -9,6 +9,7 @@ public class Run {
 		CharacterClass bob = new CharacterClass();
 		bob.setHPData(1.0, 1.0, 1.0);
 		bob.setEnergyData(1.0, 1.0, 1.0, 1.0, 1.0);
+		bob.setCombatData(1.0, 1.0);
 		bob.calcStats();
 		bob.displayStatData();
 	}

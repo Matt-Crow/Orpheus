@@ -25,6 +25,10 @@ public class CharacterClass {
 		stats.add(new Stat("Energy per hit", 5 * eph, 2));
 		stats.add(new Stat("Energy per hit received", 5 * ephr, 2));
 	}
+	public void setCombatData(double armor, double attack){
+		stats.add(new Stat("Armor", 0.20 * armor));
+		stats.add(new Stat("Attack", 20 * attack));
+	}
 	public void calcStats(){
 		for(Stat stat : stats){
 			stat.calc();
@@ -38,28 +42,42 @@ public class CharacterClass {
 		}
 		return new Stat("StatNotFound", 0);
 	}
+	public double getStatValue(String n){
+		for(Stat stat : stats){
+			if(stat.name == n){
+				return stat.get();
+			}
+		}
+		return 0.0;
+	}
 	public void displayStatData(){
 		for(Stat stat: stats){
 			stat.displayData();
 		}
 	}
+	public void initForBattle(){
+		calcStats();
+		remHP = (int) getStatValue("maxHP");
+		energy = (int) getStatValue("Max energy");
+	}
 	public double calcDamage(AttackInstance attack){
 		double damage = attack.calcDamage();
-		if(attack.type = "melee"){
-			damage *= 1.0 - getStat("armor");
+		if(attack.type == "melee"){
+			damage *= 1.0 - getStatValue("armor");
 		}
 		return damage;
 	}
 	public void logDamage(AttackInstance attack){
 		damageBacklog += calcDamage(attack);
 	}
-	public void takeDamage(){
+	public void depleteBacklog(){
 		double damage;
-		if(damageBacklog > getStat("maxHP").get()){
-			damage = getStat("maxHP").get() / 100;
+		if(damageBacklog > getStatValue("maxHP")){
+			damage = getStatValue("maxHP") / 100;
 		} else {
 			damage = damageBacklog;
 		}
 		remHP -= damage;
+		damageBacklog -= damage;
 	}
 }
