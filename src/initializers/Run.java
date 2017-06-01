@@ -1,12 +1,12 @@
 package initializers;
 import windows.StartWindow;
-import customizables.Warrior;
+import customizables.Earth;
 
 public class Run {
 
 	public static void main(String[] args) {
 		//new StartWindow();
-		Warrior bob = new Warrior();
+		Earth bob = new Earth();
 		bob.calcStats();
 		bob.displayStatData();
 	}

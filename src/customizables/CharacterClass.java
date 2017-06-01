@@ -14,21 +14,17 @@ public class CharacterClass {
 		stats = new ArrayList<>();
 	}
 	
-	public void setHPData(double HP, double regen, double wait){
-		stats.add(new Stat("maxHP", 500 * HP, 2));
-		stats.add(new Stat("Healing", 5 * regen));
-		stats.add(new Stat("Heal rate", 20 * wait));
+	public void setHPData(int HP, int regen, int wait){
+		stats.add(new Stat("maxHP", 350 + 50 * HP, 2));
+		stats.add(new Stat("Healing", 3.75 + 1.25 * regen));
+		stats.add(new Stat("Heal rate", 35 - 5 * wait));
 	}
-	public void setEnergyData(double max, double epr, double er, double eph, double ephr){
-		stats.add(new Stat("Max energy", 50 * max, 2));
-		stats.add(new Stat("EPR", 5 * epr, 2));
-		stats.add(new Stat("ER", 20 * er));
-		stats.add(new Stat("EPH", 5 * eph, 2));
-		stats.add(new Stat("EPHR", 5 * ephr, 2));
-	}
-	public void setCombatData(double armor, double attack){
-		stats.add(new Stat("armor", 0.20 * armor));
-		stats.add(new Stat("Attack", 20 * attack));
+	public void setEnergyData(int max, int epr, int er, int eph, int ephr){
+		stats.add(new Stat("Max energy", 12.5 * (max + 1), 2));
+		stats.add(new Stat("EPR", epr, 2));
+		stats.add(new Stat("ER", 35 - 5 * er));
+		stats.add(new Stat("EPH", eph + 2, 2));
+		stats.add(new Stat("EPHR", ephr + 2, 2));
 	}
 	public void calcStats(){
 		for(Stat stat : stats){
@@ -56,11 +52,8 @@ public class CharacterClass {
 		remHP = (int) getStatValue("maxHP");
 		energy = (int) getStatValue("Max energy");
 	}
-	public double calcDamage(AttackInstance attack){
-		return attack.calcDamage() * (1.0 - getStatValue("armor"));
-	}
 	public void logDamage(AttackInstance attack){
-		damageBacklog += calcDamage(attack);
+		damageBacklog += attack.calcDamage();
 	}
 	public void depleteBacklog(){
 		double damage;

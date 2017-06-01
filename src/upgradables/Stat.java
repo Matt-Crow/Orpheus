@@ -1,5 +1,4 @@
 package upgradables;
-import java.util.ArrayList;
 import resources.Op;
 
 public class Stat {
@@ -9,8 +8,6 @@ public class Stat {
 	private double step;
 	private int level;
 	private double value;
-	
-	private ArrayList<Boost> boosts;
 	
 	public Stat(String n, double base, double maxRelativeToMin){
 		name = n;
@@ -38,12 +35,6 @@ public class Stat {
 	public void calc(){
 		 value = baseValue + step * level;
 	}
-	public void init(){
-		boosts = new ArrayList<>();
-	}
-	public void boost(double amount, int duration){
-		boosts.add(new Boost(amount, duration));
-	}
 	public void displayData(){
 		Op.add(name);
 		Op.add(baseValue + "-" + maxValue);
@@ -53,21 +44,6 @@ public class Stat {
 		Op.dp();
 	}
 	public double get(){
-		double ret = value;
-		double boostValue = 1;
-		for(Boost boost : boosts){
-			boostValue += boost.get();
-		}
-		return ret * boostValue;
-	}
-	public void maintainance(){
-		ArrayList<Boost> newBoosts = new ArrayList<>();
-		for(Boost boost : boosts){
-			boost.deplete();
-			if(boost.duration != 0){
-				newBoosts.add(boost);
-			}
-		}
-		boosts = newBoosts;
+		return value;
 	}
 }
