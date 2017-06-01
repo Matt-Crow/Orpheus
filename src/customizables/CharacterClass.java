@@ -7,7 +7,7 @@ import java.util.Locale;
 import java.awt.Graphics;
 import java.awt.Color;
 
-public class CharacterClass {
+public class CharacterClass extends Customizable{
 	private ArrayList<Stat> stats;
 	private double damageBacklog;
 	private int remHP;

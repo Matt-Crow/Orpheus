@@ -8,6 +8,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.JFrame;
 import javax.swing.AbstractAction;
 
+import customizables.Earth;
+
 import resources.EasyButton;
 import resources.Menu;
 
@@ -62,13 +64,15 @@ public class MainCanvas extends JPanel{
 		openMenu1.addTo(this);
 		openMenu2.addTo(this);
 		openMenu3.addTo(this);
+		
+		classes.addContent(new Earth());
 	
 	}
 	
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		classes.draw(g);
-		actives.draw(g);
-		passives.draw(g);
+		classes.draw(g, this);
+		actives.draw(g, this);
+		passives.draw(g, this);
 	}
 }

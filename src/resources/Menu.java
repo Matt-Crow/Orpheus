@@ -24,14 +24,13 @@ public class Menu {
 		clicked = false;
 		contents = new ArrayList<>();
 	}
+	public void addContent(Customizable c){
+		contents.add(c);
+	}
 	public void toggle(){
 		clicked = !clicked;
 	}
-	public void set(JPanel j){
-		JButton button = new JButton(text);
-		j.add(button);
-	}
-	public void draw(Graphics g){
+	public void draw(Graphics g, JPanel j){
 		if(!clicked){
 			return;
 		}
@@ -45,7 +44,8 @@ public class Menu {
 				y += 100;
 			}
 			g.setColor(Color.white);
-			item.displayIcon(x + 10, y + 10, width / 5, height / 5);
+			EasyButton e = new EasyButton(item.name, x + 10, y + 10, width / 5, height / 50, Color.yellow);
+			e.addTo(j);
 			x += 100;
 		}
 	}
