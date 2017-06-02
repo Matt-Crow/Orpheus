@@ -59,7 +59,7 @@ public class CharacterClass extends Customizable{
 		g.drawString(name, x + 10, y + 10);
 		int statY = y + 30;
 		for(Stat stat : stats){
-			g.drawString(stat.name, x, statY);
+			g.drawString(stat.name + " " + stat.get(), x, statY);
 			statY += 20;
 		}
 	}

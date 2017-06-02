@@ -9,6 +9,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.JFrame;
 import javax.swing.AbstractAction;
 
+import customizables.CharacterClass;
 import customizables.Earth;
 
 import resources.EasyButton;
@@ -64,8 +65,17 @@ public class MainCanvas extends JPanel{
 		actives.addTo(this);
 		passives.addTo(this);
 	}
-	
+	public CharacterClass findClass(String name){
+		switch(name){
+			case "Earth":
+				return new Earth();
+		}
+		return new Earth();
+	}
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
+		
+		CharacterClass chosenClass = findClass(classes.getSelectedItem().toString());
+		chosenClass.displayPopup(100, 100, g);
 	}
 }
