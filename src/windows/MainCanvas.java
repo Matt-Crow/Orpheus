@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
+import javax.swing.JComboBox;
 import javax.swing.SwingUtilities;
 import javax.swing.JFrame;
 import javax.swing.AbstractAction;
@@ -35,44 +36,36 @@ public class MainCanvas extends JPanel{
 		});
 		b.addTo(this);
 		
-		classes = new Menu("Hi", 500, 1000);
+		String[] c = {"Earth", "Fire", "Water", "Air"};
+		String[] a = {"?", "??", "???"};
+		String[] p = {"?", "??", "???"};
+		
+		classes = new Menu(c, 100, 0, 100, 100);
 		EasyButton openMenu1 = new EasyButton("Menu 1", 100, 0, 100, 100, Color.green);
 		openMenu1.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				classes.toggle();
-				repaint();
 			}
 		});
 		
-		actives = new Menu("Hi", 500, 1000);
+		actives = new Menu(a, 200, 0, 100, 100);
 		EasyButton openMenu2 = new EasyButton("Menu 2", 200, 0, 100, 100, Color.green);
 		openMenu2.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				actives.toggle();
-				repaint();
 			}
 		});
 		
-		passives = new Menu("Hi", 500, 1000);
+		passives = new Menu(p, 300, 0, 100, 100);
 		EasyButton openMenu3 = new EasyButton("Menu 3", 300, 0, 100, 100, Color.green);
 		openMenu3.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				passives.toggle();
-				repaint();
 			}
 		});
-		openMenu1.addTo(this);
-		openMenu2.addTo(this);
-		openMenu3.addTo(this);
-		
-		classes.addContent(new Earth());
-	
+		classes.addTo(this);
+		actives.addTo(this);
+		passives.addTo(this);
 	}
 	
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		classes.draw(g, this);
-		actives.draw(g, this);
-		passives.draw(g, this);
 	}
 }
