@@ -4,13 +4,11 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
-import javax.swing.JComboBox;
 import javax.swing.SwingUtilities;
 import javax.swing.JFrame;
 import javax.swing.AbstractAction;
 
-import customizables.CharacterClass;
-import customizables.Earth;
+import customizables.*;
 
 import resources.EasyButton;
 import resources.Menu;
@@ -42,23 +40,23 @@ public class MainCanvas extends JPanel{
 		String[] p = {"?", "??", "???"};
 		
 		classes = new Menu(c, 100, 0, 100, 100);
-		EasyButton openMenu1 = new EasyButton("Menu 1", 100, 0, 100, 100, Color.green);
-		openMenu1.addActionListener(new AbstractAction(){
+		classes.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
+				repaint();
 			}
 		});
 		
 		actives = new Menu(a, 200, 0, 100, 100);
-		EasyButton openMenu2 = new EasyButton("Menu 2", 200, 0, 100, 100, Color.green);
-		openMenu2.addActionListener(new AbstractAction(){
+		actives.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
+				repaint();
 			}
 		});
 		
 		passives = new Menu(p, 300, 0, 100, 100);
-		EasyButton openMenu3 = new EasyButton("Menu 3", 300, 0, 100, 100, Color.green);
-		openMenu3.addActionListener(new AbstractAction(){
+		passives.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
+				repaint();
 			}
 		});
 		classes.addTo(this);
@@ -69,6 +67,12 @@ public class MainCanvas extends JPanel{
 		switch(name){
 			case "Earth":
 				return new Earth();
+			case "Fire":
+				return new Fire();
+			case "Water":
+				return new Water();
+			case "Air":
+				return new Air();
 		}
 		return new Earth();
 	}

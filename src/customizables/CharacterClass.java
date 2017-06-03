@@ -58,8 +58,9 @@ public class CharacterClass extends Customizable{
 		g.setColor(Color.black);
 		g.drawString(name, x + 10, y + 10);
 		int statY = y + 30;
+		calcStats();
 		for(Stat stat : stats){
-			g.drawString(stat.name + " " + stat.get(), x, statY);
+			g.drawString(stat.name + ": " + stat.get(), x, statY);
 			statY += 20;
 		}
 	}
