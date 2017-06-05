@@ -16,7 +16,7 @@ import resources.Menu;
 @SuppressWarnings("serial")
 public class MainCanvas extends JPanel{
 	public static final long serialVersionUID = 1L;
-	JPanel p = this;
+	JPanel panel = this;
 	Menu classes;
 	Menu actives;
 	Menu passives;
@@ -29,7 +29,7 @@ public class MainCanvas extends JPanel{
 		b.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				new StartWindow();
-				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(p);
+				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel);
 				frame.dispose();
 			}
 		});
@@ -62,6 +62,16 @@ public class MainCanvas extends JPanel{
 		classes.addTo(this);
 		actives.addTo(this);
 		passives.addTo(this);
+		
+		EasyButton battle = new EasyButton("Battle", 900, 0, 100, 100, Color.red);
+		battle.addActionListener(new AbstractAction(){
+			public void actionPerformed(ActionEvent e){
+				new BattleWindow();
+				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel);
+				frame.dispose();
+			}
+		});
+		battle.addTo(this);
 	}
 	public CharacterClass findClass(String name){
 		switch(name){
