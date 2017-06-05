@@ -2,6 +2,7 @@ package battle;
 
 import java.awt.Graphics;
 import java.awt.Color;
+import initializers.Run;
 
 public class Battlefield {
 	int w;
@@ -14,15 +15,17 @@ public class Battlefield {
 	}
 	public void draw(Graphics g){
 		g.setColor(Color.blue);
-		int x = 0;
-		int y = 0;
+		
+		int x = Run.player.getX() - (s * w / 2);
+		int y = Run.player.getY() - (s * h / 2);
 		int squareSize = (int) (s * 0.9);
-		while(x < w){
-			while(y < h){
-				g.fillRect(x * s + s / 20, y * s + s / 20,  squareSize, squareSize);
-				y += 1;
+		
+		while(x <= w * s){
+			while(y <= h * s){
+				g.fillRect(x + s / 20, y + s / 20,  squareSize, squareSize);
+				y += s;
 			}
-			x += 1;
+			x += s;
 			y = 0;
 		}
 	}
