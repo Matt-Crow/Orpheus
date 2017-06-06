@@ -11,7 +11,7 @@ public class BattleWindow extends JFrame{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(1000, 1000);
 		
-		draw = new BattleCanvas();
+		draw = new BattleCanvas(10, 10, 100);
 		setContentPane(draw);
 		setVisible(true);
 	}

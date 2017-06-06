@@ -1,6 +1,6 @@
 package initializers;
+import entities.Player;
 import windows.StartWindow;
-import resources.Player;
 
 public class Run {
 	public static Player player;
