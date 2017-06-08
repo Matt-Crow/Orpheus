@@ -12,9 +12,6 @@ import javax.swing.Timer;
 
 import battle.Battlefield;
 import initializers.Run;
-import resources.Op;
-
-import static java.lang.System.out;
 
 public class BattleCanvas extends JPanel implements KeyListener{
 	public static final long serialVersionUID = 1L;
@@ -23,6 +20,9 @@ public class BattleCanvas extends JPanel implements KeyListener{
 	private int h;
 	private int s;
 	private Timer timer;
+	private int FPS;
+	private String lastDirX;
+	private String lastDirY;
 	
 	public BattleCanvas(int width, int height, int tileSize){
 		w = width;
@@ -34,6 +34,9 @@ public class BattleCanvas extends JPanel implements KeyListener{
 		Run.player.setCoords(b.getCenter()[0] + 200, b.getCenter()[1]);
 		setFocusable(true);
 		addKeyListener(this);
+		FPS = 20;
+		lastDirX = " ";
+		lastDirY = " ";
 	}
 	
 	public int[] retTranslate(){
@@ -55,20 +58,24 @@ public class BattleCanvas extends JPanel implements KeyListener{
 	}
 	
 	public void keyPressed(KeyEvent k){
-		out.print("Pressed: ");
-		out.println(k.getKeyCode());
+		//out.print("Pressed: ");
+		//out.println(k.getKeyCode());
 		switch(k.getKeyCode()){
 			case 38:
-				Run.player.setDirection("N");
+				lastDirY = "N";
+				Run.player.setMoving(true);
 				break;
 			case 37:
-				Run.player.setDirection("W");
+				lastDirX = "W";
+				Run.player.setMoving(true);
 				break;
 			case 40:
-				Run.player.setDirection("S");
+				lastDirY = "S";
+				Run.player.setMoving(true);
 				break;
 			case 39:
-				Run.player.setDirection("E");
+				lastDirX = "E";
+				Run.player.setMoving(true);
 				break;
 		}
 	}
@@ -76,23 +83,34 @@ public class BattleCanvas extends JPanel implements KeyListener{
 		
 	}
 	public void keyReleased(KeyEvent k){
-		out.print("Released: ");
-		out.println(k.getKeyCode());
+		Run.player.setMoving(false);
+	}
+	public String lastDir(){
+		String dir = "";
+		if(lastDirY != " "){
+			dir = lastDirY;
+		}
+		if(lastDirX != " "){
+			dir += lastDirX;
+		}
+		return dir;
 	}
 	ActionListener update = new ActionListener() {
 	      public void actionPerformed(ActionEvent e) {
-	          Op.add("Working!");
-	          Op.dp();
-	          Run.player.move(1);
+	          Run.player.setDirection(lastDir());
+	          Run.player.move();
+	          repaint();
 	      }
 	  };
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		int[] trans = retTranslate();
 		g.translate(trans[0], trans[1]);
-		Run.player.move(1);
 		b.draw(g);
-		timer = new Timer(1000, update);
+		g.setColor(Color.red);
+		g.fillRect(Run.player.getX(), Run.player.getY(), 10, 10);
+		timer = new Timer(1000 / FPS, update);
+		timer.setRepeats(false);
 		timer.start();
 	}
 }

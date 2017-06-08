@@ -1,26 +1,23 @@
 package entities;
 
-import resources.Op;
-
 public class Player {
 	private int x;
 	private int y;
 	private String facing;
-	private int[] momentum; 
+	private int momentum;
+	private boolean moving;
 	
 	public Player(){
 		facing = "N";
-		momentum = new int[2];
-		momentum[0] = 0;
-		momentum[1] = 0;
+		momentum = 5;
+		moving = false;
 	}
 	public void setCoords(int x, int y){
 		this.x = x;
 		this.y = y;
 	}
-	public void setMomentum(int x, int y){
-		momentum[0] = x;
-		momentum[1] = y;
+	public void setMoving(boolean m){
+		moving = m;
 	}
 	public void setDirection(String dir){
 		facing = dir;
@@ -32,38 +29,39 @@ public class Player {
 		return y;
 	}
 	// add collisions
-	public void move(int amount){
+	public void move(){
+		if(!moving){
+			return;
+		}
 		switch(facing){
 			case "N":
-				y -= amount;
+				y -= momentum;
 				break;
 			case "W":
-				x -= amount;
+				x -= momentum;
 				break;
 			case "E":
-				x += amount;
+				x += momentum;
 				break;
 			case "S":
-				y += amount;
+				y += momentum;
 				break;
 			case "NW":
-				x -= amount;
-				y -= amount;
+				x -= momentum;
+				y -= momentum;
 				break;
 			case "NE":
-				x += amount;
-				y -= amount;
+				x += momentum;
+				y -= momentum;
 				break;
 			case "SW":
-				x -= amount;
-				y += amount;
+				x -= momentum;
+				y += momentum;
 				break;
 			case "SE":
-				x += amount;
-				y += amount;
+				x += momentum;
+				y += momentum;
 				break;
 		}
-		Op.add(facing);
-		Op.dp();
 	}
 }
