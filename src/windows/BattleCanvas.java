@@ -4,11 +4,15 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 import battle.Battlefield;
 import initializers.Run;
+import resources.Op;
 
 import static java.lang.System.out;
 
@@ -18,6 +22,7 @@ public class BattleCanvas extends JPanel implements KeyListener{
 	private int w;
 	private int h;
 	private int s;
+	private Timer timer;
 	
 	public BattleCanvas(int width, int height, int tileSize){
 		w = width;
@@ -74,12 +79,20 @@ public class BattleCanvas extends JPanel implements KeyListener{
 		out.print("Released: ");
 		out.println(k.getKeyCode());
 	}
-	
+	ActionListener update = new ActionListener() {
+	      public void actionPerformed(ActionEvent e) {
+	          Op.add("Working!");
+	          Op.dp();
+	          Run.player.move(1);
+	      }
+	  };
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		int[] trans = retTranslate();
 		g.translate(trans[0], trans[1]);
 		Run.player.move(1);
 		b.draw(g);
+		timer = new Timer(1000, update);
+		timer.start();
 	}
 }
