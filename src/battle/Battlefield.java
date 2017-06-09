@@ -3,6 +3,8 @@ package battle;
 import java.awt.Graphics;
 import java.awt.Color;
 
+import resources.Op;
+
 public class Battlefield {
 	int w;
 	int h;
@@ -25,12 +27,15 @@ public class Battlefield {
 		int squareSize = (int) (s * 0.9);
 		
 		while(x < w * s){
+			y = 0;
 			while(y < h * s){
 				g.fillRect(x + s / 20, y + s / 20,  squareSize, squareSize);
 				y += s;
 			}
 			x += s;
-			y = 0;
 		}
+		//Op.add("X: " + x);
+		//Op.add("Y: " + y);
+		//Op.dp();
 	}
 }
