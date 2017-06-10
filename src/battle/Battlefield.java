@@ -3,8 +3,6 @@ package battle;
 import java.awt.Graphics;
 import java.awt.Color;
 
-import resources.Op;
-
 public class Battlefield {
 	int w;
 	int h;
@@ -34,8 +32,5 @@ public class Battlefield {
 			}
 			x += s;
 		}
-		//Op.add("X: " + x);
-		//Op.add("Y: " + y);
-		//Op.dp();
 	}
 }

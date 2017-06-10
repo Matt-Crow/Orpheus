@@ -41,18 +41,7 @@ public class BattleCanvas extends JPanel implements KeyListener{
 		int[] ret = new int[2];
 		int x = -Run.player.getX() + 500;
 		int y = -Run.player.getY() + 500;
-		/*
-		if(x < 0){
-			x = 0;
-		} else if (x > w * s){
-			x = w * s;
-		}
-		if(y < 0){
-			y = 0;
-		} else if (y > h * s){
-			y = h * s;
-		}
-		*/
+		
 		ret[0] = x;
 		ret[1] = y;
 		return ret;
@@ -101,8 +90,6 @@ public class BattleCanvas extends JPanel implements KeyListener{
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		int[] trans = retTranslate();
-		//System.out.println(trans[0]);
-		//System.out.println(trans[1]);
 		g.translate(trans[0], trans[1]);
 		b.draw(g);
 		g.setColor(Color.red);
