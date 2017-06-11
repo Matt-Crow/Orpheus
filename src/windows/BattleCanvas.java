@@ -12,6 +12,7 @@ import javax.swing.Timer;
 
 import battle.Battlefield;
 import initializers.Run;
+import resources.Op;
 
 public class BattleCanvas extends JPanel implements KeyListener{
 	public static final long serialVersionUID = 1L;
@@ -42,6 +43,18 @@ public class BattleCanvas extends JPanel implements KeyListener{
 		int x = -Run.player.getX() + 500;
 		int y = -Run.player.getY() + 500;
 		
+		if(x < -w * s + 1000){
+			x = -w * s + 1000;
+		} else if (x > 0){
+			x = 0;
+		}
+		
+		if(y < -h * s + 1000){
+			y = -h * s + 1000;
+		} else if (y > 0){
+			y = 0;
+		}
+		
 		ret[0] = x;
 		ret[1] = y;
 		return ret;
@@ -61,6 +74,9 @@ public class BattleCanvas extends JPanel implements KeyListener{
 				}
 				break;
 			case 40:
+				Op.add("X: " + retTranslate()[0]);
+				Op.add("Y: " + retTranslate()[1]);
+				Op.dp();
 				break;
 			case 39:
 				if(turnCooldown <= 0){
