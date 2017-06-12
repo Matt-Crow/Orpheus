@@ -15,14 +15,25 @@ public class Team {
 	public Team(String n, Color c){
 		name = n;
 		color = c;
+		members = new ArrayList<>();
 	}
 	
 	public void addMember(Player m){
 		members.add(m);
 	}
 	
+	public void init(){
+		for(Player m : members){
+			
+		}
+	}
+	
 	public void setEnemy(Team t){
 		enemyTeam = t;
+	}
+	
+	public Player getMember(int index){
+		return members.get(index);
 	}
 	
 	public void displayData(){

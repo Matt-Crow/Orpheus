@@ -10,19 +10,22 @@ import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import battle.Battle;
 import battle.Battlefield;
-import initializers.Run;
+import entities.Player;
 import resources.Op;
 
 public class BattleCanvas extends JPanel implements KeyListener{
 	public static final long serialVersionUID = 1L;
 	Battlefield b;
+	Battle battle;
 	private int w;
 	private int h;
 	private int s;
 	private Timer timer;
 	private int FPS;
 	private int turnCooldown;
+	Player p;
 	
 	public BattleCanvas(int width, int height, int tileSize){
 		w = width;
@@ -31,17 +34,21 @@ public class BattleCanvas extends JPanel implements KeyListener{
 		setLayout(null);
 		setBackground(Color.black);
 		b = new Battlefield(w, h, s);
-		Run.player.setCoords(b.getCenter()[0], b.getCenter()[1]);
 		setFocusable(true);
 		addKeyListener(this);
 		FPS = 20;
 		turnCooldown = 0;
+		
+		battle = new Battle();
+		battle.init();
+		p = battle.getPlayer();
+		p.setCoords(b.getCenter()[0], b.getCenter()[1]);
 	}
 	
 	public int[] retTranslate(){
 		int[] ret = new int[2];
-		int x = -Run.player.getX() + 500;
-		int y = -Run.player.getY() + 500;
+		int x = -p.getX() + 500;
+		int y = -p.getY() + 500;
 		
 		if(x < -w * s + 1000){
 			x = -w * s + 1000;
@@ -65,11 +72,11 @@ public class BattleCanvas extends JPanel implements KeyListener{
 		//out.println(k.getKeyCode());
 		switch(k.getKeyCode()){
 			case 38:
-				Run.player.setMoving(true);
+				p.setMoving(true);
 				break;
 			case 37:
 				if(turnCooldown <= 0){
-					Run.player.turn("left");
+					p.turn("left");
 					turnCooldown = 10;
 				}
 				break;
@@ -80,7 +87,7 @@ public class BattleCanvas extends JPanel implements KeyListener{
 				break;
 			case 39:
 				if(turnCooldown <= 0){
-					Run.player.turn("right");
+					p.turn("right");
 					turnCooldown = 10;
 				}
 				break;
@@ -92,13 +99,13 @@ public class BattleCanvas extends JPanel implements KeyListener{
 	public void keyReleased(KeyEvent k){
 		switch(k.getKeyCode()){
 			case 38:
-				Run.player.setMoving(false);
+				p.setMoving(false);
 				break;
 		}
 	}
 	ActionListener update = new ActionListener() {
 	      public void actionPerformed(ActionEvent e) {
-	          Run.player.move();
+	          p.move();
 	          turnCooldown -= 1;
 	          repaint();
 	      }
@@ -109,7 +116,7 @@ public class BattleCanvas extends JPanel implements KeyListener{
 		g.translate(trans[0], trans[1]);
 		b.draw(g);
 		g.setColor(Color.red);
-		g.fillRect(Run.player.getX(), Run.player.getY(), 100, 100);
+		g.fillRect(p.getX(), p.getY(), 100, 100);
 		timer = new Timer(1000 / FPS, update);
 		timer.setRepeats(false);
 		timer.start();
