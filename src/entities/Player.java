@@ -3,13 +3,15 @@ package entities;
 //import resources.Op;
 
 public class Player {
+	public String name;
 	private int x;
 	private int y;
 	private int dirNum;
 	private int momentum;
 	private boolean moving;
 	
-	public Player(){
+	public Player(String n){
+		name = n;
 		momentum = 10;
 		moving = false;
 		dirNum = 0;
