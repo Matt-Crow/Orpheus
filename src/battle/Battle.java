@@ -1,6 +1,7 @@
 package battle;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.util.ArrayList;
 
 import entities.Player;
@@ -32,6 +33,10 @@ public class Battle {
 		init();
 	}
 	
+	public void loadCoords(int w, int h){
+		work here
+	}
+	
 	public void init(){
 		for(Team t : teams){
 			t.init();
@@ -41,6 +46,11 @@ public class Battle {
 	public void update(){
 		for(Team t : teams){
 			t.update();
+		}
+	}
+	public void draw(Graphics g){
+		for(Team t : teams){
+			t.draw(g);
 		}
 	}
 	

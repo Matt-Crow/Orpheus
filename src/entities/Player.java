@@ -1,6 +1,8 @@
 package entities;
 
+import java.awt.Graphics;
 //import resources.Op;
+import battle.Team;
 
 public class Player {
 	public String name;
@@ -10,6 +12,7 @@ public class Player {
 	private int turnCooldown;
 	private int momentum;
 	private boolean moving;
+	private Team team;
 	
 	public Player(String n){
 		name = n;
@@ -45,7 +48,8 @@ public class Player {
 	public int getY(){
 		return y;
 	}
-	public void init(){
+	public void init(Team t){
+		team = t;
 		momentum = 10;
 		moving = false;
 		dirNum = 0;
@@ -96,5 +100,10 @@ public class Player {
 				y += momentum;
 				break;
 		}
+	}
+	public void draw(Graphics g){
+		// class color?
+		g.setColor(team.color);
+		g.fillRect(x, y, 100, 100);
 	}
 }

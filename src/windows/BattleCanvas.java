@@ -40,6 +40,8 @@ public class BattleCanvas extends JPanel implements KeyListener{
 		battle = new Battle();
 		battle.init();
 		p = battle.getPlayer();
+		battle.loadCoords(w, h);
+		
 		p.setCoords(b.getCenter()[0], b.getCenter()[1]);
 	}
 	
@@ -106,8 +108,7 @@ public class BattleCanvas extends JPanel implements KeyListener{
 		int[] trans = retTranslate();
 		g.translate(trans[0], trans[1]);
 		b.draw(g);
-		g.setColor(Color.red);
-		g.fillRect(p.getX(), p.getY(), 100, 100);
+		battle.draw(g);
 		timer = new Timer(1000 / FPS, update);
 		timer.setRepeats(false);
 		timer.start();

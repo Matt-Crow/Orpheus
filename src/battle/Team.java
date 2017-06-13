@@ -2,6 +2,7 @@ package battle;
 
 import java.util.ArrayList;
 import java.awt.Color;
+import java.awt.Graphics;
 
 import entities.Player;
 import resources.Op;
@@ -24,7 +25,7 @@ public class Team {
 	
 	public void init(){
 		for(Player m : members){
-			m.init();
+			m.init(this);
 		}
 	}
 	
@@ -35,6 +36,12 @@ public class Team {
 	public void update(){
 		for(Player m : members){
 			m.update();
+		}
+	}
+	
+	public void draw(Graphics g){
+		for(Player m : members){
+			m.draw(g);
 		}
 	}
 	
