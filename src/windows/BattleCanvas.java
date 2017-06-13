@@ -24,7 +24,6 @@ public class BattleCanvas extends JPanel implements KeyListener{
 	private int s;
 	private Timer timer;
 	private int FPS;
-	private int turnCooldown;
 	Player p;
 	
 	public BattleCanvas(int width, int height, int tileSize){
@@ -33,12 +32,11 @@ public class BattleCanvas extends JPanel implements KeyListener{
 		s = tileSize;
 		setLayout(null);
 		setBackground(Color.black);
-		b = new Battlefield(w, h, s);
 		setFocusable(true);
 		addKeyListener(this);
 		FPS = 20;
-		turnCooldown = 0;
 		
+		b = new Battlefield(w, h, s);
 		battle = new Battle();
 		battle.init();
 		p = battle.getPlayer();
@@ -75,10 +73,7 @@ public class BattleCanvas extends JPanel implements KeyListener{
 				p.setMoving(true);
 				break;
 			case 37:
-				if(turnCooldown <= 0){
-					p.turn("left");
-					turnCooldown = 10;
-				}
+				p.turn("left");
 				break;
 			case 40:
 				Op.add("X: " + retTranslate()[0]);
@@ -86,10 +81,7 @@ public class BattleCanvas extends JPanel implements KeyListener{
 				Op.dp();
 				break;
 			case 39:
-				if(turnCooldown <= 0){
-					p.turn("right");
-					turnCooldown = 10;
-				}
+				p.turn("right");
 				break;
 		}
 	}
@@ -105,8 +97,7 @@ public class BattleCanvas extends JPanel implements KeyListener{
 	}
 	ActionListener update = new ActionListener() {
 	      public void actionPerformed(ActionEvent e) {
-	          p.move();
-	          turnCooldown -= 1;
+	          battle.update();
 	          repaint();
 	      }
 	  };

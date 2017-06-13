@@ -24,12 +24,18 @@ public class Team {
 	
 	public void init(){
 		for(Player m : members){
-			
+			m.init();
 		}
 	}
 	
 	public void setEnemy(Team t){
 		enemyTeam = t;
+	}
+	
+	public void update(){
+		for(Player m : members){
+			m.update();
+		}
 	}
 	
 	public Player getMember(int index){

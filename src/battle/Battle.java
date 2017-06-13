@@ -28,11 +28,19 @@ public class Battle {
 		
 		teams.add(team1);
 		teams.add(team2);
+		
+		init();
 	}
 	
 	public void init(){
 		for(Team t : teams){
 			t.init();
+		}
+	}
+	
+	public void update(){
+		for(Team t : teams){
+			t.update();
 		}
 	}
 	

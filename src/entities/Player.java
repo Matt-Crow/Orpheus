@@ -7,14 +7,12 @@ public class Player {
 	private int x;
 	private int y;
 	private int dirNum;
+	private int turnCooldown;
 	private int momentum;
 	private boolean moving;
 	
 	public Player(String n){
 		name = n;
-		momentum = 10;
-		moving = false;
-		dirNum = 0;
 	}
 	public void setCoords(int x, int y){
 		this.x = x;
@@ -24,6 +22,10 @@ public class Player {
 		moving = m;
 	}
 	public void turn(String dir){
+		if(turnCooldown > 0){
+			return;
+		}
+		
 		if(dir == "left"){
 			dirNum -= 1;
 		} else {
@@ -34,6 +36,8 @@ public class Player {
 		} else if(dirNum > 7){
 			dirNum = 0;
 		}
+		
+		turnCooldown = 10;
 	}
 	public int getX(){
 		return x;
@@ -41,10 +45,22 @@ public class Player {
 	public int getY(){
 		return y;
 	}
+	public void init(){
+		momentum = 10;
+		moving = false;
+		dirNum = 0;
+		turnCooldown = 0;
+	}
 	public String getFacing(){
 		String[] directions = {"N", "NE", "E", "SE", "S", "SW", "W", "NW"};
 		return directions[dirNum];
 	}
+	
+	public void update(){
+		turnCooldown -= 1;
+		move();
+	}
+	
 	// add collisions
 	public void move(){
 		if(!moving){
