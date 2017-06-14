@@ -13,7 +13,7 @@ public class Battle {
 		teams = new ArrayList<>();
 		
 		Team team1 = new Team("Team 1", Color.red);
-		Team team2 = new Team("Team 2", Color.blue);
+		Team team2 = new Team("Team 2", Color.green);
 		
 		team1.addMember(new Player("Matt"));
 		team1.addMember(new Player("Nick"));
@@ -29,12 +29,13 @@ public class Battle {
 		
 		teams.add(team1);
 		teams.add(team2);
-		
-		init();
 	}
 	
-	public void loadCoords(int w, int h){
-		work here
+	public void loadCoords(int w, int h, int s){
+		int spacingFromTopEdge = s;
+		int spacingBetween = w * s / 6;
+		teams.get(0).loadCoords(spacingFromTopEdge, spacingBetween);
+		teams.get(1).loadCoords(h * s - spacingFromTopEdge * 2, spacingBetween);
 	}
 	
 	public void init(){

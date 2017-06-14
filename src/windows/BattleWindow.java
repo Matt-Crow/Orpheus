@@ -9,7 +9,7 @@ public class BattleWindow extends JFrame{
 	public BattleWindow(){
 		setTitle("Match");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(1000, 1000);
+		setSize(800, 800);
 		
 		draw = new BattleCanvas(30, 30, 100);
 		setContentPane(draw);

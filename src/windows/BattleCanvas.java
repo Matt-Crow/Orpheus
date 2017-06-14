@@ -39,25 +39,23 @@ public class BattleCanvas extends JPanel implements KeyListener{
 		b = new Battlefield(w, h, s);
 		battle = new Battle();
 		battle.init();
+		battle.loadCoords(w, h, s);
 		p = battle.getPlayer();
-		battle.loadCoords(w, h);
-		
-		p.setCoords(b.getCenter()[0], b.getCenter()[1]);
 	}
 	
 	public int[] retTranslate(){
 		int[] ret = new int[2];
-		int x = -p.getX() + 500;
-		int y = -p.getY() + 500;
+		int x = -p.getX() + 400;
+		int y = -p.getY() + 400;
 		
-		if(x < -w * s + 1000){
-			x = -w * s + 1000;
+		if(x < -w * s + 800){
+			x = -w * s + 800;
 		} else if (x > 0){
 			x = 0;
 		}
 		
-		if(y < -h * s + 1000){
-			y = -h * s + 1000;
+		if(y < -h * s + 800){
+			y = -h * s + 800;
 		} else if (y > 0){
 			y = 0;
 		}
