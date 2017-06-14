@@ -21,14 +21,20 @@ public class Player {
 		this.x = x;
 		this.y = y;
 	}
-	public void setMoving(boolean m){
-		moving = m;
+	public int getX(){
+		return x;
+	}
+	public int getY(){
+		return y;
+	}
+	public String getFacing(){
+		String[] directions = {"N", "NE", "E", "SE", "S", "SW", "W", "NW"};
+		return directions[dirNum];
 	}
 	public void turn(String dir){
 		if(turnCooldown > 0){
 			return;
 		}
-		
 		if(dir == "left"){
 			dirNum -= 1;
 		} else {
@@ -39,14 +45,10 @@ public class Player {
 		} else if(dirNum > 7){
 			dirNum = 0;
 		}
-		
 		turnCooldown = 10;
 	}
-	public int getX(){
-		return x;
-	}
-	public int getY(){
-		return y;
+	public void setMoving(boolean m){
+		moving = m;
 	}
 	public void init(Team t){
 		team = t;
@@ -55,21 +57,15 @@ public class Player {
 		dirNum = 0;
 		turnCooldown = 0;
 	}
-	public String getFacing(){
-		String[] directions = {"N", "NE", "E", "SE", "S", "SW", "W", "NW"};
-		return directions[dirNum];
-	}
-	
 	public void update(){
 		turnCooldown -= 1;
-		move();
+		if(moving){
+			move();
+		}
 	}
 	
 	// add collisions
 	public void move(){
-		if(!moving){
-			return;
-		}
 		switch(getFacing()){
 			case "N":
 				y -= momentum;

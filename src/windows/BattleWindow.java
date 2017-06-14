@@ -6,12 +6,12 @@ public class BattleWindow extends JFrame{
 	public static final long serialVersionUID = 1L;
 	BattleCanvas draw;
 	
-	public BattleWindow(){
+	public BattleWindow(int w, int h){
 		setTitle("Match");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(800, 800);
+		setSize(w, h);
 		
-		draw = new BattleCanvas(30, 30, 100);
+		draw = new BattleCanvas(w, h);
 		setContentPane(draw);
 		setVisible(true);
 	}

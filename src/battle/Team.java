@@ -22,6 +22,7 @@ public class Team {
 	public void addMember(Player m){
 		members.add(m);
 	}
+	
 	public void loadCoords(int y, int spacing){
 		int x = spacing;
 		for(Player m : members){

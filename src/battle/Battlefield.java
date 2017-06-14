@@ -7,10 +7,10 @@ public class Battlefield {
 	int w;
 	int h;
 	int s;
-	public Battlefield(int width, int height, int size){
-		w = width;
-		h = height;
-		s = size;
+	public Battlefield(){
+		w = 20;
+		h = 20;
+		s = 100;
 	}
 	public int[] getCenter(){
 		int[] ret = new int[2];

@@ -21,41 +21,40 @@ public class BattleCanvas extends JPanel implements KeyListener{
 	Battle battle;
 	private int w;
 	private int h;
-	private int s;
 	private Timer timer;
 	private int FPS;
 	Player p;
 	
-	public BattleCanvas(int width, int height, int tileSize){
-		w = width;
-		h = height;
-		s = tileSize;
+	public BattleCanvas(int windowWidth, int windowHeight){
+		w = windowWidth;
+		h = windowHeight;
 		setLayout(null);
 		setBackground(Color.black);
 		setFocusable(true);
 		addKeyListener(this);
 		FPS = 20;
 		
-		b = new Battlefield(w, h, s);
+		b = new Battlefield();
 		battle = new Battle();
 		battle.init();
-		battle.loadCoords(w, h, s);
+		battle.loadCoords(w, h);
 		p = battle.getPlayer();
 	}
 	
+	// update this
 	public int[] retTranslate(){
 		int[] ret = new int[2];
 		int x = -p.getX() + 400;
 		int y = -p.getY() + 400;
 		
-		if(x < -w * s + 800){
-			x = -w * s + 800;
+		if(x < -1200){
+			x = -1200;
 		} else if (x > 0){
 			x = 0;
 		}
 		
-		if(y < -h * s + 800){
-			y = -h * s + 800;
+		if(y < -1200){
+			y = -1200;
 		} else if (y > 0){
 			y = 0;
 		}

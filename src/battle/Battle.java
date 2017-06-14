@@ -31,11 +31,11 @@ public class Battle {
 		teams.add(team2);
 	}
 	
-	public void loadCoords(int w, int h, int s){
-		int spacingFromTopEdge = s;
-		int spacingBetween = w * s / 6;
+	public void loadCoords(int w, int h){
+		int spacingFromTopEdge = 100;
+		int spacingBetween = w / 6;
 		teams.get(0).loadCoords(spacingFromTopEdge, spacingBetween);
-		teams.get(1).loadCoords(h * s - spacingFromTopEdge * 2, spacingBetween);
+		teams.get(1).loadCoords(h - spacingFromTopEdge * 2, spacingBetween);
 	}
 	
 	public void init(){
