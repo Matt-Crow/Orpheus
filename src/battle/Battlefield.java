@@ -4,13 +4,27 @@ import java.awt.Graphics;
 import java.awt.Color;
 
 public class Battlefield {
-	int w;
-	int h;
-	int s;
+	private int w;
+	private int h;
+	private int s;
+	private Battle b;
+	
 	public Battlefield(){
 		w = 20;
 		h = 20;
 		s = 100;
+	}
+	public int getTileSize(){
+		return s;
+	}
+	public int getWidth(){
+		return w * s;
+	}
+	public int getHeight(){
+		return h * s;
+	}
+	public void setHosted(Battle battle){
+		b = battle;
 	}
 	public int[] getCenter(){
 		int[] ret = new int[2];
@@ -32,5 +46,6 @@ public class Battlefield {
 			}
 			x += s;
 		}
+		b.draw(g);
 	}
 }

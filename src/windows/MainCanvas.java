@@ -66,7 +66,7 @@ public class MainCanvas extends JPanel{
 		EasyButton battle = new EasyButton("Battle", 900, 0, 100, 100, Color.red);
 		battle.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				new BattleWindow(800, 800);
+				new BattleWindow(600, 600);
 				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel);
 				frame.dispose();
 			}

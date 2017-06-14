@@ -8,6 +8,7 @@ import entities.Player;
 
 public class Battle {
 	ArrayList<Team> teams;
+	private Battlefield host;
 	
 	public Battle(){
 		teams = new ArrayList<>();
@@ -30,9 +31,15 @@ public class Battle {
 		teams.add(team1);
 		teams.add(team2);
 	}
+	public void setHost(Battlefield b){
+		host = b;
+		b.setHosted(this);
+	}
 	
-	public void loadCoords(int w, int h){
-		int spacingFromTopEdge = 100;
+	public void loadCoords(){
+		int w = host.getWidth();
+		int h = host.getHeight();
+		int spacingFromTopEdge = host.getTileSize();
 		int spacingBetween = w / 6;
 		teams.get(0).loadCoords(spacingFromTopEdge, spacingBetween);
 		teams.get(1).loadCoords(h - spacingFromTopEdge * 2, spacingBetween);

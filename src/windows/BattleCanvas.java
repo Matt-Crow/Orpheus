@@ -18,12 +18,13 @@ import resources.Op;
 public class BattleCanvas extends JPanel implements KeyListener{
 	public static final long serialVersionUID = 1L;
 	Battlefield b;
-	Battle battle;
+	Battle hostedBattle;
 	private int w;
 	private int h;
 	private Timer timer;
 	private int FPS;
 	Player p;
+	ActionListener update;
 	
 	public BattleCanvas(int windowWidth, int windowHeight){
 		w = windowWidth;
@@ -34,27 +35,37 @@ public class BattleCanvas extends JPanel implements KeyListener{
 		addKeyListener(this);
 		FPS = 20;
 		
+		hostedBattle = new Battle();
 		b = new Battlefield();
-		battle = new Battle();
-		battle.init();
-		battle.loadCoords(w, h);
-		p = battle.getPlayer();
+		
+		hostedBattle.setHost(b);
+		hostedBattle.init();
+		hostedBattle.loadCoords();
+		p = hostedBattle.getPlayer();
+		
+		update = new ActionListener() {
+		      public void actionPerformed(ActionEvent e) {
+		          hostedBattle.update();
+		          repaint();
+		      }
+		};
 	}
 	
-	// update this
 	public int[] retTranslate(){
 		int[] ret = new int[2];
-		int x = -p.getX() + 400;
-		int y = -p.getY() + 400;
+		int x = -p.getX() + w / 2;
+		int y = -p.getY() + h / 2;
+		int minX = -(b.getWidth() - w);
+		int minY = -(b.getHeight() - h);
 		
-		if(x < -1200){
-			x = -1200;
+		if(x < minX){
+			x = minX;
 		} else if (x > 0){
 			x = 0;
 		}
 		
-		if(y < -1200){
-			y = -1200;
+		if(y < minY){
+			y = minY;
 		} else if (y > 0){
 			y = 0;
 		}
@@ -94,18 +105,11 @@ public class BattleCanvas extends JPanel implements KeyListener{
 				break;
 		}
 	}
-	ActionListener update = new ActionListener() {
-	      public void actionPerformed(ActionEvent e) {
-	          battle.update();
-	          repaint();
-	      }
-	  };
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		int[] trans = retTranslate();
 		g.translate(trans[0], trans[1]);
 		b.draw(g);
-		battle.draw(g);
 		timer = new Timer(1000 / FPS, update);
 		timer.setRepeats(false);
 		timer.start();
