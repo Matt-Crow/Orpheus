@@ -22,7 +22,11 @@ public class Team {
 	public void addMember(Player m){
 		members.add(m);
 	}
-	
+	public void setAllClassesToRandom(){
+		for(Player m : members){
+			m.setClass("random");
+		}
+	}
 	public void loadCoords(int y, int spacing){
 		int x = spacing;
 		for(Player m : members){

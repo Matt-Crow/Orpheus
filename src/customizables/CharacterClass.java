@@ -13,9 +13,11 @@ public class CharacterClass extends Customizable{
 	private int remHP;
 	private int energy;
 	public String name;
+	public Color color;
 	
-	public CharacterClass(String n){
+	public CharacterClass(String n, Color c){
 		name = n;
+		color = c;
 		stats = new ArrayList<>();
 	}
 	

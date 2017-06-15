@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 
 import entities.Player;
+import initializers.Run;
 
 public class Battle {
 	ArrayList<Team> teams;
@@ -16,7 +17,7 @@ public class Battle {
 		Team team1 = new Team("Team 1", Color.red);
 		Team team2 = new Team("Team 2", Color.green);
 		
-		team1.addMember(new Player("Matt"));
+		team1.addMember(Run.player);
 		team1.addMember(new Player("Nick"));
 		team1.addMember(new Player("Paul"));
 		team1.addMember(new Player("Gianna"));
@@ -30,6 +31,12 @@ public class Battle {
 		
 		teams.add(team1);
 		teams.add(team2);
+		
+		String c = Run.player.getClassName();
+		for(Team t : teams){
+			t.setAllClassesToRandom();
+		}
+		Run.player.setClass(c);
 	}
 	public void setHost(Battlefield b){
 		host = b;

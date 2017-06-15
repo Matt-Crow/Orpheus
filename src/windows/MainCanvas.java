@@ -13,6 +13,8 @@ import customizables.*;
 import resources.EasyButton;
 import resources.Menu;
 
+import initializers.Run;
+
 @SuppressWarnings("serial")
 public class MainCanvas extends JPanel{
 	public static final long serialVersionUID = 1L;
@@ -20,6 +22,7 @@ public class MainCanvas extends JPanel{
 	Menu classes;
 	Menu actives;
 	Menu passives;
+	CharacterClass chosenClass;
 	
 	public MainCanvas(){
 		setLayout(null);
@@ -66,6 +69,7 @@ public class MainCanvas extends JPanel{
 		EasyButton battle = new EasyButton("Battle", 900, 0, 100, 100, Color.red);
 		battle.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
+				Run.player.setClass(chosenClass.name);
 				new BattleWindow(600, 600);
 				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel);
 				frame.dispose();
@@ -89,7 +93,7 @@ public class MainCanvas extends JPanel{
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		
-		CharacterClass chosenClass = findClass(classes.getSelectedItem().toString());
+		chosenClass = findClass(classes.getSelectedItem().toString());
 		chosenClass.displayPopup(100, 100, g);
 	}
 }

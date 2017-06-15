@@ -1,8 +1,10 @@
 package entities;
 
 import java.awt.Graphics;
+import java.util.concurrent.ThreadLocalRandom;
 //import resources.Op;
 import battle.Team;
+import customizables.*;
 
 public class Player {
 	public String name;
@@ -13,9 +15,32 @@ public class Player {
 	private int momentum;
 	private boolean moving;
 	private Team team;
+	private CharacterClass c;
 	
 	public Player(String n){
 		name = n;
+	}
+	public String getClassName(){
+		return c.name;
+	}
+	public void setClass(String name){
+		switch(name.toLowerCase()){
+			case "fire":
+				c = new Fire();
+				return;
+			case "earth":
+				c = new Earth();
+				return;
+			case "water":
+				c = new Water();
+				return;
+			case "air":
+				c = new Air();
+				return;
+		}
+		String[] classes = {"fire", "earth", "water", "air"};
+		int randomNum = ThreadLocalRandom.current().nextInt(0, 4);
+		setClass(classes[randomNum]);
 	}
 	public void setCoords(int x, int y){
 		this.x = x;
@@ -101,5 +126,7 @@ public class Player {
 		// class color?
 		g.setColor(team.color);
 		g.fillRect(x, y, 100, 100);
+		g.setColor(c.color);
+		g.fillRect(x + 10, y + 10, 80, 80);
 	}
 }
