@@ -1,5 +1,6 @@
 package entities;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.concurrent.ThreadLocalRandom;
 //import resources.Op;
@@ -123,10 +124,10 @@ public class Player {
 		}
 	}
 	public void draw(Graphics g){
-		// class color?
 		g.setColor(team.color);
-		g.fillRect(x, y, 100, 100);
+		g.fillOval(x - 50, y - 50, 100, 100);
 		g.setColor(c.color);
-		g.fillRect(x + 10, y + 10, 80, 80);
+		g.fillOval(x - 40, y - 40, 80, 80);
+		g.setColor(Color.gray);
 	}
 }
