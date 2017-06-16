@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.concurrent.ThreadLocalRandom;
 //import resources.Op;
+import resources.Direction;
 import battle.Team;
 import customizables.*;
 
@@ -53,9 +54,8 @@ public class Player {
 	public int getY(){
 		return y;
 	}
-	public String getFacing(){
-		String[] directions = {"N", "NE", "E", "SE", "S", "SW", "W", "NW"};
-		return directions[dirNum];
+	public int[] getVector(){
+		return Direction.directions[dirNum];
 	}
 	public void turn(String dir){
 		if(turnCooldown > 0){
@@ -92,36 +92,8 @@ public class Player {
 	
 	// add collisions
 	public void move(){
-		switch(getFacing()){
-			case "N":
-				y -= momentum;
-				break;
-			case "W":
-				x -= momentum;
-				break;
-			case "E":
-				x += momentum;
-				break;
-			case "S":
-				y += momentum;
-				break;
-			case "NW":
-				x -= momentum;
-				y -= momentum;
-				break;
-			case "NE":
-				x += momentum;
-				y -= momentum;
-				break;
-			case "SW":
-				x -= momentum;
-				y += momentum;
-				break;
-			case "SE":
-				x += momentum;
-				y += momentum;
-				break;
-		}
+		x += getVector()[0] * momentum;
+		y += getVector()[1] * momentum;
 	}
 	public void draw(Graphics g){
 		g.setColor(team.color);
