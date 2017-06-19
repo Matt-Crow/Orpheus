@@ -43,19 +43,13 @@ public class Battle {
 		b.setHosted(this);
 	}
 	
-	public void loadCoords(){
+	public void init(){
 		int w = host.getWidth();
 		int h = host.getHeight();
 		int spacingFromTopEdge = host.getTileSize();
 		int spacingBetween = w / 6;
-		teams.get(0).loadCoords(spacingFromTopEdge, spacingBetween);
-		teams.get(1).loadCoords(h - spacingFromTopEdge * 2, spacingBetween);
-	}
-	
-	public void init(){
-		for(Team t : teams){
-			t.init();
-		}
+		teams.get(0).init(spacingFromTopEdge, spacingBetween, 4);
+		teams.get(1).init(h - spacingFromTopEdge * 2, spacingBetween, 0);
 	}
 	
 	public void update(){

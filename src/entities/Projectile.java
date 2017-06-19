@@ -1,5 +1,5 @@
 package entities;
 
-public class Projectile {
+public class Projectile extends Entity{
 
 }

@@ -40,7 +40,6 @@ public class BattleCanvas extends JPanel implements KeyListener{
 		
 		hostedBattle.setHost(b);
 		hostedBattle.init();
-		hostedBattle.loadCoords();
 		p = hostedBattle.getPlayer();
 		
 		update = new ActionListener() {

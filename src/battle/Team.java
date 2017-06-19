@@ -27,16 +27,12 @@ public class Team {
 			m.setClass("random");
 		}
 	}
-	public void loadCoords(int y, int spacing){
+	
+	public void init(int y, int spacing, int facing){
 		int x = spacing;
 		for(Player m : members){
-			m.setCoords(x, y);
+			m.init(this, x, y, facing);
 			x += spacing;
-		}
-	}
-	public void init(){
-		for(Player m : members){
-			m.init(this);
 		}
 	}
 	
