@@ -76,6 +76,9 @@ public class Player {
 	public void setMoving(boolean m){
 		moving = m;
 	}
+	public int getEnergy(){
+		return c.getEnergy();
+	}
 	public void init(Team t){
 		team = t;
 		momentum = 10;

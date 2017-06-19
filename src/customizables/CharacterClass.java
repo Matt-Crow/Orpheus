@@ -40,7 +40,9 @@ public class CharacterClass extends Customizable{
 			stat.calc();
 		}
 	}
-	
+	public int getEnergy(){
+		return energy;
+	}
 	public Stat getStat(String n){
 		for(Stat stat : stats){
 			if(stat.name.toLowerCase(Locale.ENGLISH) == n.toLowerCase(Locale.ENGLISH)){
