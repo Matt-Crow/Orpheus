@@ -12,12 +12,12 @@ public class Player extends Entity{
 	private int turnCooldown;
 	private Team team;
 	private CharacterClass c;
-	private MeleeAttack strike;
+	private Slash slash;
 	
 	public Player(String n){
 		super(0, 0, 0, 10);
 		name = n;
-		strike = new MeleeAttack();
+		slash = new Slash();
 	}
 	public String getClassName(){
 		return c.name;
@@ -51,19 +51,19 @@ public class Player extends Entity{
 		return c.getEnergy();
 	}
 	public void useMeleeAttack(){
-		strike.use(this);
+		slash.use(this);
 	}
 	public void init(Team t, int x, int y, int dirNum){
 		super.setCoords(x, y);
 		super.setDirNum(dirNum);
 		team = t;
 		turnCooldown = 0;
-		strike.init();
+		slash.init();
 	}
 	public void update(){
 		super.update();
 		turnCooldown -= 1;
-		strike.update();
+		slash.update();
 	}
 	public void draw(Graphics g){
 		g.setColor(team.color);
