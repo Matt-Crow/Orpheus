@@ -44,6 +44,7 @@ public class Stat {
 		Op.dp();
 	}
 	public double get(){
+		calc();
 		return value;
 	}
 }

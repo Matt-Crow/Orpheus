@@ -1,9 +1,10 @@
 package attacks;
 import java.util.ArrayList;
-import java.util.Locale;
 
 import entities.Player;
 import upgradables.Stat;
+
+import resources.Op;
 
 public class Attack {
 	private ArrayList<Stat> stats;
@@ -11,6 +12,7 @@ public class Attack {
 	private int cooldown;
 	
 	public Attack(int energyCost){
+		stats = new ArrayList<>();
 		stats.add(new Stat("Energy Cost", energyCost, 2));
 	}
 	public void setCUCD(int chargeup, int cooldown){
@@ -19,7 +21,7 @@ public class Attack {
 	}
 	public Stat getStat(String n){
 		for(Stat stat : stats){
-			if(stat.name.toLowerCase(Locale.ENGLISH) == n.toLowerCase(Locale.ENGLISH)){
+			if(stat.name == n){
 				return stat;
 			}
 		}
@@ -29,16 +31,28 @@ public class Attack {
 		return getStat(n).get();
 	}
 	public boolean canUse(Player user){
-		return user.getEnergy() >= getStat("EnergyCost").get() && charge >= getStatValue("Chargeup") && cooldown <= 0;
+		Op.add(getStatValue("Cooldown") + " CD");
+		Op.dp();
+		return user.getEnergy() >= getStat("Energy Cost").get() && charge >= getStatValue("Chargeup") && cooldown <= 0;
 	}
 	public void use(Player user){
+		charge += 1;
 		if (!canUse(user)){
 			return;
 		}
+		// do effect
+		charge = 0;
+		cooldown = (int) getStatValue("Cooldown");
 	}
 	public void init(){
 		charge = 0;
 		cooldown = 0;
+	}
+	public void update(){
+		cooldown -= 1;
+		if (cooldown < 0){
+			cooldown = 0;
+		}
 	}
 	//double chargeScale, int range, int offset, int aoe, int areaScale, int distanceScale, int dmg
 }

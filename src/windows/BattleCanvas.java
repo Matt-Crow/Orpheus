@@ -75,9 +75,15 @@ public class BattleCanvas extends JPanel implements KeyListener{
 	}
 	
 	public void keyPressed(KeyEvent k){
-		//out.print("Pressed: ");
-		//out.println(k.getKeyCode());
+		/*
+		Op.add("Pressed: ");
+		Op.add(" " + k.getKeyCode());
+		Op.dp();
+		*/
 		switch(k.getKeyCode()){
+			case 32:
+				p.useMeleeAttack();
+				break;
 			case 38:
 				p.setMoving(true);
 				break;

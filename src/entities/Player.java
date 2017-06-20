@@ -5,16 +5,19 @@ import java.awt.Graphics;
 import java.util.concurrent.ThreadLocalRandom;
 import battle.Team;
 import customizables.*;
+import attacks.*;
 
 public class Player extends Entity{
 	public String name;
 	private int turnCooldown;
 	private Team team;
 	private CharacterClass c;
+	private MeleeAttack strike;
 	
 	public Player(String n){
-		super();
+		super(0, 0, 0, 10);
 		name = n;
+		strike = new MeleeAttack();
 	}
 	public String getClassName(){
 		return c.name;
@@ -47,14 +50,20 @@ public class Player extends Entity{
 	public int getEnergy(){
 		return c.getEnergy();
 	}
+	public void useMeleeAttack(){
+		strike.use(this);
+	}
 	public void init(Team t, int x, int y, int dirNum){
-		super.init(x, y, dirNum, 10);
+		super.setCoords(x, y);
+		super.setDirNum(dirNum);
 		team = t;
 		turnCooldown = 0;
+		strike.init();
 	}
 	public void update(){
 		super.update();
 		turnCooldown -= 1;
+		strike.update();
 	}
 	public void draw(Graphics g){
 		g.setColor(team.color);

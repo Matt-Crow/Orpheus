@@ -9,14 +9,22 @@ public class Entity {
 	private int momentum;
 	private boolean moving;
 	
-	public Entity(){
-		dirNum = 0;
+	public Entity(int xCoord, int yCoord, int directionNumber, int m){
+		x = xCoord;
+		y = yCoord;
+		dirNum = directionNumber;
+		momentum = m;
+		moving = false;
 	}
 	public int getX(){
 		return x;
 	}
 	public int getY(){
 		return y;
+	}
+	public void setCoords(int xCoord, int yCoord){
+		x = xCoord;
+		y = yCoord;
 	}
 	public int[] getVector(){
 		return Direction.directions[dirNum];
@@ -33,6 +41,9 @@ public class Entity {
 			dirNum = 0;
 		}
 	}
+	public void setDirNum(int dir){
+		dirNum = dir;
+	}
 	public void setMoving(boolean m){
 		moving = m;
 	}
@@ -40,13 +51,6 @@ public class Entity {
 	public void move(){
 		x += getVector()[0] * momentum;
 		y += getVector()[1] * momentum;
-	}
-	public void init(int xCoord, int yCoord, int directionNumber, int m){
-		x = xCoord;
-		y = yCoord;
-		dirNum = directionNumber;
-		momentum = m;
-		moving = false;
 	}
 	public void update(){
 		if(moving){
