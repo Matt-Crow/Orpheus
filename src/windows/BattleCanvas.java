@@ -17,14 +17,14 @@ import resources.Op;
 
 public class BattleCanvas extends JPanel implements KeyListener{
 	public static final long serialVersionUID = 1L;
-	Battlefield b;
-	Battle hostedBattle;
+	private Battlefield b;
+	private Battle hostedBattle;
 	private int w;
 	private int h;
 	private Timer timer;
 	private int FPS;
-	Player p;
-	ActionListener update;
+	private Player p;
+	private ActionListener update;
 	
 	public BattleCanvas(int windowWidth, int windowHeight){
 		w = windowWidth;
@@ -75,11 +75,11 @@ public class BattleCanvas extends JPanel implements KeyListener{
 	}
 	
 	public void keyPressed(KeyEvent k){
-		/*
+		
 		Op.add("Pressed: ");
 		Op.add(" " + k.getKeyCode());
 		Op.dp();
-		*/
+		
 		switch(k.getKeyCode()){
 			case 32:
 				p.useMeleeAttack();

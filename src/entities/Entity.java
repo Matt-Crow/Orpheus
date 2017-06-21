@@ -44,6 +44,9 @@ public class Entity {
 	public void setDirNum(int dir){
 		dirNum = dir;
 	}
+	public int getDirNum(){
+		return dirNum;
+	}
 	public void setMoving(boolean m){
 		moving = m;
 	}

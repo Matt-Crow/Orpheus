@@ -1,7 +1,7 @@
 package attacks;
 import java.util.ArrayList;
 
-import entities.Player;
+import entities.*;
 import upgradables.Stat;
 import resources.Op;
 
@@ -45,7 +45,9 @@ public class Attack {
 		if (!canUse(user)){
 			return;
 		}
-		// do effect
+		
+		new Projectile(user.getX(), user.getY(), user.getDirNum(), 5);
+		
 		charge = 0;
 		cooldown = (int) getStatValue("Cooldown");
 	}

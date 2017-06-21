@@ -35,7 +35,6 @@ public class Team {
 			x += spacing;
 		}
 	}
-	
 	public void setEnemy(Team t){
 		enemyTeam = t;
 	}

@@ -8,10 +8,12 @@ public class Op {
 	 * purposes. It is a static class.
 	 */
 	private static ArrayList<String> messages;
+	private static ArrayList<String> previousMessages;
 	
 	// Creates the message arraylist
 	public static void reset(){
 		messages = new ArrayList<String>();
+		previousMessages = new ArrayList<String>();
 	}
 	
 	// Adds to the message arraylist
@@ -26,10 +28,13 @@ public class Op {
 	
 	// Prints the contents of the message arraylist
 	public static void dp(){
-		out.println("<**DEBUG**>");
-		for(String msg : messages){
-			out.println(msg);
+		if(! previousMessages.equals(messages)){
+			out.println("<**DEBUG**>");
+			for(String msg : messages){
+				out.println(msg);
+			}
 		}
+		previousMessages = messages;
 		reset();
 	}
 }

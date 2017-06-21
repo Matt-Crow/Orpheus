@@ -4,11 +4,12 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
-import entities.Player;
+import entities.*;
 import initializers.Run;
 
 public class Battle {
 	ArrayList<Team> teams;
+	ArrayList<Projectile> projectiles;
 	private Battlefield host;
 	
 	public Battle(){
@@ -42,8 +43,12 @@ public class Battle {
 		host = b;
 		b.setHosted(this);
 	}
-	
+	public void registerProjectile(Projectile p){
+		projectiles.add(p);
+	}
 	public void init(){
+		Projectile.init();
+		projectiles = Projectile.getRegister();
 		int w = host.getWidth();
 		int h = host.getHeight();
 		int spacingFromTopEdge = host.getTileSize();
@@ -56,10 +61,14 @@ public class Battle {
 		for(Team t : teams){
 			t.update();
 		}
+		Projectile.updateProjectiles();
 	}
 	public void draw(Graphics g){
 		for(Team t : teams){
 			t.draw(g);
+		}
+		for(Projectile p : projectiles){
+			p.draw(g);
 		}
 	}
 	
