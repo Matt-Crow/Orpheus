@@ -17,7 +17,7 @@ import resources.Op;
 
 public class BattleCanvas extends JPanel implements KeyListener{
 	public static final long serialVersionUID = 1L;
-	private Battlefield b;
+	private Battlefield battlefield;
 	private Battle hostedBattle;
 	private int w;
 	private int h;
@@ -36,9 +36,9 @@ public class BattleCanvas extends JPanel implements KeyListener{
 		FPS = 20;
 		
 		hostedBattle = new Battle();
-		b = new Battlefield();
+		battlefield = new Battlefield();
 		
-		hostedBattle.setHost(b);
+		hostedBattle.setHost(battlefield);
 		hostedBattle.init();
 		p = hostedBattle.getPlayer();
 		
@@ -54,8 +54,8 @@ public class BattleCanvas extends JPanel implements KeyListener{
 		int[] ret = new int[2];
 		int x = -p.getX() + w / 2;
 		int y = -p.getY() + h / 2;
-		int minX = -(b.getWidth() - w);
-		int minY = -(b.getHeight() - h);
+		int minX = -(battlefield.getWidth() - w);
+		int minY = -(battlefield.getHeight() - h);
 		
 		if(x < minX){
 			x = minX;
@@ -75,11 +75,11 @@ public class BattleCanvas extends JPanel implements KeyListener{
 	}
 	
 	public void keyPressed(KeyEvent k){
-		
+		/*
 		Op.add("Pressed: ");
 		Op.add(" " + k.getKeyCode());
 		Op.dp();
-		
+		*/
 		switch(k.getKeyCode()){
 			case 32:
 				p.useMeleeAttack();
@@ -114,7 +114,8 @@ public class BattleCanvas extends JPanel implements KeyListener{
 		super.paintComponent(g);
 		int[] trans = retTranslate();
 		g.translate(trans[0], trans[1]);
-		b.draw(g);
+		battlefield.draw(g);
+		
 		timer = new Timer(1000 / FPS, update);
 		timer.setRepeats(false);
 		timer.start();

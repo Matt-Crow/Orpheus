@@ -46,7 +46,7 @@ public class Attack {
 			return;
 		}
 		
-		new Projectile(user.getX(), user.getY(), user.getDirNum(), 5);
+		new Projectile(user.getX(), user.getY(), user.getDirNum(), 5, this);
 		
 		charge = 0;
 		cooldown = (int) getStatValue("Cooldown");

@@ -43,9 +43,6 @@ public class Battle {
 		host = b;
 		b.setHosted(this);
 	}
-	public void registerProjectile(Projectile p){
-		projectiles.add(p);
-	}
 	public void init(){
 		Projectile.init();
 		projectiles = Projectile.getRegister();
@@ -56,8 +53,9 @@ public class Battle {
 		teams.get(0).init(spacingFromTopEdge, spacingBetween, 4);
 		teams.get(1).init(h - spacingFromTopEdge * 2, spacingBetween, 0);
 	}
-	
+
 	public void update(){
+		projectiles = Projectile.getRegister();
 		for(Team t : teams){
 			t.update();
 		}

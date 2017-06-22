@@ -50,6 +50,9 @@ public class Entity {
 	public void setMoving(boolean m){
 		moving = m;
 	}
+	public int getMomentum(){
+		return momentum;
+	}
 	// add collisions
 	public void move(){
 		x += getVector()[0] * momentum;
