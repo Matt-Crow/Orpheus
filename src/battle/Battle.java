@@ -9,7 +9,6 @@ import initializers.Run;
 
 public class Battle {
 	ArrayList<Team> teams;
-	ArrayList<Projectile> projectiles;
 	private Battlefield host;
 	
 	public Battle(){
@@ -33,6 +32,9 @@ public class Battle {
 		teams.add(team1);
 		teams.add(team2);
 		
+		team1.setEnemy(team2);
+		team2.setEnemy(team1);
+		
 		String c = Run.player.getClassName();
 		for(Team t : teams){
 			t.setAllClassesToRandom();
@@ -44,8 +46,6 @@ public class Battle {
 		b.setHosted(this);
 	}
 	public void init(){
-		Projectile.init();
-		projectiles = Projectile.getRegister();
 		int w = host.getWidth();
 		int h = host.getHeight();
 		int spacingFromTopEdge = host.getTileSize();
@@ -55,18 +55,13 @@ public class Battle {
 	}
 
 	public void update(){
-		projectiles = Projectile.getRegister();
 		for(Team t : teams){
 			t.update();
 		}
-		Projectile.updateProjectiles();
 	}
 	public void draw(Graphics g){
 		for(Team t : teams){
 			t.draw(g);
-		}
-		for(Projectile p : projectiles){
-			p.draw(g);
 		}
 	}
 	

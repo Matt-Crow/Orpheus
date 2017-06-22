@@ -11,7 +11,7 @@ public class Attack {
 	private int charge;
 	private int cooldown;
 	
-	public Attack(String n, int energyCost, int chargeup, int cooldown, double chargeScale, int range, int offset, int aoe, int areaScale, int distanceScale, int dmg){
+	public Attack(String n, int energyCost, int chargeup, int cooldown, double chargeScale, int range, int speed, int aoe, int areaScale, int distanceScale, int dmg){
 		name = n;
 		stats = new ArrayList<>();
 		stats.add(new Stat("Energy Cost", energyCost, 2));
@@ -19,7 +19,7 @@ public class Attack {
 		stats.add(new Stat("Cooldown", cooldown));
 		stats.add(new Stat("Charge Scale", chargeScale));
 		stats.add(new Stat("Range", range));
-		stats.add(new Stat("Offset", offset));
+		stats.add(new Stat("Speed", speed));
 		stats.add(new Stat("AOE", aoe));
 		stats.add(new Stat("Area Scale", areaScale));
 		stats.add(new Stat("Distance Scale", distanceScale));
@@ -46,7 +46,7 @@ public class Attack {
 			return;
 		}
 		
-		new Projectile(user.getX(), user.getY(), user.getDirNum(), 5, this);
+		new Projectile(user.getX(), user.getY(), user.getDirNum(), (int) getStatValue("Speed"), user.getTeam(), this);
 		
 		charge = 0;
 		cooldown = (int) getStatValue("Cooldown");

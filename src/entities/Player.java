@@ -19,6 +19,9 @@ public class Player extends Entity{
 		name = n;
 		slash = new Slash();
 	}
+	public Team getTeam(){
+		return team;
+	}
 	public String getClassName(){
 		return c.name;
 	}
