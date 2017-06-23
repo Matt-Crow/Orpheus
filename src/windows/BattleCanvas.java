@@ -7,7 +7,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+import javax.swing.InputMap;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
+import javax.swing.AbstractAction;
 import javax.swing.Timer;
 
 import battle.Battle;
@@ -48,7 +51,28 @@ public class BattleCanvas extends JPanel implements KeyListener{
 		          repaint();
 		      }
 		};
+		addKeyRegistration();
 	}
+	
+	
+	//not sure what's wrong with this
+	public void addKeyRegistration(){
+		InputMap keyRegister = getInputMap();
+		KeyStroke key = KeyStroke.getKeyStroke('m');
+		keyRegister.put(key, new moveAction());
+		
+		for (KeyStroke k : keyRegister.allKeys()){
+			java.lang.System.out.println(k);
+		}
+	}
+	public class moveAction extends AbstractAction{
+		public void actionPerformed(ActionEvent e){
+			Op.add("Works!");
+			Op.dp();
+		}
+	}
+	
+	
 	
 	public int[] retTranslate(){
 		int[] ret = new int[2];
