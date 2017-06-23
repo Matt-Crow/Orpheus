@@ -37,15 +37,22 @@ public class Attack {
 	public double getStatValue(String n){
 		return getStat(n).get();
 	}
-	public boolean canUse(Player user){
-		return user.getEnergy() >= getStat("Energy Cost").get() && charge >= getStatValue("Chargeup") && cooldown <= 0;
+	public boolean onCooldown(){
+		return cooldown > 0;
 	}
-	public void use(Player user){
-		charge += 1;
-		if (!canUse(user)){
+	public boolean canUse(Player user){
+		return user.getEnergy() >= getStat("Energy Cost").get() && charge >= getStatValue("Chargeup") && !onCooldown();
+	}
+	public void chargeUp(Player user){
+		if(onCooldown()){
 			return;
 		}
-		
+		charge += 1;
+		if(canUse(user)){
+			use(user);
+		}
+	}
+	public void use(Player user){
 		new Projectile(user.getX(), user.getY(), user.getDirNum(), (int) getStatValue("Speed"), user.getTeam(), this);
 		
 		charge = 0;

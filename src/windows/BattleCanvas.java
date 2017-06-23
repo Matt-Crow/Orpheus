@@ -81,6 +81,9 @@ public class BattleCanvas extends JPanel implements KeyListener{
 		Op.dp();
 		*/
 		switch(k.getKeyCode()){
+			case 90:
+				p.chargeSelectedAttack();
+				break;
 			case 32:
 				p.useMeleeAttack();
 				break;
@@ -105,6 +108,9 @@ public class BattleCanvas extends JPanel implements KeyListener{
 	}
 	public void keyReleased(KeyEvent k){
 		switch(k.getKeyCode()){
+			case 90:
+				p.useSelectedAttack();
+				break;
 			case 38:
 				p.setMoving(false);
 				break;
