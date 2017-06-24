@@ -2,12 +2,12 @@ package windows;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import javax.swing.InputMap;
+import javax.swing.ActionMap;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.AbstractAction;
@@ -18,7 +18,7 @@ import battle.Battlefield;
 import entities.Player;
 import resources.Op;
 
-public class BattleCanvas extends JPanel implements KeyListener{
+public class BattleCanvas extends JPanel{
 	public static final long serialVersionUID = 1L;
 	private Battlefield battlefield;
 	private Battle hostedBattle;
@@ -35,7 +35,6 @@ public class BattleCanvas extends JPanel implements KeyListener{
 		setLayout(null);
 		setBackground(Color.black);
 		setFocusable(true);
-		addKeyListener(this);
 		FPS = 20;
 		
 		hostedBattle = new Battle();
@@ -54,25 +53,76 @@ public class BattleCanvas extends JPanel implements KeyListener{
 		addKeyRegistration();
 	}
 	
-	
-	//not sure what's wrong with this
 	public void addKeyRegistration(){
-		InputMap keyRegister = getInputMap();
-		KeyStroke key = KeyStroke.getKeyStroke('m');
-		keyRegister.put(key, new moveAction());
+		// this is too fat!
 		
-		for (KeyStroke k : keyRegister.allKeys()){
-			java.lang.System.out.println(k);
-		}
+		InputMap keyRegister = getInputMap();
+		ActionMap actionRegister = getActionMap();
+		
+		keyRegister.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, false), "m");
+		actionRegister.put("m", new moveAction());
+		
+		keyRegister.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, true), "mOff");
+		actionRegister.put("mOff", new stopAction());
+		
+		keyRegister.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, false), "left");
+		actionRegister.put("left", new turnLeftAction());
+		
+		keyRegister.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, false), "right");
+		actionRegister.put("right", new turnRightAction());
+		
+		keyRegister.put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0, false), "q");
+		actionRegister.put("q", new meleeAction());
+		
+		keyRegister.put(KeyStroke.getKeyStroke(KeyEvent.VK_E, 0, false), "e");
+		actionRegister.put("e", new chargeAction());
+		
+		keyRegister.put(KeyStroke.getKeyStroke(KeyEvent.VK_E, 0, true), "eOff");
+		actionRegister.put("eOff", new releaseAction());
 	}
+	
 	public class moveAction extends AbstractAction{
+		static final long serialVersionUID = 1L;
 		public void actionPerformed(ActionEvent e){
-			Op.add("Works!");
-			Op.dp();
+			p.setMoving(true);
 		}
 	}
-	
-	
+	public class stopAction extends AbstractAction{
+		static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			p.setMoving(false);
+		}
+	}
+	public class turnLeftAction extends AbstractAction{
+		static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			p.turn("left");
+		}
+	}
+	public class turnRightAction extends AbstractAction{
+		static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			p.turn("right");
+		}
+	}
+	public class meleeAction extends AbstractAction{
+		static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			p.useMeleeAttack();
+		}
+	}
+	public class chargeAction extends AbstractAction{
+		static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			p.chargeSelectedAttack();
+		}
+	}
+	public class releaseAction extends AbstractAction{
+		static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			p.useSelectedAttack();
+		}
+	}
 	
 	public int[] retTranslate(){
 		int[] ret = new int[2];
@@ -98,48 +148,6 @@ public class BattleCanvas extends JPanel implements KeyListener{
 		return ret;
 	}
 	
-	public void keyPressed(KeyEvent k){
-		/*
-		Op.add("Pressed: ");
-		Op.add(" " + k.getKeyCode());
-		Op.dp();
-		*/
-		switch(k.getKeyCode()){
-			case 90:
-				p.chargeSelectedAttack();
-				break;
-			case 32:
-				p.useMeleeAttack();
-				break;
-			case 38:
-				p.setMoving(true);
-				break;
-			case 37:
-				p.turn("left");
-				break;
-			case 40:
-				Op.add("X: " + retTranslate()[0]);
-				Op.add("Y: " + retTranslate()[1]);
-				Op.dp();
-				break;
-			case 39:
-				p.turn("right");
-				break;
-		}
-	}
-	public void keyTyped(KeyEvent k){
-		
-	}
-	public void keyReleased(KeyEvent k){
-		switch(k.getKeyCode()){
-			case 90:
-				p.useSelectedAttack();
-				break;
-			case 38:
-				p.setMoving(false);
-				break;
-		}
-	}
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		int[] trans = retTranslate();
