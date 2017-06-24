@@ -16,7 +16,7 @@ import javax.swing.Timer;
 import battle.Battle;
 import battle.Battlefield;
 import entities.Player;
-import resources.Op;
+import resources.KeyRegister;
 
 public class BattleCanvas extends JPanel{
 	public static final long serialVersionUID = 1L;
@@ -59,11 +59,8 @@ public class BattleCanvas extends JPanel{
 		InputMap keyRegister = getInputMap();
 		ActionMap actionRegister = getActionMap();
 		
-		keyRegister.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, false), "m");
-		actionRegister.put("m", new moveAction());
-		
-		keyRegister.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, true), "mOff");
-		actionRegister.put("mOff", new stopAction());
+		new KeyRegister(this, "w", true, new moveAction());
+		new KeyRegister(this, "w", false, new stopAction());
 		
 		keyRegister.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, false), "left");
 		actionRegister.put("left", new turnLeftAction());
@@ -79,6 +76,7 @@ public class BattleCanvas extends JPanel{
 		
 		keyRegister.put(KeyStroke.getKeyStroke(KeyEvent.VK_E, 0, true), "eOff");
 		actionRegister.put("eOff", new releaseAction());
+		
 	}
 	
 	public class moveAction extends AbstractAction{
