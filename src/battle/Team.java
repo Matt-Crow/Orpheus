@@ -13,6 +13,7 @@ public class Team {
 	public Color color;
 	private ArrayList<Player> members;
 	private ArrayList<Projectile> projectiles;
+	private ArrayList<Projectile> newProjectiles;
 	private Team enemyTeam;
 	
 	public Team(String n, Color c){
@@ -39,12 +40,16 @@ public class Team {
 			x += spacing;
 		}
 		projectiles = new ArrayList<>();
+		newProjectiles = new ArrayList<>();
 	}
 	public void setEnemy(Team t){
 		enemyTeam = t;
 	}
 	public void registerProjectile(Projectile p){
 		projectiles.add(p);
+	}
+	public void registerAOEProjectile(Projectile p){
+		newProjectiles.add(p);
 	}
 	public void checkForHits(ArrayList<Projectile> proj){
 		for(Player m : members){
@@ -68,14 +73,14 @@ public class Team {
 		}
 		// members = newTeam;
 		
-		ArrayList<Projectile> newProj = new ArrayList<>();
 		for(Projectile p : projectiles){
 			p.update();
 			if(!p.getShouldTerminate()){
-				newProj.add(p);
+				newProjectiles.add(p);
 			}
 		}
-		projectiles = newProj;
+		projectiles = newProjectiles;
+		newProjectiles = new ArrayList<>();
 	}
 	
 	public void draw(Graphics g){
