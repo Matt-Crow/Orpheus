@@ -15,16 +15,14 @@ public class Player extends Entity{
 	private Slash slash;
 	private Attack active1;
 	private Attack selectedAttack;
-	private boolean selectedIsCharging;
 	
 	public Player(String n){
 		super(0, 0, 0, 10);
 		name = n;
 		slash = new Slash();
-		active1 = new HeavyStroke();
-		
+		//active1 = new HeavyStroke();
+		active1 = new Fireball();
 		selectedAttack = active1;
-		selectedIsCharging = false;
 	}
 	public Team getTeam(){
 		return team;
@@ -61,14 +59,14 @@ public class Player extends Entity{
 		return c.getEnergy();
 	}
 	public void useMeleeAttack(){
-		slash.chargeUp(this);
-	}
-	public void chargeSelectedAttack(){
-		selectedIsCharging = true;	
+		if(slash.canUse(this)){
+			slash.use(this);
+		}
 	}
 	public void useSelectedAttack(){
-		selectedIsCharging = false;
-		selectedAttack.use(this);
+		if(selectedAttack.canUse(this)){
+			selectedAttack.use(this);
+		}
 	}
 	public void init(Team t, int x, int y, int dirNum){
 		super.setCoords(x, y);
@@ -76,14 +74,15 @@ public class Player extends Entity{
 		team = t;
 		turnCooldown = 0;
 		slash.init();
+		active1.init();
+		c.initForBattle();
+		
 	}
 	public void update(){
 		super.update();
 		turnCooldown -= 1;
 		slash.update();
-		if(selectedIsCharging){
-			selectedAttack.chargeUp(this);
-		}
+		active1.update();
 	}
 	public void draw(Graphics g){
 		g.setColor(team.color);

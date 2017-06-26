@@ -1,11 +1,10 @@
 package entities;
 
 import java.awt.Graphics;
-import java.awt.Color;
 
 import attacks.Attack;
-import resources.Op;
 import battle.Team;
+import resources.Op;
 
 public class Projectile extends Entity{
 	private Attack registeredAttack;
@@ -32,6 +31,12 @@ public class Projectile extends Entity{
 	}
 	public void terminate(){
 		shouldTerminate = true;
+		if(registeredAttack.getStatValue("AOE") != 0){
+			for(int d = 0; d <= 7; d++){
+				// make a special AOEProjectile class that CANNOT CHAIN. Hit cooldown so doesnt all hit one person
+				new Projectile(getX(), getY(), d, 5, firedBy, registeredAttack);
+			}
+		}
 	}
 	public boolean getShouldTerminate(){
 		return shouldTerminate;

@@ -8,16 +8,13 @@ import resources.Op;
 public class Attack {
 	private String name;
 	private ArrayList<Stat> stats;
-	private int charge;
 	private int cooldown;
 	
-	public Attack(String n, int energyCost, int chargeup, int cooldown, double chargeScale, int range, int speed, int aoe, int areaScale, int distanceScale, int dmg){
+	public Attack(String n, int energyCost, int cooldown, int range, int speed, int aoe, int areaScale, int distanceScale, int dmg){
 		name = n;
 		stats = new ArrayList<>();
 		stats.add(new Stat("Energy Cost", energyCost, 2));
-		stats.add(new Stat("Chargeup", chargeup));
 		stats.add(new Stat("Cooldown", cooldown));
-		stats.add(new Stat("Charge Scale", chargeScale));
 		stats.add(new Stat("Range", range));
 		stats.add(new Stat("Speed", speed));
 		stats.add(new Stat("AOE", aoe));
@@ -41,25 +38,15 @@ public class Attack {
 		return cooldown > 0;
 	}
 	public boolean canUse(Player user){
-		return user.getEnergy() >= getStat("Energy Cost").get() && charge >= getStatValue("Chargeup") && !onCooldown();
-	}
-	public void chargeUp(Player user){
-		if(onCooldown()){
-			return;
-		}
-		charge += 1;
-		if(canUse(user)){
-			use(user);
-		}
+		return user.getEnergy() >= getStat("Energy Cost").get() && !onCooldown();
 	}
 	public void use(Player user){
 		new Projectile(user.getX(), user.getY(), user.getDirNum(), (int) getStatValue("Speed"), user.getTeam(), this);
 		
-		charge = 0;
 		cooldown = (int) getStatValue("Cooldown");
+		displayData();
 	}
 	public void init(){
-		charge = 0;
 		cooldown = 0;
 	}
 	public void update(){
@@ -67,5 +54,11 @@ public class Attack {
 		if (cooldown < 0){
 			cooldown = 0;
 		}
+	}
+	public void displayData(){
+		for(Stat stat : stats){
+			Op.add(stat.name + ": " + getStatValue(stat.name));
+		}
+		Op.dp();
 	}
 }

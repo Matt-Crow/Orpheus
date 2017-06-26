@@ -3,7 +3,6 @@ import upgradables.Stat;
 import battle.AttackInstance;
 
 import java.util.ArrayList;
-import java.util.Locale;
 import java.awt.Graphics;
 import java.awt.Color;
 
@@ -45,7 +44,7 @@ public class CharacterClass extends Customizable{
 	}
 	public Stat getStat(String n){
 		for(Stat stat : stats){
-			if(stat.name.toLowerCase(Locale.ENGLISH) == n.toLowerCase(Locale.ENGLISH)){
+			if(stat.name == n){
 				return stat;
 			}
 		}
