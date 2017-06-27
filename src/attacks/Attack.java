@@ -22,6 +22,9 @@ public class Attack {
 		stats.add(new Stat("Distance Scale", distanceScale));
 		stats.add(new Stat("Damage", dmg));
 	}
+	public String getName(){
+		return name;
+	}
 	public Stat getStat(String n){
 		for(Stat stat : stats){
 			if(stat.name == n){
@@ -41,7 +44,7 @@ public class Attack {
 		return user.getEnergy() >= getStat("Energy Cost").get() && !onCooldown();
 	}
 	public void use(Player user){
-		new Projectile(user.getX(), user.getY(), user.getDirNum(), (int) getStatValue("Speed"), user.getTeam(), this);
+		new Projectile(user.getX(), user.getY(), user.getDirNum(), (int) getStatValue("Speed"), user, this);
 		
 		cooldown = (int) getStatValue("Cooldown");
 		displayData();

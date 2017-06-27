@@ -99,7 +99,7 @@ public class Team {
 	public void displayData(){
 		Op.add(name);
 		for(Player m : members){
-			Op.add("* " + m.name);
+			Op.add("* " + m.getName());
 		}
 		Op.dp();
 	}

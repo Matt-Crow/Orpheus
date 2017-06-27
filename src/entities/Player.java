@@ -2,13 +2,15 @@ package entities;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 import battle.Team;
 import customizables.*;
 import attacks.*;
 
 public class Player extends Entity{
-	public String name;
+	private static ArrayList<Player> players = new ArrayList<>();
+	private String name;
 	private int turnCooldown;
 	private Team team;
 	private CharacterClass c;
@@ -23,6 +25,18 @@ public class Player extends Entity{
 		//active1 = new HeavyStroke();
 		active1 = new Fireball();
 		selectedAttack = active1;
+		players.add(this);
+	}
+	public String getName(){
+		return name;
+	}
+	public static Player getPlayerByName(String n){
+		for(Player p : players){
+			if(p.name == n){
+				return p;
+			}
+		}
+		return new Player("ERROR: NO PLAYER BY NAME " + n + " FOUND");
 	}
 	public Team getTeam(){
 		return team;

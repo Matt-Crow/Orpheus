@@ -20,7 +20,9 @@ public class MainCanvas extends JPanel{
 	public static final long serialVersionUID = 1L;
 	JPanel panel = this;
 	Menu classes;
-	Menu actives;
+	Menu active1;
+	Menu active2;
+	Menu active3;
 	Menu passives;
 	CharacterClass chosenClass;
 	
@@ -49,8 +51,8 @@ public class MainCanvas extends JPanel{
 			}
 		});
 		
-		actives = new Menu(a, 200, 0, 100, 100);
-		actives.addActionListener(new AbstractAction(){
+		active1 = new Menu(a, 0, 100, 100, 100);
+		active1.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				repaint();
 			}
@@ -63,7 +65,7 @@ public class MainCanvas extends JPanel{
 			}
 		});
 		classes.addTo(this);
-		actives.addTo(this);
+		active1.addTo(this);
 		passives.addTo(this);
 		
 		EasyButton battle = new EasyButton("Battle", 900, 0, 100, 100, Color.red);
