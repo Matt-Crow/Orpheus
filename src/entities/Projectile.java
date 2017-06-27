@@ -16,6 +16,7 @@ public class Projectile extends Entity{
 	private boolean isSeedProjectile;
 	private boolean shouldTerminate;
 	
+	// this is so ugly right now! ugh!
 	public Projectile(int x, int y, int dirNum, int momentum, Player attacker, Attack a){
 		super(x, y, dirNum, momentum);
 		setMoving(true);
@@ -29,12 +30,13 @@ public class Projectile extends Entity{
 		hit = "None";
 		isSeedProjectile = true;
 	}
-	public Projectile(int x, int y, int dirNum, int momentum, Team attacker, Attack a, Player ChainedFrom){
+	public Projectile(int x, int y, int dirNum, int momentum, Player attacker, Attack a, Player ChainedFrom){
 		super(x, y, dirNum, momentum);
 		setMoving(true);
 		distanceTraveled = 0;
-		firedBy = attacker;
-		attacker.registerAOEProjectile(this);
+		user = attacker;
+		firedBy = attacker.getTeam();
+		attacker.getTeam().registerAOEProjectile(this);
 		registeredAttack = a;
 		shouldTerminate = false;
 		doNotHit = ChainedFrom.getName();
@@ -67,7 +69,7 @@ public class Projectile extends Entity{
 		shouldTerminate = true;
 		if(registeredAttack.getStatValue("AOE") != 0 && isSeedProjectile){
 			for(int d = 0; d <= 7; d++){
-				new Projectile(getX(), getY(), d, 5, firedBy, registeredAttack, Player.getPlayerByName(hit));
+				new Projectile(getX(), getY(), d, 5, user, registeredAttack, Player.getPlayerByName(hit));
 			}
 		}
 		CombatLog.logProjectileData(this);
