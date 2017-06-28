@@ -3,75 +3,59 @@ package entities;
 import java.awt.Graphics;
 
 import attacks.Attack;
-import battle.Team;
 import resources.CombatLog;
 
 public class Projectile extends Entity{
 	private Player user;
 	private Attack registeredAttack;
 	private int distanceTraveled;
-	private Team firedBy;
-	private String doNotHit;
-	private String hit;
-	private boolean isSeedProjectile;
+	private Player doNotHit;
+	private Player hit;
 	private boolean shouldTerminate;
 	
-	// this is so ugly right now! ugh!
-	public Projectile(int x, int y, int dirNum, int momentum, Player attacker, Attack a){
+	public Projectile(int x, int y, int dirNum, int momentum, Player attackUser, Attack a){
 		super(x, y, dirNum, momentum);
 		setMoving(true);
 		distanceTraveled = 0;
-		user = attacker;
-		firedBy = attacker.getTeam();
-		attacker.getTeam().registerProjectile(this);
+		user = attackUser;
 		registeredAttack = a;
 		shouldTerminate = false;
-		doNotHit = "None";
-		hit = "None";
-		isSeedProjectile = true;
-	}
-	public Projectile(int x, int y, int dirNum, int momentum, Player attacker, Attack a, Player ChainedFrom){
-		super(x, y, dirNum, momentum);
-		setMoving(true);
-		distanceTraveled = 0;
-		user = attacker;
-		firedBy = attacker.getTeam();
-		attacker.getTeam().registerAOEProjectile(this);
-		registeredAttack = a;
-		shouldTerminate = false;
-		doNotHit = ChainedFrom.getName();
-		hit = "None";
-		isSeedProjectile = false;
+		doNotHit = new Player("Void");
+		hit = new Player("Void");
 	}
 	public String getAttackName(){
 		return registeredAttack.getName();
 	}
-	public String getUserName(){
-		return user.getName();
+	public Player getUser(){
+		return user;
 	}
 	public Player getHit(){
-		return Player.getPlayerByName(hit);
+		return hit;
+	}
+	public int getDistance(){
+		return distanceTraveled;
+	}
+	public Attack getAttack(){
+		return registeredAttack;
+	}
+	public void avoid(Player p){
+		doNotHit = p;
 	}
 	public boolean checkIfWithin(int leftX, int rightX, int topY, int bottomY){
 		return getX() >= leftX && getX() <= rightX && getY() >= topY && getY() <= bottomY;
 	}
 	public void checkForCollisionsWith(Player p){
 		if(checkIfWithin(p.getX() - 50, p.getX() + 50, p.getY() - 50, p.getY() + 50)){
-			if(p.getName() == doNotHit){
+			if(p == doNotHit){
 				return;
 			}
-			hit = p.getName();
+			hit = p;
 			// add damage calc here
 			terminate();
 		}
 	}
 	public void terminate(){
 		shouldTerminate = true;
-		if(registeredAttack.getStatValue("AOE") != 0 && isSeedProjectile){
-			for(int d = 0; d <= 7; d++){
-				new Projectile(getX(), getY(), d, 5, user, registeredAttack, Player.getPlayerByName(hit));
-			}
-		}
 		CombatLog.logProjectileData(this);
 	}
 	public boolean getShouldTerminate(){
@@ -80,18 +64,9 @@ public class Projectile extends Entity{
 	public void update(){
 		super.update();
 		distanceTraveled += getMomentum();
-		if(isSeedProjectile){
-			if(distanceTraveled >= registeredAttack.getStatValue("Range")){
-				terminate();
-			}
-		} else {
-			if(distanceTraveled >= registeredAttack.getStatValue("AOE")){
-				terminate();
-			}
-		}
 	}
 	public void draw(Graphics g){
-		g.setColor(firedBy.color);
+		g.setColor(user.getTeam().getColor());
 		g.fillOval(getX() - 25, getY() - 25, 50, 50);
 	}
 }

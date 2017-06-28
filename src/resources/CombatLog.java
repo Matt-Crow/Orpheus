@@ -23,7 +23,7 @@ public class CombatLog{
 		add("-------");
 		add("*Projectile:");
 		add("Generated from " + p.getAttackName());
-		add("by " + p.getUserName());
+		add("by " + p.getUser().getName());
 		add("hitting " + p.getHit().getName());
 	}
 	public static void displayLog(){

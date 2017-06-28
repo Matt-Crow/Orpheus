@@ -44,7 +44,7 @@ public class Attack {
 		return user.getEnergy() >= getStat("Energy Cost").get() && !onCooldown();
 	}
 	public void use(Player user){
-		new Projectile(user.getX(), user.getY(), user.getDirNum(), (int) getStatValue("Speed"), user, this);
+		new SeedProjectile(user.getX(), user.getY(), user.getDirNum(), (int) getStatValue("Speed"), user, this);
 		
 		cooldown = (int) getStatValue("Cooldown");
 		displayData();

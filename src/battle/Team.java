@@ -22,7 +22,9 @@ public class Team {
 		members = new ArrayList<>();
 		projectiles = new ArrayList<>();
 	}
-	
+	public Color getColor(){
+		return color;
+	}
 	public void addMember(Player m){
 		members.add(m);
 	}

@@ -23,7 +23,7 @@ public class Player extends Entity{
 		name = n;
 		slash = new Slash();
 		//active1 = new HeavyStroke();
-		active1 = new Fireball();
+		active1 = new FieldsOfFire();
 		selectedAttack = active1;
 		players.add(this);
 	}
