@@ -35,7 +35,7 @@ public class Battle {
 		team1.setEnemy(team2);
 		team2.setEnemy(team1);
 		
-		String c = Run.player.getClassName();
+		String c = Run.player.getCharacterClass().getName();
 		for(Team t : teams){
 			t.setAllClassesToRandom();
 		}

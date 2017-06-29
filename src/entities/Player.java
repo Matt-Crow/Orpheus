@@ -36,8 +36,8 @@ public class Player extends Entity{
 	public Team getTeam(){
 		return team;
 	}
-	public String getClassName(){
-		return c.name;
+	public CharacterClass getCharacterClass(){
+		return c;
 	}
 	public void setClass(String name){
 		switch(name.toLowerCase()){
@@ -57,15 +57,6 @@ public class Player extends Entity{
 		String[] classes = {"fire", "earth", "water", "air"};
 		int randomNum = ThreadLocalRandom.current().nextInt(0, 4);
 		setClass(classes[randomNum]);
-	}
-	public void setActives(String[] names){
-		actives = new ArrayList<>();
-		
-		for(int num = 0; num < 3; num++){
-			actives.add(Attack.getAttackByName(names[num]));
-			Op.add(actives.get(num).getName());
-		}
-		Op.dp();
 	}
 	public void turn(String dir){
 		if(turnCooldown <= 0){
@@ -109,7 +100,7 @@ public class Player extends Entity{
 	public void draw(Graphics g){
 		g.setColor(team.color);
 		g.fillOval(getX() - 50, getY() - 50, 100, 100);
-		g.setColor(c.color);
+		g.setColor(c.getColor());
 		g.fillOval(getX() - 40, getY() - 40, 80, 80);
 		g.setColor(Color.gray);
 	}
