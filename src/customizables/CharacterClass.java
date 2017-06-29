@@ -2,12 +2,13 @@ package customizables;
 import upgradables.Stat;
 import battle.AttackInstance;
 import resources.Op;
-import attacks.Attack;
+import attacks.*;
 
 import java.util.ArrayList;
 import java.awt.Graphics;
 import java.awt.Color;
 
+//ugly
 public class CharacterClass extends Customizable{
 	private ArrayList<Stat> stats;
 	private double damageBacklog;
@@ -24,6 +25,8 @@ public class CharacterClass extends Customizable{
 		stats = new ArrayList<>();
 		attackOptions = new ArrayList<>();
 		actives = new Attack[3];
+		attackOptions.add(new Slash());
+		attackOptions.add(new HeavyStroke());
 	}
 	public void setHPData(int HP, int regen, int wait){
 		stats.add(new Stat("maxHP", 350 + 50 * HP, 2));
@@ -37,7 +40,7 @@ public class CharacterClass extends Customizable{
 		stats.add(new Stat("EPH", eph + 2, 2));
 		stats.add(new Stat("EPHR", ephr + 2, 2));
 	}
-	public void addPossibleActives(Attack a){
+	public void addPossibleActive(Attack a){
 		attackOptions.add(a);
 	}
 	public void calcStats(){
@@ -54,6 +57,15 @@ public class CharacterClass extends Customizable{
 	public int getEnergy(){
 		return energy;
 	}
+	public String[] getAttackNames(){
+		String[] ret = new String[attackOptions.size()];
+		int num = 0;
+		for(Attack a : attackOptions){
+			ret[num] = a.getName();
+			num ++;
+		}
+		return ret;
+	}
 	public ArrayList<Attack> getAttackOption(){
 		return attackOptions;
 	}
@@ -69,8 +81,14 @@ public class CharacterClass extends Customizable{
 	public double getStatValue(String n){
 		return getStat(n).get();
 	}
-	public void setActive(Attack active, int index){
-		actives[index] = active;
+	public void setActive(String name, int index){
+		for(Attack a : attackOptions){
+			if(a.getName() == name){
+				actives[index] = a;
+				return;
+			}
+		}
+		actives[index] = new Slash();
 	}
 	public void displayPopup(int x, int y, Graphics g){
 		g.setColor(Color.white);

@@ -12,7 +12,7 @@ import customizables.*;
 import attacks.*;
 import resources.EasyButton;
 import resources.Menu;
-
+import resources.Op;
 import initializers.Run;
 
 @SuppressWarnings("serial")
@@ -24,8 +24,10 @@ public class MainCanvas extends JPanel{
 	Menu active2;
 	Menu active3;
 	Menu passives;
+	AbstractAction rep;
+	AbstractAction classChosen;
 	CharacterClass chosenClass;
-	Attack[] chosenActives;
+	String[] chosenActiveNames;
 	
 	public MainCanvas(){
 		setLayout(null);
@@ -41,41 +43,34 @@ public class MainCanvas extends JPanel{
 		});
 		b.addTo(this);
 		
-		CharacterClass[] c = {new Earth(), new Fire(), new Water(), new Air()};
-		Attack[] a = {new HeavyStroke(), new Fireball(), new FieldsOfFire()};
+		chosenClass = new Earth();
+		String[] c = {"Earth", "Fire", "Water", "Air"};
+		String[] a = chosenClass.getAttackNames();
 		String[] p = {"?", "??", "???"};
 		
-		classes = new Menu(c, 100, 0, 100, 100);
-		classes.addActionListener(new AbstractAction(){
+		rep = new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				repaint();
 			}
-		});
+		};
+		classChosen = new AbstractAction(){
+			public void actionPerformed(ActionEvent e){
+				updateFields();
+			}
+		};
 		
+		classes = new Menu(c, 100, 0, 100, 100);
+		classes.addActionListener(classChosen);
+		classes.addActionListener(rep);
 		active1 = new Menu(a, 100, 100, 100, 100);
-		active1.addActionListener(new AbstractAction(){
-			public void actionPerformed(ActionEvent e){
-				repaint();
-			}
-		});
+		active1.addActionListener(rep);
 		active2 = new Menu(a, 200, 100, 100, 100);
-		active2.addActionListener(new AbstractAction(){
-			public void actionPerformed(ActionEvent e){
-				repaint();
-			}
-		});
+		active2.addActionListener(rep);
 		active3 = new Menu(a, 300, 100, 100, 100);
-		active3.addActionListener(new AbstractAction(){
-			public void actionPerformed(ActionEvent e){
-				repaint();
-			}
-		});
+		active3.addActionListener(rep);
 		passives = new Menu(p, 0, 200, 100, 100);
-		passives.addActionListener(new AbstractAction(){
-			public void actionPerformed(ActionEvent e){
-				repaint();
-			}
-		});
+		passives.addActionListener(rep);
+		
 		classes.addTo(this);
 		active1.addTo(this);
 		active2.addTo(this);
@@ -86,9 +81,9 @@ public class MainCanvas extends JPanel{
 		battle.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				Run.player.setClass(chosenClass.getName());
-				Run.player.getCharacterClass().setActive(chosenActives[0], 0);
-				Run.player.getCharacterClass().setActive(chosenActives[1], 1);
-				Run.player.getCharacterClass().setActive(chosenActives[2], 2);
+				Run.player.getCharacterClass().setActive(chosenActiveNames[0], 0);
+				Run.player.getCharacterClass().setActive(chosenActiveNames[1], 1);
+				Run.player.getCharacterClass().setActive(chosenActiveNames[2], 2);
 				new BattleWindow(600, 600);
 				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel);
 				frame.dispose();
@@ -96,7 +91,7 @@ public class MainCanvas extends JPanel{
 		});
 		battle.addTo(this);
 		
-		chosenActives = new Attack[3];
+		chosenActiveNames = new String[3];
 	}
 	public CharacterClass findClass(String name){
 		switch(name){
@@ -111,13 +106,16 @@ public class MainCanvas extends JPanel{
 		}
 		return new Earth();
 	}
+	public void updateFields(){
+		//a = chosenClass.getAttackNames();
+	}
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		
 		chosenClass = findClass(classes.getSelectedItem().toString());
 		chosenClass.displayPopup(100, 100, g);
-		chosenActives[0] = (Attack) active1.getSelectedItem();
-		chosenActives[1] = (Attack) active2.getSelectedItem();
-		chosenActives[2] = (Attack) active3.getSelectedItem();
+		chosenActiveNames[0] = active1.getSelectedItem().toString();
+		chosenActiveNames[1] = active2.getSelectedItem().toString();
+		chosenActiveNames[2] = active3.getSelectedItem().toString();
 	}
 }
