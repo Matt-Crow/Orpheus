@@ -6,6 +6,7 @@ import upgradables.Stat;
 import resources.Op;
 
 public class Attack {
+	private static ArrayList<Attack> attackList = new ArrayList<>();
 	private String name;
 	private ArrayList<Stat> stats;
 	private int cooldown;
@@ -21,6 +22,16 @@ public class Attack {
 		stats.add(new Stat("Area Scale", areaScale));
 		stats.add(new Stat("Distance Scale", distanceScale));
 		stats.add(new Stat("Damage", dmg));
+		
+		attackList.add(this);
+	}
+	public static Attack getAttackByName(String name){
+		for(Attack a : attackList){
+			if(a.getName() == name){
+				return a;
+			}
+		}
+		return new Slash();
 	}
 	public String getName(){
 		return name;

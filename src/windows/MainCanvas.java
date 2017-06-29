@@ -9,7 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.AbstractAction;
 
 import customizables.*;
-
+import attacks.Attack;
 import resources.EasyButton;
 import resources.Menu;
 
@@ -25,6 +25,7 @@ public class MainCanvas extends JPanel{
 	Menu active3;
 	Menu passives;
 	CharacterClass chosenClass;
+	String[] chosenActives;
 	
 	public MainCanvas(){
 		setLayout(null);
@@ -41,7 +42,7 @@ public class MainCanvas extends JPanel{
 		b.addTo(this);
 		
 		String[] c = {"Earth", "Fire", "Water", "Air"};
-		String[] a = {"?", "??", "???"};
+		String[] a = {"Heavy Stroke", "Fireball", "Fields of Fire"};
 		String[] p = {"?", "??", "???"};
 		
 		classes = new Menu(c, 100, 0, 100, 100);
@@ -57,7 +58,18 @@ public class MainCanvas extends JPanel{
 				repaint();
 			}
 		});
-		
+		active2 = new Menu(a, 0, 200, 100, 100);
+		active2.addActionListener(new AbstractAction(){
+			public void actionPerformed(ActionEvent e){
+				repaint();
+			}
+		});
+		active3 = new Menu(a, 0, 300, 100, 100);
+		active3.addActionListener(new AbstractAction(){
+			public void actionPerformed(ActionEvent e){
+				repaint();
+			}
+		});
 		passives = new Menu(p, 300, 0, 100, 100);
 		passives.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
@@ -66,18 +78,23 @@ public class MainCanvas extends JPanel{
 		});
 		classes.addTo(this);
 		active1.addTo(this);
+		active2.addTo(this);
+		active3.addTo(this);
 		passives.addTo(this);
 		
 		EasyButton battle = new EasyButton("Battle", 900, 0, 100, 100, Color.red);
 		battle.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				Run.player.setClass(chosenClass.name);
+				Run.player.setActives(chosenActives);
 				new BattleWindow(600, 600);
 				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel);
 				frame.dispose();
 			}
 		});
 		battle.addTo(this);
+		
+		chosenActives = new String[3];
 	}
 	public CharacterClass findClass(String name){
 		switch(name){
@@ -97,5 +114,8 @@ public class MainCanvas extends JPanel{
 		
 		chosenClass = findClass(classes.getSelectedItem().toString());
 		chosenClass.displayPopup(100, 100, g);
+		chosenActives[0] = active1.getSelectedItem().toString();
+		chosenActives[1] = active2.getSelectedItem().toString();
+		chosenActives[2] = active3.getSelectedItem().toString();
 	}
 }

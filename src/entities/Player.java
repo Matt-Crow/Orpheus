@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 import battle.Team;
 import customizables.*;
+import resources.Op;
 import attacks.*;
 
 public class Player extends Entity{
@@ -15,28 +16,22 @@ public class Player extends Entity{
 	private Team team;
 	private CharacterClass c;
 	private Slash slash;
-	private Attack active1;
-	private Attack selectedAttack;
+	private ArrayList<Attack> actives;
+	private int selectedAttack;
 	
 	public Player(String n){
 		super(0, 0, 0, 10);
 		name = n;
 		slash = new Slash();
-		//active1 = new HeavyStroke();
-		active1 = new FieldsOfFire();
-		selectedAttack = active1;
+		actives = new ArrayList<>();
+		actives.add(new Slash());
+		actives.add(new Slash());
+		actives.add(new Slash());
+		selectedAttack = 0;
 		players.add(this);
 	}
 	public String getName(){
 		return name;
-	}
-	public static Player getPlayerByName(String n){
-		for(Player p : players){
-			if(p.name == n){
-				return p;
-			}
-		}
-		return new Player("ERROR: NO PLAYER BY NAME " + n + " FOUND");
 	}
 	public Team getTeam(){
 		return team;
@@ -63,6 +58,15 @@ public class Player extends Entity{
 		int randomNum = ThreadLocalRandom.current().nextInt(0, 4);
 		setClass(classes[randomNum]);
 	}
+	public void setActives(String[] names){
+		actives = new ArrayList<>();
+		
+		for(int num = 0; num < 3; num++){
+			actives.add(Attack.getAttackByName(names[num]));
+			Op.add(actives.get(num).getName());
+		}
+		Op.dp();
+	}
 	public void turn(String dir){
 		if(turnCooldown <= 0){
 			super.turn(dir);
@@ -78,8 +82,8 @@ public class Player extends Entity{
 		}
 	}
 	public void useSelectedAttack(){
-		if(selectedAttack.canUse(this)){
-			selectedAttack.use(this);
+		if(actives.get(selectedAttack).canUse(this)){
+			actives.get(selectedAttack).use(this);
 		}
 	}
 	public void init(Team t, int x, int y, int dirNum){
@@ -88,7 +92,9 @@ public class Player extends Entity{
 		team = t;
 		turnCooldown = 0;
 		slash.init();
-		active1.init();
+		for(Attack a : actives){
+			a.init();
+		}
 		c.initForBattle();
 		
 	}
@@ -96,7 +102,9 @@ public class Player extends Entity{
 		super.update();
 		turnCooldown -= 1;
 		slash.update();
-		active1.update();
+		for(Attack a : actives){
+			a.update();
+		}
 	}
 	public void draw(Graphics g){
 		g.setColor(team.color);
