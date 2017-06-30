@@ -13,6 +13,7 @@ import battle.Battle;
 import battle.Battlefield;
 import entities.Player;
 import resources.KeyRegister;
+import resources.Op;
 
 public class BattleCanvas extends JPanel{
 	public static final long serialVersionUID = 1L;
@@ -25,6 +26,7 @@ public class BattleCanvas extends JPanel{
 	private Player p;
 	private ActionListener update;
 	
+	// it fails here
 	public BattleCanvas(int windowWidth, int windowHeight){
 		w = windowWidth;
 		h = windowHeight;
@@ -39,7 +41,8 @@ public class BattleCanvas extends JPanel{
 		hostedBattle.setHost(battlefield);
 		hostedBattle.init();
 		p = hostedBattle.getPlayer();
-		
+		Op.add("In battlecanvas");
+		p.getCharacterClass().listActiveNames();
 		update = new ActionListener() {
 		      public void actionPerformed(ActionEvent e) {
 		          hostedBattle.update();
@@ -56,6 +59,9 @@ public class BattleCanvas extends JPanel{
 		new KeyRegister(this, "d", true, new turnRightAction());
 		new KeyRegister(this, "q", true, new meleeAction());
 		new KeyRegister(this, "e", true, new useAction());
+		new KeyRegister(this, "z", true, new firstActive());
+		new KeyRegister(this, "x", true, new secondActive());
+		new KeyRegister(this, "c", true, new thirdActive());
 	}
 	
 	public class moveAction extends AbstractAction{
@@ -92,6 +98,24 @@ public class BattleCanvas extends JPanel{
 		static final long serialVersionUID = 1L;
 		public void actionPerformed(ActionEvent e){
 			p.useSelectedAttack();
+		}
+	}
+	public class firstActive extends AbstractAction{
+		static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			p.changeSelectedAttack(0);
+		}
+	}
+	public class secondActive extends AbstractAction{
+		static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			p.changeSelectedAttack(1);
+		}
+	}
+	public class thirdActive extends AbstractAction{
+		static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			p.changeSelectedAttack(2);
 		}
 	}
 	

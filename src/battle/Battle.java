@@ -35,6 +35,7 @@ public class Battle {
 		team1.setEnemy(team2);
 		team2.setEnemy(team1);
 		
+		// this is causing the problem
 		String c = Run.player.getCharacterClass().getName();
 		for(Team t : teams){
 			t.setAllClassesToRandom();

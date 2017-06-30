@@ -16,17 +16,12 @@ public class Player extends Entity{
 	private Team team;
 	private CharacterClass c;
 	private Slash slash;
-	private ArrayList<Attack> actives;
 	private int selectedAttack;
 	
 	public Player(String n){
 		super(0, 0, 0, 10);
 		name = n;
 		slash = new Slash();
-		actives = new ArrayList<>();
-		actives.add(new Slash());
-		actives.add(new Slash());
-		actives.add(new Slash());
 		selectedAttack = 0;
 		players.add(this);
 	}
@@ -72,9 +67,15 @@ public class Player extends Entity{
 			slash.use(this);
 		}
 	}
+	public void changeSelectedAttack(int index){
+		selectedAttack = index;
+	}
 	public void useSelectedAttack(){
-		if(actives.get(selectedAttack).canUse(this)){
-			actives.get(selectedAttack).use(this);
+		Op.add("In player.useselectedattack, c.getactiveselectedattack is");
+		Op.add(c.getActive(selectedAttack).getName());
+		Op.dp();
+		if(c.getActive(selectedAttack).canUse(this)){
+			c.getActive(selectedAttack).use(this);
 		}
 	}
 	public void init(Team t, int x, int y, int dirNum){
@@ -83,19 +84,13 @@ public class Player extends Entity{
 		team = t;
 		turnCooldown = 0;
 		slash.init();
-		for(Attack a : actives){
-			a.init();
-		}
 		c.initForBattle();
-		
 	}
 	public void update(){
 		super.update();
 		turnCooldown -= 1;
 		slash.update();
-		for(Attack a : actives){
-			a.update();
-		}
+		c.update();
 	}
 	public void draw(Graphics g){
 		g.setColor(team.color);

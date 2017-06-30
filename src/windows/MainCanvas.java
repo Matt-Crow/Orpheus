@@ -78,6 +78,7 @@ public class MainCanvas extends JPanel{
 		passives.addTo(this);
 		
 		EasyButton battle = new EasyButton("Battle", 900, 0, 100, 100, Color.red);
+		// works
 		battle.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				Run.player.setClass(chosenClass.getName());

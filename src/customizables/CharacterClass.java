@@ -27,6 +27,9 @@ public class CharacterClass extends Customizable{
 		actives = new Attack[3];
 		attackOptions.add(new Slash());
 		attackOptions.add(new HeavyStroke());
+		actives[0] = new Slash();
+		actives[1] = new Slash();
+		actives[2] = new Slash();
 	}
 	public void setHPData(int HP, int regen, int wait){
 		stats.add(new Stat("maxHP", 350 + 50 * HP, 2));
@@ -57,6 +60,12 @@ public class CharacterClass extends Customizable{
 	public int getEnergy(){
 		return energy;
 	}
+	public Attack getActive(int index){
+		Op.add("In getactive, active name is");
+		Op.add(actives[index].getName());
+		Op.dp();
+		return actives[index];
+	}
 	public String[] getAttackNames(){
 		String[] ret = new String[attackOptions.size()];
 		int num = 0;
@@ -77,10 +86,10 @@ public class CharacterClass extends Customizable{
 		}
 		return new Stat("STATNOTFOUND", 0);
 	}
-	
 	public double getStatValue(String n){
 		return getStat(n).get();
 	}
+	// this works
 	public void setActive(String name, int index){
 		for(Attack a : attackOptions){
 			if(a.getName() == name){
@@ -102,23 +111,24 @@ public class CharacterClass extends Customizable{
 			statY += 20;
 		}
 	}
-	
 	public void displayStatData(){
 		for(Stat stat: stats){
 			stat.displayData();
 		}
 	}
-	
 	public void initForBattle(){
 		calcStats();
 		remHP = (int) getStatValue("maxHP");
 		energy = (int) getStatValue("Max energy");
+		for(Attack a : actives){
+			a.init();
+			Op.add(a.getName() + " in characterclass.initforbattle");
+		}
+		Op.dp();
 	}
-	
 	public void logDamage(AttackInstance attack){
 		damageBacklog += attack.calcDamage();
 	}
-	
 	public void depleteBacklog(){
 		double damage;
 		if(damageBacklog > getStatValue("maxHP")){
@@ -128,5 +138,18 @@ public class CharacterClass extends Customizable{
 		}
 		remHP -= damage;
 		damageBacklog -= damage;
+	}
+	public void update(){
+		for(Attack a : actives){
+			a.update();
+		}
+	}
+
+	
+	public void listActiveNames(){
+		for(Attack a : actives){
+			Op.add(a.getName());
+		}
+		Op.dp();
 	}
 }
