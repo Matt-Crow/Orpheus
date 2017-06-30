@@ -1,46 +1,18 @@
 package battle;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
 import entities.*;
-import initializers.Run;
 
 public class Battle {
 	ArrayList<Team> teams;
 	private Battlefield host;
 	
-	public Battle(){
+	public Battle(Team team1, Team team2){
 		teams = new ArrayList<>();
-		
-		Team team1 = new Team("Team 1", Color.red);
-		Team team2 = new Team("Team 2", Color.green);
-		
-		team1.addMember(Run.player);
-		team1.addMember(new Player("Nick"));
-		team1.addMember(new Player("Paul"));
-		team1.addMember(new Player("Gianna"));
-		team1.addMember(new Player("David"));
-		
-		team2.addMember(new Player("Grunt #1"));
-		team2.addMember(new Player("Grunt #2"));
-		team2.addMember(new Player("Grunt #3"));
-		team2.addMember(new Player("Grunt #4"));
-		team2.addMember(new Player("Grunt #5"));
-		
 		teams.add(team1);
 		teams.add(team2);
-		
-		team1.setEnemy(team2);
-		team2.setEnemy(team1);
-		
-		// this is causing the problem
-		String c = Run.player.getCharacterClass().getName();
-		for(Team t : teams){
-			t.setAllClassesToRandom();
-		}
-		Run.player.setClass(c);
 	}
 	public void setHost(Battlefield b){
 		host = b;

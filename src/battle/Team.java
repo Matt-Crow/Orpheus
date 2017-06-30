@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import entities.Player;
 import entities.Projectile;
 import resources.Op;
+import customizables.Build;
 
 public class Team {
 	public String name;
@@ -29,12 +30,11 @@ public class Team {
 		members.add(m);
 	}
 	
-	public void setAllClassesToRandom(){
-		for(Player m : members){
-			m.setClass("random");
+	public void applyBuilds(Build[] b){
+		for(int i = 0; i < members.size(); i++){
+			members.get(i).applyBuild(b[i]);;
 		}
 	}
-	
 	public void init(int y, int spacing, int facing){
 		int x = spacing;
 		for(Player m : members){

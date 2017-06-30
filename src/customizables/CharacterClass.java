@@ -90,14 +90,14 @@ public class CharacterClass extends Customizable{
 		return getStat(n).get();
 	}
 	// this works
-	public void setActive(String name, int index){
-		for(Attack a : attackOptions){
-			if(a.getName() == name){
-				actives[index] = a;
-				return;
+	public void setActives(String[] names){
+		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
+			for(Attack a : attackOptions){
+				if(a.getName() == names[nameIndex]){
+					actives[nameIndex] = a;
+				}
 			}
 		}
-		actives[index] = new Slash();
 	}
 	public void displayPopup(int x, int y, Graphics g){
 		g.setColor(Color.white);

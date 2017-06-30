@@ -17,4 +17,7 @@ public class BattleWindow extends JFrame{
 		setContentPane(draw);
 		setVisible(true);
 	}
+	public BattleCanvas getCanvas(){
+		return draw;
+	}
 }

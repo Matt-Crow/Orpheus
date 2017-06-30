@@ -9,8 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.AbstractAction;
 import javax.swing.Timer;
 
-import battle.Battle;
-import battle.Battlefield;
+import battle.*;
 import entities.Player;
 import resources.KeyRegister;
 import resources.Op;
@@ -34,15 +33,6 @@ public class BattleCanvas extends JPanel{
 		setBackground(Color.black);
 		setFocusable(true);
 		FPS = 20;
-		
-		hostedBattle = new Battle();
-		battlefield = new Battlefield();
-		
-		hostedBattle.setHost(battlefield);
-		hostedBattle.init();
-		p = hostedBattle.getPlayer();
-		Op.add("In battlecanvas");
-		p.getCharacterClass().listActiveNames();
 		update = new ActionListener() {
 		      public void actionPerformed(ActionEvent e) {
 		          hostedBattle.update();
@@ -50,6 +40,14 @@ public class BattleCanvas extends JPanel{
 		      }
 		};
 		addKeyRegistration();
+	}
+	public void setBattle(Team team1, Team team2){
+		hostedBattle = new Battle(team1, team2);
+		battlefield = new Battlefield();
+		
+		hostedBattle.setHost(battlefield);
+		hostedBattle.init();
+		p = hostedBattle.getPlayer();
 	}
 	
 	public void addKeyRegistration(){

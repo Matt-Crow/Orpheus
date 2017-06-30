@@ -34,6 +34,10 @@ public class Player extends Entity{
 	public CharacterClass getCharacterClass(){
 		return c;
 	}
+	public void applyBuild(Build b){
+		setClass(b.getClassName());
+		c.setActives(b.getActiveNames());
+	}
 	public void setClass(String name){
 		switch(name.toLowerCase()){
 			case "fire":
