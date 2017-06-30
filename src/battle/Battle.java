@@ -26,7 +26,6 @@ public class Battle {
 		teams.get(0).init(spacingFromTopEdge, spacingBetween, 4);
 		teams.get(1).init(h - spacingFromTopEdge * 2, spacingBetween, 0);
 	}
-
 	public void update(){
 		for(Team t : teams){
 			t.update();
@@ -37,7 +36,6 @@ public class Battle {
 			t.draw(g);
 		}
 	}
-	
 	public Player getPlayer(){
 		return teams.get(0).getMember(0);
 	}

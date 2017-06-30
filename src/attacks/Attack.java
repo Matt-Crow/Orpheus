@@ -10,6 +10,7 @@ public class Attack {
 	private String name;
 	private ArrayList<Stat> stats;
 	private int cooldown;
+	private Projectile registeredProjectile;
 	
 	public Attack(String n, int energyCost, int cooldown, int range, int speed, int aoe, int areaScale, int distanceScale, int dmg){
 		name = n;
@@ -48,6 +49,9 @@ public class Attack {
 	public double getStatValue(String n){
 		return getStat(n).get();
 	}
+	public Projectile getRegisteredProjectile(){
+		return registeredProjectile;
+	}
 	public boolean onCooldown(){
 		return cooldown > 0;
 	}
@@ -55,7 +59,7 @@ public class Attack {
 		return user.getEnergy() >= getStat("Energy Cost").get() && !onCooldown();
 	}
 	public void use(Player user){
-		new SeedProjectile(user.getX(), user.getY(), user.getDirNum(), (int) getStatValue("Speed"), user, this);
+		registeredProjectile = new SeedProjectile(user.getX(), user.getY(), user.getDirNum(), (int) getStatValue("Speed"), user, this);
 		
 		cooldown = (int) getStatValue("Cooldown");
 		displayData();
