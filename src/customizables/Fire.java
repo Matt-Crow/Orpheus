@@ -10,5 +10,6 @@ public class Fire extends CharacterClass{
 		setEnergyData(4, 3, 3, 5, 3);
 		addPossibleActive(new Fireball());
 		addPossibleActive(new FieldsOfFire());
+		addPossibleActive(new Flamethrower());
 	}
 }

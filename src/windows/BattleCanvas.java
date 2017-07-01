@@ -25,7 +25,6 @@ public class BattleCanvas extends JPanel{
 	private Player p;
 	private ActionListener update;
 	
-	// it fails here
 	public BattleCanvas(int windowWidth, int windowHeight){
 		w = windowWidth;
 		h = windowHeight;

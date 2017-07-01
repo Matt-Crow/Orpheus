@@ -4,24 +4,32 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
+
+import battle.AttackInstance;
 import battle.Team;
 import customizables.*;
 import resources.Op;
 import attacks.*;
 
+// this is going to be very big
 public class Player extends Entity{
 	private static ArrayList<Player> players = new ArrayList<>();
 	private String name;
 	private int turnCooldown;
 	private Team team;
 	private CharacterClass c;
+	private int remHP;
+	private int energy;
+	private double damageBacklog;
 	private Slash slash;
 	private int selectedAttack;
+	private Attack[] actives;
 	
 	public Player(String n){
 		super(0, 0, 0, 10);
 		name = n;
 		slash = new Slash();
+		actives = new Attack[3];
 		selectedAttack = 0;
 		players.add(this);
 	}
@@ -31,12 +39,15 @@ public class Player extends Entity{
 	public Team getTeam(){
 		return team;
 	}
+	public Attack getActive(int index){
+		return actives[index];
+	}
 	public CharacterClass getCharacterClass(){
 		return c;
 	}
 	public void applyBuild(Build b){
 		setClass(b.getClassName());
-		c.setActives(b.getActiveNames());
+		setActives(b.getActiveNames());
 	}
 	public void setClass(String name){
 		switch(name.toLowerCase()){
@@ -57,6 +68,24 @@ public class Player extends Entity{
 		int randomNum = ThreadLocalRandom.current().nextInt(0, 4);
 		setClass(classes[randomNum]);
 	}
+	public void setActives(String[] names){
+		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
+			boolean found = false;
+			for(Attack a : c.getAttackOption()){
+				if(a.getName() == names[nameIndex]){
+					actives[nameIndex] = a;
+					found = true;
+					break;
+				}
+			}
+			if(!found){
+				actives[nameIndex] = new Slash();
+				Op.add("The active by the name of " + names[nameIndex]);
+				Op.add("is not found for the characterClass " + c.getName());
+				Op.dp();
+			}
+		}
+	}
 	public void turn(String dir){
 		if(turnCooldown <= 0){
 			super.turn(dir);
@@ -64,7 +93,10 @@ public class Player extends Entity{
 		turnCooldown = 10;
 	}
 	public int getEnergy(){
-		return c.getEnergy();
+		return energy;
+	}
+	public double getStatValue(String n){
+		return c.getStatValue(n);
 	}
 	public void useMeleeAttack(){
 		if(slash.canUse(this)){
@@ -75,12 +107,22 @@ public class Player extends Entity{
 		selectedAttack = index;
 	}
 	public void useSelectedAttack(){
-		Op.add("In player.useselectedattack, c.getactiveselectedattack is");
-		Op.add(c.getActive(selectedAttack).getName());
-		Op.dp();
-		if(c.getActive(selectedAttack).canUse(this)){
-			c.getActive(selectedAttack).use(this);
+		if(getActive(selectedAttack).canUse(this)){
+			getActive(selectedAttack).use(this);
 		}
+	}
+	public void logDamage(AttackInstance attack){
+		damageBacklog += attack.calcDamage();
+	}
+	public void depleteBacklog(){
+		double damage;
+		if(damageBacklog > getStatValue("maxHP")){
+			damage = getStatValue("maxHP") / 100;
+		} else {
+			damage = damageBacklog;
+		}
+		remHP -= damage;
+		damageBacklog -= damage;
 	}
 	public void init(Team t, int x, int y, int dirNum){
 		super.setCoords(x, y);
@@ -88,13 +130,20 @@ public class Player extends Entity{
 		team = t;
 		turnCooldown = 0;
 		slash.init();
-		c.initForBattle();
+		c.calcStats();
+		remHP = (int) getStatValue("maxHP");
+		energy = (int) getStatValue("Max energy");
+		for(Attack a : actives){
+			a.init();
+		}
 	}
 	public void update(){
 		super.update();
 		turnCooldown -= 1;
 		slash.update();
-		c.update();
+		for(Attack a : actives){
+			a.update();
+		}
 	}
 	public void draw(Graphics g){
 		g.setColor(team.color);

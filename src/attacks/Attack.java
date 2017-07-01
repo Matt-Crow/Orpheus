@@ -44,6 +44,7 @@ public class Attack {
 			}
 		}
 		Op.add("The stat by the name of " + n + " is not found for Attack " + name);
+		Op.dp();
 		return new Stat("STATNOTFOUND", 0);
 	}
 	public double getStatValue(String n){
@@ -62,7 +63,7 @@ public class Attack {
 		registeredProjectile = new SeedProjectile(user.getX(), user.getY(), user.getDirNum(), (int) getStatValue("Speed"), user, this);
 		
 		cooldown = (int) getStatValue("Cooldown");
-		displayData();
+		//displayData();
 	}
 	public void init(){
 		cooldown = 0;

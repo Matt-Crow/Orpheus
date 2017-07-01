@@ -1,35 +1,25 @@
 package customizables;
 import upgradables.Stat;
-import battle.AttackInstance;
-import resources.Op;
 import attacks.*;
 
 import java.util.ArrayList;
 import java.awt.Graphics;
 import java.awt.Color;
 
-//ugly
 public class CharacterClass extends Customizable{
 	private ArrayList<Stat> stats;
-	private double damageBacklog;
-	private int remHP;
-	private int energy;
 	private String name;
 	private Color color;
 	private ArrayList<Attack> attackOptions;
-	private Attack[] actives;
 	
+	// initializers
 	public CharacterClass(String n, Color c){
 		name = n;
 		color = c;
 		stats = new ArrayList<>();
 		attackOptions = new ArrayList<>();
-		actives = new Attack[3];
 		attackOptions.add(new Slash());
 		attackOptions.add(new HeavyStroke());
-		actives[0] = new Slash();
-		actives[1] = new Slash();
-		actives[2] = new Slash();
 	}
 	public void setHPData(int HP, int regen, int wait){
 		stats.add(new Stat("maxHP", 350 + 50 * HP, 2));
@@ -43,37 +33,12 @@ public class CharacterClass extends Customizable{
 		stats.add(new Stat("EPH", eph + 2, 2));
 		stats.add(new Stat("EPHR", ephr + 2, 2));
 	}
-	public void addPossibleActive(Attack a){
-		attackOptions.add(a);
-	}
-	public void calcStats(){
-		for(Stat stat : stats){
-			stat.calc();
-		}
-	}
+	// getters
 	public String getName(){
 		return name;
 	}
 	public Color getColor(){
 		return color;
-	}
-	public int getEnergy(){
-		return energy;
-	}
-	public Attack getActive(int index){
-		Op.add("In getactive, active name is");
-		Op.add(actives[index].getName());
-		Op.dp();
-		return actives[index];
-	}
-	public String[] getAttackNames(){
-		String[] ret = new String[attackOptions.size()];
-		int num = 0;
-		for(Attack a : attackOptions){
-			ret[num] = a.getName();
-			num ++;
-		}
-		return ret;
 	}
 	public ArrayList<Attack> getAttackOption(){
 		return attackOptions;
@@ -89,14 +54,14 @@ public class CharacterClass extends Customizable{
 	public double getStatValue(String n){
 		return getStat(n).get();
 	}
-	// this works
-	public void setActives(String[] names){
-		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
-			for(Attack a : attackOptions){
-				if(a.getName() == names[nameIndex]){
-					actives[nameIndex] = a;
-				}
-			}
+	// setters
+	public void addPossibleActive(Attack a){
+		attackOptions.add(a);
+	}
+	//other
+	public void calcStats(){
+		for(Stat stat : stats){
+			stat.calc();
 		}
 	}
 	public void displayPopup(int x, int y, Graphics g){
@@ -110,46 +75,5 @@ public class CharacterClass extends Customizable{
 			g.drawString(stat.name + ": " + stat.get(), x, statY);
 			statY += 20;
 		}
-	}
-	public void displayStatData(){
-		for(Stat stat: stats){
-			stat.displayData();
-		}
-	}
-	public void initForBattle(){
-		calcStats();
-		remHP = (int) getStatValue("maxHP");
-		energy = (int) getStatValue("Max energy");
-		for(Attack a : actives){
-			a.init();
-			Op.add(a.getName() + " in characterclass.initforbattle");
-		}
-		Op.dp();
-	}
-	public void logDamage(AttackInstance attack){
-		damageBacklog += attack.calcDamage();
-	}
-	public void depleteBacklog(){
-		double damage;
-		if(damageBacklog > getStatValue("maxHP")){
-			damage = getStatValue("maxHP") / 100;
-		} else {
-			damage = damageBacklog;
-		}
-		remHP -= damage;
-		damageBacklog -= damage;
-	}
-	public void update(){
-		for(Attack a : actives){
-			a.update();
-		}
-	}
-
-	
-	public void listActiveNames(){
-		for(Attack a : actives){
-			Op.add(a.getName());
-		}
-		Op.dp();
 	}
 }
