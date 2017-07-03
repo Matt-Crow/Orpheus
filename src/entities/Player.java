@@ -10,6 +10,7 @@ import battle.Team;
 import customizables.*;
 import resources.Op;
 import attacks.*;
+import statuses.Status;
 
 // this is going to be very big
 public class Player extends Entity{
@@ -24,12 +25,14 @@ public class Player extends Entity{
 	private Slash slash;
 	private int selectedAttack;
 	private Attack[] actives;
+	private ArrayList<Status> statuses;
 	
 	public Player(String n){
 		super(0, 0, 0, 10);
 		name = n;
 		slash = new Slash();
 		actives = new Attack[3];
+		statuses = new ArrayList<>();
 		selectedAttack = 0;
 		players.add(this);
 	}
@@ -85,6 +88,12 @@ public class Player extends Entity{
 				Op.dp();
 			}
 		}
+	}
+	public void inflict(Status s){
+		statuses.add(s);
+		Op.add("Inflicted " + name);
+		Op.add("with " + s.getName());
+		Op.dp();
 	}
 	public void turn(String dir){
 		if(turnCooldown <= 0){

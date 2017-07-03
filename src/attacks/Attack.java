@@ -61,7 +61,9 @@ public class Attack {
 	}
 	public void use(Player user){
 		registeredProjectile = new SeedProjectile(user.getX(), user.getY(), user.getDirNum(), (int) getStatValue("Speed"), user, this);
-		
+		if(registeredProjectile.getAttack().getStatValue("Range") == 0){
+			registeredProjectile.terminate();
+		}
 		cooldown = (int) getStatValue("Cooldown");
 		//displayData();
 	}

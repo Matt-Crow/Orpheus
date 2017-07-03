@@ -20,6 +20,7 @@ public class CharacterClass extends Customizable{
 		attackOptions = new ArrayList<>();
 		attackOptions.add(new Slash());
 		attackOptions.add(new HeavyStroke());
+		attackOptions.add(new WarriorsStance());
 	}
 	public void setHPData(int HP, int regen, int wait){
 		stats.add(new Stat("maxHP", 350 + 50 * HP, 2));

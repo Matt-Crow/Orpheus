@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Build {
 	private static ArrayList<Build> builds = new ArrayList<>();
-	private static Build defaultEarth = new Build("Default Earth", "Earth", "Rupture", "", "");
+	private static Build defaultEarth = new Build("Default Earth", "Earth", "Rupture", "Warrior's Stance", "");
 	private static Build defaultFire = new Build("Default Fire", "Fire", "Fireball", "Fields of Fire", "Flamethrower");
 	private static Build defaultWater = new Build("Default Water", "Water", "", "", "");
 	private static Build defaultAir = new Build("Default Air", "Air", "", "", "");
