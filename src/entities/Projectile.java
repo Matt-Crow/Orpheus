@@ -12,6 +12,7 @@ public class Projectile extends Entity{
 	private Player doNotHit;
 	private Player hit;
 	private boolean shouldTerminate;
+	private boolean terminated;
 	
 	public Projectile(int x, int y, int dirNum, int momentum, Player attackUser, Attack a){
 		super(x, y, dirNum, momentum);
@@ -20,6 +21,7 @@ public class Projectile extends Entity{
 		user = attackUser;
 		registeredAttack = a;
 		shouldTerminate = false;
+		terminated = false;
 		doNotHit = new Player("Void");
 		hit = new Player("Void");
 	}
@@ -37,6 +39,12 @@ public class Projectile extends Entity{
 	}
 	public Attack getAttack(){
 		return registeredAttack;
+	}
+	public boolean getShouldTerminate(){
+		return shouldTerminate;
+	}
+	public boolean hasAlreadyTerminated(){
+		return terminated;
 	}
 	public void avoid(Player p){
 		doNotHit = p;
@@ -56,10 +64,8 @@ public class Projectile extends Entity{
 	}
 	public void terminate(){
 		shouldTerminate = true;
+		terminated = true;
 		CombatLog.logProjectileData(this);
-	}
-	public boolean getShouldTerminate(){
-		return shouldTerminate;
 	}
 	public void update(){
 		super.update();

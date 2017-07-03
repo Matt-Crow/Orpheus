@@ -17,7 +17,7 @@ public class SeedProjectile extends Projectile{
 	}
 	public void update(){
 		super.update();
-		if(getDistance() >= getAttack().getStatValue("Range")){
+		if(getDistance() >= getAttack().getStatValue("Range") && !hasAlreadyTerminated()){
 			terminate();
 		}
 	}
