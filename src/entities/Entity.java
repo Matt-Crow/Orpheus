@@ -1,5 +1,10 @@
 package entities;
 
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
+import java.util.ArrayList;
+
 import resources.Direction;
 
 public class Entity {
@@ -9,12 +14,17 @@ public class Entity {
 	private int momentum;
 	private boolean moving;
 	
+	private ArrayList<AbstractAction> onHitRegister;
+	private ArrayList<AbstractAction> onUpdateRegister;
+	
 	public Entity(int xCoord, int yCoord, int directionNumber, int m){
 		x = xCoord;
 		y = yCoord;
 		dirNum = directionNumber;
 		momentum = m;
 		moving = false;
+		
+		onHitRegister = new ArrayList<>();
 	}
 	public int getX(){
 		return x;
@@ -26,8 +36,32 @@ public class Entity {
 		x = xCoord;
 		y = yCoord;
 	}
+	public void setDirNum(int dir){
+		dirNum = dir;
+	}
+	public void setMoving(boolean m){
+		moving = m;
+	}
+	public void addOnHit(AbstractAction a){
+		onHitRegister.add(a);
+	}
+	public void addOnUpdate(AbstractAction a){
+		onUpdateRegister.add(a);
+	}
 	public int[] getVector(){
 		return Direction.directions[dirNum];
+	}
+	public int getDirNum(){
+		return dirNum;
+	}
+	
+	public int getMomentum(){
+		return momentum;
+	}
+	public void tripOnUpdate(){
+		for(AbstractAction a : onUpdateRegister){
+			
+		}
 	}
 	public void turn(String dir){
 		if(dir == "left"){
@@ -40,18 +74,6 @@ public class Entity {
 		} else if(dirNum > 7){
 			dirNum = 0;
 		}
-	}
-	public void setDirNum(int dir){
-		dirNum = dir;
-	}
-	public int getDirNum(){
-		return dirNum;
-	}
-	public void setMoving(boolean m){
-		moving = m;
-	}
-	public int getMomentum(){
-		return momentum;
 	}
 	// add collisions
 	public void move(){
