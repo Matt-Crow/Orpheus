@@ -59,6 +59,7 @@ public class Projectile extends Entity{
 			}
 			hit = p;
 			// add damage calc here
+			user.tripOnHit(p);
 			terminate();
 		}
 	}

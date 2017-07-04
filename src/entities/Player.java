@@ -91,6 +91,7 @@ public class Player extends Entity{
 	}
 	public void inflict(Status s){
 		statuses.add(s);
+		s.inflictOn(this);
 		Op.add("Inflicted " + name);
 		Op.add("with " + s.getName());
 		Op.dp();

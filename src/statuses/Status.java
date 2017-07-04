@@ -1,5 +1,7 @@
 package statuses;
 
+import entities.Player;
+
 public class Status {
 	private String name;
 	private int level;
@@ -37,6 +39,9 @@ public class Status {
 		if(uses == 0){
 			terminate();
 		}
+	}
+	public void inflictOn(Player p){
+		
 	}
 	public void update(){
 		duration -= 1;

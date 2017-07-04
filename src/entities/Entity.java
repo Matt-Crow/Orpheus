@@ -1,10 +1,9 @@
 package entities;
 
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import java.util.ArrayList;
-
+import resources.OnHitAction;
 import resources.Direction;
 
 public class Entity {
@@ -14,7 +13,7 @@ public class Entity {
 	private int momentum;
 	private boolean moving;
 	
-	private ArrayList<AbstractAction> onHitRegister;
+	private ArrayList<OnHitAction> onHitRegister;
 	private ArrayList<AbstractAction> onUpdateRegister;
 	
 	public Entity(int xCoord, int yCoord, int directionNumber, int m){
@@ -25,6 +24,7 @@ public class Entity {
 		moving = false;
 		
 		onHitRegister = new ArrayList<>();
+		onUpdateRegister = new ArrayList<>();
 	}
 	public int getX(){
 		return x;
@@ -42,7 +42,7 @@ public class Entity {
 	public void setMoving(boolean m){
 		moving = m;
 	}
-	public void addOnHit(AbstractAction a){
+	public void addOnHit(OnHitAction a){
 		onHitRegister.add(a);
 	}
 	public void addOnUpdate(AbstractAction a){
@@ -58,9 +58,17 @@ public class Entity {
 	public int getMomentum(){
 		return momentum;
 	}
+	@SuppressWarnings("serial")
+	public void tripOnHit(Player target){
+		for(OnHitAction a : onHitRegister){
+			a.setTarget(target);
+			a.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null){});
+		}
+	}
+	@SuppressWarnings("serial")
 	public void tripOnUpdate(){
 		for(AbstractAction a : onUpdateRegister){
-			
+			a.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null){});
 		}
 	}
 	public void turn(String dir){
@@ -84,5 +92,6 @@ public class Entity {
 		if(moving){
 			move();
 		}
+		tripOnUpdate();
 	}
 }
