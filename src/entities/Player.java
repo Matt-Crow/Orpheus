@@ -124,6 +124,9 @@ public class Player extends Entity{
 	public void logDamage(AttackInstance attack){
 		damageBacklog += attack.calcDamage();
 	}
+	public void logPercentageDamage(double percent){
+		damageBacklog += getStatValue("maxHP") * (percent / 100);
+	}
 	public void depleteBacklog(){
 		double damage;
 		if(damageBacklog > getStatValue("maxHP")){
@@ -153,6 +156,11 @@ public class Player extends Entity{
 		slash.update();
 		for(Attack a : actives){
 			a.update();
+		}
+		for(Status s : statuses){
+			if(s.getShouldTerminate()){
+				
+			}
 		}
 	}
 	public void draw(Graphics g){
