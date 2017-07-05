@@ -60,13 +60,13 @@ public class Projectile extends Entity{
 			hit = p;
 			// add damage calc here
 			user.tripOnHit(p);
+			CombatLog.logProjectileData(this);
 			terminate();
 		}
 	}
 	public void terminate(){
 		shouldTerminate = true;
 		terminated = true;
-		CombatLog.logProjectileData(this);
 	}
 	public void update(){
 		super.update();

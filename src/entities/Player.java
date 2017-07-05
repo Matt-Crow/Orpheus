@@ -91,7 +91,7 @@ public class Player extends Entity{
 	}
 	public void inflict(Status s){
 		statuses.add(s);
-		s.inflictOn(this);
+		s.reset();
 		Op.add("Inflicted " + name);
 		Op.add("with " + s.getName());
 		Op.dp();
@@ -150,18 +150,29 @@ public class Player extends Entity{
 			a.init();
 		}
 	}
+	public void updateStatuses(){
+		ArrayList<Status> newStatuses = new ArrayList<>();
+		for(Status s : statuses){
+			if(s.getShouldTerminate()){
+				
+			}else{
+				newStatuses.add(s);
+			}
+		}
+		statuses = newStatuses;
+		for(Status s : statuses){
+			s.inflictOn(this);
+		}
+	}
 	public void update(){
 		super.update();
 		turnCooldown -= 1;
 		slash.update();
+		resetTrips();
 		for(Attack a : actives){
 			a.update();
 		}
-		for(Status s : statuses){
-			if(s.getShouldTerminate()){
-				
-			}
-		}
+		updateStatuses();
 	}
 	public void draw(Graphics g){
 		g.setColor(team.color);

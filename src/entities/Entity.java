@@ -14,6 +14,7 @@ public class Entity {
 	private boolean moving;
 	
 	private ArrayList<OnHitAction> onHitRegister;
+	private ArrayList<OnHitAction> onBeHitRegister;
 	private ArrayList<AbstractAction> onUpdateRegister;
 	
 	public Entity(int xCoord, int yCoord, int directionNumber, int m){
@@ -24,6 +25,7 @@ public class Entity {
 		moving = false;
 		
 		onHitRegister = new ArrayList<>();
+		onBeHitRegister = new ArrayList<>();
 		onUpdateRegister = new ArrayList<>();
 	}
 	public int getX(){
@@ -45,6 +47,9 @@ public class Entity {
 	public void addOnHit(OnHitAction a){
 		onHitRegister.add(a);
 	}
+	public void addOnBeHit(OnHitAction a){
+		onBeHitRegister.add(a);
+	}
 	public void addOnUpdate(AbstractAction a){
 		onUpdateRegister.add(a);
 	}
@@ -58,9 +63,20 @@ public class Entity {
 	public int getMomentum(){
 		return momentum;
 	}
+	public void resetTrips(){
+		onHitRegister = new ArrayList<>();
+		onBeHitRegister = new ArrayList<>();
+		onUpdateRegister = new ArrayList<>();
+	}
 	@SuppressWarnings("serial")
 	public void tripOnHit(Player target){
 		for(OnHitAction a : onHitRegister){
+			a.setTarget(target);
+			a.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null){});
+		}
+	}
+	public void tripOnBeHit(Player target){
+		for(OnHitAction a : onBeHitRegister){
 			a.setTarget(target);
 			a.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null){});
 		}
