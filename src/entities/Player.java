@@ -90,11 +90,24 @@ public class Player extends Entity{
 		}
 	}
 	public void inflict(Status s){
+		if(checkForStatus(s)){
+			Op.add(name + " is already inflicted");
+			Op.add("with " + s.getName());
+			Op.dp();
+			return;
+		}
 		statuses.add(s);
-		s.reset();
 		Op.add("Inflicted " + name);
 		Op.add("with " + s.getName());
 		Op.dp();
+	}
+	public boolean checkForStatus(Status s){
+		for(Status is : statuses){
+			if(is.getName() == s.getName()){
+				return true;
+			}
+		}
+		return false;
 	}
 	public void turn(String dir){
 		if(turnCooldown <= 0){
@@ -159,6 +172,7 @@ public class Player extends Entity{
 				newStatuses.add(s);
 			}
 		}
+		Op.dp();
 		statuses = newStatuses;
 		for(Status s : statuses){
 			s.inflictOn(this);

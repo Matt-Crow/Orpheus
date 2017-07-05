@@ -1,9 +1,21 @@
 package resources;
 
 import static java.lang.System.out;
+import java.util.ArrayList;
 import entities.Projectile;
 
-public class CombatLog extends Op{
+// extending Op did not work due to static stuff
+public class CombatLog{
+	private static ArrayList<String> log;
+	
+	private static void add(String msg){
+		try {
+			log.add(msg);
+		} catch(NullPointerException e){
+			log = new ArrayList<>();
+			add(msg);
+		}
+	}
 	public static void logProjectileData(Projectile p){
 		add("-------");
 		add("*Projectile:");
@@ -14,6 +26,8 @@ public class CombatLog extends Op{
 	}
 	public static void displayLog(){
 		out.println("<**COMBAT LOG**>");
-		dp();
+		for(String msg : log){
+			out.println(msg);
+		}
 	}
 }

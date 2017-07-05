@@ -46,6 +46,7 @@ public class Status {
 		
 	}
 	public void reset(){
+		shouldTerminate = false;
 		timeLeft = duration;
 		usesLeft = uses;
 	}

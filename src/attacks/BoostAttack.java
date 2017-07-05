@@ -10,6 +10,7 @@ public class BoostAttack extends Attack{
 	}
 	public void use(Player user){
 		super.use(user);
+		inflicts.reset();
 		user.inflict(inflicts);
 	}
 }
