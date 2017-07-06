@@ -43,9 +43,6 @@ public class Player extends Entity{
 	public Team getTeam(){
 		return team;
 	}
-	public Attack getActive(int index){
-		return actives[index];
-	}
 	public CharacterClass getCharacterClass(){
 		return c;
 	}
@@ -93,25 +90,50 @@ public class Player extends Entity{
 			}
 		}
 	}
-	public void inflict(Status s){
-		if(checkForStatus(s)){
-			Op.add(name + " is already inflicted");
-			Op.add("with " + s.getName());
+	
+	public void inflict(Status newStatus){
+		Status oldStatus = new Status("Placeholder", -1, -1, -1);
+		int oldLevel = 0;
+		int oldDuration = 0;
+		
+		for(Status s : statuses){
+			if(s.getName() == newStatus.getName()){
+				oldStatus = s;
+				oldLevel = s.getIntensityLevel();
+				oldDuration = s.getDuration();
+				break;
+			}
+		}		
+				
+		if(oldLevel < newStatus.getIntensityLevel()){
+			oldStatus.terminate();
+			statuses.add(newStatus);
+			Op.add("Inflicted " + name);
+			Op.add("with " + newStatus.getName());
 			Op.dp();
 			return;
-		}
-		statuses.add(s);
-		Op.add("Inflicted " + name);
-		Op.add("with " + s.getName());
-		Op.dp();
-	}
-	public boolean checkForStatus(Status s){
-		for(Status is : statuses){
-			if(is.getName() == s.getName()){
-				return true;
+		} else if(oldLevel > newStatus.getIntensityLevel()){
+			Op.add(name + " is already infliced");
+			Op.add("with " + newStatus.getName());
+			Op.dp();
+			return;
+		} else {
+			if(oldDuration < newStatus.getDuration()){
+				oldStatus.terminate();
+				statuses.add(newStatus);
+				Op.add("Inflicted " + name);
+				Op.add("with " + newStatus.getName());
+				Op.dp();
+				return;
+			} else if(oldDuration >= newStatus.getDuration()){
+				Op.add(name + " is already infliced");
+				Op.add("with " + newStatus.getName());
+				Op.dp();
+				return;
+			} else {
+				return;
 			}
 		}
-		return false;
 	}
 	public void turn(String dir){
 		if(turnCooldown <= 0){
@@ -134,10 +156,11 @@ public class Player extends Entity{
 		selectedAttack = index;
 	}
 	public void useSelectedAttack(){
-		if(getActive(selectedAttack).canUse(this)){
-			getActive(selectedAttack).use(this);
+		if(actives[selectedAttack].canUse(this)){
+			actives[selectedAttack].use(this);
 		}
 	}
+
 	public void logDamage(AttackInstance attack){
 		damageBacklog += attack.calcDamage();
 	}
@@ -154,6 +177,7 @@ public class Player extends Entity{
 		remHP -= damage;
 		damageBacklog -= damage;
 	}
+	
 	public void init(Team t, int x, int y, int dirNum){
 		super.setCoords(x, y);
 		super.setDirNum(dirNum);
@@ -168,6 +192,7 @@ public class Player extends Entity{
 			a.init();
 		}
 	}
+	
 	public void updateStatuses(){
 		ArrayList<Status> newStatuses = new ArrayList<>();
 		for(Status s : statuses){
@@ -183,6 +208,7 @@ public class Player extends Entity{
 			s.inflictOn(this);
 		}
 	}
+	
 	public void update(){
 		super.update();
 		turnCooldown -= 1;
