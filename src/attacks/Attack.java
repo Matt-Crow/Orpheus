@@ -11,6 +11,7 @@ public class Attack {
 	private ArrayList<Stat> stats;
 	private int cooldown;
 	private Projectile registeredProjectile;
+	private String type;
 	
 	public Attack(String n, int energyCost, int cooldown, int range, int speed, int aoe, int areaScale, int distanceScale, int dmg){
 		name = n;
@@ -33,6 +34,12 @@ public class Attack {
 			}
 		}
 		return new Slash();
+	}
+	public void setType(String t){
+		type = t;
+	}
+	public String getType(){
+		return type;
 	}
 	public String getName(){
 		return name;

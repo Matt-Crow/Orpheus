@@ -4,6 +4,7 @@ import java.awt.Graphics;
 
 import attacks.Attack;
 import resources.CombatLog;
+import resources.Op;
 
 public class Projectile extends Entity{
 	private Player user;
@@ -59,7 +60,13 @@ public class Projectile extends Entity{
 			}
 			hit = p;
 			// add damage calc here
-			user.tripOnHit(p);
+			if(registeredAttack.getType() == "melee"){
+				user.tripOnMeleeHit(p);
+				p.tripOnBeMeleeHit(user);
+			} else {
+				user.tripOnHit(p);
+				p.tripOnBeHit(user);
+			}
 			CombatLog.logProjectileData(this);
 			terminate();
 		}

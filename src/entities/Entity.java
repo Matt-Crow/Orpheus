@@ -15,6 +15,8 @@ public class Entity {
 	
 	private ArrayList<OnHitAction> onHitRegister;
 	private ArrayList<OnHitAction> onBeHitRegister;
+	private ArrayList<OnHitAction> onMeleeHitRegister;
+	private ArrayList<OnHitAction> onBeMeleeHitRegister;
 	private ArrayList<AbstractAction> onUpdateRegister;
 	
 	public Entity(int xCoord, int yCoord, int directionNumber, int m){
@@ -26,6 +28,8 @@ public class Entity {
 		
 		onHitRegister = new ArrayList<>();
 		onBeHitRegister = new ArrayList<>();
+		onMeleeHitRegister = new ArrayList<>();
+		onBeMeleeHitRegister = new ArrayList<>();
 		onUpdateRegister = new ArrayList<>();
 	}
 	public int getX(){
@@ -50,6 +54,12 @@ public class Entity {
 	public void addOnBeHit(OnHitAction a){
 		onBeHitRegister.add(a);
 	}
+	public void addOnMeleeHit(OnHitAction a){
+		onMeleeHitRegister.add(a);
+	}
+	public void addOnBeMeleeHit(OnHitAction a){
+		onBeMeleeHitRegister.add(a);
+	}
 	public void addOnUpdate(AbstractAction a){
 		onUpdateRegister.add(a);
 	}
@@ -66,22 +76,42 @@ public class Entity {
 	public void resetTrips(){
 		onHitRegister = new ArrayList<>();
 		onBeHitRegister = new ArrayList<>();
+		onMeleeHitRegister = new ArrayList<>();
+		onBeMeleeHitRegister = new ArrayList<>();
 		onUpdateRegister = new ArrayList<>();
 	}
-	@SuppressWarnings("serial")
-	public void tripOnHit(Player target){
+	public void tripOnHit(Player hit){
 		for(OnHitAction a : onHitRegister){
-			a.setTarget(target);
+			a.setTarget(hit);
 			a.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null){});
 		}
 	}
-	public void tripOnBeHit(Player target){
+	public void tripOnBeHit(Player hitBy){
 		for(OnHitAction a : onBeHitRegister){
-			a.setTarget(target);
+			a.setTarget(hitBy);
 			a.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null){});
 		}
 	}
-	@SuppressWarnings("serial")
+	public void tripOnMeleeHit(Player hit){
+		for(OnHitAction a : onMeleeHitRegister){
+			a.setTarget(hit);
+			a.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null){});
+		}
+		for(OnHitAction a : onHitRegister){
+			a.setTarget(hit);
+			a.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null){});
+		}
+	}
+	public void tripOnBeMeleeHit(Player hitBy){
+		for(OnHitAction a : onBeMeleeHitRegister){
+			a.setTarget(hitBy);
+			a.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null){});
+		}
+		for(OnHitAction a : onBeHitRegister){
+			a.setTarget(hitBy);
+			a.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null){});
+		}
+	}
 	public void tripOnUpdate(){
 		for(AbstractAction a : onUpdateRegister){
 			a.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null){});

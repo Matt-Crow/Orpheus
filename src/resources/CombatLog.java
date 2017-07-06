@@ -26,8 +26,12 @@ public class CombatLog{
 	}
 	public static void displayLog(){
 		out.println("<**COMBAT LOG**>");
-		for(String msg : log){
-			out.println(msg);
+		try{
+			for(String msg : log){
+				out.println(msg);
+			}
+		} catch(NullPointerException e){
+			out.println("There is no data in the combat log");
 		}
 	}
 }

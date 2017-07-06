@@ -22,6 +22,7 @@ public class Player extends Entity{
 	private int remHP;
 	private int energy;
 	private double damageBacklog;
+	private double backLogFilter;
 	private Slash slash;
 	private int selectedAttack;
 	private Attack[] actives;
@@ -47,6 +48,9 @@ public class Player extends Entity{
 	}
 	public CharacterClass getCharacterClass(){
 		return c;
+	}
+	public void addFilter(double m){
+		backLogFilter *= m;
 	}
 	public void applyBuild(Build b){
 		setClass(b.getClassName());
@@ -142,8 +146,8 @@ public class Player extends Entity{
 	}
 	public void depleteBacklog(){
 		double damage;
-		if(damageBacklog > getStatValue("maxHP")){
-			damage = getStatValue("maxHP") / 100;
+		if(damageBacklog > getStatValue("maxHP") * backLogFilter){
+			damage = getStatValue("maxHP") * backLogFilter;
 		} else {
 			damage = damageBacklog;
 		}
@@ -159,6 +163,7 @@ public class Player extends Entity{
 		c.calcStats();
 		remHP = (int) getStatValue("maxHP");
 		energy = (int) getStatValue("Max energy");
+		backLogFilter = 0.01;
 		for(Attack a : actives){
 			a.init();
 		}
@@ -181,6 +186,7 @@ public class Player extends Entity{
 	public void update(){
 		super.update();
 		turnCooldown -= 1;
+		backLogFilter = 0.01;
 		slash.update();
 		resetTrips();
 		for(Attack a : actives){
