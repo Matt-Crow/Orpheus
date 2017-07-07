@@ -92,15 +92,13 @@ public class Player extends Entity{
 	}
 	
 	public void inflict(Status newStatus){
-		Status oldStatus = new Status("Placeholder", -1, -1, -1);
+		Status oldStatus = new Status("Placeholder", -1, -1);
 		int oldLevel = 0;
-		int oldDuration = 0;
 		
 		for(Status s : statuses){
 			if(s.getName() == newStatus.getName()){
 				oldStatus = s;
 				oldLevel = s.getIntensityLevel();
-				oldDuration = s.getDuration();
 				break;
 			}
 		}		
@@ -112,27 +110,11 @@ public class Player extends Entity{
 			Op.add("with " + newStatus.getName());
 			Op.dp();
 			return;
-		} else if(oldLevel > newStatus.getIntensityLevel()){
+		} else {
 			Op.add(name + " is already infliced");
 			Op.add("with " + newStatus.getName());
 			Op.dp();
 			return;
-		} else {
-			if(oldDuration < newStatus.getDuration()){
-				oldStatus.terminate();
-				statuses.add(newStatus);
-				Op.add("Inflicted " + name);
-				Op.add("with " + newStatus.getName());
-				Op.dp();
-				return;
-			} else if(oldDuration >= newStatus.getDuration()){
-				Op.add(name + " is already infliced");
-				Op.add("with " + newStatus.getName());
-				Op.dp();
-				return;
-			} else {
-				return;
-			}
 		}
 	}
 	public void turn(String dir){
@@ -208,6 +190,24 @@ public class Player extends Entity{
 			s.inflictOn(this);
 		}
 	}
+	public void updateBacklog(){
+		if(damageBacklog <= 0){
+			return;
+		}
+		Op.add("Before updating backlog for " + name + ":");
+		Op.add("*HP remaining: " + remHP);
+		Op.add("*Backlog: " + damageBacklog);
+		Op.add("*Backlog filter: " + backLogFilter);
+		
+		depleteBacklog();
+		
+		Op.add("After updating backlog: ");
+		Op.add("*HP remaining: " + remHP);
+		Op.add("*Backlog: " + damageBacklog);
+		Op.add("*Backlog filter: " + backLogFilter);
+		
+		Op.dp();
+	}
 	
 	public void update(){
 		super.update();
@@ -219,6 +219,8 @@ public class Player extends Entity{
 			a.update();
 		}
 		updateStatuses();
+		tripOnUpdate();
+		updateBacklog();
 	}
 	public void draw(Graphics g){
 		g.setColor(team.color);

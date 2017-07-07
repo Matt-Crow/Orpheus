@@ -25,7 +25,6 @@ public class Op {
 			add(msg);
 		}
 	}
-	
 	// Prints the contents of the message arraylist
 	public static void dp(){
 		if(! previousMessages.equals(messages)){

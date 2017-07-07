@@ -7,7 +7,7 @@ import resources.OnHitAction;
 
 public class Strength extends Status{
 	public Strength(int lv, int uses){
-		super("Strength", lv, -1, uses);
+		super("Strength", lv, uses);
 	}
 	public void inflictOn(Player p){
 		OnHitAction a = new OnHitAction();
