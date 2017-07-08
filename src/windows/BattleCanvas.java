@@ -146,6 +146,9 @@ public class BattleCanvas extends JPanel{
 		g.translate(trans[0], trans[1]);
 		battlefield.draw(g);
 		
+		g.translate(-trans[0], -trans[1]);
+		p.drawHUD(g);
+		
 		timer = new Timer(1000 / FPS, update);
 		timer.setRepeats(false);
 		timer.start();

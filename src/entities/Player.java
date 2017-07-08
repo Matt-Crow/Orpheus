@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
-import battle.AttackInstance;
 import battle.Team;
 import customizables.*;
 import resources.Op;
@@ -21,6 +20,8 @@ public class Player extends Entity{
 	private CharacterClass c;
 	private int remHP;
 	private int energy;
+	private int timeSinceLastHeal;
+	private int timeSinceLastEnergy;
 	private double damageBacklog;
 	private double backLogFilter;
 	private Slash slash;
@@ -123,6 +124,9 @@ public class Player extends Entity{
 		}
 		turnCooldown = 10;
 	}
+	public int getHP(){
+		return remHP;
+	}
 	public int getEnergy(){
 		return energy;
 	}
@@ -143,8 +147,8 @@ public class Player extends Entity{
 		}
 	}
 
-	public void logDamage(AttackInstance attack){
-		damageBacklog += attack.calcDamage();
+	public void logDamage(int dmg){
+		damageBacklog += dmg;
 	}
 	public void logPercentageDamage(double percent){
 		damageBacklog += getStatValue("maxHP") * (percent / 100);
@@ -160,6 +164,33 @@ public class Player extends Entity{
 		damageBacklog -= damage;
 	}
 	
+	public void heal(int amount){
+		if(remHP == getStatValue("maxHP")){
+			return;
+		}
+		remHP += amount;
+		if(remHP > getStatValue("maxHP")){
+			remHP = (int) getStatValue("maxHP");
+		}
+		Op.add("Healed " + amount);
+		Op.dp();
+	}
+	public void healPerc(double percent){
+		heal((int) (getStatValue("maxHP") * (percent / 100)));
+	}
+	
+	public void gainEnergy(int amount){
+		if(energy == getStatValue("Max energy")){
+			return;
+		}
+		energy += amount;
+		if(energy > getStatValue("Max energy")){
+			energy = (int) getStatValue("Max energy");
+		}
+	}
+	public void loseEnergy(int amount){
+		energy -= amount;
+	}
 	public void init(Team t, int x, int y, int dirNum){
 		super.setCoords(x, y);
 		super.setDirNum(dirNum);
@@ -170,6 +201,8 @@ public class Player extends Entity{
 		remHP = (int) getStatValue("maxHP");
 		energy = (int) getStatValue("Max energy");
 		backLogFilter = 0.01;
+		timeSinceLastHeal = 0;
+		timeSinceLastEnergy = 0;
 		for(Attack a : actives){
 			a.init();
 		}
@@ -208,6 +241,20 @@ public class Player extends Entity{
 		
 		Op.dp();
 	}
+	public void updateHealing(){
+		timeSinceLastHeal += 1;
+		if(timeSinceLastHeal >= getStatValue("Heal rate")){
+			timeSinceLastHeal = 0;
+			healPerc(getStatValue("Healing"));
+		}
+	}
+	public void updateEnergy(){
+		timeSinceLastEnergy += 1;
+		if(timeSinceLastEnergy >= getStatValue("ER")){
+			timeSinceLastEnergy = 0;
+			gainEnergy((int) getStatValue("EPR"));
+		}
+	}
 	
 	public void update(){
 		super.update();
@@ -221,6 +268,8 @@ public class Player extends Entity{
 		updateStatuses();
 		tripOnUpdate();
 		updateBacklog();
+		updateHealing();
+		updateEnergy();
 	}
 	public void draw(Graphics g){
 		g.setColor(team.color);
@@ -228,5 +277,18 @@ public class Player extends Entity{
 		g.setColor(c.getColor());
 		g.fillOval(getX() - 40, getY() - 40, 80, 80);
 		g.setColor(Color.gray);
+	}
+	public void drawHUD(Graphics g){
+		String strHP = remHP + "";
+		g.setColor(Color.red);
+		g.fillOval(0, 500, 100, 100);
+		g.setColor(Color.black);
+		g.drawString(strHP, 5, 550);
+		
+		String strEn = energy + "";
+		g.setColor(Color.yellow);
+		g.fillOval(500, 500, 100, 100);
+		g.setColor(Color.black);
+		g.drawString(strEn, 505, 550);
 	}
 }

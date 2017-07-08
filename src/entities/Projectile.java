@@ -60,6 +60,8 @@ public class Projectile extends Entity{
 			}
 			hit = p;
 			// add damage calc here
+			p.logDamage((int) registeredAttack.getStatValue("Damage"));
+			
 			if(registeredAttack.getType() == "melee"){
 				user.tripOnMeleeHit(p);
 				p.tripOnBeMeleeHit(user);

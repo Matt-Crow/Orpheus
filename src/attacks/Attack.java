@@ -67,6 +67,7 @@ public class Attack {
 		return user.getEnergy() >= getStat("Energy Cost").get() && !onCooldown();
 	}
 	public void use(Player user){
+		user.loseEnergy((int) getStatValue("Energy Cost"));
 		registeredProjectile = new SeedProjectile(user.getX(), user.getY(), user.getDirNum(), (int) getStatValue("Speed"), user, this);
 		if(registeredProjectile.getAttack().getStatValue("Range") == 0){
 			registeredProjectile.terminate();
