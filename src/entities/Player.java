@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 import battle.Team;
+import battle.DamageBacklog;
 import customizables.*;
 import resources.Op;
 import attacks.*;
@@ -23,8 +24,9 @@ public class Player extends Entity{
 	private int energy;
 	private int timeSinceLastHeal;
 	private int timeSinceLastEnergy;
-	private double damageBacklog;
-	private double backLogFilter;
+	
+	private DamageBacklog log;
+	
 	private Slash slash;
 	private int selectedAttack;
 	private Attack[] actives;
@@ -49,10 +51,7 @@ public class Player extends Entity{
 	}
 	public CharacterClass getCharacterClass(){
 		return c;
-	}
-	public void addFilter(double m){
-		backLogFilter *= m;
-	}
+	}	
 	public void applyBuild(Build b){
 		setClass(b.getClassName());
 		setActives(b.getActiveNames());
@@ -172,22 +171,19 @@ public class Player extends Entity{
 			actives[selectedAttack].use(this);
 		}
 	}
-
+	
+	//Damage Backlog stuff, maybe add HP to log?
+	public void loseHP(int amount){
+		remHP -= amount;
+	}
 	public void logDamage(int dmg){
-		damageBacklog += dmg;
+		log.log(dmg);;
 	}
 	public void logPercentageDamage(double percent){
-		damageBacklog += getStatValue("maxHP") * (percent / 100);
+		log.log( (int) (getStatValue("maxHP") * (percent / 100)));
 	}
-	public void depleteBacklog(){
-		double damage;
-		if(damageBacklog > getStatValue("maxHP") * backLogFilter){
-			damage = getStatValue("maxHP") * backLogFilter;
-		} else {
-			damage = damageBacklog;
-		}
-		remHP -= damage;
-		damageBacklog -= damage;
+	public void addFilter(double m){
+		log.applyFilter(m);
 	}
 	
 	public void heal(int amount){
@@ -226,9 +222,9 @@ public class Player extends Entity{
 		c.calcStats();
 		remHP = (int) getStatValue("maxHP");
 		energy = (int) getStatValue("Max energy");
-		backLogFilter = 0.01;
 		timeSinceLastHeal = 0;
 		timeSinceLastEnergy = 0;
+		log = new DamageBacklog(this);
 		for(Attack a : actives){
 			a.init();
 		}
@@ -252,26 +248,6 @@ public class Player extends Entity{
 			s.inflictOn(this);
 		}
 	}
-	public void updateBacklog(){
-		if(damageBacklog <= 0){
-			return;
-		}
-		/*
-		Op.add("Before updating backlog for " + name + ":");
-		Op.add("*HP remaining: " + remHP);
-		Op.add("*Backlog: " + damageBacklog);
-		Op.add("*Backlog filter: " + backLogFilter);
-		*/
-		depleteBacklog();
-		/*
-		Op.add("After updating backlog: ");
-		Op.add("*HP remaining: " + remHP);
-		Op.add("*Backlog: " + damageBacklog);
-		Op.add("*Backlog filter: " + backLogFilter);
-		
-		Op.dp();
-		*/
-	}
 	public void updateHealing(){
 		timeSinceLastHeal += 1;
 		if(timeSinceLastHeal >= getStatValue("Heal rate")){
@@ -290,7 +266,6 @@ public class Player extends Entity{
 	public void update(){
 		super.update();
 		turnCooldown -= 1;
-		backLogFilter = 0.01;
 		slash.update();
 		resetTrips();
 		for(Attack a : actives){
@@ -301,12 +276,13 @@ public class Player extends Entity{
 		}
 		updateStatuses();
 		tripOnUpdate();
-		updateBacklog();
+		log.update();
 		updateHealing();
 		updateEnergy();
 	}
 	public void draw(Graphics g){
 		g.setColor(team.color);
+		g.drawString("HP: " + remHP, getX() - 50, getY() - 75);
 		g.fillOval(getX() - 50, getY() - 50, 100, 100);
 		g.setColor(c.getColor());
 		g.fillOval(getX() - 40, getY() - 40, 80, 80);
