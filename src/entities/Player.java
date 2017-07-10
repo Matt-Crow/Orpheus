@@ -9,6 +9,7 @@ import battle.Team;
 import customizables.*;
 import resources.Op;
 import attacks.*;
+import passives.*;
 import statuses.Status;
 
 // this is going to be very big
@@ -27,6 +28,7 @@ public class Player extends Entity{
 	private Slash slash;
 	private int selectedAttack;
 	private Attack[] actives;
+	private Passive[] passives;
 	private ArrayList<Status> statuses;
 	
 	public Player(String n){
@@ -34,6 +36,7 @@ public class Player extends Entity{
 		name = n;
 		slash = new Slash();
 		actives = new Attack[3];
+		passives = new Passive[3];
 		statuses = new ArrayList<>();
 		selectedAttack = 0;
 		players.add(this);
@@ -53,6 +56,7 @@ public class Player extends Entity{
 	public void applyBuild(Build b){
 		setClass(b.getClassName());
 		setActives(b.getActiveNames());
+		setPassives(b.getPassiveNames());
 	}
 	public void setClass(String name){
 		switch(name.toLowerCase()){
@@ -86,6 +90,25 @@ public class Player extends Entity{
 			if(!found){
 				actives[nameIndex] = new Slash();
 				Op.add("The active by the name of " + names[nameIndex]);
+				Op.add("is not found for the characterClass " + c.getName());
+				Op.dp();
+			}
+		}
+	}
+	
+	public void setPassives(String[] names){
+		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
+			boolean found = false;
+			for(Passive p : c.getPassiveOptions()){
+				if(p.getName() == names[nameIndex]){
+					passives[nameIndex] = p;
+					found = true;
+					break;
+				}
+			}
+			if(!found){
+				passives[nameIndex] = new Bracing();
+				Op.add("The passive by the name of " + names[nameIndex]);
 				Op.add("is not found for the characterClass " + c.getName());
 				Op.dp();
 			}
@@ -126,6 +149,9 @@ public class Player extends Entity{
 	}
 	public int getHP(){
 		return remHP;
+	}
+	public double getHPPerc(){
+		return remHP / getStatValue("maxHP") * 100;
 	}
 	public int getEnergy(){
 		return energy;
@@ -206,6 +232,9 @@ public class Player extends Entity{
 		for(Attack a : actives){
 			a.init();
 		}
+		for(Passive p : passives){
+			p.registerTo(this);
+		}
 	}
 	
 	public void updateStatuses(){
@@ -266,6 +295,9 @@ public class Player extends Entity{
 			a.update();
 		}
 		updateStatuses();
+		for(Passive p : passives){
+			p.update();
+		}
 		tripOnUpdate();
 		updateBacklog();
 		updateHealing();

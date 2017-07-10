@@ -1,7 +1,7 @@
 package customizables;
 import upgradables.Stat;
 import attacks.*;
-
+import passives.*;
 import java.util.ArrayList;
 import java.awt.Graphics;
 import java.awt.Color;
@@ -11,6 +11,7 @@ public class CharacterClass extends Customizable{
 	private String name;
 	private Color color;
 	private ArrayList<Attack> attackOptions;
+	private ArrayList<Passive> passiveOptions;
 	
 	// initializers
 	public CharacterClass(String n, Color c){
@@ -23,6 +24,9 @@ public class CharacterClass extends Customizable{
 		attackOptions.add(new WarriorsStance());
 		attackOptions.add(new ShieldStance());
 		attackOptions.add(new BladeStance());
+		
+		passiveOptions = new ArrayList<>();
+		passiveOptions.add(new Bracing());
 	}
 	public void setHPData(int HP, int regen, int wait){
 		stats.add(new Stat("maxHP", 350 + 50 * HP, 2));
@@ -45,6 +49,9 @@ public class CharacterClass extends Customizable{
 	}
 	public ArrayList<Attack> getAttackOption(){
 		return attackOptions;
+	}
+	public ArrayList<Passive> getPassiveOptions(){
+		return passiveOptions;
 	}
 	public Stat getStat(String n){
 		for(Stat stat : stats){

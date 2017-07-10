@@ -4,19 +4,21 @@ import java.util.ArrayList;
 
 public class Build {
 	private static ArrayList<Build> builds = new ArrayList<>();
-	private static Build defaultEarth = new Build("Default Earth", "Earth", "Rupture", "Warrior's Stance", "");
-	private static Build defaultFire = new Build("Default Fire", "Fire", "Fireball", "Fields of Fire", "Burning Rage");
-	private static Build defaultWater = new Build("Default Water", "Water", "Shield Stance", "", "");
-	private static Build defaultAir = new Build("Default Air", "Air", "Blade Stance", "", "");
+	private static Build defaultEarth = new Build("Default Earth", "Earth", "Rupture", "Warrior's Stance", "", "Bracing", "", "");
+	private static Build defaultFire = new Build("Default Fire", "Fire", "Fireball", "Fields of Fire", "Burning Rage", "Bracing", "", "");
+	private static Build defaultWater = new Build("Default Water", "Water", "Shield Stance", "", "", "Bracing", "", "");
+	private static Build defaultAir = new Build("Default Air", "Air", "Blade Stance", "", "", "Bracing", "", "");
 	
 	private String name;
 	private String className;
 	private String[] activeNames;
+	private String[] passiveNames;
 	
-	public Build(String buildName, String cName, String a1, String a2, String a3){
+	public Build(String buildName, String cName, String a1, String a2, String a3, String p1, String p2, String p3){
 		name = buildName;
 		className = cName;
 		activeNames = new String[]{a1, a2, a3};
+		passiveNames = new String[]{p1, p2, p3};
 		builds.add(this);
 	}
 	public static Build getBuildByName(String name){
@@ -32,5 +34,8 @@ public class Build {
 	}
 	public String[] getActiveNames(){
 		return activeNames;
+	}
+	public String[] getPassiveNames(){
+		return passiveNames;
 	}
 }
