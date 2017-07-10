@@ -129,14 +129,9 @@ public class Player extends Entity{
 		if(oldLevel < newStatus.getIntensityLevel()){
 			oldStatus.terminate();
 			statuses.add(newStatus);
-			Op.add("Inflicted " + name);
-			Op.add("with " + newStatus.getName());
-			Op.dp();
 			return;
 		} else {
-			Op.add(name + " is already infliced");
-			Op.add("with " + newStatus.getName());
-			Op.dp();
+			oldStatus.reset();
 			return;
 		}
 	}
@@ -286,7 +281,12 @@ public class Player extends Entity{
 		g.fillOval(getX() - 50, getY() - 50, 100, 100);
 		g.setColor(c.getColor());
 		g.fillOval(getX() - 40, getY() - 40, 80, 80);
-		g.setColor(Color.gray);
+		g.setColor(Color.black);
+		int i = getY() + 55;
+		for(Status s : statuses){
+			g.drawString(s.getName() + "(" + s.getUsesLeft() + ")", getX() - 50, i);
+			i += 20;
+		}
 	}
 	public void drawHUD(Graphics g){
 		String strHP = remHP + "";

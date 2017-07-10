@@ -16,8 +16,6 @@ public class Resistance extends Status{
 			public void actionPerformed(ActionEvent e){
 				p.addFilter(1 - 0.2 * getIntensityLevel());
 				use();
-				Op.add("Uses left " + getUsesLeft());
-				Op.dp();
 			}
 		});
 		p.addOnBeHit(a);
