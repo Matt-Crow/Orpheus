@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import java.util.ArrayList;
 import resources.OnHitAction;
+import resources.Op;
 import resources.Direction;
 
 public class Entity {

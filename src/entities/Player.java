@@ -107,7 +107,7 @@ public class Player extends Entity{
 				}
 			}
 			if(!found){
-				passives[nameIndex] = new Bracing();
+				passives[nameIndex] = new Passive("UNDEFINED", "ERROR");
 				Op.add("The passive by the name of " + names[nameIndex]);
 				Op.add("is not found for the characterClass " + c.getName());
 				Op.dp();
@@ -256,19 +256,21 @@ public class Player extends Entity{
 		if(damageBacklog <= 0){
 			return;
 		}
+		/*
 		Op.add("Before updating backlog for " + name + ":");
 		Op.add("*HP remaining: " + remHP);
 		Op.add("*Backlog: " + damageBacklog);
 		Op.add("*Backlog filter: " + backLogFilter);
-		
+		*/
 		depleteBacklog();
-		
+		/*
 		Op.add("After updating backlog: ");
 		Op.add("*HP remaining: " + remHP);
 		Op.add("*Backlog: " + damageBacklog);
 		Op.add("*Backlog filter: " + backLogFilter);
 		
 		Op.dp();
+		*/
 	}
 	public void updateHealing(){
 		timeSinceLastHeal += 1;
@@ -294,10 +296,10 @@ public class Player extends Entity{
 		for(Attack a : actives){
 			a.update();
 		}
-		updateStatuses();
 		for(Passive p : passives){
 			p.update();
 		}
+		updateStatuses();
 		tripOnUpdate();
 		updateBacklog();
 		updateHealing();
