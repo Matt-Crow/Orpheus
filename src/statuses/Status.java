@@ -42,7 +42,7 @@ public class Status {
 	}
 	public void use(){
 		usesLeft -= 1;
-		if(usesLeft == 0){
+		if(usesLeft <= 0){
 			terminate();
 		}
 	}

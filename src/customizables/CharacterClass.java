@@ -29,6 +29,8 @@ public class CharacterClass extends Customizable{
 		passiveOptions.add(new Bracing());
 		passiveOptions.add(new Retaliation());
 		passiveOptions.add(new Determination());
+		passiveOptions.add(new Revitalize());
+		passiveOptions.add(new Adrenaline());
 	}
 	public void setHPData(int HP, int regen, int wait){
 		stats.add(new Stat("maxHP", 350 + 50 * HP, 2));

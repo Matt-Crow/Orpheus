@@ -132,6 +132,7 @@ public class Player extends Entity{
 		if(oldLevel < newStatus.getIntensityLevel()){
 			oldStatus.terminate();
 			statuses.add(newStatus);
+			newStatus.reset();
 			return;
 		} else {
 			oldStatus.reset();
