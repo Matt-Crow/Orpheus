@@ -27,6 +27,8 @@ public class CharacterClass extends Customizable{
 		
 		passiveOptions = new ArrayList<>();
 		passiveOptions.add(new Bracing());
+		passiveOptions.add(new Retaliation());
+		passiveOptions.add(new Determination());
 	}
 	public void setHPData(int HP, int regen, int wait){
 		stats.add(new Stat("maxHP", 350 + 50 * HP, 2));
@@ -72,18 +74,6 @@ public class CharacterClass extends Customizable{
 	public void calcStats(){
 		for(Stat stat : stats){
 			stat.calc();
-		}
-	}
-	public void displayPopup(int x, int y, Graphics g){
-		g.setColor(Color.white);
-		g.fillRect(x, y, 100, 200);
-		g.setColor(Color.black);
-		g.drawString(name, x + 10, y + 10);
-		int statY = y + 30;
-		calcStats();
-		for(Stat stat : stats){
-			g.drawString(stat.name + ": " + stat.get(), x, statY);
-			statY += 20;
 		}
 	}
 }

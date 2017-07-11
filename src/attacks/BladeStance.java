@@ -4,6 +4,6 @@ import statuses.Strength;
 
 public class BladeStance extends BoostAttack{
 	public BladeStance(){
-		super("Shield Stance", 10, 60, new Strength(2, 7));
+		super("Blade Stance", 10, 60, new Strength(2, 7));
 	}
 }

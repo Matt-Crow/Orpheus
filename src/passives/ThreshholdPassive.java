@@ -8,7 +8,7 @@ public class ThreshholdPassive extends Passive{
 		threshhold = percent;
 	}
 	public void update(){
-		if(getPlayer().getHPPerc() <= threshhold){
+		if(getPlayer().getLog().getHPPerc() <= threshhold){
 			applyEffect();
 		}
 	}

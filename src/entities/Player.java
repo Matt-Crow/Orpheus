@@ -20,9 +20,9 @@ public class Player extends Entity{
 	private int turnCooldown;
 	private Team team;
 	private CharacterClass c;
-	private int remHP;
+	
 	private int energy;
-	private int timeSinceLastHeal;
+	
 	private int timeSinceLastEnergy;
 	
 	private DamageBacklog log;
@@ -48,6 +48,9 @@ public class Player extends Entity{
 	}
 	public Team getTeam(){
 		return team;
+	}
+	public DamageBacklog getLog(){
+		return log;
 	}
 	public CharacterClass getCharacterClass(){
 		return c;
@@ -141,12 +144,6 @@ public class Player extends Entity{
 		}
 		turnCooldown = 10;
 	}
-	public int getHP(){
-		return remHP;
-	}
-	public double getHPPerc(){
-		return remHP / getStatValue("maxHP") * 100;
-	}
 	public int getEnergy(){
 		return energy;
 	}
@@ -166,34 +163,14 @@ public class Player extends Entity{
 			actives[selectedAttack].use(this);
 		}
 	}
-	
-	//Damage Backlog stuff, maybe add HP to log?
-	public void loseHP(int amount){
-		remHP -= amount;
-	}
 	public void logDamage(int dmg){
-		log.log(dmg);;
+		log.log(dmg);
 	}
 	public void logPercentageDamage(double percent){
 		log.log( (int) (getStatValue("maxHP") * (percent / 100)));
 	}
 	public void addFilter(double m){
 		log.applyFilter(m);
-	}
-	
-	public void heal(int amount){
-		if(remHP == getStatValue("maxHP")){
-			return;
-		}
-		remHP += amount;
-		if(remHP > getStatValue("maxHP")){
-			remHP = (int) getStatValue("maxHP");
-		}
-		Op.add("Healed " + amount);
-		Op.dp();
-	}
-	public void healPerc(double percent){
-		heal((int) (getStatValue("maxHP") * (percent / 100)));
 	}
 	
 	public void gainEnergy(int amount){
@@ -215,9 +192,7 @@ public class Player extends Entity{
 		turnCooldown = 0;
 		slash.init();
 		c.calcStats();
-		remHP = (int) getStatValue("maxHP");
 		energy = (int) getStatValue("Max energy");
-		timeSinceLastHeal = 0;
 		timeSinceLastEnergy = 0;
 		log = new DamageBacklog(this);
 		for(Attack a : actives){
@@ -243,13 +218,6 @@ public class Player extends Entity{
 			s.inflictOn(this);
 		}
 	}
-	public void updateHealing(){
-		timeSinceLastHeal += 1;
-		if(timeSinceLastHeal >= getStatValue("Heal rate")){
-			timeSinceLastHeal = 0;
-			healPerc(getStatValue("Healing"));
-		}
-	}
 	public void updateEnergy(){
 		timeSinceLastEnergy += 1;
 		if(timeSinceLastEnergy >= getStatValue("ER")){
@@ -272,12 +240,11 @@ public class Player extends Entity{
 		updateStatuses();
 		tripOnUpdate();
 		log.update();
-		updateHealing();
 		updateEnergy();
 	}
 	public void draw(Graphics g){
 		g.setColor(team.color);
-		g.drawString("HP: " + remHP, getX() - 50, getY() - 75);
+		g.drawString("HP: " + log.getHP(), getX() - 50, getY() - 75);
 		g.fillOval(getX() - 50, getY() - 50, 100, 100);
 		g.setColor(c.getColor());
 		g.fillOval(getX() - 40, getY() - 40, 80, 80);
@@ -289,7 +256,7 @@ public class Player extends Entity{
 		}
 	}
 	public void drawHUD(Graphics g){
-		String strHP = remHP + "";
+		String strHP = log.getHP() + "";
 		g.setColor(Color.red);
 		g.fillOval(0, 500, 100, 100);
 		g.setColor(Color.black);

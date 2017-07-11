@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 public class Build {
 	private static ArrayList<Build> builds = new ArrayList<>();
-	private static Build defaultEarth = new Build("Default Earth", "Earth", "Rupture", "Warrior's Stance", "", "Bracing", "", "");
-	private static Build defaultFire = new Build("Default Fire", "Fire", "Fireball", "Fields of Fire", "Burning Rage", "Bracing", "", "");
+	private static Build defaultEarth = new Build("Default Earth", "Earth", "Rupture", "Warrior's Stance", "", "Bracing", "Determination", "");
+	private static Build defaultFire = new Build("Default Fire", "Fire", "Fireball", "Fields of Fire", "Burning Rage", "Retaliation", "", "");
 	private static Build defaultWater = new Build("Default Water", "Water", "Shield Stance", "", "", "Bracing", "", "");
-	private static Build defaultAir = new Build("Default Air", "Air", "Blade Stance", "", "", "Bracing", "", "");
+	private static Build defaultAir = new Build("Default Air", "Air", "Blade Stance", "", "", "Retaliation", "", "");
 	
 	private String name;
 	private String className;
