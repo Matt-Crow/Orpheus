@@ -268,5 +268,15 @@ public class Player extends Entity{
 		g.fillOval(500, 500, 100, 100);
 		g.setColor(Color.black);
 		g.drawString(strEn, 505, 550);
+		
+		int i = 100;
+		for(Attack a : actives){
+			if(a == actives[selectedAttack]){
+				g.setColor(Color.yellow);
+				g.fillRect(i, 500, 133, 50);
+			}
+			a.drawStatusPane(g, i, 550);
+			i += 133;
+		}
 	}
 }

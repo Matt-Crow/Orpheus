@@ -1,6 +1,7 @@
 package attacks;
 import java.util.ArrayList;
-
+import java.awt.Color;
+import java.awt.Graphics;
 import entities.*;
 import upgradables.Stat;
 import resources.Op;
@@ -89,5 +90,20 @@ public class Attack {
 			Op.add(stat.name + ": " + getStatValue(stat.name));
 		}
 		Op.dp();
+	}
+	public void drawStatusPane(Graphics g, int x, int y){
+		if(!onCooldown()){
+			g.setColor(Color.white);
+			g.fillRect(x, y, 133, 50);
+			g.setColor(Color.black);
+			g.drawString(getName(), x + 10, y + 20);
+		} else {
+			g.setColor(Color.black);
+			g.fillRect(x, y, 133, 50);
+			g.setColor(Color.red);
+			g.drawString("On cooldown: " + cooldown, x + 10, y + 20);
+		}
+		
+		
 	}
 }
