@@ -3,12 +3,12 @@ package entities;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
 
 import battle.Team;
 import battle.DamageBacklog;
 import customizables.*;
 import resources.Op;
+import resources.Random;
 import attacks.*;
 import passives.*;
 import statuses.Status;
@@ -76,7 +76,7 @@ public class Player extends Entity{
 				return;
 		}
 		String[] classes = {"fire", "earth", "water", "air"};
-		int randomNum = ThreadLocalRandom.current().nextInt(0, 4);
+		int randomNum = Random.choose(0, 4);
 		setClass(classes[randomNum]);
 	}
 	public void setActives(String[] names){

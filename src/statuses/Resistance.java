@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import entities.Player;
 import resources.OnHitAction;
-import resources.Op;
 
 public class Resistance extends Status{
 	public Resistance(int lv, int uses){
