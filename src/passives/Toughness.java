@@ -2,7 +2,7 @@ package passives;
 
 import statuses.Resistance;
 
-public class Toughness extends OnHitPassive{
+public class Toughness extends OnBeHitPassive{
 	public Toughness(){
 		super("Toughness", 20);
 	}

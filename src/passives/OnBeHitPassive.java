@@ -5,11 +5,11 @@ import javax.swing.AbstractAction;
 import resources.OnHitAction;
 import resources.Random;
 
-public class OnHitPassive extends Passive{
+public class OnBeHitPassive extends Passive{
 	private int chance;
 	
-	public OnHitPassive(String n, int c){
-		super(n, "on hit");
+	public OnBeHitPassive(String n, int c){
+		super(n, "on be hit");
 		chance = c;
 	}
 	public void update(){
@@ -21,6 +21,6 @@ public class OnHitPassive extends Passive{
 				}
 			}
 		});
-		getPlayer().addOnHit(a);
+		getPlayer().addOnBeHit(a);
 	}
 }

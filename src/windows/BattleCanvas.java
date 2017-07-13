@@ -37,7 +37,7 @@ public class BattleCanvas extends JPanel{
 		          hostedBattle.update();
 		          repaint();
 		          //Op.add("End of frame in battlecanvas");
-		          Op.dp();
+		          //Op.dp();
 		      }
 		};
 		addKeyRegistration();

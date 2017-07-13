@@ -27,6 +27,7 @@ public class Op {
 	}
 	// Prints the contents of the message arraylist
 	public static void dp(){
+		add(" ");
 		if(! previousMessages.equals(messages)){
 			out.println("<**DEBUG**>");
 			for(String msg : messages){

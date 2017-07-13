@@ -213,7 +213,6 @@ public class Player extends Entity{
 				newStatuses.add(s);
 			}
 		}
-		Op.dp();
 		statuses = newStatuses;
 		for(Status s : statuses){
 			s.inflictOn(this);
