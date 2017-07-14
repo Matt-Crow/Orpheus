@@ -2,14 +2,19 @@ package attacks;
 import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
 import entities.*;
 import upgradables.Stat;
+import statuses.Status;
+import resources.OnHitAction;
 import resources.Op;
 
 public class Attack {
 	private static ArrayList<Attack> attackList = new ArrayList<>();
 	private String name;
 	private ArrayList<Stat> stats;
+	private ArrayList<Status> inflictOnHit;
 	private int cooldown;
 	private Projectile registeredProjectile;
 	private String type;
@@ -25,6 +30,8 @@ public class Attack {
 		stats.add(new Stat("Area Scale", areaScale));
 		stats.add(new Stat("Distance Scale", distanceScale));
 		stats.add(new Stat("Damage", dmg));
+		
+		inflictOnHit = new ArrayList<>();
 		
 		attackList.add(this);
 	}
@@ -58,6 +65,9 @@ public class Attack {
 	public double getStatValue(String n){
 		return getStat(n).get();
 	}
+	public void addStatus(Status s){
+		inflictOnHit.add(s);
+	}
 	public Projectile getRegisteredProjectile(){
 		return registeredProjectile;
 	}
@@ -70,6 +80,16 @@ public class Attack {
 	public void use(Player user){
 		user.loseEnergy((int) getStatValue("Energy Cost"));
 		registeredProjectile = new SeedProjectile(user.getX(), user.getY(), user.getDirNum(), (int) getStatValue("Speed"), user, this);
+		
+		OnHitAction a = new OnHitAction();
+		a.setAction(new AbstractAction(){
+			public void actionPerformed(ActionEvent e){
+				for(Status s : inflictOnHit){
+					a.getTarget().inflict(s);
+				}
+			}
+		});
+		registeredProjectile.addOnHit(a);
 		if(registeredProjectile.getAttack().getStatValue("Range") == 0){
 			registeredProjectile.terminate();
 		}

@@ -69,6 +69,7 @@ public class Projectile extends Entity{
 				user.tripOnHit(p);
 				p.tripOnBeHit(user);
 			}
+			tripOnHit(p);
 			CombatLog.logProjectileData(this);
 			terminate();
 		}
