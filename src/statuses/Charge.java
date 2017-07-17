@@ -15,7 +15,7 @@ public class Charge extends Status{
 		OnUpdateAction a = new OnUpdateAction();
 		a.setAction(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				p.gainEnergy((int) (2.5 * getIntensityLevel()));
+				p.getEnergyLog().gainEnergy((int) (2.5 * getIntensityLevel()));
 				use();
 			}
 		});

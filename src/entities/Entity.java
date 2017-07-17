@@ -12,6 +12,7 @@ public class Entity {
 	private int y;
 	private int dirNum;
 	private int momentum;
+	private double speedFilter;
 	private boolean moving;
 	
 	private ArrayList<OnHitAction> onHitRegister;
@@ -25,6 +26,7 @@ public class Entity {
 		y = yCoord;
 		dirNum = directionNumber;
 		momentum = m;
+		speedFilter = 1.0;
 		moving = false;
 		
 		onHitRegister = new ArrayList<>();
@@ -49,6 +51,9 @@ public class Entity {
 	public void setMoving(boolean m){
 		moving = m;
 	}
+	public void applySpeedFilter(double f){
+		speedFilter *= f;
+	}
 	public void addOnHit(OnHitAction a){
 		onHitRegister.add(a);
 	}
@@ -70,9 +75,8 @@ public class Entity {
 	public int getDirNum(){
 		return dirNum;
 	}
-	
 	public int getMomentum(){
-		return momentum;
+		return (int) (momentum * speedFilter);
 	}
 	public void resetTrips(){
 		onHitRegister = new ArrayList<>();
@@ -80,6 +84,8 @@ public class Entity {
 		onMeleeHitRegister = new ArrayList<>();
 		onBeMeleeHitRegister = new ArrayList<>();
 		onUpdateRegister = new ArrayList<>();
+		
+		speedFilter = 1.0;
 	}
 	public void tripOnHit(Player hit){
 		for(OnHitAction a : onHitRegister){
@@ -132,8 +138,8 @@ public class Entity {
 	}
 	// add collisions
 	public void move(){
-		x += getVector()[0] * momentum;
-		y += getVector()[1] * momentum;
+		x += getVector()[0] * getMomentum();
+		y += getVector()[1] * getMomentum();
 	}
 	public void update(){
 		if(moving){

@@ -15,7 +15,7 @@ public class Stun extends Status{
 		OnUpdateAction a = new OnUpdateAction();
 		a.setAction(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				p.setMoving(false);
+				p.applySpeedFilter(1.0 - 0.25 * getIntensityLevel());
 				use();
 			}
 		});

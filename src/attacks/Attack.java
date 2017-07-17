@@ -75,10 +75,10 @@ public class Attack {
 		return cooldown > 0;
 	}
 	public boolean canUse(Player user){
-		return user.getEnergy() >= getStat("Energy Cost").get() && !onCooldown();
+		return user.getEnergyLog().getEnergy() >= getStat("Energy Cost").get() && !onCooldown();
 	}
 	public void use(Player user){
-		user.loseEnergy((int) getStatValue("Energy Cost"));
+		user.getEnergyLog().loseEnergy((int) getStatValue("Energy Cost"));
 		registeredProjectile = new SeedProjectile(user.getX(), user.getY(), user.getDirNum(), (int) getStatValue("Speed"), user, this);
 		
 		OnHitAction a = new OnHitAction();

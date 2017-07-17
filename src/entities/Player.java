@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import battle.Team;
 import battle.DamageBacklog;
+import battle.EnergyLog;
 import customizables.*;
 import resources.Op;
 import resources.Random;
@@ -22,11 +23,8 @@ public class Player extends Entity{
 	private Team team;
 	private CharacterClass c;
 	
-	private int energy;
-	
-	private int timeSinceLastEnergy;
-	
 	private DamageBacklog log;
+	private EnergyLog energyLog;
 	
 	private Slash slash;
 	private int selectedAttack;
@@ -57,9 +55,14 @@ public class Player extends Entity{
 	public Coordinates getCoords(){
 		return new Coordinates(getX(), getY());
 	}
+	
 	public DamageBacklog getLog(){
 		return log;
 	}
+	public EnergyLog getEnergyLog(){
+		return energyLog;
+	}
+	
 	public CharacterClass getCharacterClass(){
 		return c;
 	}
@@ -108,7 +111,6 @@ public class Player extends Entity{
 			}
 		}
 	}
-	
 	public void setPassives(String[] names){
 		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
 			boolean found = false;
@@ -153,12 +155,9 @@ public class Player extends Entity{
 	public void turn(String dir){
 		if(turnCooldown <= 0){
 			super.turn(dir);
+			turnCooldown = 10;
 		}
-		turnCooldown = 10;
-	}
-	public int getEnergy(){
-		return energy;
-	}
+	}	
 	public double getStatValue(String n){
 		return c.getStatValue(n);
 	}
@@ -175,6 +174,8 @@ public class Player extends Entity{
 			actives[selectedAttack].use(this);
 		}
 	}
+	
+	//Backlog stuff
 	public void logDamage(int dmg){
 		log.log(dmg);
 	}
@@ -185,18 +186,6 @@ public class Player extends Entity{
 		log.applyFilter(m);
 	}
 	
-	public void gainEnergy(int amount){
-		if(energy == getStatValue("Max energy")){
-			return;
-		}
-		energy += amount;
-		if(energy > getStatValue("Max energy")){
-			energy = (int) getStatValue("Max energy");
-		}
-	}
-	public void loseEnergy(int amount){
-		energy -= amount;
-	}
 	public void init(Team t, int x, int y, int dirNum){
 		super.setCoords(x, y);
 		super.setDirNum(dirNum);
@@ -204,9 +193,8 @@ public class Player extends Entity{
 		turnCooldown = 0;
 		slash.init();
 		c.calcStats();
-		energy = (int) getStatValue("Max energy");
-		timeSinceLastEnergy = 0;
 		log = new DamageBacklog(this);
+		energyLog = new EnergyLog(this);
 		for(Attack a : actives){
 			a.init();
 		}
@@ -229,13 +217,6 @@ public class Player extends Entity{
 			s.inflictOn(this);
 		}
 	}
-	public void updateEnergy(){
-		timeSinceLastEnergy += 1;
-		if(timeSinceLastEnergy >= getStatValue("ER")){
-			timeSinceLastEnergy = 0;
-			gainEnergy((int) getStatValue("EPR"));
-		}
-	}
 	
 	public void update(){
 		super.update();
@@ -251,12 +232,13 @@ public class Player extends Entity{
 		updateStatuses();
 		tripOnUpdate();
 		log.update();
-		updateEnergy();
+		energyLog.update();
 		
 		if(AI){
 			runAICheck();
 		}
 	}
+	
 	public void draw(Graphics g){
 		g.setColor(team.color);
 		g.drawString("HP: " + log.getHP(), getX() - 50, getY() - 75);
@@ -277,7 +259,7 @@ public class Player extends Entity{
 		g.setColor(Color.black);
 		g.drawString(strHP, 5, 550);
 		
-		String strEn = energy + "";
+		String strEn = energyLog.getEnergy() + "";
 		g.setColor(Color.yellow);
 		g.fillOval(500, 500, 100, 100);
 		g.setColor(Color.black);
@@ -293,6 +275,7 @@ public class Player extends Entity{
 			i += 133;
 		}
 	}
+	
 	// AI stuff
 	public void findClosestPlayer(){
 		Player closest;
