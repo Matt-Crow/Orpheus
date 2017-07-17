@@ -9,6 +9,7 @@ import battle.DamageBacklog;
 import customizables.*;
 import resources.Op;
 import resources.Random;
+import resources.Coordinates;
 import attacks.*;
 import passives.*;
 import statuses.Status;
@@ -33,6 +34,8 @@ public class Player extends Entity{
 	private Passive[] passives;
 	private ArrayList<Status> statuses;
 	
+	private boolean AI;
+	
 	public Player(String n){
 		super(0, 0, 0, 10);
 		name = n;
@@ -42,6 +45,8 @@ public class Player extends Entity{
 		statuses = new ArrayList<>();
 		selectedAttack = 0;
 		players.add(this);
+		
+		AI = true;
 	}
 	public String getName(){
 		return name;
@@ -49,12 +54,18 @@ public class Player extends Entity{
 	public Team getTeam(){
 		return team;
 	}
+	public Coordinates getCoords(){
+		return new Coordinates(getX(), getY());
+	}
 	public DamageBacklog getLog(){
 		return log;
 	}
 	public CharacterClass getCharacterClass(){
 		return c;
-	}	
+	}
+	public void disableAI(){
+		AI = false;
+	}
 	public void applyBuild(Build b){
 		setClass(b.getClassName());
 		setActives(b.getActiveNames());
@@ -241,6 +252,10 @@ public class Player extends Entity{
 		tripOnUpdate();
 		log.update();
 		updateEnergy();
+		
+		if(AI){
+			runAICheck();
+		}
 	}
 	public void draw(Graphics g){
 		g.setColor(team.color);
@@ -277,5 +292,22 @@ public class Player extends Entity{
 			a.drawStatusPane(g, i, 550);
 			i += 133;
 		}
+	}
+	// AI stuff
+	public void findClosestPlayer(){
+		Player closest;
+		double dist = 999999;
+		// work here later
+	}
+	public boolean checkIfPlayerInRange(){
+		for(Coordinates c : getTeam().getEnemy().getAllCoords()){
+			if(c.distanceBetween(getCoords()) <= 100){
+				return true;
+			}
+		}
+		return false;
+	}
+	public void runAICheck(){
+		setMoving(!checkIfPlayerInRange());
 	}
 }

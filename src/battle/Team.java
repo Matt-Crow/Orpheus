@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import entities.Player;
 import entities.Projectile;
 import resources.Op;
+import resources.Coordinates;
 import customizables.Build;
 
 public class Team {
@@ -25,6 +26,13 @@ public class Team {
 	}
 	public Color getColor(){
 		return color;
+	}
+	public ArrayList<Coordinates> getAllCoords(){
+		ArrayList<Coordinates> ret = new ArrayList<>();
+		for(Player p : members){
+			ret.add(p.getCoords());
+		}
+		return ret;
 	}
 	public void addMember(Player m){
 		members.add(m);
@@ -46,6 +54,9 @@ public class Team {
 	}
 	public void setEnemy(Team t){
 		enemyTeam = t;
+	}
+	public Team getEnemy(){
+		return enemyTeam;
 	}
 	public void registerProjectile(Projectile p){
 		projectiles.add(p);
