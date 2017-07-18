@@ -14,6 +14,7 @@ import resources.Coordinates;
 import attacks.*;
 import passives.*;
 import statuses.Status;
+import ai.AI;
 
 // this is going to be very big
 public class Player extends Entity{
@@ -33,6 +34,7 @@ public class Player extends Entity{
 	private ArrayList<Status> statuses;
 	
 	private boolean AI;
+	private AI intel;
 	
 	public Player(String n){
 		super(0, 0, 0, 10);
@@ -45,6 +47,8 @@ public class Player extends Entity{
 		players.add(this);
 		
 		AI = true;
+		intel = new AI(this);
+		intel.setToWander();
 	}
 	public String getName(){
 		return name;
@@ -235,7 +239,8 @@ public class Player extends Entity{
 		energyLog.update();
 		
 		if(AI){
-			runAICheck();
+			//runAICheck();
+			intel.update();
 		}
 	}
 	

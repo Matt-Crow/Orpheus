@@ -140,6 +140,18 @@ public class Entity {
 	public void move(){
 		x += getVector()[0] * getMomentum();
 		y += getVector()[1] * getMomentum();
+		
+		if(x < 0){
+			x = 0;
+		} else if(x > 2000){
+			x = 2000;
+		}
+		
+		if(y < 0){
+			y = 0;
+		} else if(y > 2000){
+			y = 2000;
+		}
 	}
 	public void update(){
 		if(moving){
