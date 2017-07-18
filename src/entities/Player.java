@@ -239,7 +239,6 @@ public class Player extends Entity{
 		energyLog.update();
 		
 		if(AI){
-			//runAICheck();
 			intel.update();
 		}
 	}
@@ -279,23 +278,5 @@ public class Player extends Entity{
 			a.drawStatusPane(g, i, 550);
 			i += 133;
 		}
-	}
-	
-	// AI stuff
-	public void findClosestPlayer(){
-		Player closest;
-		double dist = 999999;
-		// work here later
-	}
-	public boolean checkIfPlayerInRange(){
-		for(Coordinates c : getTeam().getEnemy().getAllCoords()){
-			if(c.distanceBetween(getCoords()) <= 100){
-				return true;
-			}
-		}
-		return false;
-	}
-	public void runAICheck(){
-		setMoving(!checkIfPlayerInRange());
 	}
 }

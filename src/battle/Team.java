@@ -27,12 +27,22 @@ public class Team {
 	public Color getColor(){
 		return color;
 	}
+	
 	public ArrayList<Coordinates> getAllCoords(){
 		ArrayList<Coordinates> ret = new ArrayList<>();
 		for(Player p : members){
 			ret.add(p.getCoords());
 		}
 		return ret;
+	}
+	public Player getPlayerByCoords(Coordinates c){
+		for(Player p : members){
+			if(p.getCoords().getX() == c.getX() && p.getCoords().getY() == c.getY()){
+				return p;
+			}
+		}
+		Op.dp();
+		return new Player("ERROR");
 	}
 	public void addMember(Player m){
 		members.add(m);

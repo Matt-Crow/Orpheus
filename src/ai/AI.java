@@ -1,6 +1,8 @@
 package ai;
 
 import entities.Player;
+import resources.Coordinates;
+import resources.Op;
 import resources.Random;
 
 public class AI {
@@ -9,11 +11,11 @@ public class AI {
 	private String mode;
 	private int wanderDistance;
 	private int distanceWandered;
+	private Player latched;
 	
 	public AI(Player p){
 		appliedTo = p;
 	}
-	
 	public void setToWander(){
 		mode = "wander";
 		wanderDistance = Random.choose(100, 1000);
@@ -27,6 +29,12 @@ public class AI {
 			break;
 		}
 	}
+	public void latch(Player p){
+		mode = "pursue";
+		Op.add(appliedTo.getName() + " is now pursuing " + p.getName());
+		Op.dp();
+		latched = p;
+	}
 	
 	public void wander(){
 		appliedTo.setMoving(true);
@@ -34,10 +42,40 @@ public class AI {
 			setToWander();
 		}
 	}
+	// work here
+	public void pursue(){
+		
+	}
+	
+	public boolean checkIfPlayerInSightRange(){
+		for(Coordinates c : appliedTo.getTeam().getEnemy().getAllCoords()){
+			if(c.distanceBetween(appliedTo.getCoords()) <= 500){
+				return true;
+			}
+		}
+		return false;
+	}
+	public Player nearestEnemy(){
+		Coordinates nearest = new Coordinates(0, 0);
+		int distance = 999999;
+		for(Coordinates c : appliedTo.getTeam().getEnemy().getAllCoords()){
+			if(c.distanceBetween(appliedTo.getCoords()) < distance){
+				nearest = c;
+				distance = (int) c.distanceBetween(appliedTo.getCoords());
+			}
+		}
+		return appliedTo.getTeam().getEnemy().getPlayerByCoords(nearest);
+	}
 	public void update(){
 		if(mode == "wander"){
 			wander();
 			distanceWandered += appliedTo.getMomentum();
+			
+			if(checkIfPlayerInSightRange()){
+				latch(nearestEnemy());
+			}
+		} else if(mode == "pursue"){
+			appliedTo.setMoving(false);
 		}
 	}
 }
