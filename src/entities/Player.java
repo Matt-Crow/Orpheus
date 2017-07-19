@@ -11,6 +11,7 @@ import customizables.*;
 import resources.Op;
 import resources.Random;
 import resources.Coordinates;
+import resources.Direction;
 import attacks.*;
 import passives.*;
 import statuses.Status;
@@ -161,7 +162,41 @@ public class Player extends Entity{
 			super.turn(dir);
 			turnCooldown = 10;
 		}
-	}	
+	}
+	public void turnToward(String d){
+		int cDirNum = getDirNum();
+		int dDirNum = Direction.getIndexOf(d);
+		boolean shouldLeft = true;
+		
+		if(cDirNum > dDirNum){
+			shouldLeft = true;
+		} else if(cDirNum < dDirNum){
+			shouldLeft = false;
+		} else {
+			// already facing the correct way
+			return;
+		}
+		
+		int differenceBetween;
+		if(cDirNum > dDirNum){
+			differenceBetween = cDirNum - dDirNum;
+		} else if(cDirNum < dDirNum){
+			differenceBetween = dDirNum - cDirNum;
+		} else {
+			// already facing the correct way
+			return;
+		}
+		
+		if(differenceBetween > 4){
+			shouldLeft = !shouldLeft;
+		}
+		
+		if(shouldLeft){
+			turn("left");
+		} else {
+			turn("right");
+		}
+	}
 	public double getStatValue(String n){
 		return c.getStatValue(n);
 	}

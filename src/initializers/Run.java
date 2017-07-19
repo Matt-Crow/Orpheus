@@ -7,6 +7,6 @@ public class Run {
 	public static void main(String[] args) {
 		new StartWindow();
 		player = new Player("Player");
-		player.disableAI();
+		//player.disableAI();
 	}
 }

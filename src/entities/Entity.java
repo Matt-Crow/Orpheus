@@ -75,6 +75,12 @@ public class Entity {
 	public int getDirNum(){
 		return dirNum;
 	}
+	public Direction getDir(){
+		return Direction.directions[getDirNum()];
+	}
+	public String getDirName(){
+		return getDir().getName();
+	}
 	public int getMomentum(){
 		return (int) (momentum * speedFilter);
 	}
@@ -134,12 +140,6 @@ public class Entity {
 			dirNum = 7;
 		} else if(dirNum > 7){
 			dirNum = 0;
-		}
-	}
-	// work here
-	public void turnToward(String d){
-		if(Direction.getIndexOf(d) > 0){
-			
 		}
 	}
 	// add collisions

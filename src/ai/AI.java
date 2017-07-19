@@ -45,14 +45,21 @@ public class AI {
 	// work here
 	public void pursue(){
 		// check if in range
-		
-		//...
+		if(appliedTo.getCoords().distanceBetween(latched.getCoords()) <= 100){
+			/*
+			appliedTo.disableAI();
+			appliedTo.setMoving(false);
+			latched.disableAI();
+			latched.setMoving(false);
+			*/
+			return;
+		}
 		
 		// move to them
-		boolean isAbove;
-		boolean isBelow;
-		boolean isLeft;
-		boolean isRight;
+		boolean isAbove = false;
+		boolean isBelow = false;
+		boolean isLeft = false;
+		boolean isRight = false;
 		int x1 = appliedTo.getCoords().getX();
 		int x2 = latched.getCoords().getX();
 		int y1 = appliedTo.getCoords().getY();
@@ -60,21 +67,41 @@ public class AI {
 		
 		if(x1 > x2){
 			isLeft = true;
-			isRight = false;
 		} else if(x1 < x2){
-			isLeft = false;
 			isRight = true;
 		}
 		
 		if(y1 > y2){
 			isAbove = true;
-			isBelow = false;
 		} else if(y1 < y2){
-			isAbove = false;
 			isBelow = true;
 		}
+		String turnTo;
+		if(isAbove){
+			if(isLeft){
+				turnTo = "Northwest";
+			} else if(isRight){
+				turnTo = "Northeast";
+			} else {
+				turnTo = "North";
+			}
+		} else if(isBelow){
+			if(isLeft){
+				turnTo = "Southwest";
+			} else if(isRight){
+				turnTo = "Southeast";
+			} else {
+				turnTo = "South";
+			}
+		} else {
+			if(isLeft){
+				turnTo = "West";
+			} else {
+				turnTo = "East";
+			}
+		}
 		
-		// add turntoward here
+		appliedTo.turnToward(turnTo);
 	}
 	
 	public boolean checkIfPlayerInSightRange(){
