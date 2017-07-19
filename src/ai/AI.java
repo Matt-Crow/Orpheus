@@ -44,7 +44,37 @@ public class AI {
 	}
 	// work here
 	public void pursue(){
+		// check if in range
 		
+		//...
+		
+		// move to them
+		boolean isAbove;
+		boolean isBelow;
+		boolean isLeft;
+		boolean isRight;
+		int x1 = appliedTo.getCoords().getX();
+		int x2 = latched.getCoords().getX();
+		int y1 = appliedTo.getCoords().getY();
+		int y2 = latched.getCoords().getY();
+		
+		if(x1 > x2){
+			isLeft = true;
+			isRight = false;
+		} else if(x1 < x2){
+			isLeft = false;
+			isRight = true;
+		}
+		
+		if(y1 > y2){
+			isAbove = true;
+			isBelow = false;
+		} else if(y1 < y2){
+			isAbove = false;
+			isBelow = true;
+		}
+		
+		// add turntoward here
 	}
 	
 	public boolean checkIfPlayerInSightRange(){
@@ -75,7 +105,7 @@ public class AI {
 				latch(nearestEnemy());
 			}
 		} else if(mode == "pursue"){
-			appliedTo.setMoving(false);
+			pursue();
 		}
 	}
 }

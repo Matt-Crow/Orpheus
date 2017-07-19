@@ -70,7 +70,7 @@ public class Entity {
 		onUpdateRegister.add(a);
 	}
 	public int[] getVector(){
-		return Direction.directions[dirNum];
+		return Direction.directions[dirNum].getVector();
 	}
 	public int getDirNum(){
 		return dirNum;
@@ -134,6 +134,12 @@ public class Entity {
 			dirNum = 7;
 		} else if(dirNum > 7){
 			dirNum = 0;
+		}
+	}
+	// work here
+	public void turnToward(String d){
+		if(Direction.getIndexOf(d) > 0){
+			
 		}
 	}
 	// add collisions
