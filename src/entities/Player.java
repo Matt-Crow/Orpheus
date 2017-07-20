@@ -37,6 +37,8 @@ public class Player extends Entity{
 	private boolean AI;
 	private AI intel;
 	
+	private boolean shouldTerminate;
+	
 	public Player(String n){
 		super(0, 0, 0, 10);
 		name = n;
@@ -74,8 +76,15 @@ public class Player extends Entity{
 	public AI getAI(){
 		return intel;
 	}
+	
+	public boolean getShouldTerminate(){
+		return shouldTerminate;
+	}
 	public void disableAI(){
 		AI = false;
+	}
+	public void terminate(){
+		shouldTerminate = true;
 	}
 	public void applyBuild(Build b){
 		setClass(b.getClassName());
@@ -243,6 +252,7 @@ public class Player extends Entity{
 		for(Passive p : passives){
 			p.registerTo(this);
 		}
+		shouldTerminate = false;
 	}
 	
 	public void updateStatuses(){

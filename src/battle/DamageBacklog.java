@@ -48,6 +48,10 @@ public class DamageBacklog {
 		}
 		remHP -= damage;
 		dmg -= damage;
+		
+		if(remHP <= 0){
+			registeredTo.terminate();
+		}
 	}
 	public void heal(int amount){
 		if(Master.DISABLEHEALING){

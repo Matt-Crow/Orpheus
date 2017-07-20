@@ -65,9 +65,11 @@ public class Attack {
 	public double getStatValue(String n){
 		return getStat(n).get();
 	}
+	
 	public void addStatus(Status s){
 		inflictOnHit.add(s);
 	}
+	
 	public Projectile getRegisteredProjectile(){
 		return registeredProjectile;
 	}

@@ -88,13 +88,16 @@ public class Team {
 		ArrayList<Player> newTeam = new ArrayList<>();
 		for(Player m : members){
 			m.update();
-			/*
-			 * if(NOT DEAD){
-			 * 	newTeam.add(m);
-			 * }
-			 */
+			if(!m.getShouldTerminate()){
+				newTeam.add(m);
+			}
 		}
-		// members = newTeam;
+		members = newTeam;
+		
+		if(members.size() == 0){
+			Op.add(name + " has been defeated!");
+			Op.dp();
+		}
 		
 		for(Projectile p : projectiles){
 			p.update();

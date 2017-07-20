@@ -66,6 +66,11 @@ public class AI {
 		appliedTo.setMoving(true);
 	}
 	public void attack(){
+		if(latched.getShouldTerminate()){
+			mode = "wander";
+			return;
+		}
+		
 		// check if out of range
 		if(appliedTo.getCoords().distanceBetween(latched.getCoords()) >= 100){
 			mode = "pursue";
