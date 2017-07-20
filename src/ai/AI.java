@@ -1,5 +1,9 @@
 package ai;
 
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
+import resources.OnHitAction;
+
 import entities.Player;
 import resources.Coordinates;
 import resources.Op;
@@ -15,7 +19,15 @@ public class AI {
 	
 	public AI(Player p){
 		appliedTo = p;
+		OnHitAction a = new OnHitAction();
+		a.setAction(new AbstractAction(){
+			public void actionPerformed(ActionEvent e){
+				p.getAI().latchOntoNearest();
+			}
+		});
+		p.addOnBeHit(a);
 	}
+	
 	public void setToWander(){
 		mode = "wander";
 		wanderDistance = Random.choose(100, 1000);
@@ -31,9 +43,10 @@ public class AI {
 	}
 	public void latch(Player p){
 		mode = "pursue";
-		Op.add(appliedTo.getName() + " is now pursuing " + p.getName());
-		Op.dp();
 		latched = p;
+	}
+	public void setToAttack(){
+		mode = "attack";
 	}
 	
 	public void wander(){
@@ -42,20 +55,27 @@ public class AI {
 			setToWander();
 		}
 	}
-	// work here
 	public void pursue(){
 		// check if in range
 		if(appliedTo.getCoords().distanceBetween(latched.getCoords()) <= 100){
-			/*
-			appliedTo.disableAI();
-			appliedTo.setMoving(false);
-			latched.disableAI();
-			latched.setMoving(false);
-			*/
+			setToAttack();
 			return;
 		}
 		
-		// move to them
+		turnToLatch();
+		appliedTo.setMoving(true);
+	}
+	public void attack(){
+		// check if out of range
+		if(appliedTo.getCoords().distanceBetween(latched.getCoords()) >= 100){
+			mode = "pursue";
+			return;
+		}
+		turnToLatch();
+		appliedTo.useMeleeAttack();
+	}
+	
+	public void turnToLatch(){
 		boolean isAbove = false;
 		boolean isBelow = false;
 		boolean isLeft = false;
@@ -103,7 +123,6 @@ public class AI {
 		
 		appliedTo.turnToward(turnTo);
 	}
-	
 	public boolean checkIfPlayerInSightRange(){
 		for(Coordinates c : appliedTo.getTeam().getEnemy().getAllCoords()){
 			if(c.distanceBetween(appliedTo.getCoords()) <= 500){
@@ -123,16 +142,22 @@ public class AI {
 		}
 		return appliedTo.getTeam().getEnemy().getPlayerByCoords(nearest);
 	}
+	public void latchOntoNearest(){
+		latch(nearestEnemy());
+	}
+	
 	public void update(){
 		if(mode == "wander"){
 			wander();
 			distanceWandered += appliedTo.getMomentum();
 			
 			if(checkIfPlayerInSightRange()){
-				latch(nearestEnemy());
+				latchOntoNearest();
 			}
 		} else if(mode == "pursue"){
 			pursue();
+		} else if(mode == "attack"){
+			attack();
 		}
 	}
 }

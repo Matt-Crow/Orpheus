@@ -71,6 +71,9 @@ public class Player extends Entity{
 	public CharacterClass getCharacterClass(){
 		return c;
 	}
+	public AI getAI(){
+		return intel;
+	}
 	public void disableAI(){
 		AI = false;
 	}

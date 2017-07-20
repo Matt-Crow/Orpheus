@@ -1,6 +1,7 @@
 package battle;
 
 import entities.Player;
+import initializers.Master;
 import resources.Op;
 
 /*
@@ -49,6 +50,9 @@ public class DamageBacklog {
 		dmg -= damage;
 	}
 	public void heal(int amount){
+		if(Master.DISABLEHEALING){
+			return;
+		}
 		if(remHP == maxHP){
 			return;
 		}
