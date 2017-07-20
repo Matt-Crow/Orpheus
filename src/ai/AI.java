@@ -73,6 +73,7 @@ public class AI {
 		}
 		turnToLatch();
 		appliedTo.useMeleeAttack();
+		appliedTo.setMoving(false);
 	}
 	
 	public void turnToLatch(){
