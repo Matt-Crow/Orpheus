@@ -33,6 +33,7 @@ public class CharacterClass extends Customizable{
 		passiveOptions.add(new Adrenaline());
 		passiveOptions.add(new Toughness());
 		passiveOptions.add(new Sharpen());
+		passiveOptions.add(new Escapist());
 	}
 	public void setHPData(int HP, int regen, int wait){
 		stats.add(new Stat("maxHP", 350 + 50 * HP, 2));
