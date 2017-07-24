@@ -8,6 +8,7 @@ import battle.Team;
 import battle.DamageBacklog;
 import battle.EnergyLog;
 import customizables.*;
+import initializers.Master;
 import resources.Op;
 import resources.Random;
 import resources.Coordinates;
@@ -48,8 +49,10 @@ public class Player extends Entity{
 		statuses = new ArrayList<>();
 		selectedAttack = 0;
 		players.add(this);
-		
 		AI = true;
+		if(Master.DISABLEALLAI){
+			AI = false;
+		}
 		intel = new AI(this);
 		intel.setToWander();
 	}

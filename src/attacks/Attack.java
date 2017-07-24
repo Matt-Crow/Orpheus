@@ -8,6 +8,7 @@ import entities.*;
 import upgradables.Stat;
 import statuses.Status;
 import resources.OnHitAction;
+import resources.Random;
 import resources.Op;
 
 public class Attack {
@@ -15,6 +16,7 @@ public class Attack {
 	private String name;
 	private ArrayList<Stat> stats;
 	private ArrayList<Status> inflictOnHit;
+	private ArrayList<Integer> inflictChance;
 	private int cooldown;
 	private Projectile registeredProjectile;
 	private String type;
@@ -32,6 +34,7 @@ public class Attack {
 		stats.add(new Stat("Damage", dmg));
 		
 		inflictOnHit = new ArrayList<>();
+		inflictChance = new ArrayList<>();
 		
 		attackList.add(this);
 	}
@@ -66,13 +69,29 @@ public class Attack {
 		return getStat(n).get();
 	}
 	
-	public void addStatus(Status s){
+	public void addStatus(Status s, int chance){
 		inflictOnHit.add(s);
+		inflictChance.add(chance);
 	}
 	
 	public Projectile getRegisteredProjectile(){
 		return registeredProjectile;
 	}
+	
+	public OnHitAction getStatusInfliction(){
+		OnHitAction a = new OnHitAction();
+		a.setAction(new AbstractAction(){
+			public void actionPerformed(ActionEvent e){
+				for(int i = 0; i < inflictOnHit.size(); i++){
+					if(Random.chance(inflictChance.get(i))){
+						a.getTarget().inflict(inflictOnHit.get(i));
+					}
+				}
+			}
+		});
+		return a;
+	}
+	
 	public boolean onCooldown(){
 		return cooldown > 0;
 	}
@@ -82,16 +101,7 @@ public class Attack {
 	public void use(Player user){
 		user.getEnergyLog().loseEnergy((int) getStatValue("Energy Cost"));
 		registeredProjectile = new SeedProjectile(user.getX(), user.getY(), user.getDirNum(), (int) getStatValue("Speed"), user, this);
-		
-		OnHitAction a = new OnHitAction();
-		a.setAction(new AbstractAction(){
-			public void actionPerformed(ActionEvent e){
-				for(Status s : inflictOnHit){
-					a.getTarget().inflict(s);
-				}
-			}
-		});
-		registeredProjectile.addOnHit(a);
+		registeredProjectile.addOnHit(getStatusInfliction());
 		if(registeredProjectile.getAttack().getStatValue("Range") == 0){
 			registeredProjectile.terminate();
 		}

@@ -65,10 +65,10 @@ public class Projectile extends Entity{
 			if(registeredAttack.getType() == "melee"){
 				user.tripOnMeleeHit(p);
 				p.tripOnBeMeleeHit(user);
-			} else {
-				user.tripOnHit(p);
-				p.tripOnBeHit(user);
 			}
+			user.tripOnHit(p);
+			p.tripOnBeHit(user);
+			
 			tripOnHit(p);
 			CombatLog.logProjectileData(this);
 			terminate();
