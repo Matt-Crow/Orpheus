@@ -34,6 +34,7 @@ public class CharacterClass extends Customizable{
 		passiveOptions.add(new Toughness());
 		passiveOptions.add(new Sharpen());
 		passiveOptions.add(new Escapist());
+		passiveOptions.add(new SparkingStrikes());
 	}
 	public void setHPData(int HP, int regen, int wait){
 		stats.add(new Stat("maxHP", 350 + 50 * HP, 2));
