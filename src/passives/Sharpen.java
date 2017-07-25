@@ -2,7 +2,7 @@ package passives;
 
 import statuses.Strength;
 
-public class Sharpen extends OnHitPassive{
+public class Sharpen extends OnMeleeHitPassive{
 	public Sharpen(){
 		super("Sharpen", 20);
 	}
