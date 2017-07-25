@@ -178,6 +178,9 @@ public class Player extends Entity{
 			turnCooldown = 10;
 		}
 	}
+	public void decreaseTurnCooldown(int amount){
+		turnCooldown -= amount;
+	}
 	public void turnToward(String d){
 		int cDirNum = getDirNum();
 		int dDirNum = Direction.getIndexOf(d);

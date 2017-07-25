@@ -14,6 +14,7 @@ public class Rush extends Status{
 		a.setAction(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				p.applySpeedFilter(1 + 0.2 * getIntensityLevel());
+				p.decreaseTurnCooldown(getIntensityLevel());
 				use();
 			}
 		});

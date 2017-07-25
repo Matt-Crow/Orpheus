@@ -37,7 +37,7 @@ public class CharacterClass extends Customizable{
 		passiveOptions.add(new SparkingStrikes());
 	}
 	public void setHPData(int HP, int regen, int wait){
-		stats.add(new Stat("maxHP", 350 + 50 * HP, 2));
+		stats.add(new Stat("maxHP", 350 + 50 * HP));
 		stats.add(new Stat("Healing", 3.75 + 1.25 * regen));
 		stats.add(new Stat("Heal rate", 35 - 5 * wait));
 	}
