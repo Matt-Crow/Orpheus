@@ -13,7 +13,7 @@ public class Resistance extends Status{
 		OnHitAction a = new OnHitAction();
 		a.setAction(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				p.addFilter(1 - 0.2 * getIntensityLevel());
+				p.addFilter(1 - 0.25 * getIntensityLevel());
 				use();
 			}
 		});

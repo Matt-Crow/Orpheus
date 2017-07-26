@@ -71,14 +71,14 @@ public class DamageBacklog {
 	public void update(){
 		/*
 		Op.add("Before updating backlog for " + registeredTo.getName() + ":");
-		Op.add("*HP remaining: " + registeredTo.getHP());
+		Op.add("*HP remaining: " + remHP);
 		Op.add("*Backlog: " + dmg);
 		Op.add("*Backlog filter: " + filter);
 		*/
 		deplete();
 		/*
 		Op.add("After updating backlog: ");
-		Op.add("*HP remaining: " + registeredTo.getHP());
+		Op.add("*HP remaining: " + remHP);
 		Op.add("*Backlog: " + dmg);
 		Op.add("*Backlog filter: " + filter);
 		

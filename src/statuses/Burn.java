@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import entities.Player;
 import resources.OnUpdateAction;
-import resources.Op;
 
 public class Burn extends Status{
 	public Burn(int lv, int uses){
@@ -14,7 +13,7 @@ public class Burn extends Status{
 		OnUpdateAction a = new OnUpdateAction();
 		a.setAction(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				p.addFilter(1 + 0.1 * getIntensityLevel());
+				p.addFilter(1 + 0.25 * getIntensityLevel());
 				use();
 			}
 		});

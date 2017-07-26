@@ -64,7 +64,9 @@ public class Projectile extends Entity{
 			
 			if(registeredAttack.getType() == "melee"){
 				user.tripOnMeleeHit(p);
+				user.getEnergyLog().gainEnergy((int) user.getStatValue("EPH"));
 				p.tripOnBeMeleeHit(user);
+				p.getEnergyLog().gainEnergy((int) p.getStatValue("EPHR"));
 			}
 			user.tripOnHit(p);
 			p.tripOnBeHit(user);
