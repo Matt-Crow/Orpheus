@@ -69,9 +69,6 @@ public class Team {
 		return enemyTeam;
 	}
 	public void registerProjectile(Projectile p){
-		projectiles.add(p);
-	}
-	public void registerAOEProjectile(Projectile p){
 		newProjectiles.add(p);
 	}
 	public void checkForHits(ArrayList<Projectile> proj){

@@ -24,6 +24,7 @@ public class CharacterClass extends Customizable{
 		attackOptions.add(new WarriorsStance());
 		attackOptions.add(new ShieldStance());
 		attackOptions.add(new BladeStance());
+		attackOptions.add(new Flurry());
 		
 		passiveOptions = new ArrayList<>();
 		passiveOptions.add(new Bracing());
