@@ -14,6 +14,7 @@ public class Strength extends Status{
 		a.setAction(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				a.getTarget().logPercentageDamage(3.5 * getIntensityLevel());
+				a.getTarget().applyKnockback(p.getDirNum(), 10, (int) (3.5 * getIntensityLevel()));
 				use();
 			}
 		});

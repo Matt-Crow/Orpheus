@@ -15,6 +15,10 @@ public class Entity {
 	private double speedFilter;
 	private boolean moving;
 	
+	private int kbDirNum;
+	private int kbDur;
+	private int kbVelocity;
+	
 	private ArrayList<OnHitAction> onHitRegister;
 	private ArrayList<OnHitAction> onBeHitRegister;
 	private ArrayList<OnHitAction> onMeleeHitRegister;
@@ -28,6 +32,10 @@ public class Entity {
 		momentum = m;
 		speedFilter = 1.0;
 		moving = false;
+		
+		kbDirNum = 0;
+		kbDur = 0;
+		kbVelocity = 0;
 		
 		onHitRegister = new ArrayList<>();
 		onBeHitRegister = new ArrayList<>();
@@ -54,21 +62,7 @@ public class Entity {
 	public void applySpeedFilter(double f){
 		speedFilter *= f;
 	}
-	public void addOnHit(OnHitAction a){
-		onHitRegister.add(a);
-	}
-	public void addOnBeHit(OnHitAction a){
-		onBeHitRegister.add(a);
-	}
-	public void addOnMeleeHit(OnHitAction a){
-		onMeleeHitRegister.add(a);
-	}
-	public void addOnBeMeleeHit(OnHitAction a){
-		onBeMeleeHitRegister.add(a);
-	}
-	public void addOnUpdate(AbstractAction a){
-		onUpdateRegister.add(a);
-	}
+	
 	public int[] getVector(){
 		return Direction.directions[dirNum].getVector();
 	}
@@ -84,6 +78,32 @@ public class Entity {
 	public int getMomentum(){
 		return (int) (momentum * speedFilter);
 	}
+	
+	public void applyKnockback(int dirN, int dur, int vel){
+		kbDirNum = dirN;
+		kbDur = dur;
+		kbVelocity = vel;
+	}
+	public int[] getKBVector(){
+		return Direction.directions[kbDirNum].getVector();
+	}
+	
+	public void addOnHit(OnHitAction a){
+		onHitRegister.add(a);
+	}
+	public void addOnBeHit(OnHitAction a){
+		onBeHitRegister.add(a);
+	}
+	public void addOnMeleeHit(OnHitAction a){
+		onMeleeHitRegister.add(a);
+	}
+	public void addOnBeMeleeHit(OnHitAction a){
+		onBeMeleeHitRegister.add(a);
+	}
+	public void addOnUpdate(AbstractAction a){
+		onUpdateRegister.add(a);
+	}
+	
 	public void resetTrips(){
 		onHitRegister = new ArrayList<>();
 		onBeHitRegister = new ArrayList<>();
@@ -130,6 +150,7 @@ public class Entity {
 			a.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null){});
 		}
 	}
+	
 	public void turn(String dir){
 		if(dir == "left"){
 			dirNum -= 1;
@@ -142,6 +163,7 @@ public class Entity {
 			dirNum = 0;
 		}
 	}
+	
 	// add collisions
 	public void move(){
 		x += getVector()[0] * getMomentum();
@@ -159,7 +181,15 @@ public class Entity {
 			y = 2000;
 		}
 	}
+	
 	public void update(){
+		if(kbDur > 0){
+			x += getKBVector()[0] * kbVelocity;
+			y += getKBVector()[1] * kbVelocity;
+			kbDur -= 1;
+		} else {
+			applyKnockback(0, 0, 0);
+		}
 		if(moving){
 			move();
 		}

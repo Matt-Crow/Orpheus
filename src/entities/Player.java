@@ -304,10 +304,16 @@ public class Player extends Entity{
 		g.setColor(c.getColor());
 		g.fillOval(getX() - 40, getY() - 40, 80, 80);
 		g.setColor(Color.black);
-		int i = getY() + 55;
+		int y = getY() + 55;
 		for(Status s : statuses){
-			g.drawString(s.getName() + "(" + s.getUsesLeft() + ")", getX() - 50, i);
-			i += 20;
+			String iStr = "";
+			int i = 0;
+			while(i < s.getIntensityLevel()){
+				iStr += "I";
+				i++;
+			}
+			g.drawString(s.getName() + " " + iStr + "(" + s.getUsesLeft() + ")", getX() - 50, y);
+			y += 20;
 		}
 	}
 	public void drawHUD(Graphics g){
