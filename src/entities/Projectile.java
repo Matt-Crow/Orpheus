@@ -4,7 +4,6 @@ import java.awt.Graphics;
 
 import attacks.Attack;
 import resources.CombatLog;
-import resources.Op;
 
 public class Projectile extends Entity{
 	private Player user;
@@ -67,10 +66,10 @@ public class Projectile extends Entity{
 				user.getEnergyLog().gainEnergy((int) user.getStatValue("EPH"));
 				p.tripOnBeMeleeHit(user);
 				p.getEnergyLog().gainEnergy((int) p.getStatValue("EPHR"));
+			} else {
+				user.tripOnHit(p);
+				p.tripOnBeHit(user);
 			}
-			user.tripOnHit(p);
-			p.tripOnBeHit(user);
-			
 			tripOnHit(p);
 			CombatLog.logProjectileData(this);
 			terminate();
