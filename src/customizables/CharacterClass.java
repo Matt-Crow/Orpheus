@@ -25,6 +25,7 @@ public class CharacterClass extends Customizable{
 		attackOptions.add(new ShieldStance());
 		attackOptions.add(new BladeStance());
 		attackOptions.add(new Flurry());
+		attackOptions.add(new Heal());
 		
 		passiveOptions = new ArrayList<>();
 		passiveOptions.add(new Bracing());
@@ -38,6 +39,7 @@ public class CharacterClass extends Customizable{
 		passiveOptions.add(new SparkingStrikes());
 		passiveOptions.add(new Momentum());
 		passiveOptions.add(new Leechhealer());
+		passiveOptions.add(new Recover());
 	}
 	public void setHPData(int HP, int regen, int wait){
 		stats.add(new Stat("maxHP", 350 + 50 * HP));

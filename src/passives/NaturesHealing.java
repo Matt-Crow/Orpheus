@@ -7,6 +7,6 @@ public class NaturesHealing extends OnBeHitPassive{
 		super("Nature's Healing", 100);
 	}
 	public void applyEffect(){
-		getPlayer().inflict(new Regeneration(1, 80));
+		getPlayer().inflict(new Regeneration(1, 10));
 	}
 }
