@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import java.util.ArrayList;
 import resources.OnHitAction;
-import resources.Op;
 import resources.Direction;
 
 public class Entity {
@@ -14,6 +13,7 @@ public class Entity {
 	private int momentum;
 	private double speedFilter;
 	private boolean moving;
+	private boolean backwards;
 	
 	private int kbDirNum;
 	private int kbDur;
@@ -32,6 +32,7 @@ public class Entity {
 		momentum = m;
 		speedFilter = 1.0;
 		moving = false;
+		backwards = false;
 		
 		kbDirNum = 0;
 		kbDur = 0;
@@ -58,6 +59,9 @@ public class Entity {
 	}
 	public void setMoving(boolean m){
 		moving = m;
+	}
+	public void switchMoving(){
+		backwards = !backwards;
 	}
 	public void applySpeedFilter(double f){
 		speedFilter *= f;
@@ -181,7 +185,22 @@ public class Entity {
 			y = 2000;
 		}
 	}
-	
+	public void moveBackwards(){
+		x -= getVector()[0] * getMomentum() * 0.5;
+		y -= getVector()[1] * getMomentum() * 0.5;
+		
+		if(x < 0){
+			x = 0;
+		} else if(x > 2000){
+			x = 2000;
+		}
+		
+		if(y < 0){
+			y = 0;
+		} else if(y > 2000){
+			y = 2000;
+		}
+	}
 	public void update(){
 		if(kbDur > 0){
 			x += getKBVector()[0] * kbVelocity;
@@ -191,7 +210,12 @@ public class Entity {
 			applyKnockback(0, 0, 0);
 		}
 		if(moving){
-			move();
+			if(!backwards){
+				move();
+			} else {
+				moveBackwards();
+			}
+			
 		}
 		tripOnUpdate();
 	}

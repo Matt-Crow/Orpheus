@@ -54,6 +54,7 @@ public class BattleCanvas extends JPanel{
 	public void addKeyRegistration(){
 		new KeyRegister(this, "w", true, new moveAction());
 		new KeyRegister(this, "w", false, new stopAction());
+		new KeyRegister(this, "s", true, new reverseAction());
 		new KeyRegister(this, "a", true, new turnLeftAction());
 		new KeyRegister(this, "d", true, new turnRightAction());
 		new KeyRegister(this, "q", true, new meleeAction());
@@ -73,6 +74,12 @@ public class BattleCanvas extends JPanel{
 		static final long serialVersionUID = 1L;
 		public void actionPerformed(ActionEvent e){
 			p.setMoving(false);
+		}
+	}
+	public class reverseAction extends AbstractAction{
+		static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			p.switchMoving();
 		}
 	}
 	public class turnLeftAction extends AbstractAction{
