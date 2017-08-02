@@ -12,7 +12,7 @@ import javax.swing.Timer;
 import battle.*;
 import entities.Player;
 import resources.KeyRegister;
-import resources.Op;
+import initializers.Master;
 
 public class BattleCanvas extends JPanel{
 	public static final long serialVersionUID = 1L;
@@ -24,6 +24,7 @@ public class BattleCanvas extends JPanel{
 	private int FPS;
 	private Player p;
 	private ActionListener update;
+	private boolean paused;
 	
 	public BattleCanvas(int windowWidth, int windowHeight){
 		w = windowWidth;
@@ -32,6 +33,7 @@ public class BattleCanvas extends JPanel{
 		setBackground(Color.black);
 		setFocusable(true);
 		FPS = 20;
+		paused = true;
 		update = new ActionListener() {
 		      public void actionPerformed(ActionEvent e) {
 		          hostedBattle.update();
@@ -62,6 +64,7 @@ public class BattleCanvas extends JPanel{
 		new KeyRegister(this, "z", true, new firstActive());
 		new KeyRegister(this, "x", true, new secondActive());
 		new KeyRegister(this, "c", true, new thirdActive());
+		new KeyRegister(this, "p", true, new pauseAction());
 	}
 	
 	public class moveAction extends AbstractAction{
@@ -124,6 +127,17 @@ public class BattleCanvas extends JPanel{
 			p.changeSelectedAttack(2);
 		}
 	}
+	public class pauseAction extends AbstractAction{
+		static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			paused = !paused;
+			if(!paused){
+				timer = new Timer(1000 / FPS, update);
+				timer.setRepeats(false);
+				timer.start();
+			}
+		}
+	}
 	
 	public int[] retTranslate(){
 		int[] ret = new int[2];
@@ -151,6 +165,7 @@ public class BattleCanvas extends JPanel{
 	
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
+		
 		int[] trans = retTranslate();
 		g.translate(trans[0], trans[1]);
 		battlefield.draw(g);
@@ -158,8 +173,16 @@ public class BattleCanvas extends JPanel{
 		g.translate(-trans[0], -trans[1]);
 		p.drawHUD(g);
 		
-		timer = new Timer(1000 / FPS, update);
-		timer.setRepeats(false);
-		timer.start();
+		if(!paused){
+			timer = new Timer(1000 / FPS, update);
+			timer.setRepeats(false);
+			timer.start();
+		} else {
+			g.setColor(new Color(0, 0, 0, 200));
+			g.fillRect(0, 0, Master.CANVASWIDTH, Master.CANVASHEIGHT);
+			g.setColor(Color.red);
+			g.drawString("The game is paused", (int) (Master.CANVASWIDTH * 0.3), (int) (Master.CANVASHEIGHT * 0.3));
+			g.drawString("Press 'p' to continue", (int) (Master.CANVASWIDTH * 0.4), (int) (Master.CANVASHEIGHT * 0.5));
+		}
 	}
 }
