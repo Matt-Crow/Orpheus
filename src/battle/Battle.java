@@ -1,13 +1,16 @@
 package battle;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
 import entities.*;
+import initializers.Master;
 
 public class Battle {
 	ArrayList<Team> teams;
 	private Battlefield host;
+	private boolean end;
 	
 	public Battle(Team team1, Team team2){
 		teams = new ArrayList<>();
@@ -25,10 +28,27 @@ public class Battle {
 		int spacingBetween = w / 6;
 		teams.get(0).init(spacingFromTopEdge, spacingBetween, 4);
 		teams.get(1).init(h - spacingFromTopEdge * 2, spacingBetween, 0);
+		Master.setCurrentBattle(this);
+		end = false;
+	}
+	public boolean shouldEnd(){
+		return end;
+	}
+	public Team getWinner(){
+		for(Team t : teams){
+			if(!t.isDefeated()){
+				return t;
+			}
+		}
+		return new Team("ERROR", Color.black);
 	}
 	public void update(){
 		for(Team t : teams){
-			t.update();
+			if(t.isDefeated()){
+				end = true;
+			} else {
+				t.update();
+			}
 		}
 	}
 	public void draw(Graphics g){

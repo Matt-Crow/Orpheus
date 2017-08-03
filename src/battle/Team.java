@@ -11,18 +11,22 @@ import resources.Coordinates;
 import customizables.Build;
 
 public class Team {
-	public String name;
-	public Color color;
+	private String name;
+	private Color color;
 	private ArrayList<Player> members;
 	private ArrayList<Projectile> projectiles;
 	private ArrayList<Projectile> newProjectiles;
 	private Team enemyTeam;
+	private boolean defeated;
 	
 	public Team(String n, Color c){
 		name = n;
 		color = c;
 		members = new ArrayList<>();
 		projectiles = new ArrayList<>();
+	}
+	public String getName(){
+		return name;
 	}
 	public Color getColor(){
 		return color;
@@ -61,12 +65,16 @@ public class Team {
 		}
 		projectiles = new ArrayList<>();
 		newProjectiles = new ArrayList<>();
+		defeated = false;
 	}
 	public void setEnemy(Team t){
 		enemyTeam = t;
 	}
 	public Team getEnemy(){
 		return enemyTeam;
+	}
+	public boolean isDefeated(){
+		return defeated;
 	}
 	public void registerProjectile(Projectile p){
 		newProjectiles.add(p);
@@ -92,8 +100,7 @@ public class Team {
 		members = newTeam;
 		
 		if(members.size() == 0){
-			Op.add(name + " has been defeated!");
-			Op.dp();
+			defeated = true;
 		}
 		
 		for(Projectile p : projectiles){

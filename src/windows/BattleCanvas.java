@@ -6,11 +6,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.AbstractAction;
+import javax.swing.JFrame;
 import javax.swing.Timer;
 
 import battle.*;
 import entities.Player;
+import resources.EasyButton;
 import resources.KeyRegister;
 import initializers.Master;
 
@@ -27,6 +30,7 @@ public class BattleCanvas extends JPanel{
 	private boolean paused;
 	
 	public BattleCanvas(int windowWidth, int windowHeight){
+		JPanel panel = this;
 		w = windowWidth;
 		h = windowHeight;
 		setLayout(null);
@@ -34,6 +38,17 @@ public class BattleCanvas extends JPanel{
 		setFocusable(true);
 		FPS = 20;
 		paused = true;
+		
+		EasyButton b = new EasyButton("Exit", 0, 0, Master.CANVASWIDTH / 10, Master.CANVASHEIGHT / 10, Color.red);
+		b.addActionListener(new AbstractAction(){
+			public void actionPerformed(ActionEvent e){
+				new MainWindow();
+				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel);
+				frame.dispose();
+			}
+		});
+		b.addTo(this);
+		
 		update = new ActionListener() {
 		      public void actionPerformed(ActionEvent e) {
 		          hostedBattle.update();
@@ -132,9 +147,7 @@ public class BattleCanvas extends JPanel{
 		public void actionPerformed(ActionEvent e){
 			paused = !paused;
 			if(!paused){
-				timer = new Timer(1000 / FPS, update);
-				timer.setRepeats(false);
-				timer.start();
+				startTimer();
 			}
 		}
 	}
@@ -163,6 +176,12 @@ public class BattleCanvas extends JPanel{
 		return ret;
 	}
 	
+	public void startTimer(){
+		timer = new Timer(1000 / FPS, update);
+		timer.setRepeats(false);
+		timer.start();
+	}
+	
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		
@@ -173,16 +192,31 @@ public class BattleCanvas extends JPanel{
 		g.translate(-trans[0], -trans[1]);
 		p.drawHUD(g);
 		
+		if(hostedBattle.shouldEnd()){
+			drawMatchResolution(g);
+      		return;
+        }
+		
 		if(!paused){
-			timer = new Timer(1000 / FPS, update);
-			timer.setRepeats(false);
-			timer.start();
+			startTimer();
 		} else {
-			g.setColor(new Color(0, 0, 0, 200));
-			g.fillRect(0, 0, Master.CANVASWIDTH, Master.CANVASHEIGHT);
-			g.setColor(Color.red);
-			g.drawString("The game is paused", (int) (Master.CANVASWIDTH * 0.3), (int) (Master.CANVASHEIGHT * 0.3));
-			g.drawString("Press 'p' to continue", (int) (Master.CANVASWIDTH * 0.4), (int) (Master.CANVASHEIGHT * 0.5));
+			drawPause(g);
 		}
+	}
+	public void drawPause(Graphics g){
+		g.setColor(new Color(0, 0, 0, 200));
+		g.fillRect(0, 0, Master.CANVASWIDTH, Master.CANVASHEIGHT);
+		g.setColor(Color.red);
+		g.drawString("The game is paused", (int) (Master.CANVASWIDTH * 0.3), (int) (Master.CANVASHEIGHT * 0.3));
+		g.drawString("Press 'p' to continue", (int) (Master.CANVASWIDTH * 0.4), (int) (Master.CANVASHEIGHT * 0.5));
+	}
+	public void drawMatchResolution(Graphics g){
+		paused = true;
+		g.setColor(new Color(0, 0, 0, 200));
+		g.fillRect(0, 0, Master.CANVASWIDTH, Master.CANVASHEIGHT);
+		g.setColor(Color.yellow);
+		g.drawString("The match is ended,", (int) (Master.CANVASWIDTH * 0.3), (int) (Master.CANVASHEIGHT * 0.3));
+		g.drawString(hostedBattle.getWinner().getName(), (int) (Master.CANVASWIDTH * 0.5), (int) (Master.CANVASHEIGHT * 0.5));
+		g.drawString("is victorious!", (int) (Master.CANVASWIDTH * 0.7), (int) (Master.CANVASHEIGHT * 0.7));
 	}
 }

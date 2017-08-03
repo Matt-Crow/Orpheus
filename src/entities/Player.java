@@ -298,7 +298,7 @@ public class Player extends Entity{
 	}
 	
 	public void draw(Graphics g){
-		g.setColor(team.color);
+		g.setColor(team.getColor());
 		g.drawString("HP: " + log.getHP(), getX() - 50, getY() - 75);
 		g.fillOval(getX() - 50, getY() - 50, 100, 100);
 		g.setColor(c.getColor());
