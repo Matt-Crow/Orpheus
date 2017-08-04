@@ -46,15 +46,12 @@ public class Player extends Entity{
 		slash = new Slash();
 		actives = new Attack[3];
 		passives = new Passive[3];
-		statuses = new ArrayList<>();
-		selectedAttack = 0;
+		
 		players.add(this);
 		AI = true;
 		if(Master.DISABLEALLAI){
 			AI = false;
 		}
-		intel = new AI(this);
-		intel.setToWander();
 	}
 	public String getName(){
 		return name;
@@ -252,12 +249,16 @@ public class Player extends Entity{
 		c.calcStats();
 		log = new DamageBacklog(this);
 		energyLog = new EnergyLog(this);
+		statuses = new ArrayList<>();
+		selectedAttack = 0;
 		for(Attack a : actives){
 			a.init();
 		}
 		for(Passive p : passives){
 			p.registerTo(this);
 		}
+		intel = new AI(this);
+		intel.setToWander();
 		shouldTerminate = false;
 	}
 	
