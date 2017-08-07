@@ -4,35 +4,28 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
-import battle.Team;
-import battle.DamageBacklog;
-import battle.EnergyLog;
+import battle.*;
 import customizables.*;
-import initializers.Master;
-import resources.Op;
-import resources.Random;
-import resources.Coordinates;
-import resources.Direction;
+import resources.*;
 import attacks.*;
 import passives.*;
-import statuses.Status;
 import ai.AI;
+import statuses.Status;
+import initializers.Master;
 
 // this is going to be very big
 public class Player extends Entity{
-	private static ArrayList<Player> players = new ArrayList<>();
 	private String name;
-	private int turnCooldown;
 	private Team team;
 	private CharacterClass c;
+	private Attack[] actives;
+	private Passive[] passives;
 	
 	private DamageBacklog log;
 	private EnergyLog energyLog;
 	
 	private Slash slash;
 	private int selectedAttack;
-	private Attack[] actives;
-	private Passive[] passives;
 	private ArrayList<Status> statuses;
 	
 	private boolean AI;
@@ -47,11 +40,7 @@ public class Player extends Entity{
 		actives = new Attack[3];
 		passives = new Passive[3];
 		
-		players.add(this);
-		AI = true;
-		if(Master.DISABLEALLAI){
-			AI = false;
-		}
+		AI = !Master.DISABLEALLAI;
 	}
 	public String getName(){
 		return name;
@@ -86,6 +75,8 @@ public class Player extends Entity{
 	public void terminate(){
 		shouldTerminate = true;
 	}
+	
+	// Build stuff
 	public void applyBuild(Build b){
 		setClass(b.getClassName());
 		setActives(b.getActiveNames());
@@ -169,15 +160,7 @@ public class Player extends Entity{
 			return;
 		}
 	}
-	public void turn(String dir){
-		if(turnCooldown <= 0){
-			super.turn(dir);
-			turnCooldown = 10;
-		}
-	}
-	public void decreaseTurnCooldown(int amount){
-		turnCooldown -= amount;
-	}
+	
 	public void turnToward(String d){
 		int cDirNum = getDirNum();
 		int dDirNum = Direction.getIndexOf(d);
@@ -212,6 +195,7 @@ public class Player extends Entity{
 			turn("right");
 		}
 	}
+	
 	public double getStatValue(String n){
 		return c.getStatValue(n);
 	}
@@ -229,22 +213,14 @@ public class Player extends Entity{
 		}
 	}
 	
-	//Backlog stuff
 	public void logDamage(int dmg){
 		log.log(dmg);
-	}
-	public void logPercentageDamage(double percent){
-		log.log( (int) (getStatValue("maxHP") * (percent / 100)));
-	}
-	public void addFilter(double m){
-		log.applyFilter(m);
 	}
 	
 	public void init(Team t, int x, int y, int dirNum){
 		super.setCoords(x, y);
 		super.setDirNum(dirNum);
 		team = t;
-		turnCooldown = 0;
 		slash.init();
 		c.calcStats();
 		log = new DamageBacklog(this);
@@ -279,7 +255,6 @@ public class Player extends Entity{
 	
 	public void update(){
 		super.update();
-		turnCooldown -= 1;
 		slash.update();
 		resetTrips();
 		for(Attack a : actives){
@@ -299,13 +274,21 @@ public class Player extends Entity{
 	}
 	
 	public void draw(Graphics g){
-		g.setColor(team.getColor());
-		g.drawString("HP: " + log.getHP(), getX() - 50, getY() - 75);
-		g.fillOval(getX() - 50, getY() - 50, 100, 100);
-		g.setColor(c.getColor());
-		g.fillOval(getX() - 40, getY() - 40, 80, 80);
+		int w = Master.CANVASWIDTH;
+		int h = Master.CANVASHEIGHT;
+		
+		// HP value
 		g.setColor(Color.black);
-		int y = getY() + 55;
+		g.drawString("HP: " + log.getHP(), getX() - w/12, getY() - h/8);
+		
+		// Update this to sprite later
+		g.setColor(team.getColor());
+		g.fillOval(getX() - w/12, getY() - h/12, w/6, h/6);
+		g.setColor(c.getColor());
+		g.fillOval(getX() - w/15, getY() - h/15, (int)(w * 0.133), (int)(h * 0.133));
+		
+		g.setColor(Color.black);
+		int y = getY() + h/10;
 		for(Status s : statuses){
 			String iStr = "";
 			int i = 0;
@@ -314,30 +297,40 @@ public class Player extends Entity{
 				i++;
 			}
 			g.drawString(s.getName() + " " + iStr + "(" + s.getUsesLeft() + ")", getX() - 50, y);
-			y += 20;
+			y += h/30;
 		}
 	}
 	public void drawHUD(Graphics g){
+		int w = Master.CANVASWIDTH;
+		int h = Master.CANVASHEIGHT;
+		
+		int guiY = (int)(h * 0.8);
+		int sw = w / 5;
+		int sh = h / 5;
+		
+		// HP bubble
 		String strHP = log.getHP() + "";
 		g.setColor(Color.red);
-		g.fillOval(0, 500, 100, 100);
+		g.fillOval(0, guiY, sw, sh);
 		g.setColor(Color.black);
-		g.drawString(strHP, 5, 550);
+		g.drawString(strHP, w/100, (int) (h * 0.9));
 		
+		// Energy bubble
 		String strEn = energyLog.getEnergy() + "";
 		g.setColor(Color.yellow);
-		g.fillOval(500, 500, 100, 100);
+		g.fillOval((int)(w * 0.8), guiY, sw, sh);
 		g.setColor(Color.black);
-		g.drawString(strEn, 505, 550);
+		g.drawString(strEn, (int)(w * 0.81), (int) (h * 0.9));
 		
-		int i = 100;
+		// Actives
+		int i = sw;
 		for(Attack a : actives){
 			if(a == actives[selectedAttack]){
 				g.setColor(Color.yellow);
-				g.fillRect(i, 500, 133, 50);
+				g.fillRect(i, guiY, sw, h/10);
 			}
-			a.drawStatusPane(g, i, 550);
-			i += 133;
+			a.drawStatusPane(g, i, (int)(h * 0.9));
+			i += sw;
 		}
 	}
 }

@@ -36,6 +36,9 @@ public class DamageBacklog {
 	public void log(int damage){
 		dmg += damage;
 	}
+	public void logPercentageDamage(double percent){
+		log( (int) (registeredTo.getStatValue("maxHP") * (percent / 100)));
+	}
 	public void deplete(){
 		if(dmg <= 0){
 			return;

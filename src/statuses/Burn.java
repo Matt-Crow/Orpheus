@@ -13,7 +13,7 @@ public class Burn extends Status{
 		OnUpdateAction a = new OnUpdateAction();
 		a.setAction(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				p.addFilter(1 + 0.25 * getIntensityLevel());
+				p.getLog().applyFilter(1 + 0.25 * getIntensityLevel());
 				use();
 			}
 		});
