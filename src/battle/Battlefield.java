@@ -2,6 +2,7 @@ package battle;
 
 import java.awt.Graphics;
 import java.awt.Color;
+import initializers.Master;
 
 public class Battlefield {
 	private int w;
@@ -12,7 +13,7 @@ public class Battlefield {
 	public Battlefield(){
 		w = 20;
 		h = 20;
-		s = 100;
+		s = Master.CANVASWIDTH / 5;
 	}
 	public int getTileSize(){
 		return s;

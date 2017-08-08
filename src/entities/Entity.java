@@ -2,6 +2,9 @@ package entities;
 
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
+
+import initializers.Master;
+
 import java.util.ArrayList;
 import resources.OnHitAction;
 import resources.Direction;
@@ -168,21 +171,20 @@ public class Entity {
 		}
 	}
 	
-	// add collisions
 	public void move(){
 		x += getVector()[0] * getMomentum();
 		y += getVector()[1] * getMomentum();
 		
 		if(x < 0){
 			x = 0;
-		} else if(x > 2000){
-			x = 2000;
+		} else if(x > Master.getCurrentBattle().getHost().getWidth()){
+			x = Master.getCurrentBattle().getHost().getWidth();
 		}
 		
 		if(y < 0){
 			y = 0;
-		} else if(y > 2000){
-			y = 2000;
+		} else if(y > Master.getCurrentBattle().getHost().getHeight()){
+			y = Master.getCurrentBattle().getHost().getHeight();
 		}
 	}
 	public void moveBackwards(){
@@ -191,14 +193,14 @@ public class Entity {
 		
 		if(x < 0){
 			x = 0;
-		} else if(x > 2000){
-			x = 2000;
+		} else if(x > Master.getCurrentBattle().getHost().getWidth()){
+			x = Master.getCurrentBattle().getHost().getWidth();
 		}
 		
 		if(y < 0){
 			y = 0;
-		} else if(y > 2000){
-			y = 2000;
+		} else if(y > Master.getCurrentBattle().getHost().getHeight()){
+			y = Master.getCurrentBattle().getHost().getHeight();
 		}
 	}
 	public void update(){

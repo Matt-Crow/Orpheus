@@ -19,7 +19,7 @@ public class Flurry extends MeleeAttack{
 		OnHitAction a = new OnHitAction();
 		a.setAction(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				if(recurCount == 5){
+				if(recurCount >= 5){
 					recurCount = 0;
 					return;
 				}

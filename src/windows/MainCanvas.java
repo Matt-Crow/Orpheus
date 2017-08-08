@@ -84,7 +84,6 @@ public class MainCanvas extends JPanel{
 				
 				BattleWindow bw = new BattleWindow(600, 600);
 				bw.getCanvas().setBattle(team1, team2);
-				
 				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel);
 				frame.dispose();
 			}

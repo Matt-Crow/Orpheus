@@ -65,6 +65,7 @@ public class BattleCanvas extends JPanel{
 		
 		hostedBattle.setHost(battlefield);
 		hostedBattle.init();
+		Master.setCurrentBattle(hostedBattle);
 		p = hostedBattle.getPlayer();
 	}
 	

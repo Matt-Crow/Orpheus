@@ -21,6 +21,9 @@ public class Battle {
 		host = b;
 		b.setHosted(this);
 	}
+	public Battlefield getHost(){
+		return host;
+	}
 	public void init(){
 		int w = host.getWidth();
 		int h = host.getHeight();
