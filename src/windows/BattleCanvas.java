@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import com.sun.glass.events.KeyEvent;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -70,17 +71,18 @@ public class BattleCanvas extends JPanel{
 	}
 	
 	public void addKeyRegistration(){
-		new KeyRegister(this, "w", true, new moveAction());
-		new KeyRegister(this, "w", false, new stopAction());
-		new KeyRegister(this, "s", true, new reverseAction());
-		new KeyRegister(this, "a", true, new turnLeftAction());
-		new KeyRegister(this, "d", true, new turnRightAction());
-		new KeyRegister(this, "q", true, new meleeAction());
-		new KeyRegister(this, "e", true, new useAction());
-		new KeyRegister(this, "z", true, new firstActive());
-		new KeyRegister(this, "x", true, new secondActive());
-		new KeyRegister(this, "c", true, new thirdActive());
-		new KeyRegister(this, "p", true, new pauseAction());
+		new KeyRegister(this, KeyEvent.VK_UP, true, new moveAction());
+		new KeyRegister(this, KeyEvent.VK_UP, false, new stopAction());
+		new KeyRegister(this, KeyEvent.VK_DOWN, true, new reverseAction());
+		new KeyRegister(this, KeyEvent.VK_DOWN, false, new forwardAction());
+		new KeyRegister(this, KeyEvent.VK_LEFT, true, new turnLeftAction());
+		new KeyRegister(this, KeyEvent.VK_RIGHT, true, new turnRightAction());
+		new KeyRegister(this, KeyEvent.VK_Q, true, new meleeAction());
+		new KeyRegister(this, KeyEvent.VK_E, true, new useAction());
+		new KeyRegister(this, KeyEvent.VK_1, true, new firstActive());
+		new KeyRegister(this, KeyEvent.VK_2, true, new secondActive());
+		new KeyRegister(this, KeyEvent.VK_3, true, new thirdActive());
+		new KeyRegister(this, KeyEvent.VK_P, true, new pauseAction());
 	}
 	
 	public class moveAction extends AbstractAction{
@@ -98,7 +100,13 @@ public class BattleCanvas extends JPanel{
 	public class reverseAction extends AbstractAction{
 		static final long serialVersionUID = 1L;
 		public void actionPerformed(ActionEvent e){
-			p.switchMoving();
+			p.setBackwards(true);
+		}
+	}
+	public class forwardAction extends AbstractAction{
+		static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			p.setBackwards(false);
 		}
 	}
 	public class turnLeftAction extends AbstractAction{

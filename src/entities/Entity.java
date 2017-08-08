@@ -63,8 +63,8 @@ public class Entity {
 	public void setMoving(boolean m){
 		moving = m;
 	}
-	public void switchMoving(){
-		backwards = !backwards;
+	public void setBackwards(boolean b){
+		backwards = b;
 	}
 	public void applySpeedFilter(double f){
 		speedFilter *= f;
@@ -212,12 +212,9 @@ public class Entity {
 			applyKnockback(0, 0, 0);
 		}
 		if(moving){
-			if(!backwards){
-				move();
-			} else {
-				moveBackwards();
-			}
-			
+			move();
+		} else if (backwards){
+			moveBackwards();
 		}
 		tripOnUpdate();
 	}
