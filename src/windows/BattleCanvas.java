@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import com.sun.glass.events.KeyEvent;
-
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.AbstractAction;
@@ -17,6 +16,7 @@ import entities.Player;
 import resources.EasyButton;
 import resources.KeyRegister;
 import initializers.Master;
+import initializers.Controls;
 
 public class BattleCanvas extends JPanel{
 	public static final long serialVersionUID = 1L;
@@ -68,88 +68,11 @@ public class BattleCanvas extends JPanel{
 		hostedBattle.init();
 		Master.setCurrentBattle(hostedBattle);
 		p = hostedBattle.getPlayer();
+		Controls.registerPlayerControlsTo(this, p);
 	}
 	
 	public void addKeyRegistration(){
-		new KeyRegister(this, KeyEvent.VK_UP, true, new moveAction());
-		new KeyRegister(this, KeyEvent.VK_UP, false, new stopAction());
-		new KeyRegister(this, KeyEvent.VK_DOWN, true, new reverseAction());
-		new KeyRegister(this, KeyEvent.VK_DOWN, false, new forwardAction());
-		new KeyRegister(this, KeyEvent.VK_LEFT, true, new turnLeftAction());
-		new KeyRegister(this, KeyEvent.VK_RIGHT, true, new turnRightAction());
-		new KeyRegister(this, KeyEvent.VK_Q, true, new meleeAction());
-		new KeyRegister(this, KeyEvent.VK_E, true, new useAction());
-		new KeyRegister(this, KeyEvent.VK_1, true, new firstActive());
-		new KeyRegister(this, KeyEvent.VK_2, true, new secondActive());
-		new KeyRegister(this, KeyEvent.VK_3, true, new thirdActive());
 		new KeyRegister(this, KeyEvent.VK_P, true, new pauseAction());
-	}
-	
-	public class moveAction extends AbstractAction{
-		static final long serialVersionUID = 1L;
-		public void actionPerformed(ActionEvent e){
-			p.setMoving(true);
-		}
-	}
-	public class stopAction extends AbstractAction{
-		static final long serialVersionUID = 1L;
-		public void actionPerformed(ActionEvent e){
-			p.setMoving(false);
-		}
-	}
-	public class reverseAction extends AbstractAction{
-		static final long serialVersionUID = 1L;
-		public void actionPerformed(ActionEvent e){
-			p.setBackwards(true);
-		}
-	}
-	public class forwardAction extends AbstractAction{
-		static final long serialVersionUID = 1L;
-		public void actionPerformed(ActionEvent e){
-			p.setBackwards(false);
-		}
-	}
-	public class turnLeftAction extends AbstractAction{
-		static final long serialVersionUID = 1L;
-		public void actionPerformed(ActionEvent e){
-			p.turn("left");
-		}
-	}
-	public class turnRightAction extends AbstractAction{
-		static final long serialVersionUID = 1L;
-		public void actionPerformed(ActionEvent e){
-			p.turn("right");
-		}
-	}
-	public class meleeAction extends AbstractAction{
-		static final long serialVersionUID = 1L;
-		public void actionPerformed(ActionEvent e){
-			p.useMeleeAttack();
-		}
-	}
-	public class useAction extends AbstractAction{
-		static final long serialVersionUID = 1L;
-		public void actionPerformed(ActionEvent e){
-			p.useSelectedAttack();
-		}
-	}
-	public class firstActive extends AbstractAction{
-		static final long serialVersionUID = 1L;
-		public void actionPerformed(ActionEvent e){
-			p.changeSelectedAttack(0);
-		}
-	}
-	public class secondActive extends AbstractAction{
-		static final long serialVersionUID = 1L;
-		public void actionPerformed(ActionEvent e){
-			p.changeSelectedAttack(1);
-		}
-	}
-	public class thirdActive extends AbstractAction{
-		static final long serialVersionUID = 1L;
-		public void actionPerformed(ActionEvent e){
-			p.changeSelectedAttack(2);
-		}
 	}
 	public class pauseAction extends AbstractAction{
 		static final long serialVersionUID = 1L;
