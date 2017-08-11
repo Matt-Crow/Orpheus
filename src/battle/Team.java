@@ -6,7 +6,6 @@ import java.awt.Graphics;
 
 import entities.Player;
 import entities.Projectile;
-import resources.Op;
 import resources.Coordinates;
 import customizables.Build;
 
@@ -23,7 +22,6 @@ public class Team {
 		name = n;
 		color = c;
 		members = new ArrayList<>();
-		projectiles = new ArrayList<>();
 	}
 	public String getName(){
 		return name;
@@ -31,7 +29,6 @@ public class Team {
 	public Color getColor(){
 		return color;
 	}
-	
 	public ArrayList<Coordinates> getAllCoords(){
 		ArrayList<Coordinates> ret = new ArrayList<>();
 		for(Player p : members){
@@ -39,22 +36,22 @@ public class Team {
 		}
 		return ret;
 	}
-	public Player getPlayerByCoords(Coordinates c){
-		for(Player p : members){
-			if(p.getCoords().getX() == c.getX() && p.getCoords().getY() == c.getY()){
-				return p;
-			}
-		}
-		Op.dp();
-		return new Player("ERROR");
-	}
-	public void addMember(Player m){
-		members.add(m);
-	}
 	
+	
+	
+	
+	//here
 	public void applyBuilds(Build[] b){
 		for(int i = 0; i < members.size(); i++){
 			members.get(i).applyBuild(b[i]);;
+		}
+	}
+	
+	
+	
+	public void addMember(Player m){
+		if(!members.contains(m)){
+			members.add(m);
 		}
 	}
 	public void init(int y, int spacing, int facing){
@@ -67,6 +64,10 @@ public class Team {
 		newProjectiles = new ArrayList<>();
 		defeated = false;
 	}
+	
+	
+	
+	
 	public void setEnemy(Team t){
 		enemyTeam = t;
 	}
@@ -124,13 +125,5 @@ public class Team {
 	
 	public Player getMember(int index){
 		return members.get(index);
-	}
-	
-	public void displayData(){
-		Op.add(name);
-		for(Player m : members){
-			Op.add("* " + m.getName());
-		}
-		Op.dp();
 	}
 }

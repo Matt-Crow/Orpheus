@@ -49,7 +49,7 @@ public class Player extends Entity{
 		return team;
 	}
 	public Coordinates getCoords(){
-		return new Coordinates(getX(), getY());
+		return new Coordinates(getX(), getY(), this);
 	}
 	
 	public DamageBacklog getLog(){

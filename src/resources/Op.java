@@ -25,6 +25,11 @@ public class Op {
 			add(msg);
 		}
 	}
+	
+	public static void add(int msg){
+		add(Integer.toString(msg));
+	}
+	
 	// Prints the contents of the message arraylist
 	public static void dp(){
 		add(" ");

@@ -146,7 +146,7 @@ public class AI {
 				distance = (int) c.distanceBetween(appliedTo.getCoords());
 			}
 		}
-		return appliedTo.getTeam().getEnemy().getPlayerByCoords(nearest);
+		return (Player) nearest.getRegistered();
 	}
 	public void latchOntoNearest(){
 		latch(nearestEnemy());
