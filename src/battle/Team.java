@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import entities.Player;
 import entities.Projectile;
 import resources.Coordinates;
+import resources.Random;
 import customizables.Build;
 
 public class Team {
@@ -53,6 +54,18 @@ public class Team {
 		if(!members.contains(m)){
 			members.add(m);
 		}
+	}
+	public static Team constructRandomTeam(String name, Color color, int size){
+		Team t = new Team(name, color);
+		for(int teamSize = 0; teamSize < size; teamSize++){
+			Player p = new Player(name + " member #" + (teamSize + 1));
+			p.applyBuild(Build.getAllBuilds().get(Random.choose(0, Build.getAllBuilds().size() - 1)));
+			
+			t.addMember(p);
+		}
+		
+		
+		return t;
 	}
 	public void init(int y, int spacing, int facing){
 		int x = spacing;
@@ -121,9 +134,5 @@ public class Team {
 		for(Projectile p : projectiles){
 			p.draw(g);
 		}
-	}
-	
-	public Player getMember(int index){
-		return members.get(index);
 	}
 }

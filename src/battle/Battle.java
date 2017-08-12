@@ -59,7 +59,4 @@ public class Battle {
 			t.draw(g);
 		}
 	}
-	public Player getPlayer(){
-		return teams.get(0).getMember(0);
-	}
 }

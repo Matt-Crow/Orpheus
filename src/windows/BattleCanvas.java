@@ -16,6 +16,7 @@ import entities.Player;
 import resources.EasyButton;
 import resources.KeyRegister;
 import initializers.Master;
+import initializers.Run;
 import initializers.Controls;
 
 public class BattleCanvas extends JPanel{
@@ -67,7 +68,7 @@ public class BattleCanvas extends JPanel{
 		hostedBattle.setHost(battlefield);
 		hostedBattle.init();
 		Master.setCurrentBattle(hostedBattle);
-		p = hostedBattle.getPlayer();
+		p = Run.player;
 		Controls.registerPlayerControlsTo(this, p);
 	}
 	

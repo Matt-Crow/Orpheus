@@ -21,6 +21,9 @@ public class Build {
 		passiveNames = new String[]{p1, p2, p3};
 		builds.add(this);
 	}
+	public static ArrayList<Build> getAllBuilds(){
+		return builds;
+	}
 	public static Build getBuildByName(String name){
 		for(Build b : builds){
 			if(b.name == name){
@@ -28,6 +31,9 @@ public class Build {
 			}
 		}
 		return defaultEarth;
+	}
+	public String getName(){
+		return name;
 	}
 	public String getClassName(){
 		return className;

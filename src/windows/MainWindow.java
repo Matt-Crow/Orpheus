@@ -1,6 +1,7 @@
 package windows;
 
 import javax.swing.JFrame;
+import initializers.Master;
 
 public class MainWindow extends JFrame{
 	/**
@@ -13,7 +14,7 @@ public class MainWindow extends JFrame{
 	public MainWindow(){
 		setTitle("The Orpheus Proposition");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(1000, 1000);
+		setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
 		
 		draw = new MainCanvas();
 		setContentPane(draw);
