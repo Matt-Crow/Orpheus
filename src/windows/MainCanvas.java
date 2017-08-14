@@ -26,6 +26,8 @@ public class MainCanvas extends JPanel{
 	private Team team2;
 	
 	private Menu playerBuild;
+	private Menu team1Size;
+	private Menu team2Size;
 	
 	public MainCanvas(){
 		setLayout(null);
@@ -53,16 +55,29 @@ public class MainCanvas extends JPanel{
 			buildNameList[i] = builds.get(i).getName();
 		}
 		
+		int[] numbers = new int[]{1, 2, 3, 4, 5, 10};
+		String[] numStr = new String[numbers.length];
+		
+		for(int i = 0; i < numbers.length; i++){
+			numStr[i] = Integer.toString(numbers[i]);
+		}
+		
+		team1Size = new Menu(numStr, Master.CANVASWIDTH / 4, Master.CANVASHEIGHT / 2, 100, 100);
 		playerBuild = new Menu(buildNameList, Master.CANVASWIDTH / 2, Master.CANVASHEIGHT / 2, 100, 100);
-		playerBuild.addActionListener(rep);
-		playerBuild.addTo(this);
+		team2Size = new Menu(numStr, (Master.CANVASWIDTH / 4) * 3, Master.CANVASHEIGHT / 2, 100, 100);
+		
+		Menu[] menus = new Menu[]{team1Size, playerBuild, team2Size};
+		
+		for(int i = 0; i < 3; i++){
+			menus[i].addActionListener(rep);
+			menus[i].addTo(this);
+		}
 		
 		EasyButton battle = new EasyButton("Battle", 900, 0, 100, 100, Color.red);
 		battle.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				
-				team1 = Team.constructRandomTeam("Team 1", Color.green, 4);
-				team2 = Team.constructRandomTeam("Team 2", Color.red, 5);
+				team1 = Team.constructRandomTeam("Team 1", Color.green, Integer.parseInt(team1Size.getSelectedItem().toString()) - 1);
+				team2 = Team.constructRandomTeam("Team 2", Color.red, Integer.parseInt(team2Size.getSelectedItem().toString()));
 				
 				Run.player.applyBuild(Build.getBuildByName(playerBuild.getSelectedItem().toString()));
 				Run.player.disableAI();
