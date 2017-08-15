@@ -134,8 +134,6 @@ public class Attack {
 			g.fillRect(x, y, 133, 50);
 			g.setColor(Color.red);
 			g.drawString("On cooldown: " + cooldown, x + 10, y + 20);
-		}
-		
-		
+		}	
 	}
 }
