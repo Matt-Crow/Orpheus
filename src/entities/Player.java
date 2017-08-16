@@ -281,11 +281,11 @@ public class Player extends Entity{
 		g.setColor(Color.black);
 		g.drawString("HP: " + log.getHP(), getX() - w/12, getY() - h/8);
 		
-		// Update this to sprite later
+		// Update this to sprite later, doesn't scale to prevent hitbox snafoos
 		g.setColor(team.getColor());
-		g.fillOval(getX() - w/12, getY() - h/12, w/6, h/6);
+		g.fillOval(getX() - 50, getY() - 50, 100, 100);
 		g.setColor(c.getColor());
-		g.fillOval(getX() - w/15, getY() - h/15, (int)(w * 0.133), (int)(h * 0.133));
+		g.fillOval(getX() - 40, getY() - 40, 80, 80);
 		
 		g.setColor(Color.black);
 		int y = getY() + h/10;

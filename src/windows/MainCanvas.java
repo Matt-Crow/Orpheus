@@ -73,7 +73,7 @@ public class MainCanvas extends JPanel{
 			menus[i].addTo(this);
 		}
 		
-		EasyButton battle = new EasyButton("Battle", 900, 0, 100, 100, Color.red);
+		EasyButton battle = new EasyButton("Battle", Master.CANVASWIDTH - 100, 0, 100, 100, Color.red);
 		battle.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				team1 = Team.constructRandomTeam("Team 1", Color.green, Integer.parseInt(team1Size.getSelectedItem().toString()) - 1);

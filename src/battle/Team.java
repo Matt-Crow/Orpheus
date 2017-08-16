@@ -38,18 +38,6 @@ public class Team {
 		return ret;
 	}
 	
-	
-	
-	
-	//here
-	public void applyBuilds(Build[] b){
-		for(int i = 0; i < members.size(); i++){
-			members.get(i).applyBuild(b[i]);;
-		}
-	}
-	
-	
-	
 	public void addMember(Player m){
 		if(!members.contains(m)){
 			members.add(m);
@@ -63,8 +51,6 @@ public class Team {
 			
 			t.addMember(p);
 		}
-		
-		
 		return t;
 	}
 	public void init(int y, int spacing, int facing){
@@ -77,10 +63,6 @@ public class Team {
 		newProjectiles = new ArrayList<>();
 		defeated = false;
 	}
-	
-	
-	
-	
 	public void setEnemy(Team t){
 		enemyTeam = t;
 	}
