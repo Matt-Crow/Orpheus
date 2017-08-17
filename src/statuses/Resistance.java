@@ -1,7 +1,5 @@
 package statuses;
 
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
 import entities.Player;
 import resources.OnHitAction;
 
@@ -10,13 +8,12 @@ public class Resistance extends Status{
 		super("Resistance", lv, uses);
 	}
 	public void inflictOn(Player p){
-		OnHitAction a = new OnHitAction();
-		a.setAction(new AbstractAction(){
-			public void actionPerformed(ActionEvent e){
+		OnHitAction a = new OnHitAction(){
+			public void f(){
 				p.getLog().applyFilter(1 - 0.25 * getIntensityLevel());
 				use();
 			}
-		});
+		};
 		p.addOnBeHit(a);
 	}
 }

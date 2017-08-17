@@ -43,6 +43,7 @@ public class BattleCanvas extends JPanel{
 		
 		EasyButton b = new EasyButton("Exit", 0, 0, Master.CANVASWIDTH / 10, Master.CANVASHEIGHT / 10, Color.red);
 		b.addActionListener(new AbstractAction(){
+			public static final long serialVersionUID = 12L;
 			public void actionPerformed(ActionEvent e){
 				new MainWindow();
 				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel);

@@ -2,6 +2,7 @@ package customizables;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("unused")
 public class Build {
 	private static ArrayList<Build> builds = new ArrayList<>();
 	private static Build defaultEarth = new Build("Default Earth", "Earth", "Boulder Toss", "Warrior's Stance", "Earthquake", "Toughness", "Determination", "Nature's Healing");

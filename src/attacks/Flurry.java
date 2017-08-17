@@ -1,7 +1,5 @@
 package attacks;
 
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
 import resources.OnHitAction;
 import entities.Player;
 import entities.Projectile;
@@ -18,9 +16,8 @@ public class Flurry extends MeleeAttack{
 		super.use(user);
 		canRecur = true;
 		Projectile p = getRegisteredProjectile();
-		OnHitAction a = new OnHitAction();
-		a.setAction(new AbstractAction(){
-			public void actionPerformed(ActionEvent e){
+		OnHitAction a = new OnHitAction(){
+			public void f(){
 				if(recurCount >= 2){
 					recurCount = 0;
 					canRecur = false;
@@ -31,7 +28,8 @@ public class Flurry extends MeleeAttack{
 					recurCount += 1;
 				}
 			}
-		});
+		};
+		
 		p.addOnHit(a);
 	}
 }

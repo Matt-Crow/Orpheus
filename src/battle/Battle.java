@@ -3,8 +3,6 @@ package battle;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
-
-import entities.*;
 import initializers.Master;
 
 public class Battle {

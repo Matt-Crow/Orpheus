@@ -1,12 +1,8 @@
 package ai;
 
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
 import resources.OnHitAction;
-
 import entities.Player;
 import resources.Coordinates;
-import resources.Op;
 import resources.Random;
 
 public class AI {
@@ -19,13 +15,6 @@ public class AI {
 	
 	public AI(Player p){
 		appliedTo = p;
-		OnHitAction a = new OnHitAction();
-		a.setAction(new AbstractAction(){
-			public void actionPerformed(ActionEvent e){
-				p.getAI().latchOntoNearest();
-			}
-		});
-		p.addOnBeHit(a);
 	}
 	
 	public void setToWander(){
@@ -165,5 +154,11 @@ public class AI {
 		} else if(mode == "attack"){
 			attack();
 		}
+		OnHitAction a = new OnHitAction(){
+			public void f(){
+				appliedTo.getAI().latchOntoNearest();
+			}
+		};
+		appliedTo.addOnBeHit(a);
 	}
 }

@@ -1,29 +1,30 @@
 package resources;
 
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
+import entities.Entity;
 import entities.Player;
 
-public class OnHitAction extends AbstractAction{
-	public static final long serialVersionUID = 1L;
+public class OnHitAction{
+	Entity hitter;
 	Player wasHit;
-	AbstractAction action;
 	public OnHitAction(){
 		
 	}
-	public void setAction(AbstractAction a){
-		action = a;
+	public void setHitter(Entity e){
+		hitter = e;
 	}
-	public void setTarget(Player p){
+	public void setHit(Player p){
 		wasHit = p;
 	}
-	public Player getTarget(){
+	public Entity getHitter(){
+		return hitter;
+	}
+	public Player getHit(){
 		return wasHit;
 	}
-	public void actionPerformed(ActionEvent e){
-		trip();
+	public void f(){
+		
 	}
 	public void trip(){
-		action.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null){});
+		f();
 	}
 }

@@ -1,7 +1,5 @@
 package statuses;
 
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
 import entities.Player;
 import resources.OnUpdateAction;
 
@@ -10,12 +8,13 @@ public class Healing extends Status{
 		super("Healing", lv, 1);
 	}
 	public void inflictOn(Player p){
-		OnUpdateAction a = new OnUpdateAction();
-		a.setAction(new AbstractAction(){
-			public void actionPerformed(ActionEvent e){
+		OnUpdateAction a = new OnUpdateAction(){
+			public void f(){
 				p.getLog().healPerc(100 / (6 - getIntensityLevel()));
 				use();
 			}
-		});
+		};
+		
+		p.addOnUpdate(a);;
 	}
 }

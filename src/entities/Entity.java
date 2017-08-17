@@ -1,12 +1,9 @@
 package entities;
 
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
-
 import initializers.Master;
-
 import java.util.ArrayList;
 import resources.OnHitAction;
+import resources.OnUpdateAction;
 import resources.Direction;
 
 public class Entity {
@@ -26,7 +23,7 @@ public class Entity {
 	private ArrayList<OnHitAction> onBeHitRegister;
 	private ArrayList<OnHitAction> onMeleeHitRegister;
 	private ArrayList<OnHitAction> onBeMeleeHitRegister;
-	private ArrayList<AbstractAction> onUpdateRegister;
+	private ArrayList<OnUpdateAction> onUpdateRegister;
 	
 	public Entity(int xCoord, int yCoord, int directionNumber, int m){
 		x = xCoord;
@@ -107,7 +104,7 @@ public class Entity {
 	public void addOnBeMeleeHit(OnHitAction a){
 		onBeMeleeHitRegister.add(a);
 	}
-	public void addOnUpdate(AbstractAction a){
+	public void addOnUpdate(OnUpdateAction a){
 		onUpdateRegister.add(a);
 	}
 	
@@ -122,39 +119,37 @@ public class Entity {
 	}
 	public void tripOnHit(Player hit){
 		for(OnHitAction a : onHitRegister){
-			a.setTarget(hit);
-			a.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null){});
+			a.setHitter(this);
+			a.setHit(hit);
+			a.trip();
 		}
 	}
 	public void tripOnBeHit(Player hitBy){
 		for(OnHitAction a : onBeHitRegister){
-			a.setTarget(hitBy);
-			a.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null){});
+			a.setHitter(hitBy);
+			a.setHit((Player) this);
+			a.trip();
 		}
 	}
 	public void tripOnMeleeHit(Player hit){
 		for(OnHitAction a : onMeleeHitRegister){
-			a.setTarget(hit);
-			a.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null){});
+			a.setHitter(this);
+			a.setHit(hit);
+			a.trip();
 		}
-		for(OnHitAction a : onHitRegister){
-			a.setTarget(hit);
-			a.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null){});
-		}
+		tripOnHit(hit);
 	}
 	public void tripOnBeMeleeHit(Player hitBy){
 		for(OnHitAction a : onBeMeleeHitRegister){
-			a.setTarget(hitBy);
-			a.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null){});
+			a.setHitter(this);
+			a.setHit((Player) this);
+			a.trip();
 		}
-		for(OnHitAction a : onBeHitRegister){
-			a.setTarget(hitBy);
-			a.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null){});
-		}
+		tripOnBeHit(hitBy);
 	}
 	public void tripOnUpdate(){
-		for(AbstractAction a : onUpdateRegister){
-			a.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null){});
+		for(OnUpdateAction a : onUpdateRegister){
+			a.trip();
 		}
 	}
 	

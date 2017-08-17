@@ -1,7 +1,5 @@
 package passives;
 
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
 import resources.OnHitAction;
 import resources.Random;
 
@@ -13,14 +11,13 @@ public class OnHitPassive extends Passive{
 		chance = c;
 	}
 	public void update(){
-		OnHitAction a = new OnHitAction();
-		a.setAction(new AbstractAction(){
-			public void actionPerformed(ActionEvent e){
+		OnHitAction a = new OnHitAction(){
+			public void f(){
 				if(Random.chance(chance)){
 					applyEffect();
 				}
 			}
-		});
+		};
 		getPlayer().addOnHit(a);
 	}
 }

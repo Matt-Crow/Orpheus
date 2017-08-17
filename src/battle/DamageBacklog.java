@@ -2,7 +2,6 @@ package battle;
 
 import entities.Player;
 import initializers.Master;
-import resources.Op;
 
 /*
  * The damage backlog is used to keep track

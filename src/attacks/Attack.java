@@ -2,8 +2,6 @@ package attacks;
 import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
 import entities.*;
 import upgradables.Stat;
 import statuses.Status;
@@ -79,16 +77,15 @@ public class Attack {
 	}
 	
 	public OnHitAction getStatusInfliction(){
-		OnHitAction a = new OnHitAction();
-		a.setAction(new AbstractAction(){
-			public void actionPerformed(ActionEvent e){
+		OnHitAction a = new OnHitAction(){
+			public void f(){
 				for(int i = 0; i < inflictOnHit.size(); i++){
 					if(Random.chance(inflictChance.get(i))){
-						a.getTarget().inflict(inflictOnHit.get(i));
+						getHit().inflict(inflictOnHit.get(i));
 					}
 				}
 			}
-		});
+		};
 		return a;
 	}
 	

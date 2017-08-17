@@ -3,7 +3,6 @@ import upgradables.Stat;
 import attacks.*;
 import passives.*;
 import java.util.ArrayList;
-import java.awt.Graphics;
 import java.awt.Color;
 
 public class CharacterClass extends Customizable{
