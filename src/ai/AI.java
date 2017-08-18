@@ -4,6 +4,7 @@ import resources.OnHitAction;
 import entities.Player;
 import resources.Coordinates;
 import resources.Random;
+import resources.Direction;
 
 public class AI {
 	private Player appliedTo;
@@ -70,6 +71,7 @@ public class AI {
 		appliedTo.setMoving(false);
 	}
 	
+	// improve this
 	public void turnToLatch(){
 		boolean isAbove = false;
 		boolean isBelow = false;
@@ -91,32 +93,32 @@ public class AI {
 		} else if(y1 < y2){
 			isBelow = true;
 		}
-		String turnTo;
+		Double turnTo;
 		if(isAbove){
 			if(isLeft){
-				turnTo = "Northwest";
+				turnTo = 0.75;
 			} else if(isRight){
-				turnTo = "Northeast";
+				turnTo = 0.25;
 			} else {
-				turnTo = "North";
+				turnTo = 0.5;
 			}
 		} else if(isBelow){
 			if(isLeft){
-				turnTo = "Southwest";
+				turnTo = 1.25;
 			} else if(isRight){
-				turnTo = "Southeast";
+				turnTo = 1.75;
 			} else {
-				turnTo = "South";
+				turnTo = 1.5;
 			}
 		} else {
 			if(isLeft){
-				turnTo = "West";
+				turnTo = 1.0;
 			} else {
-				turnTo = "East";
+				turnTo = 0.0;
 			}
 		}
 		
-		appliedTo.turnToward(turnTo);
+		appliedTo.turnToward(new Direction(turnTo));
 	}
 	public boolean checkIfPlayerInSightRange(){
 		for(Coordinates c : appliedTo.getTeam().getEnemy().getAllCoords()){

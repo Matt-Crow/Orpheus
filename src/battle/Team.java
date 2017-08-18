@@ -53,7 +53,7 @@ public class Team {
 		}
 		return t;
 	}
-	public void init(int y, int spacing, int facing){
+	public void init(int y, int spacing, double facing){
 		int x = spacing;
 		for(Player m : members){
 			m.init(this, x, y, facing);

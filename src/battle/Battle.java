@@ -27,8 +27,8 @@ public class Battle {
 		int h = host.getHeight();
 		int spacingFromTopEdge = host.getTileSize();
 		int spacingBetween = w / 6;
-		teams.get(0).init(spacingFromTopEdge, spacingBetween, 4);
-		teams.get(1).init(h - spacingFromTopEdge * 2, spacingBetween, 0);
+		teams.get(0).init(spacingFromTopEdge, spacingBetween, 1.5);
+		teams.get(1).init(h - spacingFromTopEdge * 2, spacingBetween, 0.5);
 		Master.setCurrentBattle(this);
 		end = false;
 	}

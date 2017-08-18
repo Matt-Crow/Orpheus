@@ -161,9 +161,10 @@ public class Player extends Entity{
 		}
 	}
 	
-	public void turnToward(String d){
-		int cDirNum = getDirNum();
-		int dDirNum = Direction.getIndexOf(d);
+	// not working
+	public void turnToward(Direction d){
+		double cDirNum = getDirNum();
+		double dDirNum = d.getDirNum();
 		boolean shouldLeft = true;
 		
 		if(cDirNum > dDirNum){
@@ -175,7 +176,7 @@ public class Player extends Entity{
 			return;
 		}
 		
-		int differenceBetween;
+		double differenceBetween;
 		if(cDirNum > dDirNum){
 			differenceBetween = cDirNum - dDirNum;
 		} else if(cDirNum < dDirNum){
@@ -185,7 +186,7 @@ public class Player extends Entity{
 			return;
 		}
 		
-		if(differenceBetween > 4){
+		if(differenceBetween > 1){
 			shouldLeft = !shouldLeft;
 		}
 		
@@ -217,7 +218,7 @@ public class Player extends Entity{
 		log.log(dmg);
 	}
 	
-	public void init(Team t, int x, int y, int dirNum){
+	public void init(Team t, int x, int y, double dirNum){
 		super.setCoords(x, y);
 		super.setDirNum(dirNum);
 		team = t;

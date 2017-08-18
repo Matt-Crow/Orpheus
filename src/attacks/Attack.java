@@ -103,7 +103,6 @@ public class Attack {
 			registeredProjectile.terminate();
 		}
 		cooldown = (int) getStatValue("Cooldown");
-		//displayData();
 	}
 	public void init(){
 		cooldown = 0;

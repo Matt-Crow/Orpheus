@@ -3,7 +3,7 @@ package entities;
 import attacks.Attack;
 
 public class SeedProjectile extends Projectile{
-	public SeedProjectile(int x, int y, int dirNum, int momentum, Player attackUser, Attack a){
+	public SeedProjectile(int x, int y, double dirNum, int momentum, Player attackUser, Attack a){
 		super(x, y, dirNum, momentum, attackUser, a);
 		attackUser.getTeam().registerProjectile(this);
 	}

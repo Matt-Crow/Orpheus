@@ -9,14 +9,14 @@ import resources.Direction;
 public class Entity {
 	private int x;
 	private int y;
-	private int dirNum;
+	private double dirNum;
 	private int momentum;
 	private double speedFilter;
 	private boolean moving;
 	private boolean backwards;
 	
-	private int kbDirNum;
-	private int kbDur;
+	private double kbDirNum;
+	private double kbDur;
 	private int kbVelocity;
 	
 	private ArrayList<OnHitAction> onHitRegister;
@@ -25,7 +25,7 @@ public class Entity {
 	private ArrayList<OnHitAction> onBeMeleeHitRegister;
 	private ArrayList<OnUpdateAction> onUpdateRegister;
 	
-	public Entity(int xCoord, int yCoord, int directionNumber, int m){
+	public Entity(int xCoord, int yCoord, double directionNumber, int m){
 		x = xCoord;
 		y = yCoord;
 		dirNum = directionNumber;
@@ -54,7 +54,7 @@ public class Entity {
 		x = xCoord;
 		y = yCoord;
 	}
-	public void setDirNum(int dir){
+	public void setDirNum(double dir){
 		dirNum = dir;
 	}
 	public void setMoving(boolean m){
@@ -67,29 +67,24 @@ public class Entity {
 		speedFilter *= f;
 	}
 	
-	public int[] getVector(){
-		return Direction.directions[dirNum].getVector();
+	public double[] getVector(){
+		return new Direction(dirNum).getVector();
 	}
-	public int getDirNum(){
+	public double getDirNum(){
 		return dirNum;
 	}
-	public Direction getDir(){
-		return Direction.directions[getDirNum()];
-	}
-	public String getDirName(){
-		return getDir().getName();
-	}
+	
 	public int getMomentum(){
 		return (int) (momentum * speedFilter);
 	}
 	
-	public void applyKnockback(int dirN, int dur, int vel){
+	public void applyKnockback(double dirN, int dur, int vel){
 		kbDirNum = dirN;
 		kbDur = dur;
 		kbVelocity = vel;
 	}
-	public int[] getKBVector(){
-		return Direction.directions[kbDirNum].getVector();
+	public double[] getKBVector(){
+		return new Direction(kbDirNum).getVector();
 	}
 	
 	public void addOnHit(OnHitAction a){
@@ -155,13 +150,13 @@ public class Entity {
 	
 	public void turn(String dir){
 		if(dir == "left"){
-			dirNum -= 1;
+			dirNum += 0.1;
 		} else {
-			dirNum += 1;
+			dirNum -= 0.1;
 		}
 		if(dirNum < 0){
-			dirNum = 7;
-		} else if(dirNum > 7){
+			dirNum = 1.9;
+		} else if(dirNum > 1.9){
 			dirNum = 0;
 		}
 	}
