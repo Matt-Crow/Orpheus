@@ -11,7 +11,7 @@ public class Daze extends Status{
 	public void inflictOn(Player p){
 		OnHitAction a = new OnHitAction(){
 			public void f(){
-				p.setDirNum(Random.choose(0, 7));
+				p.setDirNum(Random.choose(0, 19));
 				use();
 			}
 		};

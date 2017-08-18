@@ -10,7 +10,7 @@ public class SeedProjectile extends Projectile{
 	public void terminate(){
 		super.terminate();
 		if(getAttack().getStatValue("AOE") != 0){
-			for(int d = 0; d <= 7; d++){
+			for(double d = 0; d <= 2; d += 0.1){
 				AOEProjectile p = new AOEProjectile(getX(), getY(), d, 5, getUser(), getAttack(), getHit());
 				p.addOnHit(getAttack().getStatusInfliction());
 			}
