@@ -161,15 +161,14 @@ public class Player extends Entity{
 		}
 	}
 	
-	// not working
 	public void turnToward(Direction d){
 		double cDirNum = getDirNum();
 		double dDirNum = d.getDirNum();
 		boolean shouldLeft = true;
 		
-		if(cDirNum > dDirNum){
+		if(cDirNum < dDirNum){
 			shouldLeft = true;
-		} else if(cDirNum < dDirNum){
+		} else if(cDirNum > dDirNum){
 			shouldLeft = false;
 		} else {
 			// already facing the correct way
