@@ -2,6 +2,8 @@ package windows;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import com.sun.glass.events.KeyEvent;
@@ -119,22 +121,30 @@ public class BattleCanvas extends JPanel{
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		
+        Graphics2D g2d = (Graphics2D)g;
+        AffineTransform old = g2d.getTransform();
+        g2d.translate(Master.CANVASWIDTH / 2, Master.CANVASHEIGHT / 2);
+        g2d.rotate((p.getDirNum() - 0.5)* Math.PI);
+        g2d.translate(-(Master.CANVASWIDTH / 2), -(Master.CANVASHEIGHT / 2));
 		int[] trans = retTranslate();
-		g.translate(trans[0], trans[1]);
-		battlefield.draw(g);
+		g2d.translate(trans[0], trans[1]);
+		battlefield.draw(g2d);
 		
-		g.translate(-trans[0], -trans[1]);
-		p.drawHUD(g);
+		g2d.translate(-trans[0], -trans[1]);
+		
+		g2d.setTransform(old);
+		
+		p.drawHUD(g2d);
 		
 		if(hostedBattle.shouldEnd()){
-			drawMatchResolution(g);
+			drawMatchResolution(g2d);
       		return;
         }
 		
 		if(!paused){
 			startTimer();
 		} else {
-			drawPause(g);
+			drawPause(g2d);
 		}
 	}
 	public void drawPause(Graphics g){
