@@ -97,7 +97,7 @@ public class Attack {
 	}
 	public void use(Player user){
 		user.getEnergyLog().loseEnergy((int) getStatValue("Energy Cost"));
-		registeredProjectile = new SeedProjectile(user.getX(), user.getY(), user.getDirNum(), (int) getStatValue("Speed"), user, this);
+		registeredProjectile = new SeedProjectile(user.getX(), user.getY(), user.getDir(), (int) getStatValue("Speed"), user, this);
 		registeredProjectile.addOnHit(getStatusInfliction());
 		if(registeredProjectile.getAttack().getStatValue("Range") == 0){
 			registeredProjectile.terminate();

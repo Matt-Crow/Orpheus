@@ -34,7 +34,7 @@ public class Player extends Entity{
 	private boolean shouldTerminate;
 	
 	public Player(String n){
-		super(0, 0, 0, 10);
+		super(0, 0, new Direction(0), 10);
 		name = n;
 		slash = new Slash();
 		actives = new Attack[3];
@@ -217,9 +217,9 @@ public class Player extends Entity{
 		log.log(dmg);
 	}
 	
-	public void init(Team t, int x, int y, double dirNum){
+	public void init(Team t, int x, int y, Direction d){
 		super.setCoords(x, y);
-		super.setDirNum(dirNum);
+		super.setDir(d);
 		team = t;
 		slash.init();
 		c.calcStats();

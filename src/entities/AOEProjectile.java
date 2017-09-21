@@ -1,9 +1,10 @@
 package entities;
 
 import attacks.Attack;
+import resources.Direction;
 
 public class AOEProjectile extends Projectile{
-	public AOEProjectile(int x, int y, double dirNum, int momentum, Player attackUser, Attack a, Player chainedFrom){
+	public AOEProjectile(int x, int y, Direction dirNum, int momentum, Player attackUser, Attack a, Player chainedFrom){
 		super(x, y, dirNum, momentum, attackUser, a);
 		avoid(chainedFrom);
 		attackUser.getTeam().registerProjectile(this);

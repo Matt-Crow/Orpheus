@@ -30,6 +30,9 @@ public class Op {
 		add(Integer.toString(msg));
 	}
 	
+	public static void add(double msg){
+		add(Double.toString(msg));
+	}
 	// Prints the contents of the message arraylist
 	public static void dp(){
 		add(" ");

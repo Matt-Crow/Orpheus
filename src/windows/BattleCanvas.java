@@ -17,6 +17,7 @@ import battle.*;
 import entities.Player;
 import resources.EasyButton;
 import resources.KeyRegister;
+import resources.Direction;
 import initializers.Master;
 import initializers.Run;
 import initializers.Controls;
@@ -121,10 +122,14 @@ public class BattleCanvas extends JPanel{
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		
+		Direction rotTo = new Direction(p.getDir().getDegrees());
+		rotTo.turnClockwise(90);
+		
         Graphics2D g2d = (Graphics2D)g;
         AffineTransform old = g2d.getTransform();
         g2d.translate(Master.CANVASWIDTH / 2, Master.CANVASHEIGHT / 2);
-        g2d.rotate(p.getDir().getRadians());
+        
+        g2d.rotate(rotTo.getRadians());
         g2d.translate(-(Master.CANVASWIDTH / 2), -(Master.CANVASHEIGHT / 2));
 		int[] trans = retTranslate();
 		g2d.translate(trans[0], trans[1]);

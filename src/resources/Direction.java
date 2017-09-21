@@ -58,7 +58,7 @@ public class Direction {
 	}
 	
 	public double getRadians(){
-		return radiansPI;
+		return radiansPI * Math.PI;
 	}
 	public int getDegrees(){
 		return degrees;

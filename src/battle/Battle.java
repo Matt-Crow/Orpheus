@@ -3,6 +3,7 @@ package battle;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import resources.Direction;
 import initializers.Master;
 
 public class Battle {
@@ -27,8 +28,8 @@ public class Battle {
 		int h = host.getHeight();
 		int spacingFromTopEdge = host.getTileSize();
 		int spacingBetween = w / 6;
-		teams.get(0).init(spacingFromTopEdge, spacingBetween, 1.5);
-		teams.get(1).init(h - spacingFromTopEdge * 2, spacingBetween, 0.5);
+		teams.get(0).init(spacingFromTopEdge, spacingBetween, new Direction(1.5));
+		teams.get(1).init(h - spacingFromTopEdge * 2, spacingBetween, new Direction(0.5));
 		Master.setCurrentBattle(this);
 		end = false;
 	}

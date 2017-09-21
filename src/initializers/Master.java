@@ -8,7 +8,7 @@ public class Master {
 	public static final boolean DISABLEHEALING = false;
 	public static final boolean DISABLEALLAI = false;
 	// number of angles a player can have
-	public static final int TICKSTOROTATE = 20;
+	public static final int TICKSTOROTATE = 60;
 	
 	private static Battle currentBattle;
 	
