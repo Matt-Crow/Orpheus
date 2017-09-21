@@ -162,8 +162,8 @@ public class Player extends Entity{
 	}
 	
 	public void turnToward(Direction d){
-		double cDirNum = getDirNum();
-		double dDirNum = d.getDirNum();
+		double cDirNum = getDir().getRadians();
+		double dDirNum = d.getRadians();
 		boolean shouldLeft = true;
 		
 		if(cDirNum < dDirNum){

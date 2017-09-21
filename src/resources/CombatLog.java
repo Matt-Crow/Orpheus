@@ -19,7 +19,7 @@ public class CombatLog{
 	public static void logProjectileData(Projectile p){
 		add("-------");
 		add("*Projectile:");
-		add("Bearing " + p.getDirNum());
+		add("Bearing " + p.getDir().getDegrees() + " degrees");
 		add("Generated from " + p.getAttackName());
 		add("by " + p.getUser().getName());
 		add("hitting " + p.getHit().getName());

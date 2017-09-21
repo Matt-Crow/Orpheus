@@ -9,13 +9,13 @@ import resources.Direction;
 public class Entity {
 	private int x;
 	private int y;
-	private double dirNum;
+	private Direction dir;
 	private int momentum;
 	private double speedFilter;
 	private boolean moving;
 	private boolean backwards;
 	
-	private double kbDirNum;
+	private Direction kbDir;
 	private double kbDur;
 	private int kbVelocity;
 	
@@ -25,16 +25,16 @@ public class Entity {
 	private ArrayList<OnHitAction> onBeMeleeHitRegister;
 	private ArrayList<OnUpdateAction> onUpdateRegister;
 	
-	public Entity(int xCoord, int yCoord, double directionNumber, int m){
+	public Entity(int xCoord, int yCoord, Direction d, int m){
 		x = xCoord;
 		y = yCoord;
-		dirNum = directionNumber;
+		dir = d;
 		momentum = m;
 		speedFilter = 1.0;
 		moving = false;
 		backwards = false;
 		
-		kbDirNum = 0;
+		kbDir = new Direction(0);
 		kbDur = 0;
 		kbVelocity = 0;
 		
@@ -54,8 +54,8 @@ public class Entity {
 		x = xCoord;
 		y = yCoord;
 	}
-	public void setDirNum(double dir){
-		dirNum = dir;
+	public void setDir(Direction d){
+		dir = d;
 	}
 	public void setMoving(boolean m){
 		moving = m;
@@ -68,23 +68,24 @@ public class Entity {
 	}
 	
 	public double[] getVector(){
-		return new Direction(dirNum).getVector();
+		return dir.getVector();
 	}
-	public double getDirNum(){
-		return dirNum;
+	
+	public Direction getDir(){
+		return dir;
 	}
 	
 	public int getMomentum(){
 		return (int) (momentum * speedFilter);
 	}
 	
-	public void applyKnockback(double dirN, int dur, int vel){
-		kbDirNum = dirN;
+	public void applyKnockback(Direction d, int dur, int vel){
+		kbDir = d;
 		kbDur = dur;
 		kbVelocity = vel;
 	}
 	public double[] getKBVector(){
-		return new Direction(kbDirNum).getVector();
+		return kbDir.getVector();
 	}
 	
 	public void addOnHit(OnHitAction a){
@@ -148,16 +149,12 @@ public class Entity {
 		}
 	}
 	
-	public void turn(String dir){
-		if(dir == "left"){
-			dirNum += 0.1;
+	public void turn(String d){
+		double amount = 2.0 / Master.TICKSTOROTATE;
+		if(d == "left"){
+			dir.turnCounterClockwise(amount);
 		} else {
-			dirNum -= 0.1;
-		}
-		if(dirNum < 0){
-			dirNum = 1.9;
-		} else if(dirNum > 1.9){
-			dirNum = 0;
+			dir.turnClockwise(amount);
 		}
 	}
 	
@@ -199,7 +196,7 @@ public class Entity {
 			y += getKBVector()[1] * kbVelocity;
 			kbDur -= 1;
 		} else {
-			applyKnockback(0, 0, 0);
+			applyKnockback(new Direction(0), 0, 0);
 		}
 		if(moving){
 			move();

@@ -2,6 +2,7 @@ package statuses;
 
 import entities.Player;
 import resources.OnHitAction;
+import resources.Direction;
 
 public class Strength extends Status{
 	public Strength(int lv, int uses){
@@ -11,7 +12,7 @@ public class Strength extends Status{
 		OnHitAction a = new OnHitAction(){
 			public void f(){
 				getHit().getLog().logPercentageDamage(3.5 * getIntensityLevel());
-				getHit().applyKnockback(p.getDirNum(), 10, (int) (3.5 * getIntensityLevel()));
+				getHit().applyKnockback(new Direction(p.getDir().getRadians()), 10, (int) (3.5 * getIntensityLevel()));
 				use();
 			}
 		};
