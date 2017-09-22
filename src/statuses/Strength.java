@@ -12,7 +12,7 @@ public class Strength extends Status{
 		OnHitAction a = new OnHitAction(){
 			public void f(){
 				getHit().getLog().logPercentageDamage(3.5 * getIntensityLevel());
-				getHit().applyKnockback(new Direction(p.getDir().getRadians()), 10, (int) (3.5 * getIntensityLevel()));
+				getHit().applyKnockback(new Direction(p.getDir().getDegrees()), 10, (int) (3.5 * getIntensityLevel()));
 				use();
 			}
 		};

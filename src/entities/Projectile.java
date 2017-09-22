@@ -1,7 +1,7 @@
 package entities;
 
 import java.awt.Graphics;
-
+import java.util.ArrayList;
 import attacks.Attack;
 import resources.CombatLog;
 import resources.Direction;
@@ -10,7 +10,7 @@ public class Projectile extends Entity{
 	private Player user;
 	private Attack registeredAttack;
 	private int distanceTraveled;
-	private Player doNotHit;
+	private ArrayList<Player> doNotHit;
 	private Player hit;
 	private boolean shouldTerminate;
 	private boolean terminated;
@@ -23,8 +23,10 @@ public class Projectile extends Entity{
 		registeredAttack = a;
 		shouldTerminate = false;
 		terminated = false;
-		doNotHit = new Player("Void");
+		doNotHit = new ArrayList<Player>();
 		hit = new Player("Void");
+		
+		user.getTeam().registerProjectile(this);
 	}
 	public String getAttackName(){
 		return registeredAttack.getName();
@@ -48,14 +50,14 @@ public class Projectile extends Entity{
 		return terminated;
 	}
 	public void avoid(Player p){
-		doNotHit = p;
+		doNotHit.add(p);
 	}
 	public boolean checkIfWithin(int leftX, int rightX, int topY, int bottomY){
 		return getX() >= leftX && getX() <= rightX && getY() >= topY && getY() <= bottomY;
 	}
 	public void checkForCollisionsWith(Player p){
 		if(checkIfWithin(p.getX() - 50, p.getX() + 50, p.getY() - 50, p.getY() + 50)){
-			if(p == doNotHit){
+			if(doNotHit.contains(p)){
 				return;
 			}
 			hit = p;
