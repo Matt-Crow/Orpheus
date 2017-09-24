@@ -14,7 +14,6 @@ import customizables.*;
 import resources.EasyButton;
 import resources.Menu;
 import initializers.Master;
-import initializers.Run;
 
 // need to add custom build creation
 @SuppressWarnings("serial")
@@ -79,9 +78,8 @@ public class MainCanvas extends JPanel{
 				team1 = Team.constructRandomTeam("Team 1", Color.green, Integer.parseInt(team1Size.getSelectedItem().toString()) - 1);
 				team2 = Team.constructRandomTeam("Team 2", Color.red, Integer.parseInt(team2Size.getSelectedItem().toString()));
 				
-				Run.player.applyBuild(Build.getBuildByName(playerBuild.getSelectedItem().toString()));
-				Run.player.disableAI();
-				team1.addMember(Run.player);
+				Master.thePlayer.applyBuild(Build.getBuildByName(playerBuild.getSelectedItem().toString()));
+				team1.addMember(Master.thePlayer);
 				
 				team1.setEnemy(team2);
 				team2.setEnemy(team1);

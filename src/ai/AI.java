@@ -73,15 +73,17 @@ public class AI {
 	
 	// improve this
 	public void turnToLatch(){
+		/*
 		boolean isAbove = false;
 		boolean isBelow = false;
 		boolean isLeft = false;
 		boolean isRight = false;
+		*/
 		int x1 = appliedTo.getCoords().getX();
 		int x2 = latched.getCoords().getX();
 		int y1 = appliedTo.getCoords().getY();
 		int y2 = latched.getCoords().getY();
-		
+		/*
 		if(x1 > x2){
 			isLeft = true;
 		} else if(x1 < x2){
@@ -119,6 +121,7 @@ public class AI {
 		}
 		
 		//appliedTo.turnToward(new Direction(turnTo));
+		 */
 		appliedTo.turnToward(Direction.getDegreeByLengths(x1, y1, x2, y2));
 	}
 	public boolean checkIfPlayerInSightRange(){

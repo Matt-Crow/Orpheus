@@ -157,7 +157,6 @@ public class Entity {
 			dir.turnClockwise(amount);
 		}
 	}
-	
 	public void move(){
 		x += getVector()[0] * getMomentum();
 		y += getVector()[1] * getMomentum();

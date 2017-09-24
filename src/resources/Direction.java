@@ -58,19 +58,20 @@ public class Direction {
 	}
 	
 	public void turnClockwise(int deg){
-		degrees -= deg;
-		calcRadians();
-	}
-	public void turnClockwise(double deg){
-		radiansPI -= deg;
-		calcDegrees();
-	}
-	public void turnCounterClockwise(int deg){
 		degrees += deg;
 		calcRadians();
 	}
-	public void turnCounterClockwise(double deg){
+	public void turnClockwise(double deg){
 		radiansPI += deg;
+		calcDegrees();
+	}
+	public void turnCounterClockwise(int deg){
+		degrees -= deg;
+		calcRadians();
+	}
+	
+	public void turnCounterClockwise(double deg){
+		radiansPI -= deg;
 		calcDegrees();
 	}
 	
@@ -100,7 +101,7 @@ public class Direction {
 		return Math.cos(radiansPI * Math.PI);
 	}
 	public double getYMod(){
-		return -Math.sin(radiansPI * Math.PI);
+		return Math.sin(radiansPI * Math.PI);
 	}
 	public double[] getVector(){
 		return new double[]{getXMod(), getYMod()};

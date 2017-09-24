@@ -14,13 +14,11 @@ import javax.swing.JFrame;
 import javax.swing.Timer;
 
 import battle.*;
-import entities.Player;
 import resources.EasyButton;
 import resources.KeyRegister;
 import resources.Op;
 import resources.Direction;
 import initializers.Master;
-import initializers.Run;
 import initializers.Controls;
 
 public class BattleCanvas extends JPanel{
@@ -31,7 +29,6 @@ public class BattleCanvas extends JPanel{
 	private int h;
 	private Timer timer;
 	private int FPS;
-	private Player p;
 	private ActionListener update;
 	private boolean paused;
 	
@@ -73,8 +70,7 @@ public class BattleCanvas extends JPanel{
 		hostedBattle.setHost(battlefield);
 		hostedBattle.init();
 		Master.setCurrentBattle(hostedBattle);
-		p = Run.player;
-		Controls.registerPlayerControlsTo(this, p);
+		Controls.registerControls(this);
 	}
 	
 	public void addKeyRegistration(){
@@ -92,8 +88,8 @@ public class BattleCanvas extends JPanel{
 	
 	public int[] retTranslate(){
 		int[] ret = new int[2];
-		int x = -p.getX() + w / 2;
-		int y = -p.getY() + h / 2;
+		int x = -Master.thePlayer.getX() + w / 2;
+		int y = -Master.thePlayer.getY() + h / 2;
 		int minX = -(battlefield.getWidth() - w);
 		int minY = -(battlefield.getHeight() - h);
 		
@@ -122,16 +118,20 @@ public class BattleCanvas extends JPanel{
 	
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		Op.add(p.getDir().getDegrees());
+		Op.add(Master.thePlayer.getDir().getDegrees());
 		Op.dp();
-		Direction rotTo = new Direction(p.getDir().getDegrees());
+		Direction rotTo = new Direction(Master.thePlayer.getDir().getDegrees());
+		Op.add(rotTo.getDegrees());
 		rotTo.turnClockwise(90);
+		Op.add(rotTo.getDegrees());
 		
         Graphics2D g2d = (Graphics2D)g;
         AffineTransform old = g2d.getTransform();
         g2d.translate(Master.CANVASWIDTH / 2, Master.CANVASHEIGHT / 2);
         
-        g2d.rotate(rotTo.getRadians());
+        Op.add(rotTo.getRadians());
+        Op.dp();
+        //g2d.rotate(rotTo.getRadians());
         g2d.translate(-(Master.CANVASWIDTH / 2), -(Master.CANVASHEIGHT / 2));
 		int[] trans = retTranslate();
 		g2d.translate(trans[0], trans[1]);
@@ -141,7 +141,7 @@ public class BattleCanvas extends JPanel{
 		
 		g2d.setTransform(old);
 		
-		p.drawHUD(g2d);
+		Master.thePlayer.drawHUD(g2d);
 		
 		if(hostedBattle.shouldEnd()){
 			drawMatchResolution(g2d);
