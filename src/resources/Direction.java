@@ -16,6 +16,38 @@ public class Direction {
 		calcRadians();
 	}
 	
+	public static Direction getDegreeByLengths(int x1, int y1, int x2, int y2){
+		double x = x2 - x1;
+		double y = y2 - y1;
+		double absX = Math.abs(x);
+		double absY = Math.abs(y);
+		
+		double alpha = Math.atan(absY / absX);
+		alpha = alpha * (180 / Math.PI);
+		Op.add(alpha);
+		
+		
+		double theta = 90;
+		
+		if((x > 0) && (y > 0)){
+			Op.add("Q1");
+			theta = alpha;
+		} else if ((x < 0) && (y > 0)){
+			Op.add("Q2");
+			theta = 180 - alpha;
+		} else if ((x < 0) && (y < 0)){
+			Op.add("Q3");
+			theta = 180 + alpha;
+		} else if ((x > 0) && (y < 0)){
+			Op.add("Q4");
+			theta = 360 - alpha;
+		} else {
+			Op.add("Coterminal: " + alpha);
+		}
+		Op.dp();
+		return new Direction((int)theta);
+	}
+	
 	public void calcDegrees(){
 		degrees = (int) (radiansPI * 180);
 		setBounds();

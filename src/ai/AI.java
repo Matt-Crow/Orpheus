@@ -118,7 +118,8 @@ public class AI {
 			}
 		}
 		
-		appliedTo.turnToward(new Direction(turnTo));
+		//appliedTo.turnToward(new Direction(turnTo));
+		appliedTo.turnToward(Direction.getDegreeByLengths(x1, y1, x2, y2));
 	}
 	public boolean checkIfPlayerInSightRange(){
 		for(Coordinates c : appliedTo.getTeam().getEnemy().getAllCoords()){

@@ -17,6 +17,7 @@ import battle.*;
 import entities.Player;
 import resources.EasyButton;
 import resources.KeyRegister;
+import resources.Op;
 import resources.Direction;
 import initializers.Master;
 import initializers.Run;
@@ -121,7 +122,8 @@ public class BattleCanvas extends JPanel{
 	
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		
+		Op.add(p.getDir().getDegrees());
+		Op.dp();
 		Direction rotTo = new Direction(p.getDir().getDegrees());
 		rotTo.turnClockwise(90);
 		
