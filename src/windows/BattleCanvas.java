@@ -128,10 +128,7 @@ public class BattleCanvas extends JPanel{
         Graphics2D g2d = (Graphics2D)g;
         AffineTransform old = g2d.getTransform();
         g2d.translate(Master.CANVASWIDTH / 2, Master.CANVASHEIGHT / 2);
-        
-        Op.add(rotTo.getRadians());
-        Op.dp();
-        //g2d.rotate(rotTo.getRadians());
+        g2d.rotate(-rotTo.getAsRadians());
         g2d.translate(-(Master.CANVASWIDTH / 2), -(Master.CANVASHEIGHT / 2));
 		int[] trans = retTranslate();
 		g2d.translate(trans[0], trans[1]);

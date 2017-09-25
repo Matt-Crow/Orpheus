@@ -150,7 +150,7 @@ public class Entity {
 	}
 	
 	public void turn(String d){
-		double amount = 2.0 / Master.TICKSTOROTATE;
+		int amount = 360 / Master.TICKSTOROTATE;
 		if(d == "left"){
 			dir.turnCounterClockwise(amount);
 		} else {
