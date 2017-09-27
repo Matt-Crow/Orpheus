@@ -54,10 +54,10 @@ public class Team {
 		}
 		return t;
 	}
-	public void init(int y, int spacing, Direction facing){
+	public void init(int y, int spacing, int facing){
 		int x = spacing;
 		for(Player m : members){
-			m.init(this, x, y, facing);
+			m.init(this, x, y, new Direction(facing));
 			x += spacing;
 		}
 		projectiles = new ArrayList<>();

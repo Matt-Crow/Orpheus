@@ -63,7 +63,6 @@ public class Player extends Entity{
 	public EnergyLog getEnergyLog(){
 		return energyLog;
 	}
-	
 	public CharacterClass getCharacterClass(){
 		return c;
 	}
@@ -73,10 +72,10 @@ public class Player extends Entity{
 	public AI getAI(){
 		return intel;
 	}
-	
 	public boolean getShouldTerminate(){
 		return shouldTerminate;
 	}
+	
 	public void disableAI(){
 		AI = false;
 	}
@@ -244,6 +243,10 @@ public class Player extends Entity{
 	}
 	
 	public void init(Team t, int x, int y, Direction d){
+		if(AI){
+			intel = new AI(this);
+			intel.setToWander();
+		}
 		super.setCoords(x, y);
 		super.setDir(d);
 		team = t;
@@ -258,10 +261,6 @@ public class Player extends Entity{
 		}
 		for(Passive p : passives){
 			p.registerTo(this);
-		}
-		if(AI){
-			intel = new AI(this);
-			intel.setToWander();
 		}
 		shouldTerminate = false;
 	}
@@ -328,5 +327,4 @@ public class Player extends Entity{
 			y += h/30;
 		}
 	}
-
 }
