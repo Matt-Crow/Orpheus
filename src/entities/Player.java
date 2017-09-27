@@ -67,6 +67,9 @@ public class Player extends Entity{
 	public CharacterClass getCharacterClass(){
 		return c;
 	}
+	public boolean getHasAI(){
+		return AI;
+	}
 	public AI getAI(){
 		return intel;
 	}
@@ -165,16 +168,16 @@ public class Player extends Entity{
 			return;
 		}
 	}
-	
+	/*
 	public void turnToward(Direction d){
 		int cDirNum = getDir().getDegrees();
 		int dDirNum = d.getDegrees();
 		boolean shouldLeft = true;
-		/*
+		
 		Op.add(name);
 		Op.add("I am facing " + cDirNum);
 		Op.add("And I need to face " + dDirNum);
-		*/
+		
 		if(cDirNum < dDirNum){
 			shouldLeft = true;
 		} else if(cDirNum > dDirNum){
@@ -195,24 +198,28 @@ public class Player extends Entity{
 			// already facing the correct way
 			return;
 		}
-		Op.add(differenceBetween);
+		//Op.add(differenceBetween);
 		
 		if(differenceBetween > 180){
 			shouldLeft = !shouldLeft;
 		}
-		/*
+		
 		if(shouldLeft){
 			Op.add("Left");
 		} else {
 			Op.add("Right");
 		}
 		Op.dp();
-		*/
+		
 		if(shouldLeft){
 			turn("left");
 		} else {
 			turn("right");
 		}
+	}
+	*/
+	public void turnToward(Direction d){
+		
 	}
 	
 	public double getStatValue(String n){
@@ -252,8 +259,10 @@ public class Player extends Entity{
 		for(Passive p : passives){
 			p.registerTo(this);
 		}
-		intel = new AI(this);
-		intel.setToWander();
+		if(AI){
+			intel = new AI(this);
+			intel.setToWander();
+		}
 		shouldTerminate = false;
 	}
 	

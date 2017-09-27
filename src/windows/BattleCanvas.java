@@ -16,7 +16,6 @@ import javax.swing.Timer;
 import battle.*;
 import resources.EasyButton;
 import resources.KeyRegister;
-import resources.Op;
 import resources.Direction;
 import initializers.Master;
 import initializers.Controls;
@@ -76,6 +75,7 @@ public class BattleCanvas extends JPanel{
 	public void addKeyRegistration(){
 		new KeyRegister(this, KeyEvent.VK_P, true, new pauseAction());
 	}
+	
 	public class pauseAction extends AbstractAction{
 		static final long serialVersionUID = 1L;
 		public void actionPerformed(ActionEvent e){
@@ -118,13 +118,8 @@ public class BattleCanvas extends JPanel{
 	
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		Op.add(Master.thePlayer.getDir().getDegrees());
-		Op.dp();
 		Direction rotTo = new Direction(Master.thePlayer.getDir().getDegrees());
-		Op.add(rotTo.getDegrees());
 		rotTo.turnClockwise(90);
-		Op.add(rotTo.getDegrees());
-		
         Graphics2D g2d = (Graphics2D)g;
         AffineTransform old = g2d.getTransform();
         g2d.translate(Master.CANVASWIDTH / 2, Master.CANVASHEIGHT / 2);

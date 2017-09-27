@@ -22,6 +22,7 @@ public class AI {
 		mode = "wander";
 		wanderDistance = Random.choose(100, 1000);
 		distanceWandered = 0;
+		
 		switch(Random.choose(0, 1)){
 		case 0:
 			appliedTo.turn("left");
@@ -31,6 +32,7 @@ public class AI {
 			break;
 		}
 	}
+	
 	public void latch(Player p){
 		mode = "pursue";
 		latched = p;

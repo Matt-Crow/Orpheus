@@ -26,26 +26,26 @@ public class Direction {
 		
 		double alpha = Math.atan((double)absY / absX);
 		alpha = alpha * (180 / Math.PI);
-		Op.add(alpha);
+		//Op.add(alpha);
 		
 		double theta = 90;
 		
 		if((x > 0) && (y > 0)){
-			Op.add("Q1");
+			//Op.add("Q1");
 			theta = alpha;
 		} else if ((x < 0) && (y > 0)){
-			Op.add("Q2");
+			//Op.add("Q2");
 			theta = 180 - alpha;
 		} else if ((x < 0) && (y < 0)){
-			Op.add("Q3");
+			//Op.add("Q3");
 			theta = 180 + alpha;
 		} else if ((x > 0) && (y < 0)){
-			Op.add("Q4");
+			//Op.add("Q4");
 			theta = 360 - alpha;
 		} else {
-			Op.add("Coterminal: " + alpha);
+			//Op.add("Coterminal: " + alpha);
 		}
-		Op.dp();
+		//Op.dp();
 		return new Direction((int)theta);
 	}
 	
