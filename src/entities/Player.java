@@ -168,17 +168,10 @@ public class Player extends Entity{
 		}
 	}
 	
-	// bugs turning when I'm on certain sides
 	public void turnToward(Direction d){
 		int cDirNum = getDir().getDegrees();
 		int dDirNum = d.getDegrees();
 		boolean shouldLeft = true;
-		
-		if(cDirNum != dDirNum){
-			Op.add(name);
-			Op.add("I am facing " + cDirNum);
-			Op.add("And I need to face " + dDirNum);
-		}
 		
 		if(cDirNum < dDirNum){
 			shouldLeft = true;
@@ -189,26 +182,16 @@ public class Player extends Entity{
 			return;
 		}
 		
-		Op.add("Therefore, turning left is: " + shouldLeft);
-		
 		double differenceBetween;
 		if(cDirNum > dDirNum){
 			differenceBetween = cDirNum - dDirNum;
 		} else {
 			differenceBetween = dDirNum - cDirNum;
 		}
-		Op.add(differenceBetween);
 		
 		if(differenceBetween > 180){
 			shouldLeft = !shouldLeft;
 		}
-		
-		if(shouldLeft){
-			Op.add("Left");
-		} else {
-			Op.add("Right");
-		}
-		Op.dp();
 		
 		if(shouldLeft){
 			turn("left");
@@ -293,8 +276,6 @@ public class Player extends Entity{
 		
 		if(AI){
 			intel.update();
-			//FIXME
-			setMoving(false);
 		}
 	}
 	

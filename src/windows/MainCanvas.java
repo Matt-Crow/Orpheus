@@ -78,8 +78,8 @@ public class MainCanvas extends JPanel{
 				team1 = Team.constructRandomTeam("Team 1", Color.green, Integer.parseInt(team1Size.getSelectedItem().toString()) - 1);
 				team2 = Team.constructRandomTeam("Team 2", Color.red, Integer.parseInt(team2Size.getSelectedItem().toString()));
 				
-				Master.thePlayer.applyBuild(Build.getBuildByName(playerBuild.getSelectedItem().toString()));
-				team1.addMember(Master.thePlayer);
+				Master.TRUEPLAYER.applyBuild(Build.getBuildByName(playerBuild.getSelectedItem().toString()));
+				team1.addMember(Master.TRUEPLAYER);
 				
 				team1.setEnemy(team2);
 				team2.setEnemy(team1);

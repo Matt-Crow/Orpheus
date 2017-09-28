@@ -88,8 +88,8 @@ public class BattleCanvas extends JPanel{
 	
 	public int[] retTranslate(){
 		int[] ret = new int[2];
-		int x = -Master.thePlayer.getX() + w / 2;
-		int y = -Master.thePlayer.getY() + h / 2;
+		int x = -Master.TRUEPLAYER.getX() + w / 2;
+		int y = -Master.TRUEPLAYER.getY() + h / 2;
 		int minX = -(battlefield.getWidth() - w);
 		int minY = -(battlefield.getHeight() - h);
 		
@@ -118,13 +118,15 @@ public class BattleCanvas extends JPanel{
 	
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		Direction rotTo = new Direction(Master.thePlayer.getDir().getDegrees());
-		rotTo.turnCounterClockwise(90);
-        Graphics2D g2d = (Graphics2D)g;
+		Graphics2D g2d = (Graphics2D)g;
         AffineTransform old = g2d.getTransform();
-        g2d.translate(Master.CANVASWIDTH / 2, Master.CANVASHEIGHT / 2);
-        g2d.rotate(rotTo.getAsRadians());
-        g2d.translate(-(Master.CANVASWIDTH / 2), -(Master.CANVASHEIGHT / 2));
+		if(Master.ROTATECANVAS){
+			Direction rotTo = new Direction(Master.TRUEPLAYER.getDir().getDegrees());
+			rotTo.turnCounterClockwise(90);
+        	g2d.translate(Master.CANVASWIDTH / 2, Master.CANVASHEIGHT / 2);
+        	g2d.rotate(rotTo.getAsRadians());
+        	g2d.translate(-(Master.CANVASWIDTH / 2), -(Master.CANVASHEIGHT / 2));
+		}
 		int[] trans = retTranslate();
 		g2d.translate(trans[0], trans[1]);
 		battlefield.draw(g2d);
@@ -133,7 +135,7 @@ public class BattleCanvas extends JPanel{
 		
 		g2d.setTransform(old);
 		
-		Master.thePlayer.drawHUD(g2d);
+		Master.TRUEPLAYER.drawHUD(g2d);
 		
 		if(hostedBattle.shouldEnd()){
 			drawMatchResolution(g2d);

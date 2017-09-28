@@ -10,7 +10,7 @@ import resources.KeyRegister;
 public class Controls {
 	private static Player p;
 	public static void registerControls(JPanel j){
-		p = Master.thePlayer;
+		p = Master.TRUEPLAYER;
 		new KeyRegister(j, KeyEvent.VK_UP, true, new moveAction());
 		new KeyRegister(j, KeyEvent.VK_UP, false, new stopAction());
 		new KeyRegister(j, KeyEvent.VK_DOWN, true, new reverseAction());

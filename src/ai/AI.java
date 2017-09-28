@@ -2,6 +2,7 @@ package ai;
 
 import resources.OnHitAction;
 import entities.Player;
+import initializers.Master;
 import resources.Coordinates;
 import resources.Random;
 import resources.Direction;
@@ -47,7 +48,7 @@ public class AI {
 	}
 	public void pursue(){
 		// check if in range
-		if(appliedTo.getCoords().distanceBetween(latched.getCoords()) <= 150){
+		if(appliedTo.getCoords().distanceBetween(latched.getCoords()) <= 100){
 			setToAttack();
 			return;
 		}
@@ -78,16 +79,11 @@ public class AI {
 		int y2 = latched.getCoords().getY();
 		
 		Direction d = Direction.getDegreeByLengths(x1, y1, x2, y2);
-		// why does this work?
-		if(y1 < y2){
-			d.turnClockwise(180);
-		}
-		
 		appliedTo.turnToward(d);
 	}
 	public boolean checkIfPlayerInSightRange(){
 		for(Coordinates c : appliedTo.getTeam().getEnemy().getAllCoords()){
-			if(c.distanceBetween(appliedTo.getCoords()) <= 500){
+			if(c.distanceBetween(appliedTo.getCoords()) <= Master.DETECTIONRANGE){
 				return true;
 			}
 		}
@@ -95,7 +91,7 @@ public class AI {
 	}
 	public Player nearestEnemy(){
 		Coordinates nearest = new Coordinates(0, 0);
-		int distance = 999999;
+		int distance = Master.DETECTIONRANGE;
 		for(Coordinates c : appliedTo.getTeam().getEnemy().getAllCoords()){
 			if(c.distanceBetween(appliedTo.getCoords()) < distance){
 				nearest = c;
