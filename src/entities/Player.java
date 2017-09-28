@@ -167,15 +167,18 @@ public class Player extends Entity{
 			return;
 		}
 	}
-	/*
+	
+	// bugs turning when I'm on certain sides
 	public void turnToward(Direction d){
 		int cDirNum = getDir().getDegrees();
 		int dDirNum = d.getDegrees();
 		boolean shouldLeft = true;
 		
-		Op.add(name);
-		Op.add("I am facing " + cDirNum);
-		Op.add("And I need to face " + dDirNum);
+		if(cDirNum != dDirNum){
+			Op.add(name);
+			Op.add("I am facing " + cDirNum);
+			Op.add("And I need to face " + dDirNum);
+		}
 		
 		if(cDirNum < dDirNum){
 			shouldLeft = true;
@@ -186,18 +189,15 @@ public class Player extends Entity{
 			return;
 		}
 		
-		//Op.add("Therefore, turning left is: " + shouldLeft);
+		Op.add("Therefore, turning left is: " + shouldLeft);
 		
 		double differenceBetween;
 		if(cDirNum > dDirNum){
 			differenceBetween = cDirNum - dDirNum;
-		} else if(cDirNum < dDirNum){
-			differenceBetween = dDirNum - cDirNum;
 		} else {
-			// already facing the correct way
-			return;
+			differenceBetween = dDirNum - cDirNum;
 		}
-		//Op.add(differenceBetween);
+		Op.add(differenceBetween);
 		
 		if(differenceBetween > 180){
 			shouldLeft = !shouldLeft;
@@ -215,10 +215,6 @@ public class Player extends Entity{
 		} else {
 			turn("right");
 		}
-	}
-	*/
-	public void turnToward(Direction d){
-		
 	}
 	
 	public double getStatValue(String n){
@@ -297,6 +293,8 @@ public class Player extends Entity{
 		
 		if(AI){
 			intel.update();
+			//FIXME
+			setMoving(false);
 		}
 	}
 	

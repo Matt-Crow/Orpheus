@@ -152,9 +152,9 @@ public class Entity {
 	public void turn(String d){
 		int amount = 360 / Master.TICKSTOROTATE;
 		if(d == "left"){
-			dir.turnCounterClockwise(amount);
-		} else {
 			dir.turnClockwise(amount);
+		} else {
+			dir.turnCounterClockwise(amount);
 		}
 	}
 	

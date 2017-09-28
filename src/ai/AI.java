@@ -21,7 +21,7 @@ public class AI {
 		mode = "wander";
 		wanderDistance = Random.choose(100, 1000);
 		distanceWandered = 0;
-		/*
+		
 		switch(Random.choose(0, 1)){
 		case 0:
 			appliedTo.turn("left");
@@ -30,9 +30,7 @@ public class AI {
 			appliedTo.turn("right");
 			break;
 		}
-		*/
 	}
-	
 	public void latch(Player p){
 		mode = "pursue";
 		latched = p;
@@ -49,7 +47,7 @@ public class AI {
 	}
 	public void pursue(){
 		// check if in range
-		if(appliedTo.getCoords().distanceBetween(latched.getCoords()) <= 100){
+		if(appliedTo.getCoords().distanceBetween(latched.getCoords()) <= 150){
 			setToAttack();
 			return;
 		}
@@ -73,58 +71,19 @@ public class AI {
 		appliedTo.setMoving(false);
 	}
 	
-	// improve this
 	public void turnToLatch(){
-		/*
-		boolean isAbove = false;
-		boolean isBelow = false;
-		boolean isLeft = false;
-		boolean isRight = false;
-		*/
 		int x1 = appliedTo.getCoords().getX();
 		int x2 = latched.getCoords().getX();
 		int y1 = appliedTo.getCoords().getY();
 		int y2 = latched.getCoords().getY();
-		/*
-		if(x1 > x2){
-			isLeft = true;
-		} else if(x1 < x2){
-			isRight = true;
+		
+		Direction d = Direction.getDegreeByLengths(x1, y1, x2, y2);
+		// why does this work?
+		if(y1 < y2){
+			d.turnClockwise(180);
 		}
 		
-		if(y1 > y2){
-			isAbove = true;
-		} else if(y1 < y2){
-			isBelow = true;
-		}
-		Double turnTo;
-		if(isAbove){
-			if(isLeft){
-				turnTo = 0.75;
-			} else if(isRight){
-				turnTo = 0.25;
-			} else {
-				turnTo = 0.5;
-			}
-		} else if(isBelow){
-			if(isLeft){
-				turnTo = 1.25;
-			} else if(isRight){
-				turnTo = 1.75;
-			} else {
-				turnTo = 1.5;
-			}
-		} else {
-			if(isLeft){
-				turnTo = 1.0;
-			} else {
-				turnTo = 0.0;
-			}
-		}
-		
-		//appliedTo.turnToward(new Direction(turnTo));
-		 */
-		appliedTo.turnToward(Direction.getDegreeByLengths(x1, y1, x2, y2));
+		appliedTo.turnToward(d);
 	}
 	public boolean checkIfPlayerInSightRange(){
 		for(Coordinates c : appliedTo.getTeam().getEnemy().getAllCoords()){
