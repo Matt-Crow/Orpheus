@@ -71,7 +71,12 @@ public class Attack {
 		inflictOnHit.add(s);
 		inflictChance.add(chance);
 	}
-	
+	public void setToCooldown(){
+		cooldown = (int) getStatValue("Cooldown");
+	}
+	public void setRegisteredProjectile(Projectile p){
+		registeredProjectile = p;
+	}
 	public Projectile getRegisteredProjectile(){
 		return registeredProjectile;
 	}
@@ -102,7 +107,7 @@ public class Attack {
 		if(registeredProjectile.getAttack().getStatValue("Range") == 0){
 			registeredProjectile.terminate();
 		}
-		cooldown = (int) getStatValue("Cooldown");
+		setToCooldown();
 	}
 	public void init(){
 		cooldown = 0;
