@@ -60,7 +60,7 @@ public class Direction {
 		}
 	}
 	public double getAsRadians(){
-		return degrees * Math.PI / 180;
+		return degrees * (Math.PI / 180);
 	}
 	public int getDegrees(){
 		return degrees;

@@ -15,8 +15,11 @@ public class MeleeAttack extends Attack{
 		// why is this not working?
 		int x = (int) (user.getX() - 100 * d.getXMod());
 		int y = (int) (user.getY() - 100 * d.getYMod());
+		Op.add(d.getDegrees());
 		Op.add(d.getXMod());
 		Op.add(d.getYMod());
+		Op.add(x);
+		Op.add(y);
 		Op.dp();
 		setRegisteredProjectile(new SeedProjectile(x, y, d, (int) getStatValue("Speed"), user, this));
 		getRegisteredProjectile().addOnHit(getStatusInfliction());
