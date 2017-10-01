@@ -3,11 +3,10 @@ package entities;
 import java.util.ArrayList;
 import attacks.Attack;
 import resources.OnHitAction;
-import resources.Direction;
 
 public class AOEProjectile extends Projectile{
 	private ArrayList<AOEProjectile> brothers;
-	public AOEProjectile(int x, int y, Direction dirNum, int momentum, Player attackUser, Attack a, Player chainedFrom){
+	public AOEProjectile(int x, int y, int dirNum, int momentum, Player attackUser, Attack a, Player chainedFrom){
 		super(x, y, dirNum, momentum, attackUser, a);
 		avoid(chainedFrom);
 		brothers = new ArrayList<>();

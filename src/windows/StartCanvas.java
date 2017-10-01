@@ -1,28 +1,22 @@
 package windows;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.event.ActionEvent;
-
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-
 import initializers.Master;
 
 import javax.swing.JLabel;
-import javax.swing.JFrame;
 import javax.swing.AbstractAction;
 
 import resources.Op;
 import resources.EasyButton;
+import resources.DrawingPlane;
 
 @SuppressWarnings("serial")
-public class StartCanvas extends JPanel{
+public class StartCanvas extends DrawingPlane{
 	public static final long serialVersionUID = 1L;
 	
 	public StartCanvas(){
-		setLayout(null);
-		JPanel p = this;
+		super(Master.CANVASWIDTH, Master.CANVASHEIGHT);
 		
 		JLabel title = new JLabel("The Orpheus Proposition");
 		title.setLayout(null);
@@ -43,8 +37,7 @@ public class StartCanvas extends JPanel{
 		actions[1] = new AbstractAction("Play"){
 			public void actionPerformed(ActionEvent e){
 				new MainWindow();
-				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(p);
-				frame.dispose();
+				close();
 			}
 		};
 		actions[2] = new AbstractAction("How to play"){
@@ -60,9 +53,5 @@ public class StartCanvas extends JPanel{
 			b.addActionListener(actions[i]);
 			b.addTo(this);
 		}
-	}
-	
-	public void paintComponent(Graphics g){
-		super.paintComponent(g);
 	}
 }

@@ -34,7 +34,7 @@ public class Player extends Entity{
 	private boolean shouldTerminate;
 	
 	public Player(String n){
-		super(0, 0, new Direction(0), 10);
+		super(0, 0, 0, 10);
 		name = n;
 		slash = new Slash();
 		actives = new Attack[3];

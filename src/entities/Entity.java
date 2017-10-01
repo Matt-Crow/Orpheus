@@ -25,10 +25,10 @@ public class Entity {
 	private ArrayList<OnHitAction> onBeMeleeHitRegister;
 	private ArrayList<OnUpdateAction> onUpdateRegister;
 	
-	public Entity(int xCoord, int yCoord, Direction d, int m){
+	public Entity(int xCoord, int yCoord, int d, int m){
 		x = xCoord;
 		y = yCoord;
-		dir = d;
+		dir = new Direction(d);
 		momentum = m;
 		speedFilter = 1.0;
 		moving = false;
@@ -67,10 +67,6 @@ public class Entity {
 		speedFilter *= f;
 	}
 	
-	public double[] getVector(){
-		return dir.getVector();
-	}
-	
 	public Direction getDir(){
 		return dir;
 	}
@@ -83,9 +79,6 @@ public class Entity {
 		kbDir = d;
 		kbDur = dur;
 		kbVelocity = vel;
-	}
-	public double[] getKBVector(){
-		return kbDir.getVector();
 	}
 	
 	public void addOnHit(OnHitAction a){
@@ -157,43 +150,18 @@ public class Entity {
 			dir.turnCounterClockwise(amount);
 		}
 	}
-	
 	public void move(){
-		x += getVector()[0] * getMomentum();
-		y += getVector()[1] * getMomentum();
-		
-		if(x < 0){
-			x = 0;
-		} else if(x > Master.getCurrentBattle().getHost().getWidth()){
-			x = Master.getCurrentBattle().getHost().getWidth();
-		}
-		
-		if(y < 0){
-			y = 0;
-		} else if(y > Master.getCurrentBattle().getHost().getHeight()){
-			y = Master.getCurrentBattle().getHost().getHeight();
-		}
+		x += dir.getVector()[0] * getMomentum();
+		y += dir.getVector()[1] * getMomentum();
 	}
 	public void moveBackwards(){
-		x -= getVector()[0] * getMomentum() * 0.5;
-		y -= getVector()[1] * getMomentum() * 0.5;
-		
-		if(x < 0){
-			x = 0;
-		} else if(x > Master.getCurrentBattle().getHost().getWidth()){
-			x = Master.getCurrentBattle().getHost().getWidth();
-		}
-		
-		if(y < 0){
-			y = 0;
-		} else if(y > Master.getCurrentBattle().getHost().getHeight()){
-			y = Master.getCurrentBattle().getHost().getHeight();
-		}
+		x -= dir.getVector()[0] * getMomentum() * 0.5;
+		y -= dir.getVector()[1] * getMomentum() * 0.5;
 	}
 	public void update(){
 		if(kbDur > 0){
-			x += getKBVector()[0] * kbVelocity;
-			y += getKBVector()[1] * kbVelocity;
+			x += kbDir.getVector()[0] * kbVelocity;
+			y += kbDir.getVector()[1] * kbVelocity;
 			kbDur -= 1;
 		} else {
 			applyKnockback(new Direction(0), 0, 0);
@@ -202,6 +170,17 @@ public class Entity {
 			move();
 		} else if (backwards){
 			moveBackwards();
+		}
+		if(x < 0){
+			x = 0;
+		} else if(x > Master.getCurrentBattle().getHost().getWidth()){
+			x = Master.getCurrentBattle().getHost().getWidth();
+		}
+		
+		if(y < 0){
+			y = 0;
+		} else if(y > Master.getCurrentBattle().getHost().getHeight()){
+			y = Master.getCurrentBattle().getHost().getHeight();
 		}
 		tripOnUpdate();
 	}

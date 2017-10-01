@@ -4,7 +4,6 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import attacks.Attack;
 import resources.CombatLog;
-import resources.Direction;
 
 public class Projectile extends Entity{
 	private Player user;
@@ -15,7 +14,7 @@ public class Projectile extends Entity{
 	private boolean shouldTerminate;
 	private boolean terminated;
 	
-	public Projectile(int x, int y, Direction dirNum, int momentum, Player attackUser, Attack a){
+	public Projectile(int x, int y, int dirNum, int momentum, Player attackUser, Attack a){
 		super(x, y, dirNum, momentum);
 		setMoving(true);
 		distanceTraveled = 0;

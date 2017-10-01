@@ -7,10 +7,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import com.sun.glass.events.KeyEvent;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.AbstractAction;
-import javax.swing.JFrame;
 import javax.swing.Timer;
 
 import battle.*;
@@ -19,8 +16,9 @@ import resources.KeyRegister;
 import resources.Direction;
 import initializers.Master;
 import initializers.Controls;
+import resources.DrawingPlane;
 
-public class BattleCanvas extends JPanel{
+public class BattleCanvas extends DrawingPlane{
 	public static final long serialVersionUID = 1L;
 	private Battlefield battlefield;
 	private Battle hostedBattle;
@@ -32,12 +30,9 @@ public class BattleCanvas extends JPanel{
 	private boolean paused;
 	
 	public BattleCanvas(int windowWidth, int windowHeight){
-		JPanel panel = this;
+		super(windowWidth, windowHeight);
 		w = windowWidth;
 		h = windowHeight;
-		setLayout(null);
-		setBackground(Color.black);
-		setFocusable(true);
 		FPS = 20;
 		paused = true;
 		
@@ -46,8 +41,7 @@ public class BattleCanvas extends JPanel{
 			public static final long serialVersionUID = 12L;
 			public void actionPerformed(ActionEvent e){
 				new MainWindow();
-				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel);
-				frame.dispose();
+				close();
 			}
 		});
 		b.addTo(this);

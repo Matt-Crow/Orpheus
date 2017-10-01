@@ -1,11 +1,7 @@
 package windows;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.event.ActionEvent;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.JFrame;
 import javax.swing.AbstractAction;
 import java.util.ArrayList;
 
@@ -14,13 +10,12 @@ import customizables.*;
 import resources.EasyButton;
 import resources.Menu;
 import initializers.Master;
+import resources.DrawingPlane;
 
 // need to add custom build creation
 @SuppressWarnings("serial")
-public class MainCanvas extends JPanel{
+public class MainCanvas extends DrawingPlane{
 	public static final long serialVersionUID = 1L;
-	private JPanel panel = this;
-	private AbstractAction rep;
 	private Team team1;
 	private Team team2;
 	
@@ -29,21 +24,13 @@ public class MainCanvas extends JPanel{
 	private Menu team2Size;
 	
 	public MainCanvas(){
-		setLayout(null);
-		setBackground(Color.black);
-		
-		rep = new AbstractAction(){
-			public void actionPerformed(ActionEvent e){
-				repaint();
-			}
-		};
+		super(Master.CANVASWIDTH, Master.CANVASHEIGHT);
 		
 		EasyButton b = new EasyButton("Quit", 0, 0, Master.CANVASWIDTH / 10, Master.CANVASHEIGHT / 10, Color.red);
 		b.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				new StartWindow();
-				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel);
-				frame.dispose();
+				close();
 			}
 		});
 		b.addTo(this);
@@ -68,7 +55,7 @@ public class MainCanvas extends JPanel{
 		Menu[] menus = new Menu[]{team1Size, playerBuild, team2Size};
 		
 		for(int i = 0; i < 3; i++){
-			menus[i].addActionListener(rep);
+			menus[i].addActionListener(getRepaint());
 			menus[i].addTo(this);
 		}
 		
@@ -86,13 +73,9 @@ public class MainCanvas extends JPanel{
 				
 				BattleWindow bw = new BattleWindow();
 				bw.getCanvas().setBattle(team1, team2);
-				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel);
-				frame.dispose();
+				close();
 			}
 		});
 		battle.addTo(this);
-	}
-	public void paintComponent(Graphics g){
-		super.paintComponent(g);
 	}
 }
