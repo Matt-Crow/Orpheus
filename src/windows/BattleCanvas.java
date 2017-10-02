@@ -114,7 +114,7 @@ public class BattleCanvas extends DrawingPlane{
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D)g;
         AffineTransform old = g2d.getTransform();
-		if(Master.ROTATECANVAS){
+        if(Master.ROTATECANVAS){
 			Direction rotTo = new Direction(Master.TRUEPLAYER.getDir().getDegrees());
 			rotTo.turnCounterClockwise(90);
         	g2d.translate(Master.CANVASWIDTH / 2, Master.CANVASHEIGHT / 2);
@@ -122,10 +122,9 @@ public class BattleCanvas extends DrawingPlane{
         	g2d.translate(-(Master.CANVASWIDTH / 2), -(Master.CANVASHEIGHT / 2));
 		}
 		int[] trans = retTranslate();
-		g2d.translate(trans[0], trans[1]);
+		translate(trans[0], trans[1], g2d);
 		battlefield.draw(g2d);
-		
-		g2d.translate(-trans[0], -trans[1]);
+		untranslate(g2d);
 		
 		g2d.setTransform(old);
 		
