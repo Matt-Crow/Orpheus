@@ -14,7 +14,7 @@ public class Master {
 	public static final int CANVASHEIGHT = 600;
 	public static final boolean DISABLEHEALING = false;
 	public static final boolean DISABLEALLAI = !false;
-	public static final boolean ROTATECANVAS = !true;
+	public static final boolean ROTATECANVAS = true;
 	// number of angles a player can have
 	public static final int TICKSTOROTATE = 36;
 	

@@ -13,6 +13,7 @@ import javax.swing.Timer;
 import battle.*;
 import resources.EasyButton;
 import resources.KeyRegister;
+import resources.Op;
 import resources.Direction;
 import initializers.Master;
 import initializers.Controls;
@@ -33,7 +34,8 @@ public class BattleCanvas extends DrawingPlane{
 		super(windowWidth, windowHeight);
 		w = windowWidth;
 		h = windowHeight;
-		FPS = 20;
+		//FIXME: set back to 20ish
+		FPS = 1;
 		paused = true;
 		
 		EasyButton b = new EasyButton("Exit", 0, 0, Master.CANVASWIDTH / 10, Master.CANVASHEIGHT / 10, Color.red);
@@ -117,17 +119,15 @@ public class BattleCanvas extends DrawingPlane{
         if(Master.ROTATECANVAS){
 			Direction rotTo = new Direction(Master.TRUEPLAYER.getDir().getDegrees());
 			rotTo.turnCounterClockwise(90);
-        	g2d.translate(Master.CANVASWIDTH / 2, Master.CANVASHEIGHT / 2);
-        	g2d.rotate(rotTo.getAsRadians());
-        	g2d.translate(-(Master.CANVASWIDTH / 2), -(Master.CANVASHEIGHT / 2));
+        	rotate(Master.CANVASWIDTH / 2, Master.CANVASHEIGHT / 2, rotTo.getDegrees(), g2d);
 		}
 		int[] trans = retTranslate();
 		translate(trans[0], trans[1], g2d);
 		battlefield.draw(g2d);
 		untranslate(g2d);
-		
-		g2d.setTransform(old);
-		
+		unrotate(g2d);
+		//g2d.setTransform(old);
+		pd();
 		Master.TRUEPLAYER.drawHUD(g2d);
 		
 		if(hostedBattle.shouldEnd()){

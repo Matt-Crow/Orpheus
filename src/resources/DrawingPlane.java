@@ -14,18 +14,25 @@ public class DrawingPlane extends JPanel{
 	private int height;
 	private int tx;
 	private int ty;
+	private int rotated;
 	
 	public DrawingPlane(int w, int h){
 		width = w;
 		height = h;
 		tx = 0;
 		ty = 0;
+		rotated = 0;
 		setSize(w, h);
 		setLayout(null);
 		setBackground(CustomColors.black);
 		setFocusable(true);
 	}
-	
+	public void pd(){
+		Op.add(tx);
+		Op.add(ty);
+		Op.add(rotated);
+		Op.dp();
+	}
 	public AbstractAction getRepaint(){
 		return new AbstractAction(){
 			public static final long serialVersionUID = 1L; 
@@ -45,9 +52,22 @@ public class DrawingPlane extends JPanel{
 		g.translate(-tx, -ty);
 		g.translate(x, y);
 	}
+	
+	public void rotate(int x, int y, int degrees, Graphics g){
+		Graphics2D g2d = (Graphics2D) g;
+		translate(x, y, g2d);
+		g2d.rotate((double)(degrees * (Math.PI / 180)));
+		translate(-x, -y, g2d);
+		rotated += degrees;
+	}
 	public void untranslate(Graphics g){
 		g.translate(-tx, -ty);
-		translate(0, 0, g);
+		tx = 0;
+		ty = 0;
+	}
+	public void unrotate(Graphics2D g){
+		g.rotate((double)(-rotated * (Math.PI / 180)));
+		rotated = 0;
 	}
 	
 	public void close(){
