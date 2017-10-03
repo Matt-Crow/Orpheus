@@ -194,9 +194,9 @@ public class Player extends Entity{
 		}
 		
 		if(shouldLeft){
-			turn("left");
+			setWillTurn("left");
 		} else {
-			turn("right");
+			setWillTurn("right");
 		}
 	}
 	

@@ -50,13 +50,13 @@ public class Controls {
 	public static class turnLeftAction extends AbstractAction{
 		static final long serialVersionUID = 1L;
 		public void actionPerformed(ActionEvent e){
-			p.turn("left");
+			p.setWillTurn("left");
 		}
 	}
 	public static class turnRightAction extends AbstractAction{
 		static final long serialVersionUID = 1L;
 		public void actionPerformed(ActionEvent e){
-			p.turn("right");
+			p.setWillTurn("right");
 		}
 	}
 	public static class meleeAction extends AbstractAction{

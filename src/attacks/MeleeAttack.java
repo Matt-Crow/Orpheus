@@ -13,8 +13,8 @@ public class MeleeAttack extends Attack{
 	public void use(Player user){
 		Direction d = new Direction(user.getDir().getDegrees() - 90);
 		// why is this not working?
-		int x = (int) (user.getX() - 100 * d.getXMod());
-		int y = (int) (user.getY() - 100 * d.getYMod());
+		//int x = (int) (user.getX() - 100 * d.getXMod());
+		//int y = (int) (user.getY() - 100 * d.getYMod());
 		/*
 		Op.add(d.getDegrees());
 		Op.add(d.getXMod());

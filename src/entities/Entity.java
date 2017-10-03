@@ -10,6 +10,7 @@ public class Entity {
 	private int x;
 	private int y;
 	private Direction dir;
+	private String willTurn;
 	private int momentum;
 	private double speedFilter;
 	private boolean moving;
@@ -29,6 +30,8 @@ public class Entity {
 		x = xCoord;
 		y = yCoord;
 		dir = new Direction(d);
+		willTurn = "none";
+		
 		momentum = m;
 		speedFilter = 1.0;
 		moving = false;
@@ -56,6 +59,9 @@ public class Entity {
 	}
 	public void setDir(Direction d){
 		dir = d;
+	}
+	public void setWillTurn(String s){
+		willTurn = s;
 	}
 	public void setMoving(boolean m){
 		moving = m;
@@ -159,6 +165,10 @@ public class Entity {
 		y -= dir.getVector()[1] * getMomentum() * 0.5;
 	}
 	public void update(){
+		if((willTurn == "left") || (willTurn == "right")){
+			turn(willTurn);
+		}
+		willTurn = "none";
 		if(kbDur > 0){
 			x += kbDir.getVector()[0] * kbVelocity;
 			y += kbDir.getVector()[1] * kbVelocity;

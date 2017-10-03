@@ -2,8 +2,6 @@ package windows;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import com.sun.glass.events.KeyEvent;
@@ -13,7 +11,6 @@ import javax.swing.Timer;
 import battle.*;
 import resources.EasyButton;
 import resources.KeyRegister;
-import resources.Op;
 import resources.Direction;
 import initializers.Master;
 import initializers.Controls;
@@ -34,8 +31,7 @@ public class BattleCanvas extends DrawingPlane{
 		super(windowWidth, windowHeight);
 		w = windowWidth;
 		h = windowHeight;
-		//FIXME: set back to 20ish
-		FPS = 1;
+		FPS = 20;
 		paused = true;
 		
 		EasyButton b = new EasyButton("Exit", 0, 0, Master.CANVASWIDTH / 10, Master.CANVASHEIGHT / 10, Color.red);
@@ -114,31 +110,28 @@ public class BattleCanvas extends DrawingPlane{
 	
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		Graphics2D g2d = (Graphics2D)g;
-        AffineTransform old = g2d.getTransform();
+		setG(g);
         if(Master.ROTATECANVAS){
 			Direction rotTo = new Direction(Master.TRUEPLAYER.getDir().getDegrees());
 			rotTo.turnCounterClockwise(90);
-        	rotate(Master.CANVASWIDTH / 2, Master.CANVASHEIGHT / 2, rotTo.getDegrees(), g2d);
+        	rotate(Master.CANVASWIDTH / 2, Master.CANVASHEIGHT / 2, rotTo.getDegrees());
 		}
 		int[] trans = retTranslate();
-		translate(trans[0], trans[1], g2d);
-		battlefield.draw(g2d);
-		untranslate(g2d);
-		unrotate(g2d);
-		//g2d.setTransform(old);
-		pd();
-		Master.TRUEPLAYER.drawHUD(g2d);
+		translate(trans[0], trans[1]);
+		battlefield.draw(getG());
+		resetToInit();
+		
+		Master.TRUEPLAYER.drawHUD(getG());
 		
 		if(hostedBattle.shouldEnd()){
-			drawMatchResolution(g2d);
+			drawMatchResolution(getG());
       		return;
         }
 		
 		if(!paused){
 			startTimer();
 		} else {
-			drawPause(g2d);
+			drawPause(getG());
 		}
 	}
 	public void drawPause(Graphics g){
