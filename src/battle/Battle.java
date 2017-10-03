@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import initializers.Master;
+import entities.Particle;
 
 public class Battle {
 	ArrayList<Team> teams;
@@ -51,10 +52,12 @@ public class Battle {
 				t.update();
 			}
 		}
+		Particle.updateAll();
 	}
 	public void draw(Graphics g){
 		for(Team t : teams){
 			t.draw(g);
 		}
+		Particle.drawAll(g);
 	}
 }
