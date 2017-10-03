@@ -11,20 +11,18 @@ public class MeleeAttack extends Attack{
 		setType("melee");
 	}
 	public void use(Player user){
+		
+		// Create a 45 degree angle, coming off of the user's angle
+		Direction testDir = new Direction(user.getDir().getDegrees() - 45);
+		// Go out 50 pixels
+		int x = (int) (user.getX() - 50 * testDir.getXMod());
+		int y = (int) (user.getY() + 50 * testDir.getYMod());
+		
 		Direction d = new Direction(user.getDir().getDegrees() - 90);
-		// why is this not working?
-		//int x = (int) (user.getX() - 100 * d.getXMod());
-		//int y = (int) (user.getY() - 100 * d.getYMod());
-		/*
-		Op.add(d.getDegrees());
-		Op.add(d.getXMod());
-		Op.add(d.getYMod());
-		Op.add(x);
-		Op.add(y);
-		Op.dp();
-		*/
-		//setRegisteredProjectile(new SeedProjectile(x, y, d, (int) getStatValue("Speed"), user, this));
-		setRegisteredProjectile(new SeedProjectile(user.getX(), user.getY(), user.getDir().getDegrees(), (int) getStatValue("Speed"), user, this));
+		
+		setRegisteredProjectile(new SeedProjectile(x, y, d.getDegrees(), (int) getStatValue("Speed"), user, this));
+		
+		//setRegisteredProjectile(new SeedProjectile(user.getX(), user.getY(), user.getDir().getDegrees(), (int) getStatValue("Speed"), user, this));
 		getRegisteredProjectile().addOnHit(getStatusInfliction());
 		if(getRegisteredProjectile().getAttack().getStatValue("Range") == 0){
 			getRegisteredProjectile().terminate();

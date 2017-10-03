@@ -16,6 +16,7 @@ public class Direction {
 	
 	public Direction(int deg){
 		degrees = deg;
+		setBounds();
 	}
 	
 	public static Direction getDegreeByLengths(int x1, int y1, int x2, int y2){
