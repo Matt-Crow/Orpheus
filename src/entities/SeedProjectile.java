@@ -14,9 +14,7 @@ public class SeedProjectile extends Projectile{
 		ArrayList<AOEProjectile> aoe = new ArrayList<>();
 		if(getAttack().getStatValue("AOE") != 0){
 			for(int i = 0; i < Master.TICKSTOROTATE; i++){
-				AOEProjectile p = new AOEProjectile(getX(), getY(), 360 * i / Master.TICKSTOROTATE, 5, getUser(), getAttack(), getHit());
-				p.setParticleType(getParticleType());
-				aoe.add(p);
+				aoe.add(new AOEProjectile(getX(), getY(), 360 * i / Master.TICKSTOROTATE, 5, getUser(), getAttack(), getHit()));
 			}
 			for(AOEProjectile p : aoe){
 				p.addOnHit(getAttack().getStatusInfliction());

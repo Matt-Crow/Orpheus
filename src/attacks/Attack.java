@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import entities.*;
 import upgradables.Stat;
 import statuses.Status;
+import resources.CustomColors;
 import resources.OnHitAction;
 import resources.Random;
 import resources.Op;
@@ -19,6 +20,7 @@ public class Attack {
 	private Projectile registeredProjectile;
 	private String type;
 	private ParticleType particleType;
+	private ArrayList<Color> particleColors;
 	
 	public Attack(String n, int energyCost, int cooldown, int range, int speed, int aoe, int areaScale, int distanceScale, int dmg){
 		name = n;
@@ -38,6 +40,8 @@ public class Attack {
 		attackList.add(this);
 		
 		particleType = ParticleType.NONE;
+		particleColors = new ArrayList<>();
+		particleColors.add(CustomColors.black);
 	}
 	public static Attack getAttackByName(String name){
 		for(Attack a : attackList){
@@ -83,6 +87,22 @@ public class Attack {
 	public void setParticleType(ParticleType t){
 		particleType = t;
 	}
+	public ParticleType getParticleType(){
+		return particleType;
+	}
+	public void setParticleColor(Color c){
+		particleColors = new ArrayList<>();
+		particleColors.add(c);
+	}
+	public void setColorBlend(Color[] cs){
+		particleColors = new ArrayList<>();
+		for(Color c : cs){
+			particleColors.add(c);
+		}
+	}
+	public ArrayList<Color> getColors(){
+		return particleColors;
+	}
 	public Projectile getRegisteredProjectile(){
 		return registeredProjectile;
 	}
@@ -109,7 +129,6 @@ public class Attack {
 	public void use(Player user){
 		user.getEnergyLog().loseEnergy((int) getStatValue("Energy Cost"));
 		registeredProjectile = new SeedProjectile(user.getX(), user.getY(), user.getDir().getDegrees(), (int) getStatValue("Speed"), user, this);
-		registeredProjectile.setParticleType(particleType);
 		registeredProjectile.addOnHit(getStatusInfliction());
 		if(registeredProjectile.getAttack().getStatValue("Range") == 0){
 			registeredProjectile.terminate();

@@ -1,12 +1,14 @@
 package entities;
 
 import java.awt.Graphics;
+import java.awt.Color;
 import java.util.ArrayList;
 import attacks.Attack;
 import initializers.Master;
 import resources.CombatLog;
 import resources.CustomColors;
 import resources.Op;
+import resources.Random;
 
 public class Projectile extends Entity{
 	private Player user;
@@ -54,12 +56,6 @@ public class Projectile extends Entity{
 	public boolean hasAlreadyTerminated(){
 		return terminated;
 	}
-	public void setParticleType(ParticleType t){
-		particleType = t;
-	}
-	public ParticleType getParticleType(){
-		return particleType;
-	}
 	public void avoid(Player p){
 		doNotHit.add(p);
 	}
@@ -96,11 +92,12 @@ public class Projectile extends Entity{
 	public void update(){
 		super.update();
 		distanceTraveled += getMomentum();
-		switch(particleType){
+		ArrayList<Color> cs = registeredAttack.getColors();
+		switch(registeredAttack.getParticleType()){
 		case BURST:
-			// i = 1 to avoid divide by 0
-			for(int i = 1; i <= Master.TICKSTOROTATE; i++){
-				new Particle(getX(), getY(), 360 / i * Master.TICKSTOROTATE, 5, CustomColors.black);
+			for(int i = 0; i < Master.TICKSTOROTATE; i++){
+				Color r = cs.get(Random.choose(0, cs.size() - 1));
+				new Particle(getX(), getY(), 360 * i / Master.TICKSTOROTATE, 5, r);
 			}
 			break;
 		default:
