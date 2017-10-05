@@ -3,7 +3,10 @@ package entities;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import attacks.Attack;
+import initializers.Master;
 import resources.CombatLog;
+import resources.CustomColors;
+import resources.Op;
 
 public class Projectile extends Entity{
 	private Player user;
@@ -13,6 +16,7 @@ public class Projectile extends Entity{
 	private Player hit;
 	private boolean shouldTerminate;
 	private boolean terminated;
+	private ParticleType particleType;
 	
 	public Projectile(int x, int y, int dirNum, int momentum, Player attackUser, Attack a){
 		super(x, y, dirNum, momentum);
@@ -22,6 +26,8 @@ public class Projectile extends Entity{
 		registeredAttack = a;
 		shouldTerminate = false;
 		terminated = false;
+		particleType = ParticleType.NONE;
+		
 		doNotHit = new ArrayList<Player>();
 		hit = new Player("Void");
 		
@@ -47,6 +53,12 @@ public class Projectile extends Entity{
 	}
 	public boolean hasAlreadyTerminated(){
 		return terminated;
+	}
+	public void setParticleType(ParticleType t){
+		particleType = t;
+	}
+	public ParticleType getParticleType(){
+		return particleType;
 	}
 	public void avoid(Player p){
 		doNotHit.add(p);
@@ -84,6 +96,17 @@ public class Projectile extends Entity{
 	public void update(){
 		super.update();
 		distanceTraveled += getMomentum();
+		switch(particleType){
+		case BURST:
+			// i = 1 to avoid divide by 0
+			for(int i = 1; i <= Master.TICKSTOROTATE; i++){
+				new Particle(getX(), getY(), 360 / i * Master.TICKSTOROTATE, 5, CustomColors.black);
+			}
+			break;
+		default:
+			Op.add("Particle type of " + particleType + " not found in Projectile.java");
+			Op.dp();
+		}
 	}
 	public void draw(Graphics g){
 		g.setColor(user.getTeam().getColor());

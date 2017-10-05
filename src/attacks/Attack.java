@@ -18,6 +18,7 @@ public class Attack {
 	private int cooldown;
 	private Projectile registeredProjectile;
 	private String type;
+	private ParticleType particleType;
 	
 	public Attack(String n, int energyCost, int cooldown, int range, int speed, int aoe, int areaScale, int distanceScale, int dmg){
 		name = n;
@@ -35,6 +36,8 @@ public class Attack {
 		inflictChance = new ArrayList<>();
 		
 		attackList.add(this);
+		
+		particleType = ParticleType.NONE;
 	}
 	public static Attack getAttackByName(String name){
 		for(Attack a : attackList){
@@ -77,6 +80,9 @@ public class Attack {
 	public void setRegisteredProjectile(Projectile p){
 		registeredProjectile = p;
 	}
+	public void setParticleType(ParticleType t){
+		particleType = t;
+	}
 	public Projectile getRegisteredProjectile(){
 		return registeredProjectile;
 	}
@@ -103,6 +109,7 @@ public class Attack {
 	public void use(Player user){
 		user.getEnergyLog().loseEnergy((int) getStatValue("Energy Cost"));
 		registeredProjectile = new SeedProjectile(user.getX(), user.getY(), user.getDir().getDegrees(), (int) getStatValue("Speed"), user, this);
+		registeredProjectile.setParticleType(particleType);
 		registeredProjectile.addOnHit(getStatusInfliction());
 		if(registeredProjectile.getAttack().getStatValue("Range") == 0){
 			registeredProjectile.terminate();
