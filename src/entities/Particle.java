@@ -16,11 +16,14 @@ public class Particle extends Entity{
 		super(x, y, dirNum, momentum);
 		color = c;
 		size = 10;
-		lifeSpan = 60;
+		lifeSpan = 30;
 		age = 0;
 		shouldTerminate = false;
 		setMoving(true);
 		particles.add(this);
+	}
+	public static void reset(){
+		particles = new ArrayList<>();
 	}
 	public boolean getShouldTerminate(){
 		return shouldTerminate;

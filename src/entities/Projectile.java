@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import attacks.Attack;
 import initializers.Master;
 import resources.CombatLog;
-import resources.CustomColors;
 import resources.Op;
 import resources.Random;
 
@@ -93,20 +92,34 @@ public class Projectile extends Entity{
 		super.update();
 		distanceTraveled += getMomentum();
 		ArrayList<Color> cs = registeredAttack.getColors();
-		switch(registeredAttack.getParticleType()){
-		case BURST:
-			for(int i = 0; i < Master.TICKSTOROTATE; i++){
-				Color r = cs.get(Random.choose(0, cs.size() - 1));
-				new Particle(getX(), getY(), 360 * i / Master.TICKSTOROTATE, 5, r);
+		if(!Master.DISABLEPARTICLES){
+			switch(registeredAttack.getParticleType()){
+			case BURST:
+				for(int i = 0; i < Master.TICKSTOROTATE; i++){
+					Color rbu = cs.get(Random.choose(0, cs.size() - 1));
+					new Particle(getX(), getY(), 360 * i / Master.TICKSTOROTATE, 5, rbu);
+				}
+				break;
+			case SHEAR:
+				Color rs = cs.get(Random.choose(0, cs.size() - 1));
+				new Particle(getX(), getY(), getDir().getDegrees() - 45, 5, rs);
+				rs = cs.get(Random.choose(0, cs.size() - 1));
+				new Particle(getX(), getY(), getDir().getDegrees() + 45, 5, rs);
+				break;
+			case BEAM:
+				Color rbe = cs.get(Random.choose(0, cs.size() - 1));
+				new Particle(getX(), getY(), getDir().getDegrees() - 180, 5, rbe);
+				break;
+			default:
+				Op.add("Particle type of " + particleType + " not found in Projectile.java");
+				Op.dp();
 			}
-			break;
-		default:
-			Op.add("Particle type of " + particleType + " not found in Projectile.java");
-			Op.dp();
 		}
 	}
 	public void draw(Graphics g){
-		g.setColor(user.getTeam().getColor());
-		g.fillOval(getX() - 25, getY() - 25, 50, 50);
+		if(registeredAttack.getParticleType() == ParticleType.NONE || Master.DISABLEPARTICLES){
+			g.setColor(user.getTeam().getColor());
+			g.fillOval(getX() - 25, getY() - 25, 50, 50);
+		}
 	}
 }

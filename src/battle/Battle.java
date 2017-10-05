@@ -30,6 +30,7 @@ public class Battle {
 		int spacingBetween = w / 6;
 		teams.get(0).init(spacingFromTopEdge, spacingBetween, 270);
 		teams.get(1).init(h - spacingFromTopEdge * 2, spacingBetween, 90);
+		Particle.reset();
 		Master.setCurrentBattle(this);
 		end = false;
 	}
@@ -55,9 +56,9 @@ public class Battle {
 		Particle.updateAll();
 	}
 	public void draw(Graphics g){
+		Particle.drawAll(g);
 		for(Team t : teams){
 			t.draw(g);
 		}
-		Particle.drawAll(g);
 	}
 }

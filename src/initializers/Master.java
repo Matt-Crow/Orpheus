@@ -17,6 +17,7 @@ public class Master {
 	public static final boolean ROTATECANVAS = true;
 	// number of angles a player can have
 	public static final int TICKSTOROTATE = 36;
+	public static final boolean DISABLEPARTICLES = false;
 	
 	private static Battle currentBattle;
 	
