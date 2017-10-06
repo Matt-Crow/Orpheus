@@ -14,6 +14,6 @@ public class Charge extends Status{
 				use();
 			}
 		};
-		p.addOnUpdate(a);
+		p.getActionRegister().addOnUpdate(a);
 	}
 }

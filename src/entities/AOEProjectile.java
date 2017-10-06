@@ -17,7 +17,7 @@ public class AOEProjectile extends Projectile{
 				}
 			}
 		};
-		this.addOnHit(act);
+		this.getActionRegister().addOnHit(act);
 	}
 	public void addBrother(AOEProjectile p){
 		brothers.add(p);

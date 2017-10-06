@@ -15,6 +15,6 @@ public class Healing extends Status{
 			}
 		};
 		
-		p.addOnUpdate(a);;
+		p.getActionRegister().addOnUpdate(a);;
 	}
 }

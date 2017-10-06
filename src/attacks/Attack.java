@@ -129,7 +129,7 @@ public class Attack {
 	public void use(Player user){
 		user.getEnergyLog().loseEnergy((int) getStatValue("Energy Cost"));
 		registeredProjectile = new SeedProjectile(user.getX(), user.getY(), user.getDir().getDegrees(), (int) getStatValue("Speed"), user, this);
-		registeredProjectile.addOnHit(getStatusInfliction());
+		registeredProjectile.getActionRegister().addOnHit(getStatusInfliction());
 		if(registeredProjectile.getAttack().getStatValue("Range") == 0){
 			registeredProjectile.terminate();
 		}

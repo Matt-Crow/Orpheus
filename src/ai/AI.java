@@ -122,6 +122,6 @@ public class AI {
 				appliedTo.getAI().latchOntoNearest();
 			}
 		};
-		appliedTo.addOnBeHit(a);
+		appliedTo.getActionRegister().addOnBeHit(a);
 	}
 }

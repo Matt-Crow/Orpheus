@@ -30,6 +30,6 @@ public class Flurry extends MeleeAttack{
 			}
 		};
 		
-		p.addOnHit(a);
+		p.getActionRegister().addOnHit(a);
 	}
 }

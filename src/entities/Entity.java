@@ -1,9 +1,7 @@
 package entities;
 
 import initializers.Master;
-import java.util.ArrayList;
-import resources.OnHitAction;
-import resources.OnUpdateAction;
+import resources.ActionRegister;
 import resources.Direction;
 
 public class Entity {
@@ -20,11 +18,7 @@ public class Entity {
 	private double kbDur;
 	private int kbVelocity;
 	
-	private ArrayList<OnHitAction> onHitRegister;
-	private ArrayList<OnHitAction> onBeHitRegister;
-	private ArrayList<OnHitAction> onMeleeHitRegister;
-	private ArrayList<OnHitAction> onBeMeleeHitRegister;
-	private ArrayList<OnUpdateAction> onUpdateRegister;
+	private ActionRegister actReg;
 	
 	public Entity(int xCoord, int yCoord, int d, int m){
 		x = xCoord;
@@ -41,11 +35,7 @@ public class Entity {
 		kbDur = 0;
 		kbVelocity = 0;
 		
-		onHitRegister = new ArrayList<>();
-		onBeHitRegister = new ArrayList<>();
-		onMeleeHitRegister = new ArrayList<>();
-		onBeMeleeHitRegister = new ArrayList<>();
-		onUpdateRegister = new ArrayList<>();
+		actReg = new ActionRegister(this);
 	}
 	public int getX(){
 		return x;
@@ -87,65 +77,8 @@ public class Entity {
 		kbVelocity = vel;
 	}
 	
-	public void addOnHit(OnHitAction a){
-		onHitRegister.add(a);
-	}
-	public void addOnBeHit(OnHitAction a){
-		onBeHitRegister.add(a);
-	}
-	public void addOnMeleeHit(OnHitAction a){
-		onMeleeHitRegister.add(a);
-	}
-	public void addOnBeMeleeHit(OnHitAction a){
-		onBeMeleeHitRegister.add(a);
-	}
-	public void addOnUpdate(OnUpdateAction a){
-		onUpdateRegister.add(a);
-	}
-	
-	public void resetTrips(){
-		onHitRegister = new ArrayList<>();
-		onBeHitRegister = new ArrayList<>();
-		onMeleeHitRegister = new ArrayList<>();
-		onBeMeleeHitRegister = new ArrayList<>();
-		onUpdateRegister = new ArrayList<>();
-		
-		speedFilter = 1.0;
-	}
-	public void tripOnHit(Player hit){
-		for(OnHitAction a : onHitRegister){
-			a.setHitter(this);
-			a.setHit(hit);
-			a.trip();
-		}
-	}
-	public void tripOnBeHit(Player hitBy){
-		for(OnHitAction a : onBeHitRegister){
-			a.setHitter(hitBy);
-			a.setHit((Player) this);
-			a.trip();
-		}
-	}
-	public void tripOnMeleeHit(Player hit){
-		for(OnHitAction a : onMeleeHitRegister){
-			a.setHitter(this);
-			a.setHit(hit);
-			a.trip();
-		}
-		tripOnHit(hit);
-	}
-	public void tripOnBeMeleeHit(Player hitBy){
-		for(OnHitAction a : onBeMeleeHitRegister){
-			a.setHitter(this);
-			a.setHit((Player) this);
-			a.trip();
-		}
-		tripOnBeHit(hitBy);
-	}
-	public void tripOnUpdate(){
-		for(OnUpdateAction a : onUpdateRegister){
-			a.trip();
-		}
+	public ActionRegister getActionRegister(){
+		return actReg;
 	}
 	
 	public void turn(String d){
@@ -192,6 +125,9 @@ public class Entity {
 		} else if(y > Master.getCurrentBattle().getHost().getHeight()){
 			y = Master.getCurrentBattle().getHost().getHeight();
 		}
-		tripOnUpdate();
+		
+		speedFilter = 1.0;
+		
+		actReg.tripOnUpdate();
 	}
 }

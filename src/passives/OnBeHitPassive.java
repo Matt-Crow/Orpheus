@@ -19,6 +19,6 @@ public class OnBeHitPassive extends Passive{
 			}
 		};
 		
-		getPlayer().addOnBeHit(a);
+		getPlayer().getActionRegister().addOnBeHit(a);
 	}
 }

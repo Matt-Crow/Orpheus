@@ -15,6 +15,6 @@ public class Burn extends Status{
 			}
 		};
 		
-		p.addOnUpdate(a);
+		p.getActionRegister().addOnUpdate(a);
 	}
 }

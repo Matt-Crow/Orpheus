@@ -17,7 +17,7 @@ public class SeedProjectile extends Projectile{
 				aoe.add(new AOEProjectile(getX(), getY(), 360 * i / Master.TICKSTOROTATE, 5, getUser(), getAttack(), getHit()));
 			}
 			for(AOEProjectile p : aoe){
-				p.addOnHit(getAttack().getStatusInfliction());
+				p.getActionRegister().addOnHit(getAttack().getStatusInfliction());
 				for(AOEProjectile possibleBrother : aoe){
 					if(p != possibleBrother){
 						p.addBrother(possibleBrother);

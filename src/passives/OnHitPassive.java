@@ -18,6 +18,6 @@ public class OnHitPassive extends Passive{
 				}
 			}
 		};
-		getPlayer().addOnHit(a);
+		getPlayer().getActionRegister().addOnHit(a);
 	}
 }

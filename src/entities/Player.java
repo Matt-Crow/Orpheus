@@ -262,7 +262,7 @@ public class Player extends Entity{
 	public void update(){
 		super.update();
 		slash.update();
-		resetTrips();
+		getActionRegister().resetTrips();
 		for(Attack a : actives){
 			a.update();
 		}
@@ -270,7 +270,7 @@ public class Player extends Entity{
 			p.update();
 		}
 		updateStatuses();
-		tripOnUpdate();
+		getActionRegister().tripOnUpdate();
 		log.update();
 		energyLog.update();
 		

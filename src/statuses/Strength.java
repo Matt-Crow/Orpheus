@@ -16,6 +16,6 @@ public class Strength extends Status{
 				use();
 			}
 		};
-		p.addOnMeleeHit(a);
+		p.getActionRegister().addOnMeleeHit(a);
 	}
 }

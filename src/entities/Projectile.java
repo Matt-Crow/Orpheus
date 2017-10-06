@@ -71,15 +71,15 @@ public class Projectile extends Entity{
 			p.logDamage((int) registeredAttack.getStatValue("Damage"));
 			
 			if(registeredAttack.getType() == "melee"){
-				user.tripOnMeleeHit(p);
+				user.getActionRegister().tripOnMeleeHit(p);
 				user.getEnergyLog().gainEnergy((int) user.getStatValue("EPH"));
-				p.tripOnBeMeleeHit(user);
+				p.getActionRegister().tripOnBeMeleeHit(user);
 				p.getEnergyLog().gainEnergy((int) p.getStatValue("EPHR"));
 			} else {
-				user.tripOnHit(p);
-				p.tripOnBeHit(user);
+				user.getActionRegister().tripOnHit(p);
+				p.getActionRegister().tripOnBeHit(user);
 			}
-			tripOnHit(p);
+			getActionRegister().tripOnHit(p);
 			CombatLog.logProjectileData(this);
 			terminate();
 		}

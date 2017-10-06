@@ -25,6 +25,6 @@ public class Rupture extends ElementalAttack{
 			}
 		};
 		
-		p.addOnUpdate(a);
+		p.getActionRegister().addOnUpdate(a);
 	}
 }

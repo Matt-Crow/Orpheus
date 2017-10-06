@@ -14,6 +14,6 @@ public class Resistance extends Status{
 				use();
 			}
 		};
-		p.addOnBeHit(a);
+		p.getActionRegister().addOnBeHit(a);
 	}
 }

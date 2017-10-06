@@ -23,7 +23,7 @@ public class MeleeAttack extends Attack{
 		setRegisteredProjectile(new SeedProjectile(x, y, d.getDegrees(), (int) getStatValue("Speed"), user, this));
 		
 		//setRegisteredProjectile(new SeedProjectile(user.getX(), user.getY(), user.getDir().getDegrees(), (int) getStatValue("Speed"), user, this));
-		getRegisteredProjectile().addOnHit(getStatusInfliction());
+		getRegisteredProjectile().getActionRegister().addOnHit(getStatusInfliction());
 		if(getRegisteredProjectile().getAttack().getStatValue("Range") == 0){
 			getRegisteredProjectile().terminate();
 		}

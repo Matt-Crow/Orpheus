@@ -18,6 +18,6 @@ public class OnMeleeHitPassive extends Passive{
 				}
 			}
 		};
-		getPlayer().addOnMeleeHit(a);
+		getPlayer().getActionRegister().addOnMeleeHit(a);
 	}
 }

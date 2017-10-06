@@ -17,6 +17,6 @@ public class Daze extends Status{
 				use();
 			}
 		};
-		p.addOnBeHit(a);
+		p.getActionRegister().addOnBeHit(a);
 	}
 }
