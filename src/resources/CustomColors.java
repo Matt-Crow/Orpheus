@@ -16,7 +16,7 @@ public class CustomColors {
 	public static final Color darkGrey = new Color(200, 200, 200);
 	public static final Color brown = new Color(255, 200, 200);
 	public static final Color gold = new Color(155, 155, 0);
-	//silver
+	public static final Color silver = new Color(200, 200, 200);
 	//pink
 	
 	public static final Color[] fireColors = {red, orange, black};

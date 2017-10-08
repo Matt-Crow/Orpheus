@@ -17,7 +17,6 @@ public class Projectile extends Entity{
 	private Player hit;
 	private boolean shouldTerminate;
 	private boolean terminated;
-	private ParticleType particleType;
 	
 	public Projectile(int x, int y, int dirNum, int momentum, Player attackUser, Attack a){
 		super(x, y, dirNum, momentum);
@@ -27,7 +26,6 @@ public class Projectile extends Entity{
 		registeredAttack = a;
 		shouldTerminate = false;
 		terminated = false;
-		particleType = ParticleType.NONE;
 		
 		doNotHit = new ArrayList<Player>();
 		hit = new Player("Void");
@@ -110,8 +108,13 @@ public class Projectile extends Entity{
 				Color rbe = cs.get(Random.choose(0, cs.size() - 1));
 				new Particle(getX(), getY(), getDir().getDegrees() - 180, 5, rbe);
 				break;
+			case BLADE:
+				Color rbl = cs.get(Random.choose(0, cs.size() - 1));
+				new Particle(getX(), getY(), getDir().getDegrees(), 0, rbl);
+				break;
 			default:
-				Op.add("Particle type of " + particleType + " not found in Projectile.java");
+				Op.add("The particle type of " + registeredAttack.getParticleType());
+				Op.add("is not found for Projectile.java");
 				Op.dp();
 			}
 		}

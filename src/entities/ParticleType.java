@@ -1,5 +1,5 @@
 package entities;
 
 public enum ParticleType {
-	BURST, BEAM, SHEAR, NONE
+	BURST, BEAM, SHEAR, BLADE, NONE
 };
