@@ -63,8 +63,22 @@ public class CharacterClass extends Customizable{
 	public ArrayList<Attack> getAttackOption(){
 		return attackOptions;
 	}
+	public String[] getAttacksString(){
+		String[] ret = new String[attackOptions.size()];
+		for(int i = 0; i < attackOptions.size(); i++){
+			ret[i] = attackOptions.get(i).getName();
+		}
+		return ret;
+	}
 	public ArrayList<Passive> getPassiveOptions(){
 		return passiveOptions;
+	}
+	public String[] getPassivesString(){
+		String[] ret = new String[passiveOptions.size()];
+		for(int i = 0; i < passiveOptions.size(); i++){
+			ret[i]= passiveOptions.get(i).getName();
+		}
+		return ret;
 	}
 	public Stat getStat(String n){
 		for(Stat stat : stats){
