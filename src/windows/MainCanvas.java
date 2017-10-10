@@ -58,6 +58,15 @@ public class MainCanvas extends DrawingPlane{
 			menus[i].addActionListener(getRepaint());
 			menus[i].addTo(this);
 		}
+		//FIXME customcolors
+		EasyButton newBuild = new EasyButton("Create a new build", Master.CANVASWIDTH / 2, Master.CANVASHEIGHT / 2 + 100, 100, 100, Color.green);
+		newBuild.addActionListener(new AbstractAction(){
+			public void actionPerformed(ActionEvent e){
+				new BuildWindow();
+				close();
+			}
+		});
+		newBuild.addTo(this);
 		
 		EasyButton battle = new EasyButton("Battle", Master.CANVASWIDTH - 100, 0, 100, 100, Color.red);
 		battle.addActionListener(new AbstractAction(){
