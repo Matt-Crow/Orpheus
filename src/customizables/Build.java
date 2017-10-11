@@ -2,6 +2,8 @@ package customizables;
 
 import java.util.ArrayList;
 
+import resources.Op;
+
 @SuppressWarnings("unused")
 public class Build {
 	private static ArrayList<Build> builds = new ArrayList<>();
@@ -21,10 +23,22 @@ public class Build {
 		className = cName;
 		activeNames = new String[]{a1, a2, a3};
 		passiveNames = new String[]{p1, p2, p3};
-		builds.add(this);
+		addBuild(this);
 	}
 	public static ArrayList<Build> getAllBuilds(){
 		return builds;
+	}
+	public static void addBuild(Build b){
+		int removeIndex = -1;
+		for(int i = 0; i < builds.size(); i++){
+			if(builds.get(i).getName().equals(b.getName())){
+				removeIndex = i;
+			}
+		}
+		if(removeIndex != -1){
+			builds.remove(removeIndex);
+		}
+		builds.add(b);
 	}
 	public static Build getBuildByName(String name){
 		for(Build b : builds){

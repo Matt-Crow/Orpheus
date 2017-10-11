@@ -3,6 +3,7 @@ package windows;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
+import javax.swing.JTextField;
 import java.util.ArrayList;
 import initializers.Master;
 import customizables.Build;
@@ -11,6 +12,7 @@ import resources.DrawingPlane;
 import resources.Menu;
 import resources.EasyButton;
 
+@SuppressWarnings("unused")
 public class BuildCanvas extends DrawingPlane{
 	public static final long serialVersionUID = 1L;
 	private Menu baseBuild;
@@ -23,7 +25,7 @@ public class BuildCanvas extends DrawingPlane{
 	
 	private EasyButton setClass;
 	private EasyButton finish;
-	
+	private JTextField name;
 	private Player testPlayer;
 	
 	public BuildCanvas(int windowWidth, int windowHeight){
@@ -82,12 +84,17 @@ public class BuildCanvas extends DrawingPlane{
 			pass[i].addTo(this);
 		}
 		
+		name = new JTextField(b.getName());
+		name.setLayout(null);
+		name.setOpaque(true);
+		name.setBounds(Master.CANVASWIDTH / 2, 0, 100, 100);
+		add(name);
+		
 		finish = new EasyButton("Save", Master.CANVASWIDTH - 100, 0, 100, 100, Color.yellow);
 		finish.addActionListener(new AbstractAction(){
 			public static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent e){
-				//so ugly
-				new Build("TEST: SETNAME LATER", b.getClassName(), acts[0].getSelectedItem().toString(), acts[1].getSelectedItem().toString(), acts[2].getSelectedItem().toString(), pass[0].getSelectedItem().toString(), pass[1].getSelectedItem().toString(), pass[2].getSelectedItem().toString());
+				new Build(name.getText(), b.getClassName(), acts[0].getSelectedItem().toString(), acts[1].getSelectedItem().toString(), acts[2].getSelectedItem().toString(), pass[0].getSelectedItem().toString(), pass[1].getSelectedItem().toString(), pass[2].getSelectedItem().toString());
 				new MainWindow();
 				close();
 			}
