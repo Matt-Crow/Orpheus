@@ -33,7 +33,7 @@ public class MainCanvas extends DrawingPlane{
 				close();
 			}
 		});
-		b.addTo(this);
+		addComp(b);
 		
 		ArrayList<Build> builds = Build.getAllBuilds();
 		String[] buildNameList = new String[builds.size()];
@@ -56,7 +56,7 @@ public class MainCanvas extends DrawingPlane{
 		
 		for(int i = 0; i < 3; i++){
 			menus[i].addActionListener(getRepaint());
-			menus[i].addTo(this);
+			addComp(menus[i]);
 		}
 		//FIXME customcolors
 		EasyButton newBuild = new EasyButton("Create a new build", Master.CANVASWIDTH / 2, Master.CANVASHEIGHT / 2 + 100, 100, 100, Color.green);
@@ -66,7 +66,7 @@ public class MainCanvas extends DrawingPlane{
 				close();
 			}
 		});
-		newBuild.addTo(this);
+		addComp(newBuild);
 		
 		EasyButton battle = new EasyButton("Battle", Master.CANVASWIDTH - 100, 0, 100, 100, Color.red);
 		battle.addActionListener(new AbstractAction(){
@@ -85,6 +85,6 @@ public class MainCanvas extends DrawingPlane{
 				close();
 			}
 		});
-		battle.addTo(this);
+		addComp(battle);
 	}
 }

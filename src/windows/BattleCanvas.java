@@ -42,7 +42,7 @@ public class BattleCanvas extends DrawingPlane{
 				close();
 			}
 		});
-		b.addTo(this);
+		addComp(b);
 		
 		update = new ActionListener() {
 		      public void actionPerformed(ActionEvent e) {

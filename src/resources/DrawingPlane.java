@@ -2,11 +2,16 @@ package resources;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+
+import initializers.Master;
+
 import javax.swing.AbstractAction;
+import javax.swing.JComponent;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
 
 public class DrawingPlane extends JPanel{
 	public static final long serialVersionUID = 1L;
@@ -15,6 +20,7 @@ public class DrawingPlane extends JPanel{
 	private int tx;
 	private int ty;
 	private int rotated;
+	private ArrayList<JComponent> components;
 	
 	public DrawingPlane(int w, int h){
 		tx = 0;
@@ -24,6 +30,7 @@ public class DrawingPlane extends JPanel{
 		setLayout(null);
 		setBackground(CustomColors.black);
 		setFocusable(true);
+		components = new ArrayList<>();
 	}
 	public void displayTransform(){
 		Op.add("X: " + tx);
@@ -60,6 +67,44 @@ public class DrawingPlane extends JPanel{
 		translate(-x, -y);
 		rotated += degrees;
 	}
+	
+
+	public void addComp(JComponent j){
+		add(j);
+		components.add(j);
+		Op.add(components.size());
+		Op.dp();
+	}
+	public void resizeComponents(int rows, int cols){
+		int cWidth = Master.CANVASWIDTH;
+		int cHeight = Master.CANVASHEIGHT;
+		int horizSpacing = cWidth / cols;
+		int vertSpacing = cHeight / rows;
+		
+		int rowNum = 0;
+		int colNum = 0;
+		
+		for(JComponent j : components){
+			if(colNum > cols){
+				colNum = 0;
+				rowNum++;
+			}
+			//check if out of space
+			if(rowNum < rows){
+				Op.add(colNum * horizSpacing);
+				Op.add(rowNum * vertSpacing);
+				j.setBounds(colNum * horizSpacing, rowNum * vertSpacing, horizSpacing, vertSpacing);
+			} else {
+				Op.add("No room");
+			}
+			colNum++;
+			Op.dp();
+		}
+	}
+	
+	
+	
+	
 	public AbstractAction getRepaint(){
 		return new AbstractAction(){
 			public static final long serialVersionUID = 1L; 

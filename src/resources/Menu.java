@@ -1,6 +1,5 @@
 package resources;
 
-import javax.swing.JPanel;
 import javax.swing.JComboBox;
 
 @SuppressWarnings("serial")
@@ -10,8 +9,5 @@ public class Menu extends JComboBox<Object>{
 		super(contents);
 		setOpaque(true);
 		setBounds(x, y, w, h);
-	}
-	public void addTo(JPanel j){
-		j.add(this);
 	}
 }

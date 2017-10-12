@@ -23,7 +23,7 @@ public class StartCanvas extends DrawingPlane{
 		title.setBounds(0, 0, Master.CANVASWIDTH, Master.CANVASHEIGHT / 3);
 		title.setBackground(Color.yellow);
 		title.setOpaque(true);
-		add(title);
+		addComp(title);
 		
 		String[] buttonTexts = {"About this game", "Play", "How to Play"};
 		Color[] buttonColors = {Color.blue, Color.red, Color.green};
@@ -51,7 +51,7 @@ public class StartCanvas extends DrawingPlane{
 		for(int i = 0; i < 3; i++){
 			EasyButton b = new EasyButton(buttonTexts[i], s * i, s, s, s, buttonColors[i]);
 			b.addActionListener(actions[i]);
-			b.addTo(this);
+			addComp(b);
 		}
 	}
 }

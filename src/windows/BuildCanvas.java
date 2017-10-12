@@ -39,7 +39,7 @@ public class BuildCanvas extends DrawingPlane{
 				close();
 			}
 		});
-		quit.addTo(this);
+		addComp(quit);
 		
 		
 		ArrayList<Build> builds = Build.getAllBuilds();
@@ -50,7 +50,7 @@ public class BuildCanvas extends DrawingPlane{
 		
 		baseBuild = new Menu(buildNames, Master.CANVASWIDTH / 2, Master.CANVASHEIGHT / 2, 100, 100);
 		baseBuild.addActionListener(getRepaint());
-		baseBuild.addTo(this);
+		addComp(baseBuild);
 		
 		setClass = new EasyButton("Edit/copy build", Master.CANVASWIDTH / 2, Master.CANVASHEIGHT / 2, 300, 100, Color.white);
 		setClass.addActionListener(new AbstractAction(){
@@ -62,7 +62,7 @@ public class BuildCanvas extends DrawingPlane{
 				phase2();
 			}
 		});
-		setClass.addTo(this);
+		addComp(setClass);
 	}
 	public void phase2(){
 		Player testPlayer = new Player("TEST");
@@ -76,12 +76,12 @@ public class BuildCanvas extends DrawingPlane{
 			acts[i] = new Menu(testPlayer.getCharacterClass().getAttacksString(), 0, Master.CANVASHEIGHT / 4 * (i + 1), 100, 100);
 			acts[i].addActionListener(getRepaint());
 			acts[i].setSelectedItem(b.getActiveNames()[i]);
-			acts[i].addTo(this);
+			addComp(acts[i]);
 			
 			pass[i] = new Menu(testPlayer.getCharacterClass().getPassivesString(), Master.CANVASWIDTH - 100, Master.CANVASHEIGHT / 4 * (i + 1), 100, 100);
 			pass[i].addActionListener(getRepaint());
 			pass[i].setSelectedItem(b.getPassiveNames()[i]);
-			pass[i].addTo(this);
+			addComp(pass[i]);
 		}
 		
 		name = new JTextField(b.getName());
@@ -94,11 +94,15 @@ public class BuildCanvas extends DrawingPlane{
 		finish.addActionListener(new AbstractAction(){
 			public static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent e){
-				new Build(name.getText(), b.getClassName(), acts[0].getSelectedItem().toString(), acts[1].getSelectedItem().toString(), acts[2].getSelectedItem().toString(), pass[0].getSelectedItem().toString(), pass[1].getSelectedItem().toString(), pass[2].getSelectedItem().toString());
+				new Build(name.getText(), b.getClassName(), 
+						acts[0].getSelectedItem().toString(), acts[1].getSelectedItem().toString(), acts[2].getSelectedItem().toString(), 
+						pass[0].getSelectedItem().toString(), pass[1].getSelectedItem().toString(), pass[2].getSelectedItem().toString());
 				new MainWindow();
 				close();
 			}
 		});
-		finish.addTo(this);
+		addComp(finish);
+		//FIXME: work on resizeComponents
+		//resizeComponents(4, 3);
 	}
 }
