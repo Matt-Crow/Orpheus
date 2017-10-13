@@ -30,6 +30,7 @@ public class BuildCanvas extends DrawingPlane{
 	
 	public BuildCanvas(int windowWidth, int windowHeight){
 		super(windowWidth, windowHeight);
+		
 		//customcolors
 		EasyButton quit = new EasyButton("Quit without saving", Color.red);
 		quit.addActionListener(new AbstractAction(){
@@ -56,53 +57,19 @@ public class BuildCanvas extends DrawingPlane{
 		setClass.addActionListener(new AbstractAction(){
 			public static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent e){
-				baseBuild.setEnabled(false);
-				setClass.setEnabled(false);
-				setClass.setVisible(false);
+				removeComp(baseBuild);
+				removeComp(setClass);
 				phase2();
 			}
 		});
 		addComp(setClass);
-		resizeComponents(3, 4);
+		resizeComponents(4, 3);
 	}
 	public void phase2(){
 		Player testPlayer = new Player("TEST");
 		Build b = Build.getBuildByName(baseBuild.getSelectedItem().toString());
 		testPlayer.applyBuild(b);
-		
-		
-		// can't make array of jcomboboxes :(
-		chooseAct1 = new JComboBox<String>(testPlayer.getCharacterClass().getAttacksString());
-		chooseAct1.addActionListener(getRepaint());
-		chooseAct1.setSelectedItem(b.getActiveNames()[0]);
-		addComp(chooseAct1);
-		
-		chooseAct2 = new JComboBox<String>(testPlayer.getCharacterClass().getAttacksString());
-		chooseAct2.addActionListener(getRepaint());
-		chooseAct2.setSelectedItem(b.getActiveNames()[1]);
-		addComp(chooseAct2);
-		
-		chooseAct3 = new JComboBox<String>(testPlayer.getCharacterClass().getAttacksString());
-		chooseAct3.addActionListener(getRepaint());
-		chooseAct3.setSelectedItem(b.getActiveNames()[2]);
-		addComp(chooseAct3);
-		
-		choosePas1 = new JComboBox<String>(testPlayer.getCharacterClass().getPassivesString());
-		choosePas1.addActionListener(getRepaint());
-		choosePas1.setSelectedItem(b.getPassiveNames()[0]);
-		addComp(choosePas1);
-		
-		choosePas2 = new JComboBox<String>(testPlayer.getCharacterClass().getPassivesString());
-		choosePas2.addActionListener(getRepaint());
-		choosePas2.setSelectedItem(b.getPassiveNames()[1]);
-		addComp(choosePas2);
-		
-		choosePas3 = new JComboBox<String>(testPlayer.getCharacterClass().getPassivesString());
-		choosePas3.addActionListener(getRepaint());
-		choosePas3.setSelectedItem(b.getPassiveNames()[2]);
-		addComp(choosePas3);
-		
-		
+
 		name = new JTextField(b.getName());
 		name.setLayout(null);
 		addComp(name);
@@ -120,6 +87,48 @@ public class BuildCanvas extends DrawingPlane{
 		});
 		addComp(finish);
 		
-		resizeComponents(3, 4);
+		
+		// can't make array of jcomboboxes :(
+		chooseAct1 = new JComboBox<String>(testPlayer.getCharacterClass().getAttacksString());
+		chooseAct1.addActionListener(getRepaint());
+		chooseAct1.setSelectedItem(b.getActiveNames()[0]);
+		addComp(chooseAct1);
+		
+		addComp(new VoidComponent());
+		
+		choosePas1 = new JComboBox<String>(testPlayer.getCharacterClass().getPassivesString());
+		choosePas1.addActionListener(getRepaint());
+		choosePas1.setSelectedItem(b.getPassiveNames()[0]);
+		addComp(choosePas1);
+		
+		
+		chooseAct2 = new JComboBox<String>(testPlayer.getCharacterClass().getAttacksString());
+		chooseAct2.addActionListener(getRepaint());
+		chooseAct2.setSelectedItem(b.getActiveNames()[1]);
+		addComp(chooseAct2);
+		
+		addComp(new VoidComponent());
+
+		choosePas2 = new JComboBox<String>(testPlayer.getCharacterClass().getPassivesString());
+		choosePas2.addActionListener(getRepaint());
+		choosePas2.setSelectedItem(b.getPassiveNames()[1]);
+		addComp(choosePas2);
+		
+		
+		chooseAct3 = new JComboBox<String>(testPlayer.getCharacterClass().getAttacksString());
+		chooseAct3.addActionListener(getRepaint());
+		chooseAct3.setSelectedItem(b.getActiveNames()[2]);
+		addComp(chooseAct3);
+		
+		addComp(new VoidComponent());
+		
+		choosePas3 = new JComboBox<String>(testPlayer.getCharacterClass().getPassivesString());
+		choosePas3.addActionListener(getRepaint());
+		choosePas3.setSelectedItem(b.getPassiveNames()[2]);
+		addComp(choosePas3);
+		
+		resizeComponents(4, 3);
+		revalidate();
+		repaint();
 	}
 }

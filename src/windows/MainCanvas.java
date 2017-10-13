@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import java.util.ArrayList;
 
 import battle.Team;
@@ -48,18 +49,6 @@ public class MainCanvas extends DrawingPlane{
 			numStr[i] = Integer.toString(numbers[i]);
 		}
 		
-		playerBuild = new JComboBox<String>(buildNameList);
-		playerBuild.addActionListener(getRepaint());
-		addComp(playerBuild);
-		
-		team1Size = new JComboBox<String>(numStr);
-		team1Size.addActionListener(getRepaint());
-		addComp(team1Size);
-		
-		team2Size = new JComboBox<String>(numStr);
-		team2Size.addActionListener(getRepaint());
-		addComp(team2Size);
-		
 		//FIXME customcolors
 		EasyButton newBuild = new EasyButton("Create a new build", Color.green);
 		newBuild.addActionListener(new AbstractAction(){
@@ -69,7 +58,7 @@ public class MainCanvas extends DrawingPlane{
 			}
 		});
 		addComp(newBuild);
-		
+
 		EasyButton battle = new EasyButton("Battle", Color.red);
 		battle.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
@@ -88,6 +77,26 @@ public class MainCanvas extends DrawingPlane{
 			}
 		});
 		addComp(battle);
+		
+		addComp(new JLabel("Player team size"));
+		addComp(new JLabel("Player Build"));
+		addComp(new JLabel("Enemy team size"));
+		
+		team1Size = new JComboBox<String>(numStr);
+		team1Size.addActionListener(getRepaint());
+		addComp(team1Size);
+		
+		playerBuild = new JComboBox<String>(buildNameList);
+		playerBuild.addActionListener(getRepaint());
+		addComp(playerBuild);
+		
+		team2Size = new JComboBox<String>(numStr);
+		team2Size.addActionListener(getRepaint());
+		addComp(team2Size);
+		
+		
+		
+		
 		resizeComponents(3, 3);
 	}
 }

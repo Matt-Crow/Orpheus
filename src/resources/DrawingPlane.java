@@ -73,6 +73,10 @@ public class DrawingPlane extends JPanel{
 		add(j);
 		components.add(j);
 	}
+	public void removeComp(JComponent j){
+		remove(j);
+		components.remove(j);
+	}
 	public void resizeComponents(int rows, int cols){
 		int cWidth = Master.CANVASWIDTH;
 		int cHeight = Master.CANVASHEIGHT;
