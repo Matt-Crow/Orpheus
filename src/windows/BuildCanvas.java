@@ -4,24 +4,24 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JTextField;
+import javax.swing.JComboBox;
 import java.util.ArrayList;
 import initializers.Master;
 import customizables.Build;
 import entities.Player;
 import resources.DrawingPlane;
-import resources.Menu;
 import resources.EasyButton;
 
 @SuppressWarnings("unused")
 public class BuildCanvas extends DrawingPlane{
 	public static final long serialVersionUID = 1L;
-	private Menu baseBuild;
-	private Menu chooseAct1;
-	private Menu chooseAct2;
-	private Menu chooseAct3;
-	private Menu choosePas1;
-	private Menu choosePas2;
-	private Menu choosePas3;
+	private JComboBox<String> baseBuild;
+	private JComboBox<String> chooseAct1;
+	private JComboBox<String> chooseAct2;
+	private JComboBox<String> chooseAct3;
+	private JComboBox<String> choosePas1;
+	private JComboBox<String> choosePas2;
+	private JComboBox<String> choosePas3;
 	
 	private EasyButton setClass;
 	private EasyButton finish;
@@ -31,7 +31,7 @@ public class BuildCanvas extends DrawingPlane{
 	public BuildCanvas(int windowWidth, int windowHeight){
 		super(windowWidth, windowHeight);
 		//customcolors
-		EasyButton quit = new EasyButton("Quit without saving", 0, 0, Master.CANVASWIDTH / 10, Master.CANVASHEIGHT / 10, Color.red);
+		EasyButton quit = new EasyButton("Quit without saving", Color.red);
 		quit.addActionListener(new AbstractAction(){
 			public static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent e){
@@ -48,11 +48,11 @@ public class BuildCanvas extends DrawingPlane{
 			buildNames[i] = builds.get(i).getName();
 		}
 		
-		baseBuild = new Menu(buildNames, Master.CANVASWIDTH / 2, Master.CANVASHEIGHT / 2, 100, 100);
+		baseBuild = new JComboBox<String>(buildNames);
 		baseBuild.addActionListener(getRepaint());
 		addComp(baseBuild);
 		
-		setClass = new EasyButton("Edit/copy build", Master.CANVASWIDTH / 2, Master.CANVASHEIGHT / 2, 300, 100, Color.white);
+		setClass = new EasyButton("Edit/copy build", Color.white);
 		setClass.addActionListener(new AbstractAction(){
 			public static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent e){
@@ -63,46 +63,63 @@ public class BuildCanvas extends DrawingPlane{
 			}
 		});
 		addComp(setClass);
+		resizeComponents(3, 4);
 	}
 	public void phase2(){
 		Player testPlayer = new Player("TEST");
 		Build b = Build.getBuildByName(baseBuild.getSelectedItem().toString());
 		testPlayer.applyBuild(b);
 		
-		Menu[] acts = {chooseAct1, chooseAct2, chooseAct3};
-		Menu[] pass = {choosePas1, choosePas2, choosePas3};
 		
-		for(int i = 0; i < 3; i++){
-			acts[i] = new Menu(testPlayer.getCharacterClass().getAttacksString(), 0, Master.CANVASHEIGHT / 4 * (i + 1), 100, 100);
-			acts[i].addActionListener(getRepaint());
-			acts[i].setSelectedItem(b.getActiveNames()[i]);
-			addComp(acts[i]);
-			
-			pass[i] = new Menu(testPlayer.getCharacterClass().getPassivesString(), Master.CANVASWIDTH - 100, Master.CANVASHEIGHT / 4 * (i + 1), 100, 100);
-			pass[i].addActionListener(getRepaint());
-			pass[i].setSelectedItem(b.getPassiveNames()[i]);
-			addComp(pass[i]);
-		}
+		// can't make array of jcomboboxes :(
+		chooseAct1 = new JComboBox<String>(testPlayer.getCharacterClass().getAttacksString());
+		chooseAct1.addActionListener(getRepaint());
+		chooseAct1.setSelectedItem(b.getActiveNames()[0]);
+		addComp(chooseAct1);
+		
+		chooseAct2 = new JComboBox<String>(testPlayer.getCharacterClass().getAttacksString());
+		chooseAct2.addActionListener(getRepaint());
+		chooseAct2.setSelectedItem(b.getActiveNames()[1]);
+		addComp(chooseAct2);
+		
+		chooseAct3 = new JComboBox<String>(testPlayer.getCharacterClass().getAttacksString());
+		chooseAct3.addActionListener(getRepaint());
+		chooseAct3.setSelectedItem(b.getActiveNames()[2]);
+		addComp(chooseAct3);
+		
+		choosePas1 = new JComboBox<String>(testPlayer.getCharacterClass().getPassivesString());
+		choosePas1.addActionListener(getRepaint());
+		choosePas1.setSelectedItem(b.getPassiveNames()[0]);
+		addComp(choosePas1);
+		
+		choosePas2 = new JComboBox<String>(testPlayer.getCharacterClass().getPassivesString());
+		choosePas2.addActionListener(getRepaint());
+		choosePas2.setSelectedItem(b.getPassiveNames()[1]);
+		addComp(choosePas2);
+		
+		choosePas3 = new JComboBox<String>(testPlayer.getCharacterClass().getPassivesString());
+		choosePas3.addActionListener(getRepaint());
+		choosePas3.setSelectedItem(b.getPassiveNames()[2]);
+		addComp(choosePas3);
+		
 		
 		name = new JTextField(b.getName());
 		name.setLayout(null);
-		name.setOpaque(true);
-		name.setBounds(Master.CANVASWIDTH / 2, 0, 100, 100);
-		add(name);
+		addComp(name);
 		
-		finish = new EasyButton("Save", Master.CANVASWIDTH - 100, 0, 100, 100, Color.yellow);
+		finish = new EasyButton("Save", Color.yellow);
 		finish.addActionListener(new AbstractAction(){
 			public static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent e){
 				new Build(name.getText(), b.getClassName(), 
-						acts[0].getSelectedItem().toString(), acts[1].getSelectedItem().toString(), acts[2].getSelectedItem().toString(), 
-						pass[0].getSelectedItem().toString(), pass[1].getSelectedItem().toString(), pass[2].getSelectedItem().toString());
+						chooseAct1.getSelectedItem().toString(), chooseAct2.getSelectedItem().toString(), chooseAct3.getSelectedItem().toString(), 
+						choosePas1.getSelectedItem().toString(), choosePas2.getSelectedItem().toString(), choosePas3.getSelectedItem().toString());
 				new MainWindow();
 				close();
 			}
 		});
 		addComp(finish);
-		//FIXME: work on resizeComponents
-		//resizeComponents(4, 3);
+		
+		resizeComponents(3, 4);
 	}
 }

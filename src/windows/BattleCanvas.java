@@ -34,7 +34,7 @@ public class BattleCanvas extends DrawingPlane{
 		FPS = 20;
 		paused = true;
 		
-		EasyButton b = new EasyButton("Exit", 0, 0, Master.CANVASWIDTH / 10, Master.CANVASHEIGHT / 10, Color.red);
+		EasyButton b = new EasyButton("Exit", Color.red);
 		b.addActionListener(new AbstractAction(){
 			public static final long serialVersionUID = 12L;
 			public void actionPerformed(ActionEvent e){
@@ -53,6 +53,7 @@ public class BattleCanvas extends DrawingPlane{
 		      }
 		};
 		addKeyRegistration();
+		resizeComponents(10, 10);
 	}
 	public void setBattle(Team team1, Team team2){
 		hostedBattle = new Battle(team1, team2);

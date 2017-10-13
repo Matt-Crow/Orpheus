@@ -3,12 +3,12 @@ package windows;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
+import javax.swing.JComboBox;
 import java.util.ArrayList;
 
 import battle.Team;
 import customizables.*;
 import resources.EasyButton;
-import resources.Menu;
 import initializers.Master;
 import resources.DrawingPlane;
 
@@ -19,14 +19,14 @@ public class MainCanvas extends DrawingPlane{
 	private Team team1;
 	private Team team2;
 	
-	private Menu playerBuild;
-	private Menu team1Size;
-	private Menu team2Size;
+	private JComboBox<String> playerBuild;
+	private JComboBox<String> team1Size;
+	private JComboBox<String> team2Size;
 	
 	public MainCanvas(){
 		super(Master.CANVASWIDTH, Master.CANVASHEIGHT);
 		
-		EasyButton b = new EasyButton("Quit", 0, 0, Master.CANVASWIDTH / 10, Master.CANVASHEIGHT / 10, Color.red);
+		EasyButton b = new EasyButton("Quit", Color.red);
 		b.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				new StartWindow();
@@ -48,18 +48,20 @@ public class MainCanvas extends DrawingPlane{
 			numStr[i] = Integer.toString(numbers[i]);
 		}
 		
-		team1Size = new Menu(numStr, Master.CANVASWIDTH / 4, Master.CANVASHEIGHT / 2, 100, 100);
-		playerBuild = new Menu(buildNameList, Master.CANVASWIDTH / 2, Master.CANVASHEIGHT / 2, 100, 100);
-		team2Size = new Menu(numStr, (Master.CANVASWIDTH / 4) * 3, Master.CANVASHEIGHT / 2, 100, 100);
+		playerBuild = new JComboBox<String>(buildNameList);
+		playerBuild.addActionListener(getRepaint());
+		addComp(playerBuild);
 		
-		Menu[] menus = new Menu[]{team1Size, playerBuild, team2Size};
+		team1Size = new JComboBox<String>(numStr);
+		team1Size.addActionListener(getRepaint());
+		addComp(team1Size);
 		
-		for(int i = 0; i < 3; i++){
-			menus[i].addActionListener(getRepaint());
-			addComp(menus[i]);
-		}
+		team2Size = new JComboBox<String>(numStr);
+		team2Size.addActionListener(getRepaint());
+		addComp(team2Size);
+		
 		//FIXME customcolors
-		EasyButton newBuild = new EasyButton("Create a new build", Master.CANVASWIDTH / 2, Master.CANVASHEIGHT / 2 + 100, 100, 100, Color.green);
+		EasyButton newBuild = new EasyButton("Create a new build", Color.green);
 		newBuild.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				new BuildWindow();
@@ -68,7 +70,7 @@ public class MainCanvas extends DrawingPlane{
 		});
 		addComp(newBuild);
 		
-		EasyButton battle = new EasyButton("Battle", Master.CANVASWIDTH - 100, 0, 100, 100, Color.red);
+		EasyButton battle = new EasyButton("Battle", Color.red);
 		battle.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				team1 = Team.constructRandomTeam("Team 1", Color.green, Integer.parseInt(team1Size.getSelectedItem().toString()) - 1);
@@ -86,5 +88,6 @@ public class MainCanvas extends DrawingPlane{
 			}
 		});
 		addComp(battle);
+		resizeComponents(3, 3);
 	}
 }

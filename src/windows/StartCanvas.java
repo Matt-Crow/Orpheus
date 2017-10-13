@@ -47,11 +47,11 @@ public class StartCanvas extends DrawingPlane{
 			}
 		};
 		
-		int s = Master.CANVASHEIGHT / 3;
 		for(int i = 0; i < 3; i++){
-			EasyButton b = new EasyButton(buttonTexts[i], s * i, s, s, s, buttonColors[i]);
+			EasyButton b = new EasyButton(buttonTexts[i], buttonColors[i]);
 			b.addActionListener(actions[i]);
 			addComp(b);
 		}
+		resizeComponents(2, 3);
 	}
 }

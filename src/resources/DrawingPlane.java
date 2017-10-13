@@ -72,8 +72,6 @@ public class DrawingPlane extends JPanel{
 	public void addComp(JComponent j){
 		add(j);
 		components.add(j);
-		Op.add(components.size());
-		Op.dp();
 	}
 	public void resizeComponents(int rows, int cols){
 		int cWidth = Master.CANVASWIDTH;
@@ -83,22 +81,20 @@ public class DrawingPlane extends JPanel{
 		
 		int rowNum = 0;
 		int colNum = 0;
-		
 		for(JComponent j : components){
-			if(colNum > cols){
+			j.setOpaque(true);
+			if(colNum >= cols){
 				colNum = 0;
 				rowNum++;
 			}
 			//check if out of space
 			if(rowNum < rows){
-				Op.add(colNum * horizSpacing);
-				Op.add(rowNum * vertSpacing);
 				j.setBounds(colNum * horizSpacing, rowNum * vertSpacing, horizSpacing, vertSpacing);
 			} else {
 				Op.add("No room");
+				Op.dp();
 			}
 			colNum++;
-			Op.dp();
 		}
 	}
 	
