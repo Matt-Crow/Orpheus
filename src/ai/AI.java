@@ -41,7 +41,7 @@ public class AI {
 	}
 	
 	public void wander(){
-		appliedTo.setMoving(true);
+		appliedTo.setMomentum(Master.MAXPLAYERSPEED);
 		if(distanceWandered >= wanderDistance){
 			setToWander();
 		}
@@ -54,7 +54,7 @@ public class AI {
 		}
 		
 		turnToLatch();
-		appliedTo.setMoving(true);
+		appliedTo.setMomentum(Master.MAXPLAYERSPEED);
 	}
 	public void attack(){
 		if(latched.getShouldTerminate()){
@@ -69,7 +69,7 @@ public class AI {
 		}
 		turnToLatch();
 		appliedTo.useMeleeAttack();
-		appliedTo.setMoving(false);
+		appliedTo.setMomentum(0);
 	}
 	
 	public void turnToLatch(){

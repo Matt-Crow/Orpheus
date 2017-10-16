@@ -20,7 +20,6 @@ public class Projectile extends Entity{
 	
 	public Projectile(int x, int y, int dirNum, int momentum, Player attackUser, Attack a){
 		super(x, y, dirNum, momentum);
-		setMoving(true);
 		distanceTraveled = 0;
 		user = attackUser;
 		registeredAttack = a;

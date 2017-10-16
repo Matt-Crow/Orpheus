@@ -87,6 +87,7 @@ public class BuildCanvas extends DrawingPlane{
 		});
 		addComp(finish);
 		
+		//tooltip of selected item desc 
 		
 		// can't make array of jcomboboxes :(
 		chooseAct1 = new JComboBox<String>(testPlayer.getCharacterClass().getAttacksString());

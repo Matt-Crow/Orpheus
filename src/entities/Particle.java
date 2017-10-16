@@ -19,7 +19,6 @@ public class Particle extends Entity{
 		lifeSpan = 30;
 		age = 0;
 		shouldTerminate = false;
-		setMoving(true);
 		particles.add(this);
 	}
 	public static void reset(){

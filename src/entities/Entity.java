@@ -11,8 +11,6 @@ public class Entity {
 	private String willTurn;
 	private int momentum;
 	private double speedFilter;
-	private boolean moving;
-	private boolean backwards;
 	
 	private Direction kbDir;
 	private double kbDur;
@@ -20,16 +18,14 @@ public class Entity {
 	
 	private ActionRegister actReg;
 	
-	public Entity(int xCoord, int yCoord, int d, int m){
+	public Entity(int xCoord, int yCoord, int degrees, int m){
 		x = xCoord;
 		y = yCoord;
-		dir = new Direction(d);
+		dir = new Direction(degrees);
 		willTurn = "none";
 		
 		momentum = m;
 		speedFilter = 1.0;
-		moving = false;
-		backwards = false;
 		
 		kbDir = new Direction(0);
 		kbDur = 0;
@@ -53,11 +49,8 @@ public class Entity {
 	public void setWillTurn(String s){
 		willTurn = s;
 	}
-	public void setMoving(boolean m){
-		moving = m;
-	}
-	public void setBackwards(boolean b){
-		backwards = b;
+	public void setMomentum(int m){
+		momentum = m;
 	}
 	public void applySpeedFilter(double f){
 		speedFilter *= f;
@@ -89,13 +82,43 @@ public class Entity {
 			dir.turnCounterClockwise(amount);
 		}
 	}
+	
+	// do fun things with projectiles here :]
+	public void turnToward(Direction d){
+		int cDirNum = getDir().getDegrees();
+		int dDirNum = d.getDegrees();
+		boolean shouldLeft = true;
+		
+		if(cDirNum < dDirNum){
+			shouldLeft = true;
+		} else if(cDirNum > dDirNum){
+			shouldLeft = false;
+		} else {
+			// already facing the correct way
+			return;
+		}
+		
+		double differenceBetween;
+		if(cDirNum > dDirNum){
+			differenceBetween = cDirNum - dDirNum;
+		} else {
+			differenceBetween = dDirNum - cDirNum;
+		}
+		
+		if(differenceBetween > 180){
+			shouldLeft = !shouldLeft;
+		}
+		
+		if(shouldLeft){
+			setWillTurn("left");
+		} else {
+			setWillTurn("right");
+		}
+	}
+	
 	public void move(){
 		x += dir.getVector()[0] * getMomentum();
 		y += dir.getVector()[1] * getMomentum();
-	}
-	public void moveBackwards(){
-		x -= dir.getVector()[0] * getMomentum() * 0.5;
-		y -= dir.getVector()[1] * getMomentum() * 0.5;
 	}
 	public void update(){
 		if((willTurn == "left") || (willTurn == "right")){
@@ -109,11 +132,7 @@ public class Entity {
 		} else {
 			applyKnockback(new Direction(0), 0, 0);
 		}
-		if(moving){
-			move();
-		} else if (backwards){
-			moveBackwards();
-		}
+		move();
 		if(x < 0){
 			x = 0;
 		} else if(x > Master.getCurrentBattle().getHost().getWidth()){
