@@ -1,9 +1,9 @@
 package attacks;
 
-import entities.Player;
+//import entities.Player;
 import entities.ParticleType;
-import entities.SeedProjectile;
-import resources.Direction;
+//import entities.SeedProjectile;
+//import resources.Direction;
 import resources.CustomColors;
 
 public class MeleeAttack extends Attack{
@@ -11,8 +11,9 @@ public class MeleeAttack extends Attack{
 		super(n, 0, cooldown, 100, 5, 0, 0, 1, dmg);
 		setType("melee");
 		setParticleColor(CustomColors.silver);
-		setParticleType(ParticleType.BLADE);
+		setParticleType(ParticleType.SHEAR);
 	}
+	/*
 	public void use(Player user){
 		// Create a 45 degree angle, coming off of the user's angle
 		Direction testDir = new Direction(user.getDir().getDegrees() + 45);
@@ -29,4 +30,5 @@ public class MeleeAttack extends Attack{
 		}
 		setToCooldown();
 	}
+	*/
 }
