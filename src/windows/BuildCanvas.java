@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
+import java.awt.GridLayout;
 import java.util.ArrayList;
 import initializers.Master;
 import customizables.Build;

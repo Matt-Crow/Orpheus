@@ -3,12 +3,11 @@ package resources;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import initializers.Master;
-
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
@@ -78,33 +77,12 @@ public class DrawingPlane extends JPanel{
 		components.remove(j);
 	}
 	public void resizeComponents(int rows, int cols){
-		int cWidth = Master.CANVASWIDTH;
-		int cHeight = Master.CANVASHEIGHT;
-		int horizSpacing = cWidth / cols;
-		int vertSpacing = cHeight / rows;
-		
-		int rowNum = 0;
-		int colNum = 0;
+		setLayout(new GridLayout(rows, cols, 10, 10));
 		for(JComponent j : components){
 			j.setOpaque(true);
-			if(colNum >= cols){
-				colNum = 0;
-				rowNum++;
-			}
-			//check if out of space
-			if(rowNum < rows){
-				j.setBounds(colNum * horizSpacing, rowNum * vertSpacing, horizSpacing, vertSpacing);
-			} else {
-				Op.add("No room");
-				Op.dp();
-			}
-			colNum++;
+			j.setVisible(true);
 		}
 	}
-	
-	
-	
-	
 	public AbstractAction getRepaint(){
 		return new AbstractAction(){
 			public static final long serialVersionUID = 1L; 
