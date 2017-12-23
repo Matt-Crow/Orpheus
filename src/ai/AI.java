@@ -14,26 +14,42 @@ public class AI {
 	private int wanderDistance;
 	private int distanceWandered;
 	private Player latched;
+	private boolean enabled;
 	
 	public AI(Entity p){
 		appliedTo = p;
+		enabled = false;
 	}
 	
 	public Entity getApplied(){
 		return appliedTo;
 	}
-	
+	public void latch(Player p){
+		mode = "pursue";
+		latched = p;
+	}
 	public Player getLatched(){
 		return latched;
 	}
-	
 	public void setMode(String s){
 		mode = s;
+	}
+	public String getMode(){
+		return mode;
+	}
+	public void enable(){
+		enabled = true;
+	}
+	public void disable(){
+		enabled = false;
+	}
+	public boolean isEnabled(){
+		return enabled;
 	}
 
 	public void setToWander(){
 		mode = "wander";
-		wanderDistance = Random.choose(100, 1000);
+		wanderDistance = Random.choose(100, 500);
 		distanceWandered = 0;
 		
 		switch(Random.choose(0, 1)){
@@ -46,11 +62,6 @@ public class AI {
 		}
 	}
 	
-	public void latch(Player p){
-		mode = "pursue";
-		latched = p;
-	}
-	
 	//give each entity own speed
 	public void wander(){
 		appliedTo.setMomentum(Master.MAXPLAYERSPEED);
@@ -59,12 +70,11 @@ public class AI {
 		}
 	}
 	
+	
 	public void pursue(){
 		turnToLatch();
 		appliedTo.setMomentum(Master.MAXPLAYERSPEED);
 	}
-	
-	
 	
 	public void turnToLatch(){
 		int x1 = appliedTo.getCoords().getX();
@@ -99,25 +109,25 @@ public class AI {
 	}
 	
 	public void update(){
-		if(mode == "wander"){
-			wander();
-			distanceWandered += appliedTo.getMomentum();
-			
-			if(checkIfPlayerInSightRange()){
-				latchOntoNearest();
-			}
-		} else if(mode == "pursue"){
-			pursue();
-		} else if(mode == "attack"){
-			attack();
-		}
-		OnHitAction a = new OnHitAction(){
-			public void f(){
+		if(enabled){
+			if(mode == "wander"){
+				wander();
+				distanceWandered += appliedTo.getMomentum();
+				
 				if(checkIfPlayerInSightRange()){
-					appliedTo.getAI().latchOntoNearest();
+					latchOntoNearest();
 				}
+			} else if(mode == "pursue"){
+				pursue();
 			}
-		};
-		appliedTo.getActionRegister().addOnBeHit(a);
+			OnHitAction a = new OnHitAction(){
+				public void f(){
+					if(checkIfPlayerInSightRange()){
+						appliedTo.getEntityAI().latchOntoNearest();
+					}
+				}
+			};
+			appliedTo.getActionRegister().addOnBeHit(a);
+		}
 	}
 }

@@ -35,4 +35,12 @@ public class PlayerAI extends AI{
 		registered.useMeleeAttack();
 		registered.setMomentum(0);
 	}
+	public void update(){
+		super.update();
+		if(isEnabled()){
+			if(getMode() == "attack"){
+				attack();
+			}
+		}
+	}
 }

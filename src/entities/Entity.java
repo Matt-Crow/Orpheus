@@ -4,6 +4,7 @@ import initializers.Master;
 import resources.ActionRegister;
 import resources.Coordinates;
 import resources.Direction;
+import battle.Team;
 import ai.AI;
 
 public class Entity {
@@ -18,10 +19,11 @@ public class Entity {
 	private double kbDur;
 	private int kbVelocity;
 	
+	private Team team;
+	
 	private ActionRegister actReg;
 	
-	private boolean hasAI;
-	private AI intel;
+	private AI entityAI;
 	
 	public Entity(int xCoord, int yCoord, int degrees, int m){
 		x = xCoord;
@@ -38,7 +40,7 @@ public class Entity {
 		
 		actReg = new ActionRegister(this);
 		
-		hasAI = false;
+		entityAI = new AI(this);
 	}
 	public int getX(){
 		return x;
@@ -84,16 +86,16 @@ public class Entity {
 		return actReg;
 	}
 	
-	public void enableAI(){
-		hasAI = true;
-		intel = new AI(this);
-	}
-	public void disableAI(){
-		hasAI = false;
+	public void setTeam(Team t){
+		team = t;
 	}
 	
-	public boolean getHasAI(){
-		return hasAI;
+	public Team getTeam(){
+		return team;
+	}
+	
+	public AI getEntityAI(){
+		return entityAI;
 	}
 	
 	public void turn(String d){
@@ -143,6 +145,8 @@ public class Entity {
 		y += dir.getVector()[1] * getMomentum();
 	}
 	public void update(){
+		entityAI.update();
+		
 		if((willTurn == "left") || (willTurn == "right")){
 			turn(willTurn);
 		}

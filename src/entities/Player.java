@@ -16,7 +16,6 @@ import initializers.Master;
 // this is going to be very big
 public class Player extends Entity{
 	private String name;
-	private Team team;
 	private CharacterClass c;
 	private Attack[] actives;
 	private Passive[] passives;
@@ -29,6 +28,7 @@ public class Player extends Entity{
 	private ArrayList<Status> statuses;
 	
 	private boolean shouldTerminate;
+	private PlayerAI playerAI;
 	
 	public Player(String n){
 		super(0, 0, 0, 0);
@@ -37,16 +37,16 @@ public class Player extends Entity{
 		actives = new Attack[3];
 		passives = new Passive[3];
 		
+		playerAI = new PlayerAI(this);
+		
 		if (!Master.DISABLEALLAI){
-			enableAI();
+			playerAI.enable();
 		}
 	}
 	public String getName(){
 		return name;
 	}
-	public Team getTeam(){
-		return team;
-	}
+	
 	public Attack[] getActives(){
 		return actives;
 	}
@@ -62,9 +62,8 @@ public class Player extends Entity{
 	public CharacterClass getCharacterClass(){
 		return c;
 	}
-	
-	public PlayerAI getAI(){
-		return intel;
+	public PlayerAI getPlayerAI(){
+		return playerAI;
 	}
 	public boolean getShouldTerminate(){
 		return shouldTerminate;
@@ -213,13 +212,11 @@ public class Player extends Entity{
 	}
 	
 	public void init(Team t, int x, int y, Direction d){
-		if(getHasAI()){
-			intel = new PlayerAI(this);
-			intel.setToWander();
-		}
+		//getEntityAI().setToWander();
+		playerAI.setToWander();
 		super.setCoords(x, y);
 		super.setDir(d);
-		team = t;
+		setTeam(t);
 		slash.init();
 		c.calcStats();
 		log = new DamageBacklog(this);
@@ -252,6 +249,7 @@ public class Player extends Entity{
 	
 	public void update(){
 		super.update();
+		playerAI.update();
 		slash.update();
 		getActionRegister().resetTrips();
 		for(Attack a : actives){
@@ -264,10 +262,6 @@ public class Player extends Entity{
 		getActionRegister().tripOnUpdate();
 		log.update();
 		energyLog.update();
-		
-		if(AI){
-			intel.update();
-		}
 	}
 	
 	public void draw(Graphics g){
@@ -279,7 +273,7 @@ public class Player extends Entity{
 		g.drawString("HP: " + log.getHP(), getX() - w/12, getY() - h/8);
 		
 		// Update this to sprite later, doesn't scale to prevent hitbox snafoos
-		g.setColor(team.getColor());
+		g.setColor(getTeam().getColor());
 		g.fillOval(getX() - 50, getY() - 50, 100, 100);
 		g.setColor(c.getColor());
 		g.fillOval(getX() - 40, getY() - 40, 80, 80);
