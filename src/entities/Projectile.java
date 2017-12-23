@@ -25,7 +25,7 @@ public class Projectile extends Entity{
 		registeredAttack = a;
 		shouldTerminate = false;
 		terminated = false;
-		
+		setMoving(true);
 		doNotHit = new ArrayList<Player>();
 		hit = new Player("Void");
 		

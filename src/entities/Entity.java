@@ -12,7 +12,9 @@ public class Entity {
 	private int y;
 	private Direction dir;
 	private String willTurn;
-	private int momentum;
+	private int maxSpeed;
+	private boolean moving;
+	private boolean backwards;
 	private double speedFilter;
 	
 	private Direction kbDir;
@@ -31,7 +33,9 @@ public class Entity {
 		dir = new Direction(degrees);
 		willTurn = "none";
 		
-		momentum = m;
+		maxSpeed = m;
+		moving = false;
+		backwards = false;
 		speedFilter = 1.0;
 		
 		kbDir = new Direction(0);
@@ -61,9 +65,6 @@ public class Entity {
 	public void setWillTurn(String s){
 		willTurn = s;
 	}
-	public void setMomentum(int m){
-		momentum = m;
-	}
 	public void applySpeedFilter(double f){
 		speedFilter *= f;
 	}
@@ -72,8 +73,26 @@ public class Entity {
 		return dir;
 	}
 	
+	public void setMoving(boolean isMoving){
+		moving = isMoving;
+	}
+	public void setBackwards(boolean back){
+		backwards = back;
+	}
+	public boolean isBackwards(){
+		return backwards;
+	}
+	
+	public boolean getIsMoving(){
+		return moving;
+	}
+	
 	public int getMomentum(){
-		return (int) (momentum * speedFilter);
+		int ret = (int)(maxSpeed * speedFilter);
+		if(backwards){
+			ret = (int)(-ret * 0.5);
+		}
+		return ret;
 	}
 	
 	public void applyKnockback(Direction d, int dur, int vel){
@@ -158,7 +177,9 @@ public class Entity {
 		} else {
 			applyKnockback(new Direction(0), 0, 0);
 		}
-		move();
+		if(moving){
+			move();
+		}
 		if(x < 0){
 			x = 0;
 		} else if(x > Master.getCurrentBattle().getHost().getWidth()){

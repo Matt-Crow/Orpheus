@@ -14,7 +14,7 @@ public class Controls {
 		new KeyRegister(j, KeyEvent.VK_UP, true, new moveAction());
 		new KeyRegister(j, KeyEvent.VK_UP, false, new stopAction());
 		new KeyRegister(j, KeyEvent.VK_DOWN, true, new reverseAction());
-		new KeyRegister(j, KeyEvent.VK_DOWN, false, new stopAction());
+		new KeyRegister(j, KeyEvent.VK_DOWN, false, new unreverseAction());
 		new KeyRegister(j, KeyEvent.VK_LEFT, true, new turnLeftAction());
 		new KeyRegister(j, KeyEvent.VK_RIGHT, true, new turnRightAction());
 		new KeyRegister(j, KeyEvent.VK_Q, true, new meleeAction());
@@ -26,19 +26,27 @@ public class Controls {
 	public static class moveAction extends AbstractAction{
 		static final long serialVersionUID = 1L;
 		public void actionPerformed(ActionEvent e){
-			p.setMomentum(Master.MAXPLAYERSPEED);
+			p.setMoving(true);
 		}
 	}
 	public static class stopAction extends AbstractAction{
 		static final long serialVersionUID = 1L;
 		public void actionPerformed(ActionEvent e){
-			p.setMomentum(0);
+			p.setMoving(false);
 		}
 	}
 	public static class reverseAction extends AbstractAction{
 		static final long serialVersionUID = 1L;
 		public void actionPerformed(ActionEvent e){
-			p.setMomentum(-Master.MAXPLAYERSPEED / 2);
+			p.setMoving(true);
+			p.setBackwards(true);
+		}
+	}
+	public static class unreverseAction extends AbstractAction{
+		static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			p.setMoving(false);
+			p.setBackwards(false);
 		}
 	}
 	public static class turnLeftAction extends AbstractAction{

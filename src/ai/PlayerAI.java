@@ -17,7 +17,6 @@ public class PlayerAI extends AI{
 		// check if in range
 		if(registered.getCoords().distanceBetween(getLatched().getCoords()) <= 100){
 			setToAttack();
-			return;
 		}
 	}
 	public void attack(){
@@ -29,11 +28,11 @@ public class PlayerAI extends AI{
 		// check if out of range
 		if(getApplied().getCoords().distanceBetween(getLatched().getCoords()) >= 100){
 			setMode("pursue");
-			return;
+		} else {
+			turnToLatch();
+			registered.useMeleeAttack();
+			registered.setMoving(false);
 		}
-		turnToLatch();
-		registered.useMeleeAttack();
-		registered.setMomentum(0);
 	}
 	public void update(){
 		super.update();

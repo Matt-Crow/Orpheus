@@ -31,7 +31,7 @@ public class Player extends Entity{
 	private PlayerAI playerAI;
 	
 	public Player(String n){
-		super(0, 0, 0, 0);
+		super(0, 0, 0, 10);
 		name = n;
 		slash = new Slash();
 		actives = new Attack[3];
@@ -212,7 +212,6 @@ public class Player extends Entity{
 	}
 	
 	public void init(Team t, int x, int y, Direction d){
-		//getEntityAI().setToWander();
 		playerAI.setToWander();
 		super.setCoords(x, y);
 		super.setDir(d);

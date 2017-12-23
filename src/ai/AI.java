@@ -64,7 +64,7 @@ public class AI {
 	
 	//give each entity own speed
 	public void wander(){
-		appliedTo.setMomentum(Master.MAXPLAYERSPEED);
+		appliedTo.setMoving(true);
 		if(distanceWandered >= wanderDistance){
 			setToWander();
 		}
@@ -73,7 +73,7 @@ public class AI {
 	
 	public void pursue(){
 		turnToLatch();
-		appliedTo.setMomentum(Master.MAXPLAYERSPEED);
+		appliedTo.setMoving(true);
 	}
 	
 	public void turnToLatch(){

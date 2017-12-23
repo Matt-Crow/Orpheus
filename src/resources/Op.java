@@ -33,6 +33,10 @@ public class Op {
 	public static void add(double msg){
 		add(Double.toString(msg));
 	}
+	public static void add(boolean msg){
+		String s = (msg) ? "true" : "false";
+		add(s);
+	}
 	
 	// Prints the contents of the message arraylist
 	public static void dp(){

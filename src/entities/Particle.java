@@ -14,6 +14,7 @@ public class Particle extends Entity{
 	
 	public Particle(int x, int y, int dirNum, int momentum, Color c){
 		super(x, y, dirNum, momentum);
+		setMoving(true);
 		color = c;
 		size = 10;
 		lifeSpan = 30;
