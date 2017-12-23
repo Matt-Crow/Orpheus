@@ -2,7 +2,9 @@ package entities;
 
 import initializers.Master;
 import resources.ActionRegister;
+import resources.Coordinates;
 import resources.Direction;
+import ai.AI;
 
 public class Entity {
 	private int x;
@@ -18,6 +20,9 @@ public class Entity {
 	
 	private ActionRegister actReg;
 	
+	private boolean hasAI;
+	private AI intel;
+	
 	public Entity(int xCoord, int yCoord, int degrees, int m){
 		x = xCoord;
 		y = yCoord;
@@ -32,6 +37,8 @@ public class Entity {
 		kbVelocity = 0;
 		
 		actReg = new ActionRegister(this);
+		
+		hasAI = false;
 	}
 	public int getX(){
 		return x;
@@ -42,6 +49,9 @@ public class Entity {
 	public void setCoords(int xCoord, int yCoord){
 		x = xCoord;
 		y = yCoord;
+	}
+	public Coordinates getCoords(){
+		return new Coordinates(getX(), getY(), this);
 	}
 	public void setDir(Direction d){
 		dir = d;
@@ -72,6 +82,18 @@ public class Entity {
 	
 	public ActionRegister getActionRegister(){
 		return actReg;
+	}
+	
+	public void enableAI(){
+		hasAI = true;
+		intel = new AI(this);
+	}
+	public void disableAI(){
+		hasAI = false;
+	}
+	
+	public boolean getHasAI(){
+		return hasAI;
 	}
 	
 	public void turn(String d){

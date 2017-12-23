@@ -9,7 +9,7 @@ import customizables.*;
 import resources.*;
 import attacks.*;
 import passives.*;
-import ai.AI;
+import ai.PlayerAI;
 import statuses.Status;
 import initializers.Master;
 
@@ -28,9 +28,6 @@ public class Player extends Entity{
 	private int selectedAttack;
 	private ArrayList<Status> statuses;
 	
-	private boolean AI;
-	private AI intel;
-	
 	private boolean shouldTerminate;
 	
 	public Player(String n){
@@ -40,16 +37,15 @@ public class Player extends Entity{
 		actives = new Attack[3];
 		passives = new Passive[3];
 		
-		AI = !Master.DISABLEALLAI;
+		if (!Master.DISABLEALLAI){
+			enableAI();
+		}
 	}
 	public String getName(){
 		return name;
 	}
 	public Team getTeam(){
 		return team;
-	}
-	public Coordinates getCoords(){
-		return new Coordinates(getX(), getY(), this);
 	}
 	public Attack[] getActives(){
 		return actives;
@@ -66,19 +62,14 @@ public class Player extends Entity{
 	public CharacterClass getCharacterClass(){
 		return c;
 	}
-	public boolean getHasAI(){
-		return AI;
-	}
-	public AI getAI(){
+	
+	public PlayerAI getAI(){
 		return intel;
 	}
 	public boolean getShouldTerminate(){
 		return shouldTerminate;
 	}
 	
-	public void disableAI(){
-		AI = false;
-	}
 	public void terminate(){
 		shouldTerminate = true;
 	}
@@ -222,8 +213,8 @@ public class Player extends Entity{
 	}
 	
 	public void init(Team t, int x, int y, Direction d){
-		if(AI){
-			intel = new AI(this);
+		if(getHasAI()){
+			intel = new PlayerAI(this);
 			intel.setToWander();
 		}
 		super.setCoords(x, y);

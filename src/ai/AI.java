@@ -1,6 +1,7 @@
 package ai;
 
 import resources.OnHitAction;
+import entities.Entity;
 import entities.Player;
 import initializers.Master;
 import resources.Coordinates;
@@ -8,16 +9,28 @@ import resources.Random;
 import resources.Direction;
 
 public class AI {
-	private Player appliedTo;
+	private Entity appliedTo;
 	private String mode;
 	private int wanderDistance;
 	private int distanceWandered;
 	private Player latched;
 	
-	public AI(Player p){
+	public AI(Entity p){
 		appliedTo = p;
 	}
 	
+	public Entity getApplied(){
+		return appliedTo;
+	}
+	
+	public Player getLatched(){
+		return latched;
+	}
+	
+	public void setMode(String s){
+		mode = s;
+	}
+
 	public void setToWander(){
 		mode = "wander";
 		wanderDistance = Random.choose(100, 1000);
@@ -32,45 +45,26 @@ public class AI {
 			break;
 		}
 	}
+	
 	public void latch(Player p){
 		mode = "pursue";
 		latched = p;
 	}
-	public void setToAttack(){
-		mode = "attack";
-	}
 	
+	//give each entity own speed
 	public void wander(){
 		appliedTo.setMomentum(Master.MAXPLAYERSPEED);
 		if(distanceWandered >= wanderDistance){
 			setToWander();
 		}
 	}
+	
 	public void pursue(){
-		// check if in range
-		if(appliedTo.getCoords().distanceBetween(latched.getCoords()) <= 100){
-			setToAttack();
-			return;
-		}
-		
 		turnToLatch();
 		appliedTo.setMomentum(Master.MAXPLAYERSPEED);
 	}
-	public void attack(){
-		if(latched.getShouldTerminate()){
-			mode = "wander";
-			return;
-		}
-		
-		// check if out of range
-		if(appliedTo.getCoords().distanceBetween(latched.getCoords()) >= 100){
-			mode = "pursue";
-			return;
-		}
-		turnToLatch();
-		appliedTo.useMeleeAttack();
-		appliedTo.setMomentum(0);
-	}
+	
+	
 	
 	public void turnToLatch(){
 		int x1 = appliedTo.getCoords().getX();
@@ -119,7 +113,9 @@ public class AI {
 		}
 		OnHitAction a = new OnHitAction(){
 			public void f(){
-				appliedTo.getAI().latchOntoNearest();
+				if(checkIfPlayerInSightRange()){
+					appliedTo.getAI().latchOntoNearest();
+				}
 			}
 		};
 		appliedTo.getActionRegister().addOnBeHit(a);
