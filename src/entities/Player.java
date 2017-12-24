@@ -24,7 +24,6 @@ public class Player extends Entity{
 	private EnergyLog energyLog;
 	
 	private Slash slash;
-	private int selectedAttack;
 	private ArrayList<Status> statuses;
 	
 	private boolean shouldTerminate;
@@ -50,9 +49,7 @@ public class Player extends Entity{
 	public Attack[] getActives(){
 		return actives;
 	}
-	public int getSelectedAttack(){
-		return selectedAttack;
-	}
+	
 	public DamageBacklog getLog(){
 		return log;
 	}
@@ -198,12 +195,10 @@ public class Player extends Entity{
 			slash.use(this);
 		}
 	}
-	public void changeSelectedAttack(int index){
-		selectedAttack = index;
-	}
-	public void useSelectedAttack(){
-		if(actives[selectedAttack].canUse(this)){
-			actives[selectedAttack].use(this);
+	
+	public void useAttack(int num){
+		if(actives[num].canUse(this)){
+			actives[num].use(this);
 		}
 	}
 	
@@ -221,7 +216,6 @@ public class Player extends Entity{
 		log = new DamageBacklog(this);
 		energyLog = new EnergyLog(this);
 		statuses = new ArrayList<>();
-		selectedAttack = 0;
 		for(Attack a : actives){
 			a.init();
 		}

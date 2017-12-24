@@ -36,10 +36,6 @@ public class TruePlayer extends Player{
 		// Actives
 		int i = sw;
 		for(Attack a : getActives()){
-			if(a == getActives()[getSelectedAttack()]){
-				g.setColor(Color.yellow);
-				g.fillRect(i, guiY, sw, h/10);
-			}
 			a.drawStatusPane(g, i, (int)(h * 0.9));
 			i += sw;
 		}

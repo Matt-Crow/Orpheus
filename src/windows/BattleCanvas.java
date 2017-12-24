@@ -15,6 +15,7 @@ import resources.Direction;
 import initializers.Master;
 import initializers.Controls;
 import resources.DrawingPlane;
+import resources.Chat;
 
 public class BattleCanvas extends DrawingPlane{
 	public static final long serialVersionUID = 1L;
@@ -43,6 +44,8 @@ public class BattleCanvas extends DrawingPlane{
 			}
 		});
 		addComp(b);
+		
+		Chat.addTo(this);
 		
 		update = new ActionListener() {
 		      public void actionPerformed(ActionEvent e) {
