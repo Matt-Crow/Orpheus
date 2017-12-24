@@ -3,6 +3,8 @@ package resources;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import initializers.Master;
+
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import java.awt.Graphics;
@@ -21,15 +23,22 @@ public class DrawingPlane extends JPanel{
 	private int rotated;
 	private ArrayList<JComponent> components;
 	
-	public DrawingPlane(int w, int h){
+	public DrawingPlane(){
+		super();
 		tx = 0;
 		ty = 0;
 		rotated = 0;
-		setSize(w, h);
 		setLayout(null);
 		setBackground(CustomColors.black);
+		setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
 		setFocusable(true);
 		components = new ArrayList<>();
+	}
+	public int getW(){
+		return Master.CANVASWIDTH;
+	}
+	public int getH(){
+		return Master.CANVASHEIGHT;
 	}
 	public void displayTransform(){
 		Op.add("X: " + tx);

@@ -16,7 +16,7 @@ public class StartCanvas extends DrawingPlane{
 	public static final long serialVersionUID = 1L;
 	
 	public StartCanvas(){
-		super(Master.CANVASWIDTH, Master.CANVASHEIGHT);
+		super();
 		
 		addComp(new VoidComponent());
 		

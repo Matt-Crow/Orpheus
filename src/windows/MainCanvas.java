@@ -25,7 +25,7 @@ public class MainCanvas extends DrawingPlane{
 	private JComboBox<String> team2Size;
 	
 	public MainCanvas(){
-		super(Master.CANVASWIDTH, Master.CANVASHEIGHT);
+		super();
 		
 		EasyButton b = new EasyButton("Quit", Color.red);
 		b.addActionListener(new AbstractAction(){

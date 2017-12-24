@@ -21,17 +21,13 @@ public class BattleCanvas extends DrawingPlane{
 	public static final long serialVersionUID = 1L;
 	private Battlefield battlefield;
 	private Battle hostedBattle;
-	private int w;
-	private int h;
 	private Timer timer;
 	private int FPS;
 	private ActionListener update;
 	private boolean paused;
 	
-	public BattleCanvas(int windowWidth, int windowHeight){
-		super(windowWidth, windowHeight);
-		w = windowWidth;
-		h = windowHeight;
+	public BattleCanvas(){
+		super();
 		FPS = 20;
 		paused = true;
 		
@@ -84,10 +80,11 @@ public class BattleCanvas extends DrawingPlane{
 	
 	public int[] retTranslate(){
 		int[] ret = new int[2];
-		int x = -Master.TRUEPLAYER.getX() + w / 2;
-		int y = -Master.TRUEPLAYER.getY() + h / 2;
-		int minX = -(battlefield.getWidth() - w);
-		int minY = -(battlefield.getHeight() - h);
+		int x = -Master.TRUEPLAYER.getX() + getW() / 2;
+		int y = -Master.TRUEPLAYER.getY() + getH() / 2;
+		
+		int minX = -(battlefield.getWidth() - getW());
+		int minY = -(battlefield.getHeight() - getH());
 		
 		if(x < minX){
 			x = minX;

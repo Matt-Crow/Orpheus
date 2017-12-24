@@ -2,50 +2,49 @@ package battle;
 
 import java.awt.Graphics;
 import java.awt.Color;
-import initializers.Master;
 
 public class Battlefield {
-	private int w;
-	private int h;
-	private int s;
+	private int numRows;
+	private int numCols;
+	private int tileSize;
 	private Battle b;
 	
 	public Battlefield(){
-		w = 20;
-		h = 20;
-		s = Master.CANVASWIDTH / 5;
+		numRows = 20;
+		numCols = 20;
+		tileSize = 100;
 	}
 	public int getTileSize(){
-		return s;
+		return tileSize;
 	}
 	public int getWidth(){
-		return w * s;
+		return numRows * tileSize;
 	}
 	public int getHeight(){
-		return h * s;
+		return numCols * tileSize;
 	}
 	public void setHosted(Battle battle){
 		b = battle;
 	}
 	public int[] getCenter(){
 		int[] ret = new int[2];
-		ret[0] = s * w / 2;
-		ret[1] = s * h / 2;
+		ret[0] = tileSize * numRows / 2;
+		ret[1] = tileSize * numCols / 2;
 		return ret;
 	}
 	public void draw(Graphics g){
 		g.setColor(Color.blue);
 		int x = 0;
 		int y = 0;
-		int squareSize = (int) (s * 0.9);
+		int squareSize = (int) (tileSize * 0.9);
 		
-		while(x < w * s){
+		while(x < numRows * tileSize){
 			y = 0;
-			while(y < h * s){
-				g.fillRect(x + s / 20, y + s / 20,  squareSize, squareSize);
-				y += s;
+			while(y < numCols * tileSize){
+				g.fillRect(x + tileSize / 20, y + tileSize / 20,  squareSize, squareSize);
+				y += tileSize;
 			}
-			x += s;
+			x += tileSize;
 		}
 		b.draw(g);
 	}

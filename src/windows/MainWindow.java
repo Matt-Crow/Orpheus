@@ -1,9 +1,8 @@
 package windows;
 
-import javax.swing.JFrame;
-import initializers.Master;
+import resources.DrawingFrame;
 
-public class MainWindow extends JFrame{
+public class MainWindow extends DrawingFrame{
 	/**
 	 * Mainwindow is the lobby window used for the game, featuring the customizer and battle options
 	 */
@@ -13,8 +12,6 @@ public class MainWindow extends JFrame{
 	
 	public MainWindow(){
 		setTitle("The Orpheus Proposition");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
 		
 		draw = new MainCanvas();
 		setContentPane(draw);

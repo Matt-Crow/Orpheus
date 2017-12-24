@@ -150,15 +150,15 @@ public class Attack {
 		}
 		Op.dp();
 	}
-	public void drawStatusPane(Graphics g, int x, int y){
+	public void drawStatusPane(Graphics g, int x, int y, int w, int h){
 		if(!onCooldown()){
 			g.setColor(Color.white);
-			g.fillRect(x, y, 133, 50);
+			g.fillRect(x, y, w, h);
 			g.setColor(Color.black);
 			g.drawString(getName(), x + 10, y + 20);
 		} else {
 			g.setColor(Color.black);
-			g.fillRect(x, y, 133, 50);
+			g.fillRect(x, y, w, h);
 			g.setColor(Color.red);
 			g.drawString("On cooldown: " + cooldown, x + 10, y + 20);
 		}	

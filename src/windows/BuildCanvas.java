@@ -29,8 +29,8 @@ public class BuildCanvas extends DrawingPlane{
 	private JTextField name;
 	private Player testPlayer;
 	
-	public BuildCanvas(int windowWidth, int windowHeight){
-		super(windowWidth, windowHeight);
+	public BuildCanvas(){
+		super();
 		
 		//customcolors
 		EasyButton quit = new EasyButton("Quit without saving", Color.red);

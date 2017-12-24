@@ -22,21 +22,21 @@ public class TruePlayer extends Player{
 		// HP bubble
 		String strHP = getLog().getHP() + "";
 		g.setColor(Color.red);
-		g.fillOval(0, guiY, sw, sh);
+		g.fillOval(0, guiY, sw, sw);
 		g.setColor(Color.black);
-		g.drawString(strHP, w/100, (int) (h * 0.9));
+		g.drawString(strHP, (int)(w * 0.1), (int) (h * 0.9));
 		
 		// Energy bubble
 		String strEn = getEnergyLog().getEnergy() + "";
 		g.setColor(Color.yellow);
-		g.fillOval((int)(w * 0.8), guiY, sw, sh);
+		g.fillOval((int)(w * 0.8), guiY, sw, sw);
 		g.setColor(Color.black);
-		g.drawString(strEn, (int)(w * 0.81), (int) (h * 0.9));
+		g.drawString(strEn, (int)(w * 0.9), (int) (h * 0.9));
 		
 		// Actives
 		int i = sw;
 		for(Attack a : getActives()){
-			a.drawStatusPane(g, i, (int)(h * 0.9));
+			a.drawStatusPane(g, i, (int)(h * 0.9), sw, sh);
 			i += sw;
 		}
 	}

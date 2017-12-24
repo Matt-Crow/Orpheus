@@ -1,10 +1,9 @@
 package windows;
 
-import javax.swing.JFrame;
+import resources.DrawingFrame;
 
-import initializers.Master;
 
-public class StartWindow  extends JFrame{
+public class StartWindow  extends DrawingFrame{
 	/**
 	 * Startwindow is used as a 'launcher' for the game
 	 */
@@ -12,9 +11,8 @@ public class StartWindow  extends JFrame{
 	StartCanvas draw;
 	
 	public StartWindow(){
+		super();
 		setTitle("Orpheus");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
 		
 		draw = new StartCanvas();
 		setContentPane(draw);
