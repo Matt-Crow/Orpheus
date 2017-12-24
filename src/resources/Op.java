@@ -10,18 +10,13 @@ public class Op {
 	private static ArrayList<String> messages;
 	private static ArrayList<String> previousMessages;
 	
-	// Creates the message arraylist
-	public static void reset(){
-		messages = new ArrayList<String>();
-		previousMessages = new ArrayList<String>();
-	}
-	
 	// Adds to the message arraylist
 	public static void add(String msg){
 		try {
 			messages.add(msg);
 		} catch(NullPointerException e){
-			reset();
+			messages = new ArrayList<String>();
+			previousMessages = new ArrayList<String>();
 			add(msg);
 		}
 	}
@@ -41,13 +36,17 @@ public class Op {
 	// Prints the contents of the message arraylist
 	public static void dp(){
 		add(" ");
-		if(! previousMessages.equals(messages)){
+		if(!previousMessages.equals(messages)){
 			out.println("<**DEBUG**>");
 			for(String msg : messages){
 				out.println(msg);
 			}
 		}
-		previousMessages = messages;
-		reset();
+		previousMessages = new ArrayList<String>();
+		for(String s : messages){
+			previousMessages.add(s);
+		}
+		
+		messages = new ArrayList<String>();
 	}
 }
