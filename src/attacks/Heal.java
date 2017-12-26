@@ -4,6 +4,6 @@ import statuses.Healing;
 
 public class Heal extends BoostAttack{
 	public Heal(){
-		super("Heal", 20, 120, new Healing(2));
+		super("Heal", 5, 5, new Healing(2));
 	}
 }

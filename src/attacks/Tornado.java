@@ -8,7 +8,7 @@ import resources.OnUpdateAction;
 
 public class Tornado extends ElementalAttack{
 	public Tornado(){
-		super("Tornado", 15, 10, 1000, 10, 0, 0, 0, 200);
+		super("Tornado", 5, 5, 5, 2, 0, 3);
 		setParticleType(ParticleType.BEAM);
 		setColorBlend(CustomColors.airColors);
 	}

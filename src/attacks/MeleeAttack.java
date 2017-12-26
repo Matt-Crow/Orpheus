@@ -8,8 +8,7 @@ import resources.CustomColors;
 
 public class MeleeAttack extends Attack{
 	public MeleeAttack(String n, int cooldown, int dmg){
-		super(n, 0, cooldown, 100, 5, 0, 0, 1, dmg);
-		setType("melee");
+		super(n, 0, cooldown, 1, 5, 0, dmg);
 		setParticleColor(CustomColors.silver);
 		setParticleType(ParticleType.SHEAR);
 	}

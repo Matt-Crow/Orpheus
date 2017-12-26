@@ -4,6 +4,6 @@ import statuses.Regeneration;
 
 public class HealingRain extends BoostAttack{
 	public HealingRain(){
-		super("Healing Rain", 25, 120, new Regeneration(1, 90));
+		super("Healing Rain", 5, 5, new Regeneration(1, 90));
 	}
 }

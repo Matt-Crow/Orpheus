@@ -10,7 +10,7 @@ public class Flamethrower extends ElementalAttack{
 	private Player recurUser;
 	
 	public Flamethrower(){
-		super("Flamethrower", 15, 90, 300, 5, 0, 1, 1, 150);
+		super("Flamethrower", 3, 5, 2, 2, 0, 2);
 		recurCount = 0;
 		recur = new ActionListener(){
 			public void actionPerformed(ActionEvent e){

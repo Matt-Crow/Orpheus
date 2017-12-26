@@ -11,64 +11,68 @@ import resources.Random;
 import resources.Op;
 
 public class Attack {
-	private static ArrayList<Attack> attackList = new ArrayList<>();
 	private String name;
 	private ArrayList<Stat> stats;
 	private ArrayList<Status> inflictOnHit;
 	private ArrayList<Integer> inflictChance;
 	private int cooldown;
+	
+	
+	//find some way to get rid of this
 	private Projectile registeredProjectile;
-	private String type;
+	
+	
 	private ParticleType particleType;
 	private ArrayList<Color> particleColors;
 	
-	public Attack(String n, int energyCost, int cooldown, int range, int speed, int aoe, int areaScale, int distanceScale, int dmg){
+	public Attack(String n, int energyCost, int cooldown, int range, int speed, int aoe, int dmg){
+		// 1-5 stat system
 		name = n;
 		stats = new ArrayList<>();
-		stats.add(new Stat("Energy Cost", energyCost, 2));
-		stats.add(new Stat("Cooldown", cooldown));
-		stats.add(new Stat("Range", range));
-		stats.add(new Stat("Speed", speed));
-		stats.add(new Stat("AOE", aoe));
-		stats.add(new Stat("Area Scale", areaScale));
-		stats.add(new Stat("Distance Scale", distanceScale));
-		stats.add(new Stat("Damage", dmg));
+		
+		// 5-25 to 10-50 cost
+		stats.add(new Stat("Energy Cost", energyCost * 5, 2));
+		
+		// 20-100 frames (see initializers.Master for second count)
+		// healing could be a problem
+		stats.add(new Stat("Cooldown", cooldown * 20));
+		
+		// 1-15 units of range. Increases exponentially
+		int units = 0;
+		for(int i = 0; i <= range; i++){
+			units += i;
+		}
+		stats.add(new Stat("Range", units * 100));
+		
+		// 1-5 units per 20 frames
+		stats.add(new Stat("Speed", speed * 5));
+		
+		// 1-5 units (or 0)
+		stats.add(new Stat("AOE", aoe * 100));
+		
+		// 50-250 to 250-500 damage (will need to balance later?)
+		stats.add(new Stat("Damage", dmg * 50, 2));
 		
 		inflictOnHit = new ArrayList<>();
 		inflictChance = new ArrayList<>();
-		
-		attackList.add(this);
 		
 		particleType = ParticleType.NONE;
 		particleColors = new ArrayList<>();
 		particleColors.add(CustomColors.black);
 	}
-	public static Attack getAttackByName(String name){
-		for(Attack a : attackList){
-			if(a.getName() == name){
-				return a;
-			}
-		}
-		return new Slash();
-	}
-	public void setType(String t){
-		type = t;
-	}
-	public String getType(){
-		return type;
-	}
 	public String getName(){
 		return name;
 	}
 	public Stat getStat(String n){
+		Stat ret = new Stat("STATNOTFOUND", 0);
 		for(Stat stat : stats){
 			if(stat.name == n){
-				return stat;
+				ret = stat;
 			}
 		}
 		Op.add("The stat by the name of " + n + " is not found for Attack " + name);
 		Op.dp();
-		return new Stat("STATNOTFOUND", 0);
+		return ret;
 	}
 	public double getStatValue(String n){
 		return getStat(n).get();
@@ -103,6 +107,7 @@ public class Attack {
 	public ArrayList<Color> getColors(){
 		return particleColors;
 	}
+	
 	public Projectile getRegisteredProjectile(){
 		return registeredProjectile;
 	}
@@ -143,12 +148,6 @@ public class Attack {
 		if (cooldown < 0){
 			cooldown = 0;
 		}
-	}
-	public void displayData(){
-		for(Stat stat : stats){
-			Op.add(stat.name + ": " + getStatValue(stat.name));
-		}
-		Op.dp();
 	}
 	public void drawStatusPane(Graphics g, int x, int y, int w, int h){
 		if(!onCooldown()){

@@ -6,7 +6,7 @@ import resources.Random;
 
 public class Rupture extends ElementalAttack{
 	public Rupture(){
-		super("Rupture", 20, 100, 1000, 5, 0, 1, 1, 200);
+		super("Rupture", 4, 5, 5, 1, 0, 5);
 	}
 	public void use(Player user){
 		super.use(user);

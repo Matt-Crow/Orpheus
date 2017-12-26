@@ -2,6 +2,6 @@ package attacks;
 
 public class HeavyStroke extends MeleeAttack{
 	public HeavyStroke(){
-		super("Heavy Stroke", 60, 100);
+		super("Heavy Stroke", 4, 4);
 	}
 }

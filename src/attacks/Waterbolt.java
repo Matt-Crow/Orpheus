@@ -5,7 +5,7 @@ import resources.CustomColors;
 
 public class Waterbolt extends ElementalAttack{
 	public Waterbolt(){
-		super("Waterbolt", 15, 60, 500, 10, 0, 1, 1, 250);
+		super("Waterbolt", 3, 3, 3, 3, 1, 2);
 		setParticleType(ParticleType.BEAM);
 		setColorBlend(CustomColors.waterColors);
 	}

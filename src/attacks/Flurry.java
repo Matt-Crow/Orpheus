@@ -9,7 +9,7 @@ public class Flurry extends MeleeAttack{
 	private boolean canRecur;
 	
 	public Flurry(){
-		super("Flurry", 40, 35);
+		super("Flurry", 4, 1);
 		recurCount = 0;
 	}
 	public void use(Player user){
