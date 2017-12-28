@@ -70,9 +70,8 @@ public class Projectile extends Entity{
 			
 			if(registeredAttack instanceof MeleeAttack){
 				user.getActionRegister().tripOnMeleeHit(p);
-				user.getEnergyLog().gainEnergy((int) user.getStatValue("EPH"));
+				user.getEnergyLog().gainEnergy(5);
 				p.getActionRegister().tripOnBeMeleeHit(user);
-				p.getEnergyLog().gainEnergy((int) p.getStatValue("EPHR"));
 			} else {
 				user.getActionRegister().tripOnHit(p);
 				p.getActionRegister().tripOnBeHit(user);

@@ -31,9 +31,9 @@ public class EnergyLog {
 	}
 	public void update(){
 		timeSinceLastEnergy += 1;
-		if(timeSinceLastEnergy >= registeredTo.getStatValue("ER")){
+		if(timeSinceLastEnergy >= 20){
 			timeSinceLastEnergy = 0;
-			gainEnergy((int) registeredTo.getStatValue("EPR"));
+			gainEnergy((int) registeredTo.getStatValue("Max energy") / 20);
 		}
 	}
 }

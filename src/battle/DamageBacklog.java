@@ -56,15 +56,11 @@ public class DamageBacklog {
 		}
 	}
 	public void heal(int amount){
-		if(Master.DISABLEHEALING){
-			return;
-		}
-		if(remHP == maxHP){
-			return;
-		}
-		remHP += amount;
-		if(remHP > maxHP){
-			remHP = maxHP;
+		if(!((Master.DISABLEHEALING) || (remHP == maxHP))){
+			remHP += amount;
+			if(remHP > maxHP){
+				remHP = maxHP;
+			}
 		}
 	}
 	public void healPerc(double percent){
@@ -89,9 +85,9 @@ public class DamageBacklog {
 		filter = 0.01;
 		
 		timeSinceLastHeal += 1;
-		if(timeSinceLastHeal >= registeredTo.getStatValue("Heal rate")){
+		if(timeSinceLastHeal >= 20){
 			timeSinceLastHeal = 0;
-			healPerc(registeredTo.getStatValue("Healing"));
+			healPerc(5);
 		}
 	}
 }

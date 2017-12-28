@@ -5,6 +5,7 @@ import passives.*;
 import java.util.ArrayList;
 import java.awt.Color;
 
+// make this connect better with player somehow
 public class CharacterClass extends Customizable{
 	private ArrayList<Stat> stats;
 	private String name;
@@ -42,16 +43,10 @@ public class CharacterClass extends Customizable{
 		passiveOptions.add(new Recover());
 	}
 	public void setHPData(int HP, int regen, int wait){
-		stats.add(new Stat("maxHP", 350 + 50 * HP));
-		stats.add(new Stat("Healing", 3.75 + 1.25 * regen));
-		stats.add(new Stat("Heal rate", 35 - 5 * wait));
+		stats.add(new Stat("maxHP", 700 + 100 * HP));
 	}
 	public void setEnergyData(int max, int epr, int er, int eph, int ephr){
 		stats.add(new Stat("Max energy", 12.5 * (max + 1), 2));
-		stats.add(new Stat("EPR", epr, 2));
-		stats.add(new Stat("ER", 35 - 5 * er));
-		stats.add(new Stat("EPH", eph + 2, 2));
-		stats.add(new Stat("EPHR", ephr + 2, 2));
 	}
 	// getters
 	public String getName(){
@@ -81,12 +76,16 @@ public class CharacterClass extends Customizable{
 		return ret;
 	}
 	public Stat getStat(String n){
+		Stat ret = new Stat("STATNOTFOUND", 0);
 		for(Stat stat : stats){
-			if(stat.name == n){
-				return stat;
+			if(stat.getName() == n){
+				ret = stat;
 			}
 		}
-		return new Stat("STATNOTFOUND", 0);
+		if(ret.getName() == "STATNOTFOUND"){
+			throw new NullPointerException();
+		}
+		return ret;
 	}
 	public double getStatValue(String n){
 		return getStat(n).get();

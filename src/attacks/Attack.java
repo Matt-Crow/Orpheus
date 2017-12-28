@@ -8,7 +8,6 @@ import statuses.Status;
 import resources.CustomColors;
 import resources.OnHitAction;
 import resources.Random;
-import resources.Op;
 
 public class Attack {
 	private String name;
@@ -66,12 +65,13 @@ public class Attack {
 	public Stat getStat(String n){
 		Stat ret = new Stat("STATNOTFOUND", 0);
 		for(Stat stat : stats){
-			if(stat.name == n){
+			if(stat.getName() == n){
 				ret = stat;
 			}
 		}
-		Op.add("The stat by the name of " + n + " is not found for Attack " + name);
-		Op.dp();
+		if(ret.getName() == "STATNOTFOUND"){
+			throw new NullPointerException();
+		}
 		return ret;
 	}
 	public double getStatValue(String n){

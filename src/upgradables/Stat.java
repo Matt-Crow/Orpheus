@@ -2,7 +2,7 @@ package upgradables;
 import resources.Op;
 
 public class Stat {
-	public String name;
+	private String name;
 	private double baseValue;
 	private double maxValue;
 	private double step;
@@ -22,6 +22,9 @@ public class Stat {
 		maxValue = val;
 		step = 0;
 		level = 0;
+	}
+	public String getName(){
+		return name;
 	}
 	public void upgrade(){
 		level += 1;
