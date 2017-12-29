@@ -65,6 +65,9 @@ public class Entity {
 	public void setWillTurn(String s){
 		willTurn = s;
 	}
+	public void setSpeed(int speed){
+		maxSpeed = speed;
+	}
 	public void applySpeedFilter(double f){
 		speedFilter *= f;
 	}

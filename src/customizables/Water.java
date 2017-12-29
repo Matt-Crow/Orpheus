@@ -5,10 +5,7 @@ import attacks.*;
 
 public class Water extends CharacterClass{
 	public Water(){
-		super("Water", Color.blue);
-		setHPData(5, 3, 1);
-		setEnergyData(3, 3, 2, 3, 4);
-		
+		super("Water", Color.blue, 5, 4, 1, 3, 3);
 		addPossibleActive(new Waterbolt());
 		addPossibleActive(new HealingRain());
 	}

@@ -75,6 +75,7 @@ public class Player extends Entity{
 		setClass(b.getClassName());
 		setActives(b.getActiveNames());
 		setPassives(b.getPassiveNames());
+		setSpeed((int)c.getStatValue("speed"));
 	}
 	public void setClass(String name){
 		switch(name.toLowerCase()){

@@ -2,6 +2,7 @@ package customizables;
 import upgradables.Stat;
 import attacks.*;
 import passives.*;
+
 import java.util.ArrayList;
 import java.awt.Color;
 
@@ -14,10 +15,18 @@ public class CharacterClass extends Customizable{
 	private ArrayList<Passive> passiveOptions;
 	
 	// initializers
-	public CharacterClass(String n, Color c){
+	public CharacterClass(String n, Color c, int HP, int energy, int dmg, int reduction, int speed){
 		name = n;
 		color = c;
 		stats = new ArrayList<>();
+		stats.add(new Stat("maxHP", 700 + 100 * HP, 2));
+		stats.add(new Stat("Max energy", 12.5 * (energy + 1), 2));
+		stats.add(new Stat("damage dealt modifier", 0.7 + 0.1 * dmg));
+		// 1: 120%, 5: 80%
+		stats.add(new Stat("damage taken modifier", 1.3 - 0.1 * reduction));
+		
+		stats.add(new Stat("speed", (0.7 + 0.1 * speed) * 10));
+		
 		attackOptions = new ArrayList<>();
 		attackOptions.add(new Slash());
 		attackOptions.add(new HeavyStroke());
@@ -41,12 +50,6 @@ public class CharacterClass extends Customizable{
 		passiveOptions.add(new Momentum());
 		passiveOptions.add(new Leechhealer());
 		passiveOptions.add(new Recover());
-	}
-	public void setHPData(int HP, int regen, int wait){
-		stats.add(new Stat("maxHP", 700 + 100 * HP));
-	}
-	public void setEnergyData(int max, int epr, int er, int eph, int ephr){
-		stats.add(new Stat("Max energy", 12.5 * (max + 1), 2));
 	}
 	// getters
 	public String getName(){

@@ -65,8 +65,7 @@ public class Projectile extends Entity{
 				return;
 			}
 			hit = p;
-			// add damage calc here
-			p.logDamage((int) registeredAttack.getStatValue("Damage"));
+			p.logDamage((int) (registeredAttack.getStatValue("Damage") * user.getStatValue("damage dealt modifier") * p.getStatValue("damage taken modifier")));
 			
 			if(registeredAttack instanceof MeleeAttack){
 				user.getActionRegister().tripOnMeleeHit(p);
