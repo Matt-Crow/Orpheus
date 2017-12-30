@@ -83,6 +83,7 @@ public class BattleCanvas extends DrawingPlane{
 		int x = -Master.TRUEPLAYER.getX() + getW() / 2;
 		int y = -Master.TRUEPLAYER.getY() + getH() / 2;
 		
+		/*
 		int minX = -(battlefield.getWidth() - getW());
 		int minY = -(battlefield.getHeight() - getH());
 		
@@ -97,7 +98,7 @@ public class BattleCanvas extends DrawingPlane{
 		} else if (y > 0){
 			y = 0;
 		}
-		
+		*/
 		ret[0] = x;
 		ret[1] = y;
 		return ret;
