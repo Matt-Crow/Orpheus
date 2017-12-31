@@ -173,6 +173,7 @@ public class Entity {
 			turn(willTurn);
 		}
 		willTurn = "none";
+		
 		if(kbDur > 0){
 			x += kbDir.getVector()[0] * kbVelocity;
 			y += kbDir.getVector()[1] * kbVelocity;

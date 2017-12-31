@@ -11,5 +11,6 @@ public class Fire extends CharacterClass{
 		addPossibleActive(new Flamethrower());
 		addPossibleActive(new BurningRage());
 		addPossibleActive(new MegaFirebolt());
+		addPossibleActive(new BlazingPillars());
 	}
 }

@@ -8,5 +8,6 @@ public class Water extends CharacterClass{
 		super("Water", Color.blue, 5, 4, 1, 3, 3);
 		addPossibleActive(new Waterbolt());
 		addPossibleActive(new HealingRain());
+		addPossibleActive(new SummonTheKraken());
 	}
 }

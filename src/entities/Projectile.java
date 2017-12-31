@@ -23,7 +23,11 @@ public class Projectile extends Entity{
 		super(x, y, dirNum, momentum);
 		distanceTraveled = 0;
 		user = attackUser;
+		setTeam(user.getTeam());
 		registeredAttack = a;
+		if(a.getTracking()){
+			getEntityAI().enable();
+		}
 		shouldTerminate = false;
 		terminated = false;
 		setMoving(true);
@@ -86,6 +90,7 @@ public class Projectile extends Entity{
 	}
 	public void update(){
 		super.update();
+		
 		distanceTraveled += getMomentum();
 		ArrayList<Color> cs = registeredAttack.getColors();
 		if(!Master.DISABLEPARTICLES){

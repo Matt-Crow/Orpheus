@@ -36,6 +36,8 @@ public class CharacterClass extends Customizable{
 		attackOptions.add(new Flurry());
 		attackOptions.add(new Heal());
 		attackOptions.add(new RainbowOfDoom());
+		attackOptions.add(new TrackingProjectileTest());
+		
 		
 		passiveOptions = new ArrayList<>();
 		passiveOptions.add(new Bracing());

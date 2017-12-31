@@ -11,7 +11,7 @@ public class Build {
 	private static Build defaultFire = new Build("Default Fire", "Fire", "Mega Firebolt", "Fields of Fire", "Burning Rage", "Escapist", "Sparking Strikes", "Bracing");
 	private static Build defaultWater = new Build("Default Water", "Water", "Waterbolt", "Heal", "Healing Rain", "Toughness", "Revitalize", "Recover");
 	private static Build defaultAir = new Build("Default Air", "Air", "Mini Windbolt", "Flurry", "Blade Stance", "Momentum", "Sharpen", "Leechhealer");
-	private static Build test = new Build("0x138", "Earth", "RAINBOW OF DOOM", "RAINBOW OF DOOM", "RAINBOW OF DOOM", "Momentum", "Recover", "Leechhealer");
+	private static Build test = new Build("0x138", "Earth", "RAINBOW OF DOOM", "RAINBOW OF DOOM", "Tracking Projectile Test", "Momentum", "Recover", "Leechhealer");
 	
 	private String name;
 	private String className;

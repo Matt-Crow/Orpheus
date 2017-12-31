@@ -39,6 +39,7 @@ public class AI {
 	}
 	public void enable(){
 		enabled = true;
+		setToWander();
 	}
 	public void disable(){
 		enabled = false;
@@ -61,16 +62,12 @@ public class AI {
 			break;
 		}
 	}
-	
-	//give each entity own speed
 	public void wander(){
 		appliedTo.setMoving(true);
 		if(distanceWandered >= wanderDistance){
 			setToWander();
 		}
 	}
-	
-	
 	public void pursue(){
 		turnToLatch();
 		appliedTo.setMoving(true);

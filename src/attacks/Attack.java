@@ -20,6 +20,7 @@ public class Attack {
 	//find some way to get rid of this
 	private Projectile registeredProjectile;
 	
+	private boolean projectilesTrack;
 	
 	private ParticleType particleType;
 	private ArrayList<Color> particleColors;
@@ -55,6 +56,8 @@ public class Attack {
 		inflictOnHit = new ArrayList<>();
 		inflictChance = new ArrayList<>();
 		
+		projectilesTrack = false;
+		
 		particleType = ParticleType.NONE;
 		particleColors = new ArrayList<>();
 		particleColors.add(CustomColors.black);
@@ -77,7 +80,12 @@ public class Attack {
 	public double getStatValue(String n){
 		return getStat(n).get();
 	}
-	
+	public void enableTracking(){
+		projectilesTrack = true;
+	}
+	public boolean getTracking(){
+		return projectilesTrack;
+	}
 	public void addStatus(Status s, int chance){
 		inflictOnHit.add(s);
 		inflictChance.add(chance);
@@ -133,12 +141,17 @@ public class Attack {
 	}
 	public void use(Player user){
 		user.getEnergyLog().loseEnergy((int) getStatValue("Energy Cost"));
+		spawnProjectile(user);
+		setToCooldown();
+	}
+	
+	// add some sort of spawn projectiles in an arc / circle
+	public void spawnProjectile(Player user){
 		registeredProjectile = new SeedProjectile(user.getX(), user.getY(), user.getDir().getDegrees(), (int) getStatValue("Speed"), user, this);
 		registeredProjectile.getActionRegister().addOnHit(getStatusInfliction());
 		if(registeredProjectile.getAttack().getStatValue("Range") == 0){
 			registeredProjectile.terminate();
 		}
-		setToCooldown();
 	}
 	public void init(){
 		cooldown = 0;
