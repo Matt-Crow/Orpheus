@@ -17,7 +17,7 @@ public class Particle extends Entity{
 		setMoving(true);
 		color = c;
 		size = 10;
-		lifeSpan = 30;
+		lifeSpan = 15;
 		age = 0;
 		shouldTerminate = false;
 		particles.add(this);
