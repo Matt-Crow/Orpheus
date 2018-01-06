@@ -3,7 +3,6 @@ package attacks;
 import entities.ParticleType;
 import entities.Player;
 import resources.CustomColors;
-import resources.Direction;
 import statuses.Burn;
 
 public class BlazingPillars extends ElementalAttack{
@@ -16,9 +15,6 @@ public class BlazingPillars extends ElementalAttack{
 	}
 	public void use(Player user){
 		super.use(user);
-		for(int i = 0; i < 3; i++){
-			spawnProjectile(user);
-			getRegisteredProjectile().setDir(new Direction(getRegisteredProjectile().getDir().getDegrees() - 90 * (i + 1)));;
-		}
+		spawnArc(user, 360, 4);
 	}
 }

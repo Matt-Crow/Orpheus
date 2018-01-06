@@ -15,7 +15,7 @@ public class Tornado extends ElementalAttack{
 	
 	public void use(Player user){
 		super.use(user);
-		Projectile p = getRegisteredProjectile();
+		Projectile p = getLastUseProjectiles().get(0);
 		OnUpdateAction a = new OnUpdateAction(){
 			public void f(){
 				p.turn("left");

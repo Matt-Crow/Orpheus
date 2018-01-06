@@ -10,7 +10,7 @@ public class Rupture extends ElementalAttack{
 	}
 	public void use(Player user){
 		super.use(user);
-		Projectile p = getRegisteredProjectile();
+		Projectile p = getLastUseProjectiles().get(0);
 		OnUpdateAction a = new OnUpdateAction(){
 			public void f(){
 				int randomNum = Random.choose(0, 4);

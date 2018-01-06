@@ -15,7 +15,7 @@ public class Flurry extends MeleeAttack{
 	public void use(Player user){
 		super.use(user);
 		canRecur = true;
-		Projectile p = getRegisteredProjectile();
+		Projectile p = getLastUseProjectiles().get(0);
 		OnHitAction a = new OnHitAction(){
 			public void f(){
 				if(recurCount >= 2){

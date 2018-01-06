@@ -16,9 +16,10 @@ public class Attack {
 	private ArrayList<Integer> inflictChance;
 	private int cooldown;
 	
-	
-	//find some way to get rid of this
-	private Projectile registeredProjectile;
+	// find some way so that this doesn't include terminated projectiles
+	// maybe update them from here?
+	private ArrayList<Projectile> allChildren;
+	private ArrayList<Projectile> lastUseChildren;
 	
 	private boolean projectilesTrack;
 	
@@ -86,16 +87,18 @@ public class Attack {
 	public boolean getTracking(){
 		return projectilesTrack;
 	}
+	
+	
 	public void addStatus(Status s, int chance){
 		inflictOnHit.add(s);
 		inflictChance.add(chance);
 	}
+	
+	
 	public void setToCooldown(){
 		cooldown = (int) getStatValue("Cooldown");
 	}
-	public void setRegisteredProjectile(Projectile p){
-		registeredProjectile = p;
-	}
+	
 	public void setParticleType(ParticleType t){
 		particleType = t;
 	}
@@ -116,9 +119,11 @@ public class Attack {
 		return particleColors;
 	}
 	
-	public Projectile getRegisteredProjectile(){
-		return registeredProjectile;
+	
+	public ArrayList<Projectile> getLastUseProjectiles(){
+		return lastUseChildren;
 	}
+	
 	
 	public OnHitAction getStatusInfliction(){
 		OnHitAction a = new OnHitAction(){
@@ -139,29 +144,58 @@ public class Attack {
 	public boolean canUse(Player user){
 		return user.getEnergyLog().getEnergy() >= getStat("Energy Cost").get() && !onCooldown();
 	}
+	
+	
+	
 	public void use(Player user){
+		lastUseChildren = new ArrayList<>();
 		user.getEnergyLog().loseEnergy((int) getStatValue("Energy Cost"));
-		spawnProjectile(user);
+		spawnProjectile(user); // remove?
 		setToCooldown();
 	}
 	
-	// add some sort of spawn projectiles in an arc / circle
+	
+	
 	public void spawnProjectile(Player user){
-		registeredProjectile = new SeedProjectile(user.getX(), user.getY(), user.getDir().getDegrees(), (int) getStatValue("Speed"), user, this);
+		spawnProjectile(user, user.getDir().getDegrees());
+	}
+	
+	public void spawnProjectile(Player user, int facingDegrees){
+		SeedProjectile registeredProjectile = new SeedProjectile(user.getX(), user.getY(), facingDegrees, (int) getStatValue("Speed"), user, this);
 		registeredProjectile.getActionRegister().addOnHit(getStatusInfliction());
 		if(registeredProjectile.getAttack().getStatValue("Range") == 0){
 			registeredProjectile.terminate();
 		}
+		allChildren.add(registeredProjectile);
+		lastUseChildren.add(registeredProjectile);
 	}
+	
+	public void spawnArc(Player user, int arcDegrees, int numProj){
+		int spacing = arcDegrees / numProj;
+		int start = user.getDir().getDegrees() - arcDegrees / 2;
+		
+		for(int i = 0; i < numProj; i++){
+			int angle = start + spacing * i;
+			spawnProjectile(user, angle);
+		}
+	}
+	
+	
 	public void init(){
 		cooldown = 0;
+		allChildren = new ArrayList<>();
+		lastUseChildren = new ArrayList<>();
 	}
+	
+	
 	public void update(){
 		cooldown -= 1;
 		if (cooldown < 0){
 			cooldown = 0;
 		}
 	}
+	
+	
 	public void drawStatusPane(Graphics g, int x, int y, int w, int h){
 		if(!onCooldown()){
 			g.setColor(Color.white);
