@@ -18,7 +18,7 @@ public class DamageBacklog {
 	public DamageBacklog(Player register){
 		registeredTo = register;
 		dmg = 0;
-		filter = 0.01;
+		filter = 1.0 / Master.seconds(5);
 		maxHP = (int) register.getStatValue("maxHP");
 		remHP = maxHP;
 		timeSinceLastHeal = 0;
@@ -82,10 +82,10 @@ public class DamageBacklog {
 		
 		Op.dp();
 		*/
-		filter = 0.01;
+		filter = 1.0 / Master.seconds(5);
 		
 		timeSinceLastHeal += 1;
-		if(timeSinceLastHeal >= 20){
+		if(timeSinceLastHeal >= Master.seconds(1)){
 			timeSinceLastHeal = 0;
 			healPerc(5);
 		}

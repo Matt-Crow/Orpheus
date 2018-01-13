@@ -10,7 +10,7 @@ public class Healing extends Status{
 	public void inflictOn(Player p){
 		OnUpdateAction a = new OnUpdateAction(){
 			public void f(){
-				p.getLog().healPerc(100 / (6 - getIntensityLevel()));
+				p.getLog().healPerc(100.0 / (6 - getIntensityLevel()));
 				use();
 			}
 		};

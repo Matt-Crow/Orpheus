@@ -22,13 +22,11 @@ public class BattleCanvas extends DrawingPlane{
 	private Battlefield battlefield;
 	private Battle hostedBattle;
 	private Timer timer;
-	private int FPS;
 	private ActionListener update;
 	private boolean paused;
 	
 	public BattleCanvas(){
 		super();
-		FPS = 20;
 		paused = true;
 		
 		EasyButton b = new EasyButton("Exit", Color.red);
@@ -105,7 +103,7 @@ public class BattleCanvas extends DrawingPlane{
 	}
 	
 	public void startTimer(){
-		timer = new Timer(1000 / FPS, update);
+		timer = new Timer(1000 / Master.FPS, update);
 		timer.setRepeats(false);
 		timer.start();
 	}

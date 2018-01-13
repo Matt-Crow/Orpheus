@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Graphics;
 import entities.*;
+import initializers.Master;
 import upgradables.Stat;
 import statuses.Status;
 import resources.CustomColors;
@@ -34,9 +35,9 @@ public class Attack {
 		// 5-25 to 10-50 cost
 		stats.add(new Stat("Energy Cost", energyCost * 5, 2));
 		
-		// 20-100 frames (see initializers.Master for second count)
+		// 1-5 seconds
 		// healing could be a problem
-		stats.add(new Stat("Cooldown", cooldown * 20));
+		stats.add(new Stat("Cooldown", Master.seconds(cooldown)));
 		
 		// 1-15 units of range. Increases exponentially
 		int units = 0;
@@ -45,7 +46,7 @@ public class Attack {
 		}
 		stats.add(new Stat("Range", units * 100));
 		
-		// 1-5 units per 20 frames
+		// 1-5 units per 20 frames                change?
 		stats.add(new Stat("Speed", speed * 5));
 		
 		// 1-5 units (or 0)

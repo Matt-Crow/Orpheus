@@ -1,20 +1,19 @@
 package statuses;
 
 import entities.Player;
-import resources.OnUpdateAction;
+import resources.OnHitAction;
 
 public class Burn extends Status{
 	public Burn(int lv, int uses){
 		super("Burn", lv, uses);
 	}
 	public void inflictOn(Player p){
-		OnUpdateAction a = new OnUpdateAction(){
+		OnHitAction a = new OnHitAction(){
 			public void f(){
 				p.getLog().applyFilter(1 + 0.25 * getIntensityLevel());
 				use();
 			}
 		};
-		
-		p.getActionRegister().addOnUpdate(a);
+		p.getActionRegister().addOnBeHit(a);
 	}
 }

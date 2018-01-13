@@ -1,6 +1,7 @@
 package battle;
 
 import entities.Player;
+import initializers.Master;
 
 public class EnergyLog {
 	private int maxEnergy;
@@ -31,7 +32,7 @@ public class EnergyLog {
 	}
 	public void update(){
 		timeSinceLastEnergy += 1;
-		if(timeSinceLastEnergy >= 20){
+		if(timeSinceLastEnergy >= Master.seconds(1)){
 			timeSinceLastEnergy = 0;
 			gainEnergy((int) registeredTo.getStatValue("Max energy") / 20);
 		}
