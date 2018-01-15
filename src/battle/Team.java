@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import entities.Entity;
 import entities.Player;
 import entities.Projectile;
 import resources.Coordinates;
@@ -14,16 +15,18 @@ import customizables.Build;
 public class Team {
 	private String name;
 	private Color color;
-	private ArrayList<Player> members;
 	private ArrayList<Projectile> projectiles;
 	private ArrayList<Projectile> newProjectiles;
 	private Team enemyTeam;
 	private boolean defeated;
 	
+	// use as head for linked list
+	private Player coach;
+	
 	public Team(String n, Color c){
 		name = n;
 		color = c;
-		members = new ArrayList<>();
+		coach = new Player("Don't Update");
 	}
 	public String getName(){
 		return name;
@@ -33,16 +36,16 @@ public class Team {
 	}
 	public ArrayList<Coordinates> getAllCoords(){
 		ArrayList<Coordinates> ret = new ArrayList<>();
-		for(Player p : members){
-			ret.add(p.getCoords());
+		Entity current = coach;
+		while(current.getHasChild()){
+			current = current.getChild(); // skip head
+			ret.add(current.getCoords());
 		}
 		return ret;
 	}
 	
 	public void addMember(Player m){
-		if(!members.contains(m)){
-			members.add(m);
-		}
+		coach.insertChild(m);
 	}
 	public static Team constructRandomTeam(String name, Color color, int size){
 		Team t = new Team(name, color);
@@ -56,8 +59,10 @@ public class Team {
 	}
 	public void init(int y, int spacing, int facing){
 		int x = spacing;
-		for(Player m : members){
-			m.init(this, x, y, new Direction(facing));
+		Player current = coach;
+		while(current.getHasChild()){
+			current = (Player) current.getChild();
+			current.init(this, x, y, new Direction(facing));
 			x += spacing;
 		}
 		projectiles = new ArrayList<>();
@@ -78,9 +83,11 @@ public class Team {
 		newProjectiles.add(p);
 	}
 	public void checkForHits(ArrayList<Projectile> proj){
-		for(Player m : members){
+		Player current = coach;
+		while(current.getHasChild()){
+			current = (Player) current.getChild();
 			for(Projectile p : proj){
-				p.checkForCollisionsWith(m);
+				p.checkForCollisionsWith(current);
 			}
 		}
 	}
@@ -88,16 +95,8 @@ public class Team {
 	public void update(){
 		enemyTeam.checkForHits(projectiles);
 		
-		ArrayList<Player> newTeam = new ArrayList<>();
-		for(Player m : members){
-			m.update();
-			if(!m.getShouldTerminate()){
-				newTeam.add(m);
-			}
-		}
-		members = newTeam;
-		
-		if(members.size() == 0){
+		coach.getChild().update();
+		if(!coach.getHasChild()){
 			defeated = true;
 		}
 		
@@ -112,8 +111,10 @@ public class Team {
 	}
 	
 	public void draw(Graphics g){
-		for(Player m : members){
-			m.draw(g);
+		Player current = coach;
+		while(current.getHasChild()){
+			current = (Player) current.getChild();
+			current.draw(g);
 		}
 		for(Projectile p : projectiles){
 			p.draw(g);

@@ -4,6 +4,7 @@ import initializers.Master;
 import resources.ActionRegister;
 import resources.Coordinates;
 import resources.Direction;
+import resources.Op;
 import battle.Team;
 import ai.AI;
 
@@ -22,10 +23,17 @@ public class Entity {
 	private int kbVelocity;
 	
 	private Team team;
-	
+	private boolean shouldTerminate;
 	private ActionRegister actReg;
 	
 	private AI entityAI;
+	
+	// linked list stuff
+	// always have a head that does not get updated
+	private Entity parent;
+	private Entity child;
+	private boolean hasParent;
+	private boolean hasChild;
 	
 	public Entity(int xCoord, int yCoord, int degrees, int m){
 		x = xCoord;
@@ -43,8 +51,11 @@ public class Entity {
 		kbVelocity = 0;
 		
 		actReg = new ActionRegister(this);
-		
+		shouldTerminate = false;
 		entityAI = new AI(this);
+		
+		hasParent = false;
+		hasChild = false;
 	}
 	public int getX(){
 		return x;
@@ -123,6 +134,74 @@ public class Entity {
 		return entityAI;
 	}
 	
+	
+	
+	public void terminate(){
+		shouldTerminate = true;
+		if(hasParent){
+			parent.disableChild();
+		}
+		if(hasChild){
+			child.disableParent();
+		}
+		if(hasParent && hasChild){
+			parent.setChild(child);
+			child.setParent(parent);
+		}
+	}
+	public boolean getShouldTerminate(){
+		return shouldTerminate;
+	}
+	
+	public void setParent(Entity e){
+		parent = e;
+		hasParent = true;
+		if(!e.getHasChild() || e.getChild() != this){
+			e.setChild(this);
+		}
+	}
+	public void setChild(Entity e){
+		child = e;
+		hasChild = true;
+		if(!e.getHasParent() || e.getParent() != this){
+			e.setParent(this);
+		}
+	}
+	public void insertChild(Entity e){
+		if(!hasChild){
+			setChild(e);
+		} else {
+			Entity old = child;
+			setChild(e);
+			e.setChild(old);
+			
+			if(e.getChild() == e){
+				Op.add("ERROR");
+				Op.dp();
+			}
+		}
+	}
+	public boolean getHasParent(){
+		return hasParent;
+	}
+	public boolean getHasChild(){
+		return hasChild;
+	}
+	public void disableParent(){
+		hasParent = false;
+	}
+	public void disableChild(){
+		hasChild = false;
+	}
+	public Entity getParent(){
+		return parent;
+	}
+	public Entity getChild(){
+		return child;
+	}
+	
+	
+	
 	public void turn(String d){
 		int amount = 360 / Master.TICKSTOROTATE;
 		if(d == "left"){
@@ -132,7 +211,6 @@ public class Entity {
 		}
 	}
 	
-	// do fun things with projectiles here :]
 	public void turnToward(Direction d){
 		int cDirNum = getDir().getDegrees();
 		int dDirNum = d.getDegrees();
@@ -169,9 +247,8 @@ public class Entity {
 		x += dir.getVector()[0] * getMomentum();
 		y += dir.getVector()[1] * getMomentum();
 	}
-	public void update(){
-		entityAI.update();
-		
+	
+	public void updateMovement(){
 		if((willTurn == "left") || (willTurn == "right")){
 			turn(willTurn);
 		}
@@ -200,7 +277,16 @@ public class Entity {
 		}
 		
 		speedFilter = 1.0;
-		
-		actReg.tripOnUpdate();
+	}
+	
+	public void update(){
+		if(!shouldTerminate){
+			entityAI.update();
+			updateMovement();
+			actReg.tripOnUpdate();
+		}
+		if(hasChild){
+			child.update();
+		}
 	}
 }

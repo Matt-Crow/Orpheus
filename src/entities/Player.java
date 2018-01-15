@@ -26,7 +26,6 @@ public class Player extends Entity{
 	private Slash slash;
 	private ArrayList<Status> statuses;
 	
-	private boolean shouldTerminate;
 	private PlayerAI playerAI;
 	
 	public Player(String n){
@@ -61,13 +60,6 @@ public class Player extends Entity{
 	}
 	public PlayerAI getPlayerAI(){
 		return playerAI;
-	}
-	public boolean getShouldTerminate(){
-		return shouldTerminate;
-	}
-	
-	public void terminate(){
-		shouldTerminate = true;
 	}
 	
 	// Build stuff
@@ -223,7 +215,6 @@ public class Player extends Entity{
 		for(Passive p : passives){
 			p.registerTo(this);
 		}
-		shouldTerminate = false;
 	}
 	
 	public void updateStatuses(){
