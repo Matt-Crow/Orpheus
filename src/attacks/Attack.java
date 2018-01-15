@@ -10,6 +10,8 @@ import resources.CustomColors;
 import resources.OnHitAction;
 import resources.Random;
 
+
+//add user
 public class Attack {
 	private String name;
 	private ArrayList<Stat> stats;
@@ -19,8 +21,9 @@ public class Attack {
 	
 	// find some way so that this doesn't include terminated projectiles
 	// maybe update them from here?
-	private ArrayList<Projectile> allChildren;
 	private ArrayList<Projectile> lastUseChildren;
+	
+	private Projectile head;
 	
 	private boolean projectilesTrack;
 	
@@ -89,12 +92,10 @@ public class Attack {
 		return projectilesTrack;
 	}
 	
-	
 	public void addStatus(Status s, int chance){
 		inflictOnHit.add(s);
 		inflictChance.add(chance);
 	}
-	
 	
 	public void setToCooldown(){
 		cooldown = (int) getStatValue("Cooldown");
@@ -121,9 +122,15 @@ public class Attack {
 	}
 	
 	
+	
+	
+	
 	public ArrayList<Projectile> getLastUseProjectiles(){
 		return lastUseChildren;
 	}
+	
+	
+	
 	
 	
 	public OnHitAction getStatusInfliction(){
@@ -159,9 +166,6 @@ public class Attack {
 	
 	
 	
-	public void spawnProjectile(Player user){
-		spawnProjectile(user, user.getDir().getDegrees());
-	}
 	
 	public void spawnProjectile(Player user, int facingDegrees){
 		SeedProjectile registeredProjectile = new SeedProjectile(user.getX(), user.getY(), facingDegrees, (int) getStatValue("Speed"), user, this);
@@ -169,8 +173,11 @@ public class Attack {
 		if(registeredProjectile.getAttack().getStatValue("Range") == 0){
 			registeredProjectile.terminate();
 		}
-		allChildren.add(registeredProjectile);
+		head.insertChild(registeredProjectile);
 		lastUseChildren.add(registeredProjectile);
+	}
+	public void spawnProjectile(Player user){
+		spawnProjectile(user, user.getDir().getDegrees());
 	}
 	
 	public void spawnArc(Player user, int arcDegrees, int numProj){
@@ -186,8 +193,8 @@ public class Attack {
 	
 	public void init(){
 		cooldown = 0;
-		allChildren = new ArrayList<>();
 		lastUseChildren = new ArrayList<>();
+		head = new Projectile(this);
 	}
 	
 	
@@ -196,8 +203,10 @@ public class Attack {
 		if (cooldown < 0){
 			cooldown = 0;
 		}
+		if(head.getHasChild()){
+			head.getChild().update();
+		}
 	}
-	
 	
 	public void drawStatusPane(Graphics g, int x, int y, int w, int h){
 		if(!onCooldown()){
@@ -211,5 +220,13 @@ public class Attack {
 			g.setColor(Color.red);
 			g.drawString("On cooldown: " + cooldown, x + 10, y + 20);
 		}	
+	}
+	
+	public void drawAllProjectiles(Graphics g){
+		Projectile current = head;
+		while(current.getHasChild()){
+			current = (Projectile) current.getChild();
+			current.draw(g);
+		}
 	}
 }

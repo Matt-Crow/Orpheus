@@ -8,9 +8,7 @@ public class SeedProjectile extends Projectile{
 	public SeedProjectile(int x, int y, int dirNum, int momentum, Player attackUser, Attack a){
 		super(x, y, dirNum, momentum, attackUser, a);
 	}
-	public void terminate(){
-		super.terminate();
-		
+	public void explode(){
 		ArrayList<AOEProjectile> aoe = new ArrayList<>();
 		if(getAttack().getStatValue("AOE") != 0){
 			for(int i = 0; i < Master.TICKSTOROTATE; i++){
@@ -23,12 +21,14 @@ public class SeedProjectile extends Projectile{
 						p.addBrother(possibleBrother);
 					}
 				}
+				getParent().insertChild(p);
 			}
 		}
 	}
 	public void update(){
 		super.update();
 		if(getDistance() >= getAttack().getStatValue("Range") && !hasAlreadyTerminated()){
+			explode();
 			terminate();
 		}
 	}

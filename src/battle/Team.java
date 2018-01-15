@@ -15,8 +15,6 @@ import customizables.Build;
 public class Team {
 	private String name;
 	private Color color;
-	private ArrayList<Projectile> projectiles;
-	private ArrayList<Projectile> newProjectiles;
 	private Team enemyTeam;
 	private boolean defeated;
 	
@@ -65,8 +63,6 @@ public class Team {
 			current.init(this, x, y, new Direction(facing));
 			x += spacing;
 		}
-		projectiles = new ArrayList<>();
-		newProjectiles = new ArrayList<>();
 		defeated = false;
 	}
 	public void setEnemy(Team t){
@@ -79,9 +75,9 @@ public class Team {
 		return defeated;
 	}
 	
-	public void registerProjectile(Projectile p){
-		newProjectiles.add(p);
-	}
+	
+	
+	
 	public void checkForHits(ArrayList<Projectile> proj){
 		Player current = coach;
 		while(current.getHasChild()){
@@ -93,21 +89,12 @@ public class Team {
 	}
 	
 	public void update(){
-		enemyTeam.checkForHits(projectiles);
+		//enemyTeam.checkForHits(projectiles);
 		
 		coach.getChild().update();
 		if(!coach.getHasChild()){
 			defeated = true;
 		}
-		
-		for(Projectile p : projectiles){
-			p.update();
-			if(!p.getShouldTerminate()){
-				newProjectiles.add(p);
-			}
-		}
-		projectiles = newProjectiles;
-		newProjectiles = new ArrayList<>();
 	}
 	
 	public void draw(Graphics g){
@@ -115,9 +102,6 @@ public class Team {
 		while(current.getHasChild()){
 			current = (Player) current.getChild();
 			current.draw(g);
-		}
-		for(Projectile p : projectiles){
-			p.draw(g);
 		}
 	}
 }

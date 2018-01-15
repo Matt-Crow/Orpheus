@@ -16,7 +16,6 @@ public class Projectile extends Entity{
 	private int distanceTraveled;
 	private ArrayList<Player> doNotHit;
 	private Player hit;
-	private boolean shouldTerminate;
 	private boolean terminated;
 	
 	public Projectile(int x, int y, int dirNum, int momentum, Player attackUser, Attack a){
@@ -28,13 +27,15 @@ public class Projectile extends Entity{
 		if(a.getTracking()){
 			getEntityAI().enable();
 		}
-		shouldTerminate = false;
 		terminated = false;
 		setMoving(true);
 		doNotHit = new ArrayList<Player>();
 		hit = new Player("Void");
-		user.getTeam().registerProjectile(this);
 	}
+	public Projectile(Attack a){
+		this(0, 0, 0, 0, new Player("undefined"), a);
+	}
+	
 	public String getAttackName(){
 		return registeredAttack.getName();
 	}
@@ -49,9 +50,6 @@ public class Projectile extends Entity{
 	}
 	public Attack getAttack(){
 		return registeredAttack;
-	}
-	public boolean getShouldTerminate(){
-		return shouldTerminate;
 	}
 	public boolean hasAlreadyTerminated(){
 		return terminated;
@@ -83,10 +81,6 @@ public class Projectile extends Entity{
 			CombatLog.logProjectileData(this);
 			terminate();
 		}
-	}
-	public void terminate(){
-		shouldTerminate = true;
-		terminated = true;
 	}
 	public void update(){
 		super.update();
