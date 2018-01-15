@@ -18,7 +18,7 @@ public class Master {
 	// number of angles a player can have
 	public static final int TICKSTOROTATE = 36;
 	public static final boolean DISABLEPARTICLES = false;
-	public static final int FPS = 30;
+	public static final int FPS = 60;
 	
 	private static Battle currentBattle;
 	

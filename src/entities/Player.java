@@ -30,7 +30,7 @@ public class Player extends Entity{
 	private PlayerAI playerAI;
 	
 	public Player(String n){
-		super(0, 0, 0, 10);
+		super(0, 0, 0, 500 / Master.FPS);
 		name = n;
 		slash = new Slash();
 		actives = new Attack[3];
@@ -75,7 +75,7 @@ public class Player extends Entity{
 		setClass(b.getClassName());
 		setActives(b.getActiveNames());
 		setPassives(b.getPassiveNames());
-		setSpeed((int)c.getStatValue("speed"));
+		setSpeed((int) (c.getStatValue("speed") * getSpeed()));
 	}
 	public void setClass(String name){
 		switch(name.toLowerCase()){

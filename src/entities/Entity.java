@@ -68,6 +68,9 @@ public class Entity {
 	public void setSpeed(int speed){
 		maxSpeed = speed;
 	}
+	public int getSpeed(){
+		return maxSpeed;
+	}
 	public void applySpeedFilter(double f){
 		speedFilter *= f;
 	}

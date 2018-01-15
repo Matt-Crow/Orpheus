@@ -46,8 +46,8 @@ public class Attack {
 		}
 		stats.add(new Stat("Range", units * 100));
 		
-		// 1-5 units per 20 frames                change?
-		stats.add(new Stat("Speed", speed * 5));
+		// 1-5 units per second
+		stats.add(new Stat("Speed", 100 * speed / Master.FPS));
 		
 		// 1-5 units (or 0)
 		stats.add(new Stat("AOE", aoe * 100));
@@ -146,13 +146,15 @@ public class Attack {
 		return user.getEnergyLog().getEnergy() >= getStat("Energy Cost").get() && !onCooldown();
 	}
 	
-	
+	public void consumeEnergy(Player user){
+		user.getEnergyLog().loseEnergy((int) getStatValue("Energy Cost"));
+		setToCooldown();
+	}
 	
 	public void use(Player user){
 		lastUseChildren = new ArrayList<>();
-		user.getEnergyLog().loseEnergy((int) getStatValue("Energy Cost"));
+		consumeEnergy(user);
 		spawnProjectile(user); // remove?
-		setToCooldown();
 	}
 	
 	

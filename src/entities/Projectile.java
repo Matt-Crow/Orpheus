@@ -19,6 +19,12 @@ public class Projectile extends Entity{
 	private boolean shouldTerminate;
 	private boolean terminated;
 	
+	// linked list stuff
+	private Projectile parent;
+	private Projectile child;
+	private boolean hasParent;
+	private boolean hasChild;
+	
 	public Projectile(int x, int y, int dirNum, int momentum, Player attackUser, Attack a){
 		super(x, y, dirNum, momentum);
 		distanceTraveled = 0;
@@ -34,6 +40,8 @@ public class Projectile extends Entity{
 		doNotHit = new ArrayList<Player>();
 		hit = new Player("Void");
 		
+		hasParent = false;
+		hasChild = false;
 		user.getTeam().registerProjectile(this);
 	}
 	public String getAttackName(){
@@ -57,6 +65,34 @@ public class Projectile extends Entity{
 	public boolean hasAlreadyTerminated(){
 		return terminated;
 	}
+	
+	public void setParent(Projectile p){
+		parent = p;
+		hasParent = true;
+	}
+	public void setChild(Projectile p){
+		child = p;
+		hasChild = true;
+	}
+	public boolean getHasParent(){
+		return hasParent;
+	}
+	public boolean getHasChild(){
+		return hasChild;
+	}
+	public void disableParent(){
+		hasParent = false;
+	}
+	public void disableChild(){
+		hasChild = false;
+	}
+	public Projectile getParent(){
+		return parent;
+	}
+	public Projectile getChild(){
+		return child;
+	}
+	
 	public void avoid(Player p){
 		doNotHit.add(p);
 	}
@@ -86,6 +122,13 @@ public class Projectile extends Entity{
 	}
 	public void terminate(){
 		shouldTerminate = true;
+		if(hasParent && hasChild){
+			parent.setChild(child);
+			child.setParent(parent);
+		} else {
+			child.disableParent();
+			parent.disableChild();
+		}
 		terminated = true;
 	}
 	public void update(){

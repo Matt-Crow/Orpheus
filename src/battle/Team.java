@@ -73,6 +73,7 @@ public class Team {
 	public boolean isDefeated(){
 		return defeated;
 	}
+	
 	public void registerProjectile(Projectile p){
 		newProjectiles.add(p);
 	}

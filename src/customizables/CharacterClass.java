@@ -25,7 +25,7 @@ public class CharacterClass extends Customizable{
 		// 1: 120%, 5: 80%
 		stats.add(new Stat("damage taken modifier", 1.3 - 0.1 * reduction));
 		
-		stats.add(new Stat("speed", (0.7 + 0.1 * speed) * 10));
+		stats.add(new Stat("speed", (0.7 + 0.1 * speed)));
 		
 		attackOptions = new ArrayList<>();
 		attackOptions.add(new Slash());
