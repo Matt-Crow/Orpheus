@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import attacks.Attack;
 import attacks.MeleeAttack;
 import initializers.Master;
+import resources.Chat;
 import resources.CombatLog;
 import resources.Op;
 import resources.Random;
@@ -58,11 +59,10 @@ public class Projectile extends Entity{
 	public void avoid(Player p){
 		doNotHit.add(p);
 	}
-	public boolean checkIfWithin(int leftX, int rightX, int topY, int bottomY){
-		return getX() >= leftX && getX() <= rightX && getY() >= topY && getY() <= bottomY;
-	}
+	
 	public void checkForCollisionsWith(Player p){
-		if(checkIfWithin(p.getX() - 50, p.getX() + 50, p.getY() - 50, p.getY() + 50)){
+		if(getHitbox().checkForIntercept(p.getHitbox())){
+			Chat.add("Hit");
 			if(doNotHit.contains(p)){
 				return;
 			}
@@ -82,6 +82,12 @@ public class Projectile extends Entity{
 			terminate();
 		}
 	}
+	
+	
+	
+	
+	
+	
 	public void update(){
 		super.update();
 		

@@ -6,6 +6,7 @@ import resources.Coordinates;
 import resources.Direction;
 import resources.Op;
 import battle.Team;
+import battle.Hitbox;
 import ai.AI;
 
 public class Entity {
@@ -25,7 +26,7 @@ public class Entity {
 	private Team team;
 	private boolean shouldTerminate;
 	private ActionRegister actReg;
-	
+	private Hitbox hitbox;
 	private AI entityAI;
 	
 	// linked list stuff
@@ -52,6 +53,7 @@ public class Entity {
 		
 		actReg = new ActionRegister(this);
 		shouldTerminate = false;
+		hitbox = new Hitbox(this, 100, 100);
 		entityAI = new AI(this);
 		
 		hasParent = false;
@@ -128,6 +130,10 @@ public class Entity {
 	
 	public Team getTeam(){
 		return team;
+	}
+	
+	public Hitbox getHitbox(){
+		return hitbox;
 	}
 	
 	public AI getEntityAI(){
@@ -276,7 +282,17 @@ public class Entity {
 			y = Master.getCurrentBattle().getHost().getHeight();
 		}
 		
+		hitbox.updatePosition();
+		
 		speedFilter = 1.0;
+	}
+	
+	public void updateAllChildren(){
+		Entity current = this;
+		while(current.getHasChild()){
+			current = current.getChild();
+			current.update();
+		}
 	}
 	
 	public void update(){
@@ -284,9 +300,6 @@ public class Entity {
 			entityAI.update();
 			updateMovement();
 			actReg.tripOnUpdate();
-		}
-		if(hasChild){
-			child.update();
 		}
 	}
 }

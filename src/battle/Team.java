@@ -91,7 +91,7 @@ public class Team {
 	public void update(){
 		//enemyTeam.checkForHits(projectiles);
 		
-		coach.getChild().update();
+		coach.updateAllChildren();
 		if(!coach.getHasChild()){
 			defeated = true;
 		}

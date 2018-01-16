@@ -1,6 +1,5 @@
 package attacks;
 import java.util.ArrayList;
-import entities.Player;
 import statuses.Status;
 
 public class BoostAttack extends Attack{
@@ -13,11 +12,11 @@ public class BoostAttack extends Attack{
 	public void addStatus(Status s){
 		inflicts.add(s);
 	}
-	public void use(Player user){
-		super.use(user);
+	public void use(){
+		super.use();
 		for(Status s : inflicts){
 			s.reset();
-			user.inflict(s);
+			getUser().inflict(s);
 		}
 	}
 }

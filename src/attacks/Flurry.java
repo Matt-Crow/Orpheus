@@ -1,7 +1,6 @@
 package attacks;
 
 import resources.OnHitAction;
-import entities.Player;
 import entities.Projectile;
 
 public class Flurry extends MeleeAttack{
@@ -12,8 +11,8 @@ public class Flurry extends MeleeAttack{
 		super("Flurry", 4, 1);
 		recurCount = 0;
 	}
-	public void use(Player user){
-		super.use(user);
+	public void use(){
+		super.use();
 		canRecur = true;
 		Projectile p = getLastUseProjectiles().get(0);
 		OnHitAction a = new OnHitAction(){
@@ -24,7 +23,7 @@ public class Flurry extends MeleeAttack{
 					return;
 				}
 				if(canRecur){
-					use(user);
+					use();
 					recurCount += 1;
 				}
 			}

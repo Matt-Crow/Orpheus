@@ -1,7 +1,6 @@
 package attacks;
 
 import entities.ParticleType;
-import entities.Player;
 import resources.CustomColors;
 
 public class CursedDaggers extends ElementalAttack{
@@ -10,7 +9,7 @@ public class CursedDaggers extends ElementalAttack{
 		setParticleType(ParticleType.BEAM);
 		setParticleColor(CustomColors.green);
 	}
-	public void use(Player user){
-		spawnArc(user, 90, 7);
+	public void use(){
+		spawnArc(90, 7);
 	}
 }

@@ -32,6 +32,7 @@ public class Player extends Entity{
 		super(0, 0, 0, 500 / Master.FPS);
 		name = n;
 		slash = new Slash();
+		slash.setUser(this);
 		actives = new Attack[3];
 		passives = new Passive[3];
 		
@@ -73,20 +74,26 @@ public class Player extends Entity{
 		switch(name.toLowerCase()){
 			case "fire":
 				c = new Fire();
-				return;
+				break;
 			case "earth":
 				c = new Earth();
-				return;
+				break;
 			case "water":
 				c = new Water();
-				return;
+				break;
 			case "air":
 				c = new Air();
-				return;
+				break;
+			default:
+				String[] classes = {"fire", "earth", "water", "air"};
+				int randomNum = Random.choose(0, 4);
+				setClass(classes[randomNum]);
+				break;
 		}
-		String[] classes = {"fire", "earth", "water", "air"};
-		int randomNum = Random.choose(0, 4);
-		setClass(classes[randomNum]);
+		
+		for(Attack a : c.getAttackOption()){
+			a.setUser(this);
+		}
 	}
 	public void setActives(String[] names){
 		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
@@ -184,14 +191,14 @@ public class Player extends Entity{
 		return c.getStatValue(n);
 	}
 	public void useMeleeAttack(){
-		if(slash.canUse(this)){
-			slash.use(this);
+		if(slash.canUse()){
+			slash.use();
 		}
 	}
 	
 	public void useAttack(int num){
-		if(actives[num].canUse(this)){
-			actives[num].use(this);
+		if(actives[num].canUse()){
+			actives[num].use();
 		}
 	}
 	

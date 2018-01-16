@@ -1,6 +1,5 @@
 package attacks;
 import entities.Projectile;
-import entities.Player;
 import resources.OnUpdateAction;
 import resources.Random;
 
@@ -8,8 +7,8 @@ public class Rupture extends ElementalAttack{
 	public Rupture(){
 		super("Rupture", 4, 5, 5, 1, 0, 5);
 	}
-	public void use(Player user){
-		super.use(user);
+	public void use(){
+		super.use();
 		Projectile p = getLastUseProjectiles().get(0);
 		OnUpdateAction a = new OnUpdateAction(){
 			public void f(){

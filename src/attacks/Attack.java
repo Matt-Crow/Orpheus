@@ -18,6 +18,7 @@ public class Attack {
 	private ArrayList<Status> inflictOnHit;
 	private ArrayList<Integer> inflictChance;
 	private int cooldown;
+	private Player user;
 	
 	// find some way so that this doesn't include terminated projectiles
 	// maybe update them from here?
@@ -66,6 +67,12 @@ public class Attack {
 		particleType = ParticleType.NONE;
 		particleColors = new ArrayList<>();
 		particleColors.add(CustomColors.black);
+	}
+	public void setUser(Player p){
+		user = p;
+	}
+	public Player getUser(){
+		return user;
 	}
 	public String getName(){
 		return name;
@@ -149,25 +156,25 @@ public class Attack {
 	public boolean onCooldown(){
 		return cooldown > 0;
 	}
-	public boolean canUse(Player user){
+	public boolean canUse(){
 		return user.getEnergyLog().getEnergy() >= getStat("Energy Cost").get() && !onCooldown();
 	}
 	
-	public void consumeEnergy(Player user){
+	public void consumeEnergy(){
 		user.getEnergyLog().loseEnergy((int) getStatValue("Energy Cost"));
 		setToCooldown();
 	}
 	
-	public void use(Player user){
+	public void use(){
 		lastUseChildren = new ArrayList<>();
-		consumeEnergy(user);
-		spawnProjectile(user); // remove?
+		consumeEnergy();
+		spawnProjectile(); // remove?
 	}
 	
 	
 	
 	
-	public void spawnProjectile(Player user, int facingDegrees){
+	public void spawnProjectile(int facingDegrees){
 		SeedProjectile registeredProjectile = new SeedProjectile(user.getX(), user.getY(), facingDegrees, (int) getStatValue("Speed"), user, this);
 		registeredProjectile.getActionRegister().addOnHit(getStatusInfliction());
 		if(registeredProjectile.getAttack().getStatValue("Range") == 0){
@@ -176,17 +183,17 @@ public class Attack {
 		head.insertChild(registeredProjectile);
 		lastUseChildren.add(registeredProjectile);
 	}
-	public void spawnProjectile(Player user){
-		spawnProjectile(user, user.getDir().getDegrees());
+	public void spawnProjectile(){
+		spawnProjectile(user.getDir().getDegrees());
 	}
 	
-	public void spawnArc(Player user, int arcDegrees, int numProj){
+	public void spawnArc(int arcDegrees, int numProj){
 		int spacing = arcDegrees / numProj;
 		int start = user.getDir().getDegrees() - arcDegrees / 2;
 		
 		for(int i = 0; i < numProj; i++){
 			int angle = start + spacing * i;
-			spawnProjectile(user, angle);
+			spawnProjectile(angle);
 		}
 	}
 	
@@ -203,9 +210,7 @@ public class Attack {
 		if (cooldown < 0){
 			cooldown = 0;
 		}
-		if(head.getHasChild()){
-			head.getChild().update();
-		}
+		head.updateAllChildren();
 	}
 	
 	public void drawStatusPane(Graphics g, int x, int y, int w, int h){

@@ -1,7 +1,6 @@
 package attacks;
 
 import entities.Projectile;
-import entities.Player;
 import entities.ParticleType;
 import resources.CustomColors;
 import resources.OnUpdateAction;
@@ -13,8 +12,8 @@ public class Tornado extends ElementalAttack{
 		setColorBlend(CustomColors.airColors);
 	}
 	
-	public void use(Player user){
-		super.use(user);
+	public void use(){
+		super.use();
 		Projectile p = getLastUseProjectiles().get(0);
 		OnUpdateAction a = new OnUpdateAction(){
 			public void f(){
