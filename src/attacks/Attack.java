@@ -168,7 +168,8 @@ public class Attack {
 	public void use(){
 		lastUseChildren = new ArrayList<>();
 		consumeEnergy();
-		spawnProjectile(); // remove?
+		
+		spawnProjectile();
 	}
 	
 	

@@ -283,6 +283,7 @@ public class Player extends Entity{
 			y += h/30;
 		}
 		
+		slash.drawAllProjectiles(g);
 		for(Attack a : actives){
 			a.drawAllProjectiles(g);
 		}

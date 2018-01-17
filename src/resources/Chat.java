@@ -14,7 +14,7 @@ public class Chat {
 		box = new JScrollPane();
 	}
 	
-	public static void add(String msg){
+	public static void log(String msg){
 		messages.add(msg);
 		String[] contents = new String[messages.size()];
 		for(int i = 0; i < messages.size(); i++){

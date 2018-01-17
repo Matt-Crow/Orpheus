@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import initializers.Master;
-import entities.Particle;
 
 public class Battle {
 	ArrayList<Team> teams;
@@ -30,7 +29,6 @@ public class Battle {
 		int spacingBetween = w / 6;
 		teams.get(0).init(spacingFromTopEdge, spacingBetween, 270);
 		teams.get(1).init(h - spacingFromTopEdge * 2, spacingBetween, 90);
-		Particle.reset();
 		Master.setCurrentBattle(this);
 		end = false;
 	}
@@ -53,10 +51,8 @@ public class Battle {
 				t.update();
 			}
 		}
-		Particle.updateAll();
 	}
 	public void draw(Graphics g){
-		Particle.drawAll(g);
 		for(Team t : teams){
 			t.draw(g);
 		}

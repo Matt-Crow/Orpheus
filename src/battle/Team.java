@@ -6,7 +6,6 @@ import java.awt.Graphics;
 
 import entities.Entity;
 import entities.Player;
-import entities.Projectile;
 import resources.Coordinates;
 import resources.Random;
 import resources.Direction;
@@ -29,6 +28,11 @@ public class Team {
 	public String getName(){
 		return name;
 	}
+	
+	public Player getHead(){
+		return coach;
+	}
+	
 	public Color getColor(){
 		return color;
 	}
@@ -75,22 +79,7 @@ public class Team {
 		return defeated;
 	}
 	
-	
-	
-	
-	public void checkForHits(ArrayList<Projectile> proj){
-		Player current = coach;
-		while(current.getHasChild()){
-			current = (Player) current.getChild();
-			for(Projectile p : proj){
-				p.checkForCollisionsWith(current);
-			}
-		}
-	}
-	
 	public void update(){
-		//enemyTeam.checkForHits(projectiles);
-		
 		coach.updateAllChildren();
 		if(!coach.getHasChild()){
 			defeated = true;
