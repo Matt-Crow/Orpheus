@@ -7,6 +7,6 @@ public class Adrenaline extends ThreshholdPassive{
 		super("Adrenaline", 25);
 	}
 	public void applyEffect(){
-		getPlayer().inflict(new Charge(2, 1));
+		getRegisteredTo().inflict(new Charge(2, 1));
 	}
 }

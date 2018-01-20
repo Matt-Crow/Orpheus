@@ -32,7 +32,7 @@ public class Player extends Entity{
 		super(0, 0, 0, 500 / Master.FPS);
 		name = n;
 		slash = new Slash();
-		slash.setUser(this);
+		slash.registerTo(this);
 		actives = new Attack[3];
 		passives = new Passive[3];
 		
@@ -68,6 +68,7 @@ public class Player extends Entity{
 		setClass(b.getClassName());
 		setActives(b.getActiveNames());
 		setPassives(b.getPassiveNames());
+		// better way for speed?
 		setSpeed((int) (c.getStatValue("speed") * getSpeed()));
 	}
 	public void setClass(String name){
@@ -92,7 +93,10 @@ public class Player extends Entity{
 		}
 		
 		for(Attack a : c.getAttackOption()){
-			a.setUser(this);
+			a.registerTo(this);
+		}
+		for(Passive p : c.getPassiveOptions()){
+			p.registerTo(this);
 		}
 	}
 	public void setActives(String[] names){
@@ -124,7 +128,7 @@ public class Player extends Entity{
 				}
 			}
 			if(!found){
-				passives[nameIndex] = new Passive("UNDEFINED", "ERROR");
+				passives[nameIndex] = new Passive("UNDEFINED");
 				Op.add("The passive by the name of " + names[nameIndex]);
 				Op.add("is not found for the characterClass " + c.getName());
 				Op.dp();

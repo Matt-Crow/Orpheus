@@ -7,6 +7,6 @@ public class Momentum extends OnMeleeHitPassive{
 		super("Momentum", 20);
 	}
 	public void applyEffect(){
-		getPlayer().inflict(new Rush(1, 20));
+		getRegisteredTo().inflict(new Rush(1, 20));
 	}
 }

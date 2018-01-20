@@ -7,6 +7,6 @@ public class Toughness extends OnBeHitPassive{
 		super("Toughness", 20);
 	}
 	public void applyEffect(){
-		getPlayer().inflict(new Resistance(1, 1));
+		getRegisteredTo().inflict(new Resistance(1, 1));
 	}
 }

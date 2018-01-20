@@ -8,7 +8,7 @@ public class Determination extends ThreshholdPassive{
 		super("Determination", 25);
 	}
 	public void applyEffect(){
-		getPlayer().inflict(new Strength(1, 1));
-		getPlayer().inflict(new Resistance(1, 1));
+		getRegisteredTo().inflict(new Strength(1, 1));
+		getRegisteredTo().inflict(new Resistance(1, 1));
 	}
 }

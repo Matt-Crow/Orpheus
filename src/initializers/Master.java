@@ -28,7 +28,11 @@ public class Master {
 	public static Battle getCurrentBattle(){
 		return currentBattle;
 	}
+	// seconds to frames
 	public static int seconds(int sec){
 		return sec * FPS;
+	}
+	public static int framesToSeconds(int frames){
+		return frames / FPS;
 	}
 }

@@ -7,7 +7,7 @@ public class OnMeleeHitPassive extends Passive{
 	private int chance;
 	
 	public OnMeleeHitPassive(String n, int c){
-		super(n, "on melee hit");
+		super(n);
 		chance = c;
 	}
 	public void update(){
@@ -18,6 +18,6 @@ public class OnMeleeHitPassive extends Passive{
 				}
 			}
 		};
-		getPlayer().getActionRegister().addOnMeleeHit(a);
+		getRegisteredTo().getActionRegister().addOnMeleeHit(a);
 	}
 }

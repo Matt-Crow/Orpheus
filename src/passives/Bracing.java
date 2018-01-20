@@ -7,6 +7,6 @@ public class Bracing extends ThreshholdPassive{
 		super("Bracing", 25);
 	}
 	public void applyEffect(){
-		getPlayer().inflict(new Resistance(2, 1));
+		getRegisteredTo().inflict(new Resistance(2, 1));
 	}
 }

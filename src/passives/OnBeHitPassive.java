@@ -7,7 +7,7 @@ public class OnBeHitPassive extends Passive{
 	private int chance;
 	
 	public OnBeHitPassive(String n, int c){
-		super(n, "on be hit");
+		super(n);
 		chance = c;
 	}
 	public void update(){
@@ -19,6 +19,6 @@ public class OnBeHitPassive extends Passive{
 			}
 		};
 		
-		getPlayer().getActionRegister().addOnBeHit(a);
+		getRegisteredTo().getActionRegister().addOnBeHit(a);
 	}
 }

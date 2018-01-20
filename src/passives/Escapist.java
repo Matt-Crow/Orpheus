@@ -7,6 +7,6 @@ public class Escapist extends ThreshholdPassive {
 		super("Escapist", 25);
 	}
 	public void applyEffect(){
-		getPlayer().inflict(new Rush(2, 1));
+		getRegisteredTo().inflict(new Rush(2, 1));
 	}
 }

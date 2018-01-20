@@ -7,6 +7,6 @@ public class SparkingStrikes extends OnMeleeHitPassive{
 		super("Sparking Strikes", 100);
 	}
 	public void applyEffect(){
-		getPlayer().inflict(new Charge(1, 10));
+		getRegisteredTo().inflict(new Charge(1, 10));
 	}
 }

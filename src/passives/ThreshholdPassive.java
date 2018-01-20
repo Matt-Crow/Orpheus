@@ -4,11 +4,11 @@ public class ThreshholdPassive extends Passive{
 	private double threshhold;
 	
 	public ThreshholdPassive(String n, double percent){
-		super(n, "threshhold");
+		super(n);
 		threshhold = percent;
 	}
 	public void update(){
-		if(getPlayer().getLog().getHPPerc() <= threshhold){
+		if(getRegisteredTo().getLog().getHPPerc() <= threshhold){
 			applyEffect();
 		}
 	}

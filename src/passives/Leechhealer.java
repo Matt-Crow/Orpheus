@@ -7,6 +7,6 @@ public class Leechhealer extends OnMeleeHitPassive{
 		super("Leechhealer", 20);
 	}
 	public void applyEffect(){
-		getPlayer().inflict(new Regeneration(1, 20));
+		getRegisteredTo().inflict(new Regeneration(1, 5));
 	}
 }

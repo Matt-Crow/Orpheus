@@ -7,6 +7,6 @@ public class Sharpen extends OnMeleeHitPassive{
 		super("Sharpen", 20);
 	}
 	public void applyEffect(){
-		getPlayer().inflict(new Strength(1, 1));
+		getRegisteredTo().inflict(new Strength(1, 1));
 	}
 }

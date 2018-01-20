@@ -7,6 +7,6 @@ public class Retaliation extends ThreshholdPassive{
 		super("Retaliation", 25);
 	}
 	public void applyEffect(){
-		getPlayer().inflict(new Strength(2, 1));
+		getRegisteredTo().inflict(new Strength(2, 1));
 	}
 }

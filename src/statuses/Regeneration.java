@@ -11,7 +11,7 @@ public class Regeneration extends Status{
 	public void inflictOn(Player p){
 		OnUpdateAction a = new OnUpdateAction(){
 			public void f(){
-				p.getLog().healPerc(0.125 * getIntensityLevel());
+				p.getLog().healPerc(5.0 * getIntensityLevel() / Master.FPS);
 				use();
 			}
 		};

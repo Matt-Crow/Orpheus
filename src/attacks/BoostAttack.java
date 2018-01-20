@@ -16,7 +16,7 @@ public class BoostAttack extends Attack{
 		super.use();
 		for(Status s : inflicts){
 			s.reset();
-			getUser().inflict(s);
+			getRegisteredTo().inflict(s);
 		}
 	}
 }
