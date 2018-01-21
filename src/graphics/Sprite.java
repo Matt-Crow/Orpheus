@@ -2,6 +2,9 @@ package graphics;
 import java.awt.Graphics;
 
 public class Sprite {
+	/*
+	 * WARNING: SLOW
+	 */
 	private CustomColors[] colors;
 	private int[][] map;
 	

@@ -2,31 +2,17 @@ package battle;
 
 import java.awt.Graphics;
 import graphics.CustomColors;
-import graphics.Sprite;
 
 public class Battlefield {
 	private int numRows;
 	private int numCols;
 	private int tileSize;
 	private Battle b;
-	private Sprite s;
 	
 	public Battlefield(){
 		numRows = 20;
 		numCols = 20;
-		tileSize = 70;
-		
-		CustomColors[] c = {CustomColors.purple, CustomColors.gold};
-		int[][] map = {
-			{0, 1, 1, 1, 1, 1, 0},
-			{1, 1, 2, 2, 1, 1, 1},
-			{1, 1, 2, 1, 1, 1, 1},
-			{1, 1, 2, 2, 2, 1, 1},
-			{1, 1, 1, 1, 2, 1, 1},
-			{1, 1, 1, 2, 2, 1, 1},
-			{0, 1, 1, 1, 1, 1, 0}
-		};
-		s = new Sprite(c, map);
+		tileSize = 100;
 	}
 	public int getTileSize(){
 		return tileSize;
@@ -47,16 +33,18 @@ public class Battlefield {
 		return ret;
 	}
 	public void draw(Graphics g){
-		int x = 0;
-		int y = 0;
-		
-		while(x < numRows * tileSize){
-			y = 0;
-			while(y < numCols * tileSize){
-				s.draw(g, x, y,  tileSize);
-				y += tileSize;
+		int row = 0;
+		int col = 0;
+		int s = (int)(tileSize * 0.9);
+		int spacing = (int)(tileSize * 0.05);
+		while(row < numRows){
+			col = 0;
+			while(col < numCols){
+				g.setColor(CustomColors.blue);
+				g.fillRect(row * tileSize + spacing, col * tileSize + spacing, s, s);
+				col += 1;
 			}
-			x += tileSize;
+			row += 1;
 		}
 		b.draw(g);
 	}
