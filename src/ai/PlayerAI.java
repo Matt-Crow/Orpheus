@@ -1,6 +1,8 @@
 package ai;
 
 import entities.Player;
+import actions.OnHitTrip;
+import actions.OnHitKey;
 
 public class PlayerAI extends AI{
 	private Player registered;
@@ -41,5 +43,11 @@ public class PlayerAI extends AI{
 				attack();
 			}
 		}
+		OnHitKey a = new OnHitKey(){
+			public void trip(OnHitTrip t){
+				latch((Player)t.getHitter());
+			}
+		};
+		getApplied().getActionRegister().addOnBeHit(a);
 	}
 }

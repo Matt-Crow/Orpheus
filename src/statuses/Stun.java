@@ -1,8 +1,8 @@
 package statuses;
 
+import actions.OnUpdateAction;
 import entities.Player;
 import initializers.Master;
-import resources.OnUpdateAction;
 
 public class Stun extends Status{
 	public Stun(int lv, int dur){

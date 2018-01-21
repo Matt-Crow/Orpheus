@@ -1,7 +1,7 @@
 package statuses;
 
+import actions.OnUpdateAction;
 import entities.Player;
-import resources.OnUpdateAction;
 
 public class Healing extends Status{
 	public Healing(int lv){

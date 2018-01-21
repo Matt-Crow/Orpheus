@@ -1,8 +1,8 @@
 package statuses;
 
+import actions.OnUpdateAction;
 import entities.Player;
 import initializers.Master;
-import resources.OnUpdateAction;
 
 public class Regeneration extends Status{
 	public Regeneration(int lv, int dur){

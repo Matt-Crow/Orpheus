@@ -1,12 +1,12 @@
 package entities;
 
 import initializers.Master;
-import resources.ActionRegister;
 import resources.Coordinates;
 import resources.Direction;
 import resources.Op;
 import battle.Team;
 import battle.Hitbox;
+import actions.ActionRegister;
 import ai.AI;
 
 public class Entity {

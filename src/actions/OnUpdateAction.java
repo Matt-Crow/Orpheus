@@ -1,4 +1,4 @@
-package resources;
+package actions;
 
 public class OnUpdateAction{
 	public OnUpdateAction(){

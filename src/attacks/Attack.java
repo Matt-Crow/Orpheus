@@ -1,5 +1,9 @@
 package attacks;
 import java.util.ArrayList;
+
+import actions.OnHitTrip;
+import actions.OnHitKey;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import entities.*;
@@ -8,7 +12,6 @@ import initializers.Master;
 import upgradables.AbstractUpgradable;
 import upgradables.Stat;
 import statuses.Status;
-import resources.OnHitAction;
 import resources.Random;
 
 public class Attack extends AbstractUpgradable{
@@ -100,12 +103,13 @@ public class Attack extends AbstractUpgradable{
 		return lastUseChildren;
 	}
 	
-	public OnHitAction getStatusInfliction(){
-		OnHitAction a = new OnHitAction(){
-			public void f(){
+	public OnHitKey getStatusInfliction(){
+		OnHitKey a = new OnHitKey(){
+			public void trip(OnHitTrip t){
+				Player target = (Player)t.getHit();
 				for(int i = 0; i < inflictOnHit.size(); i++){
 					if(Random.chance(inflictChance.get(i))){
-						getHit().inflict(inflictOnHit.get(i));
+						target.inflict(inflictOnHit.get(i));
 					}
 				}
 			}

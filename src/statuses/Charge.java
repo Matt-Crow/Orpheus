@@ -1,8 +1,8 @@
 package statuses;
 
+import actions.OnUpdateAction;
 import entities.Player;
 import initializers.Master;
-import resources.OnUpdateAction;
 
 public class Charge extends Status{
 	public Charge(int lv, int dur){

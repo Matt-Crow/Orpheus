@@ -1,15 +1,16 @@
 package statuses;
 
+import actions.OnHitTrip;
+import actions.OnHitKey;
 import entities.Player;
-import resources.OnHitAction;
 
 public class Burn extends Status{
 	public Burn(int lv, int uses){
 		super("Burn", lv, uses);
 	}
 	public void inflictOn(Player p){
-		OnHitAction a = new OnHitAction(){
-			public void f(){
+		OnHitKey a = new OnHitKey(){
+			public void trip(OnHitTrip t){
 				p.getLog().applyFilter(1 + 0.25 * getIntensityLevel());
 				use();
 			}

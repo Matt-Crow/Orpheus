@@ -1,6 +1,7 @@
 package passives;
 
-import resources.OnHitAction;
+import actions.OnHitTrip;
+import actions.OnHitKey;
 import resources.Random;
 
 public class OnBeHitPassive extends Passive{
@@ -11,9 +12,10 @@ public class OnBeHitPassive extends Passive{
 		chance = c;
 	}
 	public void update(){
-		OnHitAction a = new OnHitAction(){
-			public void f(){
+		OnHitKey a = new OnHitKey(){
+			public void trip(OnHitTrip t){
 				if(Random.chance(chance)){
+					//TODO: make this choose who to apply to
 					applyEffect();
 				}
 			}

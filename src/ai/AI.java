@@ -1,6 +1,5 @@
 package ai;
 
-import resources.OnHitAction;
 import entities.Entity;
 import entities.Player;
 import initializers.Master;
@@ -117,14 +116,6 @@ public class AI {
 			} else if(mode == "pursue"){
 				pursue();
 			}
-			OnHitAction a = new OnHitAction(){
-				public void f(){
-					if(checkIfPlayerInSightRange()){
-						appliedTo.getEntityAI().latchOntoNearest();
-					}
-				}
-			};
-			appliedTo.getActionRegister().addOnBeHit(a);
 		}
 	}
 }

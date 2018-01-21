@@ -1,15 +1,16 @@
-package resources;
+package actions;
 
 import java.util.ArrayList;
+
 import entities.Entity;
 import entities.Player;
 
 public class ActionRegister {
 	private Entity registeredTo;
-	private ArrayList<OnHitAction> onHitRegister;
-	private ArrayList<OnHitAction> onBeHitRegister;
-	private ArrayList<OnHitAction> onMeleeHitRegister;
-	private ArrayList<OnHitAction> onBeMeleeHitRegister;
+	private ArrayList<OnHitKey> onHitRegister;
+	private ArrayList<OnHitKey> onBeHitRegister;
+	private ArrayList<OnHitKey> onMeleeHitRegister;
+	private ArrayList<OnHitKey> onBeMeleeHitRegister;
 	private ArrayList<OnUpdateAction> onUpdateRegister;
 	
 	public ActionRegister(Entity e){
@@ -20,48 +21,44 @@ public class ActionRegister {
 		onBeMeleeHitRegister = new ArrayList<>();
 		onUpdateRegister = new ArrayList<>();
 	}
-	public void addOnHit(OnHitAction a){
+	public void addOnHit(OnHitKey a){
 		onHitRegister.add(a);
 	}
-	public void addOnBeHit(OnHitAction a){
+	public void addOnBeHit(OnHitKey a){
 		onBeHitRegister.add(a);
 	}
-	public void addOnMeleeHit(OnHitAction a){
+	public void addOnMeleeHit(OnHitKey a){
 		onMeleeHitRegister.add(a);
 	}
-	public void addOnBeMeleeHit(OnHitAction a){
+	public void addOnBeMeleeHit(OnHitKey a){
 		onBeMeleeHitRegister.add(a);
 	}
 	public void addOnUpdate(OnUpdateAction a){
 		onUpdateRegister.add(a);
 	}
 	public void tripOnHit(Player hit){
-		for(OnHitAction a : onHitRegister){
-			a.setHitter(registeredTo);
-			a.setHit(hit);
-			a.trip();
+		OnHitTrip t = new OnHitTrip(hit, registeredTo);
+		for(OnHitKey a : onHitRegister){
+			a.trip(t);
 		}
 	}
 	public void tripOnBeHit(Player hitBy){
-		for(OnHitAction a : onBeHitRegister){
-			a.setHitter(hitBy);
-			a.setHit((Player) registeredTo);
-			a.trip();
+		OnHitTrip t = new OnHitTrip(registeredTo, hitBy);
+		for(OnHitKey a : onBeHitRegister){
+			a.trip(t);
 		}
 	}
 	public void tripOnMeleeHit(Player hit){
-		for(OnHitAction a : onMeleeHitRegister){
-			a.setHitter(registeredTo);
-			a.setHit(hit);
-			a.trip();
+		OnHitTrip t = new OnHitTrip(hit, registeredTo);
+		for(OnHitKey a : onMeleeHitRegister){
+			a.trip(t);
 		}
 		tripOnHit(hit);
 	}
 	public void tripOnBeMeleeHit(Player hitBy){
-		for(OnHitAction a : onBeMeleeHitRegister){
-			a.setHitter(registeredTo);
-			a.setHit((Player) registeredTo);
-			a.trip();
+		OnHitTrip t = new OnHitTrip(registeredTo, hitBy);
+		for(OnHitKey a : onBeMeleeHitRegister){
+			a.trip(t);
 		}
 		tripOnBeHit(hitBy);
 	}

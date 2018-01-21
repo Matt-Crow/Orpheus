@@ -1,8 +1,8 @@
 package statuses;
 
+import actions.OnUpdateAction;
 import entities.Player;
 import initializers.Master;
-import resources.OnUpdateAction;
 
 public class Rush extends Status{
 	public Rush(int lv, int dur){

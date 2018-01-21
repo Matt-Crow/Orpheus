@@ -1,7 +1,8 @@
 package statuses;
 
+import actions.OnHitTrip;
+import actions.OnHitKey;
 import entities.Player;
-import resources.OnHitAction;
 import resources.Direction;
 
 public class Strength extends Status{
@@ -9,10 +10,11 @@ public class Strength extends Status{
 		super("Strength", lv, uses);
 	}
 	public void inflictOn(Player p){
-		OnHitAction a = new OnHitAction(){
-			public void f(){
-				getHit().getLog().logPercentageDamage(3.5 * getIntensityLevel());
-				getHit().applyKnockback(new Direction(p.getDir().getDegrees()), 10, (int) (3.5 * getIntensityLevel()));
+		OnHitKey a = new OnHitKey(){
+			public void trip(OnHitTrip t){
+				Player target = (Player)t.getHit();
+				target.getLog().logPercentageDamage(3.5 * getIntensityLevel());
+				target.applyKnockback(new Direction(p.getDir().getDegrees()), 10, (int) (3.5 * getIntensityLevel()));
 				use();
 			}
 		};

@@ -1,6 +1,6 @@
 package attacks;
+import actions.OnUpdateAction;
 import entities.Projectile;
-import resources.OnUpdateAction;
 import resources.Random;
 
 public class Rupture extends ElementalAttack{

@@ -1,8 +1,10 @@
 package entities;
 
 import java.util.ArrayList;
+
+import actions.OnHitTrip;
+import actions.OnHitKey;
 import attacks.Attack;
-import resources.OnHitAction;
 
 public class AOEProjectile extends Projectile{
 	private ArrayList<AOEProjectile> brothers;
@@ -10,10 +12,10 @@ public class AOEProjectile extends Projectile{
 		super(x, y, dirNum, momentum, attackUser, a);
 		avoid(chainedFrom);
 		brothers = new ArrayList<>();
-		OnHitAction act = new OnHitAction(){
-			public void f(){
+		OnHitKey act = new OnHitKey(){
+			public void trip(OnHitTrip t){
 				for(AOEProjectile p : brothers){
-					p.avoid(getHit());
+					p.avoid((Player)t.getHit());
 				}
 			}
 		};
