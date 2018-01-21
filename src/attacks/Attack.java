@@ -3,11 +3,11 @@ import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Graphics;
 import entities.*;
+import graphics.CustomColors;
 import initializers.Master;
 import upgradables.AbstractUpgradable;
 import upgradables.Stat;
 import statuses.Status;
-import resources.CustomColors;
 import resources.OnHitAction;
 import resources.Random;
 

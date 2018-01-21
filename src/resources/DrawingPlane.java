@@ -3,6 +3,7 @@ package resources;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import graphics.CustomColors;
 import initializers.Master;
 
 import javax.swing.AbstractAction;

@@ -1,7 +1,7 @@
 package attacks;
 
 import entities.ParticleType;
-import resources.CustomColors;
+import graphics.CustomColors;
 
 public class MiniWindbolt extends ElementalAttack{
 	public MiniWindbolt(){

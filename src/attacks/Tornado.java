@@ -1,8 +1,8 @@
 package attacks;
 
 import entities.Projectile;
+import graphics.CustomColors;
 import entities.ParticleType;
-import resources.CustomColors;
 import resources.OnUpdateAction;
 
 public class Tornado extends ElementalAttack{

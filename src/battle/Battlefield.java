@@ -1,18 +1,32 @@
 package battle;
 
 import java.awt.Graphics;
-import java.awt.Color;
+import graphics.CustomColors;
+import graphics.Sprite;
 
 public class Battlefield {
 	private int numRows;
 	private int numCols;
 	private int tileSize;
 	private Battle b;
+	private Sprite s;
 	
 	public Battlefield(){
 		numRows = 20;
 		numCols = 20;
-		tileSize = 100;
+		tileSize = 70;
+		
+		CustomColors[] c = {CustomColors.purple, CustomColors.gold};
+		int[][] map = {
+			{0, 1, 1, 1, 1, 1, 0},
+			{1, 1, 2, 2, 1, 1, 1},
+			{1, 1, 2, 1, 1, 1, 1},
+			{1, 1, 2, 2, 2, 1, 1},
+			{1, 1, 1, 1, 2, 1, 1},
+			{1, 1, 1, 2, 2, 1, 1},
+			{0, 1, 1, 1, 1, 1, 0}
+		};
+		s = new Sprite(c, map);
 	}
 	public int getTileSize(){
 		return tileSize;
@@ -33,15 +47,13 @@ public class Battlefield {
 		return ret;
 	}
 	public void draw(Graphics g){
-		g.setColor(Color.blue);
 		int x = 0;
 		int y = 0;
-		int squareSize = (int) (tileSize * 0.9);
 		
 		while(x < numRows * tileSize){
 			y = 0;
 			while(y < numCols * tileSize){
-				g.fillRect(x + tileSize / 20, y + tileSize / 20,  squareSize, squareSize);
+				s.draw(g, x, y,  tileSize);
 				y += tileSize;
 			}
 			x += tileSize;

@@ -1,7 +1,7 @@
 package attacks;
 
 import entities.ParticleType;
-import resources.CustomColors;
+import graphics.CustomColors;
 import statuses.Burn;
 
 public class BlazingPillars extends ElementalAttack{

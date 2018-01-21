@@ -1,7 +1,7 @@
 package attacks;
 
 import entities.ParticleType;
-import resources.CustomColors;
+import graphics.CustomColors;
 import statuses.Stun;
 
 public class BoulderToss extends ElementalAttack{

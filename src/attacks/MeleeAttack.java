@@ -2,9 +2,7 @@ package attacks;
 
 //import entities.Player;
 import entities.ParticleType;
-//import entities.SeedProjectile;
-//import resources.Direction;
-import resources.CustomColors;
+import graphics.CustomColors;
 
 public class MeleeAttack extends Attack{
 	public MeleeAttack(String n, int cooldown, int dmg){
