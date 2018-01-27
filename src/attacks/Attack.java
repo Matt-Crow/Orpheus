@@ -99,9 +99,15 @@ public class Attack extends AbstractUpgradable{
 		return particleColors;
 	}
 	
+	
+	
+	
 	public ArrayList<Projectile> getLastUseProjectiles(){
 		return lastUseChildren;
 	}
+	
+	
+	
 	
 	public OnHitKey getStatusInfliction(){
 		OnHitKey a = new OnHitKey(){

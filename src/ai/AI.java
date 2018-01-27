@@ -3,7 +3,6 @@ package ai;
 import entities.Entity;
 import entities.Player;
 import initializers.Master;
-import resources.Coordinates;
 import resources.Random;
 import resources.Direction;
 
@@ -81,24 +80,36 @@ public class AI {
 		Direction d = Direction.getDegreeByLengths(x1, y1, x2, y2);
 		appliedTo.turnToward(d);
 	}
+	
 	public boolean checkIfPlayerInSightRange(){
-		for(Coordinates c : appliedTo.getTeam().getEnemy().getAllCoords()){
-			if(c.distanceBetween(appliedTo.getCoords()) <= Master.DETECTIONRANGE){
-				return true;
+		boolean inRange = false;
+		
+		Player current = appliedTo.getTeam().getEnemy().getHead();
+		while(current.getHasChild()){
+			current = (Player)current.getChild();
+			if(current.getCoords().distanceBetween(appliedTo.getCoords()) <= Master.DETECTIONRANGE){
+				inRange = true;
 			}
 		}
-		return false;
+		
+		return inRange;
 	}
+	
 	public Player nearestEnemy(){
-		Coordinates nearest = new Coordinates(0, 0);
-		int distance = Master.DETECTIONRANGE;
-		for(Coordinates c : appliedTo.getTeam().getEnemy().getAllCoords()){
-			if(c.distanceBetween(appliedTo.getCoords()) < distance){
-				nearest = c;
-				distance = (int) c.distanceBetween(appliedTo.getCoords());
+		Player nearest = new Player("ERROR");
+		int distance = Master.DETECTIONRANGE + 1;
+		Player current = appliedTo.getTeam().getEnemy().getHead();
+		while(current.getHasChild()){
+			current = (Player)current.getChild();
+			if(current.getCoords().distanceBetween(appliedTo.getCoords()) < distance){
+				nearest = current;
+				distance = (int) current.getCoords().distanceBetween(appliedTo.getCoords());
 			}
 		}
-		return (Player) nearest.getRegistered();
+		if(nearest.getName() == "ERROR"){
+			throw new NullPointerException();
+		}
+		return nearest;
 	}
 	public void latchOntoNearest(){
 		latch(nearestEnemy());

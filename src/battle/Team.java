@@ -1,12 +1,9 @@
 package battle;
 
-import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import entities.Entity;
 import entities.Player;
-import resources.Coordinates;
 import resources.Random;
 import resources.Direction;
 import customizables.Build;
@@ -35,15 +32,6 @@ public class Team {
 	
 	public Color getColor(){
 		return color;
-	}
-	public ArrayList<Coordinates> getAllCoords(){
-		ArrayList<Coordinates> ret = new ArrayList<>();
-		Entity current = coach;
-		while(current.getHasChild()){
-			current = current.getChild(); // skip head
-			ret.add(current.getCoords());
-		}
-		return ret;
 	}
 	
 	public void addMember(Player m){

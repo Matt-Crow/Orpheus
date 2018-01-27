@@ -68,8 +68,7 @@ public class Player extends Entity{
 		setClass(b.getClassName());
 		setActives(b.getActiveNames());
 		setPassives(b.getPassiveNames());
-		// better way for speed?
-		setSpeed((int) (c.getStatValue("speed") * getSpeed()));
+		setSpeed((int) (c.getStatValue("speed") * (500 / Master.FPS)));
 	}
 	public void setClass(String name){
 		switch(name.toLowerCase()){

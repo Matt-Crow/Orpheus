@@ -140,8 +140,6 @@ public class Entity {
 		return entityAI;
 	}
 	
-	
-	
 	public void terminate(){
 		shouldTerminate = true;
 		if(hasParent){
@@ -205,8 +203,6 @@ public class Entity {
 	public Entity getChild(){
 		return child;
 	}
-	
-	
 	
 	public void turn(String d){
 		int amount = 360 / Master.TICKSTOROTATE;
