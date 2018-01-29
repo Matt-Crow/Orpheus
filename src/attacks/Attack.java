@@ -97,10 +97,7 @@ public class Attack extends AbstractUpgradable{
 	}
 	public ArrayList<Color> getColors(){
 		return particleColors;
-	}
-	
-	
-	
+	}	
 	
 	public ArrayList<Projectile> getLastUseProjectiles(){
 		return lastUseChildren;

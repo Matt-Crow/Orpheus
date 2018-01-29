@@ -12,6 +12,9 @@ import customizables.Build;
 import entities.Player;
 import resources.DrawingPlane;
 import resources.EasyButton;
+import graphics.UpgradableSelector;
+import upgradables.AbstractUpgradable;
+import passives.Passive;
 
 @SuppressWarnings("unused")
 public class BuildCanvas extends DrawingPlane{
@@ -23,6 +26,7 @@ public class BuildCanvas extends DrawingPlane{
 	private JComboBox<String> choosePas1;
 	private JComboBox<String> choosePas2;
 	private JComboBox<String> choosePas3;
+	private UpgradableSelector choosePas;
 	
 	private EasyButton setClass;
 	private EasyButton finish;
@@ -109,6 +113,26 @@ public class BuildCanvas extends DrawingPlane{
 		chooseAct2.setSelectedItem(b.getActiveNames()[1]);
 		addComp(chooseAct2);
 		
+		ArrayList<AbstractUpgradable> pas = new ArrayList<>();
+		for(Passive p : testPlayer.getCharacterClass().getPassiveOptions()){
+			pas.add(p);
+		}
+		
+		
+		
+		
+		
+		
+		
+		choosePas = new UpgradableSelector(pas);
+		addComp(choosePas);
+		
+		
+		
+		
+		
+		
+		
 		addComp(new VoidComponent());
 
 		choosePas2 = new JComboBox<String>(testPlayer.getCharacterClass().getPassivesString());
@@ -129,7 +153,7 @@ public class BuildCanvas extends DrawingPlane{
 		choosePas3.setSelectedItem(b.getPassiveNames()[2]);
 		addComp(choosePas3);
 		
-		resizeComponents(4, 3);
+		resizeComponents(4, 4);
 		revalidate();
 		repaint();
 	}

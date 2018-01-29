@@ -3,12 +3,23 @@ package attacks;
 //import entities.Player;
 import entities.ParticleType;
 import graphics.CustomColors;
+import initializers.Master;
 
 public class MeleeAttack extends Attack{
 	public MeleeAttack(String n, int cooldown, int dmg){
 		super(n, 0, cooldown, 1, 5, 0, dmg);
 		setParticleColor(CustomColors.silver);
 		setParticleType(ParticleType.SHEAR);
+	}
+	public String getDescription(){
+		String desc = getName() + ": \n"
+				+ "The user performs a close range attack, \n"
+				+ "dealing " + (int)getStatValue("Damage") + "\n"
+						+ "to whoever it hits. \n"
+						+ Master.framesToSeconds((int)getStatValue("Cooldown")) + " second cooldown.";
+		
+		
+		return desc;
 	}
 	/*
 	public void use(Player user){

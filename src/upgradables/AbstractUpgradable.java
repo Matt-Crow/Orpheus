@@ -28,6 +28,9 @@ public class AbstractUpgradable {
 	public String getName(){
 		return name;
 	}
+	public String getDescription(){
+		return getName() + " does not have a description";
+	}
 	public void registerTo(Player p){
 		registeredTo = p;
 	}
