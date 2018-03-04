@@ -20,18 +20,14 @@ import passives.Passive;
 public class BuildCanvas extends DrawingPlane{
 	public static final long serialVersionUID = 1L;
 	private JComboBox<String> baseBuild;
-	private JComboBox<String> chooseAct1;
-	private JComboBox<String> chooseAct2;
-	private JComboBox<String> chooseAct3;
-	private JComboBox<String> choosePas1;
-	private JComboBox<String> choosePas2;
-	private JComboBox<String> choosePas3;
-	private UpgradableSelector choosePas;
+	private UpgradableSelector[] upgradableSelectors;
 	
 	private EasyButton setClass;
 	private EasyButton finish;
 	private JTextField name;
 	private Player testPlayer;
+	
+	// currently broken, need to work on Build
 	
 	public BuildCanvas(){
 		super();
@@ -83,77 +79,37 @@ public class BuildCanvas extends DrawingPlane{
 		finish.addActionListener(new AbstractAction(){
 			public static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent e){
-				new Build(name.getText(), b.getClassName(), 
-						chooseAct1.getSelectedItem().toString(), chooseAct2.getSelectedItem().toString(), chooseAct3.getSelectedItem().toString(), 
-						choosePas1.getSelectedItem().toString(), choosePas2.getSelectedItem().toString(), choosePas3.getSelectedItem().toString());
+				String[] s = new String[6];
+				for(int i = 0; i < 6; i++){
+					s[i] = upgradableSelectors[i].getSelString();
+				}
+				new Build(name.getText(), b.getClassName(), s[0], s[1], s[2], s[3], s[4], s[5]);
 				new MainWindow();
 				close();
 			}
 		});
 		addComp(finish);
 		
-		//tooltip of selected item desc 
-		
-		// can't make array of jcomboboxes :(
-		chooseAct1 = new JComboBox<String>(testPlayer.getCharacterClass().getAttacksString());
-		chooseAct1.addActionListener(getRepaint());
-		chooseAct1.setSelectedItem(b.getActiveNames()[0]);
-		addComp(chooseAct1);
-		
-		addComp(new VoidComponent());
-		
-		choosePas1 = new JComboBox<String>(testPlayer.getCharacterClass().getPassivesString());
-		choosePas1.addActionListener(getRepaint());
-		choosePas1.setSelectedItem(b.getPassiveNames()[0]);
-		addComp(choosePas1);
-		
-		
-		chooseAct2 = new JComboBox<String>(testPlayer.getCharacterClass().getAttacksString());
-		chooseAct2.addActionListener(getRepaint());
-		chooseAct2.setSelectedItem(b.getActiveNames()[1]);
-		addComp(chooseAct2);
-		
-		ArrayList<AbstractUpgradable> pas = new ArrayList<>();
-		for(Passive p : testPlayer.getCharacterClass().getPassiveOptions()){
-			pas.add(p);
+		upgradableSelectors = new UpgradableSelector[6];
+		for(int i = 0; i < 6; i++){
+			ArrayList<AbstractUpgradable> option = (i <= 2) ? 
+					new ArrayList<AbstractUpgradable>(testPlayer.getCharacterClass().getAttackOption()) 
+					: 
+					new ArrayList<AbstractUpgradable>(testPlayer.getCharacterClass().getPassiveOptions()); 
+			String[] names = (i <= 2) ? b.getActiveNames() : b.getPassiveNames();
+					
+			upgradableSelectors[i] = new UpgradableSelector(option);
+			upgradableSelectors[i].setVisible(true);
+			upgradableSelectors[i].setOpaque(true);
+			upgradableSelectors[i].setSelected(names[i % 3]);
+			addComp(upgradableSelectors[i]);
 		}
 		
 		
 		
+		//add tooltip of selected item desc 
 		
-		
-		
-		
-		choosePas = new UpgradableSelector(pas);
-		addComp(choosePas);
-		
-		
-		
-		
-		
-		
-		
-		addComp(new VoidComponent());
-
-		choosePas2 = new JComboBox<String>(testPlayer.getCharacterClass().getPassivesString());
-		choosePas2.addActionListener(getRepaint());
-		choosePas2.setSelectedItem(b.getPassiveNames()[1]);
-		addComp(choosePas2);
-		
-		
-		chooseAct3 = new JComboBox<String>(testPlayer.getCharacterClass().getAttacksString());
-		chooseAct3.addActionListener(getRepaint());
-		chooseAct3.setSelectedItem(b.getActiveNames()[2]);
-		addComp(chooseAct3);
-		
-		addComp(new VoidComponent());
-		
-		choosePas3 = new JComboBox<String>(testPlayer.getCharacterClass().getPassivesString());
-		choosePas3.addActionListener(getRepaint());
-		choosePas3.setSelectedItem(b.getPassiveNames()[2]);
-		addComp(choosePas3);
-		
-		resizeComponents(4, 4);
+		resizeComponents(3, 3);
 		revalidate();
 		repaint();
 	}
