@@ -16,7 +16,7 @@ import graphics.UpgradableSelector;
 import upgradables.AbstractUpgradable;
 import passives.Passive;
 
-@SuppressWarnings("unused")
+//@SuppressWarnings("unused")
 public class BuildCanvas extends DrawingPlane{
 	public static final long serialVersionUID = 1L;
 	private JComboBox<String> baseBuild;
@@ -81,7 +81,7 @@ public class BuildCanvas extends DrawingPlane{
 			public void actionPerformed(ActionEvent e){
 				String[] s = new String[6];
 				for(int i = 0; i < 6; i++){
-					s[i] = upgradableSelectors[i].getSelString();
+					s[i] = upgradableSelectors[i].getBox().getSelected().toString();
 				}
 				new Build(name.getText(), b.getClassName(), s[0], s[1], s[2], s[3], s[4], s[5]);
 				new MainWindow();
@@ -96,18 +96,17 @@ public class BuildCanvas extends DrawingPlane{
 					new ArrayList<AbstractUpgradable>(testPlayer.getCharacterClass().getAttackOption()) 
 					: 
 					new ArrayList<AbstractUpgradable>(testPlayer.getCharacterClass().getPassiveOptions()); 
+			String title = (i <= 2) ? "Active" : "Passive";
 			String[] names = (i <= 2) ? b.getActiveNames() : b.getPassiveNames();
 					
-			upgradableSelectors[i] = new UpgradableSelector(option);
-			upgradableSelectors[i].setVisible(true);
-			upgradableSelectors[i].setOpaque(true);
-			upgradableSelectors[i].setSelected(names[i % 3]);
+			upgradableSelectors[i] = new UpgradableSelector(title + " #" + (i % 3 + 1), option);
+			upgradableSelectors[i].getBox().setSelected(names[i % 3]);
 			addComp(upgradableSelectors[i]);
 		}
 		
 		
 		
-		//add tooltip of selected item desc 
+		//add tooltip of selected item desc instead of UpgradableSelector
 		
 		resizeComponents(3, 3);
 		revalidate();

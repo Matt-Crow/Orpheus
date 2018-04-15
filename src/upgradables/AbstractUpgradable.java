@@ -28,6 +28,10 @@ public class AbstractUpgradable {
 	public String getName(){
 		return name;
 	}
+	@Override
+	public String toString(){
+		return name;
+	}
 	public String getDescription(){
 		return getName() + " does not have a description";
 	}
