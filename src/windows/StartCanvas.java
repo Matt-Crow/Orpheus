@@ -6,9 +6,9 @@ import initializers.Master;
 
 import javax.swing.JLabel;
 import javax.swing.AbstractAction;
+import gui.Button;
 
 import resources.Op;
-import resources.EasyButton;
 import resources.DrawingPlane;
 
 @SuppressWarnings("serial")
@@ -30,7 +30,6 @@ public class StartCanvas extends DrawingPlane{
 		addComp(new VoidComponent());
 		
 		String[] buttonTexts = {"About this game", "Play", "How to Play"};
-		Color[] buttonColors = {Color.blue, Color.red, Color.green};
 		AbstractAction[] actions = new AbstractAction[3];
 		actions[0] = new AbstractAction("About this game"){
 			public void actionPerformed(ActionEvent e){
@@ -52,7 +51,7 @@ public class StartCanvas extends DrawingPlane{
 		};
 		
 		for(int i = 0; i < 3; i++){
-			EasyButton b = new EasyButton(buttonTexts[i], buttonColors[i]);
+			Button b = new Button(buttonTexts[i]);
 			b.addActionListener(actions[i]);
 			addComp(b);
 		}

@@ -9,7 +9,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Timer;
 
 import battle.*;
-import resources.EasyButton;
+import gui.Button;
 import resources.KeyRegister;
 import resources.Direction;
 import initializers.Master;
@@ -29,7 +29,7 @@ public class BattleCanvas extends DrawingPlane{
 		super();
 		paused = true;
 		
-		EasyButton b = new EasyButton("Exit", Color.red);
+		Button b = new Button("Exit");
 		b.addActionListener(new AbstractAction(){
 			public static final long serialVersionUID = 12L;
 			public void actionPerformed(ActionEvent e){

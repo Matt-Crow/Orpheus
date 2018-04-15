@@ -7,9 +7,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import java.util.ArrayList;
 
+import gui.Button;
+
 import battle.Team;
 import customizables.*;
-import resources.EasyButton;
 import initializers.Master;
 import resources.DrawingPlane;
 
@@ -27,7 +28,7 @@ public class MainCanvas extends DrawingPlane{
 	public MainCanvas(){
 		super();
 		
-		EasyButton b = new EasyButton("Quit", Color.red);
+		Button b = new Button("Quit");
 		b.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				new StartWindow();
@@ -50,7 +51,7 @@ public class MainCanvas extends DrawingPlane{
 		}
 		
 		//FIXME customcolors
-		EasyButton newBuild = new EasyButton("Create a new build", Color.green);
+		Button newBuild = new Button("Create a new build");
 		newBuild.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				new BuildWindow();
@@ -59,7 +60,7 @@ public class MainCanvas extends DrawingPlane{
 		});
 		addComp(newBuild);
 
-		EasyButton battle = new EasyButton("Battle", Color.red);
+		Button battle = new Button("Battle");
 		battle.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				team1 = Team.constructRandomTeam("Team 1", Color.green, Integer.parseInt(team1Size.getSelectedItem().toString()) - 1);

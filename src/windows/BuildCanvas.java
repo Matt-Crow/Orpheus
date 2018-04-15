@@ -1,39 +1,30 @@
 package windows;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
-import java.awt.GridLayout;
 import java.util.ArrayList;
-import initializers.Master;
 import customizables.Build;
 import entities.Player;
 import resources.DrawingPlane;
-import resources.EasyButton;
+import gui.Button;
 import graphics.UpgradableSelector;
 import upgradables.AbstractUpgradable;
-import passives.Passive;
 
-//@SuppressWarnings("unused")
 public class BuildCanvas extends DrawingPlane{
 	public static final long serialVersionUID = 1L;
 	private JComboBox<String> baseBuild;
 	private UpgradableSelector[] upgradableSelectors;
 	
-	private EasyButton setClass;
-	private EasyButton finish;
+	private Button setClass;
+	private Button finish;
 	private JTextField name;
 	private Player testPlayer;
 	
-	// currently broken, need to work on Build
-	
 	public BuildCanvas(){
 		super();
-		
-		//customcolors
-		EasyButton quit = new EasyButton("Quit without saving", Color.red);
+		Button quit = new Button("Quit without saving");
 		quit.addActionListener(new AbstractAction(){
 			public static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent e){
@@ -54,7 +45,7 @@ public class BuildCanvas extends DrawingPlane{
 		baseBuild.addActionListener(getRepaint());
 		addComp(baseBuild);
 		
-		setClass = new EasyButton("Edit/copy build", Color.white);
+		setClass = new Button("Edit/copy build");
 		setClass.addActionListener(new AbstractAction(){
 			public static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent e){
@@ -67,15 +58,14 @@ public class BuildCanvas extends DrawingPlane{
 		resizeComponents(4, 3);
 	}
 	public void phase2(){
-		Player testPlayer = new Player("TEST");
+		testPlayer = new Player("TEST");
 		Build b = Build.getBuildByName(baseBuild.getSelectedItem().toString());
 		testPlayer.applyBuild(b);
 
 		name = new JTextField(b.getName());
-		name.setLayout(null);
 		addComp(name);
 		
-		finish = new EasyButton("Save", Color.yellow);
+		finish = new Button("Save");
 		finish.addActionListener(new AbstractAction(){
 			public static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent e){
@@ -106,7 +96,7 @@ public class BuildCanvas extends DrawingPlane{
 		
 		
 		
-		//add tooltip of selected item desc instead of UpgradableSelector
+		//TODO: add tooltip of selected item desc instead of UpgradableSelector
 		
 		resizeComponents(3, 3);
 		revalidate();
