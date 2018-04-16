@@ -7,13 +7,11 @@ import graphics.CustomColors;
 import initializers.Master;
 
 import javax.swing.AbstractAction;
-import javax.swing.JComponent;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.geom.AffineTransform;
-import java.util.ArrayList;
 
 public class DrawingPlane extends JPanel{
 	public static final long serialVersionUID = 1L;
@@ -22,7 +20,6 @@ public class DrawingPlane extends JPanel{
 	private int tx;
 	private int ty;
 	private int rotated;
-	private ArrayList<JComponent> components;
 	
 	public DrawingPlane(){
 		super();
@@ -33,7 +30,6 @@ public class DrawingPlane extends JPanel{
 		setBackground(CustomColors.black);
 		setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
 		setFocusable(true);
-		components = new ArrayList<>();
 	}
 	public int getW(){
 		return Master.CANVASWIDTH;
@@ -76,22 +72,8 @@ public class DrawingPlane extends JPanel{
 		translate(-x, -y);
 		rotated += degrees;
 	}
-	
-
-	public void addComp(JComponent j){
-		add(j);
-		components.add(j);
-	}
-	public void removeComp(JComponent j){
-		remove(j);
-		components.remove(j);
-	}
 	public void resizeComponents(int rows, int cols){
 		setLayout(new GridLayout(rows, cols, 10, 10));
-		for(JComponent j : components){
-			j.setOpaque(true);
-			j.setVisible(true);
-		}
 	}
 	public AbstractAction getRepaint(){
 		return new AbstractAction(){

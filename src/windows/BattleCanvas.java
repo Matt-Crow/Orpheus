@@ -37,7 +37,7 @@ public class BattleCanvas extends DrawingPlane{
 				close();
 			}
 		});
-		addComp(b);
+		add(b);
 		
 		Chat.addTo(this);
 		

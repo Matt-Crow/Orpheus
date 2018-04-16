@@ -1,12 +1,10 @@
 package windows;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
-import initializers.Master;
 
-import javax.swing.JLabel;
 import javax.swing.AbstractAction;
 import gui.Button;
+import gui.Title;
 
 import resources.Op;
 import resources.DrawingPlane;
@@ -18,16 +16,12 @@ public class StartCanvas extends DrawingPlane{
 	public StartCanvas(){
 		super();
 		
-		addComp(new VoidComponent());
+		add(new VoidComponent());
 		
-		JLabel title = new JLabel("The Orpheus Proposition");
-		title.setLayout(null);
-		title.setBounds(0, 0, Master.CANVASWIDTH, Master.CANVASHEIGHT / 3);
-		title.setBackground(Color.yellow);
-		title.setOpaque(true);
-		addComp(title);
+		Title title = new Title("The Orpheus Proposition");
+		add(title);
 		
-		addComp(new VoidComponent());
+		add(new VoidComponent());
 		
 		String[] buttonTexts = {"About this game", "Play", "How to Play"};
 		AbstractAction[] actions = new AbstractAction[3];
@@ -53,7 +47,7 @@ public class StartCanvas extends DrawingPlane{
 		for(int i = 0; i < 3; i++){
 			Button b = new Button(buttonTexts[i]);
 			b.addActionListener(actions[i]);
-			addComp(b);
+			add(b);
 		}
 		resizeComponents(2, 3);
 	}

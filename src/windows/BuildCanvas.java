@@ -32,7 +32,7 @@ public class BuildCanvas extends DrawingPlane{
 				close();
 			}
 		});
-		addComp(quit);
+		add(quit);
 		
 		
 		ArrayList<Build> builds = Build.getAllBuilds();
@@ -43,18 +43,18 @@ public class BuildCanvas extends DrawingPlane{
 		
 		baseBuild = new JComboBox<String>(buildNames);
 		baseBuild.addActionListener(getRepaint());
-		addComp(baseBuild);
+		add(baseBuild);
 		
 		setClass = new Button("Edit/copy build");
 		setClass.addActionListener(new AbstractAction(){
 			public static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent e){
-				removeComp(baseBuild);
-				removeComp(setClass);
+				remove(baseBuild);
+				remove(setClass);
 				phase2();
 			}
 		});
-		addComp(setClass);
+		add(setClass);
 		resizeComponents(4, 3);
 	}
 	public void phase2(){
@@ -63,7 +63,7 @@ public class BuildCanvas extends DrawingPlane{
 		testPlayer.applyBuild(b);
 
 		name = new JTextField(b.getName());
-		addComp(name);
+		add(name);
 		
 		finish = new Button("Save");
 		finish.addActionListener(new AbstractAction(){
@@ -78,7 +78,7 @@ public class BuildCanvas extends DrawingPlane{
 				close();
 			}
 		});
-		addComp(finish);
+		add(finish);
 		
 		upgradableSelectors = new UpgradableSelector[6];
 		for(int i = 0; i < 6; i++){
@@ -91,7 +91,7 @@ public class BuildCanvas extends DrawingPlane{
 					
 			upgradableSelectors[i] = new UpgradableSelector(title + " #" + (i % 3 + 1), option);
 			upgradableSelectors[i].getBox().setSelected(names[i % 3]);
-			addComp(upgradableSelectors[i]);
+			add(upgradableSelectors[i]);
 		}
 		
 		

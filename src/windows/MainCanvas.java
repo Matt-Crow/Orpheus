@@ -4,17 +4,16 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import java.util.ArrayList;
 
 import gui.Button;
+import gui.Title;
 
 import battle.Team;
 import customizables.*;
 import initializers.Master;
 import resources.DrawingPlane;
 
-// need to add custom build creation
 @SuppressWarnings("serial")
 public class MainCanvas extends DrawingPlane{
 	public static final long serialVersionUID = 1L;
@@ -35,7 +34,7 @@ public class MainCanvas extends DrawingPlane{
 				close();
 			}
 		});
-		addComp(b);
+		add(b);
 		
 		ArrayList<Build> builds = Build.getAllBuilds();
 		String[] buildNameList = new String[builds.size()];
@@ -50,7 +49,6 @@ public class MainCanvas extends DrawingPlane{
 			numStr[i] = Integer.toString(numbers[i]);
 		}
 		
-		//FIXME customcolors
 		Button newBuild = new Button("Create a new build");
 		newBuild.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
@@ -58,7 +56,7 @@ public class MainCanvas extends DrawingPlane{
 				close();
 			}
 		});
-		addComp(newBuild);
+		add(newBuild);
 
 		Button battle = new Button("Battle");
 		battle.addActionListener(new AbstractAction(){
@@ -77,23 +75,23 @@ public class MainCanvas extends DrawingPlane{
 				close();
 			}
 		});
-		addComp(battle);
+		add(battle);
 		
-		addComp(new JLabel("Player team size"));
-		addComp(new JLabel("Player Build"));
-		addComp(new JLabel("Enemy team size"));
+		add(new Title("Player team size"));
+		add(new Title("Player Build"));
+		add(new Title("Enemy team size"));
 		
 		team1Size = new JComboBox<String>(numStr);
 		team1Size.addActionListener(getRepaint());
-		addComp(team1Size);
+		add(team1Size);
 		
 		playerBuild = new JComboBox<String>(buildNameList);
 		playerBuild.addActionListener(getRepaint());
-		addComp(playerBuild);
+		add(playerBuild);
 		
 		team2Size = new JComboBox<String>(numStr);
 		team2Size.addActionListener(getRepaint());
-		addComp(team2Size);
+		add(team2Size);
 		
 		
 		

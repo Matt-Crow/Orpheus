@@ -1,8 +1,6 @@
 package graphics;
 
 import javax.swing.JComponent;
-import javax.swing.JTextArea;
-
 import java.awt.GridLayout;
 
 import java.util.ArrayList;
@@ -10,10 +8,13 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import upgradables.AbstractUpgradable;
 
+import gui.Text;
+import gui.Style;
+
 @SuppressWarnings("serial")
 public class UpgradableSelector extends JComponent{
 	private OptionBox<AbstractUpgradable> box;
-	private JTextArea desc;
+	private Text desc;
 	
 	public UpgradableSelector(String title, ArrayList<AbstractUpgradable> a){
 		super();
@@ -30,9 +31,9 @@ public class UpgradableSelector extends JComponent{
 		});
 		add(box);
 		
-		desc = new JTextArea(box.getSelected().getDescription());
-		desc.setEditable(false);
+		desc = new Text(box.getSelected().getDescription());
 		add(desc);
+		Style.applyStyling(this);
 	}
 	public OptionBox<AbstractUpgradable> getBox(){
 		return box;
