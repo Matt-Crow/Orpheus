@@ -6,7 +6,7 @@ public class CustomColors extends Color{
 	private static final long serialVersionUID = 1L;
 	
 	public static final CustomColors red = new CustomColors(255, 55, 0);
-	public static final CustomColors orange = new CustomColors(155, 155, 0);
+	public static final CustomColors orange = new CustomColors(255, 100, 0);
 	public static final CustomColors yellow = new CustomColors(200, 200, 0);
 	public static final CustomColors green = new CustomColors(0, 200, 0);
 	//public static final Color darkGreen = new Color(0, 100, 0);

@@ -3,11 +3,10 @@ package windows;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
-import javax.swing.JComboBox;
 import java.util.ArrayList;
 
 import gui.Button;
-import gui.Title;
+import gui.OptionBox;
 
 import battle.Team;
 import customizables.*;
@@ -20,9 +19,9 @@ public class MainCanvas extends DrawingPlane{
 	private Team team1;
 	private Team team2;
 	
-	private JComboBox<String> playerBuild;
-	private JComboBox<String> team1Size;
-	private JComboBox<String> team2Size;
+	private OptionBox<String> playerBuild;
+	private OptionBox<String> team1Size;
+	private OptionBox<String> team2Size;
 	
 	public MainCanvas(){
 		super();
@@ -61,10 +60,10 @@ public class MainCanvas extends DrawingPlane{
 		Button battle = new Button("Battle");
 		battle.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				team1 = Team.constructRandomTeam("Team 1", Color.green, Integer.parseInt(team1Size.getSelectedItem().toString()) - 1);
-				team2 = Team.constructRandomTeam("Team 2", Color.red, Integer.parseInt(team2Size.getSelectedItem().toString()));
+				team1 = Team.constructRandomTeam("Team 1", Color.green, Integer.parseInt(team1Size.getSelected().toString()) - 1);
+				team2 = Team.constructRandomTeam("Team 2", Color.red, Integer.parseInt(team2Size.getSelected().toString()));
 				
-				Master.TRUEPLAYER.applyBuild(Build.getBuildByName(playerBuild.getSelectedItem().toString()));
+				Master.TRUEPLAYER.applyBuild(Build.getBuildByName(playerBuild.getSelected().toString()));
 				team1.addMember(Master.TRUEPLAYER);
 				
 				team1.setEnemy(team2);
@@ -77,25 +76,21 @@ public class MainCanvas extends DrawingPlane{
 		});
 		add(battle);
 		
-		add(new Title("Player team size"));
-		add(new Title("Player Build"));
-		add(new Title("Enemy team size"));
-		
-		team1Size = new JComboBox<String>(numStr);
+		team1Size = new OptionBox<String>("Team 1 size", numStr);
 		team1Size.addActionListener(getRepaint());
 		add(team1Size);
 		
-		playerBuild = new JComboBox<String>(buildNameList);
+		playerBuild = new OptionBox<String>("Player build", buildNameList);
 		playerBuild.addActionListener(getRepaint());
 		add(playerBuild);
 		
-		team2Size = new JComboBox<String>(numStr);
+		team2Size = new OptionBox<String>("Team 2 size", numStr);
 		team2Size.addActionListener(getRepaint());
 		add(team2Size);
 		
 		
 		
 		
-		resizeComponents(3, 3);
+		resizeComponents(2, 3);
 	}
 }

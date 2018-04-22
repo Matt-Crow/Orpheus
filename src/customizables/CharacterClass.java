@@ -60,8 +60,12 @@ public class CharacterClass extends Customizable{
 	public Color getColor(){
 		return color;
 	}
-	public ArrayList<Attack> getAttackOption(){
-		return attackOptions;
+	public Attack[] getAttackOption(){
+		Attack[] ret = new Attack[attackOptions.size()];
+		for(int i = 0; i < attackOptions.size(); i++){
+			ret[i] = attackOptions.get(i);
+		}
+		return ret;
 	}
 	public String[] getAttacksString(){
 		String[] ret = new String[attackOptions.size()];
@@ -70,8 +74,12 @@ public class CharacterClass extends Customizable{
 		}
 		return ret;
 	}
-	public ArrayList<Passive> getPassiveOptions(){
-		return passiveOptions;
+	public Passive[] getPassiveOptions(){
+		Passive[] ret = new Passive[passiveOptions.size()];
+		for(int i = 0; i < passiveOptions.size(); i++){
+			ret[i] = passiveOptions.get(i);
+		}
+		return ret;
 	}
 	public String[] getPassivesString(){
 		String[] ret = new String[passiveOptions.size()];

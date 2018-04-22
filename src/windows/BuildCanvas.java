@@ -2,24 +2,24 @@ package windows;
 
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
 import java.util.ArrayList;
 import customizables.Build;
 import entities.Player;
 import resources.DrawingPlane;
 import gui.Button;
-import graphics.UpgradableSelector;
+import gui.OptionBox;
+import gui.UpgradableSelector;
+import gui.Text;
 import upgradables.AbstractUpgradable;
 
 public class BuildCanvas extends DrawingPlane{
 	public static final long serialVersionUID = 1L;
-	private JComboBox<String> baseBuild;
+	private OptionBox<String> baseBuild;
 	private UpgradableSelector[] upgradableSelectors;
 	
 	private Button setClass;
 	private Button finish;
-	private JTextField name;
+	private Text name;
 	private Player testPlayer;
 	
 	public BuildCanvas(){
@@ -41,7 +41,7 @@ public class BuildCanvas extends DrawingPlane{
 			buildNames[i] = builds.get(i).getName();
 		}
 		
-		baseBuild = new JComboBox<String>(buildNames);
+		baseBuild = new OptionBox<String>("Base build", buildNames);
 		baseBuild.addActionListener(getRepaint());
 		add(baseBuild);
 		
@@ -55,14 +55,15 @@ public class BuildCanvas extends DrawingPlane{
 			}
 		});
 		add(setClass);
-		resizeComponents(4, 3);
+		resizeComponents(3, 1);
 	}
 	public void phase2(){
 		testPlayer = new Player("TEST");
-		Build b = Build.getBuildByName(baseBuild.getSelectedItem().toString());
+		Build b = Build.getBuildByName(baseBuild.getSelected().toString());
 		testPlayer.applyBuild(b);
 
-		name = new JTextField(b.getName());
+		name = new Text(b.getName());
+		name.setEditable(true);
 		add(name);
 		
 		finish = new Button("Save");
@@ -82,10 +83,10 @@ public class BuildCanvas extends DrawingPlane{
 		
 		upgradableSelectors = new UpgradableSelector[6];
 		for(int i = 0; i < 6; i++){
-			ArrayList<AbstractUpgradable> option = (i <= 2) ? 
-					new ArrayList<AbstractUpgradable>(testPlayer.getCharacterClass().getAttackOption()) 
+			AbstractUpgradable[] option = (i <= 2) ? 
+					testPlayer.getCharacterClass().getAttackOption()
 					: 
-					new ArrayList<AbstractUpgradable>(testPlayer.getCharacterClass().getPassiveOptions()); 
+					testPlayer.getCharacterClass().getPassiveOptions(); 
 			String title = (i <= 2) ? "Active" : "Passive";
 			String[] names = (i <= 2) ? b.getActiveNames() : b.getPassiveNames();
 					

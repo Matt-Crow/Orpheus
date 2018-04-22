@@ -6,7 +6,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 
 import graphics.CustomColors;
-import resources.Op;
 
 @SuppressWarnings("serial")
 public class Button extends JButton implements MouseListener{
@@ -27,11 +26,11 @@ public class Button extends JButton implements MouseListener{
 		
 	}
 	public void mouseEntered(MouseEvent e){
-		Op.add("over");
-		Op.dp();
 		setBackground(CustomColors.orange);
+		repaint();
 	}
 	public void mouseExited(MouseEvent e){
 		setBackground(CustomColors.gold);
+		repaint();
 	}
 }

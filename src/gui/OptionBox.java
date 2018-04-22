@@ -1,10 +1,7 @@
-package graphics;
+package gui;
 
 import javax.swing.JComponent;
-import javax.swing.JTextArea;
-import javax.swing.JComboBox;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
+import java.awt.GridLayout;
 
 import java.util.ArrayList;
 
@@ -13,30 +10,23 @@ import javax.swing.AbstractAction;
 @SuppressWarnings("serial")
 public class OptionBox<T> extends JComponent{
 	private ArrayList<T> options;
-	private JTextArea title;
-	private JComboBox<String> box;
+	private Title title;
+	private Dropdown<String> box;
 	
 	public OptionBox(String t, T[] opt){
 		super();
-		setLayout(new GridBagLayout());
+		Style.applyStyling(this);
+		setLayout(new GridLayout(2, 1));
 		
-		title = new JTextArea(t);
-		title.setEditable(false);
-		GridBagConstraints c1 = new GridBagConstraints();
-		c1.fill = GridBagConstraints.BOTH;
-		add(title, c1);
+		title = new Title(t);
+		add(title);
 		
 		options = new ArrayList<T>();
 		for(int i = 0; i < opt.length; i++){
 			options.add(opt[i]);
 		}
-		box = new JComboBox<>(getOptions());
-		GridBagConstraints c2 = new GridBagConstraints();
-		c2.gridx = 0;
-		c2.gridy = 1;
-		c2.gridheight = 2;
-		c2.fill = GridBagConstraints.BOTH;
-		add(box, c2);
+		box = new Dropdown<>(getOptions());
+		add(box);
 	}
 	public String[] getOptions(){
 		String[] ret = new String[options.size()];
