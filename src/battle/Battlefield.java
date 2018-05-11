@@ -2,17 +2,37 @@ package battle;
 
 import java.awt.Graphics;
 import graphics.CustomColors;
+import resources.Op;
 
 public class Battlefield {
 	private int numRows;
 	private int numCols;
 	private int tileSize;
+	private int chunkSize;
+	private Chunk firstChunk;
 	private Battle b;
 	
 	public Battlefield(){
 		numRows = 20;
 		numCols = 20;
 		tileSize = 100;
+		
+		chunkSize = 500;
+		
+		firstChunk = new Chunk(-1, -1, chunkSize);
+		Chunk next = firstChunk;
+		for(int i = 0; i * chunkSize < numRows * tileSize; i++){
+			for(int j = 0; j * chunkSize < numCols * tileSize; j++){
+				next = next.spawn(i * chunkSize, j * chunkSize);
+			}
+		}
+		next = firstChunk;
+		while(next.getHasNext()){
+			next = next.getNext();
+			Op.add("X: " + next.getX());
+			Op.add("Y: " + next.getY());
+			Op.dp();
+		}
 	}
 	public int getTileSize(){
 		return tileSize;
@@ -30,6 +50,15 @@ public class Battlefield {
 		int[] ret = new int[2];
 		ret[0] = tileSize * numRows / 2;
 		ret[1] = tileSize * numCols / 2;
+		return ret;
+	}
+	public Chunk getChunkContaining(int x, int y){
+		Chunk ret = firstChunk;
+		boolean found = false;
+		while(ret.getHasNext() && !found){
+			ret = ret.getNext();
+			found = ret.contains(x, y);
+		}
 		return ret;
 	}
 	public void draw(Graphics g){
