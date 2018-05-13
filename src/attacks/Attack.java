@@ -137,9 +137,7 @@ public class Attack extends AbstractUpgradable{
 	public void spawnProjectile(int facingDegrees){
 		SeedProjectile registeredProjectile = new SeedProjectile(getRegisteredTo().getX(), getRegisteredTo().getY(), facingDegrees, (int) getStatValue("Speed"), getRegisteredTo(), this);
 		registeredProjectile.getActionRegister().addOnHit(getStatusInfliction());
-		if(registeredProjectile.getAttack().getStatValue("Range") == 0){
-			registeredProjectile.terminate();
-		}
+		
 		lastUseChildren.add(registeredProjectile);
 	}
 	public void spawnProjectile(){

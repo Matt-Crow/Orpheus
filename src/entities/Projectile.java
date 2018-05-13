@@ -16,7 +16,6 @@ public class Projectile extends Entity{
 	private int distanceTraveled;
 	private ArrayList<Player> doNotHit;
 	private Player hit;
-	private boolean terminated;
 	private Particle head;
 	
 	public Projectile(int x, int y, int dirNum, int momentum, Player attackUser, Attack a){
@@ -28,13 +27,18 @@ public class Projectile extends Entity{
 		if(a.getTracking()){
 			getEntityAI().enable();
 		}
-		terminated = false;
+		
 		setMoving(true);
 		doNotHit = new ArrayList<Player>();
 		hit = new Player("Void");
 		head = new Particle(0, 0, 0, 0, Color.black);
 		
 		Master.getCurrentBattle().getHost().getChunkContaining(x, y).registerProjectile(this);
+	}
+	
+	//node head manager
+	public Projectile(){
+		super(-1, -1, 0, 0);
 	}
 	
 	public String getAttackName(){
@@ -51,9 +55,6 @@ public class Projectile extends Entity{
 	}
 	public Attack getAttack(){
 		return registeredAttack;
-	}
-	public boolean hasAlreadyTerminated(){
-		return terminated;
 	}
 	
 	public void avoid(Player p){
@@ -85,6 +86,9 @@ public class Projectile extends Entity{
 		super.update();
 		
 		distanceTraveled += getMomentum();
+		if(distanceTraveled >= registeredAttack.getStatValue("Range") && !getShouldTerminate()){
+			terminate();
+		}
 		ArrayList<Color> cs = registeredAttack.getColors();
 		Player current = getTeam().getEnemy().getHead();
 		while(current.getHasChild()){
@@ -123,8 +127,6 @@ public class Projectile extends Entity{
 		}
 	}
 	public void draw(Graphics g){
-		Op.add("drew");
-		Op.dp();
 		if(registeredAttack.getParticleType() == ParticleType.NONE || Master.DISABLEPARTICLES){
 			Op.add(user.getTeam() == null);
 			Op.dp();

@@ -2,6 +2,7 @@ package battle;
 
 import entities.Player;
 import entities.Projectile;
+import attacks.Slash;
 import java.awt.Graphics;
 
 public class Chunk {
@@ -15,7 +16,6 @@ public class Chunk {
 	
 	private Player headPlayer; // linked list head
 	private Projectile headProjectile;
-	private boolean hasProjectile;
 	
 	private Chunk next;
 	private boolean hasNext;
@@ -25,7 +25,7 @@ public class Chunk {
 		y = yCoord;
 		size = s;
 		hasNext = false;
-		hasProjectile = false;
+		headProjectile = new Projectile();
 	}
 	
 	public Chunk spawn(int xCoord, int yCoord){
@@ -49,12 +49,7 @@ public class Chunk {
 	}
 	
 	public void registerProjectile(Projectile p){
-		if(!hasProjectile){
-			headProjectile = p;
-			hasProjectile = true;
-		} else {
-			headProjectile.insertChild(p);
-		}
+		headProjectile.insertChild(p);
 	}
 	
 	//not done
@@ -64,8 +59,6 @@ public class Chunk {
 				headProjectile = (Projectile) p.getChild();
 				p.disableChild();
 				headProjectile.disableParent();
-			} else {
-				hasProjectile = false;
 			}
 			if(p.getHasParent()){
 				p.getParent().disableChild();
@@ -79,19 +72,13 @@ public class Chunk {
 				yCoord > y && yCoord < y + size;
 	}
 	public void update(){
-		if(hasProjectile){
-			headProjectile.update();
-			headProjectile.updateAllChildren();
-		}
+		headProjectile.updateAllChildren();
 	}
 	public void draw(Graphics g){
-		if(hasProjectile){
-			headProjectile.draw(g);
-			Projectile current = headProjectile;
-			while(current.getHasChild()){
-				current = (Projectile) current.getChild();
-				current.draw(g);
-			}
+		Projectile current = headProjectile;
+		while(current.getHasChild()){
+			current = (Projectile) current.getChild();
+			current.draw(g);
 		}
 	}
 }
