@@ -33,9 +33,8 @@ public class Projectile extends Entity{
 		doNotHit = new ArrayList<Player>();
 		hit = new Player("Void");
 		head = new Particle(0, 0, 0, 0, Color.black);
-	}
-	public Projectile(Attack a){
-		this(0, 0, 0, 0, new Player("undefined"), a);
+		
+		Master.getCurrentBattle().getHost().getChunkContaining(x, y).registerProjectile(this);
 	}
 	
 	public String getAttackName(){
@@ -82,7 +81,6 @@ public class Projectile extends Entity{
 			terminate();
 		}
 	}
-	
 	public void update(){
 		super.update();
 		
@@ -125,7 +123,11 @@ public class Projectile extends Entity{
 		}
 	}
 	public void draw(Graphics g){
+		Op.add("drew");
+		Op.dp();
 		if(registeredAttack.getParticleType() == ParticleType.NONE || Master.DISABLEPARTICLES){
+			Op.add(user.getTeam() == null);
+			Op.dp();
 			g.setColor(user.getTeam().getColor());
 			g.fillOval(getX() - 25, getY() - 25, 50, 50);
 		} else {

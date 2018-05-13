@@ -30,10 +30,10 @@ public class SeedProjectile extends Projectile{
 						p.addBrother(possibleBrother);
 					}
 				}
-				getParent().insertChild(p);
 			}
 		}
 	}
+	
 	public void update(){
 		super.update();
 		if(getDistance() >= getAttack().getStatValue("Range") && !hasAlreadyTerminated()){

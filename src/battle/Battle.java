@@ -15,6 +15,7 @@ public class Battle {
 		teams.add(team1);
 		teams.add(team2);
 	}
+	
 	public void setHost(Battlefield b){
 		host = b;
 		b.setHosted(this);
@@ -51,6 +52,7 @@ public class Battle {
 				t.update();
 			}
 		}
+		host.updateAllChunks();
 	}
 	public void draw(Graphics g){
 		for(Team t : teams){

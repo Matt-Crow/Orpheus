@@ -285,10 +285,5 @@ public class Player extends Entity{
 			g.drawString(s.getName() + " " + iStr + "(" + s.getUsesLeft() + ")", getX() - 50, y);
 			y += h/30;
 		}
-		
-		slash.drawAllProjectiles(g);
-		for(Attack a : actives){
-			a.drawAllProjectiles(g);
-		}
 	}
 }

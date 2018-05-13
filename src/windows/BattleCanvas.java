@@ -52,13 +52,15 @@ public class BattleCanvas extends DrawingPlane{
 		addKeyRegistration();
 		resizeComponents(10, 10);
 	}
+	
 	public void setBattle(Team team1, Team team2){
 		hostedBattle = new Battle(team1, team2);
+		Master.setCurrentBattle(hostedBattle);
 		battlefield = new Battlefield();
 		
 		hostedBattle.setHost(battlefield);
 		hostedBattle.init();
-		Master.setCurrentBattle(hostedBattle);
+		
 		Controls.registerControls(this);
 	}
 	

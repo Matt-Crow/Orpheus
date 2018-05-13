@@ -76,5 +76,17 @@ public class Battlefield {
 			row += 1;
 		}
 		b.draw(g);
+		Chunk current = firstChunk;
+		while(current.getHasNext()){
+			current = current.getNext();
+			current.draw(g);
+		}
+	}
+	public void updateAllChunks(){
+		Chunk current = firstChunk;
+		while(current.getHasNext()){
+			current = current.getNext();
+			current.update();
+		}
 	}
 }

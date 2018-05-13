@@ -23,8 +23,6 @@ public class Attack extends AbstractUpgradable{
 	// maybe update them from here?
 	private ArrayList<Projectile> lastUseChildren;
 	
-	private Projectile head;
-	
 	private boolean projectilesTrack;
 	
 	private ParticleType particleType;
@@ -142,7 +140,6 @@ public class Attack extends AbstractUpgradable{
 		if(registeredProjectile.getAttack().getStatValue("Range") == 0){
 			registeredProjectile.terminate();
 		}
-		head.insertChild(registeredProjectile);
 		lastUseChildren.add(registeredProjectile);
 	}
 	public void spawnProjectile(){
@@ -162,13 +159,6 @@ public class Attack extends AbstractUpgradable{
 	public void init(){
 		super.init();
 		lastUseChildren = new ArrayList<>();
-		head = new Projectile(this);
-	}
-	
-	
-	public void update(){
-		super.update();
-		head.updateAllChildren();
 	}
 	
 	public void drawStatusPane(Graphics g, int x, int y, int w, int h){
@@ -183,13 +173,5 @@ public class Attack extends AbstractUpgradable{
 			g.setColor(Color.red);
 			g.drawString("On cooldown: " + Master.framesToSeconds(getCooldown()), x + 10, y + 20);
 		}	
-	}
-	
-	public void drawAllProjectiles(Graphics g){
-		Projectile current = head;
-		while(current.getHasChild()){
-			current = (Projectile) current.getChild();
-			current.draw(g);
-		}
 	}
 }

@@ -153,6 +153,7 @@ public class Entity {
 			child.setParent(parent);
 		}
 	}
+	
 	public boolean getShouldTerminate(){
 		return shouldTerminate;
 	}
@@ -183,6 +184,11 @@ public class Entity {
 				Op.add("ERROR");
 				Op.dp();
 			}
+		}
+	}
+	public void removeChild(){
+		if(hasChild){
+			
 		}
 	}
 	public boolean getHasParent(){
