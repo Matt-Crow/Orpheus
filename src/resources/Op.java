@@ -10,6 +10,7 @@ public class Op {
 	private static ArrayList<String> messages;
 	
 	// Adds to the message arraylist
+	
 	public static void add(String msg){
 		try {
 			messages.add(msg);
@@ -26,6 +27,7 @@ public class Op {
 	public static void add(double msg){
 		add(Double.toString(msg));
 	}
+	
 	public static void add(boolean msg){
 		String s = (msg) ? "true" : "false";
 		add(s);

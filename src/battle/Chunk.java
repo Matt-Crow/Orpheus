@@ -1,6 +1,8 @@
 package battle;
 
 import entities.Entity;
+import resources.Op;
+
 import java.awt.Graphics;
 
 public class Chunk {
@@ -59,10 +61,17 @@ public class Chunk {
 	}
 	public void update(){
 		Entity current = head;
+		Op.add("Updating chunk");
+		Op.dp();
 		while(current.getHasChild()){
 			current = current.getChild();
 			current.update();
+			
+			Op.add("updating entity with id " + current.getId());
+			Op.dp();
 		}
+		Op.add("done");
+		Op.dp();
 		// check for collisions
 	}
 	public void draw(Graphics g){

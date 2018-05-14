@@ -17,7 +17,6 @@ public class Projectile extends Entity{
 	private int range;
 	private ArrayList<Player> doNotHit;
 	private Player hit;
-	private Particle head;
 	
 	public Projectile(int x, int y, int dirNum, int momentum, Player attackUser, Attack a){
 		super(x, y, dirNum, momentum);
@@ -33,7 +32,6 @@ public class Projectile extends Entity{
 		setMoving(true);
 		doNotHit = new ArrayList<Player>();
 		hit = new Player("Void");
-		head = new Particle(0, 0, 0, 0, Color.black);
 		
 		Master.getCurrentBattle().getHost().getChunkContaining(x, y).register(this);
 	}
@@ -95,6 +93,7 @@ public class Projectile extends Entity{
 		}
 		return ret;
 	}
+	
 	public void update(){
 		super.update();
 		distanceTraveled += getMomentum();
@@ -111,43 +110,34 @@ public class Projectile extends Entity{
 			case BURST:
 				for(int i = 0; i < Master.TICKSTOROTATE; i++){
 					Color rbu = cs.get(Random.choose(0, cs.size() - 1));
-					head.insertChild(new Particle(getX(), getY(), 360 * i / Master.TICKSTOROTATE, 5, rbu));
+					insertChild(new Particle(getX(), getY(), 360 * i / Master.TICKSTOROTATE, 5, rbu));
 				}
 				break;
 			case SHEAR:
 				Color rs = cs.get(Random.choose(0, cs.size() - 1));
-				head.insertChild(new Particle(getX(), getY(), getDir().getDegrees() - 45, 5, rs));
+				insertChild(new Particle(getX(), getY(), getDir().getDegrees() - 45, 5, rs));
 				rs = cs.get(Random.choose(0, cs.size() - 1));
-				head.insertChild(new Particle(getX(), getY(), getDir().getDegrees() + 45, 5, rs));
+				insertChild(new Particle(getX(), getY(), getDir().getDegrees() + 45, 5, rs));
 				break;
 			case BEAM:
 				Color rbe = cs.get(Random.choose(0, cs.size() - 1));
-				head.insertChild(new Particle(getX(), getY(), getDir().getDegrees() - 180, 5, rbe));
+				insertChild(new Particle(getX(), getY(), getDir().getDegrees() - 180, 5, rbe));
 				break;
 			case BLADE:
 				Color rbl = cs.get(Random.choose(0, cs.size() - 1));
-				head.insertChild(new Particle(getX(), getY(), getDir().getDegrees(), 0, rbl));
+				insertChild(new Particle(getX(), getY(), getDir().getDegrees(), 0, rbl));
 				break;
 			default:
 				Op.add("The particle type of " + registeredAttack.getParticleType());
 				Op.add("is not found for Projectile.java");
 				Op.dp();
 			}
-			head.updateAllChildren();
 		}
 	}
 	public void draw(Graphics g){
 		if(registeredAttack.getParticleType() == ParticleType.NONE || Master.DISABLEPARTICLES){
-			Op.add(user.getTeam() == null);
-			Op.dp();
 			g.setColor(user.getTeam().getColor());
 			g.fillOval(getX() - 25, getY() - 25, 50, 50);
-		} else {
-			Particle current = head;
-			while(current.getHasChild()){
-				current = (Particle) current.getChild();
-				current.draw(g);
-			}
 		}
 	}
 }

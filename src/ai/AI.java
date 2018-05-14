@@ -90,7 +90,7 @@ public class AI {
 			Entity current = chunks[i].getHead();
 			while(current.getHasChild()){
 				current = current.getChild();
-				if(current instanceof Player){
+				if(current instanceof Player && !current.getTeam().equals(appliedTo.getTeam())){
 					if(current.getCoords().distanceBetween(appliedTo.getCoords()) <= Master.DETECTIONRANGE){
 						inRange = true;
 					}
@@ -112,7 +112,7 @@ public class AI {
 			Entity current = chunks[i].getHead();
 			while(current.getHasChild()){
 				current = current.getChild();
-				if(current instanceof Player){
+				if(current instanceof Player && !current.getTeam().equals(appliedTo.getTeam())){
 					if(current.getCoords().distanceBetween(appliedTo.getCoords()) < distance){
 						nearest = (Player) current;
 						distance = (int) current.getCoords().distanceBetween(appliedTo.getCoords());

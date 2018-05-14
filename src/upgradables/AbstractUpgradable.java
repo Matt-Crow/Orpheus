@@ -94,6 +94,7 @@ public class AbstractUpgradable {
 	public void init(){
 		cooldown = 0;
 	}
+	
 	public void update(){
 		cooldown -= 1;
 		if (cooldown < 0){

@@ -32,6 +32,8 @@ public class Entity {
 	private AI entityAI;
 	
 	private Chunk chunk;
+	private int id;
+	private static int nextId = 1;
 	
 	// linked list stuff
 	// always have a head that does not get updated
@@ -43,6 +45,7 @@ public class Entity {
 	public Entity(int xCoord, int yCoord, int degrees, int m){
 		x = xCoord;
 		y = yCoord;
+		
 		dir = new Direction(degrees);
 		willTurn = "none";
 		
@@ -62,11 +65,18 @@ public class Entity {
 		
 		hasParent = false;
 		hasChild = false;
+		
+		id = nextId;
+		nextId++;
 	}
 	
 	//node chain head
 	public Entity(){
 		hasChild = false;
+	}
+	
+	public int getId(){
+		return id;
 	}
 	
 	public int getX(){
@@ -75,10 +85,12 @@ public class Entity {
 	public int getY(){
 		return y;
 	}
+	
 	public void setCoords(int xCoord, int yCoord){
 		x = xCoord;
 		y = yCoord;
 		chunk = Master.getCurrentBattle().getHost().getChunkContaining(xCoord, yCoord);
+		chunk.register(this);
 	}
 	public Coordinates getCoords(){
 		return new Coordinates(getX(), getY(), this);
@@ -196,15 +208,13 @@ public class Entity {
 	public void insertChild(Entity e){
 		if(!hasChild){
 			setChild(e);
+		} else if(equals(e)){
+			Op.add("an entity cannot be its own child...");
+			Op.dp();
 		} else {
 			Entity old = child;
 			setChild(e);
 			e.setChild(old);
-			
-			if(e.getChild() == e){
-				Op.add("ERROR");
-				Op.dp();
-			}
 		}
 	}
 	public boolean getHasParent(){
@@ -301,7 +311,9 @@ public class Entity {
 		}
 		
 		hitbox.updatePosition();
-		
+		if(chunk == null){
+			chunk = Master.getCurrentBattle().getHost().getChunkContaining(x, y);
+		}
 		if(!chunk.contains(x, y)){
 			closeNodeGap();
 			chunk = Master.getCurrentBattle().getHost().getChunkContaining(x, y);
