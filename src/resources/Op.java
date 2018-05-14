@@ -8,7 +8,6 @@ public class Op {
 	 * purposes. It is a static class.
 	 */
 	private static ArrayList<String> messages;
-	private static ArrayList<String> previousMessages;
 	
 	// Adds to the message arraylist
 	public static void add(String msg){
@@ -16,7 +15,6 @@ public class Op {
 			messages.add(msg);
 		} catch(NullPointerException e){
 			messages = new ArrayList<String>();
-			previousMessages = new ArrayList<String>();
 			add(msg);
 		}
 	}
@@ -36,15 +34,9 @@ public class Op {
 	// Prints the contents of the message arraylist
 	public static void dp(){
 		add(" ");
-		if(!previousMessages.equals(messages)){
-			out.println("<**DEBUG**>");
-			for(String msg : messages){
-				out.println(msg);
-			}
-		}
-		previousMessages = new ArrayList<String>();
-		for(String s : messages){
-			previousMessages.add(s);
+		out.println("<**DEBUG**>");
+		for(String msg : messages){
+			out.println(msg);
 		}
 		
 		messages = new ArrayList<String>();

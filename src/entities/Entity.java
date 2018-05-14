@@ -139,7 +139,6 @@ public class Entity {
 	public AI getEntityAI(){
 		return entityAI;
 	}
-	
 	public void terminate(){
 		shouldTerminate = true;
 		if(hasParent){

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import actions.OnHitTrip;
 import actions.OnHitKey;
 import attacks.Attack;
-import resources.Op;
 
 public class AOEProjectile extends Projectile{
 	private ArrayList<AOEProjectile> brothers;
@@ -27,8 +26,7 @@ public class AOEProjectile extends Projectile{
 	}
 	public void update(){
 		super.update();
-		Op.add("aoe updated");
-		Op.dp();
+		
 		if(getDistance() >= getAttack().getStatValue("AOE") && !getShouldTerminate()){
 			terminate();
 		}

@@ -2,6 +2,7 @@ package battle;
 
 import entities.Player;
 import entities.Projectile;
+import resources.Op;
 import attacks.Slash;
 import java.awt.Graphics;
 
@@ -52,33 +53,28 @@ public class Chunk {
 		headProjectile.insertChild(p);
 	}
 	
-	//not done
-	public void unregisterProjectile(Projectile p){
-		if(headProjectile == p){
-			if(p.getHasChild()){
-				headProjectile = (Projectile) p.getChild();
-				p.disableChild();
-				headProjectile.disableParent();
-			}
-			if(p.getHasParent()){
-				p.getParent().disableChild();
-				p.disableParent();
-			}
-		}
-	}
-	
 	public boolean contains(int xCoord, int yCoord){
 		return xCoord > x && xCoord < x + size && 
 				yCoord > y && yCoord < y + size;
 	}
 	public void update(){
-		headProjectile.updateAllChildren();
+		Projectile current = headProjectile;
+		while(current.getHasChild()){
+			if(!current.getShouldTerminate()){
+				Op.add("here's your problem");
+				Op.dp();
+			}
+			current = (Projectile) current.getChild();
+			
+			current.update();
+		}
 	}
 	public void draw(Graphics g){
 		Projectile current = headProjectile;
 		while(current.getHasChild()){
 			current = (Projectile) current.getChild();
 			current.draw(g);
+			
 		}
 	}
 }
