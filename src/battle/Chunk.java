@@ -60,12 +60,7 @@ public class Chunk {
 	public void update(){
 		Projectile current = headProjectile;
 		while(current.getHasChild()){
-			if(!current.getShouldTerminate()){
-				Op.add("here's your problem");
-				Op.dp();
-			}
 			current = (Projectile) current.getChild();
-			
 			current.update();
 		}
 	}

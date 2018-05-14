@@ -14,6 +14,7 @@ public class Projectile extends Entity{
 	private Player user;
 	private Attack registeredAttack;
 	private int distanceTraveled;
+	private int range;
 	private ArrayList<Player> doNotHit;
 	private Player hit;
 	private Particle head;
@@ -24,6 +25,7 @@ public class Projectile extends Entity{
 		user = attackUser;
 		setTeam(user.getTeam());
 		registeredAttack = a;
+		range = (int) a.getStatValue("Range");
 		if(a.getTracking()){
 			getEntityAI().enable();
 		}
@@ -39,6 +41,10 @@ public class Projectile extends Entity{
 	//node head manager
 	public Projectile(){
 		super(-1, -1, 0, 0);
+	}
+	
+	public void setRange(int i){
+		range = i;
 	}
 	
 	public String getAttackName(){
@@ -84,11 +90,13 @@ public class Projectile extends Entity{
 	}
 	public void update(){
 		super.update();
-		
 		distanceTraveled += getMomentum();
-		if(distanceTraveled >= registeredAttack.getStatValue("Range") && !getShouldTerminate()){
+		
+		// need to change range based on projectile type: attack range for seed, aoe for aoeprojectile
+		if(distanceTraveled >= range && !getShouldTerminate()){
 			terminate();
 		}
+		
 		ArrayList<Color> cs = registeredAttack.getColors();
 		Player current = getTeam().getEnemy().getHead();
 		while(current.getHasChild()){

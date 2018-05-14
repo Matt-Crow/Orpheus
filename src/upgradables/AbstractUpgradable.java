@@ -63,8 +63,9 @@ public class AbstractUpgradable {
 	}
 	public Stat getStat(String n){
 		Stat ret = new Stat("STATNOTFOUND", 0);
+		n = n.toUpperCase();
 		for(Stat stat : stats){
-			if(stat.getName() == n){
+			if(stat.getName().toUpperCase().equals(n)){
 				ret = stat;
 			}
 		}
