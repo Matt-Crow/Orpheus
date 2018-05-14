@@ -42,6 +42,8 @@ public class Entity {
 	private boolean hasParent;
 	private boolean hasChild;
 	
+	private boolean skipUpdate; // use when traversing chunks
+	
 	public Entity(int xCoord, int yCoord, int degrees, int m){
 		x = xCoord;
 		y = yCoord;
@@ -68,6 +70,8 @@ public class Entity {
 		
 		id = nextId;
 		nextId++;
+		
+		skipUpdate = false;
 	}
 	
 	//node chain head
@@ -184,6 +188,8 @@ public class Entity {
 		if(hasParent && hasChild){
 			parent.setChild(child);
 			child.setParent(parent);
+			Op.add("closing the gap");
+			Op.dp();
 		}
 	}
 	
@@ -209,13 +215,13 @@ public class Entity {
 		if(!hasChild){
 			setChild(e);
 		} else if(equals(e)){
-			Op.add("an entity cannot be its own child...");
-			Op.dp();
+			throw new NullPointerException();
 		} else {
 			Entity old = child;
 			setChild(e);
 			e.setChild(old);
 		}
+		e.setParent(this);
 	}
 	public boolean getHasParent(){
 		return hasParent;
@@ -314,9 +320,22 @@ public class Entity {
 		if(chunk == null){
 			chunk = Master.getCurrentBattle().getHost().getChunkContaining(x, y);
 		}
-		if(!chunk.contains(x, y)){
+		if(false && !chunk.contains(x, y)){
+			if(chunk.getId() == Master.getCurrentBattle().getHost().getChunkContaining(x, y).getId()){
+				throw new NullPointerException();
+			}
+			Op.add(id + " " + x + ", " + y);
+			Op.dp();
 			closeNodeGap();
+			Op.add("Moving from chunk " + chunk.getId());
+			if(chunk.getX() + chunk.getSize() <= x && chunk.getY() + chunk.getSize() <= y){
+				// if the chunk is to our upper left, the new chunk has not yet updated
+				skipUpdate = true; // so don't update us twice!
+			}
 			chunk = Master.getCurrentBattle().getHost().getChunkContaining(x, y);
+			Op.add("to chunk " + chunk.getId());
+			Op.dp();
+			chunk.displayData();
 			chunk.register(this);
 		}
 		
@@ -333,9 +352,13 @@ public class Entity {
 	
 	public void update(){
 		if(!shouldTerminate){
-			entityAI.update();
-			updateMovement();
-			actReg.tripOnUpdate();
+			if(!skipUpdate){
+				entityAI.update();
+				updateMovement();
+				actReg.tripOnUpdate();
+			} else {
+				skipUpdate = false;
+			}
 		}
 	}
 	

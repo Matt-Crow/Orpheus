@@ -20,12 +20,17 @@ public class Chunk {
 	private Chunk next;
 	private boolean hasNext;
 	
+	private int id;
+	private static int nextId = 1;
+	
 	public Chunk(int xCoord, int yCoord, int s){
 		x = xCoord;
 		y = yCoord;
 		size = s;
 		hasNext = false;
 		head = new Entity();
+		id = nextId;
+		nextId++;
 	}
 	
 	public Chunk spawn(int xCoord, int yCoord){
@@ -47,31 +52,50 @@ public class Chunk {
 	public int getY(){
 		return y;
 	}
+	public int getSize(){
+		return size;
+	}
 	public Entity getHead(){
 		return head;
 	}
 	
+	public int getId(){
+		return id;
+	}
+	
 	public void register(Entity e){
+		if(head.getHasChild() && head.getChild().equals(e)){
+			throw new NullPointerException();
+		}
 		head.insertChild(e);
 	}
 	
 	public boolean contains(int xCoord, int yCoord){
-		return xCoord > x && xCoord < x + size && 
-				yCoord > y && yCoord < y + size;
+		return xCoord >= x && xCoord < x + size && 
+				yCoord >= y && yCoord < y + size;
+	}
+	public void displayData(){
+		Op.add("Chunk " + id);
+		Op.add("X: " + x + "-" + (x + size));
+		Op.add("Y: " + y + "-" + (y + size));
+		Entity current = head;
+		while(current.getHasChild()){
+			current = current.getChild();
+			Op.add("Entity id " + current.getId());
+		}
+		Op.dp();
 	}
 	public void update(){
+		
 		Entity current = head;
-		Op.add("Updating chunk");
-		Op.dp();
+		if(current.getHasChild() && current.getChild().getId() == current.getId()){
+			throw new NullPointerException();
+		}
+		displayData();
 		while(current.getHasChild()){
 			current = current.getChild();
 			current.update();
-			
-			Op.add("updating entity with id " + current.getId());
-			Op.dp();
 		}
-		Op.add("done");
-		Op.dp();
 		// check for collisions
 	}
 	public void draw(Graphics g){
