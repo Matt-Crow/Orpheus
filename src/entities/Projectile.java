@@ -35,7 +35,7 @@ public class Projectile extends Entity{
 		hit = new Player("Void");
 		head = new Particle(0, 0, 0, 0, Color.black);
 		
-		Master.getCurrentBattle().getHost().getChunkContaining(x, y).registerProjectile(this);
+		Master.getCurrentBattle().getHost().getChunkContaining(x, y).register(this);
 	}
 	
 	//node head manager
@@ -67,26 +67,33 @@ public class Projectile extends Entity{
 		doNotHit.add(p);
 	}
 	
-	public void checkForCollisionsWith(Player p){
-		if(getHitbox().checkForIntercept(p.getHitbox())){
-			if(doNotHit.contains(p)){
-				return;
-			}
-			hit = p;
-			p.logDamage((int) (registeredAttack.getStatValue("Damage") * user.getStatValue("damage dealt modifier") * p.getStatValue("damage taken modifier")));
-			
-			if(registeredAttack instanceof MeleeAttack){
-				user.getActionRegister().tripOnMeleeHit(p);
-				user.getEnergyLog().gainEnergy(5);
-				p.getActionRegister().tripOnBeMeleeHit(user);
-			} else {
-				user.getActionRegister().tripOnHit(p);
-				p.getActionRegister().tripOnBeHit(user);
-			}
-			getActionRegister().tripOnHit(p);
-			CombatLog.logProjectileData(this);
-			terminate();
+	public void hit(Player p){
+		hit = p;
+		p.logDamage((int) (registeredAttack.getStatValue("Damage") * user.getStatValue("damage dealt modifier") * p.getStatValue("damage taken modifier")));
+		if(registeredAttack instanceof MeleeAttack){
+			user.getActionRegister().tripOnMeleeHit(p);
+			user.getEnergyLog().gainEnergy(5);
+			p.getActionRegister().tripOnBeMeleeHit(user);
+		} else {
+			user.getActionRegister().tripOnHit(p);
+			p.getActionRegister().tripOnBeHit(user);
 		}
+		getActionRegister().tripOnHit(p);
+		CombatLog.logProjectileData(this);
+		terminate();
+	}
+	
+	public boolean checkForCollisions(Entity e){
+		boolean ret = false;
+		if(super.checkForCollisions(e)){
+			if(doNotHit.contains(e)){
+				ret = true;
+				if(e instanceof Player){
+					hit((Player) e);
+				}
+			}
+		}
+		return ret;
 	}
 	public void update(){
 		super.update();
@@ -98,11 +105,6 @@ public class Projectile extends Entity{
 		}
 		
 		ArrayList<Color> cs = registeredAttack.getColors();
-		Player current = getTeam().getEnemy().getHead();
-		while(current.getHasChild()){
-			current = (Player) current.getChild();
-			checkForCollisionsWith(current);
-		}
 		
 		if(!Master.DISABLEPARTICLES){
 			switch(registeredAttack.getParticleType()){

@@ -1,9 +1,6 @@
 package battle;
 
-import entities.Player;
-import entities.Projectile;
-import resources.Op;
-import attacks.Slash;
+import entities.Entity;
 import java.awt.Graphics;
 
 public class Chunk {
@@ -15,8 +12,8 @@ public class Chunk {
 	private int y;
 	private int size; // width and height of the chunk
 	
-	private Player headPlayer; // linked list head
-	private Projectile headProjectile;
+	//linked list stuff
+	private Entity head;
 	
 	private Chunk next;
 	private boolean hasNext;
@@ -26,7 +23,7 @@ public class Chunk {
 		y = yCoord;
 		size = s;
 		hasNext = false;
-		headProjectile = new Projectile();
+		head = new Entity();
 	}
 	
 	public Chunk spawn(int xCoord, int yCoord){
@@ -48,9 +45,12 @@ public class Chunk {
 	public int getY(){
 		return y;
 	}
+	public Entity getHead(){
+		return head;
+	}
 	
-	public void registerProjectile(Projectile p){
-		headProjectile.insertChild(p);
+	public void register(Entity e){
+		head.insertChild(e);
 	}
 	
 	public boolean contains(int xCoord, int yCoord){
@@ -58,16 +58,17 @@ public class Chunk {
 				yCoord > y && yCoord < y + size;
 	}
 	public void update(){
-		Projectile current = headProjectile;
+		Entity current = head;
 		while(current.getHasChild()){
-			current = (Projectile) current.getChild();
+			current = current.getChild();
 			current.update();
 		}
+		// check for collisions
 	}
 	public void draw(Graphics g){
-		Projectile current = headProjectile;
+		Entity current = head;
 		while(current.getHasChild()){
-			current = (Projectile) current.getChild();
+			current = current.getChild();
 			current.draw(g);
 			
 		}

@@ -1,7 +1,6 @@
 package battle;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.util.ArrayList;
 import initializers.Master;
 
@@ -53,10 +52,5 @@ public class Battle {
 			}
 		}
 		host.updateAllChunks();
-	}
-	public void draw(Graphics g){
-		for(Team t : teams){
-			t.draw(g);
-		}
 	}
 }

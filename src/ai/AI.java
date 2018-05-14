@@ -3,6 +3,7 @@ package ai;
 import entities.Entity;
 import entities.Player;
 import initializers.Master;
+import battle.Chunk;
 import resources.Random;
 import resources.Direction;
 
@@ -83,12 +84,17 @@ public class AI {
 	
 	public boolean checkIfPlayerInSightRange(){
 		boolean inRange = false;
-		
-		Player current = appliedTo.getTeam().getEnemy().getHead();
-		while(current.getHasChild()){
-			current = (Player)current.getChild();
-			if(current.getCoords().distanceBetween(appliedTo.getCoords()) <= Master.DETECTIONRANGE){
-				inRange = true;
+		int r = Master.DETECTIONRANGE;
+		Chunk[] chunks = Master.getCurrentBattle().getHost().getChunksContainedIn(appliedTo.getX() - r / 2, appliedTo.getY() - r / 2, r, r);
+		for(int i = 0; i < chunks.length && !inRange; i++){
+			Entity current = chunks[i].getHead();
+			while(current.getHasChild()){
+				current = current.getChild();
+				if(current instanceof Player){
+					if(current.getCoords().distanceBetween(appliedTo.getCoords()) <= Master.DETECTIONRANGE){
+						inRange = true;
+					}
+				}
 			}
 		}
 		
@@ -98,14 +104,23 @@ public class AI {
 	public Player nearestEnemy(){
 		Player nearest = new Player("ERROR");
 		int distance = Master.DETECTIONRANGE + 1;
-		Player current = appliedTo.getTeam().getEnemy().getHead();
-		while(current.getHasChild()){
-			current = (Player)current.getChild();
-			if(current.getCoords().distanceBetween(appliedTo.getCoords()) < distance){
-				nearest = current;
-				distance = (int) current.getCoords().distanceBetween(appliedTo.getCoords());
+		
+		
+		int r = Master.DETECTIONRANGE;
+		Chunk[] chunks = Master.getCurrentBattle().getHost().getChunksContainedIn(appliedTo.getX() - r / 2, appliedTo.getY() - r / 2, r, r);
+		for(int i = 0; i < chunks.length; i++){
+			Entity current = chunks[i].getHead();
+			while(current.getHasChild()){
+				current = current.getChild();
+				if(current instanceof Player){
+					if(current.getCoords().distanceBetween(appliedTo.getCoords()) < distance){
+						nearest = (Player) current;
+						distance = (int) current.getCoords().distanceBetween(appliedTo.getCoords());
+					}
+				}
 			}
 		}
+		
 		if(nearest.getName() == "ERROR"){
 			throw new NullPointerException();
 		}

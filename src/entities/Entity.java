@@ -1,9 +1,11 @@
 package entities;
 
 import initializers.Master;
+import java.awt.Graphics;
 import resources.Coordinates;
 import resources.Direction;
 import resources.Op;
+import battle.Chunk;
 import battle.Team;
 import battle.Hitbox;
 import actions.ActionRegister;
@@ -28,6 +30,8 @@ public class Entity {
 	private ActionRegister actReg;
 	private Hitbox hitbox;
 	private AI entityAI;
+	
+	private Chunk chunk;
 	
 	// linked list stuff
 	// always have a head that does not get updated
@@ -59,6 +63,12 @@ public class Entity {
 		hasParent = false;
 		hasChild = false;
 	}
+	
+	//node chain head
+	public Entity(){
+		hasChild = false;
+	}
+	
 	public int getX(){
 		return x;
 	}
@@ -68,6 +78,7 @@ public class Entity {
 	public void setCoords(int xCoord, int yCoord){
 		x = xCoord;
 		y = yCoord;
+		chunk = Master.getCurrentBattle().getHost().getChunkContaining(xCoord, yCoord);
 	}
 	public Coordinates getCoords(){
 		return new Coordinates(getX(), getY(), this);
@@ -114,6 +125,10 @@ public class Entity {
 		return ret;
 	}
 	
+	public Chunk getChunk(){
+		return chunk;
+	}
+	
 	public void applyKnockback(Direction d, int dur, int vel){
 		kbDir = d;
 		kbDur = dur;
@@ -136,11 +151,18 @@ public class Entity {
 		return hitbox;
 	}
 	
+	public boolean checkForCollisions(Entity e){
+		return hitbox.checkForIntercept(e.getHitbox());
+	}
+	
 	public AI getEntityAI(){
 		return entityAI;
 	}
 	public void terminate(){
 		shouldTerminate = true;
+		closeNodeGap();
+	}
+	public void closeNodeGap(){
 		if(hasParent){
 			parent.disableChild();
 		}
@@ -183,11 +205,6 @@ public class Entity {
 				Op.add("ERROR");
 				Op.dp();
 			}
-		}
-	}
-	public void removeChild(){
-		if(hasChild){
-			
 		}
 	}
 	public boolean getHasParent(){
@@ -285,6 +302,12 @@ public class Entity {
 		
 		hitbox.updatePosition();
 		
+		if(!chunk.contains(x, y)){
+			closeNodeGap();
+			chunk = Master.getCurrentBattle().getHost().getChunkContaining(x, y);
+			chunk.register(this);
+		}
+		
 		speedFilter = 1.0;
 	}
 	
@@ -302,5 +325,9 @@ public class Entity {
 			updateMovement();
 			actReg.tripOnUpdate();
 		}
+	}
+	
+	public void draw(Graphics g){
+		
 	}
 }

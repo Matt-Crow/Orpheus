@@ -2,7 +2,7 @@ package battle;
 
 import java.awt.Graphics;
 import graphics.CustomColors;
-import resources.Op;
+import java.util.ArrayList;
 
 public class Battlefield {
 	private int numRows;
@@ -25,13 +25,6 @@ public class Battlefield {
 			for(int j = 0; j * chunkSize < numCols * tileSize; j++){
 				next = next.spawn(i * chunkSize, j * chunkSize);
 			}
-		}
-		next = firstChunk;
-		while(next.getHasNext()){
-			next = next.getNext();
-			Op.add("X: " + next.getX());
-			Op.add("Y: " + next.getY());
-			Op.dp();
 		}
 	}
 	public int getTileSize(){
@@ -61,6 +54,22 @@ public class Battlefield {
 		}
 		return ret;
 	}
+	public Chunk[] getChunksContainedIn(int x, int y, int w, int h){
+		ArrayList<Chunk> cont = new ArrayList<>();
+		Chunk current = firstChunk;
+		while(current.getHasNext()){
+			current = current.getNext();
+			if(current.getX() >= x && current.getX() <= x + w
+					&& current.getY() >= y && current.getY() <= y + h){
+				cont.add(current);
+			}
+		}
+		Chunk[] ret = new Chunk[cont.size()];
+		for(int i = 0; i < cont.size(); i++){
+			ret[i] = cont.get(i);
+		}
+		return ret;
+	}
 	public void draw(Graphics g){
 		int row = 0;
 		int col = 0;
@@ -75,7 +84,7 @@ public class Battlefield {
 			}
 			row += 1;
 		}
-		b.draw(g);
+		
 		Chunk current = firstChunk;
 		while(current.getHasNext()){
 			current = current.getNext();

@@ -1,8 +1,7 @@
 package battle;
 
 import java.awt.Color;
-import java.awt.Graphics;
-
+import java.util.ArrayList;
 import entities.Player;
 import resources.Random;
 import resources.Direction;
@@ -13,21 +12,17 @@ public class Team {
 	private Color color;
 	private Team enemyTeam;
 	private boolean defeated;
-	
-	// use as head for linked list
-	private Player coach;
+	private ArrayList<Player> roster;
+	private int membersRem;
 	
 	public Team(String n, Color c){
 		name = n;
 		color = c;
-		coach = new Player("Don't Update");
+		roster = new ArrayList<>();
+		membersRem = 0;
 	}
 	public String getName(){
 		return name;
-	}
-	
-	public Player getHead(){
-		return coach;
 	}
 	
 	public Color getColor(){
@@ -35,7 +30,7 @@ public class Team {
 	}
 	
 	public void addMember(Player m){
-		coach.insertChild(m);
+		roster.add(m);
 	}
 	public static Team constructRandomTeam(String name, Color color, int size){
 		Team t = new Team(name, color);
@@ -49,12 +44,11 @@ public class Team {
 	}
 	public void init(int y, int spacing, int facing){
 		int x = spacing;
-		Player current = coach;
-		while(current.getHasChild()){
-			current = (Player) current.getChild();
-			current.init(this, x, y, new Direction(facing));
+		for(Player p : roster){
+			p.init(this, x, y, new Direction(facing));
 			x += spacing;
 		}
+		membersRem = roster.size();
 		defeated = false;
 	}
 	public void setEnemy(Team t){
@@ -68,17 +62,8 @@ public class Team {
 	}
 	
 	public void update(){
-		coach.updateAllChildren();
-		if(!coach.getHasChild()){
+		if(membersRem == 0){
 			defeated = true;
-		}
-	}
-	
-	public void draw(Graphics g){
-		Player current = coach;
-		while(current.getHasChild()){
-			current = (Player) current.getChild();
-			current.draw(g);
 		}
 	}
 }
