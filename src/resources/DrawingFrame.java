@@ -11,5 +11,6 @@ public class DrawingFrame extends JFrame{
 		setDefaultCloseOperation(DrawingFrame.EXIT_ON_CLOSE);
 		setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
 		addWindowListener(new CloseWindow());
+		setVisible(true);
 	}
 }

@@ -43,11 +43,7 @@ public class Entity {
 	
 	private boolean skipUpdate; // use when traversing chunks
 	
-	public Entity(int xCoord, int yCoord, int degrees, int m){
-		x = xCoord;
-		y = yCoord;
-		
-		dir = new Direction(degrees);
+	public Entity(int m){
 		willTurn = "none";
 		
 		maxSpeed = m;
@@ -76,6 +72,15 @@ public class Entity {
 	//node chain head
 	public Entity(){
 		hasChild = false;
+	}
+	
+	public void init(int xCoord, int yCoord, int degrees){
+		initPos(xCoord, yCoord, degrees);
+	}
+	
+	public void initPos(int xCoord, int yCoord, int degrees){
+		setCoords(xCoord, yCoord);
+		dir = new Direction(degrees);
 	}
 	
 	public int getId(){
@@ -181,24 +186,22 @@ public class Entity {
 		if(hasParent && hasChild){
 			parent.setChild(child);
 			child.setParent(parent);
-			disableParent();
-			disableChild();
+			setHasParent(false);
+			setHasChild(false);
 		}
 		else if(hasParent){
-			parent.disableChild();
-			disableParent();
+			parent.setHasChild(false);
+			setHasParent(false);
 		}
 		else if(hasChild){
-			child.disableParent();
-			disableChild();
+			child.setHasParent(false);
+			setHasChild(false);
 		}
 		
 	}
-	
 	public boolean getShouldTerminate(){
 		return shouldTerminate;
 	}
-	
 	public void setParent(Entity e){
 		parent = e;
 		hasParent = true;
@@ -229,11 +232,11 @@ public class Entity {
 	public boolean getHasChild(){
 		return hasChild;
 	}
-	public void disableParent(){
-		hasParent = false;
+	public void setHasParent(boolean b){
+		hasParent = b;
 	}
-	public void disableChild(){
-		hasChild = false;
+	public void setHasChild(boolean b){
+		hasChild = b;
 	}
 	public Entity getParent(){
 		return parent;

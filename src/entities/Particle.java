@@ -9,8 +9,8 @@ public class Particle extends Entity{
 	private int lifeSpan;
 	private int age;
 	
-	public Particle(int x, int y, int dirNum, int momentum, Color c){
-		super(x, y, dirNum, momentum);
+	public Particle(int momentum, Color c){
+		super(momentum);
 		setMoving(true);
 		color = c;
 		size = 10;

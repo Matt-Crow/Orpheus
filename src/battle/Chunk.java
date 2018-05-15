@@ -1,7 +1,6 @@
 package battle;
 
 import entities.Entity;
-
 import resources.Op;
 
 import java.awt.Graphics;

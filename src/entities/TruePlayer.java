@@ -9,7 +9,6 @@ import initializers.Master;
 public class TruePlayer extends Player{
 	public TruePlayer(){
 		super("Player");
-		getPlayerAI().disable();
 	}
 	public void drawHUD(Graphics g){
 		int w = Master.CANVASWIDTH;

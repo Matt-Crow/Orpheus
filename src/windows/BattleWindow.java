@@ -11,7 +11,6 @@ public class BattleWindow extends DrawingFrame{
 		
 		draw = new BattleCanvas();
 		setContentPane(draw);
-		setVisible(true);
 	}
 	public BattleCanvas getCanvas(){
 		return draw;

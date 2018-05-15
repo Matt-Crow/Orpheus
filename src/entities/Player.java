@@ -29,19 +29,14 @@ public class Player extends Entity{
 	private PlayerAI playerAI;
 	
 	public Player(String n){
-		super(0, 0, 0, 500 / Master.FPS);
+		super(500 / Master.FPS);
 		name = n;
 		slash = new Slash();
 		slash.registerTo(this);
 		actives = new Attack[3];
 		passives = new Passive[3];
-		
-		playerAI = new PlayerAI(this);
-		
-		if (!Master.DISABLEALLAI){
-			playerAI.enable();
-		}
 	}
+	
 	public String getName(){
 		return name;
 	}
@@ -210,9 +205,12 @@ public class Player extends Entity{
 	}
 	
 	public void init(Team t, int x, int y, Direction d){
-		playerAI.setToWander();
-		super.setCoords(x, y);
-		super.setDir(d);
+		super.init(x, y, d.getDegrees());
+		playerAI = new PlayerAI(this);
+		
+		if (!(this instanceof TruePlayer) && !Master.DISABLEALLAI){
+			playerAI.enable();
+		}
 		setTeam(t);
 		slash.init();
 		c.calcStats();
@@ -257,6 +255,10 @@ public class Player extends Entity{
 		getActionRegister().tripOnUpdate();
 		log.update();
 		energyLog.update();
+		
+		if(getShouldTerminate()){
+			getTeam().loseMember();
+		}
 	}
 	
 	public void draw(Graphics g){

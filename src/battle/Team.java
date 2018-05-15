@@ -40,6 +40,9 @@ public class Team {
 	public void addMember(Player m){
 		roster.add(m);
 	}
+	public void loseMember(){
+		membersRem--;
+	}
 	public static Team constructRandomTeam(String name, Color color, int size){
 		Team t = new Team(name, color);
 		for(int teamSize = 0; teamSize < size; teamSize++){

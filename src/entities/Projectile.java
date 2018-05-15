@@ -18,8 +18,8 @@ public class Projectile extends Entity{
 	private ArrayList<Player> doNotHit;
 	private Player hit;
 	
-	public Projectile(int x, int y, int dirNum, int momentum, Player attackUser, Attack a){
-		super(x, y, dirNum, momentum);
+	public Projectile(int momentum, Player attackUser, Attack a){
+		super(momentum);
 		distanceTraveled = 0;
 		user = attackUser;
 		setTeam(user.getTeam());
@@ -32,13 +32,6 @@ public class Projectile extends Entity{
 		setMoving(true);
 		doNotHit = new ArrayList<Player>();
 		hit = new Player("Void");
-		
-		Master.getCurrentBattle().getHost().getChunkContaining(x, y).register(this);
-	}
-	
-	//node head manager
-	public Projectile(){
-		super(-1, -1, 0, 0);
 	}
 	
 	public void setRange(int i){
@@ -81,22 +74,25 @@ public class Projectile extends Entity{
 		terminate();
 	}
 	
+	// TODO: add checking for collisions with particles, other stuff
 	public boolean checkForCollisions(Entity e){
 		boolean ret = false;
-		
 		if(super.checkForCollisions(e)){
-			if(doNotHit.contains(e)){
-				Op.add("run?");
-				Op.dp();
+			if(!doNotHit.contains(e)){
 				ret = true;
-				if(e instanceof Player){
-					hit((Player) e);
-					Op.add("ow!");
-					Op.dp();
+				try{
+					Player p = (Player) e;
+					hit(p);
+				} catch (ClassCastException ex){
+					// no need to do anything, just colliding with projectile
 				}
 			}
 		}
 		return ret;
+	}
+	
+	public void spawnParticle(int degrees, int m, Color c){
+		new Particle(m, c).init(getX(), getY(), degrees);
 	}
 	
 	public void update(){
@@ -115,22 +111,22 @@ public class Projectile extends Entity{
 			case BURST:
 				for(int i = 0; i < Master.TICKSTOROTATE; i++){
 					Color rbu = cs.get(Random.choose(0, cs.size() - 1));
-					insertChild(new Particle(getX(), getY(), 360 * i / Master.TICKSTOROTATE, 5, rbu));
+					spawnParticle(360 * i / Master.TICKSTOROTATE, 5, rbu);
 				}
 				break;
 			case SHEAR:
 				Color rs = cs.get(Random.choose(0, cs.size() - 1));
-				insertChild(new Particle(getX(), getY(), getDir().getDegrees() - 45, 5, rs));
+				spawnParticle(getDir().getDegrees() - 45, 5, rs);
 				rs = cs.get(Random.choose(0, cs.size() - 1));
-				insertChild(new Particle(getX(), getY(), getDir().getDegrees() + 45, 5, rs));
+				spawnParticle(getDir().getDegrees() + 45, 5, rs);
 				break;
 			case BEAM:
 				Color rbe = cs.get(Random.choose(0, cs.size() - 1));
-				insertChild(new Particle(getX(), getY(), getDir().getDegrees() - 180, 5, rbe));
+				spawnParticle(getDir().getDegrees() - 180, 5, rbe);
 				break;
 			case BLADE:
 				Color rbl = cs.get(Random.choose(0, cs.size() - 1));
-				insertChild(new Particle(getX(), getY(), getDir().getDegrees(), 0, rbl));
+				spawnParticle(getDir().getDegrees(), 0, rbl);
 				break;
 			default:
 				Op.add("The particle type of " + registeredAttack.getParticleType());

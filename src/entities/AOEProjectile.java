@@ -8,8 +8,8 @@ import attacks.Attack;
 
 public class AOEProjectile extends Projectile{
 	private ArrayList<AOEProjectile> brothers;
-	public AOEProjectile(int x, int y, int dirNum, int momentum, Player attackUser, Attack a, Player chainedFrom){
-		super(x, y, dirNum, momentum, attackUser, a);
+	public AOEProjectile(int momentum, Player attackUser, Attack a, Player chainedFrom){
+		super(momentum, attackUser, a);
 		setRange((int) a.getStatValue("aoe"));
 		avoid(chainedFrom);
 		brothers = new ArrayList<>();
