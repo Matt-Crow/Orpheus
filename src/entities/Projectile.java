@@ -83,11 +83,16 @@ public class Projectile extends Entity{
 	
 	public boolean checkForCollisions(Entity e){
 		boolean ret = false;
+		
 		if(super.checkForCollisions(e)){
 			if(doNotHit.contains(e)){
+				Op.add("run?");
+				Op.dp();
 				ret = true;
 				if(e instanceof Player){
 					hit((Player) e);
+					Op.add("ow!");
+					Op.dp();
 				}
 			}
 		}

@@ -17,7 +17,6 @@ public class Battle {
 	
 	public void setHost(Battlefield b){
 		host = b;
-		b.setHosted(this);
 	}
 	public Battlefield getHost(){
 		return host;

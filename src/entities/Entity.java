@@ -4,7 +4,6 @@ import initializers.Master;
 import java.awt.Graphics;
 import resources.Coordinates;
 import resources.Direction;
-import resources.Op;
 import battle.Chunk;
 import battle.Team;
 import battle.Hitbox;
@@ -184,8 +183,6 @@ public class Entity {
 			child.setParent(parent);
 			disableParent();
 			disableChild();
-			Op.add("closing the gap");
-			Op.dp();
 		}
 		else if(hasParent){
 			parent.disableChild();
@@ -219,8 +216,6 @@ public class Entity {
 	public void insertChild(Entity e){
 		if(!hasChild){
 			setChild(e);
-		} else if(equals(e)){
-			throw new NullPointerException();
 		} else {
 			Entity old = child;
 			setChild(e);
@@ -326,13 +321,6 @@ public class Entity {
 			chunk = Master.getCurrentBattle().getHost().getChunkContaining(x, y);
 		}
 		if(!chunk.contains(x, y)){
-			if(chunk.getId() == Master.getCurrentBattle().getHost().getChunkContaining(x, y).getId()){
-				//throw new NullPointerException();
-			}
-			Chunk firstChunk = chunk;
-			Op.add(id + " moving from");
-			chunk.displayData();
-			
 			closeNodeGap();
 			
 			if(chunk.getX() + chunk.getSize() <= x && chunk.getY() + chunk.getSize() <= y){
@@ -340,13 +328,7 @@ public class Entity {
 				skipUpdate = true; // so don't update us twice!
 			}
 			chunk = Master.getCurrentBattle().getHost().getChunkContaining(x, y);
-			Op.add("to");
-			Op.dp();
-			chunk.displayData();
 			chunk.register(this);
-			Op.add("After:");
-			firstChunk.displayData();
-			chunk.displayData();
 		}
 		
 		speedFilter = 1.0;

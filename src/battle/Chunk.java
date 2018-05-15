@@ -1,6 +1,7 @@
 package battle;
 
 import entities.Entity;
+
 import resources.Op;
 
 import java.awt.Graphics;
@@ -64,9 +65,6 @@ public class Chunk {
 	}
 	
 	public void register(Entity e){
-		if(head.getHasChild() && head.getChild().equals(e)){
-			throw new NullPointerException();
-		}
 		head.insertChild(e);
 	}
 	
@@ -86,17 +84,20 @@ public class Chunk {
 		Op.dp();
 	}
 	public void update(){
-		
 		Entity current = head;
-		if(current.getHasChild() && current.getChild().getId() == current.getId()){
-			throw new NullPointerException();
-		}
-		
 		while(current.getHasChild()){
 			current = current.getChild();
 			current.update();
+			
+			Entity checkAgainst = head;
+			while(checkAgainst.getHasChild()){
+				checkAgainst = checkAgainst.getChild();
+				if(checkAgainst.getTeam().getId() != current.getTeam().getId()){
+					//enemies
+					current.checkForCollisions(checkAgainst);
+				}
+			}
 		}
-		// check for collisions
 	}
 	public void draw(Graphics g){
 		Entity current = head;

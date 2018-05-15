@@ -15,11 +15,19 @@ public class Team {
 	private ArrayList<Player> roster;
 	private int membersRem;
 	
+	private int id;
+	private static int nextId = 0;
+	
 	public Team(String n, Color c){
 		name = n;
 		color = c;
 		roster = new ArrayList<>();
 		membersRem = 0;
+		id = nextId;
+		nextId++;
+	}
+	public int getId(){
+		return id;
 	}
 	public String getName(){
 		return name;

@@ -10,7 +10,6 @@ public class Battlefield {
 	private int tileSize;
 	private int chunkSize;
 	private Chunk firstChunk;
-	private Battle b;
 	
 	public Battlefield(){
 		numRows = 20;
@@ -35,9 +34,6 @@ public class Battlefield {
 	}
 	public int getHeight(){
 		return numCols * tileSize;
-	}
-	public void setHosted(Battle battle){
-		b = battle;
 	}
 	public int[] getCenter(){
 		int[] ret = new int[2];
@@ -70,6 +66,8 @@ public class Battlefield {
 		}
 		return ret;
 	}
+	
+	//make this only draw on-screen chunks
 	public void draw(Graphics g){
 		int row = 0;
 		int col = 0;
