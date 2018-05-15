@@ -15,7 +15,7 @@ public class Op {
 		try {
 			messages.add(msg);
 		} catch(NullPointerException e){
-			messages = new ArrayList<String>();
+			Op.clear();
 			add(msg);
 		}
 	}
@@ -31,6 +31,10 @@ public class Op {
 	public static void add(boolean msg){
 		String s = (msg) ? "true" : "false";
 		add(s);
+	}
+	
+	public static void clear(){
+		messages = new ArrayList<String>();
 	}
 	
 	// Prints the contents of the message arraylist

@@ -21,7 +21,7 @@ public class Chunk {
 	private boolean hasNext;
 	
 	private int id;
-	private static int nextId = 1;
+	private static int nextId = 0;
 	
 	public Chunk(int xCoord, int yCoord, int s){
 		x = xCoord;
@@ -91,7 +91,7 @@ public class Chunk {
 		if(current.getHasChild() && current.getChild().getId() == current.getId()){
 			throw new NullPointerException();
 		}
-		displayData();
+		
 		while(current.getHasChild()){
 			current = current.getChild();
 			current.update();

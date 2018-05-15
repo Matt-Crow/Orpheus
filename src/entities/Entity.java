@@ -179,18 +179,23 @@ public class Entity {
 		closeNodeGap();
 	}
 	public void closeNodeGap(){
-		if(hasParent){
-			parent.disableChild();
-		}
-		if(hasChild){
-			child.disableParent();
-		}
 		if(hasParent && hasChild){
 			parent.setChild(child);
 			child.setParent(parent);
+			disableParent();
+			disableChild();
 			Op.add("closing the gap");
 			Op.dp();
 		}
+		else if(hasParent){
+			parent.disableChild();
+			disableParent();
+		}
+		else if(hasChild){
+			child.disableParent();
+			disableChild();
+		}
+		
 	}
 	
 	public boolean getShouldTerminate(){
@@ -320,23 +325,28 @@ public class Entity {
 		if(chunk == null){
 			chunk = Master.getCurrentBattle().getHost().getChunkContaining(x, y);
 		}
-		if(false && !chunk.contains(x, y)){
+		if(!chunk.contains(x, y)){
 			if(chunk.getId() == Master.getCurrentBattle().getHost().getChunkContaining(x, y).getId()){
-				throw new NullPointerException();
+				//throw new NullPointerException();
 			}
-			Op.add(id + " " + x + ", " + y);
-			Op.dp();
+			Chunk firstChunk = chunk;
+			Op.add(id + " moving from");
+			chunk.displayData();
+			
 			closeNodeGap();
-			Op.add("Moving from chunk " + chunk.getId());
+			
 			if(chunk.getX() + chunk.getSize() <= x && chunk.getY() + chunk.getSize() <= y){
 				// if the chunk is to our upper left, the new chunk has not yet updated
 				skipUpdate = true; // so don't update us twice!
 			}
 			chunk = Master.getCurrentBattle().getHost().getChunkContaining(x, y);
-			Op.add("to chunk " + chunk.getId());
+			Op.add("to");
 			Op.dp();
 			chunk.displayData();
 			chunk.register(this);
+			Op.add("After:");
+			firstChunk.displayData();
+			chunk.displayData();
 		}
 		
 		speedFilter = 1.0;
