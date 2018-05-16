@@ -2,7 +2,6 @@ package entities;
 
 import initializers.Master;
 import java.awt.Graphics;
-import resources.Coordinates;
 import resources.Direction;
 import battle.Chunk;
 import battle.Team;
@@ -44,32 +43,23 @@ public class Entity {
 	private boolean skipUpdate; // use when traversing chunks
 	private EntityType type; // used for when downcasted
 	
+	
+	// focus is the point we want to move to
+	private int focusX;
+	private int focusY;
+	private boolean hasFocus;
+	// not fully implemented
+	
 	public Entity(int m){
-		willTurn = "none";
-		
 		maxSpeed = m;
-		moving = false;
-		backwards = false;
-		speedFilter = 1.0;
-		
-		kbDir = new Direction(0);
-		kbDur = 0;
-		kbVelocity = 0;
-		
-		actReg = new ActionRegister(this);
-		shouldTerminate = false;
-		hitbox = new Hitbox(this, 100, 100);
-		entityAI = new AI(this);
 		
 		hasParent = false;
 		hasChild = false;
 		
+		type = EntityType.RAW;
+		
 		id = nextId;
 		nextId++;
-		
-		skipUpdate = false;
-		
-		type = EntityType.RAW;
 	}
 	
 	//node chain head
@@ -86,6 +76,20 @@ public class Entity {
 	
 	public void init(int xCoord, int yCoord, int degrees){
 		initPos(xCoord, yCoord, degrees);
+		willTurn = "none";
+		moving = false;
+		backwards = false;
+		speedFilter = 1.0;
+		kbDir = new Direction(0);
+		kbDur = 0;
+		kbVelocity = 0;
+		actReg = new ActionRegister(this);
+		shouldTerminate = false;
+		hitbox = new Hitbox(this, 100, 100);
+		entityAI = new AI(this);
+		skipUpdate = false;
+		
+		hasFocus = false;
 	}
 	
 	public void initPos(int xCoord, int yCoord, int degrees){
@@ -110,9 +114,7 @@ public class Entity {
 		chunk = Master.getCurrentBattle().getHost().getChunkContaining(xCoord, yCoord);
 		chunk.register(this);
 	}
-	public Coordinates getCoords(){
-		return new Coordinates(getX(), getY(), this);
-	}
+	
 	public void setDir(Direction d){
 		dir = d;
 	}
@@ -153,6 +155,15 @@ public class Entity {
 			ret = (int)(-ret * 0.5);
 		}
 		return ret;
+	}
+	
+	public void setFocus(int xCoord, int yCoord){
+		focusX = xCoord;
+		focusY = yCoord;
+		hasFocus = true;
+	}
+	public void setFocus(Entity e){
+		setFocus(e.getX(), e.getY());
 	}
 	
 	public Chunk getChunk(){
@@ -264,41 +275,13 @@ public class Entity {
 		}
 	}
 	
-	public void turnToward(Direction d){
-		int cDirNum = getDir().getDegrees();
-		int dDirNum = d.getDegrees();
-		boolean shouldLeft = true;
-		
-		if(cDirNum < dDirNum){
-			shouldLeft = true;
-		} else if(cDirNum > dDirNum){
-			shouldLeft = false;
-		} else {
-			// already facing the correct way
-			return;
-		}
-		
-		double differenceBetween;
-		if(cDirNum > dDirNum){
-			differenceBetween = cDirNum - dDirNum;
-		} else {
-			differenceBetween = dDirNum - cDirNum;
-		}
-		
-		if(differenceBetween > 180){
-			shouldLeft = !shouldLeft;
-		}
-		
-		if(shouldLeft){
-			setWillTurn("left");
-		} else {
-			setWillTurn("right");
-		}
-	}
-	
 	public void move(){
 		x += dir.getVector()[0] * getMomentum();
 		y += dir.getVector()[1] * getMomentum();
+	}
+	
+	public void turnToFocus(){
+		setDir(Direction.getDegreeByLengths(focusX, focusY, x, y));
 	}
 	
 	public void updateMovement(){
@@ -306,6 +289,10 @@ public class Entity {
 			turn(willTurn);
 		}
 		willTurn = "none";
+		
+		if(hasFocus){
+			turnToFocus();
+		}
 		
 		if(kbDur > 0){
 			x += kbDir.getVector()[0] * kbVelocity;

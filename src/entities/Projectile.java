@@ -18,8 +18,9 @@ public class Projectile extends Entity{
 	private ArrayList<Player> doNotHit;
 	private Player hit;
 	
-	public Projectile(int momentum, Player attackUser, Attack a){
+	public Projectile(int x, int y, int degrees, int momentum, Player attackUser, Attack a){
 		super(momentum);
+		super.init(x, y, degrees);
 		distanceTraveled = 0;
 		user = attackUser;
 		setTeam(user.getTeam());

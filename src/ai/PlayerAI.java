@@ -3,6 +3,7 @@ package ai;
 import entities.Player;
 import actions.OnHitTrip;
 import actions.OnHitKey;
+import resources.Coordinates;
 
 public class PlayerAI extends AI{
 	private Player registered;
@@ -17,7 +18,7 @@ public class PlayerAI extends AI{
 	public void pursue(){
 		super.pursue();
 		// check if in range
-		if(registered.getCoords().distanceBetween(getLatched().getCoords()) <= 100){
+		if(Coordinates.distanceBetween(registered, getLatched()) <= 100){
 			setToAttack();
 		}
 	}
@@ -28,7 +29,7 @@ public class PlayerAI extends AI{
 		}
 		
 		// check if out of range
-		if(getApplied().getCoords().distanceBetween(getLatched().getCoords()) >= 100){
+		if(Coordinates.distanceBetween(getApplied(), getLatched()) >= 100){
 			setMode("pursue");
 		} else {
 			turnToLatch();

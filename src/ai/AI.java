@@ -5,7 +5,7 @@ import entities.Player;
 import initializers.Master;
 import battle.Chunk;
 import resources.Random;
-import resources.Direction;
+import resources.Coordinates;
 
 public class AI {
 	private Entity appliedTo;
@@ -73,13 +73,7 @@ public class AI {
 	}
 	
 	public void turnToLatch(){
-		int x1 = appliedTo.getCoords().getX();
-		int x2 = latched.getCoords().getX();
-		int y1 = appliedTo.getCoords().getY();
-		int y2 = latched.getCoords().getY();
-		
-		Direction d = Direction.getDegreeByLengths(x1, y1, x2, y2);
-		appliedTo.turnToward(d);
+		appliedTo.setFocus(latched);
 	}
 	
 	public boolean checkIfPlayerInSightRange(){
@@ -91,7 +85,7 @@ public class AI {
 			while(current.getHasChild()){
 				current = current.getChild();
 				if(current instanceof Player && !current.getTeam().equals(appliedTo.getTeam())){
-					if(current.getCoords().distanceBetween(appliedTo.getCoords()) <= Master.DETECTIONRANGE){
+					if(Coordinates.distanceBetween(current, appliedTo) <= Master.DETECTIONRANGE){
 						inRange = true;
 					}
 				}
@@ -113,9 +107,9 @@ public class AI {
 			while(current.getHasChild()){
 				current = current.getChild();
 				if(current instanceof Player && !current.getTeam().equals(appliedTo.getTeam())){
-					if(current.getCoords().distanceBetween(appliedTo.getCoords()) < distance){
+					if(Coordinates.distanceBetween(current, appliedTo) < distance){
 						nearest = (Player) current;
-						distance = (int) current.getCoords().distanceBetween(appliedTo.getCoords());
+						distance = (int) Coordinates.distanceBetween(current, appliedTo);
 					}
 				}
 			}
