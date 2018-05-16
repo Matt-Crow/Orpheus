@@ -35,6 +35,7 @@ public class Player extends Entity{
 		slash.registerTo(this);
 		actives = new Attack[3];
 		passives = new Passive[3];
+		setType(EntityType.PLAYER);
 	}
 	
 	public String getName(){

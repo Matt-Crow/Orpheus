@@ -16,6 +16,7 @@ public class Particle extends Entity{
 		size = 10;
 		lifeSpan = 15;
 		age = 0;
+		setType(EntityType.PARTICLE);
 	}
 	public void draw(Graphics g){
 		g.setColor(color);

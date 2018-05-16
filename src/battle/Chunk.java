@@ -1,6 +1,7 @@
 package battle;
 
 import entities.Entity;
+import entities.EntityType;
 import resources.Op;
 
 import java.awt.Graphics;
@@ -84,18 +85,30 @@ public class Chunk {
 	}
 	public void update(){
 		Entity current = head;
+		Entity previous = head; // used when current terminates
+		
 		while(current.getHasChild()){
+			// iterate through the linked list
 			current = current.getChild();
 			current.update();
 			
 			Entity checkAgainst = head;
 			while(checkAgainst.getHasChild()){
+				//check for collisions
 				checkAgainst = checkAgainst.getChild();
 				if(checkAgainst.getTeam().getId() != current.getTeam().getId()){
 					//enemies
-					current.checkForCollisions(checkAgainst);
+					if(current.getType() == EntityType.PROJECTILE && checkAgainst.getType() != EntityType.PARTICLE){
+						current.checkForCollisions(checkAgainst);
+					}
 				}
 			}
+			if(current.getShouldTerminate()){
+				// need to travel back up the node chain, as a terminated node has no children
+				// but it passed its child on to its parent, previous
+				current = previous;
+			}
+			previous = current;
 		}
 	}
 	public void draw(Graphics g){

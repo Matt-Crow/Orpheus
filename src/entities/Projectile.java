@@ -32,6 +32,8 @@ public class Projectile extends Entity{
 		setMoving(true);
 		doNotHit = new ArrayList<Player>();
 		hit = new Player("Void");
+		
+		setType(EntityType.PROJECTILE);
 	}
 	
 	public void setRange(int i){
@@ -80,11 +82,8 @@ public class Projectile extends Entity{
 		if(super.checkForCollisions(e)){
 			if(!doNotHit.contains(e)){
 				ret = true;
-				try{
-					Player p = (Player) e;
-					hit(p);
-				} catch (ClassCastException ex){
-					// no need to do anything, just colliding with projectile
+				if(e.getType() == EntityType.PLAYER){
+					hit((Player) e);
 				}
 			}
 		}
@@ -92,7 +91,9 @@ public class Projectile extends Entity{
 	}
 	
 	public void spawnParticle(int degrees, int m, Color c){
-		new Particle(m, c).init(getX(), getY(), degrees);
+		Particle p = new Particle(m, c);
+		p.init(getX(), getY(), degrees);
+		p.setTeam(this.getTeam());
 	}
 	
 	public void update(){

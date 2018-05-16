@@ -42,6 +42,7 @@ public class Entity {
 	private boolean hasChild;
 	
 	private boolean skipUpdate; // use when traversing chunks
+	private EntityType type; // used for when downcasted
 	
 	public Entity(int m){
 		willTurn = "none";
@@ -67,11 +68,20 @@ public class Entity {
 		nextId++;
 		
 		skipUpdate = false;
+		
+		type = EntityType.RAW;
 	}
 	
 	//node chain head
 	public Entity(){
 		hasChild = false;
+	}
+	
+	public void setType(EntityType e){
+		type = e;
+	}
+	public EntityType getType(){
+		return type;
 	}
 	
 	public void init(int xCoord, int yCoord, int degrees){
