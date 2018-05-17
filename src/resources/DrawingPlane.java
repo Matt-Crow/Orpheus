@@ -17,14 +17,20 @@ public class DrawingPlane extends JPanel{
 	public static final long serialVersionUID = 1L;
 	private Graphics2D g;
 	private AffineTransform initialTransform;
+	
 	private int tx;
 	private int ty;
 	private int rotated;
+	
+	private int priorX; //the last translates used
+	private int priorY;
 	
 	public DrawingPlane(){
 		super();
 		tx = 0;
 		ty = 0;
+		priorX = 0;
+		priorY = 0;
 		rotated = 0;
 		setLayout(null);
 		setBackground(CustomColors.black);
@@ -44,13 +50,17 @@ public class DrawingPlane extends JPanel{
 	public int getTY(){
 		return ty;
 	}
-	
 	public void displayTransform(){
 		Op.add("X: " + tx);
 		Op.add("Y: " + ty);
 		Op.add("R: " + rotated);
 		Op.dp();
 	}
+	
+	public int[] getLastTransform(){
+		return new int[]{priorX, priorY};
+	}
+	
 	public void setG(Graphics gr){
 		g = (Graphics2D)gr;
 		initialTransform = g.getTransform();
@@ -59,6 +69,8 @@ public class DrawingPlane extends JPanel{
 		return g;
 	}
 	public void resetToInit(){
+		priorX = tx;
+		priorY = ty;
 		tx = 0;
 		ty = 0;
 		rotated = 0;

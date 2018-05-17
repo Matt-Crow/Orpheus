@@ -3,7 +3,6 @@ package entities;
 import initializers.Master;
 import java.awt.Graphics;
 import resources.Direction;
-import resources.Op;
 import battle.Chunk;
 import battle.Team;
 import battle.Hitbox;
@@ -282,9 +281,13 @@ public class Entity {
 	}
 	
 	public void turnToFocus(){
-		//Op.add(Direction.getDegreeByLengths(focusX, focusY, x, y).getDegrees());
-		//Op.dp();
-		setDir(Direction.getDegreeByLengths(focusX, focusY, x, y));
+		setDir(Direction.getDegreeByLengths(x, y, focusX, focusY));
+	}
+	public boolean withinFocus(){
+		// returns if has reached focal point
+		boolean withinX = Math.abs(getX() - focusX) < maxSpeed;
+		boolean withinY = Math.abs(getY() - focusY) < maxSpeed;
+		return withinX && withinY;
 	}
 	
 	public void updateMovement(){
@@ -294,8 +297,13 @@ public class Entity {
 		willTurn = "none";
 		
 		if(hasFocus){
-			turnToFocus();
-			setMoving(true);
+			if(withinFocus()){
+				hasFocus = false;
+				setMoving(false);
+			}else{
+				turnToFocus();
+				setMoving(true);
+			}
 		}
 		
 		if(kbDur > 0){

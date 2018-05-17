@@ -26,6 +26,7 @@ public class Direction {
 		int absY = Math.abs(y);
 		
 		double alpha = Math.atan((double)absY / absX);
+		
 		alpha = alpha * (180 / Math.PI);
 		
 		double theta = 90;
@@ -38,7 +39,21 @@ public class Direction {
 			theta = 180 + alpha;
 		} else if ((x > 0) && (y > 0)){
 			theta = 360 - alpha;
-		} 
+		}
+		
+		if(x == 0){
+			if(y > 0){
+				theta = 90;
+			} else {
+				theta = 270;
+			}
+		} else if (y == 0){
+			if(x > 0){
+				theta = 0;
+			} else {
+				theta = 180;
+			}
+		}
 		
 		return new Direction((int)theta);
 	}

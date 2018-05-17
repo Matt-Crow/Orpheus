@@ -13,7 +13,6 @@ import javax.swing.Timer;
 import battle.*;
 import gui.Button;
 import resources.KeyRegister;
-import resources.Op;
 import resources.Direction;
 import initializers.Master;
 import initializers.Controls;
@@ -73,7 +72,8 @@ public class BattleCanvas extends DrawingPlane implements MouseListener{
 	}
 	
 	public void mousePressed(MouseEvent e){
-		Master.TRUEPLAYER.setFocus(e.getX(), e.getY()); // factor in translations / rotations
+		int[] t = getLastTransform();
+		Master.TRUEPLAYER.setFocus(e.getX() - t[0], e.getY() - t[1]); // factor in translations / rotations
 	}
 	public void mouseReleased(MouseEvent e){
 		
@@ -141,6 +141,7 @@ public class BattleCanvas extends DrawingPlane implements MouseListener{
 		int[] trans = retTranslate();
 		translate(trans[0], trans[1]);
 		battlefield.draw(getG());
+		
 		resetToInit();
 		
 		Master.TRUEPLAYER.drawHUD(getG());
