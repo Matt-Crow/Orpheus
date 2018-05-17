@@ -13,6 +13,7 @@ import javax.swing.Timer;
 import battle.*;
 import gui.Button;
 import resources.KeyRegister;
+import resources.Op;
 import resources.Direction;
 import initializers.Master;
 import initializers.Controls;

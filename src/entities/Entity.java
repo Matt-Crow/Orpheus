@@ -282,8 +282,8 @@ public class Entity {
 	}
 	
 	public void turnToFocus(){
-		Op.add(Direction.getDegreeByLengths(focusX, focusY, x, y).getDegrees());
-		Op.dp();
+		//Op.add(Direction.getDegreeByLengths(focusX, focusY, x, y).getDegrees());
+		//Op.dp();
 		setDir(Direction.getDegreeByLengths(focusX, focusY, x, y));
 	}
 	

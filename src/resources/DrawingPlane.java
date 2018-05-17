@@ -37,6 +37,14 @@ public class DrawingPlane extends JPanel{
 	public int getH(){
 		return Master.CANVASHEIGHT;
 	}
+	
+	public int getTX(){
+		return tx;
+	}
+	public int getTY(){
+		return ty;
+	}
+	
 	public void displayTransform(){
 		Op.add("X: " + tx);
 		Op.add("Y: " + ty);
