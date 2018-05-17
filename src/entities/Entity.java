@@ -3,6 +3,7 @@ package entities;
 import initializers.Master;
 import java.awt.Graphics;
 import resources.Direction;
+import resources.Op;
 import battle.Chunk;
 import battle.Team;
 import battle.Hitbox;
@@ -281,6 +282,8 @@ public class Entity {
 	}
 	
 	public void turnToFocus(){
+		Op.add(Direction.getDegreeByLengths(focusX, focusY, x, y).getDegrees());
+		Op.dp();
 		setDir(Direction.getDegreeByLengths(focusX, focusY, x, y));
 	}
 	
@@ -292,6 +295,7 @@ public class Entity {
 		
 		if(hasFocus){
 			turnToFocus();
+			setMoving(true);
 		}
 		
 		if(kbDur > 0){

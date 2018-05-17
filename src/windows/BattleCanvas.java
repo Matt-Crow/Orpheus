@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 import com.sun.glass.events.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Timer;
@@ -17,7 +19,7 @@ import initializers.Controls;
 import resources.DrawingPlane;
 import resources.Chat;
 
-public class BattleCanvas extends DrawingPlane{
+public class BattleCanvas extends DrawingPlane implements MouseListener{
 	public static final long serialVersionUID = 1L;
 	private Battlefield battlefield;
 	private Battle hostedBattle;
@@ -51,6 +53,7 @@ public class BattleCanvas extends DrawingPlane{
 		};
 		addKeyRegistration();
 		resizeComponents(10, 10);
+		addMouseListener(this);
 	}
 	
 	public void setBattle(Team team1, Team team2){
@@ -66,6 +69,22 @@ public class BattleCanvas extends DrawingPlane{
 	
 	public void addKeyRegistration(){
 		new KeyRegister(this, KeyEvent.VK_P, true, new pauseAction());
+	}
+	
+	public void mousePressed(MouseEvent e){
+		Master.TRUEPLAYER.setFocus(e.getX(), e.getY()); // factor in translations / rotations
+	}
+	public void mouseReleased(MouseEvent e){
+		
+	}
+	public void mouseClicked(MouseEvent e){
+		
+	}
+	public void mouseEntered(MouseEvent e){
+		
+	}
+	public void mouseExited(MouseEvent e){
+		
 	}
 	
 	public class pauseAction extends AbstractAction{
