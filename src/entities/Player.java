@@ -154,38 +154,6 @@ public class Player extends Entity{
 		}
 	}
 	
-	public void turnToward(Direction d){
-		int cDirNum = getDir().getDegrees();
-		int dDirNum = d.getDegrees();
-		boolean shouldLeft = true;
-		
-		if(cDirNum < dDirNum){
-			shouldLeft = true;
-		} else if(cDirNum > dDirNum){
-			shouldLeft = false;
-		} else {
-			// already facing the correct way
-			return;
-		}
-		
-		double differenceBetween;
-		if(cDirNum > dDirNum){
-			differenceBetween = cDirNum - dDirNum;
-		} else {
-			differenceBetween = dDirNum - cDirNum;
-		}
-		
-		if(differenceBetween > 180){
-			shouldLeft = !shouldLeft;
-		}
-		
-		if(shouldLeft){
-			setWillTurn("left");
-		} else {
-			setWillTurn("right");
-		}
-	}
-	
 	public double getStatValue(String n){
 		return c.getStatValue(n);
 	}

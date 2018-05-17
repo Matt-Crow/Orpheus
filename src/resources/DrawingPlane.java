@@ -20,7 +20,6 @@ public class DrawingPlane extends JPanel{
 	
 	private int tx;
 	private int ty;
-	private int rotated;
 	
 	private int priorX; //the last translates used
 	private int priorY;
@@ -31,7 +30,6 @@ public class DrawingPlane extends JPanel{
 		ty = 0;
 		priorX = 0;
 		priorY = 0;
-		rotated = 0;
 		setLayout(null);
 		setBackground(CustomColors.black);
 		setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
@@ -53,7 +51,6 @@ public class DrawingPlane extends JPanel{
 	public void displayTransform(){
 		Op.add("X: " + tx);
 		Op.add("Y: " + ty);
-		Op.add("R: " + rotated);
 		Op.dp();
 	}
 	
@@ -73,7 +70,7 @@ public class DrawingPlane extends JPanel{
 		priorY = ty;
 		tx = 0;
 		ty = 0;
-		rotated = 0;
+		
 		g.setTransform(initialTransform);
 	}
 	public void translate(int x, int y){
@@ -86,12 +83,7 @@ public class DrawingPlane extends JPanel{
 		g.translate(-tx, -ty);
 		g.translate(x, y);
 	}
-	public void rotate(int x, int y, int degrees){
-		translate(x, y);
-		g.rotate((double)(degrees * (Math.PI / 180)));
-		translate(-x, -y);
-		rotated += degrees;
-	}
+	
 	public void resizeComponents(int rows, int cols){
 		setLayout(new GridLayout(rows, cols, 10, 10));
 	}

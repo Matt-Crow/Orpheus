@@ -13,8 +13,7 @@ public class Master {
 	public static final int CANVASWIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 	public static final int CANVASHEIGHT = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - CANVASBOTTOM;
 	public static final boolean DISABLEHEALING = false;
-	public static final boolean DISABLEALLAI = !false;
-	public static final boolean ROTATECANVAS = !true;
+	public static final boolean DISABLEALLAI = false;
 	// number of angles a player can have
 	public static final int TICKSTOROTATE = 36;
 	public static final boolean DISABLEPARTICLES = !false; // causes too much lag

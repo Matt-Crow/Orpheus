@@ -42,7 +42,7 @@ public class Direction {
 		}
 		
 		if(x == 0){
-			if(y > 0){
+			if(y < 0){
 				theta = 90;
 			} else {
 				theta = 270;

@@ -13,7 +13,6 @@ import javax.swing.Timer;
 import battle.*;
 import gui.Button;
 import resources.KeyRegister;
-import resources.Direction;
 import initializers.Master;
 import initializers.Controls;
 import resources.DrawingPlane;
@@ -133,11 +132,6 @@ public class BattleCanvas extends DrawingPlane implements MouseListener{
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		setG(g);
-        if(Master.ROTATECANVAS){
-			Direction rotTo = new Direction(Master.TRUEPLAYER.getDir().getDegrees());
-			rotTo.turnCounterClockwise(90);
-        	rotate(Master.CANVASWIDTH / 2, Master.CANVASHEIGHT / 2, rotTo.getDegrees());
-		}
 		int[] trans = retTranslate();
 		translate(trans[0], trans[1]);
 		battlefield.draw(getG());

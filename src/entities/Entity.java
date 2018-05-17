@@ -13,7 +13,6 @@ public class Entity {
 	private int x;
 	private int y;
 	private Direction dir;
-	private String willTurn;
 	private int maxSpeed;
 	private boolean moving;
 	private boolean backwards;
@@ -76,7 +75,6 @@ public class Entity {
 	
 	public void init(int xCoord, int yCoord, int degrees){
 		initPos(xCoord, yCoord, degrees);
-		willTurn = "none";
 		moving = false;
 		backwards = false;
 		speedFilter = 1.0;
@@ -117,9 +115,6 @@ public class Entity {
 	
 	public void setDir(Direction d){
 		dir = d;
-	}
-	public void setWillTurn(String s){
-		willTurn = s;
 	}
 	public void setSpeed(int speed){
 		maxSpeed = speed;
@@ -199,6 +194,7 @@ public class Entity {
 	public AI getEntityAI(){
 		return entityAI;
 	}
+	
 	public void terminate(){
 		shouldTerminate = true;
 		closeNodeGap();
@@ -291,11 +287,6 @@ public class Entity {
 	}
 	
 	public void updateMovement(){
-		if((willTurn == "left") || (willTurn == "right")){
-			turn(willTurn);
-		}
-		willTurn = "none";
-		
 		if(hasFocus){
 			if(withinFocus()){
 				hasFocus = false;
