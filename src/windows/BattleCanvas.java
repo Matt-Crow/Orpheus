@@ -2,11 +2,14 @@ package windows;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
-import com.sun.glass.events.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Timer;
 
@@ -18,7 +21,7 @@ import initializers.Controls;
 import resources.DrawingPlane;
 import resources.Chat;
 
-public class BattleCanvas extends DrawingPlane implements MouseListener{
+public class BattleCanvas extends DrawingPlane implements MouseListener, KeyListener{
 	public static final long serialVersionUID = 1L;
 	private Battlefield battlefield;
 	private Battle hostedBattle;
@@ -53,6 +56,7 @@ public class BattleCanvas extends DrawingPlane implements MouseListener{
 		addKeyRegistration();
 		resizeComponents(10, 10);
 		addMouseListener(this);
+		addKeyListener(this);
 	}
 	
 	public void setBattle(Team team1, Team team2){
@@ -74,18 +78,17 @@ public class BattleCanvas extends DrawingPlane implements MouseListener{
 		int[] t = getLastTransform();
 		Master.TRUEPLAYER.setFocus(e.getX() - t[0], e.getY() - t[1]); // factor in translations / rotations
 	}
-	public void mouseReleased(MouseEvent e){
-		
+	public void mouseReleased(MouseEvent e){}
+	public void mouseClicked(MouseEvent e){}
+	public void mouseEntered(MouseEvent e){}
+	public void mouseExited(MouseEvent e){}
+	public void keyPressed(KeyEvent e){
+		Point mousePos = MouseInfo.getPointerInfo().getLocation();
+		int[] t = getLastTransform();
+		Master.TRUEPLAYER.turnTo(mousePos.x -t[0], mousePos.y - t[1]);
 	}
-	public void mouseClicked(MouseEvent e){
-		
-	}
-	public void mouseEntered(MouseEvent e){
-		
-	}
-	public void mouseExited(MouseEvent e){
-		
-	}
+	public void keyReleased(KeyEvent e) {}
+    public void keyTyped(KeyEvent e) {}
 	
 	public class pauseAction extends AbstractAction{
 		static final long serialVersionUID = 1L;
@@ -167,4 +170,5 @@ public class BattleCanvas extends DrawingPlane implements MouseListener{
 		g.drawString(hostedBattle.getWinner().getName(), (int) (Master.CANVASWIDTH * 0.5), (int) (Master.CANVASHEIGHT * 0.5));
 		g.drawString("is victorious!", (int) (Master.CANVASWIDTH * 0.7), (int) (Master.CANVASHEIGHT * 0.7));
 	}
+
 }

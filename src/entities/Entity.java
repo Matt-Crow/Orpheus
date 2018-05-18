@@ -15,7 +15,6 @@ public class Entity {
 	private Direction dir;
 	private int maxSpeed;
 	private boolean moving;
-	private boolean backwards;
 	private double speedFilter;
 	
 	private Direction kbDir;
@@ -76,7 +75,6 @@ public class Entity {
 	public void init(int xCoord, int yCoord, int degrees){
 		initPos(xCoord, yCoord, degrees);
 		moving = false;
-		backwards = false;
 		speedFilter = 1.0;
 		kbDir = new Direction(0);
 		kbDur = 0;
@@ -116,40 +114,25 @@ public class Entity {
 	public void setDir(Direction d){
 		dir = d;
 	}
+	public Direction getDir(){
+		return dir;
+	}
 	public void setSpeed(int speed){
 		maxSpeed = speed;
-	}
-	public int getSpeed(){
-		return maxSpeed;
 	}
 	public void applySpeedFilter(double f){
 		speedFilter *= f;
 	}
 	
-	public Direction getDir(){
-		return dir;
-	}
-	
 	public void setMoving(boolean isMoving){
 		moving = isMoving;
 	}
-	public void setBackwards(boolean back){
-		backwards = back;
-	}
-	public boolean isBackwards(){
-		return backwards;
-	}
-	
 	public boolean getIsMoving(){
 		return moving;
 	}
 	
 	public int getMomentum(){
-		int ret = (int)(maxSpeed * speedFilter);
-		if(backwards){
-			ret = (int)(-ret * 0.5);
-		}
-		return ret;
+		return (int)(maxSpeed * speedFilter);
 	}
 	
 	public void setFocus(int xCoord, int yCoord){
@@ -276,8 +259,12 @@ public class Entity {
 		y += dir.getVector()[1] * getMomentum();
 	}
 	
+	public void turnTo(int xCoord, int yCoord){
+		setDir(Direction.getDegreeByLengths(x, y, xCoord, yCoord));
+	}
+	
 	public void turnToFocus(){
-		setDir(Direction.getDegreeByLengths(x, y, focusX, focusY));
+		turnTo(focusX, focusY);
 	}
 	public boolean withinFocus(){
 		// returns if has reached focal point
