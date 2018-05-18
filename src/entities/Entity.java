@@ -30,7 +30,7 @@ public class Entity {
 	
 	private Chunk chunk;
 	private int id;
-	private static int nextId = 1;
+	private static int nextId = 0;
 	
 	// linked list stuff
 	// always have a head that does not get updated

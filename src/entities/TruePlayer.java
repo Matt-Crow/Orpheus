@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import attacks.Attack;
+import graphics.CustomColors;
 import initializers.Master;
 
 public class TruePlayer extends Player{
@@ -13,6 +14,17 @@ public class TruePlayer extends Player{
 	public void drawHUD(Graphics g){
 		int w = Master.CANVASWIDTH;
 		int h = Master.CANVASHEIGHT;
+		
+		// compass
+		int compassX = w / 10 * 9; // center points
+		int compassY = h / 10 * 3;
+		int compassDiameter = w / 10;
+		
+		g.setColor(CustomColors.darkGrey);
+		g.fillOval(compassX - compassDiameter, compassY - compassDiameter, compassDiameter * 2, compassDiameter * 2); // draws from upper-left corner, not center
+		g.setColor(CustomColors.red);
+		g.drawLine(compassX, compassY, (int)(compassX + getDir().getXMod() * compassDiameter), (int)(compassY + getDir().getYMod() * compassDiameter));
+		
 		
 		int guiY = (int)(h * 0.9);
 		int sw = w / 5;
