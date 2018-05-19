@@ -60,7 +60,7 @@ public class BattleCanvas extends DrawingPlane implements MouseListener, KeyList
 	}
 	
 	public void setBattle(Team team1, Team team2){
-		hostedBattle = new Battle(team1, team2);
+		hostedBattle = new Battle(this, team1, team2);
 		Master.setCurrentBattle(hostedBattle);
 		battlefield = new Battlefield();
 		
@@ -75,8 +75,7 @@ public class BattleCanvas extends DrawingPlane implements MouseListener, KeyList
 	}
 	
 	public void mousePressed(MouseEvent e){
-		int[] t = getLastTransform();
-		Master.TRUEPLAYER.setFocus(e.getX() - t[0], e.getY() - t[1]); // factor in translations / rotations
+		Master.TRUEPLAYER.setFollowingMouse(!Master.TRUEPLAYER.getFollowingMouse());
 	}
 	public void mouseReleased(MouseEvent e){}
 	public void mouseClicked(MouseEvent e){}
