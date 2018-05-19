@@ -5,15 +5,12 @@ import java.awt.Graphics;
 import resources.Direction;
 import battle.Chunk;
 import battle.Team;
-import battle.Hitbox;
 import actions.ActionRegister;
 import ai.AI;
 
 public class Entity {
 	/**
-	 * The Entity class is used as the base for anything that has to interact with players in game.
-	 * 
-	 * 
+	 * The Entity class is used as the base for anything that has to interact with players in game
 	 */
 	
 	/*
@@ -59,7 +56,6 @@ public class Entity {
 	private Team team;
 	private boolean shouldTerminate;
 	private ActionRegister actReg;
-	private Hitbox hitbox;
 	private AI entityAI;
 	
 	/*
@@ -186,8 +182,6 @@ public class Entity {
 			y = Master.getCurrentBattle().getHost().getHeight();
 		}
 		
-		hitbox.updatePosition();
-		
 		// chunk updating
 		if(chunk == null){
 			chunk = Master.getCurrentBattle().getHost().getChunkContaining(x, y);
@@ -205,6 +199,8 @@ public class Entity {
 		
 		speedFilter = 1.0;
 	}
+	
+	
 	
 	//focus related methods
 	public void setFocus(int xCoord, int yCoord){
@@ -225,6 +221,8 @@ public class Entity {
 		return withinX && withinY;
 	}
 	
+	
+	
 	// inbattle methods
 	public void init(int xCoord, int yCoord, int degrees){
 		// called by battle
@@ -241,7 +239,6 @@ public class Entity {
 		kbVelocity = 0;
 		actReg = new ActionRegister(this);
 		shouldTerminate = false;
-		hitbox = new Hitbox(this, 100, 100);
 		entityAI = new AI(this);
 		skipUpdate = false;
 		
@@ -256,15 +253,18 @@ public class Entity {
 	public ActionRegister getActionRegister(){
 		return actReg;
 	}
-	public Hitbox getHitbox(){
-		return hitbox;
-	}
 	public boolean checkForCollisions(Entity e){
-		return hitbox.checkForIntercept(e.getHitbox());
+		return x + 50 >= e.getX() - 50 
+				&& x - 50 <= e.getX() + 50
+				&& y + 50 >= e.getY() - 50 
+				&& y - 50 <= e.getY() + 50;
 	}
 	public AI getEntityAI(){
 		return entityAI;
 	}
+	
+	
+	
 	
 	// linked list methods
 	public Chunk getChunk(){
@@ -337,6 +337,9 @@ public class Entity {
 		return child;
 	}
 	
+	
+	
+	
 	// misc. methods
 	public void setType(EntityType e){
 		type = e;
@@ -347,7 +350,6 @@ public class Entity {
 	public int getId(){
 		return id;
 	}
-	
 	public void update(){
 		if(!shouldTerminate){
 			if(!skipUpdate){
@@ -359,7 +361,6 @@ public class Entity {
 			}
 		}
 	}
-	
 	public void draw(Graphics g){
 		// leave blank
 	}
