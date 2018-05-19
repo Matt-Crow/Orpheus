@@ -1,6 +1,8 @@
 package battle;
 import entities.Entity;
+import java.util.jar.*;
 
+// depreciate this
 public class Hitbox {
 	private int x;
 	private int y;

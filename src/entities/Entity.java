@@ -10,44 +10,80 @@ import actions.ActionRegister;
 import ai.AI;
 
 public class Entity {
+	/**
+	 * The Entity class is used as the base for anything that has to interact with players in game.
+	 * 
+	 * 
+	 */
+	
+	/*
+	 * Position fields
+	 * 
+	 * move to a movement manager class later?
+	 */
 	private int x;
 	private int y;
-	private Direction dir;
+	private Direction dir; // the direction the entity is facing, ranging from 0-359 degrees, with 0 being the positive x axis, turning counterclockwise
 	private int maxSpeed;
 	private boolean moving;
-	private double speedFilter;
+	private double speedFilter; // amount the entity's speed is multiplied by when moving. May depreciate later
 	
+	/*
+	 * Knockback related stuff, working much like regular movement:
+	 * dir -> kbDir
+	 * maxSpeed -> kbVelocity 
+	 * 
+	 * however, kbDur is the duration (in frames) that the knockback lasts
+	 * Depreciate later if too annoying
+	 */
 	private Direction kbDir;
 	private double kbDur;
 	private int kbVelocity;
 	
+	/*
+	 * (focusX, focusY) is a point that the entity is trying to reach
+	 */
+	private int focusX;
+	private int focusY;
+	private boolean hasFocus;
+	
+	/*
+	 * In-battle stuff
+	 * 
+	 * shouldTeminate is set to true after the entity frees itself from its node chain
+	 * more on that in linked list section
+	 * 
+	 * actReg is used to store actions (onBeHit, onUpdate, etc.) see the actions package for more details
+	 * entityAI is the AI that runs this. All entities have this AI, but it must be manually enabled
+	 */
 	private Team team;
 	private boolean shouldTerminate;
 	private ActionRegister actReg;
 	private Hitbox hitbox;
 	private AI entityAI;
 	
-	private Chunk chunk;
-	private int id;
-	private static int nextId = 0;
-	
-	// linked list stuff
-	// always have a head that does not get updated
+	/*
+	 * Linked list stuff 
+	 * 
+	 * each battle contains several 'chunks'
+	 * each chunk contains a blank 'head' entity
+	 * once an entity enters a chunk, it is moved from its original chunk, then placed in the new one
+	 */
+	private Chunk chunk; // the chunk that contains this entity
 	private Entity parent;
 	private Entity child;
 	private boolean hasParent;
 	private boolean hasChild;
 	
+	// misc
 	private boolean skipUpdate; // use when traversing chunks
 	private EntityType type; // used for when downcasted
+	private int id;
+	private static int nextId = 0;
 	
+	//constructors
 	
-	// focus is the point we want to move to
-	private int focusX;
-	private int focusY;
-	private boolean hasFocus;
-	// not fully implemented
-	
+	// depreciate later
 	public Entity(int m){
 		maxSpeed = m;
 		
@@ -65,15 +101,139 @@ public class Entity {
 		hasChild = false;
 	}
 	
-	public void setType(EntityType e){
-		type = e;
+	
+	
+	// movement functions
+	public int getX(){
+		return x;
 	}
-	public EntityType getType(){
-		return type;
+	public int getY(){
+		return y;
+	}
+	public Direction getDir(){
+		return dir;
+	}
+	public void setSpeed(int speed){
+		maxSpeed = speed;
+	}
+	public void applySpeedFilter(double f){
+		speedFilter *= f;
+	}
+	public void setMoving(boolean isMoving){
+		moving = isMoving;
+	}
+	public boolean getIsMoving(){
+		return moving;
+	}
+	public int getMomentum(){
+		return (int)(maxSpeed * speedFilter);
 	}
 	
+	// depreciate later
+	public void turn(String d){
+		int amount = 360 / Master.TICKSTOROTATE;
+		if(d == "left"){
+			dir.turnClockwise(amount);
+		} else {
+			dir.turnCounterClockwise(amount);
+		}
+	}
+	public void turnTo(int xCoord, int yCoord){
+		dir = Direction.getDegreeByLengths(x, y, xCoord, yCoord);
+	}
+	
+	public void move(){
+		x += dir.getVector()[0] * getMomentum();
+		y += dir.getVector()[1] * getMomentum();
+	}
+	public void applyKnockback(Direction d, int dur, int vel){
+		kbDir = d;
+		kbDur = dur;
+		kbVelocity = vel;
+	}
+	public void updateMovement(){
+		if(hasFocus){
+			if(withinFocus()){
+				hasFocus = false;
+				setMoving(false);
+			}else{
+				turnToFocus();
+				setMoving(true);
+			}
+		}
+		
+		if(kbDur > 0){
+			x += kbDir.getVector()[0] * kbVelocity;
+			y += kbDir.getVector()[1] * kbVelocity;
+			kbDur -= 1;
+		} else {
+			applyKnockback(new Direction(0), 0, 0);
+		}
+		
+		if(moving){
+			move();
+		}
+		
+		// keep entity on the battlefield
+		if(x < 0){
+			x = 0;
+		} else if(x > Master.getCurrentBattle().getHost().getWidth()){
+			x = Master.getCurrentBattle().getHost().getWidth();
+		}
+		if(y < 0){
+			y = 0;
+		} else if(y > Master.getCurrentBattle().getHost().getHeight()){
+			y = Master.getCurrentBattle().getHost().getHeight();
+		}
+		
+		hitbox.updatePosition();
+		
+		// chunk updating
+		if(chunk == null){
+			chunk = Master.getCurrentBattle().getHost().getChunkContaining(x, y);
+		}
+		if(!chunk.contains(x, y)){
+			closeNodeGap();
+			
+			if(chunk.getX() + chunk.getSize() <= x && chunk.getY() + chunk.getSize() <= y){
+				// if the chunk is to our upper left, the new chunk has not yet updated
+				skipUpdate = true; // so don't update us twice!
+			}
+			chunk = Master.getCurrentBattle().getHost().getChunkContaining(x, y);
+			chunk.register(this);
+		}
+		
+		speedFilter = 1.0;
+	}
+	
+	//focus related methods
+	public void setFocus(int xCoord, int yCoord){
+		focusX = xCoord;
+		focusY = yCoord;
+		hasFocus = true;
+	}
+	public void setFocus(Entity e){
+		setFocus(e.getX(), e.getY());
+	}
+	public void turnToFocus(){
+		turnTo(focusX, focusY);
+	}
+	public boolean withinFocus(){
+		// returns if has reached focal point
+		boolean withinX = Math.abs(getX() - focusX) < maxSpeed;
+		boolean withinY = Math.abs(getY() - focusY) < maxSpeed;
+		return withinX && withinY;
+	}
+	
+	// inbattle methods
 	public void init(int xCoord, int yCoord, int degrees){
-		initPos(xCoord, yCoord, degrees);
+		// called by battle
+		x = xCoord;
+		y = yCoord;
+		dir = new Direction(degrees);
+		chunk = Master.getCurrentBattle().getHost().getChunkContaining(xCoord, yCoord);
+		chunk.register(this);
+		
 		moving = false;
 		speedFilter = 1.0;
 		kbDir = new Direction(0);
@@ -87,97 +247,29 @@ public class Entity {
 		
 		hasFocus = false;
 	}
-	
-	public void initPos(int xCoord, int yCoord, int degrees){
-		setCoords(xCoord, yCoord);
-		dir = new Direction(degrees);
-	}
-	
-	public int getId(){
-		return id;
-	}
-	
-	public int getX(){
-		return x;
-	}
-	public int getY(){
-		return y;
-	}
-	
-	public void setCoords(int xCoord, int yCoord){
-		x = xCoord;
-		y = yCoord;
-		chunk = Master.getCurrentBattle().getHost().getChunkContaining(xCoord, yCoord);
-		chunk.register(this);
-	}
-	
-	public void setDir(Direction d){
-		dir = d;
-	}
-	public Direction getDir(){
-		return dir;
-	}
-	public void setSpeed(int speed){
-		maxSpeed = speed;
-	}
-	public void applySpeedFilter(double f){
-		speedFilter *= f;
-	}
-	
-	public void setMoving(boolean isMoving){
-		moving = isMoving;
-	}
-	public boolean getIsMoving(){
-		return moving;
-	}
-	
-	public int getMomentum(){
-		return (int)(maxSpeed * speedFilter);
-	}
-	
-	public void setFocus(int xCoord, int yCoord){
-		focusX = xCoord;
-		focusY = yCoord;
-		hasFocus = true;
-	}
-	public void setFocus(Entity e){
-		setFocus(e.getX(), e.getY());
-	}
-	
-	public Chunk getChunk(){
-		return chunk;
-	}
-	
-	public void applyKnockback(Direction d, int dur, int vel){
-		kbDir = d;
-		kbDur = dur;
-		kbVelocity = vel;
-	}
-	
-	public ActionRegister getActionRegister(){
-		return actReg;
-	}
-	
 	public void setTeam(Team t){
 		team = t;
 	}
-	
 	public Team getTeam(){
 		return team;
 	}
-	
+	public ActionRegister getActionRegister(){
+		return actReg;
+	}
 	public Hitbox getHitbox(){
 		return hitbox;
 	}
-	
 	public boolean checkForCollisions(Entity e){
 		return hitbox.checkForIntercept(e.getHitbox());
 	}
-	
 	public AI getEntityAI(){
 		return entityAI;
 	}
 	
+	// linked list methods
+	public Chunk getChunk(){
+		return chunk;
+	}
 	public void terminate(){
 		shouldTerminate = true;
 		closeNodeGap();
@@ -245,91 +337,15 @@ public class Entity {
 		return child;
 	}
 	
-	public void turn(String d){
-		int amount = 360 / Master.TICKSTOROTATE;
-		if(d == "left"){
-			dir.turnClockwise(amount);
-		} else {
-			dir.turnCounterClockwise(amount);
-		}
+	// misc. methods
+	public void setType(EntityType e){
+		type = e;
 	}
-	
-	public void move(){
-		x += dir.getVector()[0] * getMomentum();
-		y += dir.getVector()[1] * getMomentum();
+	public EntityType getType(){
+		return type;
 	}
-	
-	public void turnTo(int xCoord, int yCoord){
-		setDir(Direction.getDegreeByLengths(x, y, xCoord, yCoord));
-	}
-	
-	public void turnToFocus(){
-		turnTo(focusX, focusY);
-	}
-	public boolean withinFocus(){
-		// returns if has reached focal point
-		boolean withinX = Math.abs(getX() - focusX) < maxSpeed;
-		boolean withinY = Math.abs(getY() - focusY) < maxSpeed;
-		return withinX && withinY;
-	}
-	
-	public void updateMovement(){
-		if(hasFocus){
-			if(withinFocus()){
-				hasFocus = false;
-				setMoving(false);
-			}else{
-				turnToFocus();
-				setMoving(true);
-			}
-		}
-		
-		if(kbDur > 0){
-			x += kbDir.getVector()[0] * kbVelocity;
-			y += kbDir.getVector()[1] * kbVelocity;
-			kbDur -= 1;
-		} else {
-			applyKnockback(new Direction(0), 0, 0);
-		}
-		if(moving){
-			move();
-		}
-		if(x < 0){
-			x = 0;
-		} else if(x > Master.getCurrentBattle().getHost().getWidth()){
-			x = Master.getCurrentBattle().getHost().getWidth();
-		}
-		
-		if(y < 0){
-			y = 0;
-		} else if(y > Master.getCurrentBattle().getHost().getHeight()){
-			y = Master.getCurrentBattle().getHost().getHeight();
-		}
-		
-		hitbox.updatePosition();
-		if(chunk == null){
-			chunk = Master.getCurrentBattle().getHost().getChunkContaining(x, y);
-		}
-		if(!chunk.contains(x, y)){
-			closeNodeGap();
-			
-			if(chunk.getX() + chunk.getSize() <= x && chunk.getY() + chunk.getSize() <= y){
-				// if the chunk is to our upper left, the new chunk has not yet updated
-				skipUpdate = true; // so don't update us twice!
-			}
-			chunk = Master.getCurrentBattle().getHost().getChunkContaining(x, y);
-			chunk.register(this);
-		}
-		
-		speedFilter = 1.0;
-	}
-	
-	public void updateAllChildren(){
-		Entity current = this;
-		while(current.getHasChild()){
-			current = current.getChild();
-			current.update();
-		}
+	public int getId(){
+		return id;
 	}
 	
 	public void update(){
@@ -345,6 +361,6 @@ public class Entity {
 	}
 	
 	public void draw(Graphics g){
-		
+		// leave blank
 	}
 }
