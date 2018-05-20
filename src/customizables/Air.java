@@ -8,6 +8,6 @@ public class Air extends CharacterClass{
 		super("Air", Color.yellow, 2, 4, 3, 1, 5);
 		addPossibleActive(new MiniWindbolt());
 		addPossibleActive(new Tornado());
-		addPossibleActive(new SpeedTest());
+		addPossibleActive("Speed Test");
 	}
 }

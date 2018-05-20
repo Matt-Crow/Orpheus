@@ -3,7 +3,7 @@ package entities;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import attacks.Attack;
+import attacks.Active;
 import graphics.CustomColors;
 import initializers.Master;
 
@@ -65,7 +65,7 @@ public class TruePlayer extends Player{
 		
 		// Actives
 		int i = sw;
-		for(Attack a : getActives()){
+		for(Active a : getActives()){
 			a.drawStatusPane(g, i, (int)(h * 0.9), sw, sh);
 			i += sw;
 		}

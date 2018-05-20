@@ -2,9 +2,9 @@ package attacks;
 import java.util.ArrayList;
 import statuses.Status;
 
-public class BoostAttack extends Attack{
+public class BoostActive extends Active{
 	private ArrayList<Status> inflicts;
-	public BoostAttack(String n, int energyCost, int cd, Status status){
+	public BoostActive(String n, int energyCost, int cd, Status status){
 		super(n, energyCost, cd, 0, 0, 0, 0);
 		inflicts = new ArrayList<>();
 		inflicts.add(status);

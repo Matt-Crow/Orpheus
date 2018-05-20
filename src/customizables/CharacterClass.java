@@ -11,7 +11,7 @@ public class CharacterClass extends Customizable{
 	private ArrayList<Stat> stats;
 	private String name;
 	private Color color;
-	private ArrayList<Attack> attackOptions;
+	private ArrayList<Active> attackOptions;
 	private ArrayList<Passive> passiveOptions;
 	
 	// initializers
@@ -30,11 +30,12 @@ public class CharacterClass extends Customizable{
 		attackOptions = new ArrayList<>();
 		attackOptions.add(new Slash());
 		attackOptions.add(new HeavyStroke());
-		attackOptions.add(new WarriorsStance());
-		attackOptions.add(new ShieldStance());
-		attackOptions.add(new BladeStance());
+		addPossibleActive("Warrior's Stance");
+		addPossibleActive("Shield Stance");
+		
 		attackOptions.add(new Flurry());
-		attackOptions.add(new Heal());
+		addPossibleActive("Blade Stance");
+		addPossibleActive("Heal");
 		attackOptions.add(new RainbowOfDoom());
 		attackOptions.add(new TrackingProjectileTest());
 		attackOptions.add(new CursedDaggers());
@@ -60,8 +61,8 @@ public class CharacterClass extends Customizable{
 	public Color getColor(){
 		return color;
 	}
-	public Attack[] getAttackOption(){
-		Attack[] ret = new Attack[attackOptions.size()];
+	public Active[] getAttackOption(){
+		Active[] ret = new Active[attackOptions.size()];
 		for(int i = 0; i < attackOptions.size(); i++){
 			ret[i] = attackOptions.get(i);
 		}
@@ -103,9 +104,13 @@ public class CharacterClass extends Customizable{
 	public double getStatValue(String n){
 		return getStat(n).get();
 	}
+	
 	// setters
-	public void addPossibleActive(Attack a){
+	public void addPossibleActive(Active a){
 		attackOptions.add(a);
+	}
+	public void addPossibleActive(String n){
+		attackOptions.add(Active.getActiveByName(n));
 	}
 	public void addPossiblePassive(Passive p){
 		passiveOptions.add(p);

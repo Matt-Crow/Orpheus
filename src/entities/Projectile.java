@@ -3,7 +3,7 @@ package entities;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.util.ArrayList;
-import attacks.Attack;
+import attacks.Active;
 import attacks.MeleeAttack;
 import initializers.Master;
 import resources.CombatLog;
@@ -12,13 +12,13 @@ import resources.Random;
 
 public class Projectile extends Entity{
 	private Player user;
-	private Attack registeredAttack;
+	private Active registeredAttack;
 	private int distanceTraveled;
 	private int range;
 	private ArrayList<Player> doNotHit;
 	private Player hit;
 	
-	public Projectile(int x, int y, int degrees, int momentum, Player attackUser, Attack a){
+	public Projectile(int x, int y, int degrees, int momentum, Player attackUser, Active a){
 		super(momentum);
 		super.init(x, y, degrees);
 		distanceTraveled = 0;
@@ -53,7 +53,7 @@ public class Projectile extends Entity{
 	public int getDistance(){
 		return distanceTraveled;
 	}
-	public Attack getAttack(){
+	public Active getAttack(){
 		return registeredAttack;
 	}
 	

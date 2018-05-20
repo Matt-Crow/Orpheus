@@ -15,7 +15,7 @@ import upgradables.Stat;
 import statuses.Status;
 import resources.Random;
 
-public class Attack extends AbstractUpgradable{
+public class Active extends AbstractUpgradable{
 	private HashMap<Status, Integer> inflict;
 	
 	
@@ -28,7 +28,9 @@ public class Attack extends AbstractUpgradable{
 	private ParticleType particleType;
 	private ArrayList<Color> particleColors;
 	
-	public Attack(String n, int energyCost, int cooldown, int range, int speed, int aoe, int dmg){
+	private static ArrayList<Active> allActives = new ArrayList<>();
+	
+	public Active(String n, int energyCost, int cooldown, int range, int speed, int aoe, int dmg){
 		super(n);
 		// 1-5 stat system
 		
@@ -99,7 +101,23 @@ public class Attack extends AbstractUpgradable{
 		return lastUseChildren;
 	}
 	
-	
+	public static void addActive(Active a){
+		allActives.add(a);
+	}
+	public static ArrayList<Active> getAllActives(){
+		return allActives;
+	}
+	public static Active getActiveByName(String n){
+		Active ret = new Slash();
+		boolean found = false;
+		for(int i = 0; i < allActives.size() && !found; i++){
+			if(allActives.get(i).getName().equals(n)){
+				found = true;
+				ret = allActives.get(i);
+			}
+		}
+		return ret;
+	}
 	
 	
 	public OnHitKey getStatusInfliction(){

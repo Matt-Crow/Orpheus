@@ -2,12 +2,12 @@ package entities;
 
 import java.util.ArrayList;
 
-import attacks.Attack;
+import attacks.Active;
 import initializers.Master;
 
 public class SeedProjectile extends Projectile{
 	private boolean canExplode;
-	public SeedProjectile(int x, int y, int degrees, int momentum, Player attackUser, Attack a){
+	public SeedProjectile(int x, int y, int degrees, int momentum, Player attackUser, Active a){
 		super(x, y, degrees, momentum, attackUser, a);
 		canExplode = getAttack().getStatValue("AOE") != 0;
 	}

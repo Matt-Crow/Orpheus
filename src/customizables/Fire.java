@@ -8,7 +8,7 @@ public class Fire extends CharacterClass{
 		super("Fire", Color.red, 2, 4, 5, 3, 3);
 		addPossibleActive(new Fireball());
 		addPossibleActive(new FieldsOfFire());
-		addPossibleActive(new BurningRage());
+		addPossibleActive("Burning Rage");
 		addPossibleActive(new MegaFirebolt());
 		addPossibleActive(new BlazingPillars());
 	}

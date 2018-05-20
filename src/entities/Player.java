@@ -17,7 +17,7 @@ import initializers.Master;
 public class Player extends Entity{
 	private String name;
 	private CharacterClass c;
-	private Attack[] actives;
+	private Active[] actives;
 	private Passive[] passives;
 	
 	private DamageBacklog log;
@@ -33,7 +33,7 @@ public class Player extends Entity{
 		name = n;
 		slash = new Slash();
 		slash.registerTo(this);
-		actives = new Attack[3];
+		actives = new Active[3];
 		passives = new Passive[3];
 		setType(EntityType.PLAYER);
 	}
@@ -42,7 +42,7 @@ public class Player extends Entity{
 		return name;
 	}
 	
-	public Attack[] getActives(){
+	public Active[] getActives(){
 		return actives;
 	}
 	
@@ -87,7 +87,7 @@ public class Player extends Entity{
 				break;
 		}
 		
-		for(Attack a : c.getAttackOption()){
+		for(Active a : c.getAttackOption()){
 			a.registerTo(this);
 		}
 		for(Passive p : c.getPassiveOptions()){
@@ -97,11 +97,19 @@ public class Player extends Entity{
 	public void setActives(String[] names){
 		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
 			boolean found = false;
-			for(Attack a : c.getAttackOption()){
-				if(a.getName() == names[nameIndex]){
-					actives[nameIndex] = a;
+			
+			ArrayList<Active> attacks = Active.getAllActives();
+			for(int i = 0; i < attacks.size() && !found; i++){
+				if(attacks.get(i).getName().equals(names[nameIndex])){
+					actives[nameIndex] = attacks.get(i);
+					actives[nameIndex].registerTo(this);
 					found = true;
-					break;
+				}
+			}
+			for(int i = 0; i < c.getAttackOption().length && !found; i++){
+				if(c.getAttackOption()[i].getName().equals(names[nameIndex])){
+					actives[nameIndex] = c.getAttackOption()[i];
+					found = true;
 				}
 			}
 			if(!found){
@@ -186,7 +194,7 @@ public class Player extends Entity{
 		log = new DamageBacklog(this);
 		energyLog = new EnergyLog(this);
 		statuses = new ArrayList<>();
-		for(Attack a : actives){
+		for(Active a : actives){
 			a.init();
 		}
 		for(Passive p : passives){
@@ -214,7 +222,7 @@ public class Player extends Entity{
 		playerAI.update();
 		slash.update();
 		getActionRegister().resetTrips();
-		for(Attack a : actives){
+		for(Active a : actives){
 			a.update();
 		}
 		for(Passive p : passives){

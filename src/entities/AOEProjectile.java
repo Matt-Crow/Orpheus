@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 import actions.OnHitTrip;
 import actions.OnHitKey;
-import attacks.Attack;
+import attacks.Active;
 
 public class AOEProjectile extends Projectile{
 	private ArrayList<AOEProjectile> brothers;
-	public AOEProjectile(int x, int y, int degrees, int momentum, Player attackUser, Attack a, Player chainedFrom){
+	public AOEProjectile(int x, int y, int degrees, int momentum, Player attackUser, Active a, Player chainedFrom){
 		super(x, y, degrees, momentum, attackUser, a);
 		setRange((int) a.getStatValue("aoe"));
 		avoid(chainedFrom);

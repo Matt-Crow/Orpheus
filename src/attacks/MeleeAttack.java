@@ -5,7 +5,7 @@ import entities.ParticleType;
 import graphics.CustomColors;
 import initializers.Master;
 
-public class MeleeAttack extends Attack{
+public class MeleeAttack extends Active{
 	public MeleeAttack(String n, int cooldown, int dmg){
 		super(n, 0, cooldown, 1, 5, 0, dmg);
 		setParticleColor(CustomColors.silver);
