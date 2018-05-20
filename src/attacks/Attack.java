@@ -1,5 +1,6 @@
 package attacks;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import actions.OnHitTrip;
 import actions.OnHitKey;
@@ -15,8 +16,7 @@ import statuses.Status;
 import resources.Random;
 
 public class Attack extends AbstractUpgradable{
-	private ArrayList<Status> inflictOnHit;
-	private ArrayList<Integer> inflictChance;
+	private HashMap<Status, Integer> inflict;
 	
 	
 	// find some way so that this doesn't include terminated projectiles
@@ -55,8 +55,7 @@ public class Attack extends AbstractUpgradable{
 		// 50-250 to 250-500 damage (will need to balance later?)
 		addStat(new Stat("Damage", dmg * 50, 2));
 		
-		inflictOnHit = new ArrayList<>();
-		inflictChance = new ArrayList<>();
+		inflict = new HashMap<>();
 		
 		projectilesTrack = false;
 		
@@ -73,8 +72,7 @@ public class Attack extends AbstractUpgradable{
 	}
 	
 	public void addStatus(Status s, int chance){
-		inflictOnHit.add(s);
-		inflictChance.add(chance);
+		inflict.put(s, chance);
 	}
 	
 	public void setParticleType(ParticleType t){
@@ -108,9 +106,9 @@ public class Attack extends AbstractUpgradable{
 		OnHitKey a = new OnHitKey(){
 			public void trip(OnHitTrip t){
 				Player target = (Player)t.getHit();
-				for(int i = 0; i < inflictOnHit.size(); i++){
-					if(Random.chance(inflictChance.get(i))){
-						target.inflict(inflictOnHit.get(i));
+				for(Status s : inflict.keySet()){
+					if(Random.chance(inflict.get(s))){
+						target.inflict(s);
 					}
 				}
 			}
