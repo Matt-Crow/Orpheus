@@ -1,6 +1,7 @@
 package customizables;
 import upgradables.Stat;
 import passives.*;
+import resources.Op;
 
 import java.util.ArrayList;
 
@@ -38,9 +39,9 @@ public class CharacterClass extends Customizable{
 		attackOptions.add(new Flurry());
 		addPossibleActive("Blade Stance");
 		addPossibleActive("Heal");
-		attackOptions.add(new RainbowOfDoom());
-		attackOptions.add(new TrackingProjectileTest());
-		attackOptions.add(new CursedDaggers());
+		addPossibleActive("RAINBOW OF DOOM");
+		addPossibleActive("Tracking Projectile Test");
+		addPossibleActive("Cursed Daggers");
 		
 		passiveOptions = new ArrayList<>();
 		passiveOptions.add(new Bracing());
@@ -112,13 +113,18 @@ public class CharacterClass extends Customizable{
 		attackOptions.add(a);
 	}
 	public void addPossibleActive(String n){
+		try{
+			attackOptions.add(AbstractActive.getActiveByName(n));
+		} catch(NullPointerException e){
+			Op.add(n + " not found in allActives");
+			Op.dp();
+		}
 		AbstractActiveBlueprint bp = AbstractActiveBlueprint.getBlueprintByName(n);
 		switch(bp.getType()){
 		case BOOST:
 			attackOptions.add(new BoostActive((BoostActiveBlueprint)bp));
 			break;
 		}
-		
 	}
 	public void addPossiblePassive(Passive p){
 		passiveOptions.add(p);

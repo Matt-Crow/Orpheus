@@ -74,6 +74,20 @@ public abstract class AbstractActive extends AbstractUpgradable{
 			addActive(a);
 		}
 	}
+	public static AbstractActive getActiveByName(String n){
+		AbstractActive ret = allActives.get(0);
+		boolean found = false;
+		for(int i = 0; i < allActives.size() && !found; i++){
+			if(allActives.get(i).getName().equals(n)){
+				ret = allActives.get(i);
+				found = true;
+			}
+		}
+		if(!found){
+			throw new NullPointerException();
+		}
+		return ret;
+	}
 	public ActiveType getType(){
 		return type;
 	}

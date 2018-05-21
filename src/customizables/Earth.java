@@ -9,7 +9,7 @@ public class Earth extends CharacterClass{
 		super("Earth", Color.green, 4, 1, 4, 4, 1);
 		addPossibleActive(new Rupture());
 		addPossiblePassive(new NaturesHealing());
-		addPossibleActive(new BoulderToss());
-		addPossibleActive(new Earthquake());
+		addPossibleActive("Boulder Toss");
+		addPossibleActive("Earthquake");
 	}
 }
