@@ -112,7 +112,13 @@ public class CharacterClass extends Customizable{
 		attackOptions.add(a);
 	}
 	public void addPossibleActive(String n){
-		attackOptions.add(Active.getActiveByName(n));
+		AbstractActiveBlueprint bp = AbstractActiveBlueprint.getBlueprintByName(n);
+		switch(bp.getType()){
+		case BOOST:
+			attackOptions.add(new BoostActive((BoostActiveBlueprint)bp));
+			break;
+		}
+		
 	}
 	public void addPossiblePassive(Passive p){
 		passiveOptions.add(p);

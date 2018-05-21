@@ -3,7 +3,7 @@ import actions.OnUpdateAction;
 import entities.Projectile;
 import resources.Random;
 
-public class Rupture extends ElementalAttack{
+public class Rupture extends ElementalActive{
 	public Rupture(){
 		super("Rupture", 4, 5, 5, 1, 0, 5);
 	}

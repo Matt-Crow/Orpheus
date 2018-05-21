@@ -19,6 +19,11 @@ public class Op {
 			add(msg);
 		}
 	}
+	public static void add(String[] msgs){
+		for(String msg : msgs){
+			add(msg);
+		}
+	}
 	
 	public static void add(int msg){
 		add(Integer.toString(msg));

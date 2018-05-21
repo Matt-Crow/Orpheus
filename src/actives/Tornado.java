@@ -5,7 +5,7 @@ import graphics.CustomColors;
 import actions.OnUpdateAction;
 import entities.ParticleType;
 
-public class Tornado extends ElementalAttack{
+public class Tornado extends ElementalActive{
 	public Tornado(){
 		super("Tornado", 5, 5, 5, 2, 0, 3);
 		setParticleType(ParticleType.BEAM);

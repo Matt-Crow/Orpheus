@@ -98,10 +98,10 @@ public class Player extends Entity{
 		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
 			boolean found = false;
 			
-			ArrayList<Active> attacks = Active.getAllActives();
-			for(int i = 0; i < attacks.size() && !found; i++){
-				if(attacks.get(i).getName().equals(names[nameIndex])){
-					actives[nameIndex] = attacks.get(i);
+			Active[] activeOptions = c.getAttackOption();
+			for(int i = 0; i < activeOptions.length && !found; i++){
+				if(activeOptions[i].getName().equals(names[nameIndex])){
+					actives[nameIndex] = activeOptions[i];
 					actives[nameIndex].registerTo(this);
 					found = true;
 				}
