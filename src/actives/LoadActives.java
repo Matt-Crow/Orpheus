@@ -8,6 +8,9 @@ import statuses.*;
 public class LoadActives {
 	public static void load(){
 		// read from file later?
+		MeleeActive hs = new MeleeActive("Heavy Stroke", 4, 4);
+		MeleeActive s = new MeleeActive("Slash", 1, 2);
+		
 		ElementalActive bp = new ElementalActive("Blazing Pillars", 3, 5, 5, 1, 0, 1);
 		bp.enableTracking();
 		bp.addStatus(new Burn(1, 5), 70); // change later
@@ -63,7 +66,17 @@ public class LoadActives {
 		wb.setParticleType(ParticleType.BEAM);
 		wb.setColorBlend(CustomColors.waterColors);
 		
+		BoostActive ws = new BoostActive("Warrior's Stance", 1, 3, new StatusName[]{StatusName.STRENGTH, StatusName.RESISTANCE}, new int[]{1, 1}, new int[]{5, 5});
+		BoostActive st = new BoostActive("Speed Test", 1, 3, new StatusName[]{StatusName.RUSH}, new int[]{2}, new int[]{7});
+		BoostActive ss = new BoostActive("Shield Stance", 1, 3, new StatusName[]{StatusName.RESISTANCE}, new int[]{2}, new int[]{7});
+		BoostActive hr = new BoostActive("Healing Rain", 5, 5, new StatusName[]{StatusName.REGENERATION}, new int[]{1}, new int[]{90});
+		BoostActive h = new BoostActive("Heal", 5, 5, new StatusName[]{StatusName.HEALING}, new int[]{2}, new int[]{0});
+		BoostActive bs = new BoostActive("Blade Stance", 1, 3, new StatusName[]{StatusName.STRENGTH}, new int[]{2}, new int[]{7});
+		BoostActive br = new BoostActive("Burning Rage", 3, 3, new StatusName[]{StatusName.STRENGTH, StatusName.BURN}, new int[]{3, 2}, new int[]{10, 10});
+		
 		AbstractActive.addActives(new AbstractActive[]{
+			s,
+			hs,
 			bp,
 			bt,
 			cd,
@@ -75,16 +88,14 @@ public class LoadActives {
 			rod,
 			stk,
 			tpt,
-			wb
+			wb,
+			ws,
+			st,
+			ss,
+			hr,
+			h,
+			bs,
+			br
 		});
-		
-		// remove these
-		new BoostActiveBlueprint("Warrior's Stance", 1, 3, new StatusName[]{StatusName.STRENGTH, StatusName.RESISTANCE}, new int[]{1, 1}, new int[]{5, 5});
-		new BoostActiveBlueprint("Speed Test", 1, 3, new StatusName[]{StatusName.RUSH}, new int[]{2}, new int[]{7});
-		new BoostActiveBlueprint("Shield Stance", 1, 3, new StatusName[]{StatusName.RESISTANCE}, new int[]{2}, new int[]{7});
-		new BoostActiveBlueprint("Healing Rain", 5, 5, new StatusName[]{StatusName.REGENERATION}, new int[]{1}, new int[]{90});
-		new BoostActiveBlueprint("Heal", 5, 5, new StatusName[]{StatusName.HEALING}, new int[]{2}, new int[]{0});
-		new BoostActiveBlueprint("Blade Stance", 1, 3, new StatusName[]{StatusName.STRENGTH}, new int[]{2}, new int[]{7});
-		new BoostActiveBlueprint("Burning Rage", 3, 3, new StatusName[]{StatusName.STRENGTH, StatusName.BURN}, new int[]{3, 2}, new int[]{10, 10});
 	}
 }

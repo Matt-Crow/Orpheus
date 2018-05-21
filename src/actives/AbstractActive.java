@@ -16,13 +16,15 @@ import statuses.Status;
 import resources.Random;
 
 public abstract class AbstractActive extends AbstractUpgradable{
+	
+	// TODO: redo this with status name
 	private HashMap<Status, Integer> inflict;
 	
 	// find some way so that this doesn't include terminated projectiles
 	// maybe update them from here?
 	private ArrayList<Projectile> lastUseChildren;
 	
-	private int[] statCode;
+	private int[] statCode; // better way?
 	private boolean projectilesTrack;
 	private ParticleType particleType;
 	private ArrayList<Color> particleColors;

@@ -4,7 +4,9 @@ import actions.OnHitTrip;
 import actions.OnHitKey;
 import entities.Projectile;
 
-public class Flurry extends MeleeAttack{
+
+// improve later
+public class Flurry extends MeleeActive{
 	private int recurCount;
 	private boolean canRecur;
 	

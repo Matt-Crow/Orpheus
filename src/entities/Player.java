@@ -23,7 +23,7 @@ public class Player extends Entity{
 	private DamageBacklog log;
 	private EnergyLog energyLog;
 	
-	private Slash slash;
+	private MeleeActive slash;
 	private ArrayList<Status> statuses;
 	
 	private PlayerAI playerAI;
@@ -31,7 +31,7 @@ public class Player extends Entity{
 	public Player(String n){
 		super(500 / Master.FPS);
 		name = n;
-		slash = new Slash();
+		slash = (MeleeActive)AbstractActive.getActiveByName("Slash").copy();
 		slash.registerTo(this);
 		actives = new AbstractActive[3];
 		passives = new Passive[3];
@@ -98,14 +98,6 @@ public class Player extends Entity{
 		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
 			boolean found = false;
 			
-			AbstractActive[] activeOptions = c.getAttackOption();
-			for(int i = 0; i < activeOptions.length && !found; i++){
-				if(activeOptions[i].getName().equals(names[nameIndex])){
-					actives[nameIndex] = activeOptions[i].copy();
-					actives[nameIndex].registerTo(this);
-					found = true;
-				}
-			}
 			for(int i = 0; i < c.getAttackOption().length && !found; i++){
 				if(c.getAttackOption()[i].getName().equals(names[nameIndex])){
 					actives[nameIndex] = c.getAttackOption()[i];
@@ -113,7 +105,6 @@ public class Player extends Entity{
 				}
 			}
 			if(!found){
-				actives[nameIndex] = new Slash();
 				Op.add("The active by the name of " + names[nameIndex]);
 				Op.add("is not found for the characterClass " + c.getName());
 				Op.dp();
@@ -139,6 +130,8 @@ public class Player extends Entity{
 		}
 	}
 	
+	
+	// TODO: change this to pass by value
 	public void inflict(Status newStatus){
 		Status oldStatus = new Status("Placeholder", -1, -1);
 		int oldLevel = 0;

@@ -5,12 +5,17 @@ import entities.ParticleType;
 import graphics.CustomColors;
 import initializers.Master;
 
-public class MeleeAttack extends AbstractActive{
-	public MeleeAttack(String n, int cooldown, int dmg){
+public class MeleeActive extends AbstractActive{
+	public MeleeActive(String n, int cooldown, int dmg){
 		super(ActiveType.MELEE, n, 0, cooldown, 1, 5, 0, dmg);
 		setParticleColor(CustomColors.silver);
 		setParticleType(ParticleType.SHEAR);
 	}
+	public MeleeActive copy(){
+		MeleeActive copy = new MeleeActive(getName(), getStatCode()[1], getStatCode()[5]);
+		return copy;
+	}
+	
 	public String getDescription(){
 		String desc = getName() + ": \n"
 				+ "The user performs a close range attack, \n"

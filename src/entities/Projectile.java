@@ -5,7 +5,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import actives.AbstractActive;
-import actives.MeleeAttack;
+import actives.MeleeActive;
 import initializers.Master;
 import resources.CombatLog;
 import resources.Op;
@@ -65,7 +65,7 @@ public class Projectile extends Entity{
 	public void hit(Player p){
 		hit = p;
 		p.logDamage((int) (registeredAttack.getStatValue("Damage") * user.getStatValue("damage dealt modifier") * p.getStatValue("damage taken modifier")));
-		if(registeredAttack instanceof MeleeAttack){
+		if(registeredAttack instanceof MeleeActive){
 			user.getActionRegister().tripOnMeleeHit(p);
 			user.getEnergyLog().gainEnergy(5);
 			p.getActionRegister().tripOnBeMeleeHit(user);

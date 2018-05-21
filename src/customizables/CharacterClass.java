@@ -14,7 +14,7 @@ public class CharacterClass extends Customizable{
 	private ArrayList<Stat> stats;
 	private String name;
 	private Color color;
-	private ArrayList<AbstractActive> attackOptions;
+	private ArrayList<AbstractActive> attackOptions; // change to names or ids
 	private ArrayList<Passive> passiveOptions;
 	
 	// initializers
@@ -31,8 +31,8 @@ public class CharacterClass extends Customizable{
 		stats.add(new Stat("speed", (0.7 + 0.1 * speed)));
 		
 		attackOptions = new ArrayList<>();
-		attackOptions.add(new Slash());
-		attackOptions.add(new HeavyStroke());
+		addPossibleActive("Slash");
+		addPossibleActive("Heavy Stroke");
 		addPossibleActive("Warrior's Stance");
 		addPossibleActive("Shield Stance");
 		
@@ -119,14 +119,6 @@ public class CharacterClass extends Customizable{
 			Op.add(n + " not found in allActives");
 			Op.dp();
 		}
-		/*
-		AbstractActiveBlueprint bp = AbstractActiveBlueprint.getBlueprintByName(n);
-		switch(bp.getType()){
-		case BOOST:
-			attackOptions.add(new BoostActive((BoostActiveBlueprint)bp));
-			break;
-		}
-		*/
 	}
 	public void addPossiblePassive(Passive p){
 		passiveOptions.add(p);
