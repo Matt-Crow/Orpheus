@@ -101,7 +101,7 @@ public class Player extends Entity{
 			AbstractActive[] activeOptions = c.getAttackOption();
 			for(int i = 0; i < activeOptions.length && !found; i++){
 				if(activeOptions[i].getName().equals(names[nameIndex])){
-					actives[nameIndex] = activeOptions[i];
+					actives[nameIndex] = activeOptions[i].copy();
 					actives[nameIndex].registerTo(this);
 					found = true;
 				}

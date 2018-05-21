@@ -107,28 +107,28 @@ public class Projectile extends Entity{
 			terminate();
 		}
 		
-		ArrayList<Color> cs = registeredAttack.getColors();
+		Color[] cs = registeredAttack.getColors();
 		
 		if(!Master.DISABLEPARTICLES){
 			switch(registeredAttack.getParticleType()){
 			case BURST:
 				for(int i = 0; i < Master.TICKSTOROTATE; i++){
-					Color rbu = cs.get(Random.choose(0, cs.size() - 1));
+					Color rbu = cs[Random.choose(0, cs.length - 1)];
 					spawnParticle(360 * i / Master.TICKSTOROTATE, 5, rbu);
 				}
 				break;
 			case SHEAR:
-				Color rs = cs.get(Random.choose(0, cs.size() - 1));
+				Color rs = cs[Random.choose(0, cs.length - 1)];
 				spawnParticle(getDir().getDegrees() - 45, 5, rs);
-				rs = cs.get(Random.choose(0, cs.size() - 1));
+				rs = cs[Random.choose(0, cs.length - 1)];
 				spawnParticle(getDir().getDegrees() + 45, 5, rs);
 				break;
 			case BEAM:
-				Color rbe = cs.get(Random.choose(0, cs.size() - 1));
+				Color rbe = cs[Random.choose(0, cs.length - 1)];
 				spawnParticle(getDir().getDegrees() - 180, 5, rbe);
 				break;
 			case BLADE:
-				Color rbl = cs.get(Random.choose(0, cs.size() - 1));
+				Color rbl = cs[Random.choose(0, cs.length - 1)];
 				spawnParticle(getDir().getDegrees(), 0, rbl);
 				break;
 			default:

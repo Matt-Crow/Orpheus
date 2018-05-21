@@ -119,12 +119,14 @@ public class CharacterClass extends Customizable{
 			Op.add(n + " not found in allActives");
 			Op.dp();
 		}
+		/*
 		AbstractActiveBlueprint bp = AbstractActiveBlueprint.getBlueprintByName(n);
 		switch(bp.getType()){
 		case BOOST:
 			attackOptions.add(new BoostActive((BoostActiveBlueprint)bp));
 			break;
 		}
+		*/
 	}
 	public void addPossiblePassive(Passive p){
 		passiveOptions.add(p);

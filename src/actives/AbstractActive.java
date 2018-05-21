@@ -22,8 +22,8 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	// maybe update them from here?
 	private ArrayList<Projectile> lastUseChildren;
 	
+	private int[] statCode;
 	private boolean projectilesTrack;
-	
 	private ParticleType particleType;
 	private ArrayList<Color> particleColors;
 	private ActiveType type;
@@ -33,6 +33,15 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	public AbstractActive(ActiveType t, String n, int energyCost, int cooldown, int range, int speed, int aoe, int dmg){
 		super(n);
 		type = t;
+		
+		statCode = new int[]{
+				energyCost,
+				cooldown,
+				range,
+				speed,
+				aoe,
+				dmg
+		};
 		// 1-5 stat system
 		
 		// 5-25 to 10-50 cost
@@ -66,6 +75,13 @@ public abstract class AbstractActive extends AbstractUpgradable{
 		particleColors = new ArrayList<>();
 		particleColors.add(CustomColors.black);
 	}
+	
+	public AbstractActive copy(){
+		// used to allow override
+		// DO NOT INVOKE THIS
+		return this;
+	}
+	
 	public static void addActive(AbstractActive a){
 		allActives.add(a);
 	}
@@ -88,10 +104,13 @@ public abstract class AbstractActive extends AbstractUpgradable{
 		}
 		return ret;
 	}
+	
 	public ActiveType getType(){
 		return type;
 	}
-	
+	public int[] getStatCode(){
+		return statCode;
+	}
 	public void enableTracking(){
 		projectilesTrack = true;
 	}
@@ -119,12 +138,24 @@ public abstract class AbstractActive extends AbstractUpgradable{
 			particleColors.add(c);
 		}
 	}
-	public ArrayList<Color> getColors(){
-		return particleColors;
+	public Color[] getColors(){
+		Color[] ret = new Color[particleColors.size()];
+		for(int i = 0; i < particleColors.size(); i++){
+			ret[i] = particleColors.get(i);
+		}
+		return ret;
 	}	
 	
 	public ArrayList<Projectile> getLastUseProjectiles(){
 		return lastUseChildren;
+	}
+	
+	// temporary
+	public void setInflict(HashMap<Status, Integer> i){
+		inflict = i;
+	}
+	public HashMap<Status, Integer> getInflict(){
+		return inflict;
 	}
 	public OnHitKey getStatusInfliction(){
 		OnHitKey a = new OnHitKey(){
@@ -174,7 +205,6 @@ public abstract class AbstractActive extends AbstractUpgradable{
 			spawnProjectile(angle);
 		}
 	}
-	
 	
 	public void init(){
 		super.init();

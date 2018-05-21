@@ -13,12 +13,26 @@ public class ElementalActive extends AbstractActive{
 		arcLength = degrees;
 		projectileCount = count;
 	}
+	public int getArcDegrees(){
+		return arcLength;
+	}
+	public int getProjCount(){
+		return projectileCount;
+	}
 	public void use(){
 		super.use();
 		spawnArc(arcLength, projectileCount);
 	}
 	public ElementalActive copy(){
-		//TODO: make this pass by value
-		return this;
+		int[] s = getStatCode();
+		ElementalActive copy = new ElementalActive(getName(), s[0], s[1], s[2], s[3], s[4], s[5]);
+		if(getTracking()){
+			copy.enableTracking();
+		}
+		copy.setParticleType(getParticleType());
+		copy.setColorBlend(getColors());
+		copy.setInflict(getInflict());
+		
+		return copy;
 	}
 }
