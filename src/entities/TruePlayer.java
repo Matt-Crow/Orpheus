@@ -3,7 +3,7 @@ package entities;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import attacks.Active;
+import actives.Active;
 import graphics.CustomColors;
 import initializers.Master;
 

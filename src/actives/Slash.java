@@ -1,4 +1,4 @@
-package attacks;
+package actives;
 
 public class Slash extends MeleeAttack{
 	public Slash(){

@@ -1,4 +1,4 @@
-package attacks;
+package actives;
 
 public class HeavyStroke extends MeleeAttack{
 	public HeavyStroke(){

@@ -3,8 +3,9 @@ package entities;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.util.ArrayList;
-import attacks.Active;
-import attacks.MeleeAttack;
+
+import actives.Active;
+import actives.MeleeAttack;
 import initializers.Master;
 import resources.CombatLog;
 import resources.Op;

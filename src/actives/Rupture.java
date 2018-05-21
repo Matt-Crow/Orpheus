@@ -1,4 +1,4 @@
-package attacks;
+package actives;
 import actions.OnUpdateAction;
 import entities.Projectile;
 import resources.Random;

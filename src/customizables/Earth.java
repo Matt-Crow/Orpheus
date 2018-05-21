@@ -1,7 +1,8 @@
 package customizables;
-import attacks.*;
 import passives.*;
 import java.awt.Color;
+
+import actives.*;
 
 public class Earth extends CharacterClass{
 	public Earth(){

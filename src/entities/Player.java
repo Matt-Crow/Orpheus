@@ -4,10 +4,10 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
+import actives.*;
 import battle.*;
 import customizables.*;
 import resources.*;
-import attacks.*;
 import passives.*;
 import ai.PlayerAI;
 import statuses.Status;

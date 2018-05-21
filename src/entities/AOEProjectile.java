@@ -3,8 +3,8 @@ package entities;
 import java.util.ArrayList;
 
 import actions.OnHitTrip;
+import actives.Active;
 import actions.OnHitKey;
-import attacks.Active;
 
 public class AOEProjectile extends Projectile{
 	private ArrayList<AOEProjectile> brothers;

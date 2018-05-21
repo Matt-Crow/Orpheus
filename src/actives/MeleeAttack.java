@@ -1,4 +1,4 @@
-package attacks;
+package actives;
 
 //import entities.Player;
 import entities.ParticleType;

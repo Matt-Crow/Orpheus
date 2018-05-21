@@ -2,7 +2,7 @@ package entities;
 
 import java.util.ArrayList;
 
-import attacks.Active;
+import actives.Active;
 import initializers.Master;
 
 public class SeedProjectile extends Projectile{

@@ -1,4 +1,4 @@
-package attacks;
+package actives;
 
 import entities.Projectile;
 import graphics.CustomColors;

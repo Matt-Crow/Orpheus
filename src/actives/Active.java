@@ -1,4 +1,4 @@
-package attacks;
+package actives;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -27,8 +27,6 @@ public class Active extends AbstractUpgradable{
 	
 	private ParticleType particleType;
 	private ArrayList<Color> particleColors;
-	
-	private static ArrayList<Active> allActives = new ArrayList<>();
 	
 	public Active(String n, int energyCost, int cooldown, int range, int speed, int aoe, int dmg){
 		super(n);
@@ -100,26 +98,6 @@ public class Active extends AbstractUpgradable{
 	public ArrayList<Projectile> getLastUseProjectiles(){
 		return lastUseChildren;
 	}
-	
-	public static void addActive(Active a){
-		allActives.add(a);
-	}
-	public static ArrayList<Active> getAllActives(){
-		return allActives;
-	}
-	public static Active getActiveByName(String n){
-		Active ret = new Slash();
-		boolean found = false;
-		for(int i = 0; i < allActives.size() && !found; i++){
-			if(allActives.get(i).getName().equals(n)){
-				found = true;
-				ret = allActives.get(i);
-			}
-		}
-		return ret;
-	}
-	
-	
 	public OnHitKey getStatusInfliction(){
 		OnHitKey a = new OnHitKey(){
 			public void trip(OnHitTrip t){

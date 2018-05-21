@@ -1,7 +1,8 @@
 package customizables;
 
 import java.awt.Color;
-import attacks.*;
+
+import actives.*;
 
 public class Air extends CharacterClass{
 	public Air(){

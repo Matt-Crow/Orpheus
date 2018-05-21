@@ -1,4 +1,4 @@
-package attacks;
+package actives;
 
 import actions.OnHitTrip;
 import actions.OnHitKey;

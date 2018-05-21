@@ -1,7 +1,8 @@
 package customizables;
 
 import java.awt.Color;
-import attacks.*;
+
+import actives.*;
 
 public class Water extends CharacterClass{
 	public Water(){

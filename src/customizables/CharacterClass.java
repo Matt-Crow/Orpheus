@@ -1,9 +1,11 @@
 package customizables;
 import upgradables.Stat;
-import attacks.*;
 import passives.*;
 
 import java.util.ArrayList;
+
+import actives.*;
+
 import java.awt.Color;
 
 // make this connect better with player somehow
