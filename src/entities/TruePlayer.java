@@ -3,7 +3,7 @@ package entities;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import actives.Active;
+import actives.AbstractActive;
 import graphics.CustomColors;
 import initializers.Master;
 
@@ -65,7 +65,7 @@ public class TruePlayer extends Player{
 		
 		// Actives
 		int i = sw;
-		for(Active a : getActives()){
+		for(AbstractActive a : getActives()){
 			a.drawStatusPane(g, i, (int)(h * 0.9), sw, sh);
 			i += sw;
 		}

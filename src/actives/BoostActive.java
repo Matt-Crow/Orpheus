@@ -3,10 +3,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import statuses.*;
 
-public class BoostActive extends Active{
+public class BoostActive extends AbstractActive{
 	private ArrayList<Status> inflicts;
 	public BoostActive(BoostActiveBlueprint b){
-		super(b.getName(), b.getCost(), b.getCooldown(), 0, 0, 0, 0);
+		super(ActiveType.BOOST, b.getName(), b.getCost(), b.getCooldown(), 0, 0, 0, 0);
 		inflicts = new ArrayList<>();
 		HashMap<StatusName, int[]> statuses = b.getStatuses();
 		for(StatusName s : statuses.keySet()){

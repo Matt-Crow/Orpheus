@@ -17,7 +17,7 @@ import initializers.Master;
 public class Player extends Entity{
 	private String name;
 	private CharacterClass c;
-	private Active[] actives;
+	private AbstractActive[] actives;
 	private Passive[] passives;
 	
 	private DamageBacklog log;
@@ -33,7 +33,7 @@ public class Player extends Entity{
 		name = n;
 		slash = new Slash();
 		slash.registerTo(this);
-		actives = new Active[3];
+		actives = new AbstractActive[3];
 		passives = new Passive[3];
 		setType(EntityType.PLAYER);
 	}
@@ -42,7 +42,7 @@ public class Player extends Entity{
 		return name;
 	}
 	
-	public Active[] getActives(){
+	public AbstractActive[] getActives(){
 		return actives;
 	}
 	
@@ -87,7 +87,7 @@ public class Player extends Entity{
 				break;
 		}
 		
-		for(Active a : c.getAttackOption()){
+		for(AbstractActive a : c.getAttackOption()){
 			a.registerTo(this);
 		}
 		for(Passive p : c.getPassiveOptions()){
@@ -98,7 +98,7 @@ public class Player extends Entity{
 		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
 			boolean found = false;
 			
-			Active[] activeOptions = c.getAttackOption();
+			AbstractActive[] activeOptions = c.getAttackOption();
 			for(int i = 0; i < activeOptions.length && !found; i++){
 				if(activeOptions[i].getName().equals(names[nameIndex])){
 					actives[nameIndex] = activeOptions[i];
@@ -194,7 +194,7 @@ public class Player extends Entity{
 		log = new DamageBacklog(this);
 		energyLog = new EnergyLog(this);
 		statuses = new ArrayList<>();
-		for(Active a : actives){
+		for(AbstractActive a : actives){
 			a.init();
 		}
 		for(Passive p : passives){
@@ -222,7 +222,7 @@ public class Player extends Entity{
 		playerAI.update();
 		slash.update();
 		getActionRegister().resetTrips();
-		for(Active a : actives){
+		for(AbstractActive a : actives){
 			a.update();
 		}
 		for(Passive p : passives){

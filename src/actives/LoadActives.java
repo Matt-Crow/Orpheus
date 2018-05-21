@@ -5,6 +5,9 @@ import statuses.*;
 // there's gotta be a better way to do this
 public class LoadActives {
 	public static void load(){
+		AbstractActive.addActives(new AbstractActive[]{
+			new ElementalActive();
+		});
 		new BoostActiveBlueprint("Warrior's Stance", 1, 3, new StatusName[]{StatusName.STRENGTH, StatusName.RESISTANCE}, new int[]{1, 1}, new int[]{5, 5});
 		new BoostActiveBlueprint("Speed Test", 1, 3, new StatusName[]{StatusName.RUSH}, new int[]{2}, new int[]{7});
 		new BoostActiveBlueprint("Shield Stance", 1, 3, new StatusName[]{StatusName.RESISTANCE}, new int[]{2}, new int[]{7});

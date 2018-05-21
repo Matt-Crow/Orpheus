@@ -3,12 +3,12 @@ package entities;
 import java.util.ArrayList;
 
 import actions.OnHitTrip;
-import actives.Active;
+import actives.AbstractActive;
 import actions.OnHitKey;
 
 public class AOEProjectile extends Projectile{
 	private ArrayList<AOEProjectile> brothers;
-	public AOEProjectile(int x, int y, int degrees, int momentum, Player attackUser, Active a, Player chainedFrom){
+	public AOEProjectile(int x, int y, int degrees, int momentum, Player attackUser, AbstractActive a, Player chainedFrom){
 		super(x, y, degrees, momentum, attackUser, a);
 		setRange((int) a.getStatValue("aoe"));
 		avoid(chainedFrom);

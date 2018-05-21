@@ -13,7 +13,7 @@ public class CharacterClass extends Customizable{
 	private ArrayList<Stat> stats;
 	private String name;
 	private Color color;
-	private ArrayList<Active> attackOptions;
+	private ArrayList<AbstractActive> attackOptions;
 	private ArrayList<Passive> passiveOptions;
 	
 	// initializers
@@ -63,8 +63,8 @@ public class CharacterClass extends Customizable{
 	public Color getColor(){
 		return color;
 	}
-	public Active[] getAttackOption(){
-		Active[] ret = new Active[attackOptions.size()];
+	public AbstractActive[] getAttackOption(){
+		AbstractActive[] ret = new AbstractActive[attackOptions.size()];
 		for(int i = 0; i < attackOptions.size(); i++){
 			ret[i] = attackOptions.get(i);
 		}
@@ -108,7 +108,7 @@ public class CharacterClass extends Customizable{
 	}
 	
 	// setters
-	public void addPossibleActive(Active a){
+	public void addPossibleActive(AbstractActive a){
 		attackOptions.add(a);
 	}
 	public void addPossibleActive(String n){

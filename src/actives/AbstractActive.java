@@ -15,9 +15,8 @@ import upgradables.Stat;
 import statuses.Status;
 import resources.Random;
 
-public class Active extends AbstractUpgradable{
+public abstract class AbstractActive extends AbstractUpgradable{
 	private HashMap<Status, Integer> inflict;
-	
 	
 	// find some way so that this doesn't include terminated projectiles
 	// maybe update them from here?
@@ -27,9 +26,13 @@ public class Active extends AbstractUpgradable{
 	
 	private ParticleType particleType;
 	private ArrayList<Color> particleColors;
+	private ActiveType type;
 	
-	public Active(String n, int energyCost, int cooldown, int range, int speed, int aoe, int dmg){
+	private static ArrayList<AbstractActive> allActives = new ArrayList<>();
+	
+	public AbstractActive(ActiveType t, String n, int energyCost, int cooldown, int range, int speed, int aoe, int dmg){
 		super(n);
+		type = t;
 		// 1-5 stat system
 		
 		// 5-25 to 10-50 cost
@@ -62,6 +65,17 @@ public class Active extends AbstractUpgradable{
 		particleType = ParticleType.NONE;
 		particleColors = new ArrayList<>();
 		particleColors.add(CustomColors.black);
+	}
+	public static void addActive(AbstractActive a){
+		allActives.add(a);
+	}
+	public static void addActives(AbstractActive[] as){
+		for(AbstractActive a : as){
+			addActive(a);
+		}
+	}
+	public ActiveType getType(){
+		return type;
 	}
 	
 	public void enableTracking(){
