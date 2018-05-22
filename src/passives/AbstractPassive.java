@@ -11,7 +11,6 @@ import upgradables.AbstractUpgradable;
 
 public abstract class AbstractPassive extends AbstractUpgradable{
 	private PassiveType type;
-	
 	private ArrayList<Status> inflicts; // will redo later
 	private boolean targetsUser;
 	private int chance;

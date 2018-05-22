@@ -5,7 +5,7 @@ import entities.Player;
 
 public class Healing extends Status{
 	public Healing(int lv){
-		super("Healing", lv, 1);
+		super(StatusName.HEALING, "Healing", lv, 1);
 	}
 	public void inflictOn(Player p){
 		OnUpdateAction a = new OnUpdateAction(){

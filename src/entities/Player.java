@@ -11,6 +11,7 @@ import resources.*;
 import passives.*;
 import ai.PlayerAI;
 import statuses.Status;
+import statuses.StatusName;
 import initializers.Master;
 
 // this is going to be very big
@@ -99,26 +100,20 @@ public class Player extends Entity{
 	}
 	
 	// TODO: change this to pass by value
-	public void inflict(Status newStatus){
-		Status oldStatus = new Status("Placeholder", -1, -1);
-		int oldLevel = 0;
-		
+	public void inflict(StatusName statusName, int intensity, int duration){
+		boolean found = false;
 		for(Status s : statuses){
-			if(s.getName() == newStatus.getName()){
-				oldStatus = s;
-				oldLevel = s.getIntensityLevel();
-				break;
+			if(s.getStatusName() == statusName && !found){
+				// already inflicted
+				found = true;
+				if(s.getIntensityLevel() <= intensity){
+					// better level
+					if(s.getUsesLeft() < duration){
+						s.terminate();
+						statuses.add(Status.decode(statusName, intensity, duration));
+					}
+				}
 			}
-		}		
-				
-		if(oldLevel < newStatus.getIntensityLevel()){
-			oldStatus.terminate();
-			statuses.add(newStatus);
-			newStatus.reset();
-			return;
-		} else {
-			oldStatus.reset();
-			return;
 		}
 	}
 	

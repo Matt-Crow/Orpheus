@@ -6,7 +6,7 @@ import entities.Player;
 
 public class Burn extends Status{
 	public Burn(int lv, int uses){
-		super("Burn", lv, uses);
+		super(StatusName.BURN, "Burn", lv, uses);
 	}
 	public void inflictOn(Player p){
 		OnHitKey a = new OnHitKey(){

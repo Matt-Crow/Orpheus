@@ -1,6 +1,6 @@
 package passives;
 
-import statuses.Regeneration;
+import statuses.StatusName;
 
 
 // find some way to do this
@@ -12,7 +12,7 @@ public class Revitalize extends ThresholdPassive{
 	}
 	public void applyEffect(){
 		if(!activated){
-			getRegisteredTo().inflict(new Regeneration(3, 5));
+			getRegisteredTo().inflict(StatusName.REGENERATION, 3, 5);
 			activated = true;
 		}
 	}

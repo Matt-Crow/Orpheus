@@ -7,7 +7,7 @@ import resources.Direction;
 
 public class Strength extends Status{
 	public Strength(int lv, int uses){
-		super("Strength", lv, uses);
+		super(StatusName.STRENGTH, "Strength", lv, uses);
 	}
 	public void inflictOn(Player p){
 		OnHitKey a = new OnHitKey(){

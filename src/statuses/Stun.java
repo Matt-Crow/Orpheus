@@ -6,7 +6,7 @@ import initializers.Master;
 
 public class Stun extends Status{
 	public Stun(int lv, int dur){
-		super("Stun", lv, Master.seconds(dur));
+		super(StatusName.STUN, "Stun", lv, Master.seconds(dur));
 	}
 	public void inflictOn(Player p){
 		OnUpdateAction a = new OnUpdateAction(){

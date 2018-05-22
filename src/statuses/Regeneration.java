@@ -6,7 +6,7 @@ import initializers.Master;
 
 public class Regeneration extends Status{
 	public Regeneration(int lv, int dur){
-		super("Regeneration", lv, Master.seconds(dur));
+		super(StatusName.REGENERATION, "Regeneration", lv, Master.seconds(dur));
 	}
 	public void inflictOn(Player p){
 		OnUpdateAction a = new OnUpdateAction(){

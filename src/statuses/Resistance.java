@@ -6,7 +6,7 @@ import entities.Player;
 
 public class Resistance extends Status{
 	public Resistance(int lv, int uses){
-		super("Resistance", lv, uses);
+		super(StatusName.RESISTANCE, "Resistance", lv, uses);
 	}
 	public void inflictOn(Player p){
 		OnHitKey a = new OnHitKey(){
