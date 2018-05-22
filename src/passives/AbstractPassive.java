@@ -1,8 +1,12 @@
 package passives;
 
 import java.util.ArrayList;
+
+import actions.OnHitKey;
+import actions.OnHitTrip;
 import statuses.Status;
 import entities.Player;
+import resources.Random;
 import upgradables.AbstractUpgradable;
 
 public abstract class AbstractPassive extends AbstractUpgradable{
@@ -74,6 +78,20 @@ public abstract class AbstractPassive extends AbstractUpgradable{
 		for(Status s : inflicts){
 			p.inflict(s);
 		}
+	}
+	public OnHitKey getKey(){
+		OnHitKey a = new OnHitKey(){
+			public void trip(OnHitTrip t){
+				if(Random.chance(chance)){
+					if(getTargetsUser()){
+						applyEffect(getRegisteredTo());
+					} else {
+						applyEffect((Player)t.getHit());
+					}
+				}
+			}
+		};
+		return a;
 	}
 	public void update(){
 		

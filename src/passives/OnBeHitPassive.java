@@ -1,9 +1,5 @@
 package passives;
 
-import actions.OnHitTrip;
-import entities.Player;
-import actions.OnHitKey;
-import resources.Random;
 import statuses.Status;
 
 public class OnBeHitPassive extends AbstractPassive{
@@ -22,18 +18,6 @@ public class OnBeHitPassive extends AbstractPassive{
 	}
 	
 	public void update(){
-		OnHitKey a = new OnHitKey(){
-			public void trip(OnHitTrip t){
-				if(Random.chance(getChance())){
-					if(getTargetsUser()){
-						applyEffect(getRegisteredTo());
-					} else {
-						applyEffect((Player)t.getHit());
-					}
-				}
-			}
-		};
-		
-		getRegisteredTo().getActionRegister().addOnBeHit(a);
+		getRegisteredTo().getActionRegister().addOnBeHit(getKey());
 	}
 }
