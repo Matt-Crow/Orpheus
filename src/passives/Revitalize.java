@@ -2,7 +2,9 @@ package passives;
 
 import statuses.Regeneration;
 
-public class Revitalize extends ThreshholdPassive{
+
+// find some way to do this
+public class Revitalize extends ThresholdPassive{
 	private boolean activated;
 	public Revitalize(){
 		super("Revitalize", 25);

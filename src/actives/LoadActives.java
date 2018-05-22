@@ -16,7 +16,7 @@ public class LoadActives {
 		bp.addStatus(new Burn(1, 5), 70); // change later
 		bp.setParticleType(ParticleType.BURST);
 		bp.setColorBlend(CustomColors.fireColors);
-		bp.setArc(360, 4); // only spawning 2-3 projectiles
+		bp.setArc(360, 4); // bug: only spawning 2-3 projectiles
 		
 		ElementalActive bt = new ElementalActive("Boulder Toss", 5, 5, 2, 2, 3, 4);
 		bt.addStatus(new Stun(3, 4), 70);

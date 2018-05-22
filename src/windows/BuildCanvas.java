@@ -12,6 +12,7 @@ import resources.DrawingPlane;
 import gui.Button;
 import gui.OptionBox;
 import gui.UpgradableSelector;
+import passives.AbstractPassive;
 import gui.Text;
 import upgradables.AbstractUpgradable;
 
@@ -96,7 +97,11 @@ public class BuildCanvas extends DrawingPlane{
 					options[ind] = AbstractActive.getActiveByName(names[ind]);
 				}
 			} else {
-				options = testPlayer.getCharacterClass().getPassiveOptions();
+				String[] names = testPlayer.getCharacterClass().getPassiveOptions();
+				options = new AbstractUpgradable[names.length];
+				for(int ind = 0; ind < names.length; ind++){
+					options[ind] = AbstractPassive.getPassiveByName(names[ind]);
+				}
 			}
 					 
 			String title = (i <= 2) ? "Active" : "Passive";

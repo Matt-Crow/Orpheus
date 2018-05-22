@@ -13,7 +13,7 @@ public class CharacterClass extends Customizable{
 	private String name;
 	private Color color;
 	private ArrayList<String> activeOptions; // remove later
-	private ArrayList<Passive> passiveOptions;
+	private ArrayList<String> passiveOptions;
 	
 	// initializers
 	public CharacterClass(String n, Color c, int HP, int energy, int dmg, int reduction, int speed){
@@ -41,18 +41,18 @@ public class CharacterClass extends Customizable{
 		addPossibleActive("Cursed Daggers");
 		
 		passiveOptions = new ArrayList<>();
-		passiveOptions.add(new Bracing());
-		passiveOptions.add(new Retaliation());
-		passiveOptions.add(new Determination());
-		passiveOptions.add(new Revitalize());
-		passiveOptions.add(new Adrenaline());
-		passiveOptions.add(new Toughness());
-		passiveOptions.add(new Sharpen());
-		passiveOptions.add(new Escapist());
-		passiveOptions.add(new SparkingStrikes());
-		passiveOptions.add(new Momentum());
-		passiveOptions.add(new Leechhealer());
-		passiveOptions.add(new Recover());
+		addPossiblePassive("Bracing");
+		addPossiblePassive("Retaliation");
+		addPossiblePassive("Determination");
+		//addPossiblePassive(new Revitalize());
+		addPossiblePassive("Adrenaline");
+		addPossiblePassive("Toughness");
+		addPossiblePassive("Sharpen");
+		addPossiblePassive("Escapist");
+		addPossiblePassive("Sparking Strikes");
+		addPossiblePassive("Momentum");
+		addPossiblePassive("Leechhealer");
+		addPossiblePassive("Recover");
 	}
 	// getters
 	public String getName(){
@@ -68,20 +68,14 @@ public class CharacterClass extends Customizable{
 		}
 		return ret;
 	}
-	public Passive[] getPassiveOptions(){
-		Passive[] ret = new Passive[passiveOptions.size()];
+	public String[] getPassiveOptions(){
+		String[] ret = new String[passiveOptions.size()];
 		for(int i = 0; i < passiveOptions.size(); i++){
 			ret[i] = passiveOptions.get(i);
 		}
 		return ret;
 	}
-	public String[] getPassivesString(){
-		String[] ret = new String[passiveOptions.size()];
-		for(int i = 0; i < passiveOptions.size(); i++){
-			ret[i]= passiveOptions.get(i).getName();
-		}
-		return ret;
-	}
+	
 	public Stat getStat(String n){
 		Stat ret = new Stat("STATNOTFOUND", 0);
 		for(Stat stat : stats){
@@ -105,8 +99,8 @@ public class CharacterClass extends Customizable{
 	public void addPossibleActive(String n){
 		activeOptions.add(n);
 	}
-	public void addPossiblePassive(Passive p){
-		passiveOptions.add(p);
+	public void addPossiblePassive(String s){
+		passiveOptions.add(s);
 	}
 	//other
 	public void calcStats(){

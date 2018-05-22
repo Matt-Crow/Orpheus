@@ -18,7 +18,7 @@ public class Player extends Entity{
 	private String name;
 	private CharacterClass c;
 	private AbstractActive[] actives;
-	private Passive[] passives;
+	private AbstractPassive[] passives;
 	
 	private DamageBacklog log;
 	private EnergyLog energyLog;
@@ -32,7 +32,7 @@ public class Player extends Entity{
 		super(500 / Master.FPS);
 		name = n;
 		actives = new AbstractActive[3];
-		passives = new Passive[3];
+		passives = new AbstractPassive[3];
 		setType(EntityType.PLAYER);
 	}
 	
@@ -84,10 +84,6 @@ public class Player extends Entity{
 				setClass(classes[randomNum]);
 				break;
 		}
-		
-		for(Passive p : c.getPassiveOptions()){
-			p.registerTo(this);
-		}
 	}
 	public void setActives(String[] names){
 		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
@@ -97,23 +93,10 @@ public class Player extends Entity{
 	}
 	public void setPassives(String[] names){
 		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
-			boolean found = false;
-			for(Passive p : c.getPassiveOptions()){
-				if(p.getName() == names[nameIndex]){
-					passives[nameIndex] = p;
-					found = true;
-					break;
-				}
-			}
-			if(!found){
-				passives[nameIndex] = new Passive("UNDEFINED");
-				Op.add("The passive by the name of " + names[nameIndex]);
-				Op.add("is not found for the characterClass " + c.getName());
-				Op.dp();
-			}
+			passives[nameIndex] = AbstractPassive.getPassiveByName(names[nameIndex]).copy();
+			passives[nameIndex].registerTo(this);
 		}
 	}
-	
 	
 	// TODO: change this to pass by value
 	public void inflict(Status newStatus){
@@ -176,7 +159,7 @@ public class Player extends Entity{
 		for(AbstractActive a : actives){
 			a.init();
 		}
-		for(Passive p : passives){
+		for(AbstractPassive p : passives){
 			p.registerTo(this);
 		}
 	}
@@ -204,7 +187,7 @@ public class Player extends Entity{
 		for(AbstractActive a : actives){
 			a.update();
 		}
-		for(Passive p : passives){
+		for(AbstractPassive p : passives){
 			p.update();
 		}
 		updateStatuses();
