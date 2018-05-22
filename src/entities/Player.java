@@ -31,8 +31,6 @@ public class Player extends Entity{
 	public Player(String n){
 		super(500 / Master.FPS);
 		name = n;
-		slash = (MeleeActive)AbstractActive.getActiveByName("Slash").copy();
-		slash.registerTo(this);
 		actives = new AbstractActive[3];
 		passives = new Passive[3];
 		setType(EntityType.PLAYER);
@@ -87,28 +85,14 @@ public class Player extends Entity{
 				break;
 		}
 		
-		for(AbstractActive a : c.getAttackOption()){
-			a.registerTo(this);
-		}
 		for(Passive p : c.getPassiveOptions()){
 			p.registerTo(this);
 		}
 	}
 	public void setActives(String[] names){
 		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
-			boolean found = false;
-			
-			for(int i = 0; i < c.getAttackOption().length && !found; i++){
-				if(c.getAttackOption()[i].getName().equals(names[nameIndex])){
-					actives[nameIndex] = c.getAttackOption()[i];
-					found = true;
-				}
-			}
-			if(!found){
-				Op.add("The active by the name of " + names[nameIndex]);
-				Op.add("is not found for the characterClass " + c.getName());
-				Op.dp();
-			}
+			actives[nameIndex] = AbstractActive.getActiveByName(names[nameIndex]).copy();
+			actives[nameIndex].registerTo(this);
 		}
 	}
 	public void setPassives(String[] names){
@@ -182,6 +166,8 @@ public class Player extends Entity{
 			playerAI.enable();
 		}
 		setTeam(t);
+		slash = (MeleeActive)AbstractActive.getActiveByName("Slash").copy();
+		slash.registerTo(this);
 		slash.init();
 		c.calcStats();
 		log = new DamageBacklog(this);

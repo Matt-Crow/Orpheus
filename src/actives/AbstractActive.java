@@ -102,7 +102,7 @@ public abstract class AbstractActive extends AbstractUpgradable{
 			}
 		}
 		if(!found){
-			throw new NullPointerException();
+			throw new NullPointerException("No active was found with name " + n);
 		}
 		return ret;
 	}

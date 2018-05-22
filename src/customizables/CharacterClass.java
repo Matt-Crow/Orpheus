@@ -1,8 +1,6 @@
 package customizables;
 import upgradables.Stat;
 import passives.*;
-import resources.Op;
-
 import java.util.ArrayList;
 
 import actives.*;
@@ -14,7 +12,7 @@ public class CharacterClass extends Customizable{
 	private ArrayList<Stat> stats;
 	private String name;
 	private Color color;
-	private ArrayList<AbstractActive> attackOptions; // change to names or ids
+	private ArrayList<String> activeOptions; // remove later
 	private ArrayList<Passive> passiveOptions;
 	
 	// initializers
@@ -30,13 +28,12 @@ public class CharacterClass extends Customizable{
 		
 		stats.add(new Stat("speed", (0.7 + 0.1 * speed)));
 		
-		attackOptions = new ArrayList<>();
+		activeOptions = new ArrayList<>();
 		addPossibleActive("Slash");
 		addPossibleActive("Heavy Stroke");
 		addPossibleActive("Warrior's Stance");
 		addPossibleActive("Shield Stance");
-		
-		attackOptions.add(new Flurry());
+		//addPossibleActive("Flurry");
 		addPossibleActive("Blade Stance");
 		addPossibleActive("Heal");
 		addPossibleActive("RAINBOW OF DOOM");
@@ -64,17 +61,10 @@ public class CharacterClass extends Customizable{
 	public Color getColor(){
 		return color;
 	}
-	public AbstractActive[] getAttackOption(){
-		AbstractActive[] ret = new AbstractActive[attackOptions.size()];
-		for(int i = 0; i < attackOptions.size(); i++){
-			ret[i] = attackOptions.get(i);
-		}
-		return ret;
-	}
-	public String[] getAttacksString(){
-		String[] ret = new String[attackOptions.size()];
-		for(int i = 0; i < attackOptions.size(); i++){
-			ret[i] = attackOptions.get(i).getName();
+	public String[] getActiveOptions(){
+		String[] ret = new String[activeOptions.size()];
+		for(int i = 0; i < activeOptions.size(); i++){
+			ret[i] = activeOptions.get(i);
 		}
 		return ret;
 	}
@@ -110,15 +100,10 @@ public class CharacterClass extends Customizable{
 	
 	// setters
 	public void addPossibleActive(AbstractActive a){
-		attackOptions.add(a);
+		activeOptions.add(a.getName());
 	}
 	public void addPossibleActive(String n){
-		try{
-			attackOptions.add(AbstractActive.getActiveByName(n));
-		} catch(NullPointerException e){
-			Op.add(n + " not found in allActives");
-			Op.dp();
-		}
+		activeOptions.add(n);
 	}
 	public void addPossiblePassive(Passive p){
 		passiveOptions.add(p);

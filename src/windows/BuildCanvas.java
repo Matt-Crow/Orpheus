@@ -2,6 +2,9 @@ package windows;
 
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
+
+import actives.AbstractActive;
+
 import java.util.ArrayList;
 import customizables.Build;
 import entities.Player;
@@ -82,15 +85,24 @@ public class BuildCanvas extends DrawingPlane{
 		add(finish);
 		
 		upgradableSelectors = new UpgradableSelector[6];
+		
 		for(int i = 0; i < 6; i++){
-			AbstractUpgradable[] option = (i <= 2) ? 
-					testPlayer.getCharacterClass().getAttackOption()
-					: 
-					testPlayer.getCharacterClass().getPassiveOptions(); 
+			AbstractUpgradable[] options;
+			
+			if(i <= 2){
+				String[] names = testPlayer.getCharacterClass().getActiveOptions();
+				options = new AbstractUpgradable[names.length];
+				for(int ind = 0; ind < names.length; ind++){
+					options[ind] = AbstractActive.getActiveByName(names[ind]);
+				}
+			} else {
+				options = testPlayer.getCharacterClass().getPassiveOptions();
+			}
+					 
 			String title = (i <= 2) ? "Active" : "Passive";
 			String[] names = (i <= 2) ? b.getActiveNames() : b.getPassiveNames();
-					
-			upgradableSelectors[i] = new UpgradableSelector(title + " #" + (i % 3 + 1), option);
+			
+			upgradableSelectors[i] = new UpgradableSelector(title + " #" + (i % 3 + 1), options);
 			upgradableSelectors[i].getBox().setSelected(names[i % 3]);
 			add(upgradableSelectors[i]);
 		}

@@ -1,6 +1,7 @@
 package gui;
 
 import javax.swing.JComponent;
+
 import java.awt.GridLayout;
 
 import java.util.ArrayList;
