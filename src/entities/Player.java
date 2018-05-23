@@ -99,9 +99,9 @@ public class Player extends Entity{
 		}
 	}
 	
-	// TODO: change this to pass by value
 	public void inflict(StatusName statusName, int intensity, int duration){
 		boolean found = false;
+		boolean shouldReplace = false;
 		for(Status s : statuses){
 			if(s.getStatusName() == statusName && !found){
 				// already inflicted
@@ -110,10 +110,13 @@ public class Player extends Entity{
 					// better level
 					if(s.getUsesLeft() < duration){
 						s.terminate();
-						statuses.add(Status.decode(statusName, intensity, duration));
+						shouldReplace = true;
 					}
 				}
 			}
+		}
+		if(shouldReplace || !found){
+			statuses.add(Status.decode(statusName, intensity, duration));
 		}
 	}
 	
@@ -162,9 +165,7 @@ public class Player extends Entity{
 	public void updateStatuses(){
 		ArrayList<Status> newStatuses = new ArrayList<>();
 		for(Status s : statuses){
-			if(s.getShouldTerminate()){
-				
-			}else{
+			if(!s.getShouldTerminate()){
 				newStatuses.add(s);
 			}
 		}

@@ -9,8 +9,8 @@ public class Build {
 	private static ArrayList<Build> builds = new ArrayList<>();
 	private static Build defaultEarth = new Build("Default Earth", "Earth", "Boulder Toss", "Warrior's Stance", "Earthquake", "Toughness", "Determination", "Nature's Healing");
 	private static Build defaultFire = new Build("Default Fire", "Fire", "Mega Firebolt", "Fields of Fire", "Burning Rage", "Escapist", "Sparking Strikes", "Bracing");
-	private static Build defaultWater = new Build("Default Water", "Water", "Waterbolt", "Heal", "Healing Rain", "Toughness", "Revitalize", "Recover");
-	private static Build defaultAir = new Build("Default Air", "Air", "Mini Windbolt", "Flurry", "Blade Stance", "Momentum", "Sharpen", "Leechhealer");
+	private static Build defaultWater = new Build("Default Water", "Water", "Waterbolt", "Heal", "Healing Rain", "Toughness", "Bracing", "Recover");
+	private static Build defaultAir = new Build("Default Air", "Air", "Mini Windbolt", "Slash", "Blade Stance", "Momentum", "Sharpen", "Leechhealer");
 	private static Build test = new Build("0x138", "Earth", "RAINBOW OF DOOM", "Cursed Daggers", "Tracking Projectile Test", "Momentum", "Recover", "Leechhealer");
 	
 	private String name;

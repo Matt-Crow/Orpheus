@@ -15,6 +15,7 @@ public class Status {
 		name = n;
 		level = lv;
 		uses = use;
+		usesLeft = use;
 		shouldTerminate = false;
 	}
 	

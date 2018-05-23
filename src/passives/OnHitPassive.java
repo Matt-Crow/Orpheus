@@ -1,6 +1,6 @@
 package passives;
 
-import statuses.Status;
+import statuses.StatusTable;
 
 public class OnHitPassive extends AbstractPassive{
 	
@@ -11,8 +11,9 @@ public class OnHitPassive extends AbstractPassive{
 	
 	public OnHitPassive copy(){
 		OnHitPassive copy = new OnHitPassive(getName(), getChance(), getTargetsUser());
-		for(Status s : getInflicts()){
-			copy.addStatus(s);
+		StatusTable orig = getInflict();
+		for(int i = 0; i < orig.getSize(); i++){
+			copy.addStatus(orig.getNameAt(i), orig.getIntensityAt(i), orig.getDurationAt(i));
 		}
 		return copy;
 	}

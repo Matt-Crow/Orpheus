@@ -1,6 +1,6 @@
 package passives;
 
-import statuses.Status;
+import statuses.StatusTable;
 
 public class OnMeleeHitPassive extends AbstractPassive{
 	
@@ -11,8 +11,9 @@ public class OnMeleeHitPassive extends AbstractPassive{
 	
 	public OnMeleeHitPassive copy(){
 		OnMeleeHitPassive copy = new OnMeleeHitPassive(getName(), getChance(), getTargetsUser());
-		for(Status s : getInflicts()){
-			copy.addStatus(s);
+		StatusTable orig = getInflict();
+		for(int i = 0; i < orig.getSize(); i++){
+			copy.addStatus(orig.getNameAt(i), orig.getIntensityAt(i), orig.getDurationAt(i));
 		}
 		return copy;
 	}

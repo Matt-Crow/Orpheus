@@ -4,14 +4,15 @@ import java.util.ArrayList;
 
 import actions.OnHitKey;
 import actions.OnHitTrip;
-import statuses.Status;
+import statuses.StatusName;
+import statuses.StatusTable;
 import entities.Player;
 import resources.Random;
 import upgradables.AbstractUpgradable;
 
 public abstract class AbstractPassive extends AbstractUpgradable{
 	private PassiveType type;
-	private ArrayList<Status> inflicts; // will redo later
+	private StatusTable inflict;
 	private boolean targetsUser;
 	private int chance;
 	
@@ -20,7 +21,7 @@ public abstract class AbstractPassive extends AbstractUpgradable{
 	public AbstractPassive(PassiveType t, String n, boolean b){
 		super(n);
 		type = t;
-		inflicts = new ArrayList<>();
+		inflict = new StatusTable();
 		targetsUser = b;
 		chance = 100;
 	}
@@ -56,11 +57,11 @@ public abstract class AbstractPassive extends AbstractUpgradable{
 		return type;
 	}
 	
-	public void addStatus(Status s){
-		inflicts.add(s);
+	public void addStatus(StatusName n, int i, int d){
+		inflict.add(n, i, d);
 	}
-	public ArrayList<Status> getInflicts(){
-		return inflicts;
+	public StatusTable getInflict(){
+		return inflict;
 	}
 	
 	public boolean getTargetsUser(){
@@ -74,8 +75,8 @@ public abstract class AbstractPassive extends AbstractUpgradable{
 	}
 	
 	public void applyEffect(Player p){
-		for(Status s : inflicts){
-			p.inflict(s);
+		for(int i = 0; i < inflict.getSize(); i++){
+			p.inflict(inflict.getNameAt(i), inflict.getIntensityAt(i), inflict.getDurationAt(i));
 		}
 	}
 	public OnHitKey getKey(){

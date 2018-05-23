@@ -2,7 +2,7 @@ package actives;
 
 import entities.ParticleType;
 import graphics.CustomColors;
-import statuses.*;
+import statuses.StatusName;
 
 // there's gotta be a better way to do this
 public class LoadActives {
@@ -13,13 +13,13 @@ public class LoadActives {
 		
 		ElementalActive bp = new ElementalActive("Blazing Pillars", 3, 5, 5, 1, 0, 1);
 		bp.enableTracking();
-		bp.addStatus(new Burn(1, 5), 70); // change later
+		bp.addStatus(StatusName.BURN, 1, 5, 70);
 		bp.setParticleType(ParticleType.BURST);
 		bp.setColorBlend(CustomColors.fireColors);
 		bp.setArc(360, 4); // bug: only spawning 2-3 projectiles
 		
 		ElementalActive bt = new ElementalActive("Boulder Toss", 5, 5, 2, 2, 3, 4);
-		bt.addStatus(new Stun(3, 4), 70);
+		bt.addStatus(StatusName.STUN, 3, 4, 70);
 		bt.setParticleType(ParticleType.BURST);
 		bt.setColorBlend(CustomColors.earthColors);
 		
@@ -29,12 +29,12 @@ public class LoadActives {
 		cd.setArc(90, 7);
 		
 		ElementalActive eq = new ElementalActive("Earthquake", 4, 5, 0, 2, 3, 0);
-		eq.addStatus(new Stun(3, 3), 100);
+		eq.addStatus(StatusName.STUN, 3, 3, 100);
 		eq.setParticleType(ParticleType.BURST);
 		eq.setColorBlend(CustomColors.earthColors);
 		
 		ElementalActive fof = new ElementalActive("Fields of Fire", 3, 3, 0, 5, 3, 0);
-		fof.addStatus(new Burn(1, 3), 100);
+		fof.addStatus(StatusName.BURN, 1, 3, 100);
 		fof.setParticleType(ParticleType.SHEAR);
 		fof.setColorBlend(CustomColors.fireColors);
 		
@@ -42,7 +42,7 @@ public class LoadActives {
 		fb.setParticleType(ParticleType.BURST);
 		
 		ElementalActive mfb = new ElementalActive("Mega Firebolt", 4, 4, 3, 3, 3, 4);
-		mfb.addStatus(new Burn(1, 5), 33);
+		mfb.addStatus(StatusName.BURN, 1, 5, 33);
 		mfb.setParticleType(ParticleType.SHEAR);
 		mfb.setColorBlend(CustomColors.fireColors);
 		

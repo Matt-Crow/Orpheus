@@ -1,6 +1,5 @@
 package actives;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import actions.OnHitTrip;
 import actions.OnHitKey;
@@ -12,13 +11,13 @@ import graphics.CustomColors;
 import initializers.Master;
 import upgradables.AbstractUpgradable;
 import upgradables.Stat;
-import statuses.Status;
+import statuses.StatusName;
+import statuses.StatusTable;
 import resources.Random;
 
 public abstract class AbstractActive extends AbstractUpgradable{
 	
-	// TODO: redo this with status name
-	private HashMap<Status, Integer> inflict;
+	private StatusTable inflict;
 	
 	// find some way so that this doesn't include terminated projectiles
 	// maybe update them from here?
@@ -69,7 +68,7 @@ public abstract class AbstractActive extends AbstractUpgradable{
 		// 50-250 to 250-500 damage (will need to balance later?)
 		addStat(new Stat("Damage", dmg * 50, 2));
 		
-		inflict = new HashMap<>();
+		inflict = new StatusTable();
 		
 		projectilesTrack = false;
 		
@@ -120,8 +119,8 @@ public abstract class AbstractActive extends AbstractUpgradable{
 		return projectilesTrack;
 	}
 	
-	public void addStatus(Status s, int chance){
-		inflict.put(s, chance);
+	public void addStatus(StatusName n, int intensity, int duration, int chance){
+		inflict.add(n, intensity, duration, chance);
 	}
 	
 	public void setParticleType(ParticleType t){
@@ -153,19 +152,19 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	}
 	
 	// temporary
-	public void setInflict(HashMap<Status, Integer> i){
-		inflict = i;
+	public void setInflict(StatusTable s){
+		inflict = s.copy();
 	}
-	public HashMap<Status, Integer> getInflict(){
+	public StatusTable getInflict(){
 		return inflict;
 	}
 	public OnHitKey getStatusInfliction(){
 		OnHitKey a = new OnHitKey(){
 			public void trip(OnHitTrip t){
 				Player target = (Player)t.getHit();
-				for(Status s : inflict.keySet()){
-					if(Random.chance(inflict.get(s))){
-						target.inflict(s);
+				for(int i = 0; i < inflict.getSize(); i++){
+					if(Random.chance(inflict.getChanceAt(i))){
+						target.inflict(inflict.getNameAt(i), inflict.getIntensityAt(i), inflict.getDurationAt(i));
 					}
 				}
 			}
