@@ -11,13 +11,6 @@ public class LoadActives {
 		MeleeActive hs = new MeleeActive("Heavy Stroke", 4, 4);
 		MeleeActive s = new MeleeActive("Slash", 1, 2);
 		
-		ElementalActive bp = new ElementalActive("Blazing Pillars", 3, 5, 5, 1, 0, 1);
-		bp.enableTracking();
-		bp.addStatus(StatusName.BURN, 1, 5, 70);
-		bp.setParticleType(ParticleType.BURST);
-		bp.setColorBlend(CustomColors.fireColors);
-		bp.setArc(360, 4); // bug: only spawning 2-3 projectiles
-		
 		ElementalActive bt = new ElementalActive("Boulder Toss", 5, 5, 2, 2, 3, 4);
 		bt.addStatus(StatusName.STUN, 3, 4, 70);
 		bt.setParticleType(ParticleType.BURST);
@@ -54,14 +47,6 @@ public class LoadActives {
 		rod.setParticleType(ParticleType.BURST);
 		rod.setColorBlend(CustomColors.rainbow);
 		
-		ElementalActive stk = new ElementalActive("Summon the Kraken", 1, 1, 0, 3, 5, 1);
-		stk.enableTracking();
-		stk.setParticleType(ParticleType.SHEAR);
-		stk.setColorBlend(CustomColors.waterColors);
-		
-		ElementalActive tpt = new ElementalActive("Tracking Projectile Test", 1, 1, 5, 3, 3, 3);
-		tpt.enableTracking();
-		
 		ElementalActive wb = new ElementalActive("Waterbolt", 3, 3, 3, 3, 1, 2);
 		wb.setParticleType(ParticleType.BEAM);
 		wb.setColorBlend(CustomColors.waterColors);
@@ -77,7 +62,6 @@ public class LoadActives {
 		AbstractActive.addActives(new AbstractActive[]{
 			s,
 			hs,
-			bp,
 			bt,
 			cd,
 			eq,
@@ -86,8 +70,6 @@ public class LoadActives {
 			mfb,
 			mwb,
 			rod,
-			stk,
-			tpt,
 			wb,
 			ws,
 			st,

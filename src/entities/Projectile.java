@@ -27,9 +27,6 @@ public class Projectile extends Entity{
 		setTeam(user.getTeam());
 		registeredAttack = a;
 		range = (int) a.getStatValue("Range");
-		if(a.getTracking()){
-			getEntityAI().enable();
-		}
 		
 		setMoving(true);
 		doNotHit = new ArrayList<Player>();

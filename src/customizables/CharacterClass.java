@@ -1,10 +1,6 @@
 package customizables;
 import upgradables.Stat;
-import passives.*;
 import java.util.ArrayList;
-
-import actives.*;
-
 import java.awt.Color;
 
 // make this connect better with player somehow
@@ -33,18 +29,15 @@ public class CharacterClass extends Customizable{
 		addPossibleActive("Heavy Stroke");
 		addPossibleActive("Warrior's Stance");
 		addPossibleActive("Shield Stance");
-		//addPossibleActive("Flurry");
 		addPossibleActive("Blade Stance");
 		addPossibleActive("Heal");
 		addPossibleActive("RAINBOW OF DOOM");
-		addPossibleActive("Tracking Projectile Test");
 		addPossibleActive("Cursed Daggers");
 		
 		passiveOptions = new ArrayList<>();
 		addPossiblePassive("Bracing");
 		addPossiblePassive("Retaliation");
 		addPossiblePassive("Determination");
-		//addPossiblePassive(new Revitalize());
 		addPossiblePassive("Adrenaline");
 		addPossiblePassive("Toughness");
 		addPossiblePassive("Sharpen");
@@ -93,9 +86,6 @@ public class CharacterClass extends Customizable{
 	}
 	
 	// setters
-	public void addPossibleActive(AbstractActive a){
-		activeOptions.add(a.getName());
-	}
 	public void addPossibleActive(String n){
 		activeOptions.add(n);
 	}

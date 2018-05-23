@@ -9,6 +9,5 @@ public class Fire extends CharacterClass{
 		addPossibleActive("Fields of Fire");
 		addPossibleActive("Burning Rage");
 		addPossibleActive("Mega Firebolt");
-		addPossibleActive("Blazing Pillars");
 	}
 }

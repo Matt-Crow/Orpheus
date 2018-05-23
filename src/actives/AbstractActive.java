@@ -16,18 +16,14 @@ import statuses.StatusTable;
 import resources.Random;
 
 public abstract class AbstractActive extends AbstractUpgradable{
-	
-	private StatusTable inflict;
-	
-	// find some way so that this doesn't include terminated projectiles
-	// maybe update them from here?
-	private ArrayList<Projectile> lastUseChildren;
-	
-	private int[] statCode; // better way?
-	private boolean projectilesTrack;
+	/**
+	 * Actives are abilities that the user triggers
+	 */
+	private StatusTable inflict; // the statuses this will inflict on the target upon hitting
+	private ActiveStatBaseValues bases; // 1-5 values used to generate this active
 	private ParticleType particleType;
 	private ArrayList<Color> particleColors;
-	private ActiveType type;
+	private ActiveType type; // used for upcasting
 	
 	private static ArrayList<AbstractActive> allActives = new ArrayList<>();
 	
@@ -35,14 +31,8 @@ public abstract class AbstractActive extends AbstractUpgradable{
 		super(n);
 		type = t;
 		
-		statCode = new int[]{
-				energyCost,
-				cooldown,
-				range,
-				speed,
-				aoe,
-				dmg
-		};
+		bases = new ActiveStatBaseValues(energyCost, cooldown, range, speed, aoe, dmg);
+		
 		// 1-5 stat system
 		
 		// 5-25 to 10-50 cost
@@ -70,8 +60,6 @@ public abstract class AbstractActive extends AbstractUpgradable{
 		
 		inflict = new StatusTable();
 		
-		projectilesTrack = false;
-		
 		particleType = ParticleType.NONE;
 		particleColors = new ArrayList<>();
 		particleColors.add(CustomColors.black);
@@ -83,6 +71,7 @@ public abstract class AbstractActive extends AbstractUpgradable{
 		return this;
 	}
 	
+	// static methods
 	public static void addActive(AbstractActive a){
 		allActives.add(a);
 	}
@@ -109,14 +98,8 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	public ActiveType getType(){
 		return type;
 	}
-	public int[] getStatCode(){
-		return statCode;
-	}
-	public void enableTracking(){
-		projectilesTrack = true;
-	}
-	public boolean getTracking(){
-		return projectilesTrack;
+	public ActiveStatBaseValues getBases(){
+		return bases;
 	}
 	
 	public void addStatus(StatusName n, int intensity, int duration, int chance){
@@ -147,17 +130,13 @@ public abstract class AbstractActive extends AbstractUpgradable{
 		return ret;
 	}	
 	
-	public ArrayList<Projectile> getLastUseProjectiles(){
-		return lastUseChildren;
-	}
-	
-	// temporary
 	public void setInflict(StatusTable s){
 		inflict = s.copy();
 	}
 	public StatusTable getInflict(){
 		return inflict;
 	}
+	
 	public OnHitKey getStatusInfliction(){
 		OnHitKey a = new OnHitKey(){
 			public void trip(OnHitTrip t){
@@ -182,17 +161,13 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	}
 	
 	public void use(){
-		lastUseChildren = new ArrayList<>();
 		consumeEnergy();
-		
 		spawnProjectile();
 	}
 	
 	public void spawnProjectile(int facingDegrees){
 		SeedProjectile registeredProjectile = new SeedProjectile(getRegisteredTo().getX(), getRegisteredTo().getY(), facingDegrees, (int) getStatValue("Speed"), getRegisteredTo(), this);
 		registeredProjectile.getActionRegister().addOnHit(getStatusInfliction());
-		
-		lastUseChildren.add(registeredProjectile);
 	}
 	public void spawnProjectile(){
 		spawnProjectile(getRegisteredTo().getDir().getDegrees());
@@ -205,11 +180,6 @@ public abstract class AbstractActive extends AbstractUpgradable{
 			int angle = start + spacing * i;
 			spawnProjectile(angle);
 		}
-	}
-	
-	public void init(){
-		super.init();
-		lastUseChildren = new ArrayList<>();
 	}
 	
 	public void drawStatusPane(Graphics g, int x, int y, int w, int h){

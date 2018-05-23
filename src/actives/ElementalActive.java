@@ -24,11 +24,9 @@ public class ElementalActive extends AbstractActive{
 		spawnArc(arcLength, projectileCount);
 	}
 	public ElementalActive copy(){
-		int[] s = getStatCode();
-		ElementalActive copy = new ElementalActive(getName(), s[0], s[1], s[2], s[3], s[4], s[5]);
-		if(getTracking()){
-			copy.enableTracking();
-		}
+		ActiveStatBaseValues b = getBases();
+		ElementalActive copy = new ElementalActive(getName(), b.getCost(), b.getCooldown(), b.getSpeed(), b.getRange(), b.getAoe(), b.getDmg());
+		copy.setArc(getArcDegrees(), getProjCount());
 		copy.setParticleType(getParticleType());
 		copy.setColorBlend(getColors());
 		copy.setInflict(getInflict());
