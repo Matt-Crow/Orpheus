@@ -18,4 +18,7 @@ public class Regeneration extends Status{
 		
 		p.getActionRegister().addOnUpdate(a);
 	}
+	public String getDesc(){
+		return "Regeneration, restoring " + (5.0 * getIntensityLevel()) + "% of the inflicted's HP \n every second for " + Master.framesToSeconds(getUses()) + " seconds";
+	}
 }

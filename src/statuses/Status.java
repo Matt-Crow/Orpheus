@@ -2,7 +2,7 @@ package statuses;
 
 import entities.Player;
 
-public class Status {
+public abstract class Status {
 	private StatusName code;
 	private String name;
 	private int level;
@@ -85,5 +85,8 @@ public class Status {
 		if(usesLeft <= 0){
 			terminate();
 		}
+	}
+	public String getDesc(){
+		return "Status " + name + " does not have a getDesc method";
 	}
 }

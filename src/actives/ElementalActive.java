@@ -56,6 +56,9 @@ public class ElementalActive extends AbstractActive{
 			desc += "with a " + getStatValue("AOE") + " unit radius, \n";
 		}
 		desc += "dealing " + getStatValue("Damage") + " damage to enemies it hits";
+		if(getInflict().getSize() > 0){
+			desc += "\n and having " + getStatusString();
+		}
 		
 		return desc;
 	}

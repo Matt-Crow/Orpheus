@@ -20,4 +20,7 @@ public class Strength extends Status{
 		};
 		p.getActionRegister().addOnMeleeHit(a);
 	}
+	public String getDesc(){
+		return "Strength, causing the inflicted's next " + getUses() + " melee attacks to \n" + "deal an extra " + (3.5 * getIntensityLevel()) + "% of the target's maximum HP \n and knock them back " + (3.5 * getIntensityLevel()) + " units";
+	}
 }

@@ -17,4 +17,7 @@ public class Burn extends Status{
 		};
 		p.getActionRegister().addOnBeHit(a);
 	}
+	public String getDesc(){
+		return "Burn, increasing the speed of damage taken by " + getIntensityLevel() * 25 + "% for the next " + getUses() + " hits recieved";
+	}
 }

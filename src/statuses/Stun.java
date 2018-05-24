@@ -18,4 +18,7 @@ public class Stun extends Status{
 		
 		p.getActionRegister().addOnUpdate(a);
 	}
+	public String getDesc(){
+		return "Stun, lowering the inflicted's movement speed by " + (25 * getIntensityLevel()) + "% \n for " + Master.framesToSeconds(getUses()) + " seconds";
+	}
 }

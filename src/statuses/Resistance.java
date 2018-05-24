@@ -17,4 +17,7 @@ public class Resistance extends Status{
 		};
 		p.getActionRegister().addOnBeHit(a);
 	}
+	public String getDesc(){
+		return "Resistance, reducing the speed of damage taken by " + (25 * getIntensityLevel()) + "% \n for the next " + getUses() + " hits received";
+	}
 }

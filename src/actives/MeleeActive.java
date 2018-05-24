@@ -22,7 +22,9 @@ public class MeleeActive extends AbstractActive{
 				+ "dealing " + (int)getStatValue("Damage") + " damage \n"
 						+ "to whoever it hits. \n"
 						+ Master.framesToSeconds((int)getStatValue("Cooldown")) + " second cooldown.";
-		
+		if(getInflict().getSize() > 0){
+			desc += "\n and having " + getStatusString();
+		}
 		
 		return desc;
 	}

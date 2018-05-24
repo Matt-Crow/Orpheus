@@ -17,4 +17,7 @@ public class Healing extends Status{
 		
 		p.getActionRegister().addOnUpdate(a);;
 	}
+	public String getDesc(){
+		return "Healing, immediately restoring " + 100.0 / (6 - getIntensityLevel()) + "% of the inflicted's HP";
+	}
 }

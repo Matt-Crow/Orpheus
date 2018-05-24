@@ -18,4 +18,7 @@ public class Rush extends Status{
 		
 		p.getActionRegister().addOnUpdate(a);
 	}
+	public String getDesc(){
+		return "Rush, increasing the inflicted's movement speed by \n" + (20 * getIntensityLevel()) + "% for the next \n" + Master.framesToSeconds(getUses()) + " seconds";
+	}
 }
