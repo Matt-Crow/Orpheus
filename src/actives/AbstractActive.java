@@ -64,7 +64,6 @@ public abstract class AbstractActive extends AbstractUpgradable{
 		particleColors = new ArrayList<>();
 		particleColors.add(CustomColors.black);
 	}
-	
 	public AbstractActive copy(){
 		// used to allow override
 		// DO NOT INVOKE THIS
@@ -95,17 +94,34 @@ public abstract class AbstractActive extends AbstractUpgradable{
 		return ret;
 	}
 	
-	public ActiveType getType(){
-		return type;
-	}
-	public ActiveStatBaseValues getBases(){
-		return bases;
-	}
-	
+	// status methods
 	public void addStatus(StatusName n, int intensity, int duration, int chance){
 		inflict.add(n, intensity, duration, chance);
 	}
+	public void addStatus(StatusName n, int intensity, int duration){
+		addStatus(n, intensity, duration, 100);
+	}
+	public void setInflict(StatusTable s){
+		inflict = s.copy();
+	}
+	public StatusTable getInflict(){
+		return inflict;
+	}
+	public OnHitKey getStatusInfliction(){
+		OnHitKey a = new OnHitKey(){
+			public void trip(OnHitTrip t){
+				Player target = (Player)t.getHit();
+				for(int i = 0; i < inflict.getSize(); i++){
+					if(Random.chance(inflict.getChanceAt(i))){
+						target.inflict(inflict.getNameAt(i), inflict.getIntensityAt(i), inflict.getDurationAt(i));
+					}
+				}
+			}
+		};
+		return a;
+	}
 	
+	// particle methods
 	public void setParticleType(ParticleType t){
 		particleType = t;
 	}
@@ -128,43 +144,33 @@ public abstract class AbstractActive extends AbstractUpgradable{
 			ret[i] = particleColors.get(i);
 		}
 		return ret;
-	}	
-	
-	public void setInflict(StatusTable s){
-		inflict = s.copy();
-	}
-	public StatusTable getInflict(){
-		return inflict;
 	}
 	
-	public OnHitKey getStatusInfliction(){
-		OnHitKey a = new OnHitKey(){
-			public void trip(OnHitTrip t){
-				Player target = (Player)t.getHit();
-				for(int i = 0; i < inflict.getSize(); i++){
-					if(Random.chance(inflict.getChanceAt(i))){
-						target.inflict(inflict.getNameAt(i), inflict.getIntensityAt(i), inflict.getDurationAt(i));
-					}
-				}
-			}
-		};
-		return a;
+	// misc
+	public ActiveType getType(){
+		return type;
+	}
+	public ActiveStatBaseValues getBases(){
+		return bases;
 	}
 	
+	// in battle methods
 	public boolean canUse(){
 		return getRegisteredTo().getEnergyLog().getEnergy() >= getStat("Energy Cost").get() && !onCooldown();
 	}
-	
 	public void consumeEnergy(){
 		getRegisteredTo().getEnergyLog().loseEnergy((int) getStatValue("Energy Cost"));
 		setToCooldown();
 	}
-	
 	public void use(){
 		consumeEnergy();
-		spawnProjectile();
+		
+		if(getStatValue("Damage") != 0){
+			spawnProjectile();
+		}
 	}
 	
+	// spawning
 	public void spawnProjectile(int facingDegrees){
 		SeedProjectile registeredProjectile = new SeedProjectile(getRegisteredTo().getX(), getRegisteredTo().getY(), facingDegrees, (int) getStatValue("Speed"), getRegisteredTo(), this);
 		registeredProjectile.getActionRegister().addOnHit(getStatusInfliction());
@@ -178,7 +184,10 @@ public abstract class AbstractActive extends AbstractUpgradable{
 		
 		for(int i = 0; i < numProj; i++){
 			int angle = start + spacing * i;
-			spawnProjectile(angle);
+			if(angle != getRegisteredTo().getDir().getDegrees()){
+				// avoids launching 2 proj in facing direction due to initial invocation of spawnProjectile
+				spawnProjectile(angle);
+			}
 		}
 	}
 	

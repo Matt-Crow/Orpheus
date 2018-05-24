@@ -1,11 +1,11 @@
 package actives;
+import initializers.Master;
 import statuses.StatusName;
 import statuses.StatusTable;
 
 public class BoostActive extends AbstractActive{
 	public BoostActive(String n, int cost, int cd, StatusName[] statusNames, int[] intensities, int[] durations){
 		super(ActiveType.BOOST, n, cost, cd, 0, 0, 0, 0);
-		
 		for(int s = 0; s < statusNames.length; s++){
 			addStatus(statusNames[s], intensities[s], durations[s], 100);
 		}
@@ -30,5 +30,14 @@ public class BoostActive extends AbstractActive{
 		for(int i = 0; i < s.getSize(); i++){
 			getRegisteredTo().inflict(s.getNameAt(i), s.getIntensityAt(i), s.getDurationAt(i));
 		}
+	}
+	public String getDescription(){
+		String desc = getName() + ": \n";
+		desc += "Upon use, inflicts the user with: \n";
+		StatusTable s = getInflict();
+		for(int i = 0; i < s.getSize(); i++){
+			desc += "-" + s.getNameAt(i) + " level " + s.getIntensityAt(i) + " for " + Master.framesToSeconds(s.getDurationAt(i)) + " seconds \n";
+		}
+		return desc;
 	}
 }

@@ -19,7 +19,7 @@ public class MeleeActive extends AbstractActive{
 	public String getDescription(){
 		String desc = getName() + ": \n"
 				+ "The user performs a close range attack, \n"
-				+ "dealing " + (int)getStatValue("Damage") + "\n"
+				+ "dealing " + (int)getStatValue("Damage") + " damage \n"
 						+ "to whoever it hits. \n"
 						+ Master.framesToSeconds((int)getStatValue("Cooldown")) + " second cooldown.";
 		
