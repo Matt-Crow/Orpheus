@@ -1,5 +1,4 @@
 package actives;
-import statuses.Status;
 import statuses.StatusName;
 import statuses.StatusTable;
 
@@ -33,11 +32,8 @@ public class BoostActive extends AbstractActive{
 	}
 	public String getDescription(){
 		String desc = getName() + ": \n";
-		desc += "Upon use, inflicts the user with:";
-		StatusTable s = getInflict();
-		for(int i = 0; i < s.getSize(); i++){
-			desc += "\n-" + Status.decode(s.getNameAt(i), s.getIntensityAt(i), s.getDurationAt(i)).getDesc();
-		}
+		desc += "Upon use, inflicts the user with: \n";
+		desc += getInflict().getStatusString();
 		return desc;
 	}
 }

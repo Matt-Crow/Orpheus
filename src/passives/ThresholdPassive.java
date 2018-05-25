@@ -1,8 +1,10 @@
 package passives;
 
-import statuses.StatusTable;
-
 public class ThresholdPassive extends AbstractPassive{
+	/*
+	 * Triggers so long as the user is below a set percentage
+	 * of their maximum HP
+	 */
 	private double threshold;
 	
 	public ThresholdPassive(String n, double percent){
@@ -11,15 +13,19 @@ public class ThresholdPassive extends AbstractPassive{
 	}
 	public ThresholdPassive copy(){
 		ThresholdPassive copy = new ThresholdPassive(getName(), threshold);
-		StatusTable orig = getInflict();
-		for(int i = 0; i < orig.getSize(); i++){
-			copy.addStatus(orig.getNameAt(i), orig.getIntensityAt(i), orig.getDurationAt(i));
-		}
+		copyInflictTo(copy);
 		return copy;
 	}
 	public void update(){
 		if(getRegisteredTo().getLog().getHPPerc() <= threshold){
 			applyEffect(getRegisteredTo());
 		}
+	}
+	public String getDescription(){
+		String desc = getName() + ": \n";
+		desc += "When the user is at or below " + threshold + "% \n";
+		desc += "of their maximum HP, inflicts them with: \n";
+		desc += getInflict().getStatusString();
+		return desc;
 	}
 }

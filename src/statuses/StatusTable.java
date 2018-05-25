@@ -69,8 +69,18 @@ public class StatusTable {
 	public int getChanceAt(int i){
 		return chances.get(i);
 	}
-	
 	public int getSize(){
 		return names.size();
+	}
+	
+	public String getStatusString(){
+		String desc = "~~~STATUS DATA~~~";
+		for(int i = 0; i < getSize(); i++){
+			if(getChanceAt(i) < 100){
+				desc += "\n" + getChanceAt(i) + "% chance to inflict";
+			}
+			desc += "\n" + Status.decode(getNameAt(i), getIntensityAt(i), getDurationAt(i)).getDesc();
+		}
+		return desc;
 	}
 }

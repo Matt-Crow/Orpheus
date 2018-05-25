@@ -11,10 +11,15 @@ import resources.Random;
 import upgradables.AbstractUpgradable;
 
 public abstract class AbstractPassive extends AbstractUpgradable{
-	private PassiveType type;
+	/**
+	 * Passives are abilities that have specific triggers, 
+	 * i.e., the user does not directly trigger them:
+	 * they are triggered passively
+	 */
+	private PassiveType type; // used when upcasting
 	private StatusTable inflict;
 	private boolean targetsUser;
-	private int chance;
+	private int chance; // move to status table?
 	
 	private static ArrayList<AbstractPassive> allPassives = new ArrayList<>();
 	
@@ -29,7 +34,16 @@ public abstract class AbstractPassive extends AbstractUpgradable{
 		// DO NOT INVOKE THIS
 		return this;
 	}
+	public void copyInflictTo(AbstractPassive p){
+		/* takes all the statuses from this passive's
+		 * status table, and copies them to p's
+		 */
+		for(int i = 0; i < inflict.getSize(); i++){
+			p.addStatus(inflict.getNameAt(i), inflict.getIntensityAt(i), inflict.getDurationAt(i));
+		}
+	}
 	
+	// static methods
 	public static void addPassive(AbstractPassive p){
 		allPassives.add(p);
 	}
@@ -53,17 +67,10 @@ public abstract class AbstractPassive extends AbstractUpgradable{
 		return ret;
 	}
 	
+	// setters / getters
 	public PassiveType getType(){
 		return type;
 	}
-	
-	public void addStatus(StatusName n, int i, int d){
-		inflict.add(n, i, d);
-	}
-	public StatusTable getInflict(){
-		return inflict;
-	}
-	
 	public boolean getTargetsUser(){
 		return targetsUser;
 	}
@@ -73,7 +80,14 @@ public abstract class AbstractPassive extends AbstractUpgradable{
 	public int getChance(){
 		return chance;
 	}
+	public void addStatus(StatusName n, int i, int d){
+		inflict.add(n, i, d);
+	}
+	public StatusTable getInflict(){
+		return inflict;
+	}
 	
+	// in battle methods. These are applied in the subclasses
 	public void applyEffect(Player p){
 		for(int i = 0; i < inflict.getSize(); i++){
 			p.inflict(inflict.getNameAt(i), inflict.getIntensityAt(i), inflict.getDurationAt(i));

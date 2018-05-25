@@ -21,9 +21,9 @@ public class MeleeActive extends AbstractActive{
 				+ "The user performs a close range attack, \n"
 				+ "dealing " + (int)getStatValue("Damage") + " damage \n"
 						+ "to whoever it hits. \n"
-						+ Master.framesToSeconds((int)getStatValue("Cooldown")) + " second cooldown.";
+						+ Master.framesToSeconds((int)getStatValue("Cooldown")) + " second cooldown.\n";
 		if(getInflict().getSize() > 0){
-			desc += "\n and having " + getStatusString();
+			desc += getInflict().getStatusString();
 		}
 		
 		return desc;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import entities.Player;
 import initializers.Master;
 
+// TODO: move inflict to here. Make characterClass extend from this?
 public class AbstractUpgradable {
 	/**
 	 * This class is used as a base 

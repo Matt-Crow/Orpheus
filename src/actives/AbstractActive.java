@@ -11,7 +11,6 @@ import graphics.CustomColors;
 import initializers.Master;
 import upgradables.AbstractUpgradable;
 import upgradables.Stat;
-import statuses.Status;
 import statuses.StatusName;
 import statuses.StatusTable;
 import resources.Random;
@@ -190,14 +189,6 @@ public abstract class AbstractActive extends AbstractUpgradable{
 				spawnProjectile(angle);
 			}
 		}
-	}
-	
-	public String getStatusString(){
-		String desc = "";
-		for(int i = 0; i < inflict.getSize(); i++){
-			desc += "\n a " + inflict.getChanceAt(i) + "% chance to inflict \n" + Status.decode(inflict.getNameAt(i), inflict.getIntensityAt(i), inflict.getDurationAt(i)).getDesc();
-		}
-		return desc;
 	}
 	
 	public void drawStatusPane(Graphics g, int x, int y, int w, int h){
