@@ -2,7 +2,7 @@ package upgradables;
 import resources.Op;
 
 public class Stat {
-	private String name;
+	private String name; // would like this to be enum, but looks like that can't work
 	private double baseValue;
 	private double maxValue;
 	private double step;

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import actions.OnHitKey;
 import actions.OnHitTrip;
-import statuses.StatusName;
 import statuses.StatusTable;
 import entities.Player;
 import resources.Random;
@@ -17,7 +16,6 @@ public abstract class AbstractPassive extends AbstractUpgradable{
 	 * they are triggered passively
 	 */
 	private PassiveType type; // used when upcasting
-	private StatusTable inflict;
 	private boolean targetsUser;
 	private int chance; // move to status table?
 	
@@ -26,21 +24,12 @@ public abstract class AbstractPassive extends AbstractUpgradable{
 	public AbstractPassive(PassiveType t, String n, boolean b){
 		super(n);
 		type = t;
-		inflict = new StatusTable();
 		targetsUser = b;
 		chance = 100;
 	}
 	public AbstractPassive copy(){
 		// DO NOT INVOKE THIS
 		return this;
-	}
-	public void copyInflictTo(AbstractPassive p){
-		/* takes all the statuses from this passive's
-		 * status table, and copies them to p's
-		 */
-		for(int i = 0; i < inflict.getSize(); i++){
-			p.addStatus(inflict.getNameAt(i), inflict.getIntensityAt(i), inflict.getDurationAt(i));
-		}
 	}
 	
 	// static methods
@@ -80,17 +69,12 @@ public abstract class AbstractPassive extends AbstractUpgradable{
 	public int getChance(){
 		return chance;
 	}
-	public void addStatus(StatusName n, int i, int d){
-		inflict.add(n, i, d);
-	}
-	public StatusTable getInflict(){
-		return inflict;
-	}
 	
 	// in battle methods. These are applied in the subclasses
 	public void applyEffect(Player p){
-		for(int i = 0; i < inflict.getSize(); i++){
-			p.inflict(inflict.getNameAt(i), inflict.getIntensityAt(i), inflict.getDurationAt(i));
+		StatusTable inf = getInflict();
+		for(int i = 0; i < inf.getSize(); i++){
+			p.inflict(inf.getNameAt(i), inf.getIntensityAt(i), inf.getDurationAt(i));
 		}
 	}
 	public OnHitKey getKey(){

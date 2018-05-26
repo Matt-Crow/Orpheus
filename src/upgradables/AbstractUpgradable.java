@@ -1,11 +1,13 @@
 package upgradables;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import entities.Player;
 import initializers.Master;
+import statuses.StatusName;
+import statuses.StatusTable;
 
-// TODO: move inflict to here. Make characterClass extend from this?
-public class AbstractUpgradable {
+// TODO: Make characterClass extend from this?
+public abstract class AbstractUpgradable {
 	/**
 	 * This class is used as a base 
 	 * class for the Active and Passive 
@@ -13,15 +15,17 @@ public class AbstractUpgradable {
 	 * customized by the player in the
 	 * customization window
 	 */
-	private String name;
+	private String name; // would like to use enum, but looks like I can't
 	private Player registeredTo;
-	private ArrayList<Stat> stats;
+	private HashMap<String, Stat> stats;
 	private int cooldown;
+	private StatusTable inflict; // statuses that this may inflict. Each subclass handles this themself
 	
 	// constructors
 	public AbstractUpgradable(String n){
 		name = n;
-		stats = new ArrayList<>();
+		stats = new HashMap<>();
+		inflict = new StatusTable();
 		cooldown = 0;
 	}
 	
@@ -42,36 +46,25 @@ public class AbstractUpgradable {
 	public Player getRegisteredTo(){
 		return registeredTo;
 	}
-	// change this to replace old?
+	
 	public void addStat(Stat s){
-		boolean exists = false;
-		for(Stat existingStat : stats){
-			if(existingStat.getName() == s.getName()){
-				exists = true;
-			}
-		}
-		if(!exists){
-			stats.add(s);
-		}
+		stats.put(s.getName().toUpperCase(), s);
 	}
 	public void addStat(String n, double base){
-		addStat(new Stat(n, base));
+		addStat(new Stat(n.toUpperCase(), base));
 	}
 	public void addStat(String n, double base, double maxRelativeToMin){
 		// maxRelativeToMin is how much the stat's value is at max.
 		// EX: base of 12.5, maxRelativeToMin of 2.0 will result it 25.0 max
-		addStat(new Stat(n, base, maxRelativeToMin));
+		addStat(new Stat(n.toUpperCase(), base, maxRelativeToMin));
 	}
 	public Stat getStat(String n){
 		Stat ret = new Stat("STATNOTFOUND", 0);
 		n = n.toUpperCase();
-		for(Stat stat : stats){
-			if(stat.getName().toUpperCase().equals(n)){
-				ret = stat;
-			}
-		}
-		if(ret.getName() == "STATNOTFOUND"){
-			throw new NullPointerException();
+		if(!stats.containsKey(n)){
+			throw new NullPointerException("Stat not found for " + registeredTo.getName() + " with name " + n);
+		} else {
+			ret = stats.get(n);
 		}
 		return ret;
 	}
@@ -89,6 +82,28 @@ public class AbstractUpgradable {
 	}
 	public boolean onCooldown(){
 		return cooldown > 0;
+	}
+	
+	// status methods
+	public void addStatus(StatusName n, int intensity, int duration, int chance){
+		inflict.add(n, intensity, duration, chance);
+	}
+	public void addStatus(StatusName n, int intensity, int duration){
+		addStatus(n, intensity, duration, 100);
+	}
+	public void setInflict(StatusTable s){
+		inflict = s.copy();
+	}
+	public StatusTable getInflict(){
+		return inflict;
+	}
+	public void copyInflictTo(AbstractUpgradable a){
+		/* takes all the statuses from this upgradable's
+		 * status table, and copies them to p's
+		 */
+		for(int i = 0; i < inflict.getSize(); i++){
+			a.addStatus(inflict.getNameAt(i), inflict.getIntensityAt(i), inflict.getDurationAt(i));
+		}
 	}
 	
 	// in battle functions

@@ -11,7 +11,6 @@ import graphics.CustomColors;
 import initializers.Master;
 import upgradables.AbstractUpgradable;
 import upgradables.Stat;
-import statuses.StatusName;
 import statuses.StatusTable;
 import resources.Random;
 
@@ -19,7 +18,6 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	/**
 	 * Actives are abilities that the user triggers
 	 */
-	private StatusTable inflict; // the statuses this will inflict on the target upon hitting
 	private ActiveStatBaseValues bases; // 1-5 values used to generate this active
 	private ParticleType particleType;
 	private ArrayList<Color> particleColors;
@@ -58,8 +56,6 @@ public abstract class AbstractActive extends AbstractUpgradable{
 		// 50-250 to 250-500 damage (will need to balance later?)
 		addStat(new Stat("Damage", dmg * 50, 2));
 		
-		inflict = new StatusTable();
-		
 		particleType = ParticleType.NONE;
 		particleColors = new ArrayList<>();
 		particleColors.add(CustomColors.black);
@@ -94,26 +90,14 @@ public abstract class AbstractActive extends AbstractUpgradable{
 		return ret;
 	}
 	
-	// status methods
-	public void addStatus(StatusName n, int intensity, int duration, int chance){
-		inflict.add(n, intensity, duration, chance);
-	}
-	public void addStatus(StatusName n, int intensity, int duration){
-		addStatus(n, intensity, duration, 100);
-	}
-	public void setInflict(StatusTable s){
-		inflict = s.copy();
-	}
-	public StatusTable getInflict(){
-		return inflict;
-	}
 	public OnHitKey getStatusInfliction(){
+		StatusTable inf = getInflict();
 		OnHitKey a = new OnHitKey(){
 			public void trip(OnHitTrip t){
 				Player target = (Player)t.getHit();
-				for(int i = 0; i < inflict.getSize(); i++){
-					if(Random.chance(inflict.getChanceAt(i))){
-						target.inflict(inflict.getNameAt(i), inflict.getIntensityAt(i), inflict.getDurationAt(i));
+				for(int i = 0; i < inf.getSize(); i++){
+					if(Random.chance(inf.getChanceAt(i))){
+						target.inflict(inf.getNameAt(i), inf.getIntensityAt(i), inf.getDurationAt(i));
 					}
 				}
 			}
