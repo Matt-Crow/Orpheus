@@ -46,7 +46,6 @@ public class StatusTable {
 		}
 		return ret;
 	}
-	
 	public void add(StatusName n, int i, int d, int c){
 		names.add(n);
 		intensities.add(i);

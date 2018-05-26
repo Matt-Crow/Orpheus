@@ -4,26 +4,26 @@ import statuses.StatusName;
 
 public class LoadPassives {
 	public static void load(){
-		OnMeleeHitPassive lh = new OnMeleeHitPassive("Leechhealer", 20, true);
-		lh.addStatus(StatusName.REGENERATION, 1, 5);
+		OnMeleeHitPassive lh = new OnMeleeHitPassive("Leechhealer", true);
+		lh.addStatus(StatusName.REGENERATION, 1, 5, 20);
 		
-		OnMeleeHitPassive m = new OnMeleeHitPassive("Momentum", 20, true);
-		m.addStatus(StatusName.RUSH, 1, 20);
+		OnMeleeHitPassive m = new OnMeleeHitPassive("Momentum", true);
+		m.addStatus(StatusName.RUSH, 1, 20, 20);
 		
-		OnMeleeHitPassive s = new OnMeleeHitPassive("Sharpen", 20, true);
-		s.addStatus(StatusName.STRENGTH, 1, 1);
+		OnMeleeHitPassive s = new OnMeleeHitPassive("Sharpen", true);
+		s.addStatus(StatusName.STRENGTH, 1, 1, 20);
 		
-		OnMeleeHitPassive ss = new OnMeleeHitPassive("Sparking Strikes", 20, true);
-		ss.addStatus(StatusName.CHARGE, 1, 10);
+		OnMeleeHitPassive ss = new OnMeleeHitPassive("Sparking Strikes", true);
+		ss.addStatus(StatusName.CHARGE, 1, 10, 20);
 		
-		OnBeHitPassive nh = new OnBeHitPassive("Nature's Healing", 100, true);
+		OnBeHitPassive nh = new OnBeHitPassive("Nature's Healing", true);
 		nh.addStatus(StatusName.REGENERATION, 1, 1);
 		
-		OnBeHitPassive r = new OnBeHitPassive("Recover", 20, true);
-		r.addStatus(StatusName.REGENERATION, 1, 5);
+		OnBeHitPassive r = new OnBeHitPassive("Recover", true);
+		r.addStatus(StatusName.REGENERATION, 1, 5, 20);
 		
-		OnBeHitPassive t = new OnBeHitPassive("Toughness", 20, true);
-		t.addStatus(StatusName.RESISTANCE, 1, 1);
+		OnBeHitPassive t = new OnBeHitPassive("Toughness", true);
+		t.addStatus(StatusName.RESISTANCE, 1, 1, 20);
 		
 		ThresholdPassive a = new ThresholdPassive("Adrenaline", 25);
 		a.addStatus(StatusName.CHARGE, 2, 1);

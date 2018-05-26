@@ -6,13 +6,12 @@ public class OnHitPassive extends AbstractPassive{
 	 * user colliding with an enemy player
 	 */
 	
-	public OnHitPassive(String n, int c, boolean targetsUser){
+	public OnHitPassive(String n, boolean targetsUser){
 		super(PassiveType.ONHIT, n, targetsUser);
-		setChance(c);
 	}
 	
 	public OnHitPassive copy(){
-		OnHitPassive copy = new OnHitPassive(getName(), getChance(), getTargetsUser());
+		OnHitPassive copy = new OnHitPassive(getName(), getTargetsUser());
 		copyInflictTo(copy);
 		return copy;
 	}
@@ -23,8 +22,7 @@ public class OnHitPassive extends AbstractPassive{
 	public String getDescription(){
 		String desc = getName() + ": \n";
 		desc += "When the user performs an attack that successfully hits an enemy, \n";
-		desc += "there is a " + getChance() + "% chance \n";
-		desc += "that the " + ((getTargetsUser()) ? "user" : "target") + " will be inflicted with: \n";
+		desc += "inflicts " + ((getTargetsUser()) ? "user" : "target") + " with: \n";
 		desc += getInflict().getStatusString();
 		return desc;
 	}

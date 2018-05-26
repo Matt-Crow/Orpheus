@@ -81,7 +81,7 @@ public class Player extends Entity{
 				break;
 			default:
 				String[] classes = {"fire", "earth", "water", "air"};
-				int randomNum = Random.choose(0, 4);
+				int randomNum = Random.choose(0, 3);
 				setClass(classes[randomNum]);
 				break;
 		}

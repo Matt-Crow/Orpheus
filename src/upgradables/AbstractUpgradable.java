@@ -18,7 +18,7 @@ public abstract class AbstractUpgradable {
 	private String name; // would like to use enum, but looks like I can't
 	private Player registeredTo;
 	private HashMap<String, Stat> stats;
-	private int cooldown;
+	private int cooldown; // frames until this upgradable can be used in battle again
 	private StatusTable inflict; // statuses that this may inflict. Each subclass handles this themself
 	
 	// constructors
@@ -102,7 +102,7 @@ public abstract class AbstractUpgradable {
 		 * status table, and copies them to p's
 		 */
 		for(int i = 0; i < inflict.getSize(); i++){
-			a.addStatus(inflict.getNameAt(i), inflict.getIntensityAt(i), inflict.getDurationAt(i));
+			a.addStatus(inflict.getNameAt(i), inflict.getIntensityAt(i), inflict.getDurationAt(i), inflict.getChanceAt(i));
 		}
 	}
 	

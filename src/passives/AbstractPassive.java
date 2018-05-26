@@ -17,7 +17,6 @@ public abstract class AbstractPassive extends AbstractUpgradable{
 	 */
 	private PassiveType type; // used when upcasting
 	private boolean targetsUser;
-	private int chance; // move to status table?
 	
 	private static ArrayList<AbstractPassive> allPassives = new ArrayList<>();
 	
@@ -25,7 +24,6 @@ public abstract class AbstractPassive extends AbstractUpgradable{
 		super(n);
 		type = t;
 		targetsUser = b;
-		chance = 100;
 	}
 	public AbstractPassive copy(){
 		// DO NOT INVOKE THIS
@@ -63,12 +61,6 @@ public abstract class AbstractPassive extends AbstractUpgradable{
 	public boolean getTargetsUser(){
 		return targetsUser;
 	}
-	public void setChance(int c){
-		chance = c;
-	}
-	public int getChance(){
-		return chance;
-	}
 	
 	// in battle methods. These are applied in the subclasses
 	public void applyEffect(Player p){
@@ -80,11 +72,14 @@ public abstract class AbstractPassive extends AbstractUpgradable{
 	public OnHitKey getKey(){
 		OnHitKey a = new OnHitKey(){
 			public void trip(OnHitTrip t){
-				if(Random.chance(chance)){
-					if(getTargetsUser()){
-						applyEffect(getRegisteredTo());
-					} else {
-						applyEffect((Player)t.getHit());
+				StatusTable inf = getInflict();
+				for(int i = 0; i < inf.getSize(); i++){
+					if(Random.chance(inf.getChanceAt(i))){
+						if(getTargetsUser()){
+							getRegisteredTo().inflict(inf.getNameAt(i), inf.getIntensityAt(i), inf.getDurationAt(i));
+						} else {
+							((Player)t.getHit()).inflict(inf.getNameAt(i), inf.getIntensityAt(i), inf.getDurationAt(i));
+						}
 					}
 				}
 			}
