@@ -18,7 +18,6 @@ import gui.Button;
 import resources.KeyRegister;
 import initializers.Master;
 import initializers.Controls;
-import resources.DrawingPlane;
 import resources.Chat;
 
 public class BattleCanvas extends DrawingPlane implements MouseListener, KeyListener{

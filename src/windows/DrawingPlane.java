@@ -1,10 +1,11 @@
-package resources;
+package windows;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import graphics.CustomColors;
 import initializers.Master;
+import resources.Op;
 
 import javax.swing.AbstractAction;
 import java.awt.Graphics;

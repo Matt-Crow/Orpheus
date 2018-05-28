@@ -4,7 +4,7 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Toolkit;
 import entities.TruePlayer;
-import resources.DrawingFrame;
+import windows.DrawingFrame;
 import battle.Battle;
 
 public class Master {

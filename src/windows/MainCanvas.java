@@ -11,7 +11,6 @@ import gui.OptionBox;
 import battle.Team;
 import customizables.*;
 import initializers.Master;
-import resources.DrawingPlane;
 
 @SuppressWarnings("serial")
 public class MainCanvas extends DrawingPlane{

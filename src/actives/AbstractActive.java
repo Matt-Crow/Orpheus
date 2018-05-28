@@ -89,6 +89,13 @@ public abstract class AbstractActive extends AbstractUpgradable{
 		}
 		return ret;
 	}
+	public static AbstractActive[] getAll(){
+		AbstractActive[] ret = new AbstractActive[allActives.size()];
+		for(int i = 0; i < allActives.size(); i++){
+			ret[i] = allActives.get(i).copy();
+		}
+		return ret;
+	}
 	
 	public OnHitKey getStatusInfliction(){
 		StatusTable inf = getInflict();

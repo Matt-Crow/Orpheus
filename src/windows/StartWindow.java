@@ -1,8 +1,5 @@
 package windows;
 
-import resources.DrawingFrame;
-
-
 public class StartWindow  extends DrawingFrame{
 	/**
 	 * Startwindow is used as a 'launcher' for the game

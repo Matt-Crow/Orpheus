@@ -1,7 +1,5 @@
 package windows;
 
-import resources.DrawingFrame;
-
 public class MainWindow extends DrawingFrame{
 	/**
 	 * Mainwindow is the lobby window used for the game, featuring the customizer and battle options

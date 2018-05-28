@@ -1,4 +1,4 @@
-package resources;
+package windows;
 
 import javax.swing.JFrame;
 import initializers.Master;

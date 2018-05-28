@@ -8,19 +8,19 @@ import actives.AbstractActive;
 import java.util.ArrayList;
 import customizables.Build;
 import entities.Player;
-import resources.DrawingPlane;
 import gui.Button;
 import gui.OptionBox;
 import gui.UpgradableSelector;
 import passives.AbstractPassive;
 import gui.Text;
-import gui.UpgradableCustomizer;
 import upgradables.AbstractUpgradable;
 
+@SuppressWarnings("serial")
 public class BuildCanvas extends DrawingPlane{
-	public static final long serialVersionUID = 1L;
 	private OptionBox<String> baseBuild;
 	private UpgradableSelector[] upgradableSelectors;
+	
+	private Button temp;
 	
 	private Button setClass;
 	private Button finish;
@@ -61,6 +61,15 @@ public class BuildCanvas extends DrawingPlane{
 		});
 		add(setClass);
 		resizeComponents(3, 1);
+		temp = new Button("customize");
+		temp.addActionListener(new AbstractAction(){
+			public void actionPerformed(ActionEvent e){
+				new CustomizeWindow();
+				close();
+			}
+		});
+		add(temp);
+		resizeComponents(4, 1);
 	}
 	public void phase2(){
 		testPlayer = new Player("TEST");
@@ -117,9 +126,6 @@ public class BuildCanvas extends DrawingPlane{
 		
 		//TODO: add tooltip of selected item desc instead of UpgradableSelector
 		
-		
-		
-		add(new UpgradableCustomizer(upgradableSelectors[0].getBox().getSelected()));
 		
 		
 		

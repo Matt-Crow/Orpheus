@@ -7,7 +7,6 @@ import gui.Button;
 import gui.Title;
 
 import resources.Op;
-import resources.DrawingPlane;
 
 @SuppressWarnings("serial")
 public class StartCanvas extends DrawingPlane{

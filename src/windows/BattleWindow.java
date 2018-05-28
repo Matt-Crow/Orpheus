@@ -1,7 +1,5 @@
 package windows;
 
-import resources.DrawingFrame;
-
 public class BattleWindow extends DrawingFrame{
 	public static final long serialVersionUID = 1L;
 	BattleCanvas draw;

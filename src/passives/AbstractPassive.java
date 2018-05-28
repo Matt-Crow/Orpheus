@@ -53,6 +53,13 @@ public abstract class AbstractPassive extends AbstractUpgradable{
 		}
 		return ret;
 	}
+	public static AbstractPassive[] getAll(){
+		AbstractPassive[] ret = new AbstractPassive[allPassives.size()];
+		for(int i = 0; i < allPassives.size(); i++){
+			ret[i] = allPassives.get(i);
+		}
+		return ret;
+	}
 	
 	// setters / getters
 	public PassiveType getType(){
