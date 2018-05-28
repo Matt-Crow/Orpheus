@@ -28,6 +28,9 @@ public abstract class AbstractUpgradable {
 		inflict = new StatusTable();
 		cooldown = 0;
 	}
+	public AbstractUpgradable copy(){
+		return this;
+	}
 	
 	// setters and getters
 	public String getName(){
@@ -71,6 +74,10 @@ public abstract class AbstractUpgradable {
 	public double getStatValue(String n){
 		return getStat(n).get();
 	}
+	public HashMap<String, Stat> getStats(){
+		return stats;
+	}
+	
 	public void setCooldown(int seconds){
 		addStat("Cooldown", Master.seconds(seconds));
 	}

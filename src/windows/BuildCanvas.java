@@ -14,6 +14,7 @@ import gui.OptionBox;
 import gui.UpgradableSelector;
 import passives.AbstractPassive;
 import gui.Text;
+import gui.UpgradableCustomizer;
 import upgradables.AbstractUpgradable;
 
 public class BuildCanvas extends DrawingPlane{
@@ -115,6 +116,12 @@ public class BuildCanvas extends DrawingPlane{
 		
 		
 		//TODO: add tooltip of selected item desc instead of UpgradableSelector
+		
+		
+		
+		add(new UpgradableCustomizer(upgradableSelectors[0].getBox().getSelected()));
+		
+		
 		
 		resizeComponents(3, 3);
 		revalidate();
