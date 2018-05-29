@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import gui.Button;
 import gui.Title;
-
+import gui.VoidComponent;
 import resources.Op;
 
 @SuppressWarnings("serial")

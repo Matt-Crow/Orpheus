@@ -1,4 +1,4 @@
-package windows;
+package gui;
 
 import javax.swing.JComponent;
 
