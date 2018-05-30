@@ -82,7 +82,7 @@ public class CustomizeCanvas extends DrawingPlane{
 					customizing = AbstractActive.getActiveByName(upgradableName.getSelected());
 					remove(customize);
 					remove(upgradableName);
-					add(new CustomizeViewer(customizing));
+					add(new ActiveCustomizer((AbstractActive)customizing));
 					revalidate();
 					repaint();
 				}
@@ -100,7 +100,7 @@ public class CustomizeCanvas extends DrawingPlane{
 					customizing = AbstractPassive.getPassiveByName(upgradableName.getSelected());
 					remove(customize);
 					remove(upgradableName);
-					add(new CustomizeViewer(customizing));
+					//add(new CustomizeViewer(customizing));
 					revalidate();
 					repaint();
 				}
