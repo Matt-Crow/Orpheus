@@ -4,6 +4,9 @@ import upgradables.AbstractUpgradable;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
+
+import actives.AbstractActive;
+
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 
@@ -15,6 +18,9 @@ public class CustomizeViewer extends JComponent{
 	
 	public CustomizeViewer(AbstractUpgradable a){
 		customizer = new UpgradableCustomizer(a);
+		if(a instanceof AbstractActive){
+			customizer = new ActiveCustomizer((AbstractActive)a);
+		}
 		for(OptionBox<Integer> box : customizer.getBoxes()){
 			box.addActionListener(new AbstractAction(){
 				public void actionPerformed(ActionEvent e){

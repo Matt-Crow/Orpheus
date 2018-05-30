@@ -1,10 +1,10 @@
 package actives;
 
 public enum ActiveStat {
-	ENERGY_COST,
+	COST,
 	COOLDOWN,
 	RANGE,
 	SPEED,
 	AOE,
-	DMG
+	DAMAGE
 }

@@ -28,6 +28,7 @@ public class SeedProjectile extends Projectile{
 		}
 		canExplode = false;
 	}
+	
 	public void terminate(){
 		super.terminate();
 		if(canExplode){

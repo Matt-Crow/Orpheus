@@ -74,6 +74,7 @@ public abstract class AbstractUpgradable {
 		}
 		return ret;
 	}
+	
 	public double getStatValue(String n){
 		return getStat(n).get();
 	}

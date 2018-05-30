@@ -22,16 +22,11 @@ public class UpgradableCustomizer extends JComponent{
 		name = new Text(a.getName());
 		name.setEditable(true);
 		add(name);
-		
-		for(String n : a.getStats().keySet()){
-			addBox(n);
-		}
-		setLayout(new GridLayout(a.getStats().keySet().size() + 1, 1));
 		Style.applyStyling(this);
 	}
 	
 	public void addBox(String s){
-		Integer[] options = new Integer[]{1, 2, 3, 4, 5};
+		Integer[] options = new Integer[]{0, 1, 2, 3, 4, 5};
 		OptionBox<Integer> box = new OptionBox<>(s, options);
 		box.setSelected((Integer)customizing.getBase(s));
 		add(box);

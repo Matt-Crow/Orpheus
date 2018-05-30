@@ -28,12 +28,12 @@ public abstract class AbstractActive extends AbstractUpgradable{
 		super(n);
 		type = t;
 		
-		setStat(ActiveStat.ENERGY_COST, energyCost);
+		setStat(ActiveStat.COST, energyCost);
 		setStat(ActiveStat.COOLDOWN, cooldown);
 		setStat(ActiveStat.RANGE, range);
 		setStat(ActiveStat.SPEED, speed);
 		setStat(ActiveStat.AOE, aoe);
-		setStat(ActiveStat.DMG, dmg);
+		setStat(ActiveStat.DAMAGE, dmg);
 		
 		particleType = ParticleType.NONE;
 		particleColors = new ArrayList<>();
@@ -79,10 +79,10 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	public void setStat(ActiveStat n, int value){
 		// 1-5 stat system
 		switch(n){
-		case ENERGY_COST:
+		case COST:
 			// 5-25 to 10-50 cost
-			addStat(new Stat("Energy Cost", value * 5, 2));
-			setBase("Energy Cost", value);
+			addStat(new Stat("Cost", value * 5, 2));
+			setBase("Cost", value);
 			break;
 		case COOLDOWN:
 			// 1-5 seconds
@@ -109,7 +109,7 @@ public abstract class AbstractActive extends AbstractUpgradable{
 			addStat(new Stat("AOE", value * 100));
 			setBase("AOE", value);
 			break;
-		case DMG:
+		case DAMAGE:
 			// 50-250 to 250-500 damage (will need to balance later?)
 			addStat(new Stat("Damage", value * 50, 2));
 			setBase("Damage", value);
@@ -164,16 +164,16 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	
 	// in battle methods
 	public boolean canUse(){
-		return getRegisteredTo().getEnergyLog().getEnergy() >= getStat("Energy Cost").get() && !onCooldown();
+		return getRegisteredTo().getEnergyLog().getEnergy() >= getStat("Cost").get() && !onCooldown();
 	}
 	public void consumeEnergy(){
-		getRegisteredTo().getEnergyLog().loseEnergy((int) getStatValue("Energy Cost"));
+		getRegisteredTo().getEnergyLog().loseEnergy((int) getStatValue("Cost"));
 		setToCooldown();
 	}
 	public void use(){
 		consumeEnergy();
 		
-		if(getStatValue("Damage") != 0){
+		if(type != ActiveType.BOOST){
 			spawnProjectile();
 		}
 	}
