@@ -18,7 +18,6 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	/**
 	 * Actives are abilities that the user triggers
 	 */
-	private ActiveStatBaseValues bases; // 1-5 values used to generate this active
 	private ParticleType particleType;
 	private ArrayList<Color> particleColors;
 	private ActiveType type; // used for upcasting
@@ -29,32 +28,12 @@ public abstract class AbstractActive extends AbstractUpgradable{
 		super(n);
 		type = t;
 		
-		bases = new ActiveStatBaseValues(energyCost, cooldown, range, speed, aoe, dmg);
-		
-		// 1-5 stat system
-		
-		// 5-25 to 10-50 cost
-		addStat(new Stat("Energy Cost", energyCost * 5, 2));
-		
-		// 1-5 seconds
-		// healing could be a problem
-		addStat(new Stat("Cooldown", Master.seconds(cooldown)));
-		
-		// 1-15 units of range. Increases exponentially
-		int units = 0;
-		for(int i = 0; i <= range; i++){
-			units += i;
-		}
-		addStat(new Stat("Range", units * 100));
-		
-		// 1-5 units per second
-		addStat(new Stat("Speed", 100 * speed / Master.FPS));
-		
-		// 1-5 units (or 0)
-		addStat(new Stat("AOE", aoe * 100));
-		
-		// 50-250 to 250-500 damage (will need to balance later?)
-		addStat(new Stat("Damage", dmg * 50, 2));
+		setStat(ActiveStat.ENERGY_COST, energyCost);
+		setStat(ActiveStat.COOLDOWN, cooldown);
+		setStat(ActiveStat.RANGE, range);
+		setStat(ActiveStat.SPEED, speed);
+		setStat(ActiveStat.AOE, aoe);
+		setStat(ActiveStat.DMG, dmg);
 		
 		particleType = ParticleType.NONE;
 		particleColors = new ArrayList<>();
@@ -95,6 +74,47 @@ public abstract class AbstractActive extends AbstractUpgradable{
 			ret[i] = allActives.get(i).copy();
 		}
 		return ret;
+	}
+	
+	public void setStat(ActiveStat n, int value){
+		// 1-5 stat system
+		switch(n){
+		case ENERGY_COST:
+			// 5-25 to 10-50 cost
+			addStat(new Stat("Energy Cost", value * 5, 2));
+			setBase("Energy Cost", value);
+			break;
+		case COOLDOWN:
+			// 1-5 seconds
+			// healing could be a problem
+			addStat(new Stat("Cooldown", Master.seconds(value)));
+			setBase("Cooldown", value);
+			break;
+		case RANGE:
+			// 1-15 units of range. Increases exponentially
+			int units = 0;
+			for(int i = 0; i <= value; i++){
+				units += i;
+			}
+			addStat(new Stat("Range", units * 100));
+			setBase("Range", value);
+			break;
+		case SPEED:
+			// 1-5 units per second
+			addStat(new Stat("Speed", 100 * value / Master.FPS));
+			setBase("Speed", value);
+			break;
+		case AOE:
+			// 1-5 units (or 0)
+			addStat(new Stat("AOE", value * 100));
+			setBase("AOE", value);
+			break;
+		case DMG:
+			// 50-250 to 250-500 damage (will need to balance later?)
+			addStat(new Stat("Damage", value * 50, 2));
+			setBase("Damage", value);
+			break;
+		}
 	}
 	
 	public OnHitKey getStatusInfliction(){
@@ -140,9 +160,6 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	// misc
 	public ActiveType getType(){
 		return type;
-	}
-	public ActiveStatBaseValues getBases(){
-		return bases;
 	}
 	
 	// in battle methods

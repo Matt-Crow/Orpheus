@@ -10,8 +10,7 @@ public class ElementalActive extends AbstractActive{
 		projCount = 1;
 	}
 	public ElementalActive copy(){
-		ActiveStatBaseValues b = getBases();
-		ElementalActive copy = new ElementalActive(getName(), b.getCost(), b.getCooldown(), b.getSpeed(), b.getRange(), b.getAoe(), b.getDmg());
+		ElementalActive copy = new ElementalActive(getName(), getBase("Energy Cost"), getBase("Cooldown"), getBase("Speed"), getBase("Range"), getBase("AOE"), getBase("Damage"));
 		copy.setArc(getArcDegrees(), getProjCount());
 		copy.setParticleType(getParticleType());
 		copy.setColorBlend(getColors());

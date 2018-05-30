@@ -18,6 +18,7 @@ public abstract class AbstractUpgradable {
 	private String name; // would like to use enum, but looks like I can't
 	private Player registeredTo;
 	private HashMap<String, Stat> stats;
+	private HashMap<String, Integer> bases;
 	private int cooldown; // frames until this upgradable can be used in battle again
 	private StatusTable inflict; // statuses that this may inflict. Each subclass handles this themself
 	
@@ -25,6 +26,7 @@ public abstract class AbstractUpgradable {
 	public AbstractUpgradable(String n){
 		name = n;
 		stats = new HashMap<>();
+		bases = new HashMap<>();
 		inflict = new StatusTable();
 		cooldown = 0;
 	}
@@ -50,6 +52,7 @@ public abstract class AbstractUpgradable {
 		return registeredTo;
 	}
 	
+	// stat stuff
 	public void addStat(Stat s){
 		stats.put(s.getName().toUpperCase(), s);
 	}
@@ -76,6 +79,14 @@ public abstract class AbstractUpgradable {
 	}
 	public HashMap<String, Stat> getStats(){
 		return stats;
+	}
+	
+	// base stuff
+	public void setBase(String statName, int value){
+		bases.put(statName.toUpperCase(), value);
+	}
+	public int getBase(String statName){
+		return bases.get(statName.toUpperCase());
 	}
 	
 	public void setCooldown(int seconds){

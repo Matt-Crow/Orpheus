@@ -21,7 +21,7 @@ public class BoostActive extends AbstractActive{
 			ints[i] = orig.getIntensityAt(i);
 			durs[i] = orig.getDurationAt(i);
 		}
-		return new BoostActive(getName(), getBases().getCost(), getBases().getCooldown(), sn, ints, durs);
+		return new BoostActive(getName(), getBase("Energy Cost"), getBase("Cooldown"), sn, ints, durs);
 	}
 	public void use(){
 		super.use();

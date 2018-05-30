@@ -2,6 +2,7 @@ package gui;
 
 import java.util.ArrayList;
 import javax.swing.JComponent;
+
 import java.awt.GridLayout;
 
 import upgradables.AbstractUpgradable;
@@ -9,22 +10,37 @@ import upgradables.AbstractUpgradable;
 @SuppressWarnings("serial")
 public class UpgradableCustomizer extends JComponent{
 	private AbstractUpgradable customizing;
+	private Text name;
 	private ArrayList<OptionBox<Integer>> boxes;
+	
 	
 	public UpgradableCustomizer(AbstractUpgradable a){
 		super();
 		customizing = a.copy();
 		boxes = new ArrayList<>();
-		add(new Title(a.getName()));
+		
+		name = new Text(a.getName());
+		name.setEditable(true);
+		add(name);
+		
 		for(String n : a.getStats().keySet()){
-			Integer[] opt = new Integer[]{1, 2, 3, 4, 5}; // avoid pass by ref
-			OptionBox<Integer> box = new OptionBox<>(n, opt);
-			add(box);
-			boxes.add(box);
+			addBox(n);
 		}
 		setLayout(new GridLayout(a.getStats().keySet().size() + 1, 1));
 		Style.applyStyling(this);
 	}
+	
+	public void addBox(String s){
+		Integer[] options = new Integer[]{1, 2, 3, 4, 5};
+		OptionBox<Integer> box = new OptionBox<>(s, options);
+		box.setSelected((Integer)customizing.getBase(s));
+		add(box);
+		boxes.add(box);
+		setLayout(new GridLayout(boxes.size() + 1, 1));
+		revalidate();
+		repaint();
+	}
+	
 	public int[] getSelected(){
 		int[] ret = new int[boxes.size()];
 		for(int i = 0; i < ret.length; i++){

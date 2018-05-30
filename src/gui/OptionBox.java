@@ -37,7 +37,16 @@ public class OptionBox<T> extends JComponent{
 		return ret;
 	}
 	public void setSelected(T item){
-		box.setSelectedItem(item);
+		boolean found = false;
+		for(int i = 0; i < box.getItemCount() && !found; i++){
+			if(box.getItemAt(i).equals(item.toString())){
+				found = true;
+				box.setSelectedIndex(i);
+			}
+		}
+		if(!found){
+			System.out.println("Item not found: " + item);
+		}
 	}
 	public void setSelected(int i){
 		box.setSelectedIndex(i);
