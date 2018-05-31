@@ -1,5 +1,7 @@
 package actives;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 
 import actions.OnHitTrip;
 import actions.OnHitKey;
@@ -12,6 +14,7 @@ import initializers.Master;
 import upgradables.AbstractUpgradable;
 import upgradables.Stat;
 import statuses.StatusTable;
+import resources.Op;
 import resources.Random;
 
 public abstract class AbstractActive extends AbstractUpgradable{
@@ -22,7 +25,7 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	private ArrayList<Color> particleColors;
 	private ActiveType type; // used for upcasting
 	
-	private static ArrayList<AbstractActive> allActives = new ArrayList<>();
+	private static HashMap<String, AbstractActive> allActives = new HashMap<>();
 	
 	public AbstractActive(ActiveType t, String n, int energyCost, int cooldown, int range, int speed, int aoe, int dmg){
 		super(n);
@@ -47,7 +50,7 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	
 	// static methods
 	public static void addActive(AbstractActive a){
-		allActives.add(a);
+		allActives.put(a.getName().toUpperCase(), a);
 	}
 	public static void addActives(AbstractActive[] as){
 		for(AbstractActive a : as){
@@ -55,23 +58,23 @@ public abstract class AbstractActive extends AbstractUpgradable{
 		}
 	}
 	public static AbstractActive getActiveByName(String n){
-		AbstractActive ret = allActives.get(0);
-		boolean found = false;
-		for(int i = 0; i < allActives.size() && !found; i++){
-			if(allActives.get(i).getName().equals(n)){
-				ret = allActives.get(i);
-				found = true;
-			}
-		}
-		if(!found){
-			throw new NullPointerException("No active was found with name " + n);
+		AbstractActive ret = allActives.getOrDefault(n, allActives.get("SLASH"));
+		try{
+			ret = allActives.get(n.toUpperCase());
+		} catch(NullPointerException e){
+			Op.add("No active was found with name " + n);
+			Op.dp();
+			e.printStackTrace();
 		}
 		return ret;
 	}
 	public static AbstractActive[] getAll(){
 		AbstractActive[] ret = new AbstractActive[allActives.size()];
-		for(int i = 0; i < allActives.size(); i++){
-			ret[i] = allActives.get(i).copy();
+		Set<String> keys = allActives.keySet();
+		int i = 0;
+		for(String key : keys){
+			ret[i] = allActives.get(key).copy();
+			i++;
 		}
 		return ret;
 	}

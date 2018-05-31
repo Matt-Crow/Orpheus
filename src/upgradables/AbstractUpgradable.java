@@ -128,6 +128,9 @@ public abstract class AbstractUpgradable {
 	// in battle functions
 	public void init(){
 		cooldown = 0;
+		for(String s : stats.keySet()){
+			stats.get(s).calc();
+		}
 	}
 	
 	public void update(){

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
-
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 
@@ -26,6 +25,7 @@ public class UpgradableCustomizer extends JComponent{
 		
 		p1 = new Pane();
 		p2 = new Pane();
+		p2.setLayout(new GridLayout(1, 1));
 		add(p1);
 		add(p2);
 		
@@ -40,17 +40,17 @@ public class UpgradableCustomizer extends JComponent{
 		Style.applyStyling(this);
 	}
 	
+	public AbstractUpgradable getCustomizing(){
+		return customizing;
+	}
+	
 	public void addBox(String s){
 		Integer[] options = new Integer[]{0, 1, 2, 3, 4, 5};
 		OptionBox<Integer> box = new OptionBox<>(s, options);
 		box.setSelected((Integer)customizing.getBase(s));
 		box.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				// TODO: more here
-				desc.setText(customizing.getDescription());
-				revalidate();
-				desc.repaint(); // bug: this isn't painting
-				repaint();
+				updateField(box.getTitle(), box.getSelected());
 			}
 		});
 		p1.add(box);
@@ -69,6 +69,13 @@ public class UpgradableCustomizer extends JComponent{
 	}
 	public ArrayList<OptionBox<Integer>> getBoxes(){
 		return boxes;
+	}
+	
+	public void updateField(String name, int val){
+		// change a stat of customizing
+		// make subclasses define this
+		desc.setText(customizing.getDescription());
+		repaint();
 	}
 	
 	public class Pane extends JComponent{

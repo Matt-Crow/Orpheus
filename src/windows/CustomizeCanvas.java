@@ -5,6 +5,7 @@ import javax.swing.AbstractAction;
 import actives.AbstractActive;
 import passives.AbstractPassive;
 import upgradables.AbstractUpgradable;
+import upgradables.UpgradableType;
 import gui.*;
 
 @SuppressWarnings("serial")
@@ -12,6 +13,7 @@ import gui.*;
 // looks like I'll have to do seperate active and passive customizers
 public class CustomizeCanvas extends DrawingPlane{
 	
+	private Title title;
 	private OptionBox<String> upgradableName;
 	private AbstractUpgradable customizing;
 	
@@ -19,6 +21,9 @@ public class CustomizeCanvas extends DrawingPlane{
 	private Button act;
 	private Button cha;
 	private Button pas;
+	
+	private VoidComponent spacer;
+	private Button customize;
 	
 	public CustomizeCanvas(){
 		super();
@@ -32,15 +37,16 @@ public class CustomizeCanvas extends DrawingPlane{
 		});
 		add(quit);
 		
-		Title t = new Title("Select what you want to customize");
-		add(t);
+		title = new Title("Select what you want to customize");
+		add(title);
 		
-		add(new VoidComponent());
+		spacer = new VoidComponent();
+		add(spacer);
 		
 		act = new Button("Active");
 		act.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				phase2("Active");
+				phase2(UpgradableType.ACTIVE);
 			}
 		});
 		add(act);
@@ -56,22 +62,21 @@ public class CustomizeCanvas extends DrawingPlane{
 		pas = new Button("Passive");
 		pas.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				phase2("Passive");
+				
 			}
 		});
 		add(pas);
 		resizeComponents(2, 3);
 	}
-	private void phase2(String type){
-		remove(act);
-		remove(cha);
-		remove(pas);
+	private void phase2(UpgradableType type){
+		removePhase1();
 		
 		String[] names = new String[]{"An error occurred in CustomizeCanvas.phase2..."};
-		Button customize = new Button("Customize selected build");
+		customize = new Button("Customize selected build");
 		add(customize);
 		
-		if(type.equals("Active")){
+		switch(type){
+		case ACTIVE:
 			AbstractActive[] acts = AbstractActive.getAll();
 			names = new String[acts.length];
 			for(int i = 0; i < acts.length; i++){
@@ -80,14 +85,14 @@ public class CustomizeCanvas extends DrawingPlane{
 			customize.addActionListener(new AbstractAction(){
 				public void actionPerformed(ActionEvent e){
 					customizing = AbstractActive.getActiveByName(upgradableName.getSelected());
-					remove(customize);
-					remove(upgradableName);
 					add(new ActiveCustomizer((AbstractActive)customizing));
-					revalidate();
-					repaint();
+					phase3();
 				}
 			});
-		} else if (type.equals("Class")){
+			break;
+		}
+		/*
+		if (type.equals("Class")){
 			// implement later
 		} else {
 			AbstractPassive[] pass = AbstractPassive.getAll();
@@ -105,10 +110,36 @@ public class CustomizeCanvas extends DrawingPlane{
 					repaint();
 				}
 			});
-		}
+		}*/
 		upgradableName = new OptionBox<>("Select active to customize", names);
 		add(upgradableName);
 		resizeComponents(2, 2);
+		revalidate();
+		repaint();
+	}
+	private void phase3(){
+		removePhase2();
+		Button save = new Button("Save changes");
+		save.addActionListener(new AbstractAction(){
+			public void actionPerformed(ActionEvent e){
+				//TODO: implement
+			}
+		});
+		add(save);
+		resizeComponents(2, 2);
+	}
+	private void removePhase1(){
+		remove(act);
+		remove(cha);
+		remove(pas);
+		remove(spacer);
+		revalidate();
+		repaint();
+	}
+	private void removePhase2(){
+		remove(title);
+		remove(customize);
+		remove(upgradableName);
 		revalidate();
 		repaint();
 	}

@@ -29,6 +29,9 @@ public class OptionBox<T> extends JComponent{
 		box = new Dropdown<>(getOptions());
 		add(box);
 	}
+	public String getTitle(){
+		return title.getText();
+	}
 	public String[] getOptions(){
 		String[] ret = new String[options.size()];
 		for(int i = 0; i < options.size(); i++){

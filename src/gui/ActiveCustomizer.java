@@ -26,4 +26,10 @@ public class ActiveCustomizer extends UpgradableCustomizer{
 			break;
 		}
 	}
+	public void updateField(String n, int val){
+		AbstractActive a = (AbstractActive)getCustomizing();
+		a.setStat(ActiveStat.valueOf(n.toUpperCase()), val);
+		a.init();
+		super.updateField(n, val);
+	}
 }
