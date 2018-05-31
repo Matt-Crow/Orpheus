@@ -1,9 +1,8 @@
 package customizables;
-
-import java.awt.Color;
+import graphics.CustomColors;
 
 public class Fire extends CharacterClass{
 	public Fire(){
-		super("Fire", Color.red, 2, 4, 5, 3, 3);
+		super("Fire", CustomColors.fireColors, 2, 4, 5, 3, 3);
 	}
 }

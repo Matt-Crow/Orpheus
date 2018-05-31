@@ -2,17 +2,14 @@ package actives;
 
 //import entities.Player;
 import entities.ParticleType;
-import graphics.CustomColors;
-import initializers.Master;
 
 public class MeleeActive extends AbstractActive{
-	public MeleeActive(String n, int cooldown, int dmg){
-		super(ActiveType.MELEE, n, 0, cooldown, 1, 1, 1, 5, 0, dmg);
-		setParticleColor(CustomColors.silver);
+	public MeleeActive(String n, int dmg){
+		super(ActiveType.MELEE, n, 0, 1, 1, 5, 0, dmg);
 		setParticleType(ParticleType.SHEAR);
 	}
 	public MeleeActive copy(){
-		MeleeActive copy = new MeleeActive(getName(), getBase("Cooldown"), getBase("Damage"));
+		MeleeActive copy = new MeleeActive(getName(), getBase("Damage"));
 		return copy;
 	}
 	
@@ -20,8 +17,7 @@ public class MeleeActive extends AbstractActive{
 		String desc = getName() + ": \n"
 				+ "The user performs a close range attack, \n"
 				+ "dealing " + (int)getStatValue("Damage") + " damage \n"
-						+ "to whoever it hits. \n"
-						+ Master.framesToSeconds((int)getStatValue("Cooldown")) + " second cooldown.\n";
+						+ "to whoever it hits. \n";
 		if(getInflict().getSize() > 0){
 			desc += getInflict().getStatusString();
 		}

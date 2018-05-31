@@ -1,9 +1,9 @@
 package customizables;
 
-import java.awt.Color;
+import graphics.CustomColors;
 
 public class Water extends CharacterClass{
 	public Water(){
-		super("Water", Color.blue, 5, 4, 1, 3, 3);
+		super("Water", CustomColors.waterColors, 5, 4, 1, 3, 3);
 	}
 }

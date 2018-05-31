@@ -1,13 +1,12 @@
 package actives;
 
 public class ElementalActive extends AbstractActive{
-	public ElementalActive(String n, int energyCost, int cooldown, int arc, int count, int range, int speed, int aoe, int dmg){
-		super(ActiveType.ELEMENTAL, n, energyCost, cooldown, arc, count, range, speed, aoe, dmg);
+	public ElementalActive(String n, int energyCost, int arc, int range, int speed, int aoe, int dmg){
+		super(ActiveType.ELEMENTAL, n, energyCost, arc, range, speed, aoe, dmg);
 	}
 	public ElementalActive copy(){
-		ElementalActive copy = new ElementalActive(getName(), getBase("Cost"), getBase("Cooldown"), getBase("Arc"), getBase("Count"), getBase("Range"), getBase("Speed"), getBase("AOE"), getBase("Damage"));
+		ElementalActive copy = new ElementalActive(getName(), getBase("Cost"), getBase("Arc"), getBase("Range"), getBase("Speed"), getBase("AOE"), getBase("Damage"));
 		copy.setParticleType(getParticleType());
-		copy.setColorBlend(getColors());
 		copy.setInflict(getInflict());
 		
 		return copy;
@@ -21,8 +20,8 @@ public class ElementalActive extends AbstractActive{
 		String desc = getName() + ": \n";
 		if(getStatValue("Range") != 0){
 			desc += "The user launches ";
-			if(getStatValue("Count") > 1){
-				desc += getStatValue("Count") + " projectiles in a " + getStatValue("Arc") + " degree arc, \n each traveling ";
+			if(getStatValue("Arc") > 0){
+				desc += "projectiles in a " + getStatValue("Arc") + " degree arc, \n each traveling ";
 			} else {
 				desc += "a projectile, which travels ";
 			}

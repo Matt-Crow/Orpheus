@@ -43,7 +43,6 @@ public class UpgradableCustomizer extends JComponent{
 	public AbstractUpgradable getCustomizing(){
 		return customizing;
 	}
-	
 	public void addBox(String s){
 		Integer[] options = new Integer[]{0, 1, 2, 3, 4, 5};
 		OptionBox<Integer> box = new OptionBox<>(s, options);

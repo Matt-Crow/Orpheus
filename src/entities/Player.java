@@ -207,7 +207,7 @@ public class Player extends Entity{
 		// Update this to sprite later, doesn't scale to prevent hitbox snafoos
 		g.setColor(getTeam().getColor());
 		g.fillOval(getX() - 50, getY() - 50, 100, 100);
-		g.setColor(c.getColor());
+		g.setColor(c.getColors()[0]);
 		g.fillOval(getX() - 40, getY() - 40, 80, 80);
 		
 		g.setColor(Color.black);

@@ -1,19 +1,19 @@
 package customizables;
 import upgradables.Stat;
 import java.util.ArrayList;
-import java.awt.Color;
+import graphics.CustomColors;
 
 // make this connect better with player somehow
 public class CharacterClass extends Customizable{
 	private ArrayList<Stat> stats;
 	private String name;
-	private Color color;
+	private CustomColors[] colors;
 	private ArrayList<String> passiveOptions; // remove later
 	
 	// initializers
-	public CharacterClass(String n, Color c, int HP, int energy, int dmg, int reduction, int speed){
+	public CharacterClass(String n, CustomColors[] cs, int HP, int energy, int dmg, int reduction, int speed){
 		name = n;
-		color = c;
+		colors = cs;
 		stats = new ArrayList<>();
 		stats.add(new Stat("maxHP", 700 + 100 * HP, 2));
 		stats.add(new Stat("Max energy", 12.5 * (energy + 1), 2));
@@ -40,8 +40,8 @@ public class CharacterClass extends Customizable{
 	public String getName(){
 		return name;
 	}
-	public Color getColor(){
-		return color;
+	public CustomColors[] getColors(){
+		return colors;
 	}
 	public String[] getPassiveOptions(){
 		String[] ret = new String[passiveOptions.size()];

@@ -1,9 +1,8 @@
 package entities;
 
 import java.awt.Graphics;
-import java.awt.Color;
 import java.util.ArrayList;
-
+import graphics.CustomColors;
 import actives.AbstractActive;
 import actives.MeleeActive;
 import initializers.Master;
@@ -89,7 +88,7 @@ public class Projectile extends Entity{
 		return ret;
 	}
 	
-	public void spawnParticle(int degrees, int m, Color c){
+	public void spawnParticle(int degrees, int m, CustomColors c){
 		Particle p = new Particle(m, c);
 		p.init(getX(), getY(), degrees);
 		p.setTeam(this.getTeam());
@@ -104,28 +103,28 @@ public class Projectile extends Entity{
 			terminate();
 		}
 		
-		Color[] cs = registeredAttack.getColors();
+		CustomColors[] cs = user.getCharacterClass().getColors();
 		
 		if(!Master.DISABLEPARTICLES){
 			switch(registeredAttack.getParticleType()){
 			case BURST:
 				for(int i = 0; i < Master.TICKSTOROTATE; i++){
-					Color rbu = cs[Random.choose(0, cs.length - 1)];
+					CustomColors rbu = cs[Random.choose(0, cs.length - 1)];
 					spawnParticle(360 * i / Master.TICKSTOROTATE, 5, rbu);
 				}
 				break;
 			case SHEAR:
-				Color rs = cs[Random.choose(0, cs.length - 1)];
+				CustomColors rs = cs[Random.choose(0, cs.length - 1)];
 				spawnParticle(getDir().getDegrees() - 45, 5, rs);
 				rs = cs[Random.choose(0, cs.length - 1)];
 				spawnParticle(getDir().getDegrees() + 45, 5, rs);
 				break;
 			case BEAM:
-				Color rbe = cs[Random.choose(0, cs.length - 1)];
+				CustomColors rbe = cs[Random.choose(0, cs.length - 1)];
 				spawnParticle(getDir().getDegrees() - 180, 5, rbe);
 				break;
 			case BLADE:
-				Color rbl = cs[Random.choose(0, cs.length - 1)];
+				CustomColors rbl = cs[Random.choose(0, cs.length - 1)];
 				spawnParticle(getDir().getDegrees(), 0, rbl);
 				break;
 			default:

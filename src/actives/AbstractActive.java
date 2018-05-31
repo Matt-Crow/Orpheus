@@ -1,43 +1,38 @@
 package actives;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import entities.*;
-import graphics.CustomColors;
 import initializers.Master;
 import upgradables.AbstractUpgradable;
 import upgradables.Stat;
 import resources.Op;
+import resources.Number; // use later for minMax?
 
 public abstract class AbstractActive extends AbstractUpgradable{
 	/**
 	 * Actives are abilities that the user triggers
 	 */
 	private ParticleType particleType;
-	private ArrayList<Color> particleColors;
 	private ActiveType type; // used for upcasting
 	
 	private static HashMap<String, AbstractActive> allActives = new HashMap<>();
 	
-	public AbstractActive(ActiveType t, String n, int energyCost, int cooldown, int arcLength, int projCount, int range, int speed, int aoe, int dmg){
+	public AbstractActive(ActiveType t, String n, int energyCost, int arcLength, int range, int speed, int aoe, int dmg){
 		super(n);
 		type = t;
 		
 		setStat(ActiveStat.COST, energyCost);
-		setStat(ActiveStat.COOLDOWN, cooldown);
 		setStat(ActiveStat.ARC, arcLength);
-		setStat(ActiveStat.COUNT, projCount);
 		setStat(ActiveStat.RANGE, range);
 		setStat(ActiveStat.SPEED, speed);
 		setStat(ActiveStat.AOE, aoe);
 		setStat(ActiveStat.DAMAGE, dmg);
 		
 		particleType = ParticleType.NONE;
-		particleColors = new ArrayList<>();
-		particleColors.add(CustomColors.black);
+		setCooldown(1);
 	}
 	public AbstractActive copy(){
 		// used to allow override
@@ -56,8 +51,8 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	}
 	public static AbstractActive getActiveByName(String n){
 		AbstractActive ret = allActives.getOrDefault(n.toUpperCase(), allActives.get("SLASH"));
-		if(ret.getName().toUpperCase().equals("SLASH")){
-			Op.add("No active was found with name " + n);
+		if(ret.getName().toUpperCase().equals("SLASH") && !n.toUpperCase().equals("SLASH")){
+			Op.add("No active was found with name " + n + " in AbstractActive.getActiveByName");
 			Op.dp();
 		}
 		return ret;
@@ -81,12 +76,6 @@ public abstract class AbstractActive extends AbstractUpgradable{
 			addStat(new Stat("Cost", value * 5, 2));
 			setBase("Cost", value);
 			break;
-		case COOLDOWN:
-			// 1-5 seconds
-			// healing could be a problem
-			addStat(new Stat("Cooldown", Master.seconds(value)));
-			setBase("Cooldown", value);
-			break;
 		case ARC:
 			// 0 - 360 degrees
 			/*
@@ -98,11 +87,6 @@ public abstract class AbstractActive extends AbstractUpgradable{
 			 */
 			addStat(new Stat("Arc", (value == 5) ? 360 : 45 * value));
 			setBase("Arc", value);
-			break;
-		case COUNT:
-			// number of projectiles generated
-			addStat(new Stat("Count", value));
-			setBase("Count", value);
 			break;
 		case RANGE:
 			// 1-15 units of range. Increases exponentially
@@ -138,23 +122,6 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	public ParticleType getParticleType(){
 		return particleType;
 	}
-	public void setParticleColor(Color c){
-		particleColors = new ArrayList<>();
-		particleColors.add(c);
-	}
-	public void setColorBlend(Color[] cs){
-		particleColors = new ArrayList<>();
-		for(Color c : cs){
-			particleColors.add(c);
-		}
-	}
-	public Color[] getColors(){
-		Color[] ret = new Color[particleColors.size()];
-		for(int i = 0; i < particleColors.size(); i++){
-			ret[i] = particleColors.get(i);
-		}
-		return ret;
-	}
 	
 	// misc
 	public ActiveType getType(){
@@ -173,9 +140,7 @@ public abstract class AbstractActive extends AbstractUpgradable{
 		consumeEnergy();
 		
 		if(type != ActiveType.BOOST){
-			if(getStatValue("Count") > 0){
-				spawnArc((int)getStatValue("Arc"), (int)getStatValue("Count"));
-			}
+			spawnArc((int)getStatValue("Arc"));
 		}
 	}
 	
@@ -186,12 +151,12 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	public void spawnProjectile(){
 		spawnProjectile(getRegisteredTo().getDir().getDegrees());
 	}
-	public void spawnArc(int arcDegrees, int numProj){
-		int spacing = arcDegrees / numProj;
+	public void spawnArc(int arcDegrees){
 		int start = getRegisteredTo().getDir().getDegrees() - arcDegrees / 2;
 		
-		for(int i = 0; i < numProj; i++){
-			int angle = start + spacing * i;
+		// spawn projectiles every 15 degrees
+		for(int angleOffset = 0; angleOffset < arcDegrees; angleOffset += 15){
+			int angle = start + angleOffset;
 			spawnProjectile(angle);
 		}
 	}

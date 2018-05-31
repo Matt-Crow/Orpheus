@@ -9,24 +9,23 @@ public class ActiveCustomizer extends UpgradableCustomizer{
 		super(a);
 		switch(a.getType()){
 		case MELEE:
-			addBox(ActiveStat.COOLDOWN.toString());
 			addBox(ActiveStat.DAMAGE.toString());
 			break;
 		case BOOST:
 			addBox(ActiveStat.COST.toString());
-			addBox(ActiveStat.COOLDOWN.toString());
 			break;
 		case ELEMENTAL:
 			addBox(ActiveStat.COST.toString());
-			addBox(ActiveStat.COOLDOWN.toString());
 			addBox(ActiveStat.ARC.toString());
-			addBox(ActiveStat.COUNT.toString());
 			addBox(ActiveStat.RANGE.toString());
 			addBox(ActiveStat.SPEED.toString());
 			addBox(ActiveStat.AOE.toString());
 			addBox(ActiveStat.DAMAGE.toString());
 			break;
 		}
+	}
+	public void addParticleBox(){
+		// TODO: implement
 	}
 	public void updateField(String n, int val){
 		AbstractActive a = (AbstractActive)getCustomizing();

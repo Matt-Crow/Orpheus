@@ -1,9 +1,9 @@
 package customizables;
-import java.awt.Color;
+import graphics.CustomColors;
 
 public class Earth extends CharacterClass{
 	public Earth(){
-		super("Earth", Color.green, 4, 1, 4, 4, 1);
+		super("Earth", CustomColors.earthColors, 4, 1, 4, 4, 1);
 		addPossiblePassive("Nature's Healing");
 	}
 }
