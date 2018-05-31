@@ -7,7 +7,7 @@ import initializers.Master;
 
 public class MeleeActive extends AbstractActive{
 	public MeleeActive(String n, int cooldown, int dmg){
-		super(ActiveType.MELEE, n, 0, cooldown, 1, 5, 0, dmg);
+		super(ActiveType.MELEE, n, 0, cooldown, 1, 1, 1, 5, 0, dmg);
 		setParticleColor(CustomColors.silver);
 		setParticleType(ParticleType.SHEAR);
 	}

@@ -3,9 +3,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
-import actions.OnHitTrip;
-import actions.OnHitKey;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import entities.*;
@@ -13,9 +10,7 @@ import graphics.CustomColors;
 import initializers.Master;
 import upgradables.AbstractUpgradable;
 import upgradables.Stat;
-import statuses.StatusTable;
 import resources.Op;
-import resources.Random;
 
 public abstract class AbstractActive extends AbstractUpgradable{
 	/**
@@ -27,12 +22,14 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	
 	private static HashMap<String, AbstractActive> allActives = new HashMap<>();
 	
-	public AbstractActive(ActiveType t, String n, int energyCost, int cooldown, int range, int speed, int aoe, int dmg){
+	public AbstractActive(ActiveType t, String n, int energyCost, int cooldown, int arcLength, int projCount, int range, int speed, int aoe, int dmg){
 		super(n);
 		type = t;
 		
 		setStat(ActiveStat.COST, energyCost);
 		setStat(ActiveStat.COOLDOWN, cooldown);
+		setStat(ActiveStat.ARC, arcLength);
+		setStat(ActiveStat.COUNT, projCount);
 		setStat(ActiveStat.RANGE, range);
 		setStat(ActiveStat.SPEED, speed);
 		setStat(ActiveStat.AOE, aoe);
@@ -58,22 +55,19 @@ public abstract class AbstractActive extends AbstractUpgradable{
 		}
 	}
 	public static AbstractActive getActiveByName(String n){
-		AbstractActive ret = allActives.getOrDefault(n, allActives.get("SLASH"));
-		try{
-			ret = allActives.get(n.toUpperCase());
-		} catch(NullPointerException e){
+		AbstractActive ret = allActives.getOrDefault(n.toUpperCase(), allActives.get("SLASH"));
+		if(ret.getName().toUpperCase().equals("SLASH")){
 			Op.add("No active was found with name " + n);
 			Op.dp();
-			e.printStackTrace();
 		}
 		return ret;
 	}
-	public static AbstractActive[] getAll(){
-		AbstractActive[] ret = new AbstractActive[allActives.size()];
+	public static String[] getAllNames(){
+		String[] ret = new String[allActives.size()];
 		Set<String> keys = allActives.keySet();
 		int i = 0;
 		for(String key : keys){
-			ret[i] = allActives.get(key).copy();
+			ret[i] = key;
 			i++;
 		}
 		return ret;
@@ -92,6 +86,23 @@ public abstract class AbstractActive extends AbstractUpgradable{
 			// healing could be a problem
 			addStat(new Stat("Cooldown", Master.seconds(value)));
 			setBase("Cooldown", value);
+			break;
+		case ARC:
+			// 0 - 360 degrees
+			/*
+			 * 1: 45
+			 * 2: 90
+			 * 3: 135
+			 * 4: 180
+			 * 5: 360
+			 */
+			addStat(new Stat("Arc", (value == 5) ? 360 : 45 * value));
+			setBase("Arc", value);
+			break;
+		case COUNT:
+			// number of projectiles generated
+			addStat(new Stat("Count", value));
+			setBase("Count", value);
 			break;
 		case RANGE:
 			// 1-15 units of range. Increases exponentially
@@ -118,21 +129,6 @@ public abstract class AbstractActive extends AbstractUpgradable{
 			setBase("Damage", value);
 			break;
 		}
-	}
-	
-	public OnHitKey getStatusInfliction(){
-		StatusTable inf = getInflict();
-		OnHitKey a = new OnHitKey(){
-			public void trip(OnHitTrip t){
-				Player target = (Player)t.getHit();
-				for(int i = 0; i < inf.getSize(); i++){
-					if(Random.chance(inf.getChanceAt(i))){
-						target.inflict(inf.getNameAt(i), inf.getIntensityAt(i), inf.getDurationAt(i));
-					}
-				}
-			}
-		};
-		return a;
 	}
 	
 	// particle methods
@@ -177,14 +173,15 @@ public abstract class AbstractActive extends AbstractUpgradable{
 		consumeEnergy();
 		
 		if(type != ActiveType.BOOST){
-			spawnProjectile();
+			if(getStatValue("Count") > 0){
+				spawnArc((int)getStatValue("Arc"), (int)getStatValue("Count"));
+			}
 		}
 	}
 	
 	// spawning
 	public void spawnProjectile(int facingDegrees){
-		SeedProjectile registeredProjectile = new SeedProjectile(getRegisteredTo().getX(), getRegisteredTo().getY(), facingDegrees, (int) getStatValue("Speed"), getRegisteredTo(), this);
-		registeredProjectile.getActionRegister().addOnHit(getStatusInfliction());
+		new SeedProjectile(getRegisteredTo().getX(), getRegisteredTo().getY(), facingDegrees, (int) getStatValue("Speed"), getRegisteredTo(), this);
 	}
 	public void spawnProjectile(){
 		spawnProjectile(getRegisteredTo().getDir().getDegrees());
@@ -195,10 +192,7 @@ public abstract class AbstractActive extends AbstractUpgradable{
 		
 		for(int i = 0; i < numProj; i++){
 			int angle = start + spacing * i;
-			if(angle != getRegisteredTo().getDir().getDegrees()){
-				// avoids launching 2 proj in facing direction due to initial invocation of spawnProjectile
-				spawnProjectile(angle);
-			}
+			spawnProjectile(angle);
 		}
 	}
 	

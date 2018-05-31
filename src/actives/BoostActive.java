@@ -4,7 +4,7 @@ import statuses.StatusTable;
 
 public class BoostActive extends AbstractActive{
 	public BoostActive(String n, int cost, int cd, StatusName[] statusNames, int[] intensities, int[] durations){
-		super(ActiveType.BOOST, n, cost, cd, 0, 0, 0, 0);
+		super(ActiveType.BOOST, n, cost, cd, 0, 0, 0, 0, 0, 0);
 		for(int s = 0; s < statusNames.length; s++){
 			addStatus(statusNames[s], intensities[s], durations[s], 100);
 		}

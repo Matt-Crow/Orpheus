@@ -19,6 +19,8 @@ public class ActiveCustomizer extends UpgradableCustomizer{
 		case ELEMENTAL:
 			addBox(ActiveStat.COST.toString());
 			addBox(ActiveStat.COOLDOWN.toString());
+			addBox(ActiveStat.ARC.toString());
+			addBox(ActiveStat.COUNT.toString());
 			addBox(ActiveStat.RANGE.toString());
 			addBox(ActiveStat.SPEED.toString());
 			addBox(ActiveStat.AOE.toString());

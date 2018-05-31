@@ -1,8 +1,10 @@
 package actives;
 
-public enum ActiveStat {
+public enum ActiveStat{
 	COST,
 	COOLDOWN,
+	ARC,
+	COUNT,
 	RANGE,
 	SPEED,
 	AOE,

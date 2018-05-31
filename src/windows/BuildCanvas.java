@@ -101,7 +101,7 @@ public class BuildCanvas extends DrawingPlane{
 			AbstractUpgradable[] options;
 			
 			if(i <= 2){
-				String[] names = testPlayer.getCharacterClass().getActiveOptions();
+				String[] names = AbstractActive.getAllNames();
 				options = new AbstractUpgradable[names.length];
 				for(int ind = 0; ind < names.length; ind++){
 					options[ind] = AbstractActive.getActiveByName(names[ind]);

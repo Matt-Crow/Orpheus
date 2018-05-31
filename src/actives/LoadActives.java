@@ -11,43 +11,38 @@ public class LoadActives {
 		MeleeActive hs = new MeleeActive("Heavy Stroke", 4, 4);
 		MeleeActive s = new MeleeActive("Slash", 1, 2);
 		
-		ElementalActive bt = new ElementalActive("Boulder Toss", 5, 5, 2, 2, 3, 4);
-		bt.addStatus(StatusName.STUN, 3, 4, 70);
+		ElementalActive bt = new ElementalActive("Boulder Toss", 5, 5, 1, 1, 2, 2, 3, 4);
 		bt.setParticleType(ParticleType.BURST);
 		bt.setColorBlend(CustomColors.earthColors);
 		
-		ElementalActive cd = new ElementalActive("Cursed Daggers", 2, 3, 5, 5, 0, 0);
+		ElementalActive cd = new ElementalActive("Cursed Daggers", 2, 3, 2, 5, 5, 5, 0, 0);
 		cd.setParticleType(ParticleType.BEAM);
 		cd.setParticleColor(CustomColors.green);
-		cd.setArc(90, 7);
 		
-		ElementalActive eq = new ElementalActive("Earthquake", 4, 5, 0, 2, 3, 0);
-		eq.addStatus(StatusName.STUN, 3, 3, 100);
+		ElementalActive eq = new ElementalActive("Earthquake", 4, 5, 0, 0, 0, 2, 3, 2);
 		eq.setParticleType(ParticleType.BURST);
 		eq.setColorBlend(CustomColors.earthColors);
 		
-		ElementalActive fof = new ElementalActive("Fields of Fire", 3, 3, 0, 5, 3, 0);
-		fof.addStatus(StatusName.BURN, 1, 3, 100);
+		ElementalActive fof = new ElementalActive("Fields of Fire", 3, 3, 0, 0, 0, 5, 3, 2);
 		fof.setParticleType(ParticleType.SHEAR);
 		fof.setColorBlend(CustomColors.fireColors);
 		
-		ElementalActive fb = new ElementalActive("Fireball", 4, 5, 4, 3, 3, 4);
+		ElementalActive fb = new ElementalActive("Fireball", 4, 5, 2, 3, 4, 3, 3, 4);
 		fb.setParticleType(ParticleType.BURST);
 		
-		ElementalActive mfb = new ElementalActive("Mega Firebolt", 4, 4, 3, 3, 3, 4);
-		mfb.addStatus(StatusName.BURN, 1, 5, 33);
+		ElementalActive mfb = new ElementalActive("Mega Firebolt", 4, 4, 1, 1, 3, 3, 3, 4);
 		mfb.setParticleType(ParticleType.SHEAR);
 		mfb.setColorBlend(CustomColors.fireColors);
 		
-		ElementalActive mwb = new ElementalActive("Mini Windbolt", 1, 1, 5, 5, 0, 1);
+		ElementalActive mwb = new ElementalActive("Mini Windbolt", 1, 1, 2, 3, 5, 5, 0, 1);
 		mwb.setParticleType(ParticleType.BEAM);
 		mwb.setColorBlend(CustomColors.airColors);
 		
-		ElementalActive rod = new ElementalActive("RAINBOW OF DOOM", 1, 5, 3, 5, 5, 1);
+		ElementalActive rod = new ElementalActive("RAINBOW OF DOOM", 1, 5, 4, 5, 3, 5, 5, 1);
 		rod.setParticleType(ParticleType.BURST);
 		rod.setColorBlend(CustomColors.rainbow);
 		
-		ElementalActive wb = new ElementalActive("Waterbolt", 3, 3, 3, 3, 1, 2);
+		ElementalActive wb = new ElementalActive("Waterbolt", 3, 3, 1, 3, 3, 3, 1, 2);
 		wb.setParticleType(ParticleType.BEAM);
 		wb.setColorBlend(CustomColors.waterColors);
 		

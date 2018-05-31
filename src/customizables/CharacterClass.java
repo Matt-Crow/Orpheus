@@ -8,8 +8,7 @@ public class CharacterClass extends Customizable{
 	private ArrayList<Stat> stats;
 	private String name;
 	private Color color;
-	private ArrayList<String> activeOptions; // remove later
-	private ArrayList<String> passiveOptions;
+	private ArrayList<String> passiveOptions; // remove later
 	
 	// initializers
 	public CharacterClass(String n, Color c, int HP, int energy, int dmg, int reduction, int speed){
@@ -23,16 +22,6 @@ public class CharacterClass extends Customizable{
 		stats.add(new Stat("damage taken modifier", 1.3 - 0.1 * reduction));
 		
 		stats.add(new Stat("speed", (0.7 + 0.1 * speed)));
-		
-		activeOptions = new ArrayList<>();
-		addPossibleActive("Slash");
-		addPossibleActive("Heavy Stroke");
-		addPossibleActive("Warrior's Stance");
-		addPossibleActive("Shield Stance");
-		addPossibleActive("Blade Stance");
-		addPossibleActive("Heal");
-		addPossibleActive("RAINBOW OF DOOM");
-		addPossibleActive("Cursed Daggers");
 		
 		passiveOptions = new ArrayList<>();
 		addPossiblePassive("Bracing");
@@ -53,13 +42,6 @@ public class CharacterClass extends Customizable{
 	}
 	public Color getColor(){
 		return color;
-	}
-	public String[] getActiveOptions(){
-		String[] ret = new String[activeOptions.size()];
-		for(int i = 0; i < activeOptions.size(); i++){
-			ret[i] = activeOptions.get(i);
-		}
-		return ret;
 	}
 	public String[] getPassiveOptions(){
 		String[] ret = new String[passiveOptions.size()];
@@ -86,9 +68,6 @@ public class CharacterClass extends Customizable{
 	}
 	
 	// setters
-	public void addPossibleActive(String n){
-		activeOptions.add(n);
-	}
 	public void addPossiblePassive(String s){
 		passiveOptions.add(s);
 	}

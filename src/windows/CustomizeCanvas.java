@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import actives.AbstractActive;
 import passives.AbstractPassive;
+import resources.Op;
 import upgradables.AbstractUpgradable;
 import upgradables.UpgradableType;
 import gui.*;
@@ -77,16 +78,12 @@ public class CustomizeCanvas extends DrawingPlane{
 		
 		switch(type){
 		case ACTIVE:
-			AbstractActive[] acts = AbstractActive.getAll();
-			names = new String[acts.length];
-			for(int i = 0; i < acts.length; i++){
-				names[i] = acts[i].getName();
-			}
+			names = AbstractActive.getAllNames();
 			customize.addActionListener(new AbstractAction(){
 				public void actionPerformed(ActionEvent e){
 					customizing = AbstractActive.getActiveByName(upgradableName.getSelected());
 					add(new ActiveCustomizer((AbstractActive)customizing));
-					phase3();
+					phase3(UpgradableType.ACTIVE);
 				}
 			});
 			break;
@@ -117,14 +114,28 @@ public class CustomizeCanvas extends DrawingPlane{
 		revalidate();
 		repaint();
 	}
-	private void phase3(){
+	private void phase3(UpgradableType type){
 		removePhase2();
 		Button save = new Button("Save changes");
-		save.addActionListener(new AbstractAction(){
+		AbstractAction a = new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				//TODO: implement
+				Op.add("Something went wrong in CustomizeCanvas.phase3...");
+				Op.dp();
 			}
-		});
+		};
+		switch(type){
+		case ACTIVE:
+			a = new AbstractAction(){
+					public void actionPerformed(ActionEvent e){
+						AbstractActive.addActive((AbstractActive)customizing);
+						new MainWindow();
+						close();
+					}
+			};
+			break;
+		};
+		
+		save.addActionListener(a);
 		add(save);
 		resizeComponents(2, 2);
 	}
