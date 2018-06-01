@@ -1,5 +1,6 @@
 package upgradables;
 
+import java.util.Collection;
 import java.util.HashMap;
 import entities.Player;
 import initializers.Master;
@@ -88,6 +89,16 @@ public abstract class AbstractUpgradable {
 	}
 	public int getBase(String statName){
 		return bases.get(statName.toUpperCase());
+	}
+	public int[] getAllBaseValues(){
+		int[] ret = new int[bases.size()];
+		Collection<Integer> values = bases.values();
+		int i = 0;
+		for(Integer value : values){
+			ret[i] = value;
+			i++;
+		}
+		return ret;
 	}
 	
 	public void setCooldown(int seconds){

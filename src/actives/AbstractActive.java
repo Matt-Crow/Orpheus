@@ -5,6 +5,7 @@ import java.util.Set;
 import java.awt.Color;
 import java.awt.Graphics;
 import entities.*;
+import graphics.CustomColors;
 import initializers.Master;
 import upgradables.AbstractUpgradable;
 import upgradables.Stat;
@@ -17,14 +18,14 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	 */
 	private ParticleType particleType;
 	private ActiveType type; // used for upcasting
+	private int cost; // the energy cost of the active. Calculated automatically
 	
 	private static HashMap<String, AbstractActive> allActives = new HashMap<>();
 	
-	public AbstractActive(ActiveType t, String n, int energyCost, int arcLength, int range, int speed, int aoe, int dmg){
+	public AbstractActive(ActiveType t, String n, int arcLength, int range, int speed, int aoe, int dmg){
 		super(n);
 		type = t;
 		
-		setStat(ActiveStat.COST, energyCost);
 		setStat(ActiveStat.ARC, arcLength);
 		setStat(ActiveStat.RANGE, range);
 		setStat(ActiveStat.SPEED, speed);
@@ -32,6 +33,7 @@ public abstract class AbstractActive extends AbstractUpgradable{
 		setStat(ActiveStat.DAMAGE, dmg);
 		
 		particleType = ParticleType.NONE;
+		
 		setCooldown(1);
 	}
 	public AbstractActive copy(){
@@ -71,11 +73,6 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	public void setStat(ActiveStat n, int value){
 		// 1-5 stat system
 		switch(n){
-		case COST:
-			// 5-25 to 10-50 cost
-			addStat(new Stat("Cost", value * 5, 2));
-			setBase("Cost", value);
-			break;
 		case ARC:
 			// 0 - 360 degrees
 			/*
@@ -113,6 +110,15 @@ public abstract class AbstractActive extends AbstractUpgradable{
 			setBase("Damage", value);
 			break;
 		}
+		calculateCost();
+	}
+	public void calculateCost(){
+		int newCost = 0;
+		int[] bases = getAllBaseValues();
+		for(int i = 0; i < bases.length; i++){
+			newCost += bases[i];
+		}
+		cost = newCost;
 	}
 	
 	// particle methods
@@ -130,10 +136,10 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	
 	// in battle methods
 	public boolean canUse(){
-		return getRegisteredTo().getEnergyLog().getEnergy() >= getStat("Cost").get() && !onCooldown();
+		return getRegisteredTo().getEnergyLog().getEnergy() >= cost && !onCooldown();
 	}
 	public void consumeEnergy(){
-		getRegisteredTo().getEnergyLog().loseEnergy((int) getStatValue("Cost"));
+		getRegisteredTo().getEnergyLog().loseEnergy(cost);
 		setToCooldown();
 	}
 	public void use(){
@@ -172,6 +178,12 @@ public abstract class AbstractActive extends AbstractUpgradable{
 			g.fillRect(x, y, w, h);
 			g.setColor(Color.red);
 			g.drawString("On cooldown: " + Master.framesToSeconds(getCooldown()), x + 10, y + 20);
-		}	
+		}
+		if(canUse()){
+			g.setColor(CustomColors.green);
+		} else {
+			g.setColor(CustomColors.red);
+		}
+		g.drawString("Energy cost: " + getRegisteredTo().getEnergyLog().getEnergy() + "/" + cost, x + 10, y + 33);
 	}
 }

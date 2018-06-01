@@ -12,10 +12,9 @@ public class ActiveCustomizer extends UpgradableCustomizer{
 			addBox(ActiveStat.DAMAGE.toString());
 			break;
 		case BOOST:
-			addBox(ActiveStat.COST.toString());
+			// need status stuff here
 			break;
 		case ELEMENTAL:
-			addBox(ActiveStat.COST.toString());
 			addBox(ActiveStat.ARC.toString());
 			addBox(ActiveStat.RANGE.toString());
 			addBox(ActiveStat.SPEED.toString());

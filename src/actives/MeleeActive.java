@@ -5,7 +5,7 @@ import entities.ParticleType;
 
 public class MeleeActive extends AbstractActive{
 	public MeleeActive(String n, int dmg){
-		super(ActiveType.MELEE, n, 0, 1, 1, 5, 0, dmg);
+		super(ActiveType.MELEE, n, 1, 1, 5, 0, dmg);
 		setParticleType(ParticleType.SHEAR);
 	}
 	public MeleeActive copy(){

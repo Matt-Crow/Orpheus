@@ -3,8 +3,8 @@ import statuses.StatusName;
 import statuses.StatusTable;
 
 public class BoostActive extends AbstractActive{
-	public BoostActive(String n, int cost, StatusName[] statusNames, int[] intensities, int[] durations){
-		super(ActiveType.BOOST, n, cost, 0, 0, 0, 0, 0);
+	public BoostActive(String n, StatusName[] statusNames, int[] intensities, int[] durations){
+		super(ActiveType.BOOST, n, 0, 0, 0, 0, 0);
 		for(int s = 0; s < statusNames.length; s++){
 			addStatus(statusNames[s], intensities[s], durations[s], 100);
 		}
@@ -21,7 +21,7 @@ public class BoostActive extends AbstractActive{
 			ints[i] = orig.getIntensityAt(i);
 			durs[i] = orig.getDurationAt(i);
 		}
-		return new BoostActive(getName(), getBase("Cost"), sn, ints, durs);
+		return new BoostActive(getName(), sn, ints, durs);
 	}
 	public void use(){
 		super.use();
