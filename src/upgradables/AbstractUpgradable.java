@@ -7,7 +7,7 @@ import initializers.Master;
 import statuses.StatusName;
 import statuses.StatusTable;
 
-// TODO: Make characterClass extend from this?
+// TODO: Make characterClass extend from this
 public abstract class AbstractUpgradable {
 	/**
 	 * This class is used as a base 
@@ -20,6 +20,8 @@ public abstract class AbstractUpgradable {
 	private Player registeredTo;
 	private HashMap<String, Stat> stats;
 	private HashMap<String, Integer> bases;
+	private int cooldownTime; // frames between uses of this upgradable in battle
+	// not to be confused with...
 	private int cooldown; // frames until this upgradable can be used in battle again
 	private StatusTable inflict; // statuses that this may inflict. Each subclass handles this themself
 	
@@ -29,6 +31,7 @@ public abstract class AbstractUpgradable {
 		stats = new HashMap<>();
 		bases = new HashMap<>();
 		inflict = new StatusTable();
+		cooldownTime = 0;
 		cooldown = 0;
 	}
 	public AbstractUpgradable copy(){
@@ -36,6 +39,9 @@ public abstract class AbstractUpgradable {
 	}
 	
 	// setters and getters
+	public void setName(String s){
+		name = s;
+	}
 	public String getName(){
 		return name;
 	}
@@ -102,13 +108,13 @@ public abstract class AbstractUpgradable {
 	}
 	
 	public void setCooldown(int seconds){
-		addStat("Cooldown", Master.seconds(seconds));
+		cooldownTime = Master.seconds(seconds);
 	}
 	public int getCooldown(){
 		return cooldown;
 	}
 	public void setToCooldown(){
-		cooldown = (int) getStatValue("Cooldown");
+		cooldown = cooldownTime;
 	}
 	public boolean onCooldown(){
 		return cooldown > 0;

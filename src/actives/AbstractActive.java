@@ -133,6 +133,9 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	public ActiveType getType(){
 		return type;
 	}
+	public int getCost(){
+		return cost;
+	}
 	
 	// in battle methods
 	public boolean canUse(){

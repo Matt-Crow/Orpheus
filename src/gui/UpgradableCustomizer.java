@@ -1,9 +1,10 @@
 package gui;
 
-import java.util.ArrayList;
-
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
+
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 
@@ -13,15 +14,14 @@ import upgradables.AbstractUpgradable;
 public class UpgradableCustomizer extends JComponent{
 	private AbstractUpgradable customizing;
 	private Text name;
-	private ArrayList<OptionBox<Integer>> boxes;
 	private Pane p1; // used to split into two sections
 	private Pane p2;
 	private Text desc;
+	private int boxCount;
 	
 	public UpgradableCustomizer(AbstractUpgradable a){
 		super();
 		customizing = a.copy();
-		boxes = new ArrayList<>();
 		
 		p1 = new Pane();
 		p2 = new Pane();
@@ -31,17 +31,31 @@ public class UpgradableCustomizer extends JComponent{
 		
 		name = new Text(a.getName());
 		name.setEditable(true);
+		name.addCaretListener(new CaretListener(){
+			public void caretUpdate(CaretEvent e){
+				customizing.setName(name.getText());
+			}
+		});
 		p1.add(name);
 		
 		desc = new Text(a.getDescription());
 		p2.add(desc);
 		
+		boxCount = 0;
 		setLayout(new GridLayout(1, 2));
 		Style.applyStyling(this);
 	}
 	
 	public AbstractUpgradable getCustomizing(){
 		return customizing;
+	}
+	@SuppressWarnings("rawtypes")
+	public void addBox(OptionBox box){
+		p1.add(box);
+		boxCount++;
+		p1.setLayout(new GridLayout(boxCount + 1, 1));
+		revalidate();
+		repaint();
 	}
 	public void addBox(String s){
 		Integer[] options = new Integer[]{0, 1, 2, 3, 4, 5};
@@ -52,22 +66,7 @@ public class UpgradableCustomizer extends JComponent{
 				updateField(box.getTitle(), box.getSelected());
 			}
 		});
-		p1.add(box);
-		boxes.add(box);
-		p1.setLayout(new GridLayout(boxes.size() + 1, 1));
-		revalidate();
-		repaint();
-	}
-	
-	public int[] getSelected(){
-		int[] ret = new int[boxes.size()];
-		for(int i = 0; i < ret.length; i++){
-			ret[i] = boxes.get(i).getSelected();
-		}
-		return ret;
-	}
-	public ArrayList<OptionBox<Integer>> getBoxes(){
-		return boxes;
+		addBox(box);
 	}
 	
 	public void updateField(String name, int val){

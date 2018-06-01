@@ -128,6 +128,9 @@ public class CustomizeCanvas extends DrawingPlane{
 			a = new AbstractAction(){
 					public void actionPerformed(ActionEvent e){
 						AbstractActive.addActive((AbstractActive)customizing);
+						//TODO: remove me
+						Op.add(AbstractActive.getAllNames());
+						Op.dp();
 						new MainWindow();
 						close();
 					}

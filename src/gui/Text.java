@@ -8,5 +8,7 @@ public class Text extends JTextArea{
 		super(s);
 		Style.applyStyling(this);
 		setEditable(false);
+		setLineWrap(true);
+		setWrapStyleWord(true);
 	}
 }

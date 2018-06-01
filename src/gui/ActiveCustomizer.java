@@ -1,7 +1,12 @@
 package gui;
 
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
+
 import actives.AbstractActive;
 import actives.ActiveStat;
+import entities.ParticleType;
 
 @SuppressWarnings("serial")
 public class ActiveCustomizer extends UpgradableCustomizer{
@@ -20,11 +25,21 @@ public class ActiveCustomizer extends UpgradableCustomizer{
 			addBox(ActiveStat.SPEED.toString());
 			addBox(ActiveStat.AOE.toString());
 			addBox(ActiveStat.DAMAGE.toString());
+			addParticleBox();
 			break;
 		}
 	}
-	public void addParticleBox(){
-		// TODO: implement
+	private void addParticleBox(){
+		ParticleType[] options = ParticleType.values();
+		OptionBox<ParticleType> box = new OptionBox<>("Particles", options);
+		box.setSelected(((AbstractActive)getCustomizing()).getParticleType());
+		// don't need update desc
+		box.addActionListener(new AbstractAction(){
+			public void actionPerformed(ActionEvent e){
+				((AbstractActive)getCustomizing()).setParticleType(box.getSelected());
+			}
+		});
+		addBox(box);
 	}
 	public void updateField(String n, int val){
 		AbstractActive a = (AbstractActive)getCustomizing();
