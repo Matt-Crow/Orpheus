@@ -20,6 +20,7 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	private ActiveType type; // used for upcasting
 	private int cost; // the energy cost of the active. Calculated automatically
 	
+	private static int nextUseId = 0; // How many actives have been used thus far. Used to prevent double hitting
 	private static HashMap<String, AbstractActive> allActives = new HashMap<>();
 	
 	public AbstractActive(ActiveType t, String n, int arcLength, int range, int speed, int aoe, int dmg){
@@ -82,12 +83,20 @@ public abstract class AbstractActive extends AbstractUpgradable{
 			 * 4: 180
 			 * 5: 360
 			 */
-			addStat(new Stat("Arc", (value == 5) ? 360 : 45 * value));
+			value = Number.minMax(0, value, 5);
+			int deg = value * 45;
+			if(value == 0){
+				deg = 1;
+			} else if(value == 5){
+				deg = 360;
+			}
+			addStat(new Stat("Arc", deg));
 			setBase("Arc", value);
 			break;
 		case RANGE:
 			// 1-15 units of range. Increases exponentially
 			int units = 0;
+			value = Number.minMax(0, value, 5);
 			for(int i = 0; i <= value; i++){
 				units += i;
 			}
@@ -96,16 +105,19 @@ public abstract class AbstractActive extends AbstractUpgradable{
 			break;
 		case SPEED:
 			// 1-5 units per second
+			value = Number.minMax(1, value, 5);
 			addStat(new Stat("Speed", 100 * value / Master.FPS));
 			setBase("Speed", value);
 			break;
 		case AOE:
 			// 1-5 units (or 0)
+			value = Number.minMax(0, value, 5);
 			addStat(new Stat("AOE", value * 100));
 			setBase("AOE", value);
 			break;
 		case DAMAGE:
 			// 50-250 to 250-500 damage (will need to balance later?)
+			value = Number.minMax(1, value, 5);
 			addStat(new Stat("Damage", value * 50, 2));
 			setBase("Damage", value);
 			break;
@@ -147,15 +159,15 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	}
 	public void use(){
 		consumeEnergy();
-		
 		if(type != ActiveType.BOOST){
 			spawnArc((int)getStatValue("Arc"));
+			nextUseId++;
 		}
 	}
 	
 	// spawning
 	public void spawnProjectile(int facingDegrees){
-		new SeedProjectile(getRegisteredTo().getX(), getRegisteredTo().getY(), facingDegrees, (int) getStatValue("Speed"), getRegisteredTo(), this);
+		new SeedProjectile(nextUseId, getRegisteredTo().getX(), getRegisteredTo().getY(), facingDegrees, (int) getStatValue("Speed"), getRegisteredTo(), this);
 	}
 	public void spawnProjectile(){
 		spawnProjectile(getRegisteredTo().getDir().getDegrees());

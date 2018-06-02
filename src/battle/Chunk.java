@@ -2,6 +2,8 @@ package battle;
 
 import entities.Entity;
 import entities.EntityType;
+import entities.Player;
+import entities.Projectile;
 import resources.Op;
 
 import java.awt.Graphics;
@@ -99,7 +101,11 @@ public class Chunk {
 				if(checkAgainst.getTeam().getId() != current.getTeam().getId()){
 					//enemies
 					if(current.getType() == EntityType.PROJECTILE && checkAgainst.getType() != EntityType.PARTICLE){
-						current.checkForCollisions(checkAgainst);
+						if(checkAgainst.getType() == EntityType.PLAYER){
+							if(((Projectile)current).getUseId() != ((Player)checkAgainst).getLastHitById()){
+								current.checkForCollisions(checkAgainst);
+							}
+						}
 					}
 				}
 			}

@@ -7,23 +7,18 @@ import initializers.Master;
 
 public class SeedProjectile extends Projectile{
 	private boolean canExplode;
-	public SeedProjectile(int x, int y, int degrees, int momentum, Player attackUser, AbstractActive a){
-		super(x, y, degrees, momentum, attackUser, a);
+	private int useId; // the useId of the attack instance this was spawned from
+	public SeedProjectile(int id, int x, int y, int degrees, int momentum, Player attackUser, AbstractActive a){
+		super(id, x, y, degrees, momentum, attackUser, a);
+		useId = id;
 		canExplode = getAttack().getStatValue("AOE") != 0;
 	}
 	
 	public void explode(){
 		ArrayList<AOEProjectile> aoe = new ArrayList<>();
 		for(int i = 0; i < Master.TICKSTOROTATE; i++){
-			AOEProjectile p = new AOEProjectile(getX(), getY(), 360 * i / Master.TICKSTOROTATE, 5, getUser(), getAttack(), getHit());
+			AOEProjectile p = new AOEProjectile(useId, getX(), getY(), 360 * i / Master.TICKSTOROTATE, 5, getUser(), getAttack());
 			aoe.add(p);
-		}
-		for(AOEProjectile p : aoe){
-			for(AOEProjectile possibleBrother : aoe){
-				if(p != possibleBrother){
-					p.addBrother(possibleBrother);
-				}
-			}
 		}
 		canExplode = false;
 	}

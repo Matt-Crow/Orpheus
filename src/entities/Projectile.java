@@ -1,7 +1,7 @@
 package entities;
 
 import java.awt.Graphics;
-import java.util.ArrayList;
+
 import graphics.CustomColors;
 import actives.AbstractActive;
 import actives.MeleeActive;
@@ -15,12 +15,14 @@ public class Projectile extends Entity{
 	private AbstractActive registeredAttack;
 	private int distanceTraveled;
 	private int range;
-	private ArrayList<Player> doNotHit;
 	private Player hit;
 	
-	public Projectile(int x, int y, int degrees, int momentum, Player attackUser, AbstractActive a){
+	private int id; //used to prevent double hitting. May not be unique to a single projectile. See AbstractActive for more info
+	
+	public Projectile(int useId, int x, int y, int degrees, int momentum, Player attackUser, AbstractActive a){
 		super(momentum);
 		super.init(x, y, degrees);
+		id = useId;
 		distanceTraveled = 0;
 		user = attackUser;
 		setTeam(user.getTeam());
@@ -28,12 +30,13 @@ public class Projectile extends Entity{
 		range = (int) a.getStatValue("Range");
 		
 		setMoving(true);
-		doNotHit = new ArrayList<Player>();
 		hit = new Player("Void");
 		
 		setType(EntityType.PROJECTILE);
 	}
-	
+	public int getUseId(){
+		return id;
+	}
 	public void setRange(int i){
 		range = i;
 	}
@@ -54,13 +57,10 @@ public class Projectile extends Entity{
 		return registeredAttack;
 	}
 	
-	public void avoid(Player p){
-		doNotHit.add(p);
-	}
-	
 	public void hit(Player p){
 		hit = p;
 		p.logDamage((int) (registeredAttack.getStatValue("Damage") * user.getStatValue("damage dealt modifier") * p.getStatValue("damage taken modifier")));
+		p.setLastHitById(getUseId());
 		if(registeredAttack instanceof MeleeActive){
 			user.getActionRegister().tripOnMeleeHit(p);
 			user.getEnergyLog().gainEnergy(5);
@@ -78,11 +78,9 @@ public class Projectile extends Entity{
 	public boolean checkForCollisions(Entity e){
 		boolean ret = false;
 		if(super.checkForCollisions(e)){
-			if(!doNotHit.contains(e)){
-				ret = true;
-				if(e.getType() == EntityType.PLAYER){
-					hit((Player) e);
-				}
+			ret = true;
+			if(e.getType() == EntityType.PLAYER){
+				hit((Player) e);
 			}
 		}
 		return ret;

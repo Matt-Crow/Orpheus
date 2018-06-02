@@ -28,6 +28,7 @@ public class Player extends Entity{
 	private ArrayList<Status> statuses;
 	
 	private PlayerAI playerAI;
+	private int lastHitById; //the useId of the last projectile that hit this player
 	
 	public Player(String n){
 		super(500 / Master.FPS);
@@ -138,6 +139,12 @@ public class Player extends Entity{
 	public void logDamage(int dmg){
 		log.log(dmg);
 	}
+	public void setLastHitById(int id){
+		lastHitById = id;
+	}
+	public int getLastHitById(){
+		return lastHitById;
+	}
 	
 	public void init(Team t, int x, int y, Direction d){
 		super.init(x, y, d.getDegrees());
@@ -160,6 +167,7 @@ public class Player extends Entity{
 		for(AbstractPassive p : passives){
 			p.registerTo(this);
 		}
+		lastHitById = -1;
 	}
 	
 	public void updateStatuses(){
