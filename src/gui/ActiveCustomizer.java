@@ -47,4 +47,8 @@ public class ActiveCustomizer extends UpgradableCustomizer{
 		a.init();
 		super.updateField(n, val);
 	}
+	public void save(){
+		super.save();
+		AbstractActive.addActive((AbstractActive)getCustomizing());
+	}
 }
