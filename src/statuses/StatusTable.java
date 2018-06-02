@@ -68,6 +68,9 @@ public class StatusTable {
 	public int getChanceAt(int i){
 		return chances.get(i);
 	}
+	public Status getStatusAt(int i){
+		return Status.decode(names.get(i), intensities.get(i), durations.get(i));
+	}
 	public int getSize(){
 		return names.size();
 	}

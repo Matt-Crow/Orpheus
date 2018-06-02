@@ -5,9 +5,16 @@ import entities.Player;
 public abstract class Status {
 	private StatusName code;
 	private String name;
+	
 	private int level;
 	private int uses;
 	private int usesLeft;
+	
+	// base values used to generate the status
+	private int baseLv;
+	private int baseUses;
+	// need to implement calculation
+	
 	private boolean shouldTerminate;
 	
 	public Status(StatusName enumName, String n, int lv, int use){
@@ -16,6 +23,10 @@ public abstract class Status {
 		level = lv;
 		uses = use;
 		usesLeft = use;
+		
+		baseLv = lv;
+		baseUses = use;
+		
 		shouldTerminate = false;
 	}
 	
@@ -27,9 +38,6 @@ public abstract class Status {
 			break;
 		case CHARGE:
 			ret = new Charge(intensity, dur);
-			break;
-		case HEALING:
-			ret = new Healing(intensity);
 			break;
 		case REGENERATION:
 			ret = new Regeneration(intensity, dur);
@@ -66,6 +74,12 @@ public abstract class Status {
 	}
 	public int getUsesLeft(){
 		return usesLeft;
+	}
+	public int getBaseLevel(){
+		return baseLv;
+	}
+	public int getBaseUses(){
+		return baseUses;
 	}
 	public boolean getShouldTerminate(){
 		return shouldTerminate;

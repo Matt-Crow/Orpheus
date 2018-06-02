@@ -5,22 +5,22 @@ import statuses.StatusName;
 public class LoadPassives {
 	public static void load(){
 		OnMeleeHitPassive lh = new OnMeleeHitPassive("Leechhealer", true);
-		lh.addStatus(StatusName.REGENERATION, 1, 5, 20);
+		lh.addStatus(StatusName.REGENERATION, 1, 1, 20);
 		
 		OnMeleeHitPassive m = new OnMeleeHitPassive("Momentum", true);
-		m.addStatus(StatusName.RUSH, 1, 20, 20);
+		m.addStatus(StatusName.RUSH, 1, 1, 20);
 		
 		OnMeleeHitPassive s = new OnMeleeHitPassive("Sharpen", true);
 		s.addStatus(StatusName.STRENGTH, 1, 1, 20);
 		
 		OnMeleeHitPassive ss = new OnMeleeHitPassive("Sparking Strikes", true);
-		ss.addStatus(StatusName.CHARGE, 1, 10, 20);
+		ss.addStatus(StatusName.CHARGE, 1, 1, 20);
 		
 		OnBeHitPassive nh = new OnBeHitPassive("Nature's Healing", true);
 		nh.addStatus(StatusName.REGENERATION, 1, 1);
 		
 		OnBeHitPassive r = new OnBeHitPassive("Recover", true);
-		r.addStatus(StatusName.REGENERATION, 1, 5, 20);
+		r.addStatus(StatusName.REGENERATION, 2, 1, 20);
 		
 		OnBeHitPassive t = new OnBeHitPassive("Toughness", true);
 		t.addStatus(StatusName.RESISTANCE, 1, 1, 20);

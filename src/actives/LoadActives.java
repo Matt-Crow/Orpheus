@@ -36,13 +36,12 @@ public class LoadActives {
 		ElementalActive wb = new ElementalActive("Waterbolt", 1, 3, 3, 1, 2);
 		wb.setParticleType(ParticleType.BEAM);
 		
-		BoostActive ws = new BoostActive("Warrior's Stance", new StatusName[]{StatusName.STRENGTH, StatusName.RESISTANCE}, new int[]{1, 1}, new int[]{5, 5});
-		BoostActive st = new BoostActive("Speed Test", new StatusName[]{StatusName.RUSH}, new int[]{2}, new int[]{7});
-		BoostActive ss = new BoostActive("Shield Stance", new StatusName[]{StatusName.RESISTANCE}, new int[]{2}, new int[]{7});
-		BoostActive hr = new BoostActive("Healing Rain", new StatusName[]{StatusName.REGENERATION}, new int[]{1}, new int[]{90});
-		BoostActive h = new BoostActive("Heal", new StatusName[]{StatusName.HEALING}, new int[]{2}, new int[]{0});
-		BoostActive bs = new BoostActive("Blade Stance", new StatusName[]{StatusName.STRENGTH}, new int[]{2}, new int[]{7});
-		BoostActive br = new BoostActive("Burning Rage", new StatusName[]{StatusName.STRENGTH, StatusName.BURN}, new int[]{3, 2}, new int[]{10, 10});
+		BoostActive ws = new BoostActive("Warrior's Stance", new StatusName[]{StatusName.STRENGTH, StatusName.RESISTANCE}, new int[]{1, 1}, new int[]{2, 2});
+		BoostActive st = new BoostActive("Speed Test", new StatusName[]{StatusName.RUSH}, new int[]{2}, new int[]{3});
+		BoostActive ss = new BoostActive("Shield Stance", new StatusName[]{StatusName.RESISTANCE}, new int[]{2}, new int[]{3});
+		BoostActive hr = new BoostActive("Healing Rain", new StatusName[]{StatusName.REGENERATION}, new int[]{2}, new int[]{3});
+		BoostActive bs = new BoostActive("Blade Stance", new StatusName[]{StatusName.STRENGTH}, new int[]{2}, new int[]{3});
+		BoostActive br = new BoostActive("Burning Rage", new StatusName[]{StatusName.STRENGTH, StatusName.BURN}, new int[]{3, 2}, new int[]{3, 3});
 		
 		AbstractActive.addActives(new AbstractActive[]{
 			s,
@@ -60,7 +59,6 @@ public class LoadActives {
 			st,
 			ss,
 			hr,
-			h,
 			bs,
 			br
 		});
