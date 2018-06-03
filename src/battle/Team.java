@@ -64,6 +64,7 @@ public class Team {
 	public Team getEnemy(){
 		return enemyTeam;
 	}
+	
 	public boolean isDefeated(){
 		return defeated;
 	}
@@ -81,6 +82,9 @@ public class Team {
 			}
 		}
 		return ret;
+	}
+	public final ArrayList<Player> getMembersRem(){
+		return membersRem;
 	}
 	
 	public void update(){

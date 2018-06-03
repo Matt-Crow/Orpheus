@@ -1,6 +1,7 @@
 package entities;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
 
 import graphics.CustomColors;
 import actives.AbstractActive;
@@ -16,6 +17,7 @@ public class Projectile extends Entity{
 	private int distanceTraveled;
 	private int range;
 	private Player hit;
+	private ArrayList<Particle> particles;
 	
 	private int id; //used to prevent double hitting. May not be unique to a single projectile. See AbstractActive for more info
 	
@@ -31,7 +33,7 @@ public class Projectile extends Entity{
 		
 		setMoving(true);
 		hit = new Player("Void");
-		
+		particles = new ArrayList<>();
 		setType(EntityType.PROJECTILE);
 	}
 	public int getUseId(){
@@ -90,10 +92,18 @@ public class Projectile extends Entity{
 		Particle p = new Particle(m, c);
 		p.init(getX(), getY(), degrees);
 		p.setTeam(this.getTeam());
+		particles.add(p);
 	}
 	
 	public void update(){
 		super.update();
+		
+		for(Player p : getTeam().getEnemy().getMembersRem()){
+			if(p.getLastHitById() != id){
+				checkForCollisions(p);
+			}
+		}
+		
 		distanceTraveled += getMomentum();
 		
 		// need to change range based on projectile type: attack range for seed, aoe for aoeprojectile
@@ -130,12 +140,19 @@ public class Projectile extends Entity{
 				Op.add("is not found for Projectile.java");
 				Op.dp();
 			}
+			particles.stream().forEach(p -> p.update());
+			ArrayList<Particle> newPart = new ArrayList<>();
+			particles.stream().filter(p -> !p.getShouldTerminate()).forEach(p -> newPart.add(p));
+			particles = newPart;
 		}
 	}
 	public void draw(Graphics g){
 		if(registeredAttack.getParticleType() == ParticleType.NONE || Master.DISABLEPARTICLES){
 			g.setColor(user.getTeam().getColor());
 			g.fillOval(getX() - 25, getY() - 25, 50, 50);
+		} 
+		if(!Master.DISABLEPARTICLES){
+			particles.stream().forEach(p -> p.draw(g));
 		}
 	}
 }

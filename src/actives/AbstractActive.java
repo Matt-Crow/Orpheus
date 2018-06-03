@@ -1,4 +1,5 @@
 package actives;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -19,6 +20,8 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	private ParticleType particleType;
 	private ActiveType type; // used for upcasting
 	private int cost; // the energy cost of the active. Calculated automatically
+	private ArrayList<Projectile> projectiles;
+	private ArrayList<Projectile> nextProjectiles; // projectiles to add at the end of the frame (used to avoid concurrent modification)
 	
 	private static int nextUseId = 0; // How many actives have been used thus far. Used to prevent double hitting
 	private static HashMap<String, AbstractActive> allActives = new HashMap<>();
@@ -34,7 +37,6 @@ public abstract class AbstractActive extends AbstractUpgradable{
 		setStat(ActiveStat.DAMAGE, dmg);
 		
 		particleType = ParticleType.NONE;
-		
 		setCooldown(1);
 	}
 	public AbstractActive copy(){
@@ -142,6 +144,11 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	}
 	
 	// misc
+	public void init(){
+		super.init();
+		projectiles = new ArrayList<>();
+		nextProjectiles = new ArrayList<>();
+	}
 	public ActiveType getType(){
 		return type;
 	}
@@ -165,9 +172,13 @@ public abstract class AbstractActive extends AbstractUpgradable{
 		}
 	}
 	
+	public void registerProjectile(Projectile p){
+		nextProjectiles.add(p);
+	}
+	
 	// spawning
 	public void spawnProjectile(int facingDegrees){
-		new SeedProjectile(nextUseId, getRegisteredTo().getX(), getRegisteredTo().getY(), facingDegrees, (int) getStatValue("Speed"), getRegisteredTo(), this);
+		registerProjectile(new SeedProjectile(nextUseId, getRegisteredTo().getX(), getRegisteredTo().getY(), facingDegrees, (int) getStatValue("Speed"), getRegisteredTo(), this));
 	}
 	public void spawnProjectile(){
 		spawnProjectile(getRegisteredTo().getDir().getDegrees());
@@ -180,6 +191,23 @@ public abstract class AbstractActive extends AbstractUpgradable{
 			int angle = start + angleOffset;
 			spawnProjectile(angle);
 		}
+	}
+	
+	public void update(){
+		super.update();
+		
+		projectiles.stream()
+		.forEach(p -> p.update());
+		
+		projectiles.stream()
+		.filter(p -> !p.getShouldTerminate())
+		.forEach(p -> nextProjectiles.add(p));
+		projectiles = nextProjectiles;
+		
+		nextProjectiles = new ArrayList<>();
+	}
+	public void drawProjectiles(Graphics g){
+		projectiles.stream().forEach(p -> p.draw(g));
 	}
 	
 	public void drawStatusPane(Graphics g, int x, int y, int w, int h){

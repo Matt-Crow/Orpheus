@@ -7,6 +7,7 @@ import battle.Team;
 import actions.ActionRegister;
 import ai.AI;
 
+// TODO: add interface with draw, update, init, etc.
 public class Entity {
 	/**
 	 * The Entity class is used as the base for anything that has to interact with players in game
@@ -46,8 +47,7 @@ public class Entity {
 	/*
 	 * In-battle stuff
 	 * 
-	 * shouldTeminate is set to true after the entity frees itself from its node chain
-	 * more on that in linked list section
+	 * shouldTeminate is set to true once the entity should be deleted
 	 * 
 	 * actReg is used to store actions (onBeHit, onUpdate, etc.) see the actions package for more details
 	 * entityAI is the AI that runs this. All entities have this AI, but it must be manually enabled
@@ -57,18 +57,7 @@ public class Entity {
 	private ActionRegister actReg;
 	private AI entityAI;
 	
-	/*
-	 * Linked list stuff 
-	 * 
-	 * depreciating
-	 */
-	private Entity parent;
-	private Entity child;
-	private boolean hasParent;
-	private boolean hasChild;
-	
 	// misc
-	private boolean skipUpdate; // use when traversing chunks
 	private EntityType type; // used for when downcasted
 	private int id;
 	private static int nextId = 0;
@@ -79,21 +68,11 @@ public class Entity {
 	public Entity(int m){
 		maxSpeed = m;
 		
-		hasParent = false;
-		hasChild = false;
-		
 		type = EntityType.RAW;
 		
 		id = nextId;
 		nextId++;
 	}
-	
-	//node chain head
-	public Entity(){
-		hasChild = false;
-	}
-	
-	
 	
 	// movement functions
 	public int getX(){
@@ -219,7 +198,6 @@ public class Entity {
 		actReg = new ActionRegister(this);
 		shouldTerminate = false;
 		entityAI = new AI(this);
-		skipUpdate = false;
 		
 		hasFocus = false;
 	}
@@ -245,76 +223,13 @@ public class Entity {
 	
 	
 	
-	// linked list methods
 	public void terminate(){
 		shouldTerminate = true;
-		closeNodeGap();
 	}
-	public void closeNodeGap(){
-		if(hasParent && hasChild){
-			parent.setChild(child);
-			child.setParent(parent);
-			setHasParent(false);
-			setHasChild(false);
-		}
-		else if(hasParent){
-			parent.setHasChild(false);
-			setHasParent(false);
-		}
-		else if(hasChild){
-			child.setHasParent(false);
-			setHasChild(false);
-		}
-		
-	}
+	
 	public boolean getShouldTerminate(){
 		return shouldTerminate;
 	}
-	public void setParent(Entity e){
-		parent = e;
-		hasParent = true;
-		if(!e.getHasChild() || e.getChild() != this){
-			e.setChild(this);
-		}
-	}
-	public void setChild(Entity e){
-		child = e;
-		hasChild = true;
-		if(!e.getHasParent() || e.getParent() != this){
-			e.setParent(this);
-		}
-	}
-	public void insertChild(Entity e){
-		if(!hasChild){
-			setChild(e);
-		} else {
-			Entity old = child;
-			setChild(e);
-			e.setChild(old);
-		}
-		e.setParent(this);
-	}
-	public boolean getHasParent(){
-		return hasParent;
-	}
-	public boolean getHasChild(){
-		return hasChild;
-	}
-	public void setHasParent(boolean b){
-		hasParent = b;
-	}
-	public void setHasChild(boolean b){
-		hasChild = b;
-	}
-	public Entity getParent(){
-		return parent;
-	}
-	public Entity getChild(){
-		return child;
-	}
-	
-	
-	
 	
 	// misc. methods
 	public void setType(EntityType e){
@@ -328,13 +243,9 @@ public class Entity {
 	}
 	public void update(){
 		if(!shouldTerminate){
-			if(!skipUpdate){
-				entityAI.update();
-				updateMovement();
-				actReg.tripOnUpdate();
-			} else {
-				skipUpdate = false;
-			}
+			entityAI.update();
+			updateMovement();
+			actReg.tripOnUpdate();
 		}
 	}
 	public void draw(Graphics g){

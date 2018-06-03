@@ -1,7 +1,5 @@
 package entities;
 
-import java.util.ArrayList;
-
 import actives.AbstractActive;
 import initializers.Master;
 
@@ -15,10 +13,8 @@ public class SeedProjectile extends Projectile{
 	}
 	
 	public void explode(){
-		ArrayList<AOEProjectile> aoe = new ArrayList<>();
 		for(int i = 0; i < Master.TICKSTOROTATE; i++){
-			AOEProjectile p = new AOEProjectile(useId, getX(), getY(), 360 * i / Master.TICKSTOROTATE, 5, getUser(), getAttack());
-			aoe.add(p);
+			getAttack().registerProjectile(new AOEProjectile(useId, getX(), getY(), 360 * i / Master.TICKSTOROTATE, 5, getUser(), getAttack()));
 		}
 		canExplode = false;
 	}

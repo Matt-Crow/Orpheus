@@ -39,6 +39,7 @@ public class Battle {
 		Master.setCurrentBattle(this);
 		end = false;
 	}
+	
 	public boolean shouldEnd(){
 		return end;
 	}
@@ -51,11 +52,10 @@ public class Battle {
 		return new Team("ERROR", Color.black);
 	}
 	public void update(){
-		for(Team t : teams){
-			if(t.isDefeated()){
+		for(int i = 0; i < teams.size() && !end; i++){
+			teams.get(i).update();
+			if(teams.get(i).isDefeated()){
 				end = true;
-			} else {
-				t.update();
 			}
 		}
 	}

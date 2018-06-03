@@ -204,6 +204,10 @@ public class Player extends Entity{
 		int w = Master.CANVASWIDTH;
 		int h = Master.CANVASHEIGHT;
 		
+		for(AbstractActive a : actives){
+			a.drawProjectiles(g);
+		}
+		
 		// HP value
 		g.setColor(Color.black);
 		g.drawString("HP: " + log.getHP(), getX() - w/12, getY() - h/8);
