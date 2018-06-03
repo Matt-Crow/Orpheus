@@ -3,7 +3,6 @@ package ai;
 import entities.Entity;
 import entities.Player;
 import initializers.Master;
-import battle.Chunk;
 import resources.Random;
 import resources.Coordinates;
 
@@ -79,6 +78,8 @@ public class AI {
 	public boolean checkIfPlayerInSightRange(){
 		boolean inRange = false;
 		int r = Master.DETECTIONRANGE;
+		// redo this
+		/*
 		Chunk[] chunks = Master.getCurrentBattle().getHost().getChunksContainedIn(appliedTo.getX() - r / 2, appliedTo.getY() - r / 2, r, r);
 		for(int i = 0; i < chunks.length && !inRange; i++){
 			Entity current = chunks[i].getHead();
@@ -90,7 +91,7 @@ public class AI {
 					}
 				}
 			}
-		}
+		}*/
 		
 		return inRange;
 	}

@@ -3,7 +3,6 @@ package entities;
 import initializers.Master;
 import java.awt.Graphics;
 import resources.Direction;
-import battle.Chunk;
 import battle.Team;
 import actions.ActionRegister;
 import ai.AI;
@@ -61,11 +60,8 @@ public class Entity {
 	/*
 	 * Linked list stuff 
 	 * 
-	 * each battle contains several 'chunks'
-	 * each chunk contains a blank 'head' entity
-	 * once an entity enters a chunk, it is moved from its original chunk, then placed in the new one
+	 * depreciating
 	 */
-	private Chunk chunk; // the chunk that contains this entity
 	private Entity parent;
 	private Entity child;
 	private boolean hasParent;
@@ -182,21 +178,6 @@ public class Entity {
 			y = Master.getCurrentBattle().getHost().getHeight();
 		}
 		
-		// chunk updating
-		if(chunk == null){
-			chunk = Master.getCurrentBattle().getHost().getChunkContaining(x, y);
-		}
-		if(!chunk.contains(x, y)){
-			closeNodeGap();
-			
-			if(chunk.getX() + chunk.getSize() <= x && chunk.getY() + chunk.getSize() <= y){
-				// if the chunk is to our upper left, the new chunk has not yet updated
-				skipUpdate = true; // so don't update us twice!
-			}
-			chunk = Master.getCurrentBattle().getHost().getChunkContaining(x, y);
-			chunk.register(this);
-		}
-		
 		speedFilter = 1.0;
 	}
 	
@@ -229,8 +210,6 @@ public class Entity {
 		x = xCoord;
 		y = yCoord;
 		dir = new Direction(degrees);
-		chunk = Master.getCurrentBattle().getHost().getChunkContaining(xCoord, yCoord);
-		chunk.register(this);
 		
 		moving = false;
 		speedFilter = 1.0;
@@ -267,9 +246,6 @@ public class Entity {
 	
 	
 	// linked list methods
-	public Chunk getChunk(){
-		return chunk;
-	}
 	public void terminate(){
 		shouldTerminate = true;
 		closeNodeGap();

@@ -57,6 +57,5 @@ public class Battle {
 				t.update();
 			}
 		}
-		host.updateAllChunks();
 	}
 }
