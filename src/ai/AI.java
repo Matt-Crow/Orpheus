@@ -76,50 +76,12 @@ public class AI {
 	}
 	
 	public boolean checkIfPlayerInSightRange(){
-		boolean inRange = false;
-		int r = Master.DETECTIONRANGE;
-		// redo this
-		/*
-		Chunk[] chunks = Master.getCurrentBattle().getHost().getChunksContainedIn(appliedTo.getX() - r / 2, appliedTo.getY() - r / 2, r, r);
-		for(int i = 0; i < chunks.length && !inRange; i++){
-			Entity current = chunks[i].getHead();
-			while(current.getHasChild()){
-				current = current.getChild();
-				if(current instanceof Player && !current.getTeam().equals(appliedTo.getTeam())){
-					if(Coordinates.distanceBetween(current, appliedTo) <= Master.DETECTIONRANGE){
-						inRange = true;
-					}
-				}
-			}
-		}*/
-		
-		return inRange;
+		Player nearest = nearestEnemy();
+		return Coordinates.distanceBetween(appliedTo, nearest) <= Master.DETECTIONRANGE;
 	}
 	
 	public Player nearestEnemy(){
-		Player nearest = new Player("ERROR");
-		int distance = Master.DETECTIONRANGE + 1;
-		
-		
-		int r = Master.DETECTIONRANGE;
-		Chunk[] chunks = Master.getCurrentBattle().getHost().getChunksContainedIn(appliedTo.getX() - r / 2, appliedTo.getY() - r / 2, r, r);
-		for(int i = 0; i < chunks.length; i++){
-			Entity current = chunks[i].getHead();
-			while(current.getHasChild()){
-				current = current.getChild();
-				if(current instanceof Player && !current.getTeam().equals(appliedTo.getTeam())){
-					if(Coordinates.distanceBetween(current, appliedTo) < distance){
-						nearest = (Player) current;
-						distance = (int) Coordinates.distanceBetween(current, appliedTo);
-					}
-				}
-			}
-		}
-		
-		if(nearest.getName() == "ERROR"){
-			throw new NullPointerException();
-		}
-		return nearest;
+		return appliedTo.getTeam().getEnemy().nearestPlayerTo(appliedTo.getX(), appliedTo.getY());
 	}
 	public void latchOntoNearest(){
 		latch(nearestEnemy());

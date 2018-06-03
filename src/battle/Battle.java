@@ -1,6 +1,7 @@
 package battle;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.util.ArrayList;
 import initializers.Master;
 import windows.BattleCanvas;
@@ -56,6 +57,11 @@ public class Battle {
 			} else {
 				t.update();
 			}
+		}
+	}
+	public void draw(Graphics g){
+		for(Team t : teams){
+			t.draw(g);
 		}
 	}
 }

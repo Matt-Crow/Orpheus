@@ -3,6 +3,7 @@ package battle;
 import java.awt.Graphics;
 import graphics.CustomColors;
 
+//TODO: merge with battle
 public class Battlefield {
 	private int numRows;
 	private int numCols;

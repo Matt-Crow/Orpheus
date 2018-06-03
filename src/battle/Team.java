@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import entities.Player;
 import resources.Random;
+import resources.Coordinates;
 import resources.Direction;
 import customizables.Build;
 
@@ -65,6 +66,21 @@ public class Team {
 	}
 	public boolean isDefeated(){
 		return defeated;
+	}
+	public Player nearestPlayerTo(int x, int y){
+		if(membersRem.size() == 0){
+			throw new IndexOutOfBoundsException("No players exist for team " + name);
+		}
+		Player ret = membersRem.get(0);
+		int distance = (int)Coordinates.distanceBetween(ret.getX(), ret.getY(), x, y);
+		for(Player p : membersRem){
+			int check = (int)Coordinates.distanceBetween(p.getX(), p.getY(), x, y);
+			if(check < distance){
+				ret = p;
+				distance = check;
+			}
+		}
+		return ret;
 	}
 	
 	public void update(){

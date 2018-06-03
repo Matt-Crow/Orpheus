@@ -198,10 +198,6 @@ public class Player extends Entity{
 		getActionRegister().tripOnUpdate();
 		log.update();
 		energyLog.update();
-		
-		if(getShouldTerminate()){
-			getTeam().loseMember();
-		}
 	}
 	
 	public void draw(Graphics g){

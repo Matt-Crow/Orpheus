@@ -136,7 +136,7 @@ public class BattleCanvas extends DrawingPlane implements MouseListener, KeyList
 		int[] trans = retTranslate();
 		translate(trans[0], trans[1]);
 		battlefield.draw(getG());
-		
+		hostedBattle.draw(getG());
 		resetToInit();
 		
 		Master.TRUEPLAYER.drawHUD(getG());
