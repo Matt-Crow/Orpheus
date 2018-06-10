@@ -4,18 +4,27 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import graphics.CustomColors;
+import gui.Pane;
 import initializers.Master;
 import resources.Op;
 
 import javax.swing.AbstractAction;
+
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.geom.AffineTransform;
 
 public class DrawingPlane extends JPanel{
 	public static final long serialVersionUID = 1L;
+	
+	private Pane menuBar;
+	private Pane content;
+	
 	private Graphics2D g;
 	private AffineTransform initialTransform;
 	
@@ -31,7 +40,20 @@ public class DrawingPlane extends JPanel{
 		ty = 0;
 		priorX = 0;
 		priorY = 0;
-		setLayout(null);
+		setLayout(new GridBagLayout());
+		GridBagConstraints c1 = new GridBagConstraints();
+		menuBar = new Pane();
+		c1.weightx = 1;
+		c1.weighty = 1;
+		c1.fill = GridBagConstraints.BOTH;
+		super.add(menuBar, c1);
+		GridBagConstraints c2 = new GridBagConstraints();
+		c2.gridy = 1;
+		c2.weighty = 9;
+		c2.weightx = 1;
+		c2.fill = GridBagConstraints.BOTH;
+		content = new Pane();
+		super.add(content, c2);
 		setBackground(CustomColors.black);
 		setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
 		setFocusable(true);
@@ -85,8 +107,23 @@ public class DrawingPlane extends JPanel{
 		g.translate(x, y);
 	}
 	
+	public Component add(Component j){
+		content.add(j);
+		return j;
+	}
+	public Component addMenuItem(Component j){
+		menuBar.add(j);
+		return j;
+	}
+	public void remove(Component j){
+		content.remove(j);
+	}
+	
 	public void resizeComponents(int rows, int cols){
-		setLayout(new GridLayout(rows, cols, 10, 10));
+		content.setLayout(new GridLayout(rows, cols));
+	}
+	public void resizeMenu(int cols){
+		menuBar.setLayout(new GridLayout(1, cols));
 	}
 	public AbstractAction getRepaint(){
 		return new AbstractAction(){

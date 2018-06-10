@@ -40,7 +40,7 @@ public class BattleCanvas extends DrawingPlane implements MouseListener, KeyList
 				close();
 			}
 		});
-		add(b);
+		addMenuItem(b);
 		
 		Chat.addTo(this);
 		
@@ -54,6 +54,7 @@ public class BattleCanvas extends DrawingPlane implements MouseListener, KeyList
 		};
 		addKeyRegistration();
 		resizeComponents(10, 10);
+		resizeMenu(1);
 		addMouseListener(this);
 		addKeyListener(this);
 	}

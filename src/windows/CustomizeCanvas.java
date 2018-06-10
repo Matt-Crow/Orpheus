@@ -13,7 +13,6 @@ import gui.*;
 // looks like I'll have to do seperate active and passive customizers
 public class CustomizeCanvas extends DrawingPlane{
 	
-	private Title title;
 	private OptionBox<String> upgradableName;
 	private AbstractUpgradable customizing;
 	
@@ -22,7 +21,6 @@ public class CustomizeCanvas extends DrawingPlane{
 	private Button cha;
 	private Button pas;
 	
-	private VoidComponent spacer;
 	private Button customize;
 	
 	public CustomizeCanvas(){
@@ -35,13 +33,7 @@ public class CustomizeCanvas extends DrawingPlane{
 				close();
 			}
 		});
-		add(quit);
-		
-		title = new Title("Select what you want to customize");
-		add(title);
-		
-		spacer = new VoidComponent();
-		add(spacer);
+		addMenuItem(quit);
 		
 		act = new Button("Active");
 		act.addActionListener(new AbstractAction(){
@@ -66,7 +58,8 @@ public class CustomizeCanvas extends DrawingPlane{
 			}
 		});
 		add(pas);
-		resizeComponents(2, 3);
+		resizeComponents(1, 3);
+		resizeMenu(1);
 	}
 	private void phase2(UpgradableType type){
 		removePhase1();
@@ -109,25 +102,23 @@ public class CustomizeCanvas extends DrawingPlane{
 		}*/
 		upgradableName = new OptionBox<>("Select upgradable to customize", names);
 		add(upgradableName);
-		resizeComponents(2, 2);
+		resizeComponents(2, 1);
 		revalidate();
 		repaint();
 	}
 	private void phase3(UpgradableType type){
 		removePhase2();
-		
-		resizeComponents(2, 2);
+		// for some reason this is crushing out quit button
+		resizeComponents(1, 2);
 	}
 	private void removePhase1(){
 		remove(act);
 		remove(cha);
 		remove(pas);
-		remove(spacer);
 		revalidate();
 		repaint();
 	}
 	private void removePhase2(){
-		remove(title);
 		remove(customize);
 		remove(upgradableName);
 		revalidate();

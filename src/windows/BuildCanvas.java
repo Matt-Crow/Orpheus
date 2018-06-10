@@ -10,6 +10,7 @@ import customizables.Build;
 import entities.Player;
 import gui.Button;
 import gui.OptionBox;
+import gui.Pane;
 import gui.UpgradableSelector;
 import passives.AbstractPassive;
 import gui.Text;
@@ -37,8 +38,16 @@ public class BuildCanvas extends DrawingPlane{
 				close();
 			}
 		});
-		add(quit);
+		addMenuItem(quit);
 		
+		temp = new Button("customize upgradables");
+		temp.addActionListener(new AbstractAction(){
+			public void actionPerformed(ActionEvent e){
+				new CustomizeWindow();
+				close();
+			}
+		});
+		add(temp);
 		
 		ArrayList<Build> builds = Build.getAllBuilds();
 		String[] buildNames = new String[builds.size()];
@@ -60,25 +69,21 @@ public class BuildCanvas extends DrawingPlane{
 			}
 		});
 		add(setClass);
-		resizeComponents(3, 1);
-		temp = new Button("customize");
-		temp.addActionListener(new AbstractAction(){
-			public void actionPerformed(ActionEvent e){
-				new CustomizeWindow();
-				close();
-			}
-		});
-		add(temp);
-		resizeComponents(4, 1);
+		
+		resizeComponents(1, 3);
+		resizeMenu(1);
 	}
 	public void phase2(){
+		remove(temp);
 		testPlayer = new Player("TEST");
 		Build b = Build.getBuildByName(baseBuild.getSelected().toString());
 		testPlayer.applyBuild(b);
-
+		
+		add(new Pane());
 		name = new Text(b.getName());
 		name.setEditable(true);
 		add(name);
+		add(new Pane());
 		
 		finish = new Button("Save");
 		finish.addActionListener(new AbstractAction(){
@@ -93,7 +98,7 @@ public class BuildCanvas extends DrawingPlane{
 				close();
 			}
 		});
-		add(finish);
+		addMenuItem(finish);
 		
 		upgradableSelectors = new UpgradableSelector[6];
 		
@@ -126,10 +131,8 @@ public class BuildCanvas extends DrawingPlane{
 		
 		//TODO: add tooltip of selected item desc instead of UpgradableSelector
 		
-		
-		
-		
 		resizeComponents(3, 3);
+		resizeMenu(2);
 		revalidate();
 		repaint();
 	}

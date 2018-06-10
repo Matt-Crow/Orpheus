@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import gui.Button;
 import gui.Title;
-import gui.VoidComponent;
 import resources.Op;
 
 @SuppressWarnings("serial")
@@ -15,12 +14,8 @@ public class StartCanvas extends DrawingPlane{
 	public StartCanvas(){
 		super();
 		
-		add(new VoidComponent());
-		
 		Title title = new Title("The Orpheus Proposition");
-		add(title);
-		
-		add(new VoidComponent());
+		addMenuItem(title);
 		
 		String[] buttonTexts = {"About this game", "Play", "How to Play"};
 		AbstractAction[] actions = new AbstractAction[3];
@@ -48,6 +43,7 @@ public class StartCanvas extends DrawingPlane{
 			b.addActionListener(actions[i]);
 			add(b);
 		}
-		resizeComponents(2, 3);
+		resizeComponents(1, 3);
+		resizeMenu(1);
 	}
 }

@@ -32,7 +32,7 @@ public class MainCanvas extends DrawingPlane{
 				close();
 			}
 		});
-		add(b);
+		addMenuItem(b);
 		
 		ArrayList<Build> builds = Build.getAllBuilds();
 		String[] buildNameList = new String[builds.size()];
@@ -47,7 +47,7 @@ public class MainCanvas extends DrawingPlane{
 			numStr[i] = Integer.toString(numbers[i]);
 		}
 		
-		Button newBuild = new Button("Create a new build");
+		Button newBuild = new Button("Customize");
 		newBuild.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				new BuildWindow();
@@ -73,23 +73,21 @@ public class MainCanvas extends DrawingPlane{
 				close();
 			}
 		});
-		add(battle);
-		
-		team1Size = new OptionBox<String>("Team 1 size", numStr);
-		team1Size.addActionListener(getRepaint());
-		add(team1Size);
+		addMenuItem(battle);
 		
 		playerBuild = new OptionBox<String>("Player build", buildNameList);
 		playerBuild.addActionListener(getRepaint());
 		add(playerBuild);
 		
+		team1Size = new OptionBox<String>("Team 1 size", numStr);
+		team1Size.addActionListener(getRepaint());
+		add(team1Size);
+		
 		team2Size = new OptionBox<String>("Team 2 size", numStr);
 		team2Size.addActionListener(getRepaint());
 		add(team2Size);
 		
-		
-		
-		
-		resizeComponents(2, 3);
+		resizeComponents(2, 2);
+		resizeMenu(2);
 	}
 }
