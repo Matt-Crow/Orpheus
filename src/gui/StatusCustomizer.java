@@ -1,11 +1,9 @@
 package gui;
 
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
-
 import statuses.Status;
 import statuses.StatusName;
 import upgradables.AbstractUpgradable;
@@ -14,7 +12,6 @@ import upgradables.AbstractUpgradable;
 public class StatusCustomizer extends JComponent{
 	
 	private AbstractUpgradable statusOwner;
-	private Status status;
 	private OptionBox<StatusName> box;
 	private OptionBox<Integer> intensity;
 	private OptionBox<Integer> duration;
@@ -23,16 +20,6 @@ public class StatusCustomizer extends JComponent{
 	public StatusCustomizer(AbstractUpgradable a, Status s){
 		super();
 		statusOwner = a;
-		status = s;
-		
-		AbstractAction act = new AbstractAction(){
-			public void actionPerformed(ActionEvent e){
-				statusOwner.addStatus(box.getSelected(), 
-						intensity.getSelected(), 
-						duration.getSelected(), 
-						chance.getSelected());
-			}
-		};
 		
 		box = new OptionBox<>("Status", StatusName.values());
 		box.setSelected(StatusName.valueOf(s.getName().toUpperCase()));
@@ -56,5 +43,15 @@ public class StatusCustomizer extends JComponent{
 		setLayout(new GridLayout(4, 1));
 		
 		Style.applyStyling(this);
+	}
+	
+	public void saveStatus(){
+		statusOwner.addStatus(box.getSelected(), intensity.getSelected(), duration.getSelected(), chance.getSelected());
+	}
+	public void addActionListener(AbstractAction a){
+		box.addActionListener(a);
+		intensity.addActionListener(a);
+		duration.addActionListener(a);
+		chance.addActionListener(a);
 	}
 }

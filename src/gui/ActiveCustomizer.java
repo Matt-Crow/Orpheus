@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -8,7 +7,6 @@ import javax.swing.AbstractAction;
 import actives.AbstractActive;
 import actives.ActiveStat;
 import entities.ParticleType;
-import statuses.StatusTable;
 
 @SuppressWarnings("serial")
 public class ActiveCustomizer extends UpgradableCustomizer{
@@ -19,11 +17,7 @@ public class ActiveCustomizer extends UpgradableCustomizer{
 			addBox(ActiveStat.DAMAGE.toString());
 			break;
 		case BOOST:
-			StatusTable s = a.getInflict();
-			for(int i = 0; i < s.getSize(); i++){
-				add(new StatusCustomizer(a, s.getStatusAt(i)));
-			}
-			setLayout(new GridLayout(s.getSize() + 1, 1));
+			addStatusBoxes();
 			break;
 		case ELEMENTAL:
 			addBox(ActiveStat.ARC.toString());

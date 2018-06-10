@@ -133,6 +133,9 @@ public abstract class AbstractUpgradable {
 	public StatusTable getInflict(){
 		return inflict;
 	}
+	public void clearInflict(){
+		inflict = new StatusTable();
+	}
 	public void copyInflictTo(AbstractUpgradable a){
 		/* takes all the statuses from this upgradable's
 		 * status table, and copies them to p's

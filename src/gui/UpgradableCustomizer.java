@@ -5,8 +5,12 @@ import javax.swing.JComponent;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
+import statuses.Status;
+import statuses.StatusTable;
+
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
 import upgradables.AbstractUpgradable;
 
@@ -19,6 +23,7 @@ public class UpgradableCustomizer extends JComponent{
 	private Text desc;
 	private Button save;
 	private int boxCount;
+	private ArrayList<StatusCustomizer> statusBoxes;
 	
 	public UpgradableCustomizer(AbstractUpgradable a){
 		super();
@@ -30,7 +35,7 @@ public class UpgradableCustomizer extends JComponent{
 		add(p1);
 		add(p2);
 		
-		name = new Text(a.getName());
+		name = new Text(customizing.getName());
 		name.setEditable(true);
 		name.addCaretListener(new CaretListener(){
 			public void caretUpdate(CaretEvent e){
@@ -40,7 +45,7 @@ public class UpgradableCustomizer extends JComponent{
 		});
 		p1.add(name);
 		
-		desc = new Text(a.getDescription());
+		desc = new Text(customizing.getDescription());
 		p2.setLayout(new GridLayout(2, 1));
 		p2.add(desc);
 		
@@ -51,7 +56,7 @@ public class UpgradableCustomizer extends JComponent{
 			}
 		});
 		p2.add(save);
-		
+		statusBoxes = new ArrayList<>();
 		boxCount = 0;
 		setLayout(new GridLayout(1, 2));
 		Style.applyStyling(this);
@@ -60,6 +65,7 @@ public class UpgradableCustomizer extends JComponent{
 		if(b){
 			save.setText("Save changes");
 			save.setEnabled(true);
+			desc.setText(customizing.getDescription());
 		} else {
 			save.setText("No changes to save");
 			save.setEnabled(false);
@@ -87,10 +93,36 @@ public class UpgradableCustomizer extends JComponent{
 		});
 		addBox(box);
 	}
+	public void addStatusBoxes(){
+		StatusTable s = customizing.getInflict();
+		for(int i = 0; i < s.getSize(); i++){
+			StatusCustomizer c = new StatusCustomizer(customizing, s.getStatusAt(i));
+			c.addActionListener(new AbstractAction(){
+				public void actionPerformed(ActionEvent e){
+					updateStatuses();
+				}
+			});
+			p1.add(c);
+			statusBoxes.add(c);
+			boxCount++;
+		}
+		p1.setLayout(new GridLayout(boxCount + 1, 1));
+	}
 	
 	public void updateField(String name, int val){
 		// change a stat of customizing
 		// make subclasses define this
+		desc.setText(customizing.getDescription());
+		setCanSave(true);
+		repaint();
+	}
+	public void updateStatuses(){
+		if(statusBoxes.size() != 0){
+			customizing.clearInflict();
+		}
+		for(StatusCustomizer s : statusBoxes){
+			s.saveStatus();
+		}
 		desc.setText(customizing.getDescription());
 		setCanSave(true);
 		repaint();
