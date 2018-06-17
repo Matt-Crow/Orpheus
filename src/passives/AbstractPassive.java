@@ -1,11 +1,13 @@
 package passives;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 
 import actions.OnHitKey;
 import actions.OnHitTrip;
 import statuses.StatusTable;
 import entities.Player;
+import resources.Op;
 import resources.Random;
 import upgradables.AbstractUpgradable;
 
@@ -18,7 +20,7 @@ public abstract class AbstractPassive extends AbstractUpgradable{
 	private PassiveType type; // used when upcasting
 	private boolean targetsUser;
 	
-	private static ArrayList<AbstractPassive> allPassives = new ArrayList<>();
+	private static HashMap<String, AbstractPassive> allPassives = new HashMap<>();
 	
 	public AbstractPassive(PassiveType t, String n, boolean b){
 		super(n);
@@ -32,7 +34,7 @@ public abstract class AbstractPassive extends AbstractUpgradable{
 	
 	// static methods
 	public static void addPassive(AbstractPassive p){
-		allPassives.add(p);
+		allPassives.put(p.getName().toUpperCase(), p);
 	}
 	public static void addPassives(AbstractPassive[] ps){
 		for(AbstractPassive p : ps){
@@ -40,25 +42,27 @@ public abstract class AbstractPassive extends AbstractUpgradable{
 		}
 	}
 	public static AbstractPassive getPassiveByName(String n){
-		AbstractPassive ret = allPassives.get(0);
-		boolean found = false;
-		for(int i = 0; i < allPassives.size() && !found; i++){
-			if(allPassives.get(i).getName().equals(n)){
-				ret = allPassives.get(i);
-				found = true;
-			}
-		}
-		if(!found){
-			throw new NullPointerException("No passive was found with name " + n);
+		AbstractPassive ret = allPassives.getOrDefault(n.toUpperCase(), allPassives.get("SLASH"));
+		if(ret.getName().toUpperCase().equals("SLASH") && !n.toUpperCase().equals("SLASH")){
+			Op.add("No passive was found with name " + n + " in AbstractPassive.getPassiveByName");
+			Op.dp();
 		}
 		return ret;
 	}
-	public static AbstractPassive[] getAll(){
-		AbstractPassive[] ret = new AbstractPassive[allPassives.size()];
-		for(int i = 0; i < allPassives.size(); i++){
-			ret[i] = allPassives.get(i);
+	public static String[] getAllNames(){
+		String[] ret = new String[allPassives.size()];
+		Set<String> keys = allPassives.keySet();
+		int i = 0;
+		for(String key : keys){
+			ret[i] = key;
+			i++;
 		}
 		return ret;
+	}
+	
+	public void setStat(PassiveStat n, int value){
+		Op.add("Method addStat is not defined for class " + getClass().getName());
+		Op.dp();
 	}
 	
 	// setters / getters

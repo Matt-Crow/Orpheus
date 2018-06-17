@@ -25,20 +25,20 @@ public class LoadPassives {
 		OnBeHitPassive t = new OnBeHitPassive("Toughness", true);
 		t.addStatus(StatusName.RESISTANCE, 1, 1, 20);
 		
-		ThresholdPassive a = new ThresholdPassive("Adrenaline", 25);
+		ThresholdPassive a = new ThresholdPassive("Adrenaline", 3);
 		a.addStatus(StatusName.CHARGE, 2, 1);
 		
-		ThresholdPassive b = new ThresholdPassive("Bracing", 25);
+		ThresholdPassive b = new ThresholdPassive("Bracing", 3);
 		b.addStatus(StatusName.RESISTANCE, 2, 1);
 		
-		ThresholdPassive d = new ThresholdPassive("Determination", 25);
+		ThresholdPassive d = new ThresholdPassive("Determination", 3);
 		d.addStatus(StatusName.STRENGTH, 1, 1);
 		d.addStatus(StatusName.RESISTANCE, 1, 1);
 		
-		ThresholdPassive e = new ThresholdPassive("Escapist", 25);
+		ThresholdPassive e = new ThresholdPassive("Escapist", 3);
 		e.addStatus(StatusName.RUSH, 2, 1);
 		
-		ThresholdPassive re = new ThresholdPassive("Retaliation", 25);
+		ThresholdPassive re = new ThresholdPassive("Retaliation", 3);
 		re.addStatus(StatusName.STRENGTH, 2, 1);
 		
 		AbstractPassive.addPassives(new AbstractPassive[]{

@@ -54,7 +54,7 @@ public class CustomizeCanvas extends DrawingPlane{
 		pas = new Button("Passive");
 		pas.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				
+				phase2(UpgradableType.PASSIVE);
 			}
 		});
 		add(pas);
@@ -79,27 +79,21 @@ public class CustomizeCanvas extends DrawingPlane{
 				}
 			});
 			break;
+		case PASSIVE:
+			names = AbstractPassive.getAllNames();
+			customize.addActionListener(new AbstractAction(){
+				public void actionPerformed(ActionEvent e){
+					customizing = AbstractPassive.getPassiveByName(upgradableName.getSelected());
+					add(new PassiveCustomizer((AbstractPassive)customizing));
+					phase3(UpgradableType.PASSIVE);
+				}
+			});
 		}
 		/*
 		if (type.equals("Class")){
 			// implement later
-		} else {
-			AbstractPassive[] pass = AbstractPassive.getAll();
-			names = new String[pass.length];
-			for(int i = 0; i < pass.length; i++){
-				names[i] = pass[i].getName();
-			}
-			customize.addActionListener(new AbstractAction(){
-				public void actionPerformed(ActionEvent e){
-					customizing = AbstractPassive.getPassiveByName(upgradableName.getSelected());
-					remove(customize);
-					remove(upgradableName);
-					//add(new CustomizeViewer(customizing));
-					revalidate();
-					repaint();
-				}
-			});
-		}*/
+		} */
+		
 		upgradableName = new OptionBox<>("Select upgradable to customize", names);
 		add(upgradableName);
 		resizeComponents(2, 1);
@@ -108,7 +102,6 @@ public class CustomizeCanvas extends DrawingPlane{
 	}
 	private void phase3(UpgradableType type){
 		removePhase2();
-		// for some reason this is crushing out quit button on the laptop
 		resizeComponents(1, 2);
 	}
 	private void removePhase1(){

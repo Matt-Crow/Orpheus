@@ -5,9 +5,7 @@ import javax.swing.JComponent;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
-import statuses.Status;
 import statuses.StatusTable;
-
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;

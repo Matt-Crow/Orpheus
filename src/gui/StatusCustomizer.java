@@ -8,6 +8,7 @@ import statuses.Status;
 import statuses.StatusName;
 import upgradables.AbstractUpgradable;
 
+//TODO: make this take only upgradable as param so that it can do chance
 @SuppressWarnings("serial")
 public class StatusCustomizer extends JComponent{
 	
@@ -15,7 +16,7 @@ public class StatusCustomizer extends JComponent{
 	private OptionBox<StatusName> box;
 	private OptionBox<Integer> intensity;
 	private OptionBox<Integer> duration;
-	private OptionBox<Integer> chance;
+	//private OptionBox<Integer> chance;
 	
 	public StatusCustomizer(AbstractUpgradable a, Status s){
 		super();
@@ -35,23 +36,23 @@ public class StatusCustomizer extends JComponent{
 		duration.setSelected((Integer)s.getBaseUses());
 		add(duration);
 		
-		Integer[] v3 = {1, 2, 3};
-		chance = new OptionBox<Integer>("Chance", v3);
+		//Integer[] v3 = {1, 2, 3};
+		//chance = new OptionBox<Integer>("Chance", v3);
 		//chance.setSelected(?);
-		add(chance);
+		//add(chance);
 		
-		setLayout(new GridLayout(4, 1));
+		setLayout(new GridLayout(3, 1));
 		
 		Style.applyStyling(this);
 	}
 	
 	public void saveStatus(){
-		statusOwner.addStatus(box.getSelected(), intensity.getSelected(), duration.getSelected(), chance.getSelected());
+		statusOwner.addStatus(box.getSelected(), intensity.getSelected(), duration.getSelected(), 100);
 	}
 	public void addActionListener(AbstractAction a){
 		box.addActionListener(a);
 		intensity.addActionListener(a);
 		duration.addActionListener(a);
-		chance.addActionListener(a);
+		//chance.addActionListener(a);
 	}
 }
