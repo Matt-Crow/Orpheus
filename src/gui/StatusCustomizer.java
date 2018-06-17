@@ -16,9 +16,9 @@ public class StatusCustomizer extends JComponent{
 	private OptionBox<StatusName> box;
 	private OptionBox<Integer> intensity;
 	private OptionBox<Integer> duration;
-	//private OptionBox<Integer> chance;
+	private OptionBox<Integer> chance;
 	
-	public StatusCustomizer(AbstractUpgradable a, Status s){
+	public StatusCustomizer(AbstractUpgradable a, Status s, int c){
 		super();
 		statusOwner = a;
 		
@@ -36,23 +36,26 @@ public class StatusCustomizer extends JComponent{
 		duration.setSelected((Integer)s.getBaseUses());
 		add(duration);
 		
-		//Integer[] v3 = {1, 2, 3};
-		//chance = new OptionBox<Integer>("Chance", v3);
-		//chance.setSelected(?);
-		//add(chance);
-		
-		setLayout(new GridLayout(3, 1));
+		Integer[] v3 = {20, 50, 100};
+		chance = new OptionBox<>("Chance", v3);
+		chance.setSelected((Integer)c);
+		if(c != 100){
+			add(chance);
+			setLayout(new GridLayout(4, 1));
+		}else{
+			setLayout(new GridLayout(3, 1));
+		}
 		
 		Style.applyStyling(this);
 	}
 	
 	public void saveStatus(){
-		statusOwner.addStatus(box.getSelected(), intensity.getSelected(), duration.getSelected(), 100);
+		statusOwner.addStatus(box.getSelected(), intensity.getSelected(), duration.getSelected(), chance.getSelected());
 	}
 	public void addActionListener(AbstractAction a){
 		box.addActionListener(a);
 		intensity.addActionListener(a);
 		duration.addActionListener(a);
-		//chance.addActionListener(a);
+		chance.addActionListener(a);
 	}
 }

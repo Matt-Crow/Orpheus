@@ -12,6 +12,14 @@ public class PassiveCustomizer extends UpgradableCustomizer{
 			addBox(PassiveStat.THRESHOLD.toString());
 			addStatusBoxes();
 			break;
+		case ONMELEEHIT:
+			addStatusBoxes();
+			break;
+		case ONHIT:
+			addStatusBoxes();
+			break;
+		case ONBEHIT:
+			addStatusBoxes();
 		}
 	}
 	public void updateField(String n, int val){

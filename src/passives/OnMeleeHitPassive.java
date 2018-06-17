@@ -18,9 +18,9 @@ public class OnMeleeHitPassive extends AbstractPassive{
 		getRegisteredTo().getActionRegister().addOnMeleeHit(getKey());
 	}
 	public String getDescription(){
-		String desc = getName() + ": \n";
-		desc += "When the user strikes a target with a melee attack, \n";
-		desc += "inflicts " + ((getTargetsUser()) ? "user" : "target") + " with: \n";
+		String desc = getName() + ": ";
+		desc += "When the user strikes a target with a melee attack, ";
+		desc += "inflicts " + ((getTargetsUser()) ? "user" : "target") + " with: ";
 		desc += getInflict().getStatusString();
 		return desc;
 	}

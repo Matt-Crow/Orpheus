@@ -128,9 +128,11 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	}
 	public void calculateCost(){
 		int newCost = 0;
-		int[] bases = getAllBaseValues();
-		for(int i = 0; i < bases.length; i++){
-			newCost += bases[i];
+		if(type != ActiveType.MELEE){
+			int[] bases = getAllBaseValues();
+			for(int i = 0; i < bases.length; i++){
+				newCost += bases[i];
+			}
 		}
 		cost = newCost;
 	}

@@ -6,7 +6,7 @@ public class OnBeHitPassive extends AbstractPassive{
 	 * that of an enemy projectile
 	 */
 	public OnBeHitPassive(String n, boolean targetsUser){
-		super(PassiveType.ONBEHET, n, targetsUser);
+		super(PassiveType.ONBEHIT, n, targetsUser);
 	}
 	
 	public OnBeHitPassive copy(){

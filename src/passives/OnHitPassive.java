@@ -20,9 +20,9 @@ public class OnHitPassive extends AbstractPassive{
 		getRegisteredTo().getActionRegister().addOnHit(getKey());
 	}
 	public String getDescription(){
-		String desc = getName() + ": \n";
-		desc += "When the user performs an attack that successfully hits an enemy, \n";
-		desc += "inflicts " + ((getTargetsUser()) ? "user" : "target") + " with: \n";
+		String desc = getName() + ": ";
+		desc += "When the user performs an attack that successfully hits an enemy, ";
+		desc += "inflicts " + ((getTargetsUser()) ? "user" : "target") + " with: ";
 		desc += getInflict().getStatusString();
 		return desc;
 	}

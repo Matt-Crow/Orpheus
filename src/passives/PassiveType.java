@@ -1,7 +1,7 @@
 package passives;
 
 public enum PassiveType {
-	ONBEHET,
+	ONBEHIT,
 	ONHIT,
 	ONMELEEHIT,
 	THRESHOLD
