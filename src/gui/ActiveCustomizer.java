@@ -15,6 +15,7 @@ public class ActiveCustomizer extends UpgradableCustomizer{
 		switch(a.getType()){
 		case MELEE:
 			addBox(ActiveStat.DAMAGE.toString());
+			//need to do more here
 			break;
 		case BOOST:
 			addStatusBoxes();

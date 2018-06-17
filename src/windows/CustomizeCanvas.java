@@ -108,7 +108,7 @@ public class CustomizeCanvas extends DrawingPlane{
 	}
 	private void phase3(UpgradableType type){
 		removePhase2();
-		// for some reason this is crushing out quit button
+		// for some reason this is crushing out quit button on the laptop
 		resizeComponents(1, 2);
 	}
 	private void removePhase1(){

@@ -41,7 +41,6 @@ public class LoadActives {
 		BoostActive ss = new BoostActive("Shield Stance", new StatusName[]{StatusName.RESISTANCE}, new int[]{2}, new int[]{3});
 		BoostActive hr = new BoostActive("Healing Rain", new StatusName[]{StatusName.REGENERATION}, new int[]{2}, new int[]{3});
 		BoostActive bs = new BoostActive("Blade Stance", new StatusName[]{StatusName.STRENGTH}, new int[]{2}, new int[]{3});
-		BoostActive br = new BoostActive("Burning Rage", new StatusName[]{StatusName.STRENGTH, StatusName.BURN}, new int[]{3, 2}, new int[]{3, 3});
 		
 		AbstractActive.addActives(new AbstractActive[]{
 			s,
@@ -59,8 +58,7 @@ public class LoadActives {
 			st,
 			ss,
 			hr,
-			bs,
-			br
+			bs
 		});
 	}
 }

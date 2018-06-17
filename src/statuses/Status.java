@@ -33,9 +33,6 @@ public abstract class Status {
 	public static Status decode(StatusName n, int intensity, int dur){
 		Status ret = new Strength(1, 1);
 		switch(n){
-		case BURN:
-			ret = new Burn(intensity, dur);
-			break;
 		case CHARGE:
 			ret = new Charge(intensity, dur);
 			break;
