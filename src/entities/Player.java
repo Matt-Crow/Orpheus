@@ -157,7 +157,7 @@ public class Player extends Entity{
 		slash = (MeleeActive)AbstractActive.getActiveByName("Slash").copy();
 		slash.registerTo(this);
 		slash.init();
-		c.calcStats();
+		c.init();
 		log = new DamageBacklog(this);
 		energyLog = new EnergyLog(this);
 		statuses = new ArrayList<>();

@@ -1,80 +1,98 @@
 package customizables;
+import upgradables.AbstractUpgradable;
 import upgradables.Stat;
-import java.util.ArrayList;
+
+import java.util.HashMap;
+import java.util.Set;
+
 import graphics.CustomColors;
+import resources.Number;
+import resources.Op;
 
 // make this connect better with player somehow
-public class CharacterClass extends Customizable{
-	private ArrayList<Stat> stats;
-	private String name;
+public class CharacterClass extends AbstractUpgradable{
 	private CustomColors[] colors;
-	private ArrayList<String> passiveOptions; // remove later
 	
+	private static HashMap<String, CharacterClass> allCharacterClasses = new HashMap<>();
 	// initializers
 	public CharacterClass(String n, CustomColors[] cs, int HP, int energy, int dmg, int reduction, int speed){
-		name = n;
+		super(n);
 		colors = cs;
-		stats = new ArrayList<>();
-		stats.add(new Stat("maxHP", 700 + 100 * HP, 2));
-		stats.add(new Stat("Max energy", 12.5 * (energy + 1), 2));
-		stats.add(new Stat("damage dealt modifier", 0.7 + 0.1 * dmg));
-		// 1: 120%, 5: 80%
-		stats.add(new Stat("damage taken modifier", 1.3 - 0.1 * reduction));
 		
-		stats.add(new Stat("speed", (0.7 + 0.1 * speed)));
-		
-		passiveOptions = new ArrayList<>();
-		addPossiblePassive("Bracing");
-		addPossiblePassive("Retaliation");
-		addPossiblePassive("Determination");
-		addPossiblePassive("Adrenaline");
-		addPossiblePassive("Toughness");
-		addPossiblePassive("Sharpen");
-		addPossiblePassive("Escapist");
-		addPossiblePassive("Sparking Strikes");
-		addPossiblePassive("Momentum");
-		addPossiblePassive("Leechhealer");
-		addPossiblePassive("Recover");
+		setStat(CharacterStat.HP, HP);
+		setStat(CharacterStat.ENERGY, energy);
+		setStat(CharacterStat.DMG, dmg);
+		setStat(CharacterStat.REDUCTION, reduction);
+		setStat(CharacterStat.SPEED, speed);
+	}
+	public CharacterClass copy(){
+		return new CharacterClass(
+				getName(), 
+				getColors(), 
+				getBase("maxHP"),
+				getBase("Max energy"),
+				getBase("damage dealt modifier"),
+				getBase("damage taken modifier"),
+				getBase("speed")
+			);
+	}
+	
+	// static methods
+	public static void addCharacterClass(CharacterClass c){
+		allCharacterClasses.put(c.getName().toUpperCase(), c);
+	}
+	public static void addCharacterClasses(CharacterClass[] c){
+		for(CharacterClass cs : c){
+			addCharacterClass(cs);
+		}
+	}
+	public static CharacterClass getCharacterClassByName(String n){
+		CharacterClass ret = allCharacterClasses.getOrDefault(n.toUpperCase(), 
+				new CharacterClass("ERROR", new CustomColors[0], 3, 3, 3, 3, 3));
+		if(!n.toUpperCase().equals(ret.getName().toUpperCase())){
+			Op.add("No character class was found with name " + n + " in CharacterClass.getCharacterClassByName");
+			Op.dp();
+		}
+		return ret;
+	}
+	public static String[] getAllNames(){
+		String[] ret = new String[allCharacterClasses.size()];
+		Set<String> keys = allCharacterClasses.keySet();
+		int i = 0;
+		for(String key : keys){
+			ret[i] = key;
+			i++;
+		}
+		return ret;
 	}
 	// getters
-	public String getName(){
-		return name;
-	}
 	public CustomColors[] getColors(){
 		return colors;
 	}
-	public String[] getPassiveOptions(){
-		String[] ret = new String[passiveOptions.size()];
-		for(int i = 0; i < passiveOptions.size(); i++){
-			ret[i] = passiveOptions.get(i);
-		}
-		return ret;
-	}
-	
-	public Stat getStat(String n){
-		Stat ret = new Stat("STATNOTFOUND", 0);
-		for(Stat stat : stats){
-			if(stat.getName() == n){
-				ret = stat;
-			}
-		}
-		if(ret.getName() == "STATNOTFOUND"){
-			throw new NullPointerException();
-		}
-		return ret;
-	}
-	public double getStatValue(String n){
-		return getStat(n).get();
-	}
-	
-	// setters
-	public void addPossiblePassive(String s){
-		passiveOptions.add(s);
-	}
-	//other
-	public void calcStats(){
-		for(Stat stat : stats){
-			stat.calc();
+	public void setStat(CharacterStat c, int value){
+		value = Number.minMax(1, value, 5);
+		switch(c){
+		case HP:
+			addStat(new Stat("maxHP", 700 + 100 * value, 2));
+			setBase("maxHP", value);
+			break;
+		case ENERGY:
+			addStat(new Stat("Max energy", 12.5 * (value + 1), 2));
+			setBase("Max energy", value);
+			break;
+		case DMG:
+			addStat(new Stat("damage dealt modifier", 0.7 + 0.1 * value));
+			setBase("damage dealt modifier", value);
+			break;
+		case REDUCTION:
+			// 1: 120%, 5: 80%
+			addStat(new Stat("damage taken modifier", 1.3 - 0.1 * value));
+			setBase("damage taken modifier", value);
+			break;
+		case SPEED:
+			addStat(new Stat("speed", (0.7 + 0.1 * value)));
+			setBase("speed", value);
+			break;
 		}
 	}
 }

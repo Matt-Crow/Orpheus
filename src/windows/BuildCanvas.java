@@ -112,7 +112,7 @@ public class BuildCanvas extends DrawingPlane{
 					options[ind] = AbstractActive.getActiveByName(names[ind]);
 				}
 			} else {
-				String[] names = testPlayer.getCharacterClass().getPassiveOptions();
+				String[] names = AbstractPassive.getAllNames();
 				options = new AbstractUpgradable[names.length];
 				for(int ind = 0; ind < names.length; ind++){
 					options[ind] = AbstractPassive.getPassiveByName(names[ind]);
