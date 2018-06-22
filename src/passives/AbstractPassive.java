@@ -11,7 +11,7 @@ import resources.Op;
 import resources.Random;
 import upgradables.AbstractUpgradable;
 
-public abstract class AbstractPassive extends AbstractUpgradable{
+public abstract class AbstractPassive extends AbstractUpgradable<PassiveStat>{
 	/**
 	 * Passives are abilities that have specific triggers, 
 	 * i.e., the user does not directly trigger them:

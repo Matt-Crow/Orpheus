@@ -9,7 +9,7 @@ import customizables.CharacterClass;
 import upgradables.UpgradableType;
 import gui.*;
 
-@SuppressWarnings("serial")
+@SuppressWarnings({"serial", "rawtypes"})
 
 // looks like I'll have to do seperate active and passive customizers
 public class CustomizeCanvas extends DrawingPlane{

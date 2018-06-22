@@ -13,7 +13,7 @@ import upgradables.Stat;
 import resources.Op;
 import resources.Number; // use later for minMax?
 
-public abstract class AbstractActive extends AbstractUpgradable{
+public abstract class AbstractActive extends AbstractUpgradable<ActiveStat>{
 	/**
 	 * Actives are abilities that the user triggers
 	 */
@@ -92,8 +92,8 @@ public abstract class AbstractActive extends AbstractUpgradable{
 			} else if(value == 5){
 				deg = 360;
 			}
-			addStat(new Stat("Arc", deg));
-			setBase("Arc", value);
+			addStat(new Stat<ActiveStat>(ActiveStat.ARC, deg));
+			setBase(ActiveStat.ARC, value);
 			break;
 		case RANGE:
 			// 1-15 units of range. Increases exponentially
@@ -102,26 +102,26 @@ public abstract class AbstractActive extends AbstractUpgradable{
 			for(int i = 0; i <= value; i++){
 				units += i;
 			}
-			addStat(new Stat("Range", units * 100));
-			setBase("Range", value);
+			addStat(new Stat<ActiveStat>(ActiveStat.RANGE, units * 100));
+			setBase(ActiveStat.RANGE, value);
 			break;
 		case SPEED:
 			// 1-5 units per second
 			value = Number.minMax(1, value, 5);
-			addStat(new Stat("Speed", 100 * value / Master.FPS));
-			setBase("Speed", value);
+			addStat(new Stat<ActiveStat>(ActiveStat.SPEED, 100 * value / Master.FPS));
+			setBase(ActiveStat.SPEED, value);
 			break;
 		case AOE:
 			// 1-5 units (or 0)
 			value = Number.minMax(0, value, 5);
-			addStat(new Stat("AOE", value * 100));
-			setBase("AOE", value);
+			addStat(new Stat<ActiveStat>(ActiveStat.AOE, value * 100));
+			setBase(ActiveStat.AOE, value);
 			break;
 		case DAMAGE:
 			// 50-250 to 250-500 damage (will need to balance later?)
 			value = Number.minMax(1, value, 5);
-			addStat(new Stat("Damage", value * 50, 2));
-			setBase("Damage", value);
+			addStat(new Stat<ActiveStat>(ActiveStat.DAMAGE, value * 50, 2));
+			setBase(ActiveStat.DAMAGE, value);
 			break;
 		}
 		calculateCost();
@@ -169,7 +169,7 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	public void use(){
 		consumeEnergy();
 		if(type != ActiveType.BOOST){
-			spawnArc((int)getStatValue("Arc"));
+			spawnArc((int)getStatValue(ActiveStat.ARC));
 			nextUseId++;
 		}
 	}
@@ -180,7 +180,7 @@ public abstract class AbstractActive extends AbstractUpgradable{
 	
 	// spawning
 	public void spawnProjectile(int facingDegrees){
-		registerProjectile(new SeedProjectile(nextUseId, getRegisteredTo().getX(), getRegisteredTo().getY(), facingDegrees, (int) getStatValue("Speed"), getRegisteredTo(), this));
+		registerProjectile(new SeedProjectile(nextUseId, getRegisteredTo().getX(), getRegisteredTo().getY(), facingDegrees, (int) getStatValue(ActiveStat.SPEED), getRegisteredTo(), this));
 	}
 	public void spawnProjectile(){
 		spawnProjectile(getRegisteredTo().getDir().getDegrees());

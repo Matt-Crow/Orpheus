@@ -7,7 +7,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import upgradables.AbstractUpgradable;
 
-@SuppressWarnings("serial")
+@SuppressWarnings({"serial", "rawtypes"})
 public class UpgradableSelector extends JComponent{
 	private OptionBox<AbstractUpgradable> box;
 	private Text desc;

@@ -103,6 +103,7 @@ public class BuildCanvas extends DrawingPlane{
 		upgradableSelectors = new UpgradableSelector[6];
 		
 		for(int i = 0; i < 6; i++){
+			@SuppressWarnings("rawtypes")
 			AbstractUpgradable[] options;
 			
 			if(i <= 2){

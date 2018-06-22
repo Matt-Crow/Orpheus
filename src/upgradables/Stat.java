@@ -1,29 +1,31 @@
 package upgradables;
 import resources.Op;
 
-public class Stat {
-	private String name; // would like this to be enum, but looks like that can't work
+// T is an enum
+public class Stat<T> {
+	private T name;
 	private double baseValue;
 	private double maxValue;
 	private double step;
 	private int level;
 	private double value;
 	
-	public Stat(String n, double base, double maxRelativeToMin){
+	public Stat(T n, double base, double maxRelativeToMin){
 		name = n;
 		baseValue = base;
 		maxValue = baseValue * maxRelativeToMin;
 		step = (maxValue - base) / 10;
 		level = 0;
 	}
-	public Stat(String n, double val){
+	public Stat(T n, double val){
+		this(n, val, 1.0);
 		name = n;
 		baseValue = val;
 		maxValue = val;
 		step = 0;
 		level = 0;
 	}
-	public String getName(){
+	public T getName(){
 		return name;
 	}
 	public void upgrade(){
@@ -39,7 +41,7 @@ public class Stat {
 		 value = baseValue + step * level;
 	}
 	public void displayData(){
-		Op.add(name);
+		Op.add(name.toString());
 		Op.add(baseValue + "-" + maxValue);
 		Op.add(step + " step");
 		Op.add("at level " + level + ":");

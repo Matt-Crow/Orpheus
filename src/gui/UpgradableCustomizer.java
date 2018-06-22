@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 import upgradables.AbstractUpgradable;
 
-@SuppressWarnings("serial")
+@SuppressWarnings({"serial", "rawtypes"})
 public class UpgradableCustomizer extends JComponent{
 	private AbstractUpgradable customizing;
 	private Text name;
@@ -72,7 +72,7 @@ public class UpgradableCustomizer extends JComponent{
 	public AbstractUpgradable getCustomizing(){
 		return customizing;
 	}
-	@SuppressWarnings("rawtypes")
+	
 	public void addBox(OptionBox box){
 		p1.add(box);
 		boxCount++;

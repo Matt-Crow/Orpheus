@@ -7,8 +7,8 @@ import initializers.Master;
 import statuses.StatusName;
 import statuses.StatusTable;
 
-// TODO: Make characterClass extend from this
-public abstract class AbstractUpgradable {
+//T is an enum
+public abstract class AbstractUpgradable<T> {
 	/**
 	 * This class is used as a base 
 	 * class for the Active and Passive 
@@ -18,8 +18,8 @@ public abstract class AbstractUpgradable {
 	 */
 	private String name; // would like to use enum, but looks like I can't
 	private Player registeredTo;
-	private HashMap<String, Stat> stats;
-	private HashMap<String, Integer> bases;
+	private HashMap<T, Stat<T>> stats;
+	private HashMap<T, Integer> bases;
 	private int cooldownTime; // frames between uses of this upgradable in battle
 	// not to be confused with...
 	private int cooldown; // frames until this upgradable can be used in battle again
@@ -34,7 +34,7 @@ public abstract class AbstractUpgradable {
 		cooldownTime = 0;
 		cooldown = 0;
 	}
-	public AbstractUpgradable copy(){
+	public AbstractUpgradable<T> copy(){
 		return this;
 	}
 	
@@ -59,21 +59,20 @@ public abstract class AbstractUpgradable {
 		return registeredTo;
 	}
 	
-	// stat stuff
-	public void addStat(Stat s){
-		stats.put(s.getName().toUpperCase(), s);
+	// stat stuf
+	public void addStat(Stat<T> s){
+		stats.put(s.getName(), s);
 	}
-	public void addStat(String n, double base){
-		addStat(new Stat(n.toUpperCase(), base));
+	public void addStat(T n, double base){
+		addStat(new Stat<T>(n, base));
 	}
-	public void addStat(String n, double base, double maxRelativeToMin){
+	public void addStat(T n, double base, double maxRelativeToMin){
 		// maxRelativeToMin is how much the stat's value is at max.
 		// EX: base of 12.5, maxRelativeToMin of 2.0 will result it 25.0 max
-		addStat(new Stat(n.toUpperCase(), base, maxRelativeToMin));
+		addStat(new Stat<T>(n, base, maxRelativeToMin));
 	}
-	public Stat getStat(String n){
-		Stat ret = new Stat("STATNOTFOUND", 0);
-		n = n.toUpperCase();
+	public Stat<T> getStat(T n){
+		Stat<T> ret;
 		if(!stats.containsKey(n)){
 			throw new NullPointerException("Stat not found for " + registeredTo.getName() + " with name " + n);
 		} else {
@@ -82,16 +81,16 @@ public abstract class AbstractUpgradable {
 		return ret;
 	}
 	
-	public double getStatValue(String n){
+	public double getStatValue(T n){
 		return getStat(n).get();
 	}
-	public HashMap<String, Stat> getStats(){
+	public HashMap<T, Stat<T>> getStats(){
 		return stats;
 	}
 	
 	// base stuff
-	public void setBase(String statName, int value){
-		bases.put(statName.toUpperCase(), value);
+	public void setBase(T statName, int value){
+		bases.put(statName, value);
 	}
 	public int getBase(String statName){
 		return bases.get(statName.toUpperCase());
@@ -136,7 +135,7 @@ public abstract class AbstractUpgradable {
 	public void clearInflict(){
 		inflict = new StatusTable();
 	}
-	public void copyInflictTo(AbstractUpgradable a){
+	public void copyInflictTo(AbstractUpgradable<T> a){
 		/* takes all the statuses from this upgradable's
 		 * status table, and copies them to p's
 		 */
@@ -148,7 +147,7 @@ public abstract class AbstractUpgradable {
 	// in battle functions
 	public void init(){
 		cooldown = 0;
-		for(String s : stats.keySet()){
+		for(T s : stats.keySet()){
 			stats.get(s).calc();
 		}
 	}

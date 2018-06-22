@@ -10,7 +10,7 @@ import resources.Number;
 import resources.Op;
 
 // make this connect better with player somehow
-public class CharacterClass extends AbstractUpgradable{
+public class CharacterClass extends AbstractUpgradable<CharacterStat>{
 	private CustomColors[] colors;
 	
 	private static HashMap<String, CharacterClass> allCharacterClasses = new HashMap<>();

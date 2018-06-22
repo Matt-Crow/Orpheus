@@ -19,23 +19,23 @@ public class ElementalActive extends AbstractActive{
 	
 	public String getDescription(){
 		String desc = getName() + ": \n";
-		if(getStatValue("Range") != 0){
+		if(getStatValue(ActiveStat.RANGE) != 0){
 			desc += "The user launches ";
-			if(getStatValue("Arc") > 0){
-				desc += "projectiles in a " + (int)getStatValue("Arc") + " degree arc, each traveling ";
+			if(getStatValue(ActiveStat.ARC) > 0){
+				desc += "projectiles in a " + (int)getStatValue(ActiveStat.ARC) + " degree arc, each traveling ";
 			} else {
 				desc += "a projectile, which travels ";
 			}
-			desc += "for " + (int)(getStatValue("Range") / Master.UNITSIZE) + " units, at " + (int)(getStatValue("Speed") * Master.FPS / Master.UNITSIZE) + " units per second";
+			desc += "for " + (int)(getStatValue(ActiveStat.RANGE) / Master.UNITSIZE) + " units, at " + (int)(getStatValue(ActiveStat.SPEED) * Master.FPS / Master.UNITSIZE) + " units per second";
 			
-			if(getStatValue("AOE") != 0){
-				desc += " before exploding in a " + (int)(getStatValue("AOE") / Master.UNITSIZE)+ " unit radius,"; 
+			if(getStatValue(ActiveStat.AOE) != 0){
+				desc += " before exploding in a " + (int)(getStatValue(ActiveStat.AOE) / Master.UNITSIZE)+ " unit radius,"; 
 			}
 		} else {
 			desc += "The user generates an explosion ";
-			desc += "with a " + (int)(getStatValue("AOE") / Master.UNITSIZE) + " unit radius,";
+			desc += "with a " + (int)(getStatValue(ActiveStat.AOE) / Master.UNITSIZE) + " unit radius,";
 		}
-		desc += " dealing " + (int)getStatValue("Damage") + " damage to enemies it hits. \n";
+		desc += " dealing " + (int)getStatValue(ActiveStat.DAMAGE) + " damage to enemies it hits. \n";
 		desc += getCost() + " energy cost.";
 		if(getInflict().getSize() > 0){
 			desc += getInflict().getStatusString();
