@@ -66,26 +66,9 @@ public class Player extends Entity{
 		setPassives(b.getPassiveNames());
 		setSpeed((int) (c.getStatValue("speed") * (500 / Master.FPS)));
 	}
+	
 	public void setClass(String name){
-		switch(name.toLowerCase()){
-			case "fire":
-				c = new Fire();
-				break;
-			case "earth":
-				c = new Earth();
-				break;
-			case "water":
-				c = new Water();
-				break;
-			case "air":
-				c = new Air();
-				break;
-			default:
-				String[] classes = {"fire", "earth", "water", "air"};
-				int randomNum = Random.choose(0, 3);
-				setClass(classes[randomNum]);
-				break;
-		}
+		c = CharacterClass.getCharacterClassByName(name.toUpperCase());
 	}
 	public void setActives(String[] names){
 		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){

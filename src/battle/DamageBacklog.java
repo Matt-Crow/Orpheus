@@ -19,7 +19,7 @@ public class DamageBacklog {
 		registeredTo = register;
 		dmg = 0;
 		filter = 1.0 / Master.seconds(5);
-		maxHP = (int) register.getStatValue("maxHP");
+		maxHP = (int) register.getStatValue("HP");
 		remHP = maxHP;
 		timeSinceLastHeal = 0;
 	}
@@ -27,7 +27,7 @@ public class DamageBacklog {
 		return remHP;
 	}
 	public double getHPPerc(){
-		return remHP / registeredTo.getStatValue("maxHP") * 100;
+		return remHP / registeredTo.getStatValue("HP") * 100;
 	}
 	public void applyFilter(double f){
 		filter *= f;
@@ -36,15 +36,15 @@ public class DamageBacklog {
 		dmg += damage;
 	}
 	public void logPercentageDamage(double percent){
-		log( (int) (registeredTo.getStatValue("maxHP") * (percent / 100)));
+		log( (int) (registeredTo.getStatValue("HP") * (percent / 100)));
 	}
 	public void deplete(){
 		if(dmg <= 0){
 			return;
 		}
 		int damage;
-		if(dmg > registeredTo.getStatValue("maxHP") * filter){
-			damage = (int) (registeredTo.getStatValue("maxHP") * filter);
+		if(dmg > registeredTo.getStatValue("HP") * filter){
+			damage = (int) (registeredTo.getStatValue("HP") * filter);
 		} else {
 			damage = dmg;
 		}

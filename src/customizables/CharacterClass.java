@@ -29,10 +29,10 @@ public class CharacterClass extends AbstractUpgradable{
 		return new CharacterClass(
 				getName(), 
 				getColors(), 
-				getBase("maxHP"),
-				getBase("Max energy"),
-				getBase("damage dealt modifier"),
-				getBase("damage taken modifier"),
+				getBase("HP"),
+				getBase("energy"),
+				getBase("dmg"),
+				getBase("reduction"),
 				getBase("speed")
 			);
 	}
@@ -65,7 +65,10 @@ public class CharacterClass extends AbstractUpgradable{
 		}
 		return ret;
 	}
-	// getters
+	
+	public void setColors(CustomColors[] cs){
+		colors = cs;
+	}
 	public CustomColors[] getColors(){
 		return colors;
 	}
@@ -73,26 +76,34 @@ public class CharacterClass extends AbstractUpgradable{
 		value = Number.minMax(1, value, 5);
 		switch(c){
 		case HP:
-			addStat(new Stat("maxHP", 700 + 100 * value, 2));
-			setBase("maxHP", value);
+			addStat(new Stat("hp", 700 + 100 * value, 2));
+			setBase("hp", value);
 			break;
 		case ENERGY:
-			addStat(new Stat("Max energy", 12.5 * (value + 1), 2));
-			setBase("Max energy", value);
+			addStat(new Stat("energy", 12.5 * (value + 1), 2));
+			setBase("energy", value);
 			break;
 		case DMG:
-			addStat(new Stat("damage dealt modifier", 0.7 + 0.1 * value));
-			setBase("damage dealt modifier", value);
+			addStat(new Stat("dmg", 0.7 + 0.1 * value));
+			setBase("dmg", value);
 			break;
 		case REDUCTION:
 			// 1: 120%, 5: 80%
-			addStat(new Stat("damage taken modifier", 1.3 - 0.1 * value));
-			setBase("damage taken modifier", value);
+			addStat(new Stat("reduction", 1.3 - 0.1 * value));
+			setBase("reduction", value);
 			break;
 		case SPEED:
 			addStat(new Stat("speed", (0.7 + 0.1 * value)));
 			setBase("speed", value);
 			break;
 		}
+	}
+	public String getDescription(){
+		return getName() + ": \n" 
+				+ "Maximum hit points: " + getStatValue("hp") + "\n"
+				+ "Maximum energy: " + getStatValue("energy") + "\n"
+				+ "Damage dealt modifier: " + getStatValue("dmg") + "\n"
+				+ "Damage taken modifier: " + getStatValue("reduction") + "\n"
+				+ "Movement speed modifier: " + getStatValue("speed") + "\n";
 	}
 }

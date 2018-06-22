@@ -5,6 +5,7 @@ import javax.swing.AbstractAction;
 import actives.AbstractActive;
 import passives.AbstractPassive;
 import upgradables.AbstractUpgradable;
+import customizables.CharacterClass;
 import upgradables.UpgradableType;
 import gui.*;
 
@@ -46,7 +47,7 @@ public class CustomizeCanvas extends DrawingPlane{
 		cha = new Button("Character Class");
 		cha.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				
+				phase2(UpgradableType.CHARACTER_CLASS);
 			}
 		});
 		add(cha);
@@ -88,11 +89,18 @@ public class CustomizeCanvas extends DrawingPlane{
 					phase3(UpgradableType.PASSIVE);
 				}
 			});
+			break;
+		case CHARACTER_CLASS:
+			names = CharacterClass.getAllNames();
+			customize.addActionListener(new AbstractAction(){
+				public void actionPerformed(ActionEvent e){
+					customizing = CharacterClass.getCharacterClassByName(upgradableName.getSelected());
+					add(new CharacterClassCustomizer((CharacterClass)customizing));
+					phase3(UpgradableType.PASSIVE);
+				}
+			});
+			break;
 		}
-		/*
-		if (type.equals("Class")){
-			// implement later
-		} */
 		
 		upgradableName = new OptionBox<>("Select upgradable to customize", names);
 		add(upgradableName);
