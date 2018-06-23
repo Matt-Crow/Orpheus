@@ -12,9 +12,9 @@ import java.util.ArrayList;
 
 import upgradables.AbstractUpgradable;
 
-@SuppressWarnings({"serial", "rawtypes"})
-public class UpgradableCustomizer extends JComponent{
-	private AbstractUpgradable customizing;
+@SuppressWarnings("serial")
+public class UpgradableCustomizer<T> extends JComponent{
+	private AbstractUpgradable<T> customizing;
 	private Text name;
 	private Pane p1; // used to split into two sections
 	private Pane p2;
@@ -23,7 +23,7 @@ public class UpgradableCustomizer extends JComponent{
 	private int boxCount;
 	private ArrayList<StatusCustomizer> statusBoxes;
 	
-	public UpgradableCustomizer(AbstractUpgradable a){
+	public UpgradableCustomizer(AbstractUpgradable<T> a){
 		super();
 		customizing = a.copy();
 		
@@ -69,7 +69,7 @@ public class UpgradableCustomizer extends JComponent{
 			save.setEnabled(false);
 		}
 	}
-	public AbstractUpgradable getCustomizing(){
+	public AbstractUpgradable<T> getCustomizing(){
 		return customizing;
 	}
 	
@@ -80,9 +80,9 @@ public class UpgradableCustomizer extends JComponent{
 		revalidate();
 		repaint();
 	}
-	public void addBox(String s){
+	public void addBox(T s){
 		Integer[] options = new Integer[]{0, 1, 2, 3, 4, 5};
-		OptionBox<Integer> box = new OptionBox<>(s, options);
+		OptionBox<Integer> box = new OptionBox<>(s.toString(), options);
 		box.setSelected((Integer)customizing.getBase(s));
 		box.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){

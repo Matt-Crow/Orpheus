@@ -29,11 +29,11 @@ public class CharacterClass extends AbstractUpgradable<CharacterStat>{
 		return new CharacterClass(
 				getName(), 
 				getColors(), 
-				getBase("HP"),
-				getBase("energy"),
-				getBase("dmg"),
-				getBase("reduction"),
-				getBase("speed")
+				getBase(CharacterStat.HP),
+				getBase(CharacterStat.ENERGY),
+				getBase(CharacterStat.DMG),
+				getBase(CharacterStat.REDUCTION),
+				getBase(CharacterStat.SPEED)
 			);
 	}
 	
@@ -76,34 +76,34 @@ public class CharacterClass extends AbstractUpgradable<CharacterStat>{
 		value = Number.minMax(1, value, 5);
 		switch(c){
 		case HP:
-			addStat(new Stat("hp", 700 + 100 * value, 2));
-			setBase("hp", value);
+			addStat(new Stat<CharacterStat>(CharacterStat.HP, 700 + 100 * value, 2));
+			setBase(CharacterStat.HP, value);
 			break;
 		case ENERGY:
-			addStat(new Stat("energy", 12.5 * (value + 1), 2));
-			setBase("energy", value);
+			addStat(new Stat<CharacterStat>(CharacterStat.ENERGY, 12.5 * (value + 1), 2));
+			setBase(CharacterStat.ENERGY, value);
 			break;
 		case DMG:
-			addStat(new Stat("dmg", 0.7 + 0.1 * value));
-			setBase("dmg", value);
+			addStat(new Stat<CharacterStat>(CharacterStat.DMG, 0.7 + 0.1 * value));
+			setBase(CharacterStat.DMG, value);
 			break;
 		case REDUCTION:
 			// 1: 120%, 5: 80%
-			addStat(new Stat("reduction", 1.3 - 0.1 * value));
-			setBase("reduction", value);
+			addStat(new Stat<CharacterStat>(CharacterStat.REDUCTION, 1.3 - 0.1 * value));
+			setBase(CharacterStat.REDUCTION, value);
 			break;
 		case SPEED:
-			addStat(new Stat("speed", (0.7 + 0.1 * value)));
-			setBase("speed", value);
+			addStat(new Stat<CharacterStat>(CharacterStat.SPEED, (0.7 + 0.1 * value)));
+			setBase(CharacterStat.SPEED, value);
 			break;
 		}
 	}
 	public String getDescription(){
 		return getName() + ": \n" 
-				+ "Maximum hit points: " + getStatValue("hp") + "\n"
-				+ "Maximum energy: " + getStatValue("energy") + "\n"
-				+ "Damage dealt modifier: " + getStatValue("dmg") + "\n"
-				+ "Damage taken modifier: " + getStatValue("reduction") + "\n"
-				+ "Movement speed modifier: " + getStatValue("speed") + "\n";
+				+ "Maximum hit points: " + getStatValue(CharacterStat.HP) + "\n"
+				+ "Maximum energy: " + getStatValue(CharacterStat.ENERGY) + "\n"
+				+ "Damage dealt modifier: " + getStatValue(CharacterStat.DMG) + "\n"
+				+ "Damage taken modifier: " + getStatValue(CharacterStat.REDUCTION) + "\n"
+				+ "Movement speed modifier: " + getStatValue(CharacterStat.SPEED) + "\n";
 	}
 }

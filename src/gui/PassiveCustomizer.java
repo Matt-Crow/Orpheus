@@ -4,12 +4,12 @@ import passives.AbstractPassive;
 import passives.PassiveStat;
 
 @SuppressWarnings("serial")
-public class PassiveCustomizer extends UpgradableCustomizer{
+public class PassiveCustomizer extends UpgradableCustomizer<PassiveStat>{
 	public PassiveCustomizer(AbstractPassive a){
 		super(a);
 		switch(a.getType()){
 		case THRESHOLD:
-			addBox(PassiveStat.THRESHOLD.toString());
+			addBox(PassiveStat.THRESHOLD);
 			addStatusBoxes();
 			break;
 		case ONMELEEHIT:

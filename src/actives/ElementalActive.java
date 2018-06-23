@@ -7,7 +7,13 @@ public class ElementalActive extends AbstractActive{
 		super(ActiveType.ELEMENTAL, n, arc, range, speed, aoe, dmg);
 	}
 	public ElementalActive copy(){
-		ElementalActive copy = new ElementalActive(getName(), getBase("Arc"), getBase("Range"), getBase("Speed"), getBase("AOE"), getBase("Damage"));
+		ElementalActive copy = new ElementalActive(
+				getName(), 
+				getBase(ActiveStat.ARC), 
+				getBase(ActiveStat.RANGE), 
+				getBase(ActiveStat.SPEED), 
+				getBase(ActiveStat.AOE), 
+				getBase(ActiveStat.DAMAGE));
 		copy.setParticleType(getParticleType());
 		
 		return copy;

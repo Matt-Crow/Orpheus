@@ -92,8 +92,8 @@ public abstract class AbstractUpgradable<T> {
 	public void setBase(T statName, int value){
 		bases.put(statName, value);
 	}
-	public int getBase(String statName){
-		return bases.get(statName.toUpperCase());
+	public int getBase(T statName){
+		return bases.get(statName);
 	}
 	public int[] getAllBaseValues(){
 		int[] ret = new int[bases.size()];

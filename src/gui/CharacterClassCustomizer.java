@@ -4,11 +4,11 @@ import customizables.CharacterClass;
 import customizables.CharacterStat;
 
 @SuppressWarnings("serial")
-public class CharacterClassCustomizer extends UpgradableCustomizer{
+public class CharacterClassCustomizer extends UpgradableCustomizer<CharacterStat>{
 	public CharacterClassCustomizer(CharacterClass c){
 		super(c);
 		for(CharacterStat cs : CharacterStat.values()){
-			addBox(cs.toString());
+			addBox(cs);
 		}
 		
 	}

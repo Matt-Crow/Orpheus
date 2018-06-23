@@ -14,7 +14,7 @@ public class ThresholdPassive extends AbstractPassive{
 		setStat(PassiveStat.THRESHOLD, baseThresh);
 	}
 	public ThresholdPassive copy(){
-		ThresholdPassive copy = new ThresholdPassive(getName(), getBase("Threshold"));
+		ThresholdPassive copy = new ThresholdPassive(getName(), getBase(PassiveStat.THRESHOLD));
 		copyInflictTo(copy);
 		return copy;
 	}
@@ -30,19 +30,19 @@ public class ThresholdPassive extends AbstractPassive{
 			 * 4: 1/4 (25%)
 			 * 5: 1/3 (33%)
 			 */
-			addStat(new Stat("Threshold", thresh));
-			setBase("Threshold", base);
+			addStat(new Stat<PassiveStat>(PassiveStat.THRESHOLD, thresh));
+			setBase(PassiveStat.THRESHOLD, base);
 			break;
 		}
 	}
 	public void update(){
-		if(getRegisteredTo().getLog().getHPPerc() <= getStatValue("Threshold")){
+		if(getRegisteredTo().getLog().getHPPerc() <= getStatValue(PassiveStat.THRESHOLD)){
 			applyEffect(getRegisteredTo());
 		}
 	}
 	public String getDescription(){
 		String desc = getName() + ": ";
-		desc += "When the user is at or below " + getStatValue("Threshold") + "% ";
+		desc += "When the user is at or below " + getStatValue(PassiveStat.THRESHOLD) + "% ";
 		desc += "of their maximum HP, inflicts them with: ";
 		desc += getInflict().getStatusString();
 		return desc;

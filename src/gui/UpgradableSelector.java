@@ -7,15 +7,15 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import upgradables.AbstractUpgradable;
 
-@SuppressWarnings({"serial", "rawtypes"})
-public class UpgradableSelector extends JComponent{
-	private OptionBox<AbstractUpgradable> box;
+@SuppressWarnings("serial")
+public class UpgradableSelector<T> extends JComponent{
+	private OptionBox<AbstractUpgradable<T>> box;
 	private Text desc;
 	
-	public UpgradableSelector(String title, AbstractUpgradable[] a){
+	public UpgradableSelector(String title, AbstractUpgradable<T>[] a){
 		super();
 		setLayout(new GridLayout(2, 1));
-		box = new OptionBox<AbstractUpgradable>(title, a);
+		box = new OptionBox<AbstractUpgradable<T>>(title, a);
 		box.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				desc.setText(box.getSelected().getDescription());
@@ -27,7 +27,7 @@ public class UpgradableSelector extends JComponent{
 		add(desc);
 		Style.applyStyling(this);
 	}
-	public OptionBox<AbstractUpgradable> getBox(){
+	public OptionBox<AbstractUpgradable<T>> getBox(){
 		return box;
 	}
 }

@@ -64,7 +64,7 @@ public class Player extends Entity{
 		setClass(b.getClassName());
 		setActives(b.getActiveNames());
 		setPassives(b.getPassiveNames());
-		setSpeed((int) (c.getStatValue("speed") * (500 / Master.FPS)));
+		setSpeed((int) (c.getStatValue(CharacterStat.SPEED) * (500 / Master.FPS)));
 	}
 	
 	public void setClass(String name){
@@ -104,7 +104,7 @@ public class Player extends Entity{
 		}
 	}
 	
-	public double getStatValue(String n){
+	public double getStatValue(CharacterStat n){
 		return c.getStatValue(n);
 	}
 	public void useMeleeAttack(){

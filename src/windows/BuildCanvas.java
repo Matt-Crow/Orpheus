@@ -16,6 +16,7 @@ import passives.AbstractPassive;
 import gui.Text;
 import upgradables.AbstractUpgradable;
 
+//need to redo this
 @SuppressWarnings("serial")
 public class BuildCanvas extends DrawingPlane{
 	private OptionBox<String> baseBuild;

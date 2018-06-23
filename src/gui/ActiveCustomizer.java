@@ -9,23 +9,23 @@ import actives.ActiveStat;
 import entities.ParticleType;
 
 @SuppressWarnings("serial")
-public class ActiveCustomizer extends UpgradableCustomizer{
+public class ActiveCustomizer extends UpgradableCustomizer<ActiveStat>{
 	public ActiveCustomizer(AbstractActive a){
 		super(a);
 		switch(a.getType()){
 		case MELEE:
-			addBox(ActiveStat.DAMAGE.toString());
+			addBox(ActiveStat.DAMAGE);
 			//need to do more here
 			break;
 		case BOOST:
 			addStatusBoxes();
 			break;
 		case ELEMENTAL:
-			addBox(ActiveStat.ARC.toString());
-			addBox(ActiveStat.RANGE.toString());
-			addBox(ActiveStat.SPEED.toString());
-			addBox(ActiveStat.AOE.toString());
-			addBox(ActiveStat.DAMAGE.toString());
+			addBox(ActiveStat.ARC);
+			addBox(ActiveStat.RANGE);
+			addBox(ActiveStat.SPEED);
+			addBox(ActiveStat.AOE);
+			addBox(ActiveStat.DAMAGE);
 			addParticleBox();
 			break;
 		}

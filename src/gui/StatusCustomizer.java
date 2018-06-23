@@ -9,7 +9,7 @@ import statuses.StatusName;
 import upgradables.AbstractUpgradable;
 
 //TODO: make this take only upgradable as param so that it can do chance
-@SuppressWarnings({"serial", "rawtypes"})
+@SuppressWarnings("serial")
 public class StatusCustomizer extends JComponent{
 	private AbstractUpgradable statusOwner;
 	private OptionBox<StatusName> box;

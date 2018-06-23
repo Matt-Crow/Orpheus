@@ -9,7 +9,7 @@ public class MeleeActive extends AbstractActive{
 		setParticleType(ParticleType.SHEAR);
 	}
 	public MeleeActive copy(){
-		MeleeActive copy = new MeleeActive(getName(), getBase("Damage"));
+		MeleeActive copy = new MeleeActive(getName(), getBase(ActiveStat.DAMAGE));
 		return copy;
 	}
 	
