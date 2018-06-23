@@ -26,8 +26,13 @@ public class CustomColors extends Color{
 	public static final CustomColors[] airColors = {yellow, white, gold};
 	public static final CustomColors[] waterColors = {blue, bluegreen, white};
 	public static final CustomColors[] rainbow = {red, orange, yellow, green, blue, purple};
-
+	
+	public static final CustomColors[][] all = {fireColors, earthColors, airColors, waterColors, rainbow};
+	
 	public CustomColors(int r, int g, int b){
 		super(r, g, b);
+	}
+	public String toString(){
+		return getRed() + ", " + getGreen() + ", " + getBlue();
 	}
 }

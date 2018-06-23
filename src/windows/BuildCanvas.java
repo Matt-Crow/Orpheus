@@ -4,15 +4,19 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import actives.AbstractActive;
+import actives.ActiveStat;
 
 import java.util.ArrayList;
 import customizables.Build;
+import customizables.CharacterClass;
+import customizables.CharacterStat;
 import entities.Player;
 import gui.Button;
 import gui.OptionBox;
 import gui.Pane;
 import gui.UpgradableSelector;
 import passives.AbstractPassive;
+import passives.PassiveStat;
 import gui.Text;
 import upgradables.AbstractUpgradable;
 
@@ -20,7 +24,9 @@ import upgradables.AbstractUpgradable;
 @SuppressWarnings("serial")
 public class BuildCanvas extends DrawingPlane{
 	private OptionBox<String> baseBuild;
-	private UpgradableSelector[] upgradableSelectors;
+	private UpgradableSelector<CharacterStat> classSelect;
+	private UpgradableSelector<ActiveStat>[] actives;
+	private UpgradableSelector<PassiveStat>[] passives;
 	
 	private Button temp;
 	
@@ -84,50 +90,50 @@ public class BuildCanvas extends DrawingPlane{
 		name = new Text(b.getName());
 		name.setEditable(true);
 		add(name);
-		add(new Pane());
+		
+		classSelect = new UpgradableSelector<CharacterStat>("Character Class", CharacterClass.getAll());
+		classSelect.getBox().setSelected(b.getClassName());
+		add(classSelect);
+		
+		actives = new UpgradableSelector[3];
+		for(int i = 0; i < 3; i++){
+			AbstractActive[] options = AbstractActive.getAll();
+			actives[i] = new UpgradableSelector<ActiveStat>("Active #" + (i + 1), options);
+			actives[i].getBox().setSelected(b.getActiveNames()[i]);
+			add(actives[i]);
+		}
+		
+		passives = new UpgradableSelector[3];
+		for(int i = 0; i < 3; i++){
+			AbstractPassive[] options = AbstractPassive.getAll();
+			passives[i] = new UpgradableSelector<PassiveStat>("Passive #" + (i + 1), options);
+			passives[i].getBox().setSelected(b.getPassiveNames()[i]);
+			add(passives[i]);
+		}
 		
 		finish = new Button("Save");
 		finish.addActionListener(new AbstractAction(){
 			public static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent e){
-				String[] s = new String[6];
-				for(int i = 0; i < 6; i++){
-					s[i] = upgradableSelectors[i].getBox().getSelected().toString();
-				}
-				new Build(name.getText(), b.getClassName(), s[0], s[1], s[2], s[3], s[4], s[5]);
+				new Build(
+						name.getText(), 
+						classSelect.getBox().getSelected().getName(), 
+						actives[0].getBox().getSelected().getName(), 
+						actives[1].getBox().getSelected().getName(), 
+						actives[2].getBox().getSelected().getName(), 
+						passives[0].getBox().getSelected().getName(), 
+						passives[1].getBox().getSelected().getName(), 
+						passives[2].getBox().getSelected().getName()
+								);
 				new MainWindow();
 				close();
 			}
 		});
 		addMenuItem(finish);
 		
-		upgradableSelectors = new UpgradableSelector[6];
 		
-		for(int i = 0; i < 6; i++){
-			@SuppressWarnings("rawtypes")
-			AbstractUpgradable[] options;
+		//upgradableSelectors[i].getBox().setSelected(names[i % 3]);
 			
-			if(i <= 2){
-				String[] names = AbstractActive.getAllNames();
-				options = new AbstractUpgradable[names.length];
-				for(int ind = 0; ind < names.length; ind++){
-					options[ind] = AbstractActive.getActiveByName(names[ind]);
-				}
-			} else {
-				String[] names = AbstractPassive.getAllNames();
-				options = new AbstractUpgradable[names.length];
-				for(int ind = 0; ind < names.length; ind++){
-					options[ind] = AbstractPassive.getPassiveByName(names[ind]);
-				}
-			}
-					 
-			String title = (i <= 2) ? "Active" : "Passive";
-			String[] names = (i <= 2) ? b.getActiveNames() : b.getPassiveNames();
-			
-			upgradableSelectors[i] = new UpgradableSelector(title + " #" + (i % 3 + 1), options);
-			upgradableSelectors[i].getBox().setSelected(names[i % 3]);
-			add(upgradableSelectors[i]);
-		}
 		
 		
 		

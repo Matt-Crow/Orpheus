@@ -2,6 +2,7 @@ package customizables;
 import upgradables.AbstractUpgradable;
 import upgradables.Stat;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -52,6 +53,16 @@ public class CharacterClass extends AbstractUpgradable<CharacterStat>{
 		if(!n.toUpperCase().equals(ret.getName().toUpperCase())){
 			Op.add("No character class was found with name " + n + " in CharacterClass.getCharacterClassByName");
 			Op.dp();
+		}
+		return ret;
+	}
+	public static CharacterClass[] getAll(){
+		CharacterClass[] ret = new CharacterClass[allCharacterClasses.size()];
+		Collection<CharacterClass> values = allCharacterClasses.values();
+		int i = 0;
+		for(CharacterClass cc : values){
+			ret[i] = cc;
+			i++;
 		}
 		return ret;
 	}

@@ -1,5 +1,6 @@
 package passives;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -46,6 +47,16 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStat>{
 		if(ret.getName().toUpperCase().equals("SLASH") && !n.toUpperCase().equals("SLASH")){
 			Op.add("No passive was found with name " + n + " in AbstractPassive.getPassiveByName");
 			Op.dp();
+		}
+		return ret;
+	}
+	public static AbstractPassive[] getAll(){
+		AbstractPassive[] ret = new AbstractPassive[allPassives.size()];
+		Collection<AbstractPassive> values = allPassives.values();
+		int i = 0;
+		for(AbstractPassive ap : values){
+			ret[i] = ap;
+			i++;
 		}
 		return ret;
 	}

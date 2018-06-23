@@ -1,5 +1,6 @@
 package actives;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -59,6 +60,16 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStat>{
 		if(ret.getName().toUpperCase().equals("SLASH") && !n.toUpperCase().equals("SLASH")){
 			Op.add("No active was found with name " + n + " in AbstractActive.getActiveByName");
 			Op.dp();
+		}
+		return ret;
+	}
+	public static AbstractActive[] getAll(){
+		AbstractActive[] ret = new AbstractActive[allActives.size()];
+		Collection<AbstractActive> values = allActives.values();
+		int i = 0;
+		for(AbstractActive aa : values){
+			ret[i] = aa;
+			i++;
 		}
 		return ret;
 	}
