@@ -5,27 +5,27 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import actives.AbstractActive;
-import actives.ActiveStat;
+import actives.ActiveStatName;
 import entities.ParticleType;
 
 @SuppressWarnings("serial")
-public class ActiveCustomizer extends UpgradableCustomizer<ActiveStat>{
+public class ActiveCustomizer extends UpgradableCustomizer<ActiveStatName>{
 	public ActiveCustomizer(AbstractActive a){
 		super(a);
 		switch(a.getType()){
 		case MELEE:
-			addBox(ActiveStat.DAMAGE);
+			addBox(ActiveStatName.DAMAGE);
 			//need to do more here
 			break;
 		case BOOST:
 			addStatusBoxes();
 			break;
 		case ELEMENTAL:
-			addBox(ActiveStat.ARC);
-			addBox(ActiveStat.RANGE);
-			addBox(ActiveStat.SPEED);
-			addBox(ActiveStat.AOE);
-			addBox(ActiveStat.DAMAGE);
+			addBox(ActiveStatName.ARC);
+			addBox(ActiveStatName.RANGE);
+			addBox(ActiveStatName.SPEED);
+			addBox(ActiveStatName.AOE);
+			addBox(ActiveStatName.DAMAGE);
 			addParticleBox();
 			break;
 		}
@@ -44,7 +44,7 @@ public class ActiveCustomizer extends UpgradableCustomizer<ActiveStat>{
 	}
 	public void updateField(String n, int val){
 		AbstractActive a = (AbstractActive)getCustomizing();
-		a.setStat(ActiveStat.valueOf(n.toUpperCase()), val);
+		a.setStat(ActiveStatName.valueOf(n.toUpperCase()), val);
 		a.init();
 		super.updateField(n, val);
 	}

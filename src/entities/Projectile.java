@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 import graphics.CustomColors;
 import actives.AbstractActive;
-import actives.ActiveStat;
+import actives.ActiveStatName;
 import actives.MeleeActive;
-import customizables.CharacterStat;
+import customizables.CharacterStatName;
 import initializers.Master;
 import resources.CombatLog;
 import resources.Op;
@@ -31,7 +31,7 @@ public class Projectile extends Entity{
 		user = attackUser;
 		setTeam(user.getTeam());
 		registeredAttack = a;
-		range = (int) a.getStatValue(ActiveStat.RANGE);
+		range = (int) a.getStatValue(ActiveStatName.RANGE);
 		
 		setMoving(true);
 		hit = new Player("Void");
@@ -63,7 +63,7 @@ public class Projectile extends Entity{
 	
 	public void hit(Player p){
 		hit = p;
-		p.logDamage((int) (registeredAttack.getStatValue(ActiveStat.DAMAGE) * user.getStatValue(CharacterStat.DMG) * p.getStatValue(CharacterStat.REDUCTION)));
+		p.logDamage((int) (registeredAttack.getStatValue(ActiveStatName.DAMAGE) * user.getStatValue(CharacterStatName.DMG) * p.getStatValue(CharacterStatName.REDUCTION)));
 		p.setLastHitById(getUseId());
 		if(registeredAttack instanceof MeleeActive){
 			user.getActionRegister().tripOnMeleeHit(p);

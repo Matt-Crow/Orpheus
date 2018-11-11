@@ -4,19 +4,19 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import actives.AbstractActive;
-import actives.ActiveStat;
+import actives.ActiveStatName;
 
 import java.util.ArrayList;
 import customizables.Build;
 import customizables.CharacterClass;
-import customizables.CharacterStat;
+import customizables.CharacterStatName;
 import entities.Player;
 import gui.Button;
 import gui.OptionBox;
 import gui.Pane;
 import gui.UpgradableSelector;
 import passives.AbstractPassive;
-import passives.PassiveStat;
+import passives.PassiveStatName;
 import gui.Text;
 import upgradables.AbstractUpgradable;
 
@@ -24,9 +24,9 @@ import upgradables.AbstractUpgradable;
 @SuppressWarnings("serial")
 public class BuildCanvas extends DrawingPlane{
 	private OptionBox<String> baseBuild;
-	private UpgradableSelector<CharacterStat> classSelect;
-	private UpgradableSelector<ActiveStat>[] actives;
-	private UpgradableSelector<PassiveStat>[] passives;
+	private UpgradableSelector<CharacterStatName> classSelect;
+	private UpgradableSelector<ActiveStatName>[] actives;
+	private UpgradableSelector<PassiveStatName>[] passives;
 	
 	private Button temp;
 	
@@ -91,14 +91,14 @@ public class BuildCanvas extends DrawingPlane{
 		name.setEditable(true);
 		add(name);
 		
-		classSelect = new UpgradableSelector<CharacterStat>("Character Class", CharacterClass.getAll());
+		classSelect = new UpgradableSelector<CharacterStatName>("Character Class", CharacterClass.getAll());
 		classSelect.getBox().setSelected(b.getClassName());
 		add(classSelect);
 		
 		actives = new UpgradableSelector[3];
 		for(int i = 0; i < 3; i++){
 			AbstractActive[] options = AbstractActive.getAll();
-			actives[i] = new UpgradableSelector<ActiveStat>("Active #" + (i + 1), options);
+			actives[i] = new UpgradableSelector<ActiveStatName>("Active #" + (i + 1), options);
 			actives[i].getBox().setSelected(b.getActiveNames()[i]);
 			add(actives[i]);
 		}
@@ -106,7 +106,7 @@ public class BuildCanvas extends DrawingPlane{
 		passives = new UpgradableSelector[3];
 		for(int i = 0; i < 3; i++){
 			AbstractPassive[] options = AbstractPassive.getAll();
-			passives[i] = new UpgradableSelector<PassiveStat>("Passive #" + (i + 1), options);
+			passives[i] = new UpgradableSelector<PassiveStatName>("Passive #" + (i + 1), options);
 			passives[i].getBox().setSelected(b.getPassiveNames()[i]);
 			add(passives[i]);
 		}

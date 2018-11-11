@@ -1,6 +1,6 @@
 package battle;
 
-import customizables.CharacterStat;
+import customizables.CharacterStatName;
 import entities.Player;
 import initializers.Master;
 
@@ -12,7 +12,7 @@ public class EnergyLog {
 	
 	public EnergyLog(Player register){
 		registeredTo = register;
-		maxEnergy = (int) register.getStatValue(CharacterStat.ENERGY);
+		maxEnergy = (int) register.getStatValue(CharacterStatName.ENERGY);
 		energy = maxEnergy;
 		timeSinceLastEnergy = 0;
 	}
@@ -35,7 +35,7 @@ public class EnergyLog {
 		timeSinceLastEnergy += 1;
 		if(timeSinceLastEnergy >= Master.seconds(1)){
 			timeSinceLastEnergy = 0;
-			gainEnergy((int) registeredTo.getStatValue(CharacterStat.ENERGY) / 20);
+			gainEnergy((int) registeredTo.getStatValue(CharacterStatName.ENERGY) / 20);
 		}
 	}
 }

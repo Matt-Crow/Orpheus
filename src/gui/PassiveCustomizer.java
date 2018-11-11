@@ -1,15 +1,15 @@
 package gui;
 
 import passives.AbstractPassive;
-import passives.PassiveStat;
+import passives.PassiveStatName;
 
 @SuppressWarnings("serial")
-public class PassiveCustomizer extends UpgradableCustomizer<PassiveStat>{
+public class PassiveCustomizer extends UpgradableCustomizer<PassiveStatName>{
 	public PassiveCustomizer(AbstractPassive a){
 		super(a);
 		switch(a.getType()){
 		case THRESHOLD:
-			addBox(PassiveStat.THRESHOLD);
+			addBox(PassiveStatName.THRESHOLD);
 			addStatusBoxes();
 			break;
 		case ONMELEEHIT:
@@ -24,7 +24,7 @@ public class PassiveCustomizer extends UpgradableCustomizer<PassiveStat>{
 	}
 	public void updateField(String n, int val){
 		AbstractPassive p = (AbstractPassive)getCustomizing();
-		p.setStat(PassiveStat.THRESHOLD, val);
+		p.setStat(PassiveStatName.THRESHOLD, val);
 		p.init();
 		super.updateField(n, val);
 	}

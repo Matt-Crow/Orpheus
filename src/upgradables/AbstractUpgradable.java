@@ -18,7 +18,7 @@ public abstract class AbstractUpgradable<T> {
 	 */
 	private String name; // would like to use enum, but looks like I can't
 	private Player registeredTo;
-	private HashMap<T, Stat<T>> stats;
+	private HashMap<T, AbstractStat<T>> stats;
 	private HashMap<T, Integer> bases;
 	private int cooldownTime; // frames between uses of this upgradable in battle
 	// not to be confused with...
@@ -59,20 +59,13 @@ public abstract class AbstractUpgradable<T> {
 		return registeredTo;
 	}
 	
-	// stat stuf
-	public void addStat(Stat<T> s){
-		stats.put(s.getName(), s);
-	}
-	public void addStat(T n, double base){
-		addStat(new Stat<T>(n, base));
-	}
-	public void addStat(T n, double base, double maxRelativeToMin){
-		// maxRelativeToMin is how much the stat's value is at max.
-		// EX: base of 12.5, maxRelativeToMin of 2.0 will result it 25.0 max
-		addStat(new Stat<T>(n, base, maxRelativeToMin));
-	}
-	public Stat<T> getStat(T n){
-		Stat<T> ret;
+	// stat stuff
+	public void addStat(AbstractStat<T> s){
+		stats.put(s.name, s);
+        }
+        
+	public AbstractStat<T> getStat(T n){
+		AbstractStat<T> ret;
 		if(!stats.containsKey(n)){
 			throw new NullPointerException("Stat not found for " + registeredTo.getName() + " with name " + n);
 		} else {
@@ -84,7 +77,7 @@ public abstract class AbstractUpgradable<T> {
 	public double getStatValue(T n){
 		return getStat(n).get();
 	}
-	public HashMap<T, Stat<T>> getStats(){
+	public HashMap<T, AbstractStat<T>> getStats(){
 		return stats;
 	}
 	

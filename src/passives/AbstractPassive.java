@@ -12,7 +12,7 @@ import resources.Op;
 import resources.Random;
 import upgradables.AbstractUpgradable;
 
-public abstract class AbstractPassive extends AbstractUpgradable<PassiveStat>{
+public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName>{
 	/**
 	 * Passives are abilities that have specific triggers, 
 	 * i.e., the user does not directly trigger them:
@@ -71,7 +71,7 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStat>{
 		return ret;
 	}
 	
-	public void setStat(PassiveStat n, int value){
+	public void setStat(PassiveStatName n, int value){
 		Op.add("Method addStat is not defined for class " + getClass().getName());
 		Op.dp();
 	}

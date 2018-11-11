@@ -5,21 +5,21 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import customizables.CharacterClass;
-import customizables.CharacterStat;
+import customizables.CharacterStatName;
 import graphics.CustomColors;
 
 @SuppressWarnings("serial")
-public class CharacterClassCustomizer extends UpgradableCustomizer<CharacterStat>{
+public class CharacterClassCustomizer extends UpgradableCustomizer<CharacterStatName>{
 	public CharacterClassCustomizer(CharacterClass c){
 		super(c);
-		for(CharacterStat cs : CharacterStat.values()){
+		for(CharacterStatName cs : CharacterStatName.values()){
 			addBox(cs);
 		}
 		addColorBox();
 	}
 	public void updateField(String n, int val){
 		CharacterClass c = (CharacterClass)getCustomizing();
-		c.setStat(CharacterStat.valueOf(n.toUpperCase()), val);
+		c.setStat(CharacterStatName.valueOf(n.toUpperCase()), val);
 		c.init();
 		super.updateField(n, val);
 	}

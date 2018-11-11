@@ -1,6 +1,6 @@
 package passives;
 
-import upgradables.Stat;
+import upgradables.AbstractStat;
 import resources.Number;
 
 public class ThresholdPassive extends AbstractPassive{
@@ -11,14 +11,14 @@ public class ThresholdPassive extends AbstractPassive{
 	
 	public ThresholdPassive(String n, int baseThresh){
 		super(PassiveType.THRESHOLD, n, true);
-		setStat(PassiveStat.THRESHOLD, baseThresh);
+		setStat(PassiveStatName.THRESHOLD, baseThresh);
 	}
 	public ThresholdPassive copy(){
-		ThresholdPassive copy = new ThresholdPassive(getName(), getBase(PassiveStat.THRESHOLD));
+		ThresholdPassive copy = new ThresholdPassive(getName(), getBase(PassiveStatName.THRESHOLD));
 		copyInflictTo(copy);
 		return copy;
 	}
-	public void setStat(PassiveStat n, int value){
+	public void setStat(PassiveStatName n, int value){
 		switch(n){
 		case THRESHOLD:
 			int base = Number.minMax(1, value, 5);
@@ -30,19 +30,19 @@ public class ThresholdPassive extends AbstractPassive{
 			 * 4: 1/4 (25%)
 			 * 5: 1/3 (33%)
 			 */
-			addStat(new Stat<PassiveStat>(PassiveStat.THRESHOLD, thresh));
-			setBase(PassiveStat.THRESHOLD, base);
+			addStat(new PassiveStat(PassiveStatName.THRESHOLD, thresh));
+			setBase(PassiveStatName.THRESHOLD, base);
 			break;
 		}
 	}
 	public void update(){
-		if(getRegisteredTo().getLog().getHPPerc() <= getStatValue(PassiveStat.THRESHOLD)){
+		if(getRegisteredTo().getLog().getHPPerc() <= getStatValue(PassiveStatName.THRESHOLD)){
 			applyEffect(getRegisteredTo());
 		}
 	}
 	public String getDescription(){
 		String desc = getName() + ": ";
-		desc += "When the user is at or below " + getStatValue(PassiveStat.THRESHOLD) + "% ";
+		desc += "When the user is at or below " + getStatValue(PassiveStatName.THRESHOLD) + "% ";
 		desc += "of their maximum HP, inflicts them with: ";
 		desc += getInflict().getStatusString();
 		return desc;

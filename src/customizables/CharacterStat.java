@@ -1,9 +1,13 @@
 package customizables;
 
-public enum CharacterStat {
-	HP,
-	ENERGY,
-	DMG,
-	REDUCTION,
-	SPEED
+import upgradables.AbstractStat;
+
+public class CharacterStat extends AbstractStat<CharacterStatName>{
+    
+    public CharacterStat(CharacterStatName n, double base, double maxRelativeToMin) {
+        super(n, base, maxRelativeToMin);
+    }
+    public CharacterStat(CharacterStatName n, double val){
+        super(n, val);
+    }
 }

@@ -9,11 +9,11 @@ public class ElementalActive extends AbstractActive{
 	public ElementalActive copy(){
 		ElementalActive copy = new ElementalActive(
 				getName(), 
-				getBase(ActiveStat.ARC), 
-				getBase(ActiveStat.RANGE), 
-				getBase(ActiveStat.SPEED), 
-				getBase(ActiveStat.AOE), 
-				getBase(ActiveStat.DAMAGE));
+				getBase(ActiveStatName.ARC), 
+				getBase(ActiveStatName.RANGE), 
+				getBase(ActiveStatName.SPEED), 
+				getBase(ActiveStatName.AOE), 
+				getBase(ActiveStatName.DAMAGE));
 		copy.setParticleType(getParticleType());
 		
 		return copy;
@@ -25,23 +25,23 @@ public class ElementalActive extends AbstractActive{
 	
 	public String getDescription(){
 		String desc = getName() + ": \n";
-		if(getStatValue(ActiveStat.RANGE) != 0){
+		if(getStatValue(ActiveStatName.RANGE) != 0){
 			desc += "The user launches ";
-			if(getStatValue(ActiveStat.ARC) > 0){
-				desc += "projectiles in a " + (int)getStatValue(ActiveStat.ARC) + " degree arc, each traveling ";
+			if(getStatValue(ActiveStatName.ARC) > 0){
+				desc += "projectiles in a " + (int)getStatValue(ActiveStatName.ARC) + " degree arc, each traveling ";
 			} else {
 				desc += "a projectile, which travels ";
 			}
-			desc += "for " + (int)(getStatValue(ActiveStat.RANGE) / Master.UNITSIZE) + " units, at " + (int)(getStatValue(ActiveStat.SPEED) * Master.FPS / Master.UNITSIZE) + " units per second";
+			desc += "for " + (int)(getStatValue(ActiveStatName.RANGE) / Master.UNITSIZE) + " units, at " + (int)(getStatValue(ActiveStatName.SPEED) * Master.FPS / Master.UNITSIZE) + " units per second";
 			
-			if(getStatValue(ActiveStat.AOE) != 0){
-				desc += " before exploding in a " + (int)(getStatValue(ActiveStat.AOE) / Master.UNITSIZE)+ " unit radius,"; 
+			if(getStatValue(ActiveStatName.AOE) != 0){
+				desc += " before exploding in a " + (int)(getStatValue(ActiveStatName.AOE) / Master.UNITSIZE)+ " unit radius,"; 
 			}
 		} else {
 			desc += "The user generates an explosion ";
-			desc += "with a " + (int)(getStatValue(ActiveStat.AOE) / Master.UNITSIZE) + " unit radius,";
+			desc += "with a " + (int)(getStatValue(ActiveStatName.AOE) / Master.UNITSIZE) + " unit radius,";
 		}
-		desc += " dealing " + (int)getStatValue(ActiveStat.DAMAGE) + " damage to enemies it hits. \n";
+		desc += " dealing " + (int)getStatValue(ActiveStatName.DAMAGE) + " damage to enemies it hits. \n";
 		desc += getCost() + " energy cost.";
 		if(getInflict().getSize() > 0){
 			desc += getInflict().getStatusString();

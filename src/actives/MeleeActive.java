@@ -9,14 +9,14 @@ public class MeleeActive extends AbstractActive{
 		setParticleType(ParticleType.SHEAR);
 	}
 	public MeleeActive copy(){
-		MeleeActive copy = new MeleeActive(getName(), getBase(ActiveStat.DAMAGE));
+		MeleeActive copy = new MeleeActive(getName(), getBase(ActiveStatName.DAMAGE));
 		return copy;
 	}
 	
 	public String getDescription(){
 		String desc = getName() + ": \n"
 				+ "The user performs a close range attack, \n"
-				+ "dealing " + (int)getStatValue(ActiveStat.DAMAGE) + " damage \n"
+				+ "dealing " + (int)getStatValue(ActiveStatName.DAMAGE) + " damage \n"
 						+ "to whoever it hits. \n";
 		if(getInflict().getSize() > 0){
 			desc += getInflict().getStatusString();
