@@ -36,7 +36,6 @@ public class Projectile extends Entity{
 		setMoving(true);
 		hit = new Player("Void");
 		particles = new ArrayList<>();
-		setType(EntityType.PROJECTILE);
 	}
 	public int getUseId(){
 		return id;
@@ -83,7 +82,7 @@ public class Projectile extends Entity{
 		boolean ret = false;
 		if(super.checkForCollisions(e)){
 			ret = true;
-			if(e.getType() == EntityType.PLAYER){
+			if(e instanceof Player){
 				hit((Player) e);
 			}
 		}
@@ -98,7 +97,6 @@ public class Projectile extends Entity{
 	}
 	
 	public void update(){
-		super.update();
 		
 		for(Player p : getTeam().getEnemy().getMembersRem()){
 			if(p.getLastHitById() != id){
@@ -142,7 +140,7 @@ public class Projectile extends Entity{
 				Op.add("is not found for Projectile.java");
 				Op.dp();
 			}
-			particles.stream().forEach(p -> p.update());
+			particles.stream().forEach(p -> p.doUpdate());
 			ArrayList<Particle> newPart = new ArrayList<>();
 			particles.stream().filter(p -> !p.getShouldTerminate()).forEach(p -> newPart.add(p));
 			particles = newPart;

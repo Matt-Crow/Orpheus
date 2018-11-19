@@ -35,7 +35,6 @@ public class Player extends Entity{
 		name = n;
 		actives = new AbstractActive[3];
 		passives = new AbstractPassive[3];
-		setType(EntityType.PLAYER);
 	}
 	
 	public String getName(){
@@ -167,7 +166,6 @@ public class Player extends Entity{
 	}
 	
 	public void update(){
-		super.update();
 		playerAI.update();
 		slash.update();
 		getActionRegister().resetTrips();

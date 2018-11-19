@@ -51,14 +51,7 @@ public class AI {
 		wanderDistance = Random.choose(100, 500);
 		distanceWandered = 0;
 		
-		switch(Random.choose(0, 1)){
-		case 0:
-			appliedTo.turn("left");
-			break;
-		case 1:
-			appliedTo.turn("right");
-			break;
-		}
+        appliedTo.getDir().turnClockwise(Random.choose(0, 360));
 	}
 	public void wander(){
 		appliedTo.setMoving(true);

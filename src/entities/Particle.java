@@ -4,9 +4,9 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 public class Particle extends Entity{
-	private Color color;
-	private int size;
-	private int lifeSpan;
+	private final Color color;
+	private final int size;
+	private final int lifeSpan;
 	private int age;
 	
 	public Particle(int momentum, Color c){
@@ -16,14 +16,15 @@ public class Particle extends Entity{
 		size = 10;
 		lifeSpan = 15;
 		age = 0;
-		setType(EntityType.PARTICLE);
 	}
+    
+    @Override
 	public void draw(Graphics g){
 		g.setColor(color);
 		g.fillRect(getX(), getY(), size, size);
 	}
+    
 	public void update(){
-		super.update();
 		age++;
 		if(age >= lifeSpan){
 			terminate();

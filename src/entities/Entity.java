@@ -7,8 +7,7 @@ import battle.Team;
 import actions.ActionRegister;
 import ai.AI;
 
-// TODO: add interface with draw, update, init, etc.
-public class Entity {
+public abstract class Entity {
 	/**
 	 * The Entity class is used as the base for anything that has to interact with players in game
 	 */
@@ -58,8 +57,7 @@ public class Entity {
 	private AI entityAI;
 	
 	// misc
-	private EntityType type; // used for when downcasted
-	private int id;
+	private final int id;
 	private static int nextId = 0;
 	
 	//constructors
@@ -68,61 +66,50 @@ public class Entity {
 	public Entity(int m){
 		maxSpeed = m;
 		
-		type = EntityType.RAW;
-		
 		id = nextId;
 		nextId++;
 	}
 	
 	// movement functions
-	public int getX(){
+	public final int getX(){
 		return x;
 	}
-	public int getY(){
+	public final int getY(){
 		return y;
 	}
-	public Direction getDir(){
+	public final Direction getDir(){
 		return dir;
 	}
-	public void setSpeed(int speed){
+	public final void setSpeed(int speed){
 		maxSpeed = speed;
 	}
-	public void applySpeedFilter(double f){
+	public final void applySpeedFilter(double f){
 		speedFilter *= f;
 	}
-	public void setMoving(boolean isMoving){
+	public final void setMoving(boolean isMoving){
 		moving = isMoving;
 	}
-	public boolean getIsMoving(){
+	public final boolean getIsMoving(){
 		return moving;
 	}
-	public int getMomentum(){
+	public final int getMomentum(){
 		return (int)(maxSpeed * speedFilter);
 	}
 	
-	// depreciate later
-	public void turn(String d){
-		int amount = 360 / Master.TICKSTOROTATE;
-		if(d == "left"){
-			dir.turnClockwise(amount);
-		} else {
-			dir.turnCounterClockwise(amount);
-		}
-	}
-	public void turnTo(int xCoord, int yCoord){
+	public final void turnTo(int xCoord, int yCoord){
 		dir = Direction.getDegreeByLengths(x, y, xCoord, yCoord);
 	}
 	
-	public void move(){
+	private void move(){
 		x += dir.getVector()[0] * getMomentum();
 		y += dir.getVector()[1] * getMomentum();
 	}
-	public void applyKnockback(Direction d, int dur, int vel){
+	public final void applyKnockback(Direction d, int dur, int vel){
 		kbDir = d;
 		kbDur = dur;
 		kbVelocity = vel;
 	}
-	public void updateMovement(){
+	private void updateMovement(){
 		if(hasFocus){
 			if(withinFocus()){
 				hasFocus = false;
@@ -163,17 +150,19 @@ public class Entity {
 	
 	
 	//focus related methods
-	public void setFocus(int xCoord, int yCoord){
+	public final void setFocus(int xCoord, int yCoord){
 		focusX = xCoord;
 		focusY = yCoord;
 		hasFocus = true;
 	}
-	public void setFocus(Entity e){
+	public final void setFocus(Entity e){
 		setFocus(e.getX(), e.getY());
 	}
-	public void turnToFocus(){
+	public final void turnToFocus(){
 		turnTo(focusX, focusY);
 	}
+    
+    //add different versions in subclasses?
 	public boolean withinFocus(){
 		// returns if has reached focal point
 		boolean withinX = Math.abs(getX() - focusX) < maxSpeed;
@@ -184,7 +173,39 @@ public class Entity {
 	
 	
 	// inbattle methods
-	public void init(int xCoord, int yCoord, int degrees){
+	public final void setTeam(Team t){
+		team = t;
+	}
+	public final Team getTeam(){
+		return team;
+	}
+	public final ActionRegister getActionRegister(){
+		return actReg;
+	}
+	public boolean checkForCollisions(Entity e){
+		return x + 50 >= e.getX() - 50 
+				&& x - 50 <= e.getX() + 50
+				&& y + 50 >= e.getY() - 50 
+				&& y - 50 <= e.getY() + 50;
+	}
+	public final AI getEntityAI(){
+		return entityAI;
+	}
+    
+    //can't be final, as SeedProjectile needs to override
+	public void terminate(){
+		shouldTerminate = true;
+	}
+	
+	public final boolean getShouldTerminate(){
+		return shouldTerminate;
+	}
+	
+	// misc. methods
+	public final int getId(){
+		return id;
+	}
+    public void init(int xCoord, int yCoord, int degrees){
 		// called by battle
 		x = xCoord;
 		y = yCoord;
@@ -201,54 +222,15 @@ public class Entity {
 		
 		hasFocus = false;
 	}
-	public void setTeam(Team t){
-		team = t;
-	}
-	public Team getTeam(){
-		return team;
-	}
-	public ActionRegister getActionRegister(){
-		return actReg;
-	}
-	public boolean checkForCollisions(Entity e){
-		return x + 50 >= e.getX() - 50 
-				&& x - 50 <= e.getX() + 50
-				&& y + 50 >= e.getY() - 50 
-				&& y - 50 <= e.getY() + 50;
-	}
-	public AI getEntityAI(){
-		return entityAI;
-	}
-	
-	
-	
-	
-	public void terminate(){
-		shouldTerminate = true;
-	}
-	
-	public boolean getShouldTerminate(){
-		return shouldTerminate;
-	}
-	
-	// misc. methods
-	public void setType(EntityType e){
-		type = e;
-	}
-	public EntityType getType(){
-		return type;
-	}
-	public int getId(){
-		return id;
-	}
-	public void update(){
+	public final void doUpdate(){
 		if(!shouldTerminate){
 			entityAI.update();
 			updateMovement();
 			actReg.tripOnUpdate();
+            update();
 		}
 	}
-	public void draw(Graphics g){
-		// leave blank
-	}
+    
+    public abstract void update();
+	public abstract void draw(Graphics g);
 }

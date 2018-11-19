@@ -209,7 +209,7 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
         super.update();
 
         projectiles.stream()
-        .forEach(p -> p.update());
+        .forEach(p -> p.doUpdate());
 
         projectiles.stream()
         .filter(p -> !p.getShouldTerminate())

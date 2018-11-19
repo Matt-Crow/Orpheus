@@ -89,7 +89,7 @@ public class Team {
 	
 	public void update(){
 		ArrayList<Player> newMembersRem = new ArrayList<>();
-		membersRem.stream().forEach(p -> p.update());
+		membersRem.stream().forEach(p -> p.doUpdate());
 		membersRem.stream().filter(p -> !p.getShouldTerminate()).forEach(p -> newMembersRem.add(p));
 		membersRem = newMembersRem;
 		if(membersRem.size() == 0){
