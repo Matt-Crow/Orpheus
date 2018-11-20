@@ -146,6 +146,8 @@ public class Projectile extends Entity{
 			particles = newPart;
 		}
 	}
+    
+    @Override
 	public void draw(Graphics g){
 		if(registeredAttack.getParticleType() == ParticleType.NONE || Master.DISABLEPARTICLES){
 			g.setColor(user.getTeam().getColor());

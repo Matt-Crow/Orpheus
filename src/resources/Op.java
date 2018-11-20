@@ -37,9 +37,13 @@ public class Op {
 		String s = (msg) ? "true" : "false";
 		add(s);
 	}
+    
+    public static void add(Object o){
+        add(o.toString());
+    }
 	
 	public static void clear(){
-		messages = new ArrayList<String>();
+		messages = new ArrayList<>();
 	}
 	
 	// Prints the contents of the message arraylist

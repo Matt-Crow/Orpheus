@@ -3,8 +3,10 @@ package statuses;
 import actions.OnHitTrip;
 import actions.OnHitKey;
 import entities.Player;
+import initializers.Master;
 import resources.Direction;
 import resources.Number;
+import resources.Op;
 
 public class Strength extends Status{
 	public Strength(int lv, int uses){
@@ -17,7 +19,10 @@ public class Strength extends Status{
 			public void trip(OnHitTrip t){
 				Player target = (Player)t.getHit();
 				target.getLog().logPercentageDamage(3.5 * getIntensityLevel());
-				target.applyKnockback(new Direction(p.getDir().getDegrees()), 10, (int) (3.5 * getIntensityLevel()));
+                
+                Direction angleBetween = Direction.getDegreeByLengths(p.getX(), p.getY(), target.getX(), target.getY());
+                int magnitude = Master.UNITSIZE * getIntensityLevel();
+                target.addVector((int)(angleBetween.getXMod() * magnitude), (int)(angleBetween.getYMod() * magnitude), Master.seconds(3));
 				use();
 			}
 		};

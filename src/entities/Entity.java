@@ -6,6 +6,8 @@ import resources.Direction;
 import battle.Team;
 import actions.ActionRegister;
 import ai.AI;
+import java.util.ArrayList;
+import resources.Op;
 
 public abstract class Entity {
 	/**
@@ -23,18 +25,6 @@ public abstract class Entity {
 	private int maxSpeed;
 	private boolean moving;
 	private double speedFilter; // amount the entity's speed is multiplied by when moving. May depreciate later
-	
-	/*
-	 * Knockback related stuff, working much like regular movement:
-	 * dir -> kbDir
-	 * maxSpeed -> kbVelocity 
-	 * 
-	 * however, kbDur is the duration (in frames) that the knockback lasts
-	 * Depreciate later if too annoying
-	 */
-	private Direction kbDir;
-	private double kbDur;
-	private int kbVelocity;
 	
 	/*
 	 * (focusX, focusY) is a point that the entity is trying to reach
@@ -60,6 +50,16 @@ public abstract class Entity {
 	private final int id;
 	private static int nextId = 0;
 	
+    
+    
+    //WIP
+    private ArrayList<MovementVector> movement; //may want different data structure. Movement manager class?
+    private int timeInVector;
+    
+    
+    
+    
+    
 	//constructors
 	
 	// depreciate later
@@ -104,11 +104,10 @@ public abstract class Entity {
 		x += dir.getVector()[0] * getMomentum();
 		y += dir.getVector()[1] * getMomentum();
 	}
-	public final void applyKnockback(Direction d, int dur, int vel){
-		kbDir = d;
-		kbDur = dur;
-		kbVelocity = vel;
-	}
+	
+    public final void addVector(int x, int y, int dur){
+        movement.add(new MovementVector(x, y, dur));
+    }
 	private void updateMovement(){
 		if(hasFocus){
 			if(withinFocus()){
@@ -120,13 +119,17 @@ public abstract class Entity {
 			}
 		}
 		
-		if(kbDur > 0){
-			x += kbDir.getVector()[0] * kbVelocity;
-			y += kbDir.getVector()[1] * kbVelocity;
-			kbDur -= 1;
-		} else {
-			applyKnockback(new Direction(0), 0, 0);
-		}
+        if(!movement.isEmpty()){
+            Op.add(movement.get(0));
+            Op.dp();
+            x += movement.get(0).getX();
+            y += movement.get(0).getY();
+            timeInVector++;
+            if(timeInVector >= movement.get(0).getDur()){
+                timeInVector = 0;
+                movement.remove(0);
+            }
+        }
 		
 		if(moving){
 			move();
@@ -170,8 +173,6 @@ public abstract class Entity {
 		return withinX && withinY;
 	}
 	
-	
-	
 	// inbattle methods
 	public final void setTeam(Team t){
 		team = t;
@@ -213,14 +214,16 @@ public abstract class Entity {
 		
 		moving = false;
 		speedFilter = 1.0;
-		kbDir = new Direction(0);
-		kbDur = 0;
-		kbVelocity = 0;
 		actReg = new ActionRegister(this);
 		shouldTerminate = false;
 		entityAI = new AI(this);
 		
 		hasFocus = false;
+        
+        
+        
+        movement = new ArrayList<>();
+        timeInVector = 0;
 	}
 	public final void doUpdate(){
 		if(!shouldTerminate){

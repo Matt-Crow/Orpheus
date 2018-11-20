@@ -188,6 +188,7 @@ public class Player extends Entity{
 		for(AbstractActive a : actives){
 			a.drawProjectiles(g);
 		}
+        slash.drawProjectiles(g);
 		
 		// HP value
 		g.setColor(Color.black);
