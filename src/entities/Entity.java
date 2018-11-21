@@ -105,8 +105,8 @@ public abstract class Entity {
 		y += dir.getVector()[1] * getMomentum();
 	}
 	
-    public final void addVector(int x, int y, int dur){
-        movement.add(new MovementVector(x, y, dur));
+    public final void addVector(int mag, int degrees, int dur){
+        movement.add(new MovementVector(mag, degrees, dur));
     }
 	private void updateMovement(){
 		if(hasFocus){

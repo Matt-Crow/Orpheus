@@ -22,7 +22,7 @@ public class Strength extends Status{
                 
                 Direction angleBetween = Direction.getDegreeByLengths(p.getX(), p.getY(), target.getX(), target.getY());
                 int magnitude = Master.UNITSIZE * getIntensityLevel();
-                target.addVector((int)(angleBetween.getXMod() * magnitude), (int)(angleBetween.getYMod() * magnitude), Master.seconds(3));
+                target.addVector(magnitude, angleBetween.getDegrees(), Master.seconds(3));
 				use();
 			}
 		};

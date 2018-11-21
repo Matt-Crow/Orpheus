@@ -1,33 +1,30 @@
 package entities;
+import resources.Coordinates;
 import resources.Direction;
 
 
 public final class MovementVector {
-    private final int x; //total movement in x direction
-    private final int y;
-    private final int duration; //in frames
+    private final Direction dir;
+    private final int magnitude;
+    private final int duration; // in frames
     
-    public MovementVector(int xComp, int yComp, int dur){
-        x = xComp;
-        y = yComp;
+    public MovementVector(int mag, int degrees, int dur){
+        dir = new Direction(degrees);
+        magnitude = mag;
         duration = dur;
     }
-    public MovementVector(int xComp, int yComp){
-        this(xComp, yComp, 1);
+    public MovementVector(int mag, int degrees){
+        this(mag, degrees, 1);
     }
-    public MovementVector(int r, Direction d, int dur){
-        //polar
-        this((int)(d.getXMod() * r), (int)(d.getYMod() * r), dur);
-    }
-    public MovementVector(int r, Direction d){
-        this(r, d, 1);
+    public MovementVector(Entity from, Entity to){
+        this((int)Coordinates.distanceBetween(from, to), Direction.getDegreeByLengths(from.getX(), from.getY(), to.getX(), to.getY()).getDegrees());
     }
     
     public int getX(){
-        return (int)((double)x / duration);
+        return (int)(dir.getXMod() * magnitude);
     }
     public int getY(){
-        return (int)((double)y / duration);
+        return (int)(dir.getYMod() * magnitude);
     }
     public int getDur(){
         return duration;
