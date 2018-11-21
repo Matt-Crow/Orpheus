@@ -122,6 +122,7 @@ public abstract class Entity {
         if(!movement.isEmpty()){
             Op.add(movement.get(0));
             Op.dp();
+            dir = movement.get(0).getDir();
             x += movement.get(0).getX();
             y += movement.get(0).getY();
             timeInVector++;

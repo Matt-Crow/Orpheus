@@ -26,6 +26,9 @@ public final class MovementVector {
     public int getY(){
         return (int)(dir.getYMod() * magnitude);
     }
+    public Direction getDir(){
+        return dir;
+    }
     public int getDur(){
         return duration;
     }
