@@ -7,6 +7,7 @@ import battle.Team;
 import actions.ActionRegister;
 import ai.AI;
 import java.util.ArrayList;
+import resources.Chat;
 import resources.Op;
 
 public abstract class Entity {
@@ -95,7 +96,8 @@ public abstract class Entity {
 	}
 	
     public final void knockBack(int mag, Direction d, int dur){
-        knockbackMag = mag;
+        knockbackMag = mag / dur;
+        Chat.log("Mag: " + knockbackMag);
         knockbackDir = d;
         knockbackDur = dur;
     }

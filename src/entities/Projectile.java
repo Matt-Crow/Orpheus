@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import graphics.CustomColors;
 import actives.AbstractActive;
 import actives.ActiveStatName;
+import actives.ActiveTag;
 import actives.MeleeActive;
 import customizables.CharacterStatName;
 import initializers.Master;
@@ -73,6 +74,11 @@ public class Projectile extends Entity{
 			p.getActionRegister().tripOnBeHit(user);
 		}
 		getActionRegister().tripOnHit(p);
+        
+        if(registeredAttack.containsTag(ActiveTag.KNOCKSBACK)){
+            p.knockBack(range, getDir(), Master.seconds(1));
+        }
+        
 		CombatLog.logProjectileData(this);
 		terminate();
 	}

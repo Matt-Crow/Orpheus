@@ -11,8 +11,11 @@ public class BoostActive extends AbstractActive{
 	}
 	
 	public BoostActive copy(){
-		StatusTable orig = getInflict();
+		BoostActive ret;
+        StatusTable orig = getInflict();
 		StatusName[] sn = new StatusName[orig.getSize()];
+        
+        
 		int[] ints = new int[orig.getSize()];
 		int[] durs = new int[orig.getSize()];
 		
@@ -21,7 +24,9 @@ public class BoostActive extends AbstractActive{
 			ints[i] = orig.getIntensityAt(i);
 			durs[i] = orig.getDurationAt(i);
 		}
-		return new BoostActive(getName(), sn, ints, durs);
+		ret = new BoostActive(getName(), sn, ints, durs);
+        copyTagsTo(ret);
+        return ret;
 	}
 	public void use(){
 		super.use();

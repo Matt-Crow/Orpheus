@@ -10,6 +10,7 @@ public class MeleeActive extends AbstractActive{
 	}
 	public MeleeActive copy(){
 		MeleeActive copy = new MeleeActive(getName(), getBase(ActiveStatName.DAMAGE));
+        copyTagsTo(copy);
 		return copy;
 	}
 	

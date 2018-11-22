@@ -22,7 +22,9 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
     private int cost; // the energy cost of the active. Calculated automatically
     private ArrayList<Projectile> projectiles;
     private ArrayList<Projectile> nextProjectiles; // projectiles to add at the end of the frame (used to avoid concurrent modification)
-
+    
+    private ArrayList<ActiveTag> tags;
+    
     private static int nextUseId = 0; // How many actives have been used thus far. Used to prevent double hitting
     private static HashMap<String, AbstractActive> allActives = new HashMap<>();
 
@@ -38,6 +40,8 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
 
             particleType = ParticleType.NONE;
             setCooldown(1);
+            
+            tags = new ArrayList<>();
     }
     public AbstractActive copy(){
             // used to allow override
@@ -47,7 +51,7 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
 
     // static methods
     public static void addActive(AbstractActive a){
-            allActives.put(a.getName().toUpperCase(), a);
+        allActives.put(a.getName().toUpperCase(), a);
     }
     public static void addActives(AbstractActive[] as){
             for(AbstractActive a : as){
@@ -153,6 +157,18 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
     }
     public ParticleType getParticleType(){
         return particleType;
+    }
+    
+    public void addTag(ActiveTag t){
+        tags.add(t);
+    }
+    public void copyTagsTo(AbstractActive a){
+        for(ActiveTag t : tags){
+            a.addTag(t);
+        }
+    }
+    public boolean containsTag(ActiveTag t){
+        return tags.contains(t);
     }
 
     // misc

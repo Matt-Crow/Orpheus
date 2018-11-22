@@ -21,7 +21,7 @@ public class Strength extends Status{
                 
                 Direction angleBetween = Direction.getDegreeByLengths(p.getX(), p.getY(), target.getX(), target.getY());
                 int magnitude = Master.UNITSIZE * getIntensityLevel();
-                target.knockBack(magnitude, angleBetween, Master.seconds(3));
+                target.knockBack(magnitude, angleBetween, Master.seconds(1));
 				use();
 			}
 		};

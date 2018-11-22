@@ -15,7 +15,7 @@ public class ElementalActive extends AbstractActive{
 				getBase(ActiveStatName.AOE), 
 				getBase(ActiveStatName.DAMAGE));
 		copy.setParticleType(getParticleType());
-		
+		copyTagsTo(copy);
 		return copy;
 	}
 	

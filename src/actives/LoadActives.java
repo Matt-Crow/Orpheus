@@ -11,12 +11,14 @@ public class LoadActives {
 		
 		ElementalActive bt = new ElementalActive("Boulder Toss", 1, 2, 2, 3, 4);
 		bt.setParticleType(ParticleType.BURST);
+        bt.addTag(ActiveTag.KNOCKSBACK);
 		
 		ElementalActive cd = new ElementalActive("Cursed Daggers", 2, 5, 5, 0, 0);
 		cd.setParticleType(ParticleType.BEAM);
 		
 		ElementalActive eq = new ElementalActive("Earthquake", 1, 0, 2, 3, 2);
 		eq.setParticleType(ParticleType.BURST);
+        eq.addTag(ActiveTag.KNOCKSBACK);
 		
 		ElementalActive fof = new ElementalActive("Fields of Fire", 1, 0, 5, 3, 2);
 		fof.setParticleType(ParticleType.SHEAR);
