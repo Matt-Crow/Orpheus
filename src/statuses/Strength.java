@@ -11,8 +11,7 @@ import resources.Op;
 public class Strength extends Status{
 	public Strength(int lv, int uses){
 		super(StatusName.STRENGTH, "Strength", Number.minMax(1, lv, 3), Number.minMax(1, uses, 3) * 2 + 1);
-		// 3 - 7 uses of 3.5% to 10.5% extra damage logged and 
-		//TODO: how does knockback work again?
+		// 3 - 7 uses of 3.5% to 10.5% extra damage logged and knocks back lv units
 	}
 	public void inflictOn(Player p){
 		OnHitKey a = new OnHitKey(){
@@ -22,7 +21,7 @@ public class Strength extends Status{
                 
                 Direction angleBetween = Direction.getDegreeByLengths(p.getX(), p.getY(), target.getX(), target.getY());
                 int magnitude = Master.UNITSIZE * getIntensityLevel();
-                target.addVector(magnitude, angleBetween.getDegrees(), Master.seconds(3));
+                target.knockBack(magnitude, angleBetween, Master.seconds(3));
 				use();
 			}
 		};

@@ -26,6 +26,10 @@ public abstract class Entity {
 	private boolean moving;
 	private double speedFilter; // amount the entity's speed is multiplied by when moving. May depreciate later
 	
+    private Direction knockbackDir;
+    private int knockbackMag;
+    private int knockbackDur;
+    
 	/*
 	 * (focusX, focusY) is a point that the entity is trying to reach
 	 */
@@ -49,16 +53,6 @@ public abstract class Entity {
 	// misc
 	private final int id;
 	private static int nextId = 0;
-	
-    
-    
-    //WIP
-    private ArrayList<MovementVector> movement; //may want different data structure. Movement manager class?
-    private int timeInVector;
-    
-    
-    
-    
     
 	//constructors
 	
@@ -100,14 +94,12 @@ public abstract class Entity {
 		dir = Direction.getDegreeByLengths(x, y, xCoord, yCoord);
 	}
 	
-	private void move(){
-		x += dir.getVector()[0] * getMomentum();
-		y += dir.getVector()[1] * getMomentum();
-	}
-	
-    public final void addVector(int mag, int degrees, int dur){
-        movement.add(new MovementVector(mag, degrees, dur));
+    public final void knockBack(int mag, Direction d, int dur){
+        knockbackMag = mag;
+        knockbackDir = d;
+        knockbackDur = dur;
     }
+    
 	private void updateMovement(){
 		if(hasFocus){
 			if(withinFocus()){
@@ -119,22 +111,17 @@ public abstract class Entity {
 			}
 		}
 		
-        if(!movement.isEmpty()){
-            Op.add(movement.get(0));
-            Op.dp();
-            dir = movement.get(0).getDir();
-            x += movement.get(0).getX();
-            y += movement.get(0).getY();
-            timeInVector++;
-            if(timeInVector >= movement.get(0).getDur()){
-                timeInVector = 0;
-                movement.remove(0);
+        if(knockbackDur <= 0){
+            //can move if not knocked back
+            if(moving){
+                x += getMomentum() * dir.getXMod();
+                y += getMomentum() * dir.getYMod();
             }
+        } else {
+            x += knockbackMag * knockbackDir.getXMod();
+            y += knockbackMag * knockbackDir.getYMod();
+            knockbackDur--;
         }
-		
-		if(moving){
-			move();
-		}
 		
 		// keep entity on the battlefield
 		if(x < 0){
@@ -213,6 +200,10 @@ public abstract class Entity {
 		y = yCoord;
 		dir = new Direction(degrees);
 		
+        knockbackDir = new Direction(0);
+        knockbackMag = 0;
+        knockbackDur = 0;
+        
 		moving = false;
 		speedFilter = 1.0;
 		actReg = new ActionRegister(this);
@@ -220,11 +211,6 @@ public abstract class Entity {
 		entityAI = new AI(this);
 		
 		hasFocus = false;
-        
-        
-        
-        movement = new ArrayList<>();
-        timeInVector = 0;
 	}
 	public final void doUpdate(){
 		if(!shouldTerminate){

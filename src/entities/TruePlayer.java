@@ -23,8 +23,7 @@ public class TruePlayer extends Player{
 	
 	public void update(){
 		if(followingMouse){
-			turnTo(Master.getMouseX(), Master.getMouseY());
-			setMoving(true);
+            setFocus(Master.getMouseX(), Master.getMouseY());
 		} else {
 			setMoving(false);
 		}
