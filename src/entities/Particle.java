@@ -10,13 +10,18 @@ public class Particle extends Entity{
 	private int age;
 	
 	public Particle(int momentum, Color c){
-		super(momentum);
-		setMoving(true);
+		super();
+        setSpeed(momentum);
 		color = c;
 		size = 10;
 		lifeSpan = 15;
-		age = 0;
 	}
+    
+    @Override
+    public void init() {
+        setMoving(true);
+		age = 0;
+    }
     
     @Override
 	public void draw(Graphics g){
@@ -24,10 +29,11 @@ public class Particle extends Entity{
 		g.fillRect(getX(), getY(), size, size);
 	}
     
+    @Override
 	public void update(){
 		age++;
 		if(age >= lifeSpan){
 			terminate();
 		}
-	}
+    }
 }

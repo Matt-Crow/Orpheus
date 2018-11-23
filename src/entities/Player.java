@@ -31,7 +31,8 @@ public class Player extends Entity{
 	private int lastHitById; //the useId of the last projectile that hit this player
 	
 	public Player(String n){
-		super(500 / Master.FPS);
+		super();
+        setSpeed(Master.UNITSIZE * 5 / Master.FPS);
 		name = n;
 		actives = new AbstractActive[3];
 		passives = new AbstractPassive[3];
@@ -128,14 +129,13 @@ public class Player extends Entity{
 		return lastHitById;
 	}
 	
-	public void init(Team t, int x, int y, Direction d){
-		super.init(x, y, d.getDegrees());
+    @Override
+	public void init(){
 		playerAI = new PlayerAI(this);
 		
 		if (!(this instanceof TruePlayer) && !Master.DISABLEALLAI){
 			playerAI.enable();
 		}
-		setTeam(t);
 		slash = (MeleeActive)AbstractActive.getActiveByName("Slash").copy();
 		slash.registerTo(this);
 		slash.init();
@@ -165,6 +165,7 @@ public class Player extends Entity{
 		}
 	}
 	
+    @Override
 	public void update(){
 		playerAI.update();
 		slash.update();
@@ -181,6 +182,7 @@ public class Player extends Entity{
 		energyLog.update();
 	}
 	
+    @Override
 	public void draw(Graphics g){
 		int w = Master.CANVASWIDTH;
 		int h = Master.CANVASHEIGHT;

@@ -50,10 +50,14 @@ public class Team {
 		}
 		return t;
 	}
+    
+    //OK to have different params, as this does not extend entity
 	public void init(int y, int spacing, int facing){
 		int x = spacing;
 		for(Player p : membersRem){
-			p.init(this, x, y, new Direction(facing));
+			p.initPos(x, y, facing);
+            p.doInit();
+            p.setTeam(this);
 			x += spacing;
 		}
 		defeated = false;

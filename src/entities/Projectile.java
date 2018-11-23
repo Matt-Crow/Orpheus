@@ -25,8 +25,10 @@ public class Projectile extends Entity{
 	private int id; //used to prevent double hitting. May not be unique to a single projectile. See AbstractActive for more info
 	
 	public Projectile(int useId, int x, int y, int degrees, int momentum, Player attackUser, AbstractActive a){
-		super(momentum);
-		super.init(x, y, degrees);
+		super();
+        setSpeed(momentum);
+        doInit();
+		initPos(x, y, degrees);
 		id = useId;
 		distanceTraveled = 0;
 		user = attackUser;
@@ -97,11 +99,17 @@ public class Projectile extends Entity{
 	
 	public void spawnParticle(int degrees, int m, CustomColors c){
 		Particle p = new Particle(m, c);
-		p.init(getX(), getY(), degrees);
+        p.doInit();
+		p.initPos(getX(), getY(), degrees);
 		p.setTeam(this.getTeam());
 		particles.add(p);
 	}
-	
+	@Override
+    public void init() {
+        
+    }
+    
+    @Override
 	public void update(){
 		
 		for(Player p : getTeam().getEnemy().getMembersRem()){

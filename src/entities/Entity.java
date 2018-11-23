@@ -6,9 +6,6 @@ import resources.Direction;
 import battle.Team;
 import actions.ActionRegister;
 import ai.AI;
-import java.util.ArrayList;
-import resources.Chat;
-import resources.Op;
 
 public abstract class Entity {
 	/**
@@ -55,15 +52,27 @@ public abstract class Entity {
 	private final int id;
 	private static int nextId = 0;
     
-	//constructors
-	
-	// depreciate later
-	public Entity(int m){
-		maxSpeed = m;
-		
+	public Entity(){
 		id = nextId;
 		nextId++;
 	}
+    
+    @Override
+    public final boolean equals(Object o){
+        return o instanceof Entity && ((Entity)o).id == id; 
+    }
+
+    @Override
+    public final int hashCode() {
+        int hash = 7;
+        hash = 59 * hash + this.id;
+        return hash;
+    }
+    
+    @Override
+    public String toString(){
+        return "Entity #" + id;
+    }
 	
 	// movement functions
 	public final int getX(){
@@ -76,9 +85,17 @@ public abstract class Entity {
 		return dir;
 	}
 	public final void setSpeed(int speed){
+        /**
+         * Sets the movement speed of this entity
+         */
 		maxSpeed = speed;
 	}
+    
+    //change later
 	public final void applySpeedFilter(double f){
+        /**
+         * @param f : the amount this entity's speed will be multiplied by
+         */
 		speedFilter *= f;
 	}
 	public final void setMoving(boolean isMoving){
@@ -88,16 +105,26 @@ public abstract class Entity {
 		return moving;
 	}
 	public final int getMomentum(){
+        /**
+         * returns how much this entity will move
+         */
 		return (int)(maxSpeed * speedFilter);
 	}
 	
 	public final void turnTo(int xCoord, int yCoord){
+        /**
+         * Rotates the entity to face the given point
+         */
 		dir = Direction.getDegreeByLengths(x, y, xCoord, yCoord);
 	}
 	
     public final void knockBack(int mag, Direction d, int dur){
+        /**
+         * @param mag : the total distance this entity will be knocked back
+         * @param d : the direction this entity is knocked back
+         * @param dur : the number of frames this will be knocked back for
+         */
         knockbackMag = mag / dur;
-        Chat.log("Mag: " + knockbackMag);
         knockbackDir = d;
         knockbackDur = dur;
     }
@@ -154,8 +181,6 @@ public abstract class Entity {
 	public final void turnToFocus(){
 		turnTo(focusX, focusY);
 	}
-    
-    //add different versions in subclasses?
 	public boolean withinFocus(){
 		// returns if has reached focal point
 		boolean withinX = Math.abs(getX() - focusX) < maxSpeed;
@@ -173,17 +198,26 @@ public abstract class Entity {
 	public final ActionRegister getActionRegister(){
 		return actReg;
 	}
-	public boolean checkForCollisions(Entity e){
-		return x + 50 >= e.getX() - 50 
-				&& x - 50 <= e.getX() + 50
-				&& y + 50 >= e.getY() - 50 
-				&& y - 50 <= e.getY() + 50;
+	
+    
+    public double distanceFrom(int xc, int yc){
+        return Math.sqrt(Math.pow(xc - x, 2) + Math.pow(yc - y, 2));
+    }
+    public double distanceFrom(Entity e){
+        return distanceFrom(e.getX(), e.getY());
+    }
+    
+    //add different versions in subclasses?
+    public boolean checkForCollisions(Entity e){
+		return distanceFrom(e) <= 100;
 	}
+    
 	public final AI getEntityAI(){
 		return entityAI;
 	}
     
     //can't be final, as SeedProjectile needs to override
+    //add on terminate?
 	public void terminate(){
 		shouldTerminate = true;
 	}
@@ -196,12 +230,8 @@ public abstract class Entity {
 	public final int getId(){
 		return id;
 	}
-    public void init(int xCoord, int yCoord, int degrees){
+    public void doInit(){
 		// called by battle
-		x = xCoord;
-		y = yCoord;
-		dir = new Direction(degrees);
-		
         knockbackDir = new Direction(0);
         knockbackMag = 0;
         knockbackDur = 0;
@@ -213,7 +243,15 @@ public abstract class Entity {
 		entityAI = new AI(this);
 		
 		hasFocus = false;
+        init();
 	}
+    
+    public final void initPos(int xCoord, int yCoord, int degrees){
+        x = xCoord;
+		y = yCoord;
+		dir = new Direction(degrees);
+    }
+    
 	public final void doUpdate(){
 		if(!shouldTerminate){
 			entityAI.update();
@@ -223,6 +261,7 @@ public abstract class Entity {
 		}
 	}
     
+    public abstract void init();
     public abstract void update();
 	public abstract void draw(Graphics g);
 }
