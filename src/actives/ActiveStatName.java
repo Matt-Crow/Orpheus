@@ -1,7 +1,8 @@
 package actives;
 
 public enum ActiveStatName{
-	ARC,
+	NAME,
+    ARC,
 	RANGE,
 	SPEED,
 	AOE,

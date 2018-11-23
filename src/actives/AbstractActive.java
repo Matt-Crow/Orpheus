@@ -9,6 +9,8 @@ import java.awt.Graphics;
 import entities.*;
 import graphics.CustomColors;
 import initializers.Master;
+import java.io.*;
+import static java.lang.System.out;
 import upgradables.AbstractUpgradable;
 import resources.Op;
 import resources.Number; // use later for minMax?
@@ -47,6 +49,42 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
             // used to allow override
             // DO NOT INVOKE THIS
             return this;
+    }
+    public static void readFile(InputStream s){
+        BufferedReader ip;
+        
+        try {
+            ip = new BufferedReader(new InputStreamReader(s));
+            
+            out.println(getHeadersIn(ip.readLine().split(",")));
+            while(ip.ready()){
+                out.println(ip.readLine());
+            }
+            ip.close();
+        } catch (FileNotFoundException e) {
+            out.println("File not found");
+            e.printStackTrace();
+        } catch (IOException e) {
+           e.printStackTrace();
+        } 
+    }
+    private static HashMap<ActiveStatName, Integer> getHeadersIn(String[] headers){
+        HashMap<ActiveStatName, Integer> idx = new HashMap();
+        
+        for(int i = 0; i < headers.length; i++){
+            for(ActiveStatName a : ActiveStatName.values()){
+                if(a.toString().equalsIgnoreCase(headers[i])){
+                    idx.put(a, i);
+                }
+            }
+        }
+        
+        return idx;
+    }
+    
+    public static void ParseLine(String s){
+        String[] tokens = s.split(",");
+        
     }
 
     // static methods
