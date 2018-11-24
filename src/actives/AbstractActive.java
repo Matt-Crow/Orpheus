@@ -11,6 +11,7 @@ import graphics.CustomColors;
 import initializers.Master;
 import java.io.*;
 import static java.lang.System.out;
+import java.util.Arrays;
 import upgradables.AbstractUpgradable;
 import resources.Op;
 import resources.Number; // use later for minMax?
@@ -71,11 +72,20 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
     private static HashMap<ActiveStatName, Integer> getHeadersIn(String[] headers){
         HashMap<ActiveStatName, Integer> idx = new HashMap();
         
+        out.println("Name".equalsIgnoreCase("name"));
+        
+        out.println(ActiveStatName.NAME.toString().length());
+        out.println((int)headers[0].charAt(0)); //this is causing problems
+        idx.put(ActiveStatName.NAME, 0);
+        
         for(int i = 0; i < headers.length; i++){
             for(ActiveStatName a : ActiveStatName.values()){
-                if(a.toString().equalsIgnoreCase(headers[i])){
+                out.print(a.toString() + " = " + headers[i] + "? ");
+                if(a.toString().trim().replaceAll("\\P{Print}", "").equalsIgnoreCase(headers[i])){
                     idx.put(a, i);
+                    out.print("Yes");
                 }
+                out.println();
             }
         }
         
@@ -84,7 +94,6 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
     
     public static void ParseLine(String s){
         String[] tokens = s.split(",");
-        
     }
 
     // static methods

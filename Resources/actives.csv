@@ -1,4 +1,4 @@
-﻿name,arc,range,speed,aoe,dmg,particle type,Tags,
+﻿name,arc,range,speed,aoe,damage,particle type,Tags,
 Heavy Stroke,,,,,4,,,how do multiple?
 Slash,,,,,2,,,
 Boulder Toss,1,2,2,3,4,Burst,knocksback,
