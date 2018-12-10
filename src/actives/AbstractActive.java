@@ -32,34 +32,34 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
     private static HashMap<String, AbstractActive> allActives = new HashMap<>();
 
     public AbstractActive(ActiveType t, String n, int arcLength, int range, int speed, int aoe, int dmg){
-            super(n);
-            type = t;
+        super(n);
+        type = t;
 
-            setStat(ActiveStatName.ARC, arcLength);
-            setStat(ActiveStatName.RANGE, range);
-            setStat(ActiveStatName.SPEED, speed);
-            setStat(ActiveStatName.AOE, aoe);
-            setStat(ActiveStatName.DAMAGE, dmg);
+        setStat(ActiveStatName.ARC, arcLength);
+        setStat(ActiveStatName.RANGE, range);
+        setStat(ActiveStatName.SPEED, speed);
+        setStat(ActiveStatName.AOE, aoe);
+        setStat(ActiveStatName.DAMAGE, dmg);
 
-            particleType = ParticleType.NONE;
-            setCooldown(1);
-            
-            tags = new ArrayList<>();
+        particleType = ParticleType.NONE;
+        setCooldown(1);
+
+        tags = new ArrayList<>();
     }
-    public AbstractActive copy(){
-            // used to allow override
-            // DO NOT INVOKE THIS
-            return this;
-    }
+    
+    @Override
+    public abstract AbstractActive copy();
+    
     public static void readFile(InputStream s){
         BufferedReader ip;
         
         try {
             ip = new BufferedReader(new InputStreamReader(s));
             
-            out.println(getHeadersIn(ip.readLine().split(",")));
+            HashMap<ActiveStatName, Integer> indexes = getHeadersIn(ip.readLine().split(","));
+            out.println(indexes);
             while(ip.ready()){
-                out.println(ip.readLine());
+                parseLine(ip.readLine(), indexes);
             }
             ip.close();
         } catch (FileNotFoundException e) {
@@ -69,19 +69,18 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
            e.printStackTrace();
         } 
     }
+    
+    // has bug with character 65279
     private static HashMap<ActiveStatName, Integer> getHeadersIn(String[] headers){
         HashMap<ActiveStatName, Integer> idx = new HashMap();
         
-        out.println("Name".equalsIgnoreCase("name"));
-        
-        out.println(ActiveStatName.NAME.toString().length());
         out.println((int)headers[0].charAt(0)); //this is causing problems
         idx.put(ActiveStatName.NAME, 0);
         
         for(int i = 0; i < headers.length; i++){
             for(ActiveStatName a : ActiveStatName.values()){
                 out.print(a.toString() + " = " + headers[i] + "? ");
-                if(a.toString().trim().replaceAll("\\P{Print}", "").equalsIgnoreCase(headers[i])){
+                if(a.toString().trim().equalsIgnoreCase(headers[i])){
                     idx.put(a, i);
                     out.print("Yes");
                 }
@@ -92,8 +91,52 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
         return idx;
     }
     
-    public static void ParseLine(String s){
-        String[] tokens = s.split(",");
+    //better way?
+    public static void parseLine(String line, HashMap<ActiveStatName, Integer> idxs){
+        String[] tokens = line.split(",");
+        
+        String name = tokens[idxs.get(ActiveStatName.NAME)];
+        int arc = Integer.parseInt(tokens[idxs.get(ActiveStatName.ARC)]);
+        int range = Integer.parseInt(tokens[idxs.get(ActiveStatName.RANGE)]);
+        int speed = Integer.parseInt(tokens[idxs.get(ActiveStatName.SPEED)]);
+        int aoe = Integer.parseInt(tokens[idxs.get(ActiveStatName.AOE)]);
+        int damage = Integer.parseInt(tokens[idxs.get(ActiveStatName.DAMAGE)]);
+        
+        String particleType = tokens[idxs.get(ActiveStatName.PARTICLETYPE)];
+        ParticleType particles = ParticleType.NONE;
+        try{
+            particles = ParticleType.valueOf(particleType);
+        } catch(IllegalArgumentException iae){
+            out.println(particleType + " is not a valid particle type");
+        }
+        
+        String[] tags = new String[tokens.length - 7];
+        for(int i = 7; i < tokens.length; i++){
+            tags[i - 7] = tokens[i];
+        }
+        ActiveTag[] t = new ActiveTag[tags.length];
+        for(int i = 0; i < tags.length; i++){
+            try{
+                t[i] = ActiveTag.valueOf(tags[i]);
+            }catch(IllegalArgumentException e){
+                out.println(tags[i] + " is not a valid particle type");
+            }
+        }
+        
+        AbstractActive newActive = null;
+        if(range == 1){
+            newActive = new MeleeActive(name, damage);
+        } else if(damage == 0){
+            //newActive = new BoostActive();  //how do?
+        } else {
+            newActive = new ElementalActive(name, arc, range, speed, aoe, damage);
+        }
+        
+        newActive.setParticleType(particles);
+        for(ActiveTag at : t){
+            newActive.addTag(at);
+        }
+        addActive(newActive);
     }
 
     // static methods
