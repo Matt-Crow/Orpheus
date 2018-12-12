@@ -9,7 +9,7 @@ public class Run {
 	public static void main(String[] args) {
 		LoadActives.load();
         
-        AbstractActive.readFile(Run.class.getClass().getResourceAsStream("/actives.csv"));
+        //AbstractActive.readFile(Run.class.getClass().getResourceAsStream("/actives.csv"));
         
 		LoadPassives.load();
 		LoadCharacterClasses.load();
