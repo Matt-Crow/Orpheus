@@ -1,5 +1,6 @@
 package actives;
 
+import PsuedoJson.PsuedoJsonObject;
 import initializers.Master;
 
 public class ElementalActive extends AbstractActive{
@@ -49,4 +50,24 @@ public class ElementalActive extends AbstractActive{
 		
 		return desc;
 	}
+
+    @Override
+    public PsuedoJsonObject getPsuedoJson() {
+        PsuedoJsonObject j = new PsuedoJsonObject(getName());
+        
+        ActiveStatName[] keys = new ActiveStatName[]{
+            ActiveStatName.AOE,
+            ActiveStatName.ARC,
+            ActiveStatName.DAMAGE,
+            ActiveStatName.RANGE,
+            ActiveStatName.SPEED
+        };
+        
+        for(ActiveStatName n : keys){
+            j.addPair(n.toString(), getBase(n) + "");
+        }
+        j.addPair(ActiveStatName.PARTICLETYPE.toString(), getParticleType().toString());
+        
+        return j;
+    }
 }

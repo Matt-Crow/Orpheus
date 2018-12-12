@@ -1,4 +1,5 @@
 package actives;
+import PsuedoJson.PsuedoJsonObject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,11 +12,11 @@ import graphics.CustomColors;
 import initializers.Master;
 import java.io.*;
 import static java.lang.System.out;
-import java.util.Arrays;
 import upgradables.AbstractUpgradable;
 import resources.Op;
 import resources.Number; // use later for minMax?
 
+//TODO: add tag copy to PsuedoJson
 public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
     /**
      * Actives are abilities that the user triggers
@@ -49,6 +50,14 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
     
     @Override
     public abstract AbstractActive copy();
+    
+    public abstract PsuedoJsonObject getPsuedoJson();
+    
+    public static void logAllPsuedoJson(){
+        allActives.values().stream().forEach(
+            act -> out.println(act.getPsuedoJson().toString())
+        );
+    }
     
     public static void readFile(InputStream s){
         BufferedReader ip;

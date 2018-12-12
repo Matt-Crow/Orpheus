@@ -1,6 +1,7 @@
 package actives;
 
 //import entities.Player;
+import PsuedoJson.PsuedoJsonObject;
 import entities.ParticleType;
 
 public class MeleeActive extends AbstractActive{
@@ -43,4 +44,11 @@ public class MeleeActive extends AbstractActive{
 		setToCooldown();
 	}
 	*/
+
+    @Override
+    public PsuedoJsonObject getPsuedoJson() {
+        PsuedoJsonObject j = new PsuedoJsonObject(getName());
+        j.addPair(ActiveStatName.DAMAGE.toString(), getBase(ActiveStatName.DAMAGE) + "");
+        return j;
+    }
 }

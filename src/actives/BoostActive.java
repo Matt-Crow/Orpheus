@@ -1,4 +1,5 @@
 package actives;
+import PsuedoJson.PsuedoJsonObject;
 import statuses.StatusName;
 import statuses.StatusTable;
 
@@ -41,4 +42,21 @@ public class BoostActive extends AbstractActive{
 		desc += getInflict().getStatusString();
 		return desc;
 	}
+
+    @Override
+    public PsuedoJsonObject getPsuedoJson() {
+        PsuedoJsonObject j = new PsuedoJsonObject(getName());
+        
+        StatusTable s = getInflict();
+        PsuedoJsonObject status = null;
+        for(int i = 0; i < s.getSize(); i++){
+            status = new PsuedoJsonObject(s.getNameAt(i).toString());
+            status.addPair("Intensity", s.getIntensityAt(i) + "");
+            status.addPair("Duration", s.getDurationAt(i) + "");
+            status.addPair("Chance", s.getChanceAt(i) + "");
+            j.addPair(s.getNameAt(i).toString(), status);
+        }
+        
+        return j;
+    }
 }
