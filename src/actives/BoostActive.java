@@ -17,6 +17,7 @@ public class BoostActive extends AbstractActive{
 		StatusName[] sn = new StatusName[orig.getSize()];
         
         
+        
 		int[] ints = new int[orig.getSize()];
 		int[] durs = new int[orig.getSize()];
 		
@@ -47,6 +48,9 @@ public class BoostActive extends AbstractActive{
     public PsuedoJsonObject getPsuedoJson() {
         PsuedoJsonObject j = new PsuedoJsonObject(getName());
         
+        j.addPair("Type", this.getType().toString());
+        
+        
         StatusTable s = getInflict();
         PsuedoJsonObject status = null;
         for(int i = 0; i < s.getSize(); i++){
@@ -56,6 +60,7 @@ public class BoostActive extends AbstractActive{
             status.addPair("Chance", s.getChanceAt(i) + "");
             j.addPair(s.getNameAt(i).toString(), status);
         }
+        j.addPair("Tags", getTagPsuedoJson());
         
         return j;
     }

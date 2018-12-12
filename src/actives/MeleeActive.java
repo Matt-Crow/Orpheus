@@ -48,7 +48,9 @@ public class MeleeActive extends AbstractActive{
     @Override
     public PsuedoJsonObject getPsuedoJson() {
         PsuedoJsonObject j = new PsuedoJsonObject(getName());
+        j.addPair("Type", this.getType().toString());
         j.addPair(ActiveStatName.DAMAGE.toString(), getBase(ActiveStatName.DAMAGE) + "");
+        j.addPair("Tags", getTagPsuedoJson());
         return j;
     }
 }

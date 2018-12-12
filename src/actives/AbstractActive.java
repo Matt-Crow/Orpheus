@@ -53,6 +53,14 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
     
     public abstract PsuedoJsonObject getPsuedoJson();
     
+    public PsuedoJsonObject getTagPsuedoJson(){
+        PsuedoJsonObject j = new PsuedoJsonObject("Tags");
+        for(int i = 0; i < tags.size(); i++){
+            j.addPair("Tag" + (i+1), tags.get(i).toString());
+        }
+        return j;
+    }
+    
     public static void logAllPsuedoJson(){
         allActives.values().stream().forEach(
             act -> out.println(act.getPsuedoJson().toString())

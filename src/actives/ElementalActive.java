@@ -62,12 +62,12 @@ public class ElementalActive extends AbstractActive{
             ActiveStatName.RANGE,
             ActiveStatName.SPEED
         };
-        
+        j.addPair("Type", this.getType().toString());
         for(ActiveStatName n : keys){
             j.addPair(n.toString(), getBase(n) + "");
         }
         j.addPair(ActiveStatName.PARTICLETYPE.toString(), getParticleType().toString());
-        
+        j.addPair("Tags", getTagPsuedoJson());
         return j;
     }
 }
