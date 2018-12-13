@@ -4,22 +4,40 @@ import customizables.CharacterStatName;
 import entities.Player;
 import initializers.Master;
 
-/*
+/**
  * The damage backlog is used to keep track
- * of the damage a player has taken.
+ * of the damage a player has taken,
+ * and how much damage they have "logged".
+ * This logged damage is dealt over a period of time, 
+ * instead of instantly, giving Players a minimum lifespan over which they will survive.
+ *
+ * Players lose HP at the end of every frame, 
+ * based on the amount in the backlog,
+ * losing at most 20% of their maximum HP every second.
+ * 
+ * For example,
+ * if a Player has a maximum HP of 500, 
+ * then is assigned 150 points of damage,
+ * they will take 100 damage over the first second after receiving the damage,
+ * then 50 damage over the half second after that.
+ * 
+ * Every second, the Player regenerates 5% of their maximum HP.
  */
-public class DamageBacklog {
-	private int maxHP;
+public final class DamageBacklog {
+	private final Player registeredTo;
+    private final int maxHP;
 	private int remHP;
-	private int timeSinceLastHeal;
-	private int dmg;
-	private double filter;
-	private Player registeredTo;
+	private int timeSinceLastHeal; //number of frames since the user last regenerated health.
+	private int dmg; //backlogged damage
+    private final double baseFilter;
+	private double secondaryFilter; //this is altered by some statuses. Resets every frame
+    //The maximum percentage of the player's max HP that can be depleted per frame is (maxHP * baseFilter * secondaryFilter) 
 	
 	public DamageBacklog(Player register){
 		registeredTo = register;
 		dmg = 0;
-		filter = 1.0 / Master.seconds(5);
+		baseFilter = 1.0 / Master.seconds(5);
+        secondaryFilter = 1.0;
 		maxHP = (int) register.getStatValue(CharacterStatName.HP);
 		remHP = maxHP;
 		timeSinceLastHeal = 0;
@@ -31,7 +49,7 @@ public class DamageBacklog {
 		return remHP / registeredTo.getStatValue(CharacterStatName.HP) * 100;
 	}
 	public void applyFilter(double f){
-		filter *= f;
+		secondaryFilter *= f;
 	}
 	public void log(int damage){
 		dmg += damage;
@@ -44,8 +62,8 @@ public class DamageBacklog {
 			return;
 		}
 		int damage;
-		if(dmg > registeredTo.getStatValue(CharacterStatName.HP) * filter){
-			damage = (int) (registeredTo.getStatValue(CharacterStatName.HP) * filter);
+		if(dmg > registeredTo.getStatValue(CharacterStatName.HP) * baseFilter * secondaryFilter){
+			damage = (int) (registeredTo.getStatValue(CharacterStatName.HP) * baseFilter * secondaryFilter);
 		} else {
 			damage = dmg;
 		}
@@ -83,7 +101,7 @@ public class DamageBacklog {
 		
 		Op.dp();
 		*/
-		filter = 1.0 / Master.seconds(5);
+		secondaryFilter = 1.0;
 		
 		timeSinceLastHeal += 1;
 		if(timeSinceLastHeal >= Master.seconds(1)){
