@@ -1,6 +1,7 @@
 package PsuedoJson;
 
 import static java.lang.System.out;
+import java.nio.file.Path;
 
 public class PsuedoJsonExample {
     public static void main(String[] args) {
@@ -20,5 +21,12 @@ public class PsuedoJsonExample {
         
         pjo1.displayData();
         pjo2.displayData();
+        
+        //String path = PsuedoJsonExample.class.getResource("/test.txt").getPath();
+        //out.println(path);
+        String thisPath = PsuedoJsonExample.class.getResource("PsuedoJsonExample.class").getPath();
+        out.println(thisPath);
+        PsuedoJsonFile file = new PsuedoJsonFile("noexist.txt");//new PsuedoJsonFile(path);
+        file.writeObjects(new PsuedoJsonObject[]{pjo1, pjo2});
     }
 }

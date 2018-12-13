@@ -2,6 +2,7 @@ package statuses;
 
 import java.util.ArrayList;
 
+// redo this to be less aweful
 public class StatusTable {
 	/**
 	 * Used to store status data for actives and passives
