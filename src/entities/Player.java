@@ -10,7 +10,7 @@ import customizables.*;
 import resources.*;
 import passives.*;
 import ai.PlayerAI;
-import statuses.Status;
+import statuses.AbstractStatus;
 import statuses.StatusName;
 import initializers.Master;
 
@@ -25,7 +25,7 @@ public class Player extends Entity{
 	private EnergyLog energyLog;
 	
 	private MeleeActive slash;
-	private ArrayList<Status> statuses;
+	private ArrayList<AbstractStatus> statuses;
 	
 	private PlayerAI playerAI;
 	private int lastHitById; //the useId of the last projectile that hit this player
@@ -86,7 +86,7 @@ public class Player extends Entity{
 	public void inflict(StatusName statusName, int intensity, int duration){
 		boolean found = false;
 		boolean shouldReplace = false;
-		for(Status s : statuses){
+		for(AbstractStatus s : statuses){
 			if(s.getStatusName() == statusName && !found){
 				// already inflicted
 				found = true;
@@ -100,7 +100,7 @@ public class Player extends Entity{
 			}
 		}
 		if(shouldReplace || !found){
-			statuses.add(Status.decode(statusName, intensity, duration));
+			statuses.add(AbstractStatus.decode(statusName, intensity, duration));
 		}
 	}
 	
@@ -153,14 +153,14 @@ public class Player extends Entity{
 	}
 	
 	public void updateStatuses(){
-		ArrayList<Status> newStatuses = new ArrayList<>();
-		for(Status s : statuses){
+		ArrayList<AbstractStatus> newStatuses = new ArrayList<>();
+		for(AbstractStatus s : statuses){
 			if(!s.getShouldTerminate()){
 				newStatuses.add(s);
 			}
 		}
 		statuses = newStatuses;
-		for(Status s : statuses){
+		for(AbstractStatus s : statuses){
 			s.inflictOn(this);
 		}
 	}
@@ -204,7 +204,7 @@ public class Player extends Entity{
 		
 		g.setColor(Color.black);
 		int y = getY() + h/10;
-		for(Status s : statuses){
+		for(AbstractStatus s : statuses){
 			String iStr = "";
 			int i = 0;
 			while(i < s.getIntensityLevel()){

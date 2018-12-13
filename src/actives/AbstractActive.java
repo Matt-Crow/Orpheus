@@ -16,7 +16,6 @@ import upgradables.AbstractUpgradable;
 import resources.Op;
 import resources.Number; // use later for minMax?
 
-//TODO: add tag copy to PsuedoJson
 public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
     /**
      * Actives are abilities that the user triggers

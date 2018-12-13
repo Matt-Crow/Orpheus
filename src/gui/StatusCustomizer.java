@@ -4,7 +4,7 @@ import java.awt.GridLayout;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
-import statuses.Status;
+import statuses.AbstractStatus;
 import statuses.StatusName;
 import upgradables.AbstractUpgradable;
 
@@ -17,7 +17,7 @@ public class StatusCustomizer extends JComponent{
 	private OptionBox<Integer> duration;
 	private OptionBox<Integer> chance;
 	
-	public StatusCustomizer(AbstractUpgradable a, Status s, int c){
+	public StatusCustomizer(AbstractUpgradable a, AbstractStatus s, int c){
 		super();
 		statusOwner = a;
 		
@@ -27,7 +27,7 @@ public class StatusCustomizer extends JComponent{
 		
 		Integer[] v1 = {1, 2, 3};
 		intensity = new OptionBox<>("Intensity", v1);
-		intensity.setSelected((Integer)s.getBaseLevel());
+		intensity.setSelected((Integer)s.getIntensityLevel());
 		add(intensity);
 		
 		Integer[] v2 = {1, 2, 3};

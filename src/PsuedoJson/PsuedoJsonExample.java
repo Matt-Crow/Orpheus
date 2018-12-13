@@ -24,9 +24,9 @@ public class PsuedoJsonExample {
         
         //String path = PsuedoJsonExample.class.getResource("/test.txt").getPath();
         //out.println(path);
-        String thisPath = PsuedoJsonExample.class.getResource("PsuedoJsonExample.class").getPath();
+        String thisPath = PsuedoJsonExample.class.getResource("/test.txt").getPath();
         out.println(thisPath);
-        PsuedoJsonFile file = new PsuedoJsonFile("noexist.txt");//new PsuedoJsonFile(path);
+        PsuedoJsonFile file = new PsuedoJsonFile(thisPath);//new PsuedoJsonFile(path);
         file.writeObjects(new PsuedoJsonObject[]{pjo1, pjo2});
     }
 }

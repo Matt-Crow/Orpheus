@@ -5,7 +5,7 @@ import actions.OnHitKey;
 import entities.Player;
 import resources.Number;
 
-public class Resistance extends Status{
+public class Resistance extends AbstractStatus{
 	public Resistance(int lv, int uses){
 		super(StatusName.RESISTANCE, "Resistance", Number.minMax(1, lv, 3), Number.minMax(1, uses, 3) * 2 + 1);
 		// make this stronger
@@ -20,6 +20,6 @@ public class Resistance extends Status{
 		p.getActionRegister().addOnBeHit(a);
 	}
 	public String getDesc(){
-		return "Resistance, reducing the speed of damage taken by " + (25 * getIntensityLevel()) + "% for the next " + getUses() + " hits received";
+		return "Resistance, reducing the speed of damage taken by " + (25 * getIntensityLevel()) + "% for the next " + getBaseUses() + " hits received";
 	}
 }

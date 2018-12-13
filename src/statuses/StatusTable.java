@@ -69,8 +69,8 @@ public class StatusTable {
 	public int getChanceAt(int i){
 		return chances.get(i);
 	}
-	public Status getStatusAt(int i){
-		return Status.decode(names.get(i), intensities.get(i), durations.get(i));
+	public AbstractStatus getStatusAt(int i){
+		return AbstractStatus.decode(names.get(i), intensities.get(i), durations.get(i));
 	}
 	public int getSize(){
 		return names.size();
@@ -82,7 +82,7 @@ public class StatusTable {
 			if(getChanceAt(i) < 100){
 				desc += "\n" + getChanceAt(i) + "% chance to inflict";
 			}
-			desc += "\n" + Status.decode(getNameAt(i), getIntensityAt(i), getDurationAt(i)).getDesc();
+			desc += "\n" + AbstractStatus.decode(getNameAt(i), getIntensityAt(i), getDurationAt(i)).getDesc();
 		}
 		return desc;
 	}

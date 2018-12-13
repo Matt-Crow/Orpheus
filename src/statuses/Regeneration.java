@@ -5,7 +5,7 @@ import entities.Player;
 import resources.Number;
 import initializers.Master;
 
-public class Regeneration extends Status{
+public class Regeneration extends AbstractStatus{
 	public Regeneration(int lv, int dur){
 		super(StatusName.REGENERATION, "Regeneration", Number.minMax(1, lv, 3), Master.seconds(Number.minMax(1, dur, 3)) + 2);
 		// 3 - 5 seconds of 2.5% - 7.5% healing each second
@@ -22,6 +22,6 @@ public class Regeneration extends Status{
 		p.getActionRegister().addOnUpdate(a);
 	}
 	public String getDesc(){
-		return "Regeneration, restoring " + (2.5 * getIntensityLevel()) + "% of the inflicted's HP every second for " + Master.framesToSeconds(getUses()) + " seconds";
+		return "Regeneration, restoring " + (2.5 * getIntensityLevel()) + "% of the inflicted's HP every second for " + Master.framesToSeconds(getBaseUses()) + " seconds";
 	}
 }

@@ -5,7 +5,7 @@ import entities.Player;
 import resources.Number;
 import initializers.Master;
 
-public class Rush extends Status{
+public class Rush extends AbstractStatus{
 	public Rush(int lv, int dur){
 		super(StatusName.RUSH, "Rush", Number.minMax(1, lv, 3), Master.seconds(Number.minMax(1, dur, 3) + 2));
 		// 3 - 5 seconds of + 20% to 60% movement
@@ -21,6 +21,6 @@ public class Rush extends Status{
 		p.getActionRegister().addOnUpdate(a);
 	}
 	public String getDesc(){
-		return "Rush, increasing the inflicted's movement speed by " + (20 * getIntensityLevel()) + "% for the next " + Master.framesToSeconds(getUses()) + " seconds";
+		return "Rush, increasing the inflicted's movement speed by " + (20 * getIntensityLevel()) + "% for the next " + Master.framesToSeconds(getBaseUses()) + " seconds";
 	}
 }
