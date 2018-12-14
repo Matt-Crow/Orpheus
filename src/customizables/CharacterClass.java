@@ -1,6 +1,5 @@
 package customizables;
 import upgradables.AbstractUpgradable;
-import upgradables.AbstractStat;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -87,25 +86,20 @@ public class CharacterClass extends AbstractUpgradable<CharacterStatName>{
         value = Number.minMax(1, value, 5);
         switch(c){
         case HP:
-            addStat(new CharacterStat(CharacterStatName.HP, 700 + 100 * value, 2));
-            setBase(CharacterStatName.HP, value);
+            addStat(CharacterStatName.HP, value, 700 + 100 * value);
             break;
         case ENERGY:
-            addStat(new CharacterStat(CharacterStatName.ENERGY, 12.5 * (value + 1), 2));
-            setBase(CharacterStatName.ENERGY, value);
+            addStat(CharacterStatName.ENERGY, value, 12.5 * (value + 1));
             break;
         case DMG:
-            addStat(new CharacterStat(CharacterStatName.DMG, 0.7 + 0.1 * value));
-            setBase(CharacterStatName.DMG, value);
+            addStat(CharacterStatName.DMG, value, 0.7 + 0.1 * value);
             break;
         case REDUCTION:
             // 1: 120%, 5: 80%
-            addStat(new CharacterStat(CharacterStatName.REDUCTION, 1.3 - 0.1 * value));
-            setBase(CharacterStatName.REDUCTION, value);
+            addStat(CharacterStatName.REDUCTION, value, 1.3 - 0.1 * value);
             break;
         case SPEED:
-            addStat(new CharacterStat(CharacterStatName.SPEED, (0.7 + 0.1 * value)));
-            setBase(CharacterStatName.SPEED, value);
+            addStat(CharacterStatName.SPEED, value, (0.7 + 0.1 * value));
             break;
         }
     }

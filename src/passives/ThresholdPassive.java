@@ -1,6 +1,5 @@
 package passives;
 
-import upgradables.AbstractStat;
 import resources.Number;
 
 public class ThresholdPassive extends AbstractPassive{
@@ -30,8 +29,7 @@ public class ThresholdPassive extends AbstractPassive{
 			 * 4: 1/4 (25%)
 			 * 5: 1/3 (33%)
 			 */
-			addStat(new PassiveStat(PassiveStatName.THRESHOLD, thresh));
-			setBase(PassiveStatName.THRESHOLD, base);
+			addStat(PassiveStatName.THRESHOLD, base, thresh);
 			break;
 		}
 	}

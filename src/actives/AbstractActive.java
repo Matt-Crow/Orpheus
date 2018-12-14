@@ -212,8 +212,7 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
             } else if(value == 5){
                     deg = 360;
             }
-            addStat(new ActiveStat(ActiveStatName.ARC, deg));
-            setBase(ActiveStatName.ARC, value);
+            addStat(ActiveStatName.ARC, value, deg);
             break;
         case RANGE:
             // 1-15 units of range. Increases exponentially
@@ -222,26 +221,22 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
             for(int i = 0; i <= value; i++){
                     units += i;
             }
-            addStat(new ActiveStat(ActiveStatName.RANGE, units * 100));
-            setBase(ActiveStatName.RANGE, value);
+            addStat(ActiveStatName.RANGE, value, units * 100);
             break;
         case SPEED:
             // 1-5 units per second
             value = Number.minMax(1, value, 5);
-            addStat(new ActiveStat(ActiveStatName.SPEED, 100 * value / Master.FPS));
-            setBase(ActiveStatName.SPEED, value);
+            addStat(ActiveStatName.SPEED, value, 100 * value / Master.FPS);
             break;
         case AOE:
             // 1-5 units (or 0)
             value = Number.minMax(0, value, 5);
-            addStat(new ActiveStat(ActiveStatName.AOE, value * 100));
-            setBase(ActiveStatName.AOE, value);
+            addStat(ActiveStatName.AOE, value, value * Master.UNITSIZE);
             break;
         case DAMAGE:
             // 50-250 to 250-500 damage (will need to balance later?)
             value = Number.minMax(1, value, 5);
-            addStat(new ActiveStat(ActiveStatName.DAMAGE, value * 50, 2));
-            setBase(ActiveStatName.DAMAGE, value);
+            addStat(ActiveStatName.DAMAGE, value, value * 50);
             break;
         }
         calculateCost();
