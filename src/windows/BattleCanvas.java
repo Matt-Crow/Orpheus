@@ -1,23 +1,13 @@
 package windows;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.MouseInfo;
-import java.awt.Point;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.KeyEvent;
-import javax.swing.AbstractAction;
-import javax.swing.Timer;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
 import battle.*;
 import gui.Button;
 import resources.KeyRegister;
-import initializers.Master;
-import initializers.Controls;
+import initializers.*;
 import resources.Chat;
 
 public class BattleCanvas extends DrawingPlane implements MouseListener, KeyListener{
@@ -36,8 +26,7 @@ public class BattleCanvas extends DrawingPlane implements MouseListener, KeyList
 		b.addActionListener(new AbstractAction(){
 			public static final long serialVersionUID = 12L;
 			public void actionPerformed(ActionEvent e){
-				new MainWindow();
-				close();
+				switchTo(new MainCanvas());
 			}
 		});
 		addMenuItem(b);

@@ -3,8 +3,7 @@ package windows;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
-import gui.Button;
-import gui.Title;
+import gui.*;
 import resources.Op;
 
 @SuppressWarnings("serial")
@@ -13,7 +12,7 @@ public class StartCanvas extends DrawingPlane{
 	
 	public StartCanvas(){
 		super();
-		
+		StartCanvas c = this;
 		Title title = new Title("The Orpheus Proposition");
 		addMenuItem(title);
 		
@@ -27,8 +26,7 @@ public class StartCanvas extends DrawingPlane{
 		};
 		actions[1] = new AbstractAction("Play"){
 			public void actionPerformed(ActionEvent e){
-				new MainWindow();
-				close();
+                switchTo(new MainCanvas());
 			}
 		};
 		actions[2] = new AbstractAction("How to play"){

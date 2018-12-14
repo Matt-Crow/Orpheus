@@ -1,6 +1,6 @@
 package windows;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 import initializers.Master;
 import resources.CloseWindow;
 

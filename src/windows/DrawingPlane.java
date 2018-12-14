@@ -10,14 +10,10 @@ import resources.Op;
 
 import javax.swing.AbstractAction;
 
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.geom.AffineTransform;
+import javax.swing.JFrame;
 
 public class DrawingPlane extends JPanel{
 	public static final long serialVersionUID = 1L;
@@ -133,6 +129,11 @@ public class DrawingPlane extends JPanel{
 			}
 		};
 	}	
+    public void switchTo(JPanel j){
+        JFrame parent = (JFrame)SwingUtilities.getWindowAncestor(this);
+        parent.setContentPane(j);
+        parent.revalidate();
+    }
 	public void close(){
 		SwingUtilities.getWindowAncestor(this).dispose();
 	}

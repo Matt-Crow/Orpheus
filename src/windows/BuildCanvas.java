@@ -2,23 +2,12 @@ package windows;
 
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
-
-import actives.AbstractActive;
-import actives.ActiveStatName;
-
+import actives.*;
 import java.util.ArrayList;
-import customizables.Build;
-import customizables.CharacterClass;
-import customizables.CharacterStatName;
+import customizables.*;
 import entities.Player;
-import gui.Button;
-import gui.OptionBox;
-import gui.Pane;
-import gui.UpgradableSelector;
-import passives.AbstractPassive;
-import passives.PassiveStatName;
-import gui.Text;
-import upgradables.AbstractUpgradable;
+import gui.*;
+import passives.*;
 
 //need to redo this
 @SuppressWarnings("serial")
@@ -41,7 +30,7 @@ public class BuildCanvas extends DrawingPlane{
 		quit.addActionListener(new AbstractAction(){
 			public static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent e){
-				new MainWindow();
+				switchTo(new MainCanvas());
 				close();
 			}
 		});
@@ -50,8 +39,7 @@ public class BuildCanvas extends DrawingPlane{
 		temp = new Button("customize upgradables");
 		temp.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				new CustomizeWindow();
-				close();
+				switchTo(new CustomizeCanvas());
 			}
 		});
 		add(temp);
@@ -125,8 +113,7 @@ public class BuildCanvas extends DrawingPlane{
 						passives[1].getBox().getSelected().getName(), 
 						passives[2].getBox().getSelected().getName()
 								);
-				new MainWindow();
-				close();
+				switchTo(new MainCanvas());
 			}
 		});
 		addMenuItem(finish);

@@ -30,8 +30,7 @@ public class CustomizeCanvas extends DrawingPlane{
 		Button quit = new Button("Return to build window");
 		quit.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				new BuildWindow();
-				close();
+				switchTo(new BuildCanvas());
 			}
 		});
 		addMenuItem(quit);

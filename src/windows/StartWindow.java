@@ -5,14 +5,11 @@ public class StartWindow  extends DrawingFrame{
 	 * Startwindow is used as a 'launcher' for the game
 	 */
 	public static final long serialVersionUID = 1L;
-	StartCanvas draw;
 	
 	public StartWindow(){
 		super();
-		setTitle("Orpheus");
-		
-		draw = new StartCanvas();
-		setContentPane(draw);
+		setTitle("The Orpheus Proposition");
+		setContentPane(new StartCanvas());
 		setVisible(true);
 	}
 }

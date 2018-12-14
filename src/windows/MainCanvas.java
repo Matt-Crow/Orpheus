@@ -50,8 +50,7 @@ public class MainCanvas extends DrawingPlane{
 		Button newBuild = new Button("Customize");
 		newBuild.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				new BuildWindow();
-				close();
+				switchTo(new BuildCanvas());
 			}
 		});
 		add(newBuild);
