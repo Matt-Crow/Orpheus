@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import entities.Entity;
 import entities.Player;
 
+/**
+ * An ActionRegister is used to store OnHit- and OnUpdate-Listeners, and register them to an Entity.
+ * It is used by the Player class to store Status effects and passives.
+ */
 public class ActionRegister {
 	private Entity registeredTo;
 	private ArrayList<OnHitListener> onHitRegister;
@@ -13,6 +17,10 @@ public class ActionRegister {
 	private ArrayList<OnHitListener> onBeMeleeHitRegister;
 	private ArrayList<OnUpdateListener> onUpdateRegister;
 	
+    /**
+     * Stores Listeners for an Entity.
+     * @param e the Entity to store Listeners for.
+     */
 	public ActionRegister(Entity e){
 		registeredTo = e;
 		onHitRegister = new ArrayList<>();
@@ -21,15 +29,35 @@ public class ActionRegister {
 		onBeMeleeHitRegister = new ArrayList<>();
 		onUpdateRegister = new ArrayList<>();
 	}
+    
+    /**
+     * adds a Listener that will fire whenever this Entity lands an attack on another.
+     * @param a the listener to add.
+     */
 	public void addOnHit(OnHitListener a){
 		onHitRegister.add(a);
 	}
+    
+    /**
+     * Adds a Listener that will fire whenever this Entity is struck by another.
+     * @param a the listener to add.
+     */
 	public void addOnBeHit(OnHitListener a){
 		onBeHitRegister.add(a);
 	}
+    
+    /**
+     * adds a Listener that will fire whenever this Entity lands an attack on another.
+     * @param a the listener to add.
+     */
 	public void addOnMeleeHit(OnHitListener a){
 		onMeleeHitRegister.add(a);
 	}
+    
+    /**
+     * Adds a 
+     * @param a 
+     */
 	public void addOnBeMeleeHit(OnHitListener a){
 		onBeMeleeHitRegister.add(a);
 	}

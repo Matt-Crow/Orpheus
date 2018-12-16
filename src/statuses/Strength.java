@@ -25,6 +25,7 @@ public class Strength extends AbstractStatus{
     @Override
 	public void inflictOn(Player p){
 		OnHitListener a = new OnHitListener(){
+            @Override
 			public void actionPerformed(OnHitEvent e){
 				Player target = (Player)e.getWasHit();
 				target.getLog().logPercentageDamage(3.5 * getIntensityLevel());
@@ -37,6 +38,8 @@ public class Strength extends AbstractStatus{
 		};
 		p.getActionRegister().addOnMeleeHit(a);
 	}
+    
+    @Override
 	public String getDesc(){
 		return "Strength, causing the inflicted's next " + getBaseUses() + " melee attacks to deal an extra " + (3.5 * getIntensityLevel()) + "% of the target's maximum HP and knock them back " + (3.5 * getIntensityLevel()) + " units";
 	}
