@@ -1,22 +1,32 @@
 package statuses;
 
-import actions.OnHitTrip;
-import actions.OnHitKey;
+import actions.*;
 import entities.Player;
 import initializers.Master;
 import resources.Direction;
 import resources.Number;
-import resources.Op;
 
+/**
+ * Strength causes the afflicted Entity to knock back those it hits and do more damage
+ */
 public class Strength extends AbstractStatus{
+    
+    /**
+     * 
+     * @param lv 1-3. The afflicted's melee attack do some knockback 
+     * and deal an extra 3.5% of the targets maximum HP for each level of this status.
+     * @param uses effect lasts for the next ((uses * 2) + 1) melee attacks the afflicted performs that hit an enemy.
+     */
 	public Strength(int lv, int uses){
 		super(StatusName.STRENGTH, "Strength", Number.minMax(1, lv, 3), Number.minMax(1, uses, 3) * 2 + 1);
 		// 3 - 7 uses of 3.5% to 10.5% extra damage logged and knocks back lv units
 	}
+    
+    @Override
 	public void inflictOn(Player p){
-		OnHitKey a = new OnHitKey(){
-			public void trip(OnHitTrip t){
-				Player target = (Player)t.getHit();
+		OnHitListener a = new OnHitListener(){
+			public void actionPerformed(OnHitEvent e){
+				Player target = (Player)e.getWasHit();
 				target.getLog().logPercentageDamage(3.5 * getIntensityLevel());
                 
                 Direction angleBetween = Direction.getDegreeByLengths(p.getX(), p.getY(), target.getX(), target.getY());

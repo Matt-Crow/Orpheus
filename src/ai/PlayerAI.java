@@ -1,8 +1,7 @@
 package ai;
 
 import entities.Player;
-import actions.OnHitTrip;
-import actions.OnHitKey;
+import actions.*;
 import resources.Coordinates;
 
 public class PlayerAI extends AI{
@@ -44,8 +43,9 @@ public class PlayerAI extends AI{
 				attack();
 			}
 		}
-		OnHitKey a = new OnHitKey(){
-			public void trip(OnHitTrip t){
+		OnHitListener a = new OnHitListener(){
+            @Override
+			public void actionPerformed(OnHitEvent t){
 				latch((Player)t.getHitter());
 			}
 		};

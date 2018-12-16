@@ -4,8 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
-import actions.OnHitKey;
-import actions.OnHitTrip;
+import actions.*;
 import statuses.StatusTable;
 import entities.Player;
 import resources.Op;
@@ -91,16 +90,17 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
 			p.inflict(inf.getNameAt(i), inf.getIntensityAt(i), inf.getDurationAt(i));
 		}
 	}
-	public OnHitKey getKey(){
-		OnHitKey a = new OnHitKey(){
-			public void trip(OnHitTrip t){
+	public OnHitListener getKey(){
+		OnHitListener a = new OnHitListener(){
+            @Override
+			public void actionPerformed(OnHitEvent t){
 				StatusTable inf = getInflict();
 				for(int i = 0; i < inf.getSize(); i++){
 					if(Random.chance(inf.getChanceAt(i))){
 						if(getTargetsUser()){
 							getRegisteredTo().inflict(inf.getNameAt(i), inf.getIntensityAt(i), inf.getDurationAt(i));
 						} else {
-							((Player)t.getHit()).inflict(inf.getNameAt(i), inf.getIntensityAt(i), inf.getDurationAt(i));
+							((Player)t.getWasHit()).inflict(inf.getNameAt(i), inf.getIntensityAt(i), inf.getDurationAt(i));
 						}
 					}
 				}
