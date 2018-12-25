@@ -2,7 +2,7 @@ package windows;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.AbstractAction;
+import javax.swing.*;
 import gui.*;
 import resources.Op;
 
@@ -13,7 +13,7 @@ public class StartCanvas extends DrawingPlane{
 	public StartCanvas(){
 		super();
 		StartCanvas c = this;
-		Title title = new Title("The Orpheus Proposition");
+		JLabel title = new JLabel("The Orpheus Proposition");
 		addMenuItem(title);
 		
 		String[] buttonTexts = {"About this game", "Play", "How to Play"};

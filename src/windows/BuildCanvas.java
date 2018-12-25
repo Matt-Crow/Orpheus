@@ -31,7 +31,6 @@ public class BuildCanvas extends DrawingPlane{
 			public static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent e){
 				switchTo(new MainCanvas());
-				close();
 			}
 		});
 		addMenuItem(quit);

@@ -1,17 +1,15 @@
 package gui;
 
-import javax.swing.JComponent;
+import javax.swing.*;
 
 import java.awt.GridLayout;
 
 import java.util.ArrayList;
 
-import javax.swing.AbstractAction;
-
 @SuppressWarnings("serial")
 public class OptionBox<T> extends JComponent{
 	private ArrayList<T> options;
-	private Title title;
+	private JLabel title;
 	private Dropdown<String> box;
 	
 	public OptionBox(String t, T[] opt){
@@ -19,7 +17,8 @@ public class OptionBox<T> extends JComponent{
 		Style.applyStyling(this);
 		setLayout(new GridLayout(2, 1));
 		
-		title = new Title(t);
+		title = new JLabel(t);
+        Style.applyStyling(title);
 		add(title);
 		
 		options = new ArrayList<T>();

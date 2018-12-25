@@ -5,6 +5,7 @@ import javax.swing.SwingUtilities;
 
 import graphics.CustomColors;
 import gui.Pane;
+import gui.Style;
 import initializers.Master;
 import resources.Op;
 
@@ -103,12 +104,15 @@ public class DrawingPlane extends JPanel{
 		g.translate(x, y);
 	}
 	
+    @Override
 	public Component add(Component j){
 		content.add(j);
+        Style.applyStyling(j);
 		return j;
 	}
 	public Component addMenuItem(Component j){
 		menuBar.add(j);
+        Style.applyStyling(j);
 		return j;
 	}
 	public void remove(Component j){
