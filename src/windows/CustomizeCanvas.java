@@ -1,5 +1,6 @@
 package windows;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import actives.AbstractActive;
@@ -18,16 +19,16 @@ public class CustomizeCanvas extends DrawingPlane{
 	private AbstractUpgradable customizing;
 	
 	// used to choose the type of what to customize
-	private Button act;
-	private Button cha;
-	private Button pas;
+	private JButton act;
+	private JButton cha;
+	private JButton pas;
 	
-	private Button customize;
+	private JButton customize;
 	
 	public CustomizeCanvas(){
 		super();
 		
-		Button quit = new Button("Return to build window");
+		JButton quit = new JButton("Return to build window");
 		quit.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				switchTo(new BuildCanvas());
@@ -35,7 +36,7 @@ public class CustomizeCanvas extends DrawingPlane{
 		});
 		addMenuItem(quit);
 		
-		act = new Button("Active");
+		act = new JButton("Active");
 		act.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				phase2(UpgradableType.ACTIVE);
@@ -43,7 +44,7 @@ public class CustomizeCanvas extends DrawingPlane{
 		});
 		add(act);
 		
-		cha = new Button("Character Class");
+		cha = new JButton("Character Class");
 		cha.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				phase2(UpgradableType.CHARACTER_CLASS);
@@ -51,7 +52,7 @@ public class CustomizeCanvas extends DrawingPlane{
 		});
 		add(cha);
 		
-		pas = new Button("Passive");
+		pas = new JButton("Passive");
 		pas.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				phase2(UpgradableType.PASSIVE);
@@ -65,7 +66,7 @@ public class CustomizeCanvas extends DrawingPlane{
 		removePhase1();
 		
 		String[] names = new String[]{"An error occurred in CustomizeCanvas.phase2..."};
-		customize = new Button("Customize selected build");
+		customize = new JButton("Customize selected build");
 		add(customize);
 		
 		switch(type){

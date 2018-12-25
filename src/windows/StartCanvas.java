@@ -37,7 +37,7 @@ public class StartCanvas extends DrawingPlane{
 		};
 		
 		for(int i = 0; i < 3; i++){
-			Button b = new Button(buttonTexts[i]);
+			JButton b = new JButton(buttonTexts[i]);
 			b.addActionListener(actions[i]);
 			add(b);
 		}

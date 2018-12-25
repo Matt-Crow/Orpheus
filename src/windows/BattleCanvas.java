@@ -5,7 +5,6 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import battle.*;
-import gui.Button;
 import resources.KeyRegister;
 import initializers.*;
 import resources.Chat;

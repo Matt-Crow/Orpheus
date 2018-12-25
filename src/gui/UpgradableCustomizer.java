@@ -1,7 +1,6 @@
 package gui;
 
-import javax.swing.AbstractAction;
-import javax.swing.JComponent;
+import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
@@ -15,11 +14,11 @@ import upgradables.AbstractUpgradable;
 @SuppressWarnings("serial")
 public class UpgradableCustomizer<T> extends JComponent{
 	private AbstractUpgradable<T> customizing;
-	private Text name;
+	private JTextArea name;
 	private Pane p1; // used to split into two sections
 	private Pane p2;
-	private Text desc;
-	private Button save;
+	private JTextArea desc;
+	private JButton save;
 	private int boxCount;
 	private ArrayList<StatusCustomizer> statusBoxes;
 	
@@ -33,7 +32,7 @@ public class UpgradableCustomizer<T> extends JComponent{
 		add(p1);
 		add(p2);
 		
-		name = new Text(customizing.getName());
+		name = new JTextArea(customizing.getName());
 		name.setEditable(true);
 		name.addCaretListener(new CaretListener(){
 			public void caretUpdate(CaretEvent e){
@@ -42,17 +41,21 @@ public class UpgradableCustomizer<T> extends JComponent{
 			}
 		});
 		p1.add(name);
+        Style.applyStyling(name);
+        name.setEditable(true);
 		
-		desc = new Text(customizing.getDescription());
+		desc = new JTextArea(customizing.getDescription());
 		p2.setLayout(new GridLayout(2, 1));
 		p2.add(desc);
+        Style.applyStyling(desc);
 		
-		save = new Button("Save changes");
+		save = new JButton("Save changes");
 		save.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				save();
 			}
 		});
+        Style.applyStyling(save);
 		p2.add(save);
 		statusBoxes = new ArrayList<>();
 		boxCount = 0;

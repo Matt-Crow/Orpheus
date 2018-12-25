@@ -2,10 +2,9 @@ package windows;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
+import javax.swing.*;
 import java.util.ArrayList;
 
-import gui.Button;
 import gui.OptionBox;
 
 import battle.Team;
@@ -25,7 +24,7 @@ public class MainCanvas extends DrawingPlane{
 	public MainCanvas(){
 		super();
 		
-		Button b = new Button("Quit");
+		JButton b = new JButton("Quit");
 		b.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				new StartWindow();
@@ -47,7 +46,7 @@ public class MainCanvas extends DrawingPlane{
 			numStr[i] = Integer.toString(numbers[i]);
 		}
 		
-		Button newBuild = new Button("Customize");
+		JButton newBuild = new JButton("Customize");
 		newBuild.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				switchTo(new BuildCanvas());
@@ -55,7 +54,7 @@ public class MainCanvas extends DrawingPlane{
 		});
 		add(newBuild);
 
-		Button battle = new Button("Battle");
+		JButton battle = new JButton("Battle");
 		battle.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				team1 = Team.constructRandomTeam("Team 1", Color.green, Integer.parseInt(team1Size.getSelected().toString()) - 1);

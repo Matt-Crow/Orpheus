@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class OptionBox<T> extends JComponent{
 	private ArrayList<T> options;
 	private JLabel title;
-	private Dropdown<String> box;
+	private JComboBox<String> box;
 	
 	public OptionBox(String t, T[] opt){
 		super();
@@ -25,8 +25,9 @@ public class OptionBox<T> extends JComponent{
 		for(int i = 0; i < opt.length; i++){
 			options.add(opt[i]);
 		}
-		box = new Dropdown<>(getOptions());
+		box = new JComboBox<>(getOptions());
 		add(box);
+        Style.applyStyling(box);
 	}
 	public String getTitle(){
 		return title.getText();

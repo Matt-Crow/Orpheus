@@ -4,13 +4,13 @@ import javax.swing.JComponent;
 import java.awt.GridLayout;
 
 import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
+import javax.swing.*;
 import upgradables.AbstractUpgradable;
 
 @SuppressWarnings("serial")
 public class UpgradableSelector<T> extends JComponent{
 	private OptionBox<AbstractUpgradable<T>> box;
-	private Text desc;
+	private JTextArea desc;
 	
 	public UpgradableSelector(String title, AbstractUpgradable<T>[] a){
 		super();
@@ -23,8 +23,9 @@ public class UpgradableSelector<T> extends JComponent{
 		});
 		add(box);
 		
-		desc = new Text(box.getSelected().getDescription());
+		desc = new JTextArea(box.getSelected().getDescription());
 		add(desc);
+        Style.applyStyling(desc);
 		Style.applyStyling(this);
 	}
 	public OptionBox<AbstractUpgradable<T>> getBox(){

@@ -1,7 +1,7 @@
 package windows;
 
 import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
+import javax.swing.*;
 import actives.*;
 import java.util.ArrayList;
 import customizables.*;
@@ -17,16 +17,16 @@ public class BuildCanvas extends DrawingPlane{
 	private UpgradableSelector<ActiveStatName>[] actives;
 	private UpgradableSelector<PassiveStatName>[] passives;
 	
-	private Button temp;
+	private JButton temp;
 	
-	private Button setClass;
-	private Button finish;
-	private Text name;
+	private JButton setClass;
+	private JButton finish;
+	private JTextArea name;
 	private Player testPlayer;
 	
 	public BuildCanvas(){
 		super();
-		Button quit = new Button("Quit without saving");
+		JButton quit = new JButton("Quit without saving");
 		quit.addActionListener(new AbstractAction(){
 			public static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent e){
@@ -35,7 +35,7 @@ public class BuildCanvas extends DrawingPlane{
 		});
 		addMenuItem(quit);
 		
-		temp = new Button("customize upgradables");
+		temp = new JButton("customize upgradables");
 		temp.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				switchTo(new CustomizeCanvas());
@@ -53,7 +53,7 @@ public class BuildCanvas extends DrawingPlane{
 		baseBuild.addActionListener(getRepaint());
 		add(baseBuild);
 		
-		setClass = new Button("Edit/copy build");
+		setClass = new JButton("Edit/copy build");
 		setClass.addActionListener(new AbstractAction(){
 			public static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent e){
@@ -73,11 +73,11 @@ public class BuildCanvas extends DrawingPlane{
 		Build b = Build.getBuildByName(baseBuild.getSelected().toString());
 		testPlayer.applyBuild(b);
 		
-		add(new Pane());
-		name = new Text(b.getName());
-		name.setEditable(true);
+		add(new JComponent(){});
+		name = new JTextArea(b.getName());
 		add(name);
-		
+		name.setEditable(true);
+        
 		classSelect = new UpgradableSelector<CharacterStatName>("Character Class", CharacterClass.getAll());
 		classSelect.getBox().setSelected(b.getClassName());
 		add(classSelect);
@@ -98,7 +98,7 @@ public class BuildCanvas extends DrawingPlane{
 			add(passives[i]);
 		}
 		
-		finish = new Button("Save");
+		finish = new JButton("Save");
 		finish.addActionListener(new AbstractAction(){
 			public static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent e){

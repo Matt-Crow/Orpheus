@@ -4,12 +4,11 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import graphics.CustomColors;
-import gui.Pane;
 import gui.Style;
 import initializers.Master;
 import resources.Op;
 
-import javax.swing.AbstractAction;
+import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -19,8 +18,8 @@ import javax.swing.JFrame;
 public class DrawingPlane extends JPanel{
 	public static final long serialVersionUID = 1L;
 	
-	private Pane menuBar;
-	private Pane content;
+	private JComponent menuBar;
+	private JComponent content;
 	
 	private Graphics2D g;
 	private AffineTransform initialTransform;
@@ -39,7 +38,7 @@ public class DrawingPlane extends JPanel{
 		priorY = 0;
 		setLayout(new GridBagLayout());
 		GridBagConstraints c1 = new GridBagConstraints();
-		menuBar = new Pane();
+		menuBar = new JComponent(){};
 		c1.weightx = 1;
 		c1.weighty = 1;
 		c1.fill = GridBagConstraints.BOTH;
@@ -49,7 +48,7 @@ public class DrawingPlane extends JPanel{
 		c2.weighty = 9;
 		c2.weightx = 1;
 		c2.fill = GridBagConstraints.BOTH;
-		content = new Pane();
+		content = new JComponent(){};
 		super.add(content, c2);
 		setBackground(CustomColors.black);
 		setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
