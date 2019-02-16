@@ -6,17 +6,17 @@ import java.util.ArrayList;
 import entities.Player;
 import resources.Random;
 import resources.Coordinates;
-import resources.Direction;
 import customizables.Build;
+import entities.Entity;
 
 public class Team {
-	private String name;
-	private Color color;
+	private final String name;
+	private final Color color;
 	private Team enemyTeam;
 	private boolean defeated;
 	private ArrayList<Player> membersRem;
 	
-	private int id;
+	private final int id;
 	private static int nextId = 0;
 	
 	public Team(String n, Color c){
@@ -73,7 +73,7 @@ public class Team {
 		return defeated;
 	}
 	public Player nearestPlayerTo(int x, int y){
-		if(membersRem.size() == 0){
+		if(membersRem.isEmpty()){
 			throw new IndexOutOfBoundsException("No players exist for team " + name);
 		}
 		Player ret = membersRem.get(0);
@@ -93,14 +93,26 @@ public class Team {
 	
 	public void update(){
 		ArrayList<Player> newMembersRem = new ArrayList<>();
-		membersRem.stream().forEach(p -> p.doUpdate());
+		membersRem.stream().forEach(p -> {
+            Entity current = p;
+            while(current != null){
+                current.doUpdate();
+                current = current.getChild();
+            }
+        });
 		membersRem.stream().filter(p -> !p.getShouldTerminate()).forEach(p -> newMembersRem.add(p));
 		membersRem = newMembersRem;
-		if(membersRem.size() == 0){
+		if(membersRem.isEmpty()){
 			defeated = true;
 		}
 	}
 	public void draw(Graphics g){
-		membersRem.stream().forEach(p -> p.draw(g));
+		membersRem.stream().forEach(p -> {
+            Entity current = p;
+            while(current != null){
+                current.draw(g);
+                current = current.getChild();
+            }
+        });
 	}
 }

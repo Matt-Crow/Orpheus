@@ -21,15 +21,13 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
      * Actives are abilities that the user triggers
      */
     private ParticleType particleType;
-    private ActiveType type; // used for upcasting
+    private final ActiveType type; // used for upcasting
     private int cost; // the energy cost of the active. Calculated automatically
-    private ArrayList<Projectile> projectiles;
-    private ArrayList<Projectile> nextProjectiles; // projectiles to add at the end of the frame (used to avoid concurrent modification)
     
-    private ArrayList<ActiveTag> tags;
+    private final ArrayList<ActiveTag> tags;
     
     private static int nextUseId = 0; // How many actives have been used thus far. Used to prevent double hitting
-    private static HashMap<String, AbstractActive> allActives = new HashMap<>();
+    private static final HashMap<String, AbstractActive> allActives = new HashMap<>();
 
     public AbstractActive(ActiveType t, String n, int arcLength, int range, int speed, int aoe, int dmg){
         super(n);
@@ -271,13 +269,9 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
     public boolean containsTag(ActiveTag t){
         return tags.contains(t);
     }
-
-    // misc
-    public void init(){
-        super.init();
-        projectiles = new ArrayList<>();
-        nextProjectiles = new ArrayList<>();
-    }
+    
+    
+    
     public ActiveType getType(){
         return type;
     }
@@ -301,8 +295,9 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
         }
     }
 
+    
     public void registerProjectile(Projectile p){
-        nextProjectiles.add(p);
+        p.insertAfter(this.getRegisteredTo());
     }
 
     // spawning
@@ -322,21 +317,15 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
         }
     }
 
+    @Override
     public void update(){
         super.update();
-
-        projectiles.stream()
-        .forEach(p -> p.doUpdate());
-
-        projectiles.stream()
-        .filter(p -> !p.getShouldTerminate())
-        .forEach(p -> nextProjectiles.add(p));
-        projectiles = nextProjectiles;
-
-        nextProjectiles = new ArrayList<>();
-    }
-    public void drawProjectiles(Graphics g){
-        projectiles.stream().forEach(p -> p.draw(g));
+        
+        Entity current = getRegisteredTo().getChild();
+        while(current != null){
+            current.doUpdate();
+            current = current.getChild();
+        }
     }
     
     public void drawStatusPane(Graphics g, int x, int y, int w, int h){

@@ -1,7 +1,6 @@
 package entities;
 
 import java.awt.Graphics;
-import java.util.ArrayList;
 
 import graphics.CustomColors;
 import actives.AbstractActive;
@@ -15,21 +14,20 @@ import resources.Op;
 import resources.Random;
 
 public class Projectile extends Entity{
-	private Player user;
-	private AbstractActive registeredAttack;
+	private final Player user;
+	private final AbstractActive registeredAttack;
 	private int distanceTraveled;
 	private int range;
 	private Player hit;
-	private ArrayList<Particle> particles;
 	
-	private int id; //used to prevent double hitting. May not be unique to a single projectile. See AbstractActive for more info
-	
+	private final int useId; //used to prevent double hitting. May not be unique to a single projectile. See AbstractActive for more info
+    
 	public Projectile(int useId, int x, int y, int degrees, int momentum, Player attackUser, AbstractActive a){
 		super();
         setSpeed(momentum);
         doInit();
 		initPos(x, y, degrees);
-		id = useId;
+		this.useId = useId;
 		distanceTraveled = 0;
 		user = attackUser;
 		setTeam(user.getTeam());
@@ -38,10 +36,9 @@ public class Projectile extends Entity{
 		
 		setMoving(true);
 		hit = new Player("Void");
-		particles = new ArrayList<>();
 	}
 	public int getUseId(){
-		return id;
+		return useId;
 	}
 	public void setRange(int i){
 		range = i;
@@ -86,6 +83,7 @@ public class Projectile extends Entity{
 	}
 	
 	// TODO: add checking for collisions with particles, other stuff
+    @Override
 	public boolean checkForCollisions(Entity e){
 		boolean ret = false;
 		if(super.checkForCollisions(e)){
@@ -102,7 +100,7 @@ public class Projectile extends Entity{
         p.doInit();
 		p.initPos(getX(), getY(), degrees);
 		p.setTeam(this.getTeam());
-		particles.add(p);
+        p.insertAfter(this);
 	}
 	@Override
     public void init() {
@@ -111,9 +109,8 @@ public class Projectile extends Entity{
     
     @Override
 	public void update(){
-		
 		for(Player p : getTeam().getEnemy().getMembersRem()){
-			if(p.getLastHitById() != id){
+			if(p.getLastHitById() != useId){
 				checkForCollisions(p);
 			}
 		}
@@ -154,10 +151,6 @@ public class Projectile extends Entity{
 				Op.add("is not found for Projectile.java");
 				Op.dp();
 			}
-			particles.stream().forEach(p -> p.doUpdate());
-			ArrayList<Particle> newPart = new ArrayList<>();
-			particles.stream().filter(p -> !p.getShouldTerminate()).forEach(p -> newPart.add(p));
-			particles = newPart;
 		}
 	}
     
@@ -166,9 +159,6 @@ public class Projectile extends Entity{
 		if(registeredAttack.getParticleType() == ParticleType.NONE || Master.DISABLEPARTICLES){
 			g.setColor(user.getTeam().getColor());
 			g.fillOval(getX() - 25, getY() - 25, 50, 50);
-		} 
-		if(!Master.DISABLEPARTICLES){
-			particles.stream().forEach(p -> p.draw(g));
 		}
 	}
 }

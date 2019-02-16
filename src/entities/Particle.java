@@ -1,5 +1,6 @@
 package entities;
 
+import initializers.Master;
 import java.awt.Color;
 import java.awt.Graphics;
 
@@ -25,8 +26,10 @@ public class Particle extends Entity{
     
     @Override
 	public void draw(Graphics g){
-		g.setColor(color);
-		g.fillRect(getX(), getY(), size, size);
+        if(!Master.DISABLEPARTICLES){
+            g.setColor(color);
+            g.fillRect(getX(), getY(), size, size);
+        }
 	}
     
     @Override

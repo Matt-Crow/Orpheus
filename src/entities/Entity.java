@@ -6,6 +6,8 @@ import resources.Direction;
 import battle.Team;
 import actions.ActionRegister;
 import ai.AI;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class Entity {
 	/**
@@ -49,11 +51,17 @@ public abstract class Entity {
 	private AI entityAI;
 	
 	// misc
-	private final int id;
+	public final int id;
 	private static int nextId = 0;
+    
+    //linked list stuff
+    private Entity prev;
+    private Entity next;
     
 	public Entity(){
 		id = nextId;
+        prev = null;
+        next = null;
 		nextId++;
 	}
     
@@ -92,10 +100,10 @@ public abstract class Entity {
 	}
     
     //change later
+     /**
+     * @param f : the amount this entity's speed will be multiplied by
+     */
 	public final void applySpeedFilter(double f){
-        /**
-         * @param f : the amount this entity's speed will be multiplied by
-         */
 		speedFilter *= f;
 	}
 	public final void setMoving(boolean isMoving){
@@ -220,6 +228,13 @@ public abstract class Entity {
     //add on terminate?
 	public void terminate(){
 		shouldTerminate = true;
+        
+        if(prev != null){
+            prev.next = next; //will set to null if this doesn't have a next
+        }
+        if(next != null){
+            next.prev = prev;
+        }
 	}
 	
 	public final boolean getShouldTerminate(){
@@ -260,6 +275,24 @@ public abstract class Entity {
             update();
 		}
 	}
+    
+    public final void insertAfter(Entity e){
+        if(e == this){
+            System.out.println(this + " is trying to add itself as a child in Entity.insertAfter");
+        } else {
+            Entity temp = e.next;
+            e.next = this;
+            prev = e;
+            next = temp;
+            if(temp != null){
+                temp.prev = this;
+            }
+        }
+    }
+    
+    public final Entity getChild(){
+        return next;
+    }
     
     public abstract void init();
     public abstract void update();
