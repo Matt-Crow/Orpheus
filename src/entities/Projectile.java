@@ -124,7 +124,7 @@ public class Projectile extends Entity{
 		
 		CustomColors[] cs = user.getCharacterClass().getColors();
 		
-		if(!Master.DISABLEPARTICLES){
+		if(!Master.DISABLEPARTICLES && !getShouldTerminate()){
 			switch(registeredAttack.getParticleType()){
 			case BURST:
 				for(int i = 0; i < Master.TICKSTOROTATE; i++){
