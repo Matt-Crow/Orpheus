@@ -8,7 +8,6 @@ import resources.Random;
 import resources.Coordinates;
 import customizables.Build;
 import entities.Entity;
-import java.util.stream.Collectors;
 
 /**
  * The Team class is used to keep track of

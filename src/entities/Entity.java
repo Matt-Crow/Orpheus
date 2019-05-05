@@ -6,8 +6,6 @@ import resources.Direction;
 import battle.Team;
 import actions.ActionRegister;
 import ai.AI;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public abstract class Entity {
 	/**
