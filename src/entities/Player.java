@@ -181,6 +181,12 @@ public class Player extends Entity{
 		log.update();
 		energyLog.update();
 	}
+    
+    @Override
+    public void terminate(){
+        super.terminate();
+        getTeam().notifyTerminate(this);
+    }
 	
     @Override
 	public void draw(Graphics g){

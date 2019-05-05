@@ -8,7 +8,7 @@ import windows.StartWindow;
 public class Run {
 	public static void main(String[] args) {
 		LoadActives.load();
-        AbstractActive.logAllPsuedoJson();
+        //AbstractActive.logAllPsuedoJson();
         //AbstractActive.readFile(Run.class.getClass().getResourceAsStream("/actives.csv"));
         
 		LoadPassives.load();

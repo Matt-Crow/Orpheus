@@ -109,11 +109,14 @@ public class Projectile extends Entity{
     
     @Override
 	public void update(){
-		for(Player p : getTeam().getEnemy().getMembersRem()){
-			if(p.getLastHitById() != useId){
-				checkForCollisions(p);
-			}
-		}
+        getTeam()
+            .getEnemy()
+            .getMembersRem()
+            .stream()
+            .filter((p) -> (p.getLastHitById() != useId))
+            .forEachOrdered((p) -> {
+                checkForCollisions(p);
+            });
 		
 		distanceTraveled += getMomentum();
 		

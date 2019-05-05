@@ -8,13 +8,23 @@ import resources.Random;
 import resources.Coordinates;
 import customizables.Build;
 import entities.Entity;
+import java.util.stream.Collectors;
 
+/**
+ * The Team class is used to keep track of
+ * which Players are allies, and which are enemies.
+ * It keeps track of which team members are still in the game,
+ * and reports itself as defeated once it has no members remaining.
+ * 
+ * @author Matt Crow
+ */
 public class Team {
 	private final String name;
 	private final Color color;
 	private Team enemyTeam;
 	private boolean defeated;
 	private ArrayList<Player> membersRem;
+    private ArrayList<Player> nextMembersRem; //used for when a Player is removed from the Team (see notifyTerminate)
 	
 	private final int id;
 	private static int nextId = 0;
@@ -23,9 +33,11 @@ public class Team {
 		name = n;
 		color = c;
 		membersRem = new ArrayList<>();
+        nextMembersRem = null;
 		id = nextId;
 		nextId++;
 	}
+    
 	public int getId(){
 		return id;
 	}
@@ -72,7 +84,8 @@ public class Team {
 	public boolean isDefeated(){
 		return defeated;
 	}
-	public Player nearestPlayerTo(int x, int y){
+	
+    public Player nearestPlayerTo(int x, int y){
 		if(membersRem.isEmpty()){
 			throw new IndexOutOfBoundsException("No players exist for team " + name);
 		}
@@ -90,9 +103,25 @@ public class Team {
 	public final ArrayList<Player> getMembersRem(){
 		return membersRem;
 	}
+    
+    /**
+     * Notifies this that a member is out of the game.
+     * Updates the list of members remaining accordingly.
+     * @param p the Player who was removed from the game.
+     */
+    public void notifyTerminate(Player p){
+        //prevent concurrent modification
+        if(nextMembersRem == null){
+            
+            //not a deep copy, but that's what we want: the same Players
+            nextMembersRem = (ArrayList<Player>)membersRem.clone();
+        }
+        nextMembersRem.remove(p);
+        
+        defeated = nextMembersRem.isEmpty();
+    }
 	
 	public void update(){
-		ArrayList<Player> newMembersRem = new ArrayList<>();
 		membersRem.stream().forEach(p -> {
             Entity current = p;
             while(current != null){
@@ -100,11 +129,11 @@ public class Team {
                 current = current.getChild();
             }
         });
-		membersRem.stream().filter(p -> !p.getShouldTerminate()).forEach(p -> newMembersRem.add(p));
-		membersRem = newMembersRem;
-		if(membersRem.isEmpty()){
-			defeated = true;
-		}
+        
+        if(nextMembersRem != null){
+            membersRem = nextMembersRem;
+            nextMembersRem = null;
+        }
 	}
 	public void draw(Graphics g){
 		membersRem.stream().forEach(p -> {
