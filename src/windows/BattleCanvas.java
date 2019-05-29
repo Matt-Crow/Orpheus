@@ -5,13 +5,16 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import battle.*;
+import controllers.World;
 import resources.KeyRegister;
 import initializers.*;
 import resources.Chat;
 
 public class BattleCanvas extends DrawingPlane implements MouseListener, KeyListener{
 	public static final long serialVersionUID = 1L;
-	private Battlefield battlefield;
+	//private Battlefield battlefield;
+    private World world;
+    
 	private Battle hostedBattle;
 	private Timer timer;
 	private ActionListener update;
@@ -50,9 +53,12 @@ public class BattleCanvas extends DrawingPlane implements MouseListener, KeyList
 	public void setBattle(Team team1, Team team2){
 		hostedBattle = new Battle(this, team1, team2);
 		Master.setCurrentBattle(hostedBattle);
-		battlefield = new Battlefield();
+		//battlefield = new Battlefield();
+        world = new World(20);
+        world.setTileSize(100);
+        world.setColor(0, Color.BLUE);
 		
-		hostedBattle.setHost(battlefield);
+		hostedBattle.setHost(world);
 		hostedBattle.init();
 		
 		Controls.registerControls(this);
@@ -124,7 +130,7 @@ public class BattleCanvas extends DrawingPlane implements MouseListener, KeyList
 		setG(g);
 		int[] trans = retTranslate();
 		translate(trans[0], trans[1]);
-		battlefield.draw(getG());
+		world.draw(getG());
 		hostedBattle.draw(getG());
 		resetToInit();
 		

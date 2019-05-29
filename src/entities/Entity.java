@@ -159,15 +159,16 @@ public abstract class Entity {
         }
 		
 		// keep entity on the battlefield
+        int bound = Master.getCurrentBattle().getHost().getSize();
 		if(x < 0){
 			x = 0;
-		} else if(x > Master.getCurrentBattle().getHost().getWidth()){
-			x = Master.getCurrentBattle().getHost().getWidth();
+		} else if(x > bound){
+			x = bound;
 		}
 		if(y < 0){
 			y = 0;
-		} else if(y > Master.getCurrentBattle().getHost().getHeight()){
-			y = Master.getCurrentBattle().getHost().getHeight();
+		} else if(y > bound){
+			y = bound;
 		}
 		
 		speedFilter = 1.0;

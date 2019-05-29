@@ -1,5 +1,6 @@
 package battle;
 
+import controllers.World;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import windows.BattleCanvas;
 
 public class Battle {
 	ArrayList<Team> teams;
-	private Battlefield host;
+	private World host;
 	private BattleCanvas hostingCanvas;
 	private boolean end;
 	
@@ -19,10 +20,10 @@ public class Battle {
 		hostingCanvas = b;
 	}
 	
-	public void setHost(Battlefield b){
-		host = b;
+	public void setHost(World w){
+		host = w;
 	}
-	public Battlefield getHost(){
+	public World getHost(){
 		return host;
 	}
 	public BattleCanvas getCanvas(){
@@ -30,12 +31,11 @@ public class Battle {
 	}
 	
 	public void init(){
-		int w = host.getWidth();
-		int h = host.getHeight();
-		int spacingFromTopEdge = host.getTileSize();
-		int spacingBetween = w / 6;
+		int s = host.getSize();
+		int spacingFromTopEdge = 50; //arbitrary. Will change later
+		int spacingBetween = s / 6;
 		teams.get(0).init(spacingFromTopEdge, spacingBetween, 270);
-		teams.get(1).init(h - spacingFromTopEdge * 2, spacingBetween, 90);
+		teams.get(1).init(s - spacingFromTopEdge * 2, spacingBetween, 90);
 		Master.setCurrentBattle(this);
 		end = false;
 	}
