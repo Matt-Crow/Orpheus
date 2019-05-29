@@ -4,18 +4,25 @@ package entities;
  * Used by EntityManager to link Entities together
  * @author Matt Crow
  */
-public class EntityNode {
+public class EntityNode{
     private final Entity entity;
     private EntityNode next;
-    private boolean addedDuringIter;
     
-    public EntityNode(Entity e, boolean managerIsIterating){
+    public EntityNode(Entity e){
         if(e == null){
             throw new NullPointerException();
         }
         entity = e;
-        addedDuringIter = managerIsIterating;
         next = null;
+    }
+    
+    @Override
+    public EntityNode clone() throws CloneNotSupportedException{
+        EntityNode ret = new EntityNode(entity);//(EntityNode)super.clone(); //not sure if I need this
+        if(next != null){
+            ret.next = next.clone();
+        }
+        return ret;
     }
     
     public Entity get(){
@@ -34,20 +41,5 @@ public class EntityNode {
     
     public EntityNode getNext(){
         return next;
-    }
-    
-    /**
-     * Calls the Entity's update method,
-     * if this was not added this update cycle
-     * @return whether or not this updated
-     */
-    public boolean update(){
-        boolean ret = !addedDuringIter;
-        if(ret){
-            entity.doUpdate();
-        } else {
-            addedDuringIter = false;
-        }
-        return ret;
     }
 }

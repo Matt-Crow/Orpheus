@@ -8,6 +8,7 @@ import resources.Random;
 import resources.Coordinates;
 import customizables.Build;
 import entities.Entity;
+import entities.EntityNode;
 
 /**
  * The Team class is used to keep track of
@@ -25,6 +26,9 @@ public class Team {
 	private ArrayList<Player> membersRem;
     private ArrayList<Player> nextMembersRem; //used for when a Player is removed from the Team (see notifyTerminate)
 	
+    private EntityNode head;
+    private EntityNode newHead; //used for when a Player is removed from the Team (see notifyTerminate)
+    
 	private final int id;
 	private static int nextId = 0;
 	
