@@ -52,8 +52,20 @@ public class EntityManager {
    
    public void print(){
        forEach((e)->{
-           System.out.println("Entity #" + e.id + " " + ((Player)e).getName());
+           System.out.println(e.toString());
        });
+   }
+   
+   public void update(){
+       isIterating = true;
+       EntityNode curr = head;
+       while(curr != null){
+           if(!curr.update()){
+               System.out.println(curr.get().id + " did not update");
+           }
+           curr = curr.getNext();
+       }
+       isIterating = false;
    }
    
    public static void main(String[] args){

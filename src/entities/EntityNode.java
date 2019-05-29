@@ -35,4 +35,19 @@ public class EntityNode {
     public EntityNode getNext(){
         return next;
     }
+    
+    /**
+     * Calls the Entity's update method,
+     * if this was not added this update cycle
+     * @return whether or not this updated
+     */
+    public boolean update(){
+        boolean ret = !addedDuringIter;
+        if(ret){
+            entity.doUpdate();
+        } else {
+            addedDuringIter = false;
+        }
+        return ret;
+    }
 }
