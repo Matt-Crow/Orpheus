@@ -6,6 +6,7 @@ import javax.swing.*;
 
 import battle.*;
 import controllers.World;
+import graphics.Tile;
 import resources.KeyRegister;
 import initializers.*;
 import resources.Chat;
@@ -55,7 +56,7 @@ public class BattleCanvas extends DrawingPlane implements MouseListener, KeyList
 		Master.setCurrentBattle(hostedBattle);
 		//battlefield = new Battlefield();
         world = new World(20);
-        world.setColor(0, Color.BLUE);
+        world.setBlock(0, new Tile(0, 0, Color.BLUE));
 		
 		hostedBattle.setHost(world);
         world.initTiles();

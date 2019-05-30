@@ -39,10 +39,12 @@ public class WorldCanvas extends DrawingPlane{
             }
         }
         
+        //.setBlock(0, WhiteBlock.class)
+        //.setBlock(1, BlackBlock.class)
         
         c.world
-            .setBlock(0, WhiteBlock.class)
-            .setBlock(1, BlackBlock.class)
+            .setBlock(0, new WhiteBlock(0, 0))
+            .setBlock(1, new BlackBlock(0, 0))
             .setTile(0, 0, 1)
             .setTile(0, 1, 1)
             .setTile(0, 2, 1)

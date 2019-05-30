@@ -24,9 +24,11 @@ import java.util.HashMap;
 public class World {
     private final int worldSize;
     private final int[][] map;
-    private final HashMap<Integer, Color> colors;
     
+    private final HashMap<Integer, Color> colors; //will have to choose 1 to use
+    private final HashMap<Integer, Tile> tileSet;
     private final HashMap<Integer, Class> tileClasses;
+    
     private final ArrayList<Tile> tiles;
     
     private final ArrayList<Team> teams; //makes it faster to find nearest enemies
@@ -42,6 +44,7 @@ public class World {
         }
         colors = new HashMap<>();
         tileClasses = new HashMap<>();
+        tileSet = new HashMap<>();
         tiles = new ArrayList<>();
         teams = new ArrayList<>();
     }
@@ -54,6 +57,11 @@ public class World {
     public World setBlock(int valueInMap, Class t){
         //todo add constructor checking
         tileClasses.put(valueInMap, t);
+        return this;
+    }
+    
+    public World setBlock(int valueInMap, Tile t){
+        tileSet.put(valueInMap, t);
         return this;
     }
     
@@ -80,6 +88,11 @@ public class World {
         
         for(int x = 0; x < worldSize; x++){
             for(int y = 0; y < worldSize; y++){
+                if(tileSet.containsKey(map[x][y])){
+                    t = tileSet.get(map[x][y]).copy(x, y);
+                    tiles.add(t);
+                }
+                /*
                 if(tileClasses.containsKey(map[x][y])){
                     try {
                         for(Constructor con : tileClasses.get(map[x][y]).getConstructors()){
@@ -103,7 +116,7 @@ public class World {
                     } catch (InvocationTargetException ex) {
                         ex.printStackTrace();
                     }
-                }
+                }*/
             }
         }
     }

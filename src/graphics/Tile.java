@@ -31,6 +31,13 @@ public class Tile {
         blocking = false;
     }
     
+    //each subclass will have to override
+    public Tile copy(int x, int y){
+        Tile ret = new Tile(x, y, c);
+        ret.blocking = blocking;
+        return ret;
+    }
+    
     public void setBlocking(boolean blocksEntities){
         blocking = blocksEntities;
     }
