@@ -2,9 +2,16 @@
 package windows;
 
 import controllers.World;
+import graphics.ImageTile;
 import graphics.Tile;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 /**
@@ -28,23 +35,15 @@ public class WorldCanvas extends DrawingPlane{
         f.setContentPane(c);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        class BlackBlock extends Tile{
-            public BlackBlock(int x, int y){
-                super(x, y, Color.BLACK);
-            }
+        try {
+            Image testImage = ImageIO.read(c.getClass().getResourceAsStream("/testImage.PNG"));
+            c.world.setBlock(0, new ImageTile(0, 0, testImage));
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
-        class WhiteBlock extends Tile{
-            public WhiteBlock(int x, int y){
-                super(x, y, Color.WHITE);
-            }
-        }
-        
-        //.setBlock(0, WhiteBlock.class)
-        //.setBlock(1, BlackBlock.class)
         
         c.world
-            .setBlock(0, new WhiteBlock(0, 0))
-            .setBlock(1, new BlackBlock(0, 0))
+            .setBlock(1, new Tile(0, 0, Color.BLACK))
             .setTile(0, 0, 1)
             .setTile(0, 1, 1)
             .setTile(0, 2, 1)

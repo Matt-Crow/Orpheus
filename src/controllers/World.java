@@ -4,10 +4,7 @@ import battle.Team;
 import graphics.Tile;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -54,26 +51,8 @@ public class World {
         return this;
     }
     
-    public World setBlock(int valueInMap, Class t){
-        //todo add constructor checking
-        tileClasses.put(valueInMap, t);
-        return this;
-    }
-    
     public World setBlock(int valueInMap, Tile t){
         tileSet.put(valueInMap, t);
-        return this;
-    }
-    
-    public World setColor(int valueInMap, Color c){
-        class C extends Tile{
-            public C(int x, int y){
-                super(x, y, c);
-            }
-        }
-        
-        colors.put(valueInMap, c);
-        tileClasses.put(valueInMap, C.class);
         return this;
     }
     
@@ -83,7 +62,6 @@ public class World {
     
     public void initTiles(){
         tiles.clear();
-        Constructor c;
         Tile t;
         
         for(int x = 0; x < worldSize; x++){
@@ -92,31 +70,6 @@ public class World {
                     t = tileSet.get(map[x][y]).copy(x, y);
                     tiles.add(t);
                 }
-                /*
-                if(tileClasses.containsKey(map[x][y])){
-                    try {
-                        for(Constructor con : tileClasses.get(map[x][y]).getConstructors()){
-                            System.out.println("Parameters:");
-                            System.out.println(Arrays.toString(con.getParameterTypes()));
-                        }
-                        
-                        c = tileClasses.get(map[x][y]).getConstructor(int.class, int.class);
-                        t = (Tile)c.newInstance(x, y);
-                        tiles.add(t);
-                    } catch (NoSuchMethodException ex) {
-                        ex.printStackTrace();
-                    } catch (SecurityException ex) {
-                        ex.printStackTrace();
-                    } catch (InstantiationException ex) {
-                        ex.printStackTrace();
-                    } catch (IllegalAccessException ex) {
-                        ex.printStackTrace();
-                    } catch (IllegalArgumentException ex) {
-                        ex.printStackTrace();
-                    } catch (InvocationTargetException ex) {
-                        ex.printStackTrace();
-                    }
-                }*/
             }
         }
     }

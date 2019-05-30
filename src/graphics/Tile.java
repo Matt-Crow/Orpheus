@@ -11,6 +11,8 @@ public class Tile {
     public static final int TILE_SIZE = 100;
     private static final int TILE_SPACING = (int)(TILE_SIZE * 0.05);
     private static final int RECT_SIZE = (int)(TILE_SIZE * 0.9);
+    private static final Color TANGIBLE_OUTLINE_COLOR = Color.BLACK; //the color of the outline around tiles that check collisions
+    private static final Color INTANGIBLE_OUTLINE_COLOR = Color.WHITE; //the color of the outline around tiles that don't check collisions
     
     private final int x;
     private final int y;
@@ -38,19 +40,30 @@ public class Tile {
         return ret;
     }
     
+    public int getX(){
+        return x;
+    }
+    
+    public int getY(){
+        return y;
+    }
+    
     public void setBlocking(boolean blocksEntities){
         blocking = blocksEntities;
     }
     
+    public boolean getBlocking(){
+        return blocking;
+    }
+    
     public void draw(Graphics g){
         if(blocking){
-            g.setColor(Color.BLACK);
-            g.fillRect(x, y, TILE_SIZE, TILE_SIZE);
-            g.setColor(c);
-            g.fillRect(x + TILE_SPACING, y + TILE_SPACING, RECT_SIZE, RECT_SIZE);
+            g.setColor(TANGIBLE_OUTLINE_COLOR);
         } else {
-            g.setColor(c);
-            g.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+            g.setColor(INTANGIBLE_OUTLINE_COLOR);
         }
+        g.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+        g.setColor(c);
+        g.fillRect(x + TILE_SPACING, y + TILE_SPACING, RECT_SIZE, RECT_SIZE);
     }
 }
