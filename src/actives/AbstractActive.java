@@ -302,7 +302,8 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
 
     // spawning
     public void spawnProjectile(int facingDegrees){
-        registerProjectile(new SeedProjectile(nextUseId, getRegisteredTo().getX(), getRegisteredTo().getY(), facingDegrees, (int) getStatValue(ActiveStatName.SPEED), getRegisteredTo(), this));
+        getRegisteredTo().spawn(new SeedProjectile(nextUseId, getRegisteredTo().getX(), getRegisteredTo().getY(), facingDegrees, (int) getStatValue(ActiveStatName.SPEED), getRegisteredTo(), this));
+        ///new SeedProjectile(nextUseId, getRegisteredTo().getX(), getRegisteredTo().getY(), facingDegrees, (int) getStatValue(ActiveStatName.SPEED), getRegisteredTo(), this));
     }
     public void spawnProjectile(){
         spawnProjectile(getRegisteredTo().getDir().getDegrees());

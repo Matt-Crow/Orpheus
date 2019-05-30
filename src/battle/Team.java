@@ -8,6 +8,7 @@ import resources.Random;
 import resources.Coordinates;
 import customizables.Build;
 import entities.Entity;
+import entities.EntityManager;
 import entities.EntityNode;
 
 /**
@@ -18,27 +19,25 @@ import entities.EntityNode;
  * 
  * @author Matt Crow
  */
-public class Team {
+public class Team extends EntityManager{
 	private final String name;
 	private final Color color;
 	private Team enemyTeam;
 	private boolean defeated;
-	private ArrayList<Player> membersRem;
-    private ArrayList<Player> nextMembersRem; //used for when a Player is removed from the Team (see notifyTerminate)
-	
-    private EntityNode head;
-    private EntityNode newHead; //used for when a Player is removed from the Team (see notifyTerminate)
-    
 	private final int id;
 	private static int nextId = 0;
+    
+    private final ArrayList<Player> roster;
+    private final ArrayList<Player> membersRem;
 	
 	public Team(String n, Color c){
-		name = n;
+		super();
+        name = n;
 		color = c;
-		membersRem = new ArrayList<>();
-        nextMembersRem = null;
 		id = nextId;
 		nextId++;
+        roster = new ArrayList<>();
+        membersRem = new ArrayList<>();
 	}
     
 	public int getId(){
@@ -53,7 +52,9 @@ public class Team {
 	}
 	
 	public void addMember(Player m){
-		membersRem.add(m);
+        roster.add(m);
+        add(m);
+        m.setTeam(this);
 	}
 	public static Team constructRandomTeam(String name, Color color, int size){
 		Team t = new Team(name, color);
@@ -69,10 +70,11 @@ public class Team {
     //OK to have different params, as this does not extend entity
 	public void init(int y, int spacing, int facing){
 		int x = spacing;
-		for(Player p : membersRem){
+        membersRem.clear();
+		for(Player p : roster){
 			p.initPos(x, y, facing);
             p.doInit();
-            p.setTeam(this);
+            membersRem.add(p);
 			x += spacing;
 		}
 		defeated = false;
@@ -92,9 +94,12 @@ public class Team {
 		if(membersRem.isEmpty()){
 			throw new IndexOutOfBoundsException("No players exist for team " + name);
 		}
-		Player ret = membersRem.get(0);
+        Player ret = membersRem.get(0);
 		int distance = (int)Coordinates.distanceBetween(ret.getX(), ret.getY(), x, y);
 		for(Player p : membersRem){
+            if(p.getShouldTerminate()){
+                continue;
+            }
 			int check = (int)Coordinates.distanceBetween(p.getX(), p.getY(), x, y);
 			if(check < distance){
 				ret = p;
@@ -110,41 +115,12 @@ public class Team {
     /**
      * Notifies this that a member is out of the game.
      * Updates the list of members remaining accordingly.
+     * Note that this does not affect iteration,
+     * just anything that references membersRem
      * @param p the Player who was removed from the game.
      */
     public void notifyTerminate(Player p){
-        //prevent concurrent modification
-        if(nextMembersRem == null){
-            
-            //not a deep copy, but that's what we want: the same Players
-            nextMembersRem = (ArrayList<Player>)membersRem.clone();
-        }
-        nextMembersRem.remove(p);
-        
-        defeated = nextMembersRem.isEmpty();
+        membersRem.remove(p);
+        defeated = membersRem.isEmpty();
     }
-	
-	public void update(){
-		membersRem.stream().forEach(p -> {
-            Entity current = p;
-            while(current != null){
-                current.doUpdate();
-                current = current.getChild();
-            }
-        });
-        
-        if(nextMembersRem != null){
-            membersRem = nextMembersRem;
-            nextMembersRem = null;
-        }
-	}
-	public void draw(Graphics g){
-		membersRem.stream().forEach(p -> {
-            Entity current = p;
-            while(current != null){
-                current.draw(g);
-                current = current.getChild();
-            }
-        });
-	}
 }

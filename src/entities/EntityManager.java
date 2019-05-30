@@ -1,5 +1,6 @@
 package entities;
 
+import java.awt.Graphics;
 import java.util.function.Consumer;
 
 /**
@@ -28,14 +29,12 @@ public class EntityManager {
     * @param e 
     */
    public void add(Entity e){
-       EntityNode en = new EntityNode(this, e);
-       
        if(head == null){
+           EntityNode en = new EntityNode(this, e);
            head = en;
            tail = en;
        } else {
-           tail.setNext(en);
-           tail = en;
+           tail.insert(e);
        }
    }
    
@@ -78,6 +77,16 @@ public class EntityManager {
            curr = curr.getNext();
        }
        isIterating = false;
+   }
+   
+   public void update(){
+       forEach((Entity e)->{
+           e.doUpdate();
+       });
+   }
+   
+   public void draw(Graphics g){
+       forEach((Entity e)->e.draw(g));
    }
    
    public void print(){

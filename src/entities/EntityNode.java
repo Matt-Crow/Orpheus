@@ -16,6 +16,7 @@ public class EntityNode{
         }
         manager = em;
         entity = e;
+        e.setNode(this);
         prev = null;
         next = null;
     }
@@ -30,6 +31,11 @@ public class EntityNode{
             ret.next = next.clone();
         }
         return ret;
+    }
+    
+    @Override
+    public String toString(){
+        return "Entity Node Containing Entity #" + entity.id;
     }
     
     public Entity get(){
@@ -48,19 +54,29 @@ public class EntityNode{
         if(e == null){
             throw new NullPointerException();
         }
+        if(e.hasParent() || e.hasChild()){
+            System.out.println("Uh oh in EntityNode.setPrev");
+        }
         if(prev != null){
-            e.setPrev(prev);
+            prev.next = e;
+            e.prev = prev;
         }
         prev = e;
+        e.next = this;
     }
     public void setNext(EntityNode e){
         if(e == null){
             throw new NullPointerException();
         }
+        if(e.hasParent() || e.hasChild()){
+            System.out.println("Uh oh in EntityNode.setNext");
+        }
         if(next != null){
-            e.setNext(next);
+            next.prev = e;
+            e.next = next;
         }
         next = e;
+        e.prev = this;
     }
     
     /**
@@ -96,11 +112,10 @@ public class EntityNode{
         if(prev == null){
             manager.headIsDead();
             if(next != null){
-                next.prev = null; //don't call setter
-                //as it will throw a null pointer exception
+                next.prev = null; 
             }
         } else {
-            next.setPrev(prev);
+            prev.next = next;
         }
         
         if(next == null){
@@ -109,7 +124,7 @@ public class EntityNode{
                 prev.next = null;
             }
         } else {
-            prev.setNext(next);
+            next.prev = prev;
         }
     }
     

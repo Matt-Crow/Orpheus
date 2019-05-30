@@ -52,6 +52,10 @@ public abstract class Entity {
 	public final int id;
 	private static int nextId = 0;
     
+    
+    private EntityNode inNode;
+    
+    
     //linked list stuff
     private Entity prev;
     private Entity next;
@@ -61,6 +65,7 @@ public abstract class Entity {
         prev = null;
         next = null;
 		nextId++;
+        inNode = null;
 	}
     
     @Override
@@ -80,6 +85,12 @@ public abstract class Entity {
         return "Entity #" + id;
     }
 	
+    
+    public void setNode(EntityNode n){
+        inNode = n;
+    }
+    
+    
 	// movement functions
 	public final int getX(){
 		return x;
@@ -234,6 +245,10 @@ public abstract class Entity {
         if(next != null){
             next.prev = prev;
         }
+        
+        if(inNode != null){
+            inNode.delete();
+        }
 	}
 	
 	public final boolean getShouldTerminate(){
@@ -274,6 +289,17 @@ public abstract class Entity {
             update();
 		}
 	}
+    
+    public final void spawn(Entity e){
+        if(e == null){
+            throw new NullPointerException();
+        }
+        if(inNode != null){
+            inNode.insert(e);
+        } else {
+            System.out.println("Cannot spawn: Not in a node!!!");
+        }
+    }
     
     public final void insertAfter(Entity e){
         if(e == this){
