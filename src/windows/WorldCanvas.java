@@ -2,6 +2,7 @@
 package windows;
 
 import controllers.World;
+import graphics.Tile;
 import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JFrame;
@@ -26,16 +27,30 @@ public class WorldCanvas extends DrawingPlane{
         WorldCanvas c = new WorldCanvas();
         f.setContentPane(c);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        class BlackBlock extends Tile{
+            public BlackBlock(int x, int y){
+                super(x, y, Color.BLACK);
+            }
+        }
+        class WhiteBlock extends Tile{
+            public WhiteBlock(int x, int y){
+                super(x, y, Color.WHITE);
+            }
+        }
+        
+        
         c.world
-            .setColor(0, Color.BLACK)
-            .setColor(1, Color.WHITE)
+            .setBlock(0, WhiteBlock.class)
+            .setBlock(1, BlackBlock.class)
             .setTile(0, 0, 1)
             .setTile(0, 1, 1)
             .setTile(0, 2, 1)
             .setTile(1, 1, 1)
             .setTile(2, 0, 1)
             .setTile(2, 1, 1)
-            .setTile(2, 2, 1);
+            .setTile(2, 2, 1)
+            .initTiles();
         f.setVisible(true);
         f.revalidate();
         f.repaint();

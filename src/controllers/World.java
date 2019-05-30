@@ -51,6 +51,12 @@ public class World {
         return this;
     }
     
+    public World setBlock(int valueInMap, Class t){
+        //todo add constructor checking
+        tileClasses.put(valueInMap, t);
+        return this;
+    }
+    
     public World setColor(int valueInMap, Color c){
         class C extends Tile{
             public C(int x, int y){
@@ -79,7 +85,7 @@ public class World {
                         for(Constructor con : tileClasses.get(map[x][y]).getConstructors()){
                             System.out.println("Parameters:");
                             System.out.println(Arrays.toString(con.getParameterTypes()));
-                        }return;
+                        }
                         
                         c = tileClasses.get(map[x][y]).getConstructor(int.class, int.class);
                         t = (Tile)c.newInstance(x, y);
