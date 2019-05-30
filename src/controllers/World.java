@@ -1,31 +1,39 @@
 package controllers;
 
 import battle.Team;
+import graphics.Tile;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
- *
+ * The World class will act as a controller for the game.
+ * It will keep track of all Entities in the game through one of 2 ways:
+ * either (a): by keeping track of each Team, which in turn keeps track of various entities
+ * or (b): Keeping track of all Entities as one gigantic linked list (of my own design).
+ * (a) has the advantage of being faster to check for collisions, as team members should collide with one another (or should they?)
+ * (b) suits a less structured world where Entities can be unaffilliated with a team, and allows me to search faster if the linked list is sorted by ID.
+ * 
+ * The World will handle all the drawing and updating as well.
  * @author Matt Crow
  */
 public class World {
     private final int worldSize;
-    private int tileSize; // the total size of each tile
-    private int spacing; // the spacing between each tile
-    private int rectSize; // the size of the colored portion of each tile
     private final int[][] map;
     private final HashMap<Integer, Color> colors;
+    
+    private final HashMap<Integer, Class> tileClasses;
+    private final ArrayList<Tile> tiles;
     
     private final ArrayList<Team> teams; //makes it faster to find nearest enemies
     //maybe just keep track of everything in one linked list?
     
     public World(int size){
         worldSize = size;
-        tileSize = 1;
-        spacing = 0;
-        rectSize = 1;
         map = new int[size][size];
         for(int i = 0; i < size; i++){
             for(int j = 0; j < size; j++){
@@ -33,14 +41,9 @@ public class World {
             }
         }
         colors = new HashMap<>();
+        tileClasses = new HashMap<>();
+        tiles = new ArrayList<>();
         teams = new ArrayList<>();
-    }
-    
-    public World setTileSize(int i){
-        tileSize = i;
-        spacing = (int)(tileSize * 0.05);
-        rectSize = i - 2 * spacing;
-        return this;
     }
     
     public World setTile(int x, int y, int value){
@@ -49,12 +52,54 @@ public class World {
     }
     
     public World setColor(int valueInMap, Color c){
+        class C extends Tile{
+            public C(int x, int y){
+                super(x, y, c);
+            }
+        }
+        
         colors.put(valueInMap, c);
+        tileClasses.put(valueInMap, C.class);
         return this;
     }
     
     public int getSize(){
-        return tileSize * worldSize;
+        return Tile.TILE_SIZE * worldSize;
+    }
+    
+    public void initTiles(){
+        tiles.clear();
+        Constructor c;
+        Tile t;
+        
+        for(int x = 0; x < worldSize; x++){
+            for(int y = 0; y < worldSize; y++){
+                if(tileClasses.containsKey(map[x][y])){
+                    try {
+                        for(Constructor con : tileClasses.get(map[x][y]).getConstructors()){
+                            System.out.println("Parameters:");
+                            System.out.println(Arrays.toString(con.getParameterTypes()));
+                        }return;
+                        
+                        c = tileClasses.get(map[x][y]).getConstructor(int.class, int.class);
+                        t = (Tile)c.newInstance(x, y);
+                        tiles.add(t);
+                    } catch (NoSuchMethodException ex) {
+                        ex.printStackTrace();
+                    } catch (SecurityException ex) {
+                        ex.printStackTrace();
+                    } catch (InstantiationException ex) {
+                        ex.printStackTrace();
+                    } catch (IllegalAccessException ex) {
+                        ex.printStackTrace();
+                    } catch (IllegalArgumentException ex) {
+                        ex.printStackTrace();
+                    } catch (InvocationTargetException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        }
     }
     
     public void update(){
@@ -63,15 +108,9 @@ public class World {
     
     public void draw(Graphics g){
         g.setColor(Color.BLACK);
-        g.fillRect(0, 0, worldSize * tileSize, worldSize * tileSize);
-        for(int x = 0; x < worldSize; x++){
-            for(int y = 0; y < worldSize; y++){
-                if(colors.containsKey(map[x][y])){
-                    g.setColor(colors.get(map[x][y]));
-                    g.fillRect(x * tileSize + spacing, y * tileSize + spacing, rectSize, rectSize);
-                }
-            }
-        }
+        g.fillRect(0, 0, getSize(), getSize());
+        
+        tiles.forEach((tile)->tile.draw(g));
         teams.forEach((t)->t.draw(g));
     }
 }

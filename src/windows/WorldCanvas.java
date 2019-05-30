@@ -7,7 +7,7 @@ import java.awt.Graphics;
 import javax.swing.JFrame;
 
 /**
- *
+ * Test class for now
  * @author Matt Crow
  */
 public class WorldCanvas extends DrawingPlane{
@@ -26,7 +26,7 @@ public class WorldCanvas extends DrawingPlane{
         WorldCanvas c = new WorldCanvas();
         f.setContentPane(c);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        c.world.setTileSize(100)
+        c.world
             .setColor(0, Color.BLACK)
             .setColor(1, Color.WHITE)
             .setTile(0, 0, 1)

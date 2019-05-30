@@ -55,10 +55,10 @@ public class BattleCanvas extends DrawingPlane implements MouseListener, KeyList
 		Master.setCurrentBattle(hostedBattle);
 		//battlefield = new Battlefield();
         world = new World(20);
-        world.setTileSize(100);
         world.setColor(0, Color.BLUE);
 		
 		hostedBattle.setHost(world);
+        world.initTiles();
 		hostedBattle.init();
 		
 		Controls.registerControls(this);
