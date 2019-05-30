@@ -39,6 +39,7 @@ public class BattleCanvas extends DrawingPlane implements MouseListener, KeyList
 		update = new ActionListener() {
 		      public void actionPerformed(ActionEvent e) {
 		          hostedBattle.update();
+                  world.update();
 		          repaint();
 		          //Op.add("End of frame in battlecanvas");
 		          //Op.dp();
@@ -57,6 +58,12 @@ public class BattleCanvas extends DrawingPlane implements MouseListener, KeyList
 		//battlefield = new Battlefield();
         world = new World(20);
         world.setBlock(0, new Tile(0, 0, Color.BLUE));
+        Tile bomb = new Tile(0, 0, Color.red);
+        bomb.setBlocking(true);
+        world.setBlock(1, bomb);
+        world.setTile(10, 10, 1);
+        world.addTeam(team1).addTeam(team2);
+        
 		
 		hostedBattle.setHost(world);
         world.initTiles();
@@ -132,7 +139,6 @@ public class BattleCanvas extends DrawingPlane implements MouseListener, KeyList
 		int[] trans = retTranslate();
 		translate(trans[0], trans[1]);
 		world.draw(getG());
-		hostedBattle.draw(getG());
 		resetToInit();
 		
 		Master.TRUEPLAYER.drawHUD(getG());

@@ -19,6 +19,7 @@ public abstract class Entity {
 	 */
 	private int x;
 	private int y;
+    private int radius; //used for collisions
 	private Direction dir; // the direction the entity is facing, ranging from 0-359 degrees, with 0 being the positive x axis, turning counterclockwise
 	private int maxSpeed;
 	private boolean moving;
@@ -58,6 +59,7 @@ public abstract class Entity {
 	public Entity(){
 		id = nextId;
         inNode = null;
+        radius = 50;
 		nextId++;
 	}
     
@@ -96,7 +98,31 @@ public abstract class Entity {
 	public final int getY(){
 		return y;
 	}
-	public final Direction getDir(){
+	
+    public final void setRadius(int r){
+        radius = (r >= 0) ? r : -r;
+    }
+    public final int getRadius(){
+        return radius;
+    }
+    
+    
+    
+    
+    public final boolean isWithin(int x, int y, int w, int h){
+        return (
+            x < this.x + radius //left
+            && x + w > this.x - radius //right
+            && y < this.y + radius //top
+            && y + h > this.y - radius //bottom
+        );
+    }
+    
+    
+    
+    
+    
+    public final Direction getDir(){
 		return dir;
 	}
 	public final void setSpeed(int speed){

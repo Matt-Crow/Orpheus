@@ -1,5 +1,6 @@
 package graphics;
 
+import entities.Entity;
 import java.awt.Color;
 import java.awt.Graphics;
 
@@ -46,6 +47,10 @@ public class Tile {
     
     public int getY(){
         return y;
+    }
+    
+    public final boolean contains(Entity e){
+        return e.isWithin(x, y, TILE_SIZE, TILE_SIZE);
     }
     
     public void setBlocking(boolean blocksEntities){

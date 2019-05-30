@@ -33,7 +33,7 @@ public class Projectile extends Entity{
 		setTeam(user.getTeam());
 		registeredAttack = a;
 		range = (int) a.getStatValue(ActiveStatName.RANGE);
-		
+		setRadius(25);
 		setMoving(true);
 		hit = new Player("Void");
 	}
@@ -161,8 +161,9 @@ public class Projectile extends Entity{
     @Override
 	public void draw(Graphics g){
 		if(registeredAttack.getParticleType() == ParticleType.NONE || Master.DISABLEPARTICLES){
+            int r = getRadius();
 			g.setColor(user.getTeam().getColor());
-			g.fillOval(getX() - 25, getY() - 25, 50, 50);
+			g.fillOval(getX() - r, getY() - r, 2 * r, 2 * r);
 		}
 	}
 }

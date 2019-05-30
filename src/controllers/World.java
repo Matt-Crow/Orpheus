@@ -1,6 +1,7 @@
 package controllers;
 
 import battle.Team;
+import entities.Entity;
 import graphics.Tile;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -22,11 +23,12 @@ public class World {
     private final int worldSize;
     private final int[][] map;
     
-    private final HashMap<Integer, Color> colors; //will have to choose 1 to use
+    //the tile designs that correspond to a given number int the map.
+    //for example, all 1's on the map array correspond to a copy of tileSet.get(1)
     private final HashMap<Integer, Tile> tileSet;
-    private final HashMap<Integer, Class> tileClasses;
     
-    private final ArrayList<Tile> tiles;
+    private final ArrayList<Tile> allTiles;
+    private final ArrayList<Tile> tangibleTiles;
     
     private final ArrayList<Team> teams; //makes it faster to find nearest enemies
     //maybe just keep track of everything in one linked list?
@@ -39,10 +41,9 @@ public class World {
                 map[i][j] = 0;
             }
         }
-        colors = new HashMap<>();
-        tileClasses = new HashMap<>();
         tileSet = new HashMap<>();
-        tiles = new ArrayList<>();
+        allTiles = new ArrayList<>();
+        tangibleTiles = new ArrayList<>();
         teams = new ArrayList<>();
     }
     
@@ -60,29 +61,52 @@ public class World {
         return Tile.TILE_SIZE * worldSize;
     }
     
+    public final World addTeam(Team t){
+        teams.add(t);
+        return this;
+    }
+    
     public void initTiles(){
-        tiles.clear();
+        allTiles.clear();
+        tangibleTiles.clear();
         Tile t;
         
         for(int x = 0; x < worldSize; x++){
             for(int y = 0; y < worldSize; y++){
                 if(tileSet.containsKey(map[x][y])){
                     t = tileSet.get(map[x][y]).copy(x, y);
-                    tiles.add(t);
+                    allTiles.add(t);
+                    if(t.getBlocking()){
+                        tangibleTiles.add(t);
+                    }
                 }
             }
         }
     }
     
+    private void checkForTileCollisions(Entity e){
+        //make sure the entity is within the world
+        tangibleTiles.forEach((Tile t)->{
+            if(t.contains(e)){
+                e.terminate();
+            }
+        });
+    }
+    
     public void update(){
-        teams.forEach((t)->t.update());
+        teams.forEach((Team t)->{
+            t.update();
+            t.forEach((Entity e)->{
+                checkForTileCollisions(e);
+            });
+        });
     }
     
     public void draw(Graphics g){
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, getSize(), getSize());
         
-        tiles.forEach((tile)->tile.draw(g));
+        allTiles.forEach((tile)->tile.draw(g));
         teams.forEach((t)->t.draw(g));
     }
 }

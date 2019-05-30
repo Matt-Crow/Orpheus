@@ -36,6 +36,7 @@ public class Player extends Entity{
 		name = n;
 		actives = new AbstractActive[3];
 		passives = new AbstractPassive[3];
+        setRadius(50);
 	}
 	
 	public String getName(){
@@ -192,16 +193,17 @@ public class Player extends Entity{
 	public void draw(Graphics g){
 		int w = Master.CANVASWIDTH;
 		int h = Master.CANVASHEIGHT;
-		
+		int r = getRadius();
+        
 		// HP value
 		g.setColor(Color.black);
 		g.drawString("HP: " + log.getHP(), getX() - w/12, getY() - h/8);
 		
 		// Update this to sprite later, doesn't scale to prevent hitbox snafoos
 		g.setColor(getTeam().getColor());
-		g.fillOval(getX() - 50, getY() - 50, 100, 100);
+		g.fillOval(getX() - r, getY() - r, 2 * r, 2 * r);
 		g.setColor(c.getColors()[0]);
-		g.fillOval(getX() - 40, getY() - 40, 80, 80);
+		g.fillOval(getX() - (int)(r * 0.8), getY() - (int)(r * 0.8), (int)(r * 1.6), (int)(r * 1.6));
 		
 		g.setColor(Color.black);
 		int y = getY() + h/10;
@@ -212,7 +214,7 @@ public class Player extends Entity{
 				iStr += "I";
 				i++;
 			}
-			g.drawString(s.getName() + " " + iStr + "(" + s.getUsesLeft() + ")", getX() - 50, y);
+			g.drawString(s.getName() + " " + iStr + "(" + s.getUsesLeft() + ")", getX() - r, y);
 			y += h/30;
 		}
 	}

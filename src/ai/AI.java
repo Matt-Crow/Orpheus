@@ -81,15 +81,15 @@ public class AI {
 	}
 	
 	public void update(){
-		if(enabled){
-			if(mode == "wander"){
+		if(enabled && !appliedTo.getTeam().getEnemy().isDefeated()){
+			if("wander".equals(mode)){
 				wander();
 				distanceWandered += appliedTo.getMomentum();
 				
 				if(checkIfPlayerInSightRange()){
 					latchOntoNearest();
 				}
-			} else if(mode == "pursue"){
+			} else if("pursue".equals(mode)){
 				pursue();
 			}
 		}

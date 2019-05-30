@@ -10,7 +10,7 @@ import windows.BattleCanvas;
 public class Battle {
 	ArrayList<Team> teams;
 	private World host;
-	private BattleCanvas hostingCanvas;
+	private final BattleCanvas hostingCanvas;
 	private boolean end;
 	
 	public Battle(BattleCanvas b, Team team1, Team team2){
@@ -52,16 +52,10 @@ public class Battle {
 		return new Team("ERROR", Color.black);
 	}
 	public void update(){
-		for(int i = 0; i < teams.size() && !end; i++){
-			teams.get(i).update();
-			if(teams.get(i).isDefeated()){
-				end = true;
-			}
-		}
-	}
-	public void draw(Graphics g){
-		for(Team t : teams){
-			t.draw(g);
-		}
+        for(Team t : teams){
+            if(t.isDefeated()){
+                end = true;
+            }
+        }
 	}
 }
