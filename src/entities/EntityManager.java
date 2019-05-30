@@ -11,32 +11,62 @@ import java.util.function.Consumer;
  */
 public class EntityManager {
    private EntityNode head;
+   private EntityNode tail;
    private boolean isIterating;
    
    public EntityManager(){
        head = null;
+       tail = null;
        isIterating = false;
    }
    
+   /**
+    * Registers an Entity for updating, appending it to the tail.
+    * In future versions, I may want to sort the items as I'm inserting
+    * them, but while that would allow me to search easier, 
+    * it would also slow this down
+    * @param e 
+    */
    public void add(Entity e){
-       EntityNode en = new EntityNode(e);
+       EntityNode en = new EntityNode(this, e);
        
        if(head == null){
            head = en;
+           tail = en;
        } else {
-           EntityNode prev = null;
-           EntityNode curr = head;
-           while(curr != null && curr.get().id < e.id){
-               prev = curr;
-               curr = curr.getNext();
-           }
-           if(prev == null){
-               //new head
-               en.setNext(head);
-               head = en;
-           } else {
-               prev.setNext(en);
-           }
+           tail.setNext(en);
+           tail = en;
+       }
+   }
+   
+   public void setHead(EntityNode en){
+       if(en == null){
+           throw new NullPointerException();
+       }
+       EntityNode curr = en;
+       while(curr.hasParent()){
+           curr = curr.getPrev();
+       }
+       head = curr;
+   }
+   
+   public void headIsDead(){
+       if(head.hasChild()){
+           head = head.getNext();
+       } else {
+           //no more nodes
+           head = null;
+           tail = null;
+       }
+   }
+   
+   public void tailFailed(){
+       if(tail.hasParent()){
+           tail = tail.getPrev();
+       } else {
+           //no more nodes
+           head = null;
+           tail = null;
        }
    }
    
