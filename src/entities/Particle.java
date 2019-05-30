@@ -6,7 +6,6 @@ import java.awt.Graphics;
 
 public class Particle extends Entity{
 	private final Color color;
-	private final int size;
 	private final int lifeSpan;
 	private int age;
 	
@@ -14,7 +13,7 @@ public class Particle extends Entity{
 		super();
         setSpeed(momentum);
 		color = c;
-		size = 10;
+		setRadius(5);
 		lifeSpan = 15;
 	}
     
@@ -27,8 +26,9 @@ public class Particle extends Entity{
     @Override
 	public void draw(Graphics g){
         if(!Master.DISABLEPARTICLES){
+            int r = getRadius();
             g.setColor(color);
-            g.fillRect(getX(), getY(), size, size);
+            g.fillRect(getX() - r, getY() - r, r * 2, r * 2);
         }
 	}
     

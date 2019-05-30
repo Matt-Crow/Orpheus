@@ -99,6 +99,13 @@ public abstract class Entity {
 		return y;
 	}
 	
+    public final void setX(int xc){
+        x = xc;
+    }
+    public final void setY(int yc){
+        y = yc;
+    }
+    
     public final void setRadius(int r){
         radius = (r >= 0) ? r : -r;
     }

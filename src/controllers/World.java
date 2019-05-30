@@ -88,7 +88,7 @@ public class World {
         //make sure the entity is within the world
         tangibleTiles.forEach((Tile t)->{
             if(t.contains(e)){
-                e.terminate();
+                t.shoveOut(e);
             }
         });
     }

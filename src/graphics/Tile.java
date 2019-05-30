@@ -53,6 +53,31 @@ public class Tile {
         return e.isWithin(x, y, TILE_SIZE, TILE_SIZE);
     }
     
+    public void shoveOut(Entity e){
+        
+        //first, check to see which kind of collision to check for
+        //if I shove from both axis, results in entities acting strangely with blocks
+        int withinX = Math.abs(x + TILE_SIZE / 2 - e.getX());
+        int withinY = Math.abs(y + TILE_SIZE / 2 - e.getY());
+        boolean moreX = withinX > withinY;
+        
+        if(moreX && e.getX() + e.getRadius() > x && e.getX() < x + TILE_SIZE / 2){
+            //left collide
+            e.setX(x - e.getRadius());
+        } else if(moreX && e.getX() - e.getRadius() > x + TILE_SIZE / 2 && e.getX() - e.getRadius() < x + TILE_SIZE){
+            //right collide
+            e.setX(x + TILE_SIZE + e.getRadius());
+        }
+        
+        if(!moreX && e.getY() + e.getRadius() > y && e.getY() < y + TILE_SIZE / 2){
+            //top collide
+            e.setY(y - e.getRadius());
+        } else if(!moreX && e.getY() - e.getRadius() > y + TILE_SIZE / 2 && e.getY() - e.getRadius() < y + TILE_SIZE){
+            //bottom collide
+            e.setY(y + TILE_SIZE + e.getRadius());
+        }
+    }
+    
     public void setBlocking(boolean blocksEntities){
         blocking = blocksEntities;
     }

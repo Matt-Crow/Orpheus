@@ -58,10 +58,11 @@ public class BattleCanvas extends DrawingPlane implements MouseListener, KeyList
 		//battlefield = new Battlefield();
         world = new World(20);
         world.setBlock(0, new Tile(0, 0, Color.BLUE));
-        Tile bomb = new Tile(0, 0, Color.red);
-        bomb.setBlocking(true);
-        world.setBlock(1, bomb);
+        Tile b = new Tile(0, 0, Color.red);
+        b.setBlocking(true);
+        world.setBlock(1, b);
         world.setTile(10, 10, 1);
+        world.setTile(12, 10, 1);
         world.addTeam(team1).addTeam(team2);
         
 		
