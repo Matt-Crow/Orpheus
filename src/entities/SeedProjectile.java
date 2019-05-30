@@ -6,7 +6,7 @@ import initializers.Master;
 
 public class SeedProjectile extends Projectile{
 	private boolean canExplode;
-	private int useId; // the useId of the attack instance this was spawned from
+	private final int useId; // the useId of the attack instance this was spawned from
 	public SeedProjectile(int id, int x, int y, int degrees, int momentum, Player attackUser, AbstractActive a){
 		super(id, x, y, degrees, momentum, attackUser, a);
 		useId = id;
@@ -15,12 +15,12 @@ public class SeedProjectile extends Projectile{
 	
 	public void explode(){
 		for(int i = 0; i < Master.TICKSTOROTATE; i++){
-			spawn(new AOEProjectile(useId, getX(), getY(), 360 * i / Master.TICKSTOROTATE, 5, getUser(), getAttack()));
-            //getAttack().registerProjectile(new AOEProjectile(useId, getX(), getY(), 360 * i / Master.TICKSTOROTATE, 5, getUser(), getAttack()));
-		}
+			getAttack().getRegisteredTo().spawn(new AOEProjectile(useId, getX(), getY(), 360 * i / Master.TICKSTOROTATE, 5, getUser(), getAttack()));
+        }
 		canExplode = false;
 	}
 	
+    @Override
 	public void terminate(){
 		super.terminate();
 		if(canExplode){

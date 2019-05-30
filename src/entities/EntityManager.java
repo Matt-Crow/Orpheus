@@ -50,6 +50,9 @@ public class EntityManager {
    }
    
    public void headIsDead(){
+       if(head == null){
+           return;
+       }
        if(head.hasChild()){
            head = head.getNext();
        } else {
@@ -60,6 +63,9 @@ public class EntityManager {
    }
    
    public void tailFailed(){
+       if(tail == null){
+           return;
+       }
        if(tail.hasParent()){
            tail = tail.getPrev();
        } else {

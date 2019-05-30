@@ -295,15 +295,9 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
         }
     }
 
-    
-    public void registerProjectile(Projectile p){
-        p.insertAfter(this.getRegisteredTo());
-    }
-
     // spawning
     public void spawnProjectile(int facingDegrees){
-        getRegisteredTo().spawn(new SeedProjectile(nextUseId, getRegisteredTo().getX(), getRegisteredTo().getY(), facingDegrees, (int) getStatValue(ActiveStatName.SPEED), getRegisteredTo(), this));
-        ///new SeedProjectile(nextUseId, getRegisteredTo().getX(), getRegisteredTo().getY(), facingDegrees, (int) getStatValue(ActiveStatName.SPEED), getRegisteredTo(), this));
+        getRegisteredTo().spawn(new SeedProjectile(nextUseId, getRegisteredTo().getX(), getRegisteredTo().getY(), facingDegrees, (int) getStatValue(ActiveStatName.SPEED), getRegisteredTo(), this));    
     }
     public void spawnProjectile(){
         spawnProjectile(getRegisteredTo().getDir().getDegrees());
@@ -315,17 +309,6 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
         for(int angleOffset = 0; angleOffset < arcDegrees; angleOffset += 15){
                 int angle = start + angleOffset;
                 spawnProjectile(angle);
-        }
-    }
-
-    @Override
-    public void update(){
-        super.update();
-        
-        Entity current = getRegisteredTo().getChild();
-        while(current != null){
-            current.doUpdate();
-            current = current.getChild();
         }
     }
     

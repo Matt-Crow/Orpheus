@@ -53,19 +53,12 @@ public abstract class Entity {
 	private static int nextId = 0;
     
     
-    private EntityNode inNode;
-    
-    
-    //linked list stuff
-    private Entity prev;
-    private Entity next;
+    private EntityNode inNode; //the EntityNode containing this
     
 	public Entity(){
 		id = nextId;
-        prev = null;
-        next = null;
-		nextId++;
         inNode = null;
+		nextId++;
 	}
     
     @Override
@@ -86,6 +79,11 @@ public abstract class Entity {
     }
 	
     
+    /**
+     * Invoked by EntityNode
+     * Notifies this that an EntityNode contains this.
+     * @param n the EntityNode containing this
+     */
     public void setNode(EntityNode n){
         inNode = n;
     }
@@ -238,14 +236,6 @@ public abstract class Entity {
     //add on terminate?
 	public void terminate(){
 		shouldTerminate = true;
-        
-        if(prev != null){
-            prev.next = next; //will set to null if this doesn't have a next
-        }
-        if(next != null){
-            next.prev = prev;
-        }
-        
         if(inNode != null){
             inNode.delete();
         }
@@ -254,11 +244,7 @@ public abstract class Entity {
 	public final boolean getShouldTerminate(){
 		return shouldTerminate;
 	}
-	
-	// misc. methods
-	public final int getId(){
-		return id;
-	}
+    
     public void doInit(){
 		// called by battle
         knockbackDir = new Direction(0);
@@ -290,6 +276,13 @@ public abstract class Entity {
 		}
 	}
     
+    /**
+     * Inserts an Entity into this' EntityNode chain.
+     * Since the Entity is inserted before this one,
+     * it will not be updated during this iteration of
+     * EntityManager.update
+     * @param e the Entity to insert before this one
+     */
     public final void spawn(Entity e){
         if(e == null){
             throw new NullPointerException();
@@ -299,24 +292,6 @@ public abstract class Entity {
         } else {
             System.out.println("Cannot spawn: Not in a node!!!");
         }
-    }
-    
-    public final void insertAfter(Entity e){
-        if(e == this){
-            System.out.println(this + " is trying to add itself as a child in Entity.insertAfter");
-        } else {
-            Entity temp = e.next;
-            e.next = this;
-            prev = e;
-            next = temp;
-            if(temp != null){
-                temp.prev = this;
-            }
-        }
-    }
-    
-    public final Entity getChild(){
-        return next;
     }
     
     public abstract void init();
