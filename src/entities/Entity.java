@@ -113,22 +113,6 @@ public abstract class Entity {
         return radius;
     }
     
-    
-    
-    
-    public final boolean isWithin(int x, int y, int w, int h){
-        return (
-            x < this.x + radius //left
-            && x + w > this.x - radius //right
-            && y < this.y + radius //top
-            && y + h > this.y - radius //bottom
-        );
-    }
-    
-    
-    
-    
-    
     public final Direction getDir(){
 		return dir;
 	}
@@ -256,9 +240,25 @@ public abstract class Entity {
         return distanceFrom(e.getX(), e.getY());
     }
     
-    //add different versions in subclasses?
+    public final boolean isWithin(int x, int y, int w, int h){
+        return (
+            x < this.x + radius //left
+            && x + w > this.x - radius //right
+            && y < this.y + radius //top
+            && y + h > this.y - radius //bottom
+        );
+    }
+    
+    /**
+     * Checks if this entity collides with another entity.
+     * Subclasses should overload this with each subclass of Entity
+     * that needs special reactions
+     * 
+     * @param e the Entity to check for collisions with
+     * @return whether or not this collides with the given Entity
+     */
     public boolean checkForCollisions(Entity e){
-		return distanceFrom(e) <= 100;
+        return distanceFrom(e) <= e.getRadius() + radius;
 	}
     
 	public final AI getEntityAI(){
@@ -323,7 +323,7 @@ public abstract class Entity {
         if(inNode != null){
             inNode.insert(e);
         } else {
-            System.out.println("Cannot spawn: Not in a node!!!");
+            System.out.println("Cannot spawn: Not in a node!!! (Entity.spawn)");
         }
     }
     

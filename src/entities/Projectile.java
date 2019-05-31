@@ -81,16 +81,12 @@ public class Projectile extends Entity{
 		CombatLog.logProjectileData(this);
 		terminate();
 	}
-	
-	// TODO: add checking for collisions with particles, other stuff
-    @Override
-	public boolean checkForCollisions(Entity e){
-		boolean ret = false;
-		if(super.checkForCollisions(e)){
+    
+	public boolean checkForCollisions(Player p){
+		boolean ret = super.checkForCollisions(p);
+		if(ret && p.getLastHitById() != useId){
 			ret = true;
-			if(e instanceof Player){
-				hit((Player) e);
-			}
+			hit(p);
 		}
 		return ret;
 	}
@@ -110,16 +106,7 @@ public class Projectile extends Entity{
     
     @Override
 	public void update(){
-        getTeam()
-            .getEnemy()
-            .getMembersRem()
-            .stream()
-            .filter((p) -> (p.getLastHitById() != useId))
-            .forEachOrdered((p) -> {
-                checkForCollisions(p);
-            });
-		
-		distanceTraveled += getMomentum();
+        distanceTraveled += getMomentum();
 		
 		// need to change range based on projectile type: attack range for seed, aoe for aoeprojectile
 		if(distanceTraveled >= range && !getShouldTerminate()){

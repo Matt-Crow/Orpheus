@@ -2,6 +2,8 @@ package controllers;
 
 import battle.Team;
 import entities.Entity;
+import entities.Player;
+import entities.Projectile;
 import graphics.Tile;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -96,8 +98,15 @@ public class World {
     public void update(){
         teams.forEach((Team t)->{
             t.update();
-            t.forEach((Entity e)->{
-                checkForTileCollisions(e);
+            t.forEach((Entity member)->{
+                checkForTileCollisions(member);
+                t.getEnemy().getMembersRem().forEach((Player enemy)->{
+                    if(member instanceof Projectile){
+                        // I thought that java handled this conversion?
+                        ((Projectile)member).checkForCollisions(enemy);
+                    }
+                    //member.checkForCollisions(enemy);
+                });
             });
         });
     }

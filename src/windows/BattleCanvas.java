@@ -38,8 +38,8 @@ public class BattleCanvas extends DrawingPlane implements MouseListener, KeyList
 		
 		update = new ActionListener() {
 		      public void actionPerformed(ActionEvent e) {
-		          hostedBattle.update();
                   world.update();
+                  hostedBattle.update();
 		          repaint();
 		          //Op.add("End of frame in battlecanvas");
 		          //Op.dp();
