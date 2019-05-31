@@ -1,4 +1,4 @@
-package resources;
+package util;
 
 public class Number {
 	public static int minMax(int min, int value, int max){

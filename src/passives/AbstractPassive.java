@@ -7,8 +7,8 @@ import java.util.Set;
 import actions.*;
 import statuses.StatusTable;
 import entities.Player;
-import resources.Op;
-import resources.Random;
+import util.Op;
+import util.Random;
 import upgradables.AbstractUpgradable;
 
 public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName>{

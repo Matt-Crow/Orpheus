@@ -2,7 +2,7 @@ package ai;
 
 import entities.Player;
 import actions.*;
-import resources.Coordinates;
+import util.Coordinates;
 
 public class PlayerAI extends AI{
 	private Player registered;

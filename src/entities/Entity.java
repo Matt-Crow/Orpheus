@@ -2,7 +2,7 @@ package entities;
 
 import initializers.Master;
 import java.awt.Graphics;
-import resources.Direction;
+import util.Direction;
 import battle.Team;
 import actions.ActionRegister;
 import ai.AI;

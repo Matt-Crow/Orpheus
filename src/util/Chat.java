@@ -1,4 +1,4 @@
-package resources;
+package util;
 
 import javax.swing.JScrollPane;
 import javax.swing.JPanel;

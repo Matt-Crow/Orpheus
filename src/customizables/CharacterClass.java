@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Set;
 
 import graphics.CustomColors;
-import resources.Number;
-import resources.Op;
+import util.Number;
+import util.Op;
 
 // make this connect better with player somehow
 public class CharacterClass extends AbstractUpgradable<CharacterStatName>{

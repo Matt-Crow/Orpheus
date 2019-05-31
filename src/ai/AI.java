@@ -3,8 +3,8 @@ package ai;
 import entities.Entity;
 import entities.Player;
 import initializers.Master;
-import resources.Random;
-import resources.Coordinates;
+import util.Random;
+import util.Coordinates;
 
 public class AI {
 	private Entity appliedTo;

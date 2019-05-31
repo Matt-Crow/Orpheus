@@ -3,8 +3,8 @@ package statuses;
 import actions.*;
 import entities.Player;
 import initializers.Master;
-import resources.Direction;
-import resources.Number;
+import util.Direction;
+import util.Number;
 
 /**
  * Strength causes the afflicted Entity to knock back those it hits and do more damage

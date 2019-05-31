@@ -9,9 +9,9 @@ import actives.ActiveTag;
 import actives.MeleeActive;
 import customizables.CharacterStatName;
 import initializers.Master;
-import resources.CombatLog;
-import resources.Op;
-import resources.Random;
+import util.CombatLog;
+import util.Op;
+import util.Random;
 
 public class Projectile extends Entity{
 	private final Player user;

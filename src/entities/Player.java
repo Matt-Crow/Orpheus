@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import actives.*;
 import battle.*;
 import customizables.*;
-import resources.*;
 import passives.*;
 import ai.PlayerAI;
 import statuses.AbstractStatus;
@@ -21,6 +20,8 @@ public class Player extends Entity{
 	private AbstractActive[] actives;
 	private AbstractPassive[] passives;
 	
+    private boolean followingMouse;
+    
 	private DamageBacklog log;
 	private EnergyLog energyLog;
 	
@@ -37,6 +38,7 @@ public class Player extends Entity{
 		actives = new AbstractActive[3];
 		passives = new AbstractPassive[3];
         setRadius(50);
+        followingMouse = false;
 	}
 	
 	public String getName(){
@@ -58,6 +60,13 @@ public class Player extends Entity{
 	}
 	public PlayerAI getPlayerAI(){
 		return playerAI;
+	}
+    
+    public void setFollowingMouse(boolean b){
+		followingMouse = b;
+	}
+	public boolean getFollowingMouse(){
+		return followingMouse;
 	}
 	
 	// Build stuff
@@ -168,6 +177,9 @@ public class Player extends Entity{
 	
     @Override
 	public void update(){
+        if(followingMouse){
+            turnTo(Master.getMouseX(), Master.getMouseY());
+		}
 		playerAI.update();
 		slash.update();
 		getActionRegister().resetTrips();

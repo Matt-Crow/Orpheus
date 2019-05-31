@@ -1,6 +1,6 @@
 package passives;
 
-import resources.Number;
+import util.Number;
 
 public class ThresholdPassive extends AbstractPassive{
 	/*

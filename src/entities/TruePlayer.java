@@ -7,29 +7,13 @@ import actives.AbstractActive;
 import graphics.CustomColors;
 import initializers.Master;
 
+//get rid of this thing
 public class TruePlayer extends Player{
-	private boolean followingMouse;
 	
 	public TruePlayer(){
 		super("Player");
-		followingMouse = false;
-	}
-	public void setFollowingMouse(boolean b){
-		followingMouse = b;
-	}
-	public boolean getFollowingMouse(){
-		return followingMouse;
 	}
 	
-	public void update(){
-		if(followingMouse){
-            turnTo(Master.getMouseX(), Master.getMouseY());
-            setMoving(true);
-		} else {
-			setMoving(false);
-		}
-		super.update();
-	}
 	public void drawHUD(Graphics g){
 		int w = Master.CANVASWIDTH;
 		int h = Master.CANVASHEIGHT;

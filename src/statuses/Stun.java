@@ -1,7 +1,7 @@
 package statuses;
 
 import actions.*;
-import resources.Number;
+import util.Number;
 import entities.Player;
 import initializers.Master;
 

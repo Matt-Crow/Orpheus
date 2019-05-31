@@ -33,6 +33,9 @@ public class Master {
 	public static void setCurrentBattle(Battle b){
 		currentBattle = b;
 	}
+    public static Battle getCurrentBattle(){
+        return currentBattle;
+    }
     
 	// seconds to frames
 	public static int seconds(int sec){

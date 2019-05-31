@@ -2,7 +2,7 @@ package windows;
 
 import javax.swing.*;
 import initializers.Master;
-import resources.CloseWindow;
+import util.CloseWindow;
 
 @SuppressWarnings("serial")
 public class DrawingFrame extends JFrame{

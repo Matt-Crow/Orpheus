@@ -2,7 +2,7 @@ package statuses;
 
 import actions.*;
 import entities.Player;
-import resources.Number;
+import util.Number;
 
 /**
  * Resistance slows how fast an Entity takes damage, giving them a longer lifespan.

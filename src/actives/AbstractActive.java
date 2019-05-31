@@ -13,8 +13,8 @@ import initializers.Master;
 import java.io.*;
 import static java.lang.System.out;
 import upgradables.AbstractUpgradable;
-import resources.Op;
-import resources.Number; // use later for minMax?
+import util.Op;
+import util.Number; // use later for minMax?
 
 public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
     /**

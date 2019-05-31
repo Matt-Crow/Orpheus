@@ -2,7 +2,7 @@ package statuses;
 
 import actions.*;
 import entities.Player;
-import resources.Number;
+import util.Number;
 import initializers.Master;
 
 /**

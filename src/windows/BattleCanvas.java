@@ -6,19 +6,16 @@ import javax.swing.*;
 
 import battle.*;
 import controllers.World;
+import entities.PlayerControls;
 import graphics.Tile;
-import resources.KeyRegister;
 import initializers.*;
-import resources.Chat;
+import util.Chat;
 
-public class BattleCanvas extends DrawingPlane implements MouseListener, KeyListener{
-	public static final long serialVersionUID = 1L;
-	//private Battlefield battlefield;
-    private World world;
-    
+public class BattleCanvas extends DrawingPlane{
+	private World world;
 	private Battle hostedBattle;
 	private Timer timer;
-	private ActionListener update;
+	private final ActionListener update;
 	private boolean paused;
 	
 	public BattleCanvas(){
@@ -45,17 +42,20 @@ public class BattleCanvas extends DrawingPlane implements MouseListener, KeyList
 		          //Op.dp();
 		      }
 		};
-		addKeyRegistration();
+		
 		resizeComponents(10, 10);
 		resizeMenu(1);
-		addMouseListener(this);
-		addKeyListener(this);
+        
+        //change this later
+        PlayerControls pc = new PlayerControls(Master.TRUEPLAYER);
+		addMouseListener(pc);
+        pc.registerControlsTo(this);
+        registerKey(KeyEvent.VK_P, true, ()->togglePause());
 	}
 	
 	public void setBattle(Team team1, Team team2){
 		hostedBattle = new Battle(this, team1, team2);
 		Master.setCurrentBattle(hostedBattle);
-		//battlefield = new Battlefield();
         world = new World(20);
         world.setBlock(0, new Tile(0, 0, Color.BLUE));
         Tile b = new Tile(0, 0, Color.red);
@@ -69,38 +69,14 @@ public class BattleCanvas extends DrawingPlane implements MouseListener, KeyList
 		hostedBattle.setHost(world);
         world.initTiles();
 		hostedBattle.init();
-		
-		Controls.registerControls(this);
 	}
 	
-	public void addKeyRegistration(){
-		new KeyRegister(this, KeyEvent.VK_P, true, new pauseAction());
-	}
-	
-	public void mousePressed(MouseEvent e){
-		Master.TRUEPLAYER.setFollowingMouse(!Master.TRUEPLAYER.getFollowingMouse());
-	}
-	public void mouseReleased(MouseEvent e){}
-	public void mouseClicked(MouseEvent e){}
-	public void mouseEntered(MouseEvent e){}
-	public void mouseExited(MouseEvent e){}
-	public void keyPressed(KeyEvent e){
-		Point mousePos = MouseInfo.getPointerInfo().getLocation();
-		int[] t = getLastTransform();
-		Master.TRUEPLAYER.turnTo(mousePos.x -t[0], mousePos.y - t[1]);
-	}
-	public void keyReleased(KeyEvent e) {}
-    public void keyTyped(KeyEvent e) {}
-	
-	public class pauseAction extends AbstractAction{
-		static final long serialVersionUID = 1L;
-		public void actionPerformed(ActionEvent e){
-			paused = !paused;
-			if(!paused){
-				startTimer();
-			}
+    private void togglePause(){
+        paused = !paused;
+		if(!paused){
+			startTimer();
 		}
-	}
+    }
 	
 	public int[] retTranslate(){
 		int[] ret = new int[2];
@@ -134,6 +110,7 @@ public class BattleCanvas extends DrawingPlane implements MouseListener, KeyList
 		timer.start();
 	}
 	
+    @Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		setG(g);
@@ -171,5 +148,4 @@ public class BattleCanvas extends DrawingPlane implements MouseListener, KeyList
 		g.drawString(hostedBattle.getWinner().getName(), (int) (Master.CANVASWIDTH * 0.5), (int) (Master.CANVASHEIGHT * 0.5));
 		g.drawString("is victorious!", (int) (Master.CANVASWIDTH * 0.7), (int) (Master.CANVASHEIGHT * 0.7));
 	}
-
 }

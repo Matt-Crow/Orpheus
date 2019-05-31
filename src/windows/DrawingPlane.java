@@ -6,7 +6,7 @@ import javax.swing.SwingUtilities;
 import graphics.CustomColors;
 import gui.Style;
 import initializers.Master;
-import resources.Op;
+import util.Op;
 
 import javax.swing.*;
 
@@ -84,6 +84,18 @@ public class DrawingPlane extends JPanel{
 	public Graphics2D getG(){
 		return g;
 	}
+    
+    public void registerKey(int key, boolean pressed, Runnable r){
+        String text = key + ((pressed) ? " pressed" : " released");
+        getInputMap().put(KeyStroke.getKeyStroke(key, 0, !pressed), text);
+        getActionMap().put(text, new AbstractAction(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                r.run();
+            }
+        });
+    }
+    
 	public void resetToInit(){
 		priorX = tx;
 		priorY = ty;
