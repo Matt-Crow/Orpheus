@@ -88,6 +88,22 @@ public class World {
     
     private void checkForTileCollisions(Entity e){
         //make sure the entity is within the world
+        if(e.getX() - e.getRadius() < 0){
+            //outside of left bound
+            e.setX(e.getRadius());
+        } else if(e.getX() + e.getRadius() > getSize()){
+            //right
+            e.setX(getSize() - e.getRadius());
+        }
+        
+        if(e.getY() - e.getRadius() < 0){
+            //top
+            e.setY(e.getRadius());
+        } else if(e.getY() + e.getRadius() > getSize()){
+            //bottom
+            e.setY(getSize() - e.getRadius());
+        }
+        
         tangibleTiles.forEach((Tile t)->{
             if(t.contains(e)){
                 t.shoveOut(e);

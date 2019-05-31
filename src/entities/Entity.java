@@ -184,24 +184,9 @@ public abstract class Entity {
             knockbackDur--;
         }
 		
-		// keep entity on the battlefield
-        int bound = Master.getCurrentBattle().getHost().getSize();
-		if(x < 0){
-			x = 0;
-		} else if(x > bound){
-			x = bound;
-		}
-		if(y < 0){
-			y = 0;
-		} else if(y > bound){
-			y = bound;
-		}
-		
 		speedFilter = 1.0;
 	}
-	
-	
-	
+    
 	//focus related methods
 	public final void setFocus(int xCoord, int yCoord){
 		focusX = xCoord;
