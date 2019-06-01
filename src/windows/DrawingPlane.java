@@ -148,6 +148,8 @@ public class DrawingPlane extends JPanel{
         JFrame parent = (JFrame)SwingUtilities.getWindowAncestor(this);
         parent.setContentPane(j);
         parent.revalidate();
+        j.requestFocus(); 
+        //otherwise key controls don't work until the user selects the program in their task bar
     }
 	public void close(){
 		SwingUtilities.getWindowAncestor(this).dispose();

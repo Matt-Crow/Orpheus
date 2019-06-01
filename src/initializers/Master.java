@@ -4,8 +4,8 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Toolkit;
 import entities.TruePlayer;
-import windows.DrawingFrame;
 import battle.Battle;
+import javax.swing.JFrame;
 
 public class Master {
 	public static final TruePlayer TRUEPLAYER = new TruePlayer();
@@ -24,7 +24,7 @@ public class Master {
 	private static Battle currentBattle;
     
     static {
-        DrawingFrame f = new DrawingFrame();
+        JFrame f = new JFrame();
         CANVASBOTTOM = Toolkit.getDefaultToolkit().getScreenInsets(f.getGraphicsConfiguration()).bottom;
         CANVASHEIGHT = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - CANVASBOTTOM;
         f.dispose();

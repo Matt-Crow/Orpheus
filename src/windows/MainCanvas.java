@@ -25,10 +25,12 @@ public class MainCanvas extends DrawingPlane{
 		super();
 		
 		JButton b = new JButton("Quit");
+        
+        MainCanvas m = this;
+        
 		b.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				new StartWindow();
-				close();
+				m.switchTo(new StartCanvas());
 			}
 		});
 		addMenuItem(b);
@@ -54,6 +56,8 @@ public class MainCanvas extends DrawingPlane{
 		});
 		add(newBuild);
 
+        DrawingPlane p = this;
+        
 		JButton battle = new JButton("Battle");
 		battle.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
@@ -66,9 +70,9 @@ public class MainCanvas extends DrawingPlane{
 				team1.setEnemy(team2);
 				team2.setEnemy(team1);
 				
-				BattleWindow bw = new BattleWindow();
-				bw.getCanvas().setBattle(team1, team2);
-				close();
+                BattleCanvas bc = new BattleCanvas();
+                bc.setBattle(team1, team2);
+                switchTo(bc);
 			}
 		});
 		addMenuItem(battle);
