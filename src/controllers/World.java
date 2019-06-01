@@ -142,40 +142,50 @@ public class World {
         int currY = y1 / Tile.TILE_SIZE;
         int destX = x2 / Tile.TILE_SIZE;
         int destY = y2 / Tile.TILE_SIZE;
+        
+        //first, bind the search to within a small region so that the algorithm doesn't search everywhere
+        int minX = currX - 3; //temporary until I can find a better way
+        int minY = currY - 3;
+        int maxX = currX + 3;
+        int maxY = currY + 3;
+        if(minX < 0){
+            minX = 0;
+        }
+        if(minY < 0){
+            minY = 0;
+        }
+        if(maxX > worldSize - 1){
+            maxX = worldSize - 1;
+        }
+        if(maxY > worldSize - 1){
+            maxY = worldSize - 1;
+        }
+        
         PathInfo p = new PathInfo(currX, currY, currX, currY, 0);
         stack.push(p);
         visited[currX][currY] = true;
         
         while(currX != destX || currY != destY){
             out.println("Currently at (" + currX + ", " + currY + ")");
-            /*
-            out.println(map[currX - 1][currY]);
-            out.println(map[currX + 1][currY]);
-            out.println(map[currX - 1][currY]);
-            out.println(map[currX + 1][currY]);
-            out.println(!visited[currX - 1][currY]);
-            out.println(!visited[currX + 1][currY]);
-            out.println(!visited[currX][currY - 1]);
-            out.println(!visited[currX][currY + 1]);
-            */
+            
             try{
                 //push adjacent points to the heap
-                if(currX > 0 && map[currX - 1][currY] == 0 && !visited[currX - 1][currY]){
+                if(currX > minX && map[currX - 1][currY] == 0 && !visited[currX - 1][currY]){
                     //can go left
                     p = new PathInfo(currX, currY, currX - 1, currY, 1 + stack.peek().getDist());
                     heap.siftUp(p);
                 }
-                if(currX < worldSize && map[currX + 1][currY] == 0 && !visited[currX + 1][currY]){
+                if(currX < maxX && map[currX + 1][currY] == 0 && !visited[currX + 1][currY]){
                     //can go right
                     p = new PathInfo(currX, currY, currX + 1, currY, 1 + stack.peek().getDist());
                     heap.siftUp(p);
                 }
-                if(currY > 0 && map[currX][currY - 1] == 0 && !visited[currX][currY - 1]){
+                if(currY > minY && map[currX][currY - 1] == 0 && !visited[currX][currY - 1]){
                     //can go up
                     p = new PathInfo(currX, currY, currX, currY - 1, 1 + stack.peek().getDist());
                     heap.siftUp(p);
                 }
-                if(currY < worldSize && map[currX][currY + 1] == 0 && !visited[currX][currY + 1]){
+                if(currY < maxY && map[currX][currY + 1] == 0 && !visited[currX][currY + 1]){
                     //can go down
                     p = new PathInfo(currX, currY, currX, currY + 1, 1 + stack.peek().getDist());
                     heap.siftUp(p);
@@ -192,6 +202,16 @@ public class World {
                 
             } catch(Exception e){
                 e.printStackTrace();
+            }
+        }
+        double accuDist = stack.peek().getDist();
+        while(!stack.empty()){
+            p = stack.pop();
+            if(p.getEndX() == currX && p.getEndY() == currY){// && accuDist - p.getDist() == 1){
+                out.println(p);
+                currX = p.getStartX();
+                currY = p.getStartY();
+                accuDist -= 1;
             }
         }
     }
