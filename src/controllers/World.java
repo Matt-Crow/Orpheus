@@ -8,7 +8,10 @@ import graphics.Tile;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+
+import static java.lang.System.out;
 
 /**
  * The World class will act as a controller for the game.
@@ -110,6 +113,62 @@ public class World {
             }
         });
     }
+    
+    
+    
+    
+    
+    /**
+     * Parameters are the coordinates, NOT indexes in the map array
+     * @param x1 the x coordinate of the starting point
+     * @param y1 the y coordinate of the starting point
+     * @param x2
+     * @param y2 
+     */
+    public void findPath(int x1, int y1, int x2, int y2){
+        int arrSize = worldSize * worldSize; //convert the two-d array of the world to a one-d to make it easier to work with
+        
+        boolean[] visited = new boolean[arrSize];
+        double[] distances = new double[arrSize];
+        int[] closest = new int[arrSize];
+        
+        Arrays.fill(visited, false);
+        Arrays.fill(distances, Double.MAX_VALUE);
+        Arrays.fill(closest, -1);
+        
+        /*
+        if (x, 0) corresponds to index x, given x < worldSize,
+        then (x, y) corrsponds to index x + y * worldSize
+        since neither x nor y can never equal the worldsize (index out of bounds),
+        the maximum index is (worldSize - 1) + (worldSize^2 - worldSize) = worldSize^2 - 1
+        */
+        int curr = x1 / Tile.TILE_SIZE + (y1 / Tile.TILE_SIZE) * worldSize;
+        int currX = x1 / Tile.TILE_SIZE; //array indexes
+        int currY = y1 / Tile.TILE_SIZE;
+        
+        int dest = x2 / Tile.TILE_SIZE + (y2 / Tile.TILE_SIZE) * worldSize;
+        
+        while(curr != dest){
+            out.println("Currently at " + curr);
+            if(currX > 0 && map[currX - 1][currY] == 0){
+                //can go left
+            }
+            if(currX < worldSize && map[currX + 1][currY] == 0){
+                //can go right
+            }
+            if(currY > 0 && map[currX][currY - 1] == 0){
+                //can go up
+            }
+            if(currY < worldSize && map[currX][currY + 1] == 0){
+                //can go down
+            }
+            break;
+        }
+    }
+    
+    
+    
+    
     
     public void update(){
         teams.forEach((Team t)->{

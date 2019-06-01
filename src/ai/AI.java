@@ -7,8 +7,8 @@ import util.Random;
 import util.Coordinates;
 
 public class AI {
-	private Entity appliedTo;
-	private String mode;
+	private final Entity appliedTo;
+	private AiMode mode;
 	private int wanderDistance;
 	private int distanceWandered;
 	private Player latched;
@@ -16,6 +16,7 @@ public class AI {
 	
 	public AI(Entity p){
 		appliedTo = p;
+        mode = AiMode.NONE;
 		enabled = false;
 	}
 	
@@ -23,16 +24,16 @@ public class AI {
 		return appliedTo;
 	}
 	public void latch(Player p){
-		mode = "pursue";
+		mode = AiMode.PURSUE;
 		latched = p;
 	}
 	public Player getLatched(){
 		return latched;
 	}
-	public void setMode(String s){
-		mode = s;
+	public void setMode(AiMode m){
+		mode = m;
 	}
-	public String getMode(){
+	public AiMode getMode(){
 		return mode;
 	}
 	public void enable(){
@@ -47,7 +48,7 @@ public class AI {
 	}
 
 	public void setToWander(){
-		mode = "wander";
+		mode = AiMode.WANDER;
 		wanderDistance = Random.choose(100, 500);
 		distanceWandered = 0;
 		
@@ -82,14 +83,14 @@ public class AI {
 	
 	public void update(){
 		if(enabled && !appliedTo.getTeam().getEnemy().isDefeated()){
-			if("wander".equals(mode)){
+			if(mode == AiMode.WANDER){
 				wander();
 				distanceWandered += appliedTo.getMomentum();
 				
 				if(checkIfPlayerInSightRange()){
 					latchOntoNearest();
 				}
-			} else if("pursue".equals(mode)){
+			} else if(mode == AiMode.PURSUE){
 				pursue();
 			}
 		}

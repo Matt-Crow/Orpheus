@@ -1,15 +1,12 @@
 package battle;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.util.ArrayList;
 import entities.Player;
 import util.Random;
 import util.Coordinates;
 import customizables.Build;
-import entities.Entity;
 import entities.EntityManager;
-import entities.EntityNode;
 
 /**
  * The Team class is used to keep track of

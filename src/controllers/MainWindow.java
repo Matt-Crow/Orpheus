@@ -37,7 +37,7 @@ public class MainWindow extends JFrame{
         return new WindowAdapter(){
             @Override
             public void windowClosing(WindowEvent e) {
-                CombatLog.displayLog();
+                //CombatLog.displayLog();
             }
         };
     }

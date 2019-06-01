@@ -1,6 +1,5 @@
 package entities;
 
-import initializers.Master;
 import java.awt.Graphics;
 import util.Direction;
 import battle.Team;
