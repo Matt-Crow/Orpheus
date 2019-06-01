@@ -30,27 +30,32 @@ public class WorldCanvas extends DrawingPlane{
         JFrame f = new JFrame();
         WorldCanvas c = new WorldCanvas();
         f.setContentPane(c);
+        f.setSize(500, 500);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+        /*
         try {
             Image testImage = ImageIO.read(c.getClass().getResourceAsStream("/testImage.PNG"));
             c.world.setBlock(0, new ImageTile(0, 0, testImage));
         } catch (IOException ex) {
             ex.printStackTrace();
-        }
+        }*/
+        
+        Tile t = new Tile(0, 0, Color.BLACK);
+        t.setBlocking(true);
         
         c.world
-            .setBlock(1, new Tile(0, 0, Color.BLACK))
+            .setBlock(0, new Tile(0, 0, Color.WHITE))
+            .setBlock(1, t)
             .setTile(0, 0, 1)
             .setTile(0, 1, 1)
-            .setTile(0, 2, 1)
             .setTile(1, 1, 1)
-            .setTile(2, 0, 1)
             .setTile(2, 1, 1)
             .setTile(2, 2, 1)
             .initTiles();
         f.setVisible(true);
         f.revalidate();
         f.repaint();
+        
+        c.world.findPath(150, 250, 150, 50);
     }
 }

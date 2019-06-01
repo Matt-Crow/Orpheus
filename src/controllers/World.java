@@ -1,5 +1,7 @@
 package controllers;
 
+import ai.PathInfo;
+import ai.PathMinHeap;
 import battle.Team;
 import entities.Entity;
 import entities.Player;
@@ -12,6 +14,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import static java.lang.System.out;
+import java.util.Stack;
 
 /**
  * The World class will act as a controller for the game.
@@ -126,43 +129,70 @@ public class World {
      * @param y2 
      */
     public void findPath(int x1, int y1, int x2, int y2){
-        int arrSize = worldSize * worldSize; //convert the two-d array of the world to a one-d to make it easier to work with
+        boolean[][] visited = new boolean[worldSize][worldSize];
+        for(int i = 0; i < worldSize; i++){
+            for(int j = 0; j < worldSize; j++){
+                visited[i][j] = false;
+            }
+        }
         
-        boolean[] visited = new boolean[arrSize];
-        double[] distances = new double[arrSize];
-        int[] closest = new int[arrSize];
-        
-        Arrays.fill(visited, false);
-        Arrays.fill(distances, Double.MAX_VALUE);
-        Arrays.fill(closest, -1);
-        
-        /*
-        if (x, 0) corresponds to index x, given x < worldSize,
-        then (x, y) corrsponds to index x + y * worldSize
-        since neither x nor y can never equal the worldsize (index out of bounds),
-        the maximum index is (worldSize - 1) + (worldSize^2 - worldSize) = worldSize^2 - 1
-        */
-        int curr = x1 / Tile.TILE_SIZE + (y1 / Tile.TILE_SIZE) * worldSize;
+        PathMinHeap heap = new PathMinHeap(worldSize * worldSize);
+        Stack<PathInfo> stack = new Stack<>();
         int currX = x1 / Tile.TILE_SIZE; //array indexes
         int currY = y1 / Tile.TILE_SIZE;
+        int destX = x2 / Tile.TILE_SIZE;
+        int destY = y2 / Tile.TILE_SIZE;
+        PathInfo p = new PathInfo(currX, currY, currX, currY, 0);
+        stack.push(p);
+        visited[currX][currY] = true;
         
-        int dest = x2 / Tile.TILE_SIZE + (y2 / Tile.TILE_SIZE) * worldSize;
-        
-        while(curr != dest){
-            out.println("Currently at " + curr);
-            if(currX > 0 && map[currX - 1][currY] == 0){
-                //can go left
+        while(currX != destX || currY != destY){
+            out.println("Currently at (" + currX + ", " + currY + ")");
+            /*
+            out.println(map[currX - 1][currY]);
+            out.println(map[currX + 1][currY]);
+            out.println(map[currX - 1][currY]);
+            out.println(map[currX + 1][currY]);
+            out.println(!visited[currX - 1][currY]);
+            out.println(!visited[currX + 1][currY]);
+            out.println(!visited[currX][currY - 1]);
+            out.println(!visited[currX][currY + 1]);
+            */
+            try{
+                //push adjacent points to the heap
+                if(currX > 0 && map[currX - 1][currY] == 0 && !visited[currX - 1][currY]){
+                    //can go left
+                    p = new PathInfo(currX, currY, currX - 1, currY, 1 + stack.peek().getDist());
+                    heap.siftUp(p);
+                }
+                if(currX < worldSize && map[currX + 1][currY] == 0 && !visited[currX + 1][currY]){
+                    //can go right
+                    p = new PathInfo(currX, currY, currX + 1, currY, 1 + stack.peek().getDist());
+                    heap.siftUp(p);
+                }
+                if(currY > 0 && map[currX][currY - 1] == 0 && !visited[currX][currY - 1]){
+                    //can go up
+                    p = new PathInfo(currX, currY, currX, currY - 1, 1 + stack.peek().getDist());
+                    heap.siftUp(p);
+                }
+                if(currY < worldSize && map[currX][currY + 1] == 0 && !visited[currX][currY + 1]){
+                    //can go down
+                    p = new PathInfo(currX, currY, currX, currY + 1, 1 + stack.peek().getDist());
+                    heap.siftUp(p);
+                }
+                heap.print();
+                
+                do{
+                    p = heap.siftDown();
+                } while(visited[p.getEndX()][p.getEndY()]);
+                stack.push(p);
+                currX = p.getEndX();
+                currY = p.getEndY();
+                visited[currX][currY] = true;
+                
+            } catch(Exception e){
+                e.printStackTrace();
             }
-            if(currX < worldSize && map[currX + 1][currY] == 0){
-                //can go right
-            }
-            if(currY > 0 && map[currX][currY - 1] == 0){
-                //can go up
-            }
-            if(currY < worldSize && map[currX][currY + 1] == 0){
-                //can go down
-            }
-            break;
         }
     }
     
