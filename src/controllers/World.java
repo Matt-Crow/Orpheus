@@ -120,6 +120,7 @@ public class World {
     }
     
     /**
+     * Dijkstra's algorithm.
      * Parameters are the coordinates, NOT indexes in the map array
      * @param x1 the x coordinate of the starting point
      * @param y1 the y coordinate of the starting point
@@ -164,7 +165,7 @@ public class World {
             maxY = worldSize - 1;
         }
         
-        PathInfo p = new PathInfo(currXIdx * t, currYIdx * t, currXIdx * t, currYIdx * t, 0);
+        PathInfo p = new PathInfo((int)((currXIdx + 0.5) * t), (int)((currYIdx + 0.5) * t), (int)((currXIdx + 0.5) * t), (int)((currYIdx + 0.5)* t), 0);
         stack.push(p);
         visited[currXIdx][currYIdx] = true;
         try{
@@ -173,22 +174,47 @@ public class World {
                 //push adjacent points to the heap
                 if(currXIdx > minX && map[currXIdx - 1][currYIdx] == 0 && !visited[currXIdx - 1][currYIdx]){
                     //can go left
-                    p = new PathInfo(currXIdx * t, currYIdx * t, (currXIdx - 1) * t, currYIdx * t, t + stack.peek().getDist());
+                    //the 0.5 shift is to account for the Idx's being the upper left corner of a tile instead of its center 
+                    p = new PathInfo(
+                        (int)((currXIdx + 0.5) * t), 
+                        (int)((currYIdx + 0.5) * t), 
+                        (int)((currXIdx - 0.5) * t), // minus is because - 1 + 0.5
+                        (int)((currYIdx + 0.5) * t), 
+                        t + stack.peek().getDist()
+                    );
                     heap.siftUp(p);
                 }
                 if(currXIdx < maxX && map[currXIdx + 1][currYIdx] == 0 && !visited[currXIdx + 1][currYIdx]){
                     //can go right
-                    p = new PathInfo(currXIdx * t, currYIdx * t, (currXIdx + 1) * t, currYIdx * t, t + stack.peek().getDist());
+                    p = new PathInfo(
+                        (int)((currXIdx + 0.5) * t), 
+                        (int)((currYIdx + 0.5) * t), 
+                        (int)((currXIdx + 1.5) * t), 
+                        (int)((currYIdx + 0.5) * t), 
+                        t + stack.peek().getDist()
+                    );
                     heap.siftUp(p);
                 }
                 if(currYIdx > minY && map[currXIdx][currYIdx - 1] == 0 && !visited[currXIdx][currYIdx - 1]){
                     //can go up
-                    p = new PathInfo(currXIdx * t, currYIdx * t, currXIdx * t, (currYIdx - 1) * t, t + stack.peek().getDist());
+                    p = new PathInfo(
+                        (int)((currXIdx + 0.5) * t), 
+                        (int)((currYIdx + 0.5) * t), 
+                        (int)((currXIdx + 0.5) * t), 
+                        (int)((currYIdx - 0.5) * t), 
+                        t + stack.peek().getDist()
+                    );
                     heap.siftUp(p);
                 }
                 if(currYIdx < maxY && map[currXIdx][currYIdx + 1] == 0 && !visited[currXIdx][currYIdx + 1]){
                     //can go down
-                    p = new PathInfo(currXIdx * t, currYIdx * t, currXIdx * t, (currYIdx + 1) * t, t + stack.peek().getDist());
+                    p = new PathInfo(
+                        (int)((currXIdx + 0.5) * t), 
+                        (int)((currYIdx + 0.5) * t), 
+                        (int)((currXIdx + 0.5) * t), 
+                        (int)((currYIdx + 1.5) * t), 
+                        t + stack.peek().getDist()
+                    );
                     heap.siftUp(p);
                 }
                 //heap.print();
@@ -203,7 +229,7 @@ public class World {
             double accuDist = stack.peek().getDist();
             while(!stack.empty()){
                 p = stack.pop();
-                if(p.getEndX() == currXIdx * t && p.getEndY() == currYIdx * t && accuDist == p.getDist()){
+                if(p.getEndX() == (currXIdx + 0.5) * t && p.getEndY() == (currYIdx + 0.5) * t && accuDist == p.getDist()){
                     ret.add(p);
                     currXIdx = p.getStartX() / t;
                     currYIdx = p.getStartY() / t;

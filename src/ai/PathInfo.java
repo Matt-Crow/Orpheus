@@ -1,8 +1,11 @@
 package ai;
 
 /**
- *
- * @author Matt
+ * The PathInfo class is used to record paths through a World.
+ * It functions more as a struct than a class, mostly just used to store data
+ * as opposed to actually doing anything with it.
+ * 
+ * @author Matt Crow
  */
 public class PathInfo {
     private final int fromX;
@@ -10,6 +13,15 @@ public class PathInfo {
     private final int toX;
     private final int toY;
     private final double dist;
+    
+    /**
+     * 
+     * @param startX the X coordinate of the start of the path
+     * @param startY 
+     * @param endX
+     * @param endY
+     * @param d the ACCUMULATED distance to this point. Used by Dijkstra's algorithm
+     */
     public PathInfo(int startX, int startY, int endX, int endY, double d){
         fromX = startX;
         fromY = startY;
