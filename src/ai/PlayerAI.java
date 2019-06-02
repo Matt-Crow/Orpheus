@@ -13,14 +13,24 @@ public class PlayerAI extends AI{
 	}
 	public void setToAttack(){
 		setMode(AiMode.ATTACK);
-	}
+    }
+    
     @Override
 	public void pursue(){
 		super.pursue();
 		// check if in range
 		if(Coordinates.distanceBetween(registered, getLatched()) <= 100){
 			setToAttack();
-		}
+		} else {
+            registered.setPath(
+                registered.getWorld().findPath(
+                    registered.getX(), 
+                    registered.getY(), 
+                    getLatched().getX(), 
+                    getLatched().getY()
+                )
+            );
+        }
 	}
 	public void attack(){
 		if(getLatched().getShouldTerminate()){

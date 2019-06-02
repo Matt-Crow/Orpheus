@@ -129,7 +129,7 @@ public class World {
      * @return  
      */
     public Path findPath(int x1, int y1, int x2, int y2){
-        out.println(String.format("Finding path from (%d, %d) to (%d, %d)", x1, y1, x2, y2));
+        //out.println(String.format("Finding path from (%d, %d) to (%d, %d)", x1, y1, x2, y2));
         
         Path ret = new Path();
         int t = Tile.TILE_SIZE;

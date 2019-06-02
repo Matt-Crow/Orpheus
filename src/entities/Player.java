@@ -78,6 +78,10 @@ public class Player extends Entity{
 	public boolean getFollowingMouse(){
 		return followingMouse;
 	}
+    
+    public void setPath(Path p){
+        path = p;
+    }
 	
 	// Build stuff
 	public void applyBuild(Build b){
@@ -222,7 +226,6 @@ public class Player extends Entity{
 		int r = getRadius();
         
         if(path != null){
-            path.print();
             path.draw(g);
         }
         
