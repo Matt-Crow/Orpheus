@@ -2,7 +2,7 @@ package upgradables;
 
 import java.util.*;
 import entities.Player;
-import initializers.Master;
+import controllers.Master;
 import statuses.*;
 
 //T is an enum

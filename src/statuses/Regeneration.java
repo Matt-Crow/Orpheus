@@ -3,7 +3,7 @@ package statuses;
 import actions.*;
 import entities.Player;
 import util.Number;
-import initializers.Master;
+import controllers.Master;
 
 /**
  * Regeneration restores an Entity's hit points over time.

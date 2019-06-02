@@ -3,7 +3,7 @@ package statuses;
 import actions.*;
 import entities.Player;
 import util.Number;
-import initializers.Master;
+import controllers.Master;
 
 /**
  * Charge restores energy over time to the afflicted Player

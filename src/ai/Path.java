@@ -25,4 +25,9 @@ public class Path {
             g.fillRect(p.getStartX(), p.getStartY(), Tile.TILE_SIZE, Tile.TILE_SIZE);
         }
     }
+    
+    public void print(){
+        System.out.println("Path:");
+        path.forEach((PathInfo p)->System.out.println(p));
+    }
 }

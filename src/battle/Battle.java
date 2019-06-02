@@ -4,7 +4,7 @@ import controllers.World;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
-import initializers.Master;
+import controllers.Master;
 import windows.BattleCanvas;
 
 public class Battle {

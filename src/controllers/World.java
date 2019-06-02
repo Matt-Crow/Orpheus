@@ -72,6 +72,7 @@ public class World {
     
     public final World addTeam(Team t){
         teams.add(t);
+        t.forEachMember((Player p)->p.setWorld(this));
         return this;
     }
     
@@ -127,6 +128,8 @@ public class World {
      * @return  
      */
     public Path findPath(int x1, int y1, int x2, int y2){
+        out.println(String.format("Finding path from (%d, %d) to (%d, %d)", x1, y1, x2, y2));
+        
         Path ret = new Path();
         int t = Tile.TILE_SIZE;
         boolean[][] visited = new boolean[worldSize][worldSize];
@@ -200,10 +203,10 @@ public class World {
             double accuDist = stack.peek().getDist();
             while(!stack.empty()){
                 p = stack.pop();
-                if(p.getEndX() == currXIdx * t && p.getEndY() == currYIdx && accuDist == p.getDist()){
+                if(p.getEndX() == currXIdx * t && p.getEndY() == currYIdx * t && accuDist == p.getDist()){
                     ret.add(p);
                     currXIdx = p.getStartX() / t;
-                    currYIdx = p.getStartY();
+                    currYIdx = p.getStartY() / t;
                     accuDist -= t;
                 }
             }

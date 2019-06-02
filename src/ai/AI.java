@@ -2,7 +2,7 @@ package ai;
 
 import entities.Entity;
 import entities.Player;
-import initializers.Master;
+import controllers.Master;
 import util.Random;
 import util.Coordinates;
 

@@ -8,7 +8,7 @@ import actives.ActiveStatName;
 import actives.ActiveTag;
 import actives.MeleeActive;
 import customizables.CharacterStatName;
-import initializers.Master;
+import controllers.Master;
 import util.CombatLog;
 import util.Op;
 import util.Random;

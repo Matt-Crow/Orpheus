@@ -5,20 +5,21 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 
 import actives.*;
+import ai.Path;
 import battle.*;
 import customizables.*;
 import passives.*;
 import ai.PlayerAI;
 import statuses.AbstractStatus;
 import statuses.StatusName;
-import initializers.Master;
+import controllers.Master;
 
 // this is going to be very big
 public class Player extends Entity{
-	private String name;
+	private final String name;
 	private CharacterClass c;
-	private AbstractActive[] actives;
-	private AbstractPassive[] passives;
+	private final AbstractActive[] actives;
+	private final AbstractPassive[] passives;
 	
     private boolean followingMouse;
     
@@ -30,6 +31,14 @@ public class Player extends Entity{
 	
 	private PlayerAI playerAI;
 	private int lastHitById; //the useId of the last projectile that hit this player
+    
+    
+    
+    
+    private Path path;
+    
+    
+    
 	
 	public Player(String n){
 		super();
@@ -39,6 +48,7 @@ public class Player extends Entity{
 		passives = new AbstractPassive[3];
         setRadius(50);
         followingMouse = false;
+        path = null;
 	}
 	
 	public String getName(){
@@ -142,7 +152,7 @@ public class Player extends Entity{
     @Override
 	public void init(){
 		playerAI = new PlayerAI(this);
-		
+		path = null;
 		if (!(this instanceof TruePlayer) && !Master.DISABLEALLAI){
 			playerAI.enable();
 		}
@@ -179,7 +189,11 @@ public class Player extends Entity{
 	public void update(){
         if(followingMouse){
             turnTo(Master.getMouseX(), Master.getMouseY());
+            path = getWorld().findPath(getX(), getY(), Master.getMouseX(), Master.getMouseY());
 		}
+        if(path != null){
+            //follow path
+        }
 		playerAI.update();
 		slash.update();
 		getActionRegister().resetTrips();
@@ -206,6 +220,12 @@ public class Player extends Entity{
 		int w = Master.CANVASWIDTH;
 		int h = Master.CANVASHEIGHT;
 		int r = getRadius();
+        
+        if(path != null){
+            path.print();
+            path.draw(g);
+        }
+        
         
 		// HP value
 		g.setColor(Color.black);

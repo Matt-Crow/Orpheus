@@ -5,7 +5,7 @@ import javax.swing.SwingUtilities;
 
 import graphics.CustomColors;
 import gui.Style;
-import initializers.Master;
+import controllers.Master;
 import util.Op;
 
 import javax.swing.*;

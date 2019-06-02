@@ -3,7 +3,7 @@ package statuses;
 import actions.*;
 import util.Number;
 import entities.Player;
-import initializers.Master;
+import controllers.Master;
 
 /**
  * The Stun status decreases an Entity's movement speed

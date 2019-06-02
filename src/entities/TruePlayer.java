@@ -5,7 +5,7 @@ import java.awt.Graphics;
 
 import actives.AbstractActive;
 import graphics.CustomColors;
-import initializers.Master;
+import controllers.Master;
 
 //get rid of this thing
 public class TruePlayer extends Player{

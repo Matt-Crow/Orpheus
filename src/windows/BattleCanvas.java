@@ -1,5 +1,6 @@
 package windows;
 
+import controllers.Master;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -8,7 +9,6 @@ import battle.*;
 import controllers.World;
 import entities.PlayerControls;
 import graphics.Tile;
-import initializers.*;
 import util.Chat;
 
 public class BattleCanvas extends DrawingPlane{
@@ -61,8 +61,13 @@ public class BattleCanvas extends DrawingPlane{
         Tile b = new Tile(0, 0, Color.red);
         b.setBlocking(true);
         world.setBlock(1, b);
-        world.setTile(10, 10, 1);
-        world.setTile(12, 10, 1);
+        world
+            .setTile(10, 10, 1)
+            .setTile(10, 11, 1)
+            .setTile(10, 12, 1)
+            .setTile(8, 11, 1)
+            .setTile(8, 12, 1)
+            .setTile(8, 13, 1);
         world.addTeam(team1).addTeam(team2);
         
 		

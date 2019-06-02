@@ -2,7 +2,7 @@ package entities;
 
 import actives.AbstractActive;
 import actives.ActiveStatName;
-import initializers.Master;
+import controllers.Master;
 
 public class SeedProjectile extends Projectile{
 	private boolean canExplode;

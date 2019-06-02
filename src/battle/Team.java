@@ -7,6 +7,7 @@ import util.Random;
 import util.Coordinates;
 import customizables.Build;
 import entities.EntityManager;
+import java.util.function.Consumer;
 
 /**
  * The Team class is used to keep track of
@@ -108,6 +109,16 @@ public class Team extends EntityManager{
 	public final ArrayList<Player> getMembersRem(){
 		return membersRem;
 	}
+    
+    /**
+     * Invokes a method on each member in the team
+     * note that this is EVERY member,
+     * NOT just members remaining
+     * @param f 
+     */
+    public final void forEachMember(Consumer<Player> f){
+        roster.forEach((Player p)->f.accept(p));
+    }
     
     /**
      * Notifies this that a member is out of the game.

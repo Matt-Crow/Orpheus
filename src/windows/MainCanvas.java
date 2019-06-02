@@ -9,7 +9,7 @@ import gui.OptionBox;
 
 import battle.Team;
 import customizables.*;
-import initializers.Master;
+import controllers.Master;
 
 @SuppressWarnings("serial")
 public class MainCanvas extends DrawingPlane{

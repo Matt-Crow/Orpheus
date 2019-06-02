@@ -1,6 +1,6 @@
 package entities;
 
-import initializers.Master;
+import controllers.Master;
 import java.awt.Color;
 import java.awt.Graphics;
 

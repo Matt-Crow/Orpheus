@@ -2,7 +2,7 @@ package battle;
 
 import customizables.CharacterStatName;
 import entities.Player;
-import initializers.Master;
+import controllers.Master;
 
 /**
  * The damage backlog is used to keep track

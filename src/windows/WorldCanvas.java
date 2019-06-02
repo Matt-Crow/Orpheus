@@ -4,7 +4,7 @@ package windows;
 import controllers.World;
 import graphics.ImageTile;
 import graphics.Tile;
-import initializers.Master;
+import controllers.Master;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;

@@ -2,7 +2,6 @@ package controllers;
 
 import actives.LoadActives;
 import customizables.LoadCharacterClasses;
-import initializers.Master;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JFrame;

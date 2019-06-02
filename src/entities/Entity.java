@@ -5,6 +5,7 @@ import util.Direction;
 import battle.Team;
 import actions.ActionRegister;
 import ai.AI;
+import controllers.World;
 
 public abstract class Entity {
 	/**
@@ -55,9 +56,12 @@ public abstract class Entity {
     
     private EntityNode inNode; //the EntityNode containing this
     
+    private World inWorld; //the world this is currently in
+    
 	public Entity(){
 		id = nextId;
         inNode = null;
+        inWorld = null;
         radius = 50;
 		nextId++;
 	}
@@ -87,6 +91,17 @@ public abstract class Entity {
      */
     public void setNode(EntityNode n){
         inNode = n;
+    }
+    
+    public void setWorld(World w){
+        if(w != null){
+            inWorld = w;
+        } else {
+            throw new NullPointerException();
+        }
+    }
+    public World getWorld(){
+        return inWorld;
     }
     
     
@@ -304,6 +319,7 @@ public abstract class Entity {
         if(e == null){
             throw new NullPointerException();
         }
+        e.setWorld(inWorld);
         if(inNode != null){
             inNode.insert(e);
         } else {

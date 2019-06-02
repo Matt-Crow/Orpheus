@@ -9,7 +9,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import entities.*;
 import graphics.CustomColors;
-import initializers.Master;
+import controllers.Master;
 import java.io.*;
 import static java.lang.System.out;
 import upgradables.AbstractUpgradable;

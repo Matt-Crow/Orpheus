@@ -1,7 +1,7 @@
 package actives;
 
 import PsuedoJson.PsuedoJsonObject;
-import initializers.Master;
+import controllers.Master;
 
 public class ElementalActive extends AbstractActive{
 	public ElementalActive(String n, int arc, int range, int speed, int aoe, int dmg){
