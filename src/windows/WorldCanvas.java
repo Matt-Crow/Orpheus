@@ -8,6 +8,8 @@ import initializers.Master;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -28,8 +30,8 @@ public class WorldCanvas extends DrawingPlane{
     }
     
     public static void main(String[] args){
-        JFrame f = new JFrame();
         WorldCanvas c = new WorldCanvas();
+        JFrame f = new JFrame();
         f.setContentPane(c);
         f.setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,7 +58,33 @@ public class WorldCanvas extends DrawingPlane{
         f.setVisible(true);
         f.revalidate();
         f.repaint();
+        f.addMouseListener(new MouseListener(){
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                c.world.findPath(150, 250, 150, 50).draw(c.getGraphics());
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                
+            }
         
-        c.world.findPath(150, 250, 150, 50).draw(c.getGraphics());
+        });
+        
     }
 }

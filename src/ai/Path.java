@@ -22,7 +22,7 @@ public class Path {
     public void draw(Graphics g){
         g.setColor(Color.red);
         for(PathInfo p : path){
-            g.fillRect(p.getStartX() * Tile.TILE_SIZE, p.getStartY() * Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE);
+            g.fillRect(p.getStartX(), p.getStartY(), Tile.TILE_SIZE, Tile.TILE_SIZE);
         }
     }
 }

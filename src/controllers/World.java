@@ -118,10 +118,6 @@ public class World {
         });
     }
     
-    
-    
-    
-    
     /**
      * Parameters are the coordinates, NOT indexes in the map array
      * @param x1 the x coordinate of the starting point
@@ -132,6 +128,7 @@ public class World {
      */
     public Path findPath(int x1, int y1, int x2, int y2){
         Path ret = new Path();
+        int t = Tile.TILE_SIZE;
         boolean[][] visited = new boolean[worldSize][worldSize];
         for(int i = 0; i < worldSize; i++){
             for(int j = 0; j < worldSize; j++){
@@ -141,16 +138,16 @@ public class World {
         
         PathMinHeap heap = new PathMinHeap(worldSize * worldSize);
         Stack<PathInfo> stack = new Stack<>();
-        int currX = x1 / Tile.TILE_SIZE; //array indexes
-        int currY = y1 / Tile.TILE_SIZE;
+        int currXIdx = x1 / t; //array indexes
+        int currYIdx = y1 / t;
         int destX = x2 / Tile.TILE_SIZE;
         int destY = y2 / Tile.TILE_SIZE;
         
-        //first, bind the search to within a small region so that the algorithm doesn't search everywhere
-        int minX = currX - 3; //temporary until I can find a better way
-        int minY = currY - 3;
-        int maxX = currX + 3;
-        int maxY = currY + 3;
+        //these are array indexes
+        int minX = 0;
+        int minY = 0;
+        int maxX = worldSize - 1;
+        int maxY = worldSize - 1;
         if(minX < 0){
             minX = 0;
         }
@@ -164,57 +161,55 @@ public class World {
             maxY = worldSize - 1;
         }
         
-        PathInfo p = new PathInfo(currX, currY, currX, currY, 0);
+        PathInfo p = new PathInfo(currXIdx * t, currYIdx * t, currXIdx * t, currYIdx * t, 0);
         stack.push(p);
-        visited[currX][currY] = true;
+        visited[currXIdx][currYIdx] = true;
         try{
-            while(currX != destX || currY != destY){
-                out.println("Currently at (" + currX + ", " + currY + ")");
-                    //push adjacent points to the heap
-                    if(currX > minX && map[currX - 1][currY] == 0 && !visited[currX - 1][currY]){
-                        //can go left
-                        p = new PathInfo(currX, currY, currX - 1, currY, 1 + stack.peek().getDist());
-                        heap.siftUp(p);
-                    }
-                    if(currX < maxX && map[currX + 1][currY] == 0 && !visited[currX + 1][currY]){
-                        //can go right
-                        p = new PathInfo(currX, currY, currX + 1, currY, 1 + stack.peek().getDist());
-                        heap.siftUp(p);
-                    }
-                    if(currY > minY && map[currX][currY - 1] == 0 && !visited[currX][currY - 1]){
-                        //can go up
-                        p = new PathInfo(currX, currY, currX, currY - 1, 1 + stack.peek().getDist());
-                        heap.siftUp(p);
-                    }
-                    if(currY < maxY && map[currX][currY + 1] == 0 && !visited[currX][currY + 1]){
-                        //can go down
-                        p = new PathInfo(currX, currY, currX, currY + 1, 1 + stack.peek().getDist());
-                        heap.siftUp(p);
-                    }
-                    //heap.print();
-
-                    do{
-                        p = heap.siftDown();
-                    } while(visited[p.getEndX()][p.getEndY()]);
-                    stack.push(p);
-                    currX = p.getEndX();
-                    currY = p.getEndY();
-                    visited[currX][currY] = true;
+            while(currXIdx != destX || currYIdx != destY){
+                //out.println("Currently at (" + currXIdx + ", " + currYIdx + ")");
+                //push adjacent points to the heap
+                if(currXIdx > minX && map[currXIdx - 1][currYIdx] == 0 && !visited[currXIdx - 1][currYIdx]){
+                    //can go left
+                    p = new PathInfo(currXIdx * t, currYIdx * t, (currXIdx - 1) * t, currYIdx * t, t + stack.peek().getDist());
+                    heap.siftUp(p);
+                }
+                if(currXIdx < maxX && map[currXIdx + 1][currYIdx] == 0 && !visited[currXIdx + 1][currYIdx]){
+                    //can go right
+                    p = new PathInfo(currXIdx * t, currYIdx * t, (currXIdx + 1) * t, currYIdx * t, t + stack.peek().getDist());
+                    heap.siftUp(p);
+                }
+                if(currYIdx > minY && map[currXIdx][currYIdx - 1] == 0 && !visited[currXIdx][currYIdx - 1]){
+                    //can go up
+                    p = new PathInfo(currXIdx * t, currYIdx * t, currXIdx * t, (currYIdx - 1) * t, t + stack.peek().getDist());
+                    heap.siftUp(p);
+                }
+                if(currYIdx < maxY && map[currXIdx][currYIdx + 1] == 0 && !visited[currXIdx][currYIdx + 1]){
+                    //can go down
+                    p = new PathInfo(currXIdx * t, currYIdx * t, currXIdx * t, (currYIdx + 1) * t, t + stack.peek().getDist());
+                    heap.siftUp(p);
+                }
+                //heap.print();
+                do{
+                    p = heap.siftDown();
+                } while(visited[p.getEndX() / t][p.getEndY() / t]);
+                stack.push(p);
+                currXIdx = p.getEndX() / t;
+                currYIdx = p.getEndY() / t;
+                visited[currXIdx][currYIdx] = true;
             }
             double accuDist = stack.peek().getDist();
             while(!stack.empty()){
                 p = stack.pop();
-                if(p.getEndX() == currX && p.getEndY() == currY && accuDist == p.getDist()){
+                if(p.getEndX() == currXIdx * t && p.getEndY() == currYIdx && accuDist == p.getDist()){
                     ret.add(p);
-                    currX = p.getStartX();
-                    currY = p.getStartY();
-                    accuDist -= 1;
+                    currXIdx = p.getStartX() / t;
+                    currYIdx = p.getStartY();
+                    accuDist -= t;
                 }
             }
         } catch(Exception e){
             e.printStackTrace();
         }
-        
         return ret;
     }
     
