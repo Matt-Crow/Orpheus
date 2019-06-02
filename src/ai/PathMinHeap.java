@@ -29,6 +29,8 @@ public class PathMinHeap {
         firstEmptyIdx++;
         PathInfo temp = null;
         
+        out.println("Sifting up...");
+        print();
         while(parentIdx > 0 && heap[parentIdx].getDist() > p.getDist()){
             //want the smallest on top
             temp = heap[parentIdx];
@@ -36,7 +38,9 @@ public class PathMinHeap {
             heap[currIdx] = temp;
             currIdx = parentIdx;
             parentIdx = (currIdx - 1) / 2;
+            print();
         }
+        out.println("Done sifting up");
     }
     
     public PathInfo siftDown() throws Exception{
@@ -50,7 +54,8 @@ public class PathMinHeap {
         int left = 1;
         int right = 2;
         PathInfo temp = null;
-        
+        out.println("Sifting down...");
+        print();
         while(
             (left < firstEmptyIdx && heap[currIdx].getDist() > heap[left].getDist()) 
             || (right < firstEmptyIdx && heap[currIdx].getDist() > heap[right].getDist()))
@@ -58,16 +63,19 @@ public class PathMinHeap {
             if(heap[left].getDist() > heap[right].getDist()){
                 temp = heap[right];
                 heap[right] = heap[currIdx];
+                heap[currIdx] = temp;
                 currIdx = right;
             } else {
                 temp = heap[left];
                 heap[left] = heap[currIdx];
+                heap[currIdx] = temp;
                 currIdx = left;
             }
             left = 2 * currIdx + 1;
             right = 2 * currIdx + 2;
+            print();
         }
-        
+        out.println("Done sifting down");
         return ret;
     }
     

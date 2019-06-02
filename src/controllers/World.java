@@ -191,7 +191,7 @@ public class World {
                         p = new PathInfo(currX, currY, currX, currY + 1, 1 + stack.peek().getDist());
                         heap.siftUp(p);
                     }
-                    heap.print();
+                    //heap.print();
 
                     do{
                         p = heap.siftDown();
