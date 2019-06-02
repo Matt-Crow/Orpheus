@@ -4,6 +4,7 @@ package windows;
 import controllers.World;
 import graphics.ImageTile;
 import graphics.Tile;
+import initializers.Master;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -30,7 +31,7 @@ public class WorldCanvas extends DrawingPlane{
         JFrame f = new JFrame();
         WorldCanvas c = new WorldCanvas();
         f.setContentPane(c);
-        f.setSize(500, 500);
+        f.setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         /*
         try {
@@ -56,6 +57,6 @@ public class WorldCanvas extends DrawingPlane{
         f.revalidate();
         f.repaint();
         
-        c.world.findPath(150, 250, 150, 50);
+        c.world.findPath(150, 250, 150, 50).draw(c.getGraphics());
     }
 }

@@ -1,5 +1,6 @@
 package controllers;
 
+import ai.Path;
 import ai.PathInfo;
 import ai.PathMinHeap;
 import battle.Team;
@@ -127,8 +128,10 @@ public class World {
      * @param y1 the y coordinate of the starting point
      * @param x2
      * @param y2 
+     * @return  
      */
-    public void findPath(int x1, int y1, int x2, int y2){
+    public Path findPath(int x1, int y1, int x2, int y2){
+        Path ret = new Path();
         boolean[][] visited = new boolean[worldSize][worldSize];
         for(int i = 0; i < worldSize; i++){
             for(int j = 0; j < worldSize; j++){
@@ -164,56 +167,55 @@ public class World {
         PathInfo p = new PathInfo(currX, currY, currX, currY, 0);
         stack.push(p);
         visited[currX][currY] = true;
+        try{
+            while(currX != destX || currY != destY){
+                out.println("Currently at (" + currX + ", " + currY + ")");
+                    //push adjacent points to the heap
+                    if(currX > minX && map[currX - 1][currY] == 0 && !visited[currX - 1][currY]){
+                        //can go left
+                        p = new PathInfo(currX, currY, currX - 1, currY, 1 + stack.peek().getDist());
+                        heap.siftUp(p);
+                    }
+                    if(currX < maxX && map[currX + 1][currY] == 0 && !visited[currX + 1][currY]){
+                        //can go right
+                        p = new PathInfo(currX, currY, currX + 1, currY, 1 + stack.peek().getDist());
+                        heap.siftUp(p);
+                    }
+                    if(currY > minY && map[currX][currY - 1] == 0 && !visited[currX][currY - 1]){
+                        //can go up
+                        p = new PathInfo(currX, currY, currX, currY - 1, 1 + stack.peek().getDist());
+                        heap.siftUp(p);
+                    }
+                    if(currY < maxY && map[currX][currY + 1] == 0 && !visited[currX][currY + 1]){
+                        //can go down
+                        p = new PathInfo(currX, currY, currX, currY + 1, 1 + stack.peek().getDist());
+                        heap.siftUp(p);
+                    }
+                    heap.print();
+
+                    do{
+                        p = heap.siftDown();
+                    } while(visited[p.getEndX()][p.getEndY()]);
+                    stack.push(p);
+                    currX = p.getEndX();
+                    currY = p.getEndY();
+                    visited[currX][currY] = true;
+            }
+            double accuDist = stack.peek().getDist();
+            while(!stack.empty()){
+                p = stack.pop();
+                if(p.getEndX() == currX && p.getEndY() == currY && accuDist == p.getDist()){
+                    ret.add(p);
+                    currX = p.getStartX();
+                    currY = p.getStartY();
+                    accuDist -= 1;
+                }
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
         
-        while(currX != destX || currY != destY){
-            out.println("Currently at (" + currX + ", " + currY + ")");
-            
-            try{
-                //push adjacent points to the heap
-                if(currX > minX && map[currX - 1][currY] == 0 && !visited[currX - 1][currY]){
-                    //can go left
-                    p = new PathInfo(currX, currY, currX - 1, currY, 1 + stack.peek().getDist());
-                    heap.siftUp(p);
-                }
-                if(currX < maxX && map[currX + 1][currY] == 0 && !visited[currX + 1][currY]){
-                    //can go right
-                    p = new PathInfo(currX, currY, currX + 1, currY, 1 + stack.peek().getDist());
-                    heap.siftUp(p);
-                }
-                if(currY > minY && map[currX][currY - 1] == 0 && !visited[currX][currY - 1]){
-                    //can go up
-                    p = new PathInfo(currX, currY, currX, currY - 1, 1 + stack.peek().getDist());
-                    heap.siftUp(p);
-                }
-                if(currY < maxY && map[currX][currY + 1] == 0 && !visited[currX][currY + 1]){
-                    //can go down
-                    p = new PathInfo(currX, currY, currX, currY + 1, 1 + stack.peek().getDist());
-                    heap.siftUp(p);
-                }
-                heap.print();
-                
-                do{
-                    p = heap.siftDown();
-                } while(visited[p.getEndX()][p.getEndY()]);
-                stack.push(p);
-                currX = p.getEndX();
-                currY = p.getEndY();
-                visited[currX][currY] = true;
-                
-            } catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-        double accuDist = stack.peek().getDist();
-        while(!stack.empty()){
-            p = stack.pop();
-            if(p.getEndX() == currX && p.getEndY() == currY){// && accuDist - p.getDist() == 1){
-                out.println(p);
-                currX = p.getStartX();
-                currY = p.getStartY();
-                accuDist -= 1;
-            }
-        }
+        return ret;
     }
     
     

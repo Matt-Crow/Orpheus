@@ -36,7 +36,6 @@ public class PathMinHeap {
             heap[currIdx] = temp;
             currIdx = parentIdx;
             parentIdx = (currIdx - 1) / 2;
-            //print();
         }
     }
     
