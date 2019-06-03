@@ -62,12 +62,19 @@ public class BattleCanvas extends DrawingPlane{
         b.setBlocking(true);
         world.setBlock(1, b);
         world
-            .setTile(10, 10, 1)
-            .setTile(10, 11, 1)
-            .setTile(10, 12, 1)
+            .setTile(8, 10, 1)
             .setTile(8, 11, 1)
             .setTile(8, 12, 1)
-            .setTile(8, 13, 1);
+            .setTile(7, 12, 1)
+            .setTile(7, 13, 1)
+            .setTile(7, 14, 1)
+            .setTile(8, 14, 1)
+            .setTile(9, 14, 1)
+            .setTile(10, 14, 1)
+            .setTile(10, 13, 1)
+            .setTile(10, 10, 1)
+            .setTile(10, 11, 1)
+            .setTile(10, 12, 1);
         world.addTeam(team1).addTeam(team2);
         
 		

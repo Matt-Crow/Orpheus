@@ -81,6 +81,11 @@ public class Player extends Entity{
     
     public void setPath(Path p){
         path = p;
+        if(!path.noneLeft()){
+            PathInfo pi = path.get();
+            // System.out.println(pi);
+            setFocus(pi.getEndX(), pi.getEndY());
+        }
     }
 	
 	// Build stuff
@@ -192,13 +197,7 @@ public class Player extends Entity{
     @Override
 	public void update(){
         if(followingMouse){
-            //turnTo(Master.getMouseX(), Master.getMouseY());
-            path = getWorld().findPath(getX(), getY(), Master.getMouseX(), Master.getMouseY());
-            if(!path.noneLeft()){
-                PathInfo p = path.get();
-               // System.out.println(p);
-                setFocus(p.getEndX(), p.getEndY());
-            }
+            setPath(getWorld().findPath(getX(), getY(), Master.getMouseX(), Master.getMouseY()));
 		}
 		playerAI.update();
         if(path != null){
