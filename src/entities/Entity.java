@@ -4,7 +4,6 @@ import java.awt.Graphics;
 import util.Direction;
 import battle.Team;
 import actions.ActionRegister;
-import ai.AI;
 import controllers.World;
 
 public abstract class Entity {
@@ -47,7 +46,6 @@ public abstract class Entity {
 	private Team team;
 	private boolean shouldTerminate;
 	private ActionRegister actReg;
-	private AI entityAI;
 	
 	// misc
 	public final int id;
@@ -262,10 +260,6 @@ public abstract class Entity {
         return distanceFrom(e) <= e.getRadius() + radius;
 	}
     
-	public final AI getEntityAI(){
-		return entityAI;
-	}
-    
     //can't be final, as SeedProjectile needs to override
     //add on terminate?
 	public void terminate(){
@@ -289,7 +283,6 @@ public abstract class Entity {
 		speedFilter = 1.0;
 		actReg = new ActionRegister(this);
 		shouldTerminate = false;
-		entityAI = new AI(this);
 		
 		hasFocus = false;
         init();
@@ -303,7 +296,6 @@ public abstract class Entity {
     
 	public final void doUpdate(){
 		if(!shouldTerminate){
-			entityAI.update();
 			updateMovement();
 			actReg.tripOnUpdate();
             update();

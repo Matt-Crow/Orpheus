@@ -157,8 +157,8 @@ public class Player extends Entity{
 	public void init(){
 		playerAI = new PlayerAI(this);
 		path = null;
-		if (!(this instanceof TruePlayer) && !Master.DISABLEALLAI){
-			playerAI.enable();
+		if (!(this instanceof TruePlayer)){
+			playerAI.setEnabled(true);
 		}
 		slash = (MeleeActive)AbstractActive.getActiveByName("Slash").copy();
 		slash.registerTo(this);
