@@ -132,6 +132,15 @@ public class World {
         //out.println(String.format("Finding path from (%d, %d) to (%d, %d)", x1, y1, x2, y2));
         
         Path ret = new Path();
+        
+        int max = worldSize * Tile.TILE_SIZE;
+        if(
+            x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0 ||
+            x1 > max || y1 > max || x2 > max || y2 > max
+        ){
+            return ret;
+        }
+        
         int t = Tile.TILE_SIZE;
         boolean[][] visited = new boolean[worldSize][worldSize];
         for(int i = 0; i < worldSize; i++){
@@ -237,6 +246,12 @@ public class World {
                 }
             }
         } catch(Exception e){
+            out.println("Error encountered while trying to find the path");
+            out.println(String.format("(%d, %d) to (%d, %d)", x1, y1, x2, y2));
+            out.println("Stack: ");
+            stack.forEach((PathInfo pi)->out.println(pi.toString()));
+            out.println("Heap: ");
+            heap.print();
             e.printStackTrace();
         }
         return ret;
