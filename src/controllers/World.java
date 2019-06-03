@@ -122,11 +122,14 @@ public class World {
     /**
      * Dijkstra's algorithm.
      * Parameters are the coordinates, NOT indexes in the map array
+     * Currently, the only tiles this can find a path on is 0, 
+     * but I can add checking to see if the tile is tangible later
      * @param x1 the x coordinate of the starting point
      * @param y1 the y coordinate of the starting point
      * @param x2
      * @param y2 
-     * @return  
+     * @return the path between the two points. If none exists, 
+     * or an error is encountered, the Path returned will have no info
      */
     public Path findPath(int x1, int y1, int x2, int y2){
         //out.println(String.format("Finding path from (%d, %d) to (%d, %d)", x1, y1, x2, y2));
@@ -277,22 +280,20 @@ public class World {
         return ret;
     }
     
-    
-    
-    
-    
     public void update(){
         teams.forEach((Team t)->{
             t.update();
             t.forEach((Entity member)->{
                 checkForTileCollisions(member);
-                t.getEnemy().getMembersRem().forEach((Player enemy)->{
-                    if(member instanceof Projectile){
-                        // I thought that java handled this conversion?
-                        ((Projectile)member).checkForCollisions(enemy);
-                    }
-                    //member.checkForCollisions(enemy);
-                });
+                if(t.getEnemy() != null){
+                    t.getEnemy().getMembersRem().forEach((Player enemy)->{
+                        if(member instanceof Projectile){
+                            // I thought that java handled this conversion?
+                            ((Projectile)member).checkForCollisions(enemy);
+                        }
+                        //member.checkForCollisions(enemy);
+                    });
+                }
             });
         });
     }
