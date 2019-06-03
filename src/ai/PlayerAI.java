@@ -17,7 +17,7 @@ public class PlayerAI extends AI{
     
     @Override
 	public void pursue(){
-		super.pursue();
+		//super.pursue();
 		// check if in range
 		if(Coordinates.distanceBetween(registered, getLatched()) <= 100){
 			setToAttack();

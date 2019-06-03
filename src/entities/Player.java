@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import actives.*;
 import ai.Path;
+import ai.PathInfo;
 import battle.*;
 import customizables.*;
 import passives.*;
@@ -14,7 +15,6 @@ import statuses.AbstractStatus;
 import statuses.StatusName;
 import controllers.Master;
 
-// this is going to be very big
 public class Player extends Entity{
 	private final String name;
 	private CharacterClass c;
@@ -192,13 +192,31 @@ public class Player extends Entity{
     @Override
 	public void update(){
         if(followingMouse){
-            turnTo(Master.getMouseX(), Master.getMouseY());
+            //turnTo(Master.getMouseX(), Master.getMouseY());
             path = getWorld().findPath(getX(), getY(), Master.getMouseX(), Master.getMouseY());
+            if(!path.noneLeft()){
+                PathInfo p = path.get();
+               // System.out.println(p);
+                setFocus(p.getEndX(), p.getEndY());
+            }
 		}
+		playerAI.update();
         if(path != null){
             //follow path
+            if(path.noneLeft()){
+                path = null;
+            } else {
+                //System.out.println("Refocusing..");
+                while(withinFocus() && !path.noneLeft()){
+                    path.deque();
+                    if(!path.noneLeft()){
+                        PathInfo p = path.get();
+                        //System.out.println(p);
+                        setFocus(p.getEndX(), p.getEndY());
+                    }
+                }
+            }
         }
-		playerAI.update();
 		slash.update();
 		getActionRegister().resetTrips();
 		for(AbstractActive a : actives){

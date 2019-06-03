@@ -120,12 +120,6 @@ public abstract class Entity {
         y = yc;
     }
     
-    public final void setRadius(int r){
-        radius = (r >= 0) ? r : -r;
-    }
-    public final int getRadius(){
-        return radius;
-    }
     
     public final Direction getDir(){
 		return dir;
@@ -200,6 +194,14 @@ public abstract class Entity {
 		
 		speedFilter = 1.0;
 	}
+    
+    public final void setRadius(int r){
+        radius = (r >= 0) ? r : -r;
+    }
+    public final int getRadius(){
+        return radius;
+    }
+    
     
 	//focus related methods
 	public final void setFocus(int xCoord, int yCoord){
@@ -277,7 +279,7 @@ public abstract class Entity {
 		return shouldTerminate;
 	}
     
-    public void doInit(){
+    public final void doInit(){
 		// called by battle
         knockbackDir = new Direction(0);
         knockbackMag = 0;

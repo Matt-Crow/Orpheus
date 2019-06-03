@@ -32,8 +32,8 @@ public class Path {
         return path.getFirst();
     }
     
-    public void add(PathInfo p){
-        path.add(p);
+    public void push(PathInfo p){
+        path.push(p);
     }
     
     public void deque(){
@@ -46,6 +46,12 @@ public class Path {
         g2d.setStroke(new BasicStroke(10));
         for(PathInfo p : path){
             g2d.drawLine(p.getStartX(), p.getStartY(), p.getEndX(), p.getEndY());
+        }
+        if(!path.isEmpty()){
+            g2d.setColor(Color.red);
+            g2d.fillOval(path.getLast().getEndX(), path.getLast().getEndY(), 20, 20);
+            g2d.setColor(Color.green);
+            g2d.fillOval(path.getFirst().getStartX(), path.getFirst().getStartY(), 20, 20);
         }
     }
     

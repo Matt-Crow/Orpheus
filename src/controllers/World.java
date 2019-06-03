@@ -133,6 +133,7 @@ public class World {
         
         Path ret = new Path();
         
+        //check to make sure the points are inside the world
         int max = worldSize * Tile.TILE_SIZE;
         if(
             x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0 ||
@@ -173,6 +174,20 @@ public class World {
         if(maxY > worldSize - 1){
             maxY = worldSize - 1;
         }
+        
+        //make sure the source and destination are intanglible
+        if(
+            currXIdx < minX || currXIdx > maxX
+            || currYIdx < minY || currYIdx > maxY
+            || destX < minX || destX > maxX
+            || destY < minY || destY > maxY
+            || map[currXIdx][currYIdx] != 0 
+            || map[destX][destY] != 0
+        ){
+            return ret;
+        }
+        
+        
         
         PathInfo p = new PathInfo((int)((currXIdx + 0.5) * t), (int)((currYIdx + 0.5) * t), (int)((currXIdx + 0.5) * t), (int)((currYIdx + 0.5)* t), 0);
         stack.push(p);
@@ -238,8 +253,13 @@ public class World {
             double accuDist = stack.peek().getDist();
             while(!stack.empty()){
                 p = stack.pop();
-                if(p.getEndX() == (currXIdx + 0.5) * t && p.getEndY() == (currYIdx + 0.5) * t && accuDist == p.getDist()){
-                    ret.add(p);
+                if(
+                    p.getEndX() == (currXIdx + 0.5) * t 
+                    && p.getEndY() == (currYIdx + 0.5) * t 
+                    && accuDist == p.getDist()
+                    && p.getDist() != 0 //don't include the start to start point
+                ){
+                    ret.push(p); //need to add to front, as the stack is backwards
                     currXIdx = p.getStartX() / t;
                     currYIdx = p.getStartY() / t;
                     accuDist -= t;
