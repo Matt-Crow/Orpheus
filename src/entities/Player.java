@@ -33,12 +33,9 @@ public class Player extends Entity{
 	private PlayerAI playerAI;
 	private int lastHitById; //the useId of the last projectile that hit this player
     
-    
-    
-    
     private Path path;
     
-    
+    public static final int RADIUS = 50;
     
 	
 	public Player(String n){
@@ -47,7 +44,7 @@ public class Player extends Entity{
 		name = n;
 		actives = new AbstractActive[3];
 		passives = new AbstractPassive[3];
-        setRadius(50);
+        setRadius(RADIUS);
         followingMouse = false;
         path = null;
 	}

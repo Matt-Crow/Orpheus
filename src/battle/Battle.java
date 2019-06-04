@@ -3,11 +3,11 @@ package battle;
 import controllers.World;
 import java.awt.Color;
 import java.util.ArrayList;
-import controllers.Master;
+import entities.Player;
 import windows.DrawingPlane;
 
 public class Battle {
-	ArrayList<Team> teams;
+	ArrayList<Team> teams; //TODO: add support for many teams or a free-for-all
 	private World host;
 	private final DrawingPlane hostingCanvas;
 	private boolean end;
@@ -16,6 +16,8 @@ public class Battle {
 		teams = new ArrayList<>();
 		teams.add(team1);
 		teams.add(team2);
+        team1.setEnemy(team2);
+        team2.setEnemy(team1);
 		hostingCanvas = b;
 	}
 	
@@ -31,11 +33,10 @@ public class Battle {
 	
 	public void init(){
 		int s = host.getSize();
-		int spacingFromTopEdge = 50; //arbitrary. Will change later
+		int spacingFromTopEdge = Player.RADIUS;
 		int spacingBetween = s / 6;
 		teams.get(0).init(spacingFromTopEdge, spacingBetween, 270);
 		teams.get(1).init(s - spacingFromTopEdge * 2, spacingBetween, 90);
-		Master.setCurrentBattle(this);
 		end = false;
 	}
 	

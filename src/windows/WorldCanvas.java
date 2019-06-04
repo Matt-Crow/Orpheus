@@ -207,7 +207,7 @@ public class WorldCanvas extends DrawingPlane{
             .setTile(1, 1, 1)
             .setTile(2, 1, 1)
             .setTile(2, 2, 1)
-            .initTiles();
+            .init();
         c.world.addTeam(t1);
         f.setVisible(true);
         f.revalidate();

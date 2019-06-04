@@ -16,13 +16,12 @@ import graphics.Tile;
 
 @SuppressWarnings("serial")
 public class MainCanvas extends DrawingPlane{
-	public static final long serialVersionUID = 1L;
 	private Team team1;
 	private Team team2;
 	
-	private OptionBox<String> playerBuild;
-	private OptionBox<String> team1Size;
-	private OptionBox<String> team2Size;
+	private final OptionBox<String> playerBuild;
+	private final OptionBox<String> team1Size;
+	private final OptionBox<String> team2Size;
 	
 	public MainCanvas(){
 		super();
@@ -32,6 +31,7 @@ public class MainCanvas extends DrawingPlane{
         MainCanvas m = this;
         
 		b.addActionListener(new AbstractAction(){
+            @Override
 			public void actionPerformed(ActionEvent e){
 				m.switchTo(new StartCanvas());
 			}
@@ -53,6 +53,7 @@ public class MainCanvas extends DrawingPlane{
 		
 		JButton newBuild = new JButton("Customize");
 		newBuild.addActionListener(new AbstractAction(){
+            @Override
 			public void actionPerformed(ActionEvent e){
 				switchTo(new BuildCanvas());
 			}
@@ -63,21 +64,22 @@ public class MainCanvas extends DrawingPlane{
         
 		JButton battle = new JButton("Battle");
 		battle.addActionListener(new AbstractAction(){
+            @Override
 			public void actionPerformed(ActionEvent e){
 				startBattle();
 			}
 		});
 		addMenuItem(battle);
 		
-		playerBuild = new OptionBox<String>("Player build", buildNameList);
+		playerBuild = new OptionBox<>("Player build", buildNameList);
 		playerBuild.addActionListener(getRepaint());
 		add(playerBuild);
 		
-		team1Size = new OptionBox<String>("Team 1 size", numStr);
+		team1Size = new OptionBox<>("Team 1 size", numStr);
 		team1Size.addActionListener(getRepaint());
 		add(team1Size);
 		
-		team2Size = new OptionBox<String>("Team 2 size", numStr);
+		team2Size = new OptionBox<>("Team 2 size", numStr);
 		team2Size.addActionListener(getRepaint());
 		add(team2Size);
 		
@@ -87,19 +89,12 @@ public class MainCanvas extends DrawingPlane{
     
     //this is a lot of work for one function, might want to clean it up a bit
     private void startBattle(){
-        team1 = Team.constructRandomTeam("Team 1", Color.green, Integer.parseInt(team1Size.getSelected().toString()) - 1);
-        team2 = Team.constructRandomTeam("Team 2", Color.red, Integer.parseInt(team2Size.getSelected().toString()));
+        team1 = Team.constructRandomTeam("Team 1", Color.green, Integer.parseInt(team1Size.getSelected()) - 1);
+        team2 = Team.constructRandomTeam("Team 2", Color.red, Integer.parseInt(team2Size.getSelected()));
 
-        Master.TRUEPLAYER.applyBuild(Build.getBuildByName(playerBuild.getSelected().toString()));
+        Master.TRUEPLAYER.applyBuild(Build.getBuildByName(playerBuild.getSelected()));
         team1.addMember(Master.TRUEPLAYER);
 
-        team1.setEnemy(team2);
-        team2.setEnemy(team1);
-        /*
-        BattleCanvas bc = new BattleCanvas();
-        bc.setBattle(team1, team2);
-        switchTo(bc);
-        */
         World battleWorld = new World(20);
         //it's like a theme park or something
         battleWorld.createCanvas();
@@ -121,19 +116,19 @@ public class MainCanvas extends DrawingPlane{
             .setTile(10, 10, 1)
             .setTile(10, 11, 1)
             .setTile(10, 12, 1);
-        battleWorld.addTeam(team1).addTeam(team2);
+        battleWorld
+            .addTeam(team1)
+            .addTeam(team2);
         
         Battle b = new Battle(
             battleWorld.getCanvas(),
             team1,
             team2
         );
-        Master.setCurrentBattle(b);
         battleWorld.setCurrentMinigame(b);
         b.setHost(battleWorld);
         
-        battleWorld.initTiles();
-        b.init();
+        battleWorld.init();
         switchTo(battleWorld.getCanvas());
     }
 }

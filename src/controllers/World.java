@@ -12,7 +12,6 @@ import graphics.Tile;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import static java.lang.System.out;
@@ -81,24 +80,6 @@ public class World {
         teams.add(t);
         t.forEachMember((Player p)->p.setWorld(this));
         return this;
-    }
-    
-    public void initTiles(){
-        allTiles.clear();
-        tangibleTiles.clear();
-        Tile t;
-        
-        for(int x = 0; x < worldSize; x++){
-            for(int y = 0; y < worldSize; y++){
-                if(tileSet.containsKey(map[x][y])){
-                    t = tileSet.get(map[x][y]).copy(x, y);
-                    allTiles.add(t);
-                    if(t.getBlocking()){
-                        tangibleTiles.add(t);
-                    }
-                }
-            }
-        }
     }
     
     private void checkForTileCollisions(Entity e){
@@ -305,6 +286,47 @@ public class World {
         return currentMinigame;
     }
     
+    private void initTiles(){
+        allTiles.clear();
+        tangibleTiles.clear();
+        Tile t;
+        
+        for(int x = 0; x < worldSize; x++){
+            for(int y = 0; y < worldSize; y++){
+                if(tileSet.containsKey(map[x][y])){
+                    t = tileSet.get(map[x][y]).copy(x, y);
+                    allTiles.add(t);
+                    if(t.getBlocking()){
+                        tangibleTiles.add(t);
+                    }
+                }
+            }
+        }
+    }
+    
+    //working here
+    public boolean spawnIntoWorld(Entity e, int x, int y){
+        boolean success = false;
+        int t = Tile.TILE_SIZE;
+        int s = getSize();
+        for(int yIdx = y / t; yIdx < worldSize && !success; yIdx++){
+            for(int xIdx = x / t; xIdx < worldSize && !success; xIdx++){
+                if(!tileSet.containsKey(map[xIdx][yIdx]) || !tileSet.get(map[xIdx][yIdx]).getBlocking()){
+                    success = true;
+                    //spawn the entity
+                }
+            }
+        }
+        
+        return success;
+    }
+    
+    public void init(){
+        initTiles();
+        if(currentMinigame != null){
+            currentMinigame.init();
+        }
+    }
     
     public void update(){
         if(currentMinigame != null){

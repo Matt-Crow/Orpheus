@@ -18,21 +18,12 @@ public class Master {
 	public static final boolean DISABLEPARTICLES = false; // causes lag
 	public static final int FPS = 30;
 	public static final int UNITSIZE = 100;
-	
-	private static Battle currentBattle;
     
     static {
         JFrame f = new JFrame();
         CANVASBOTTOM = Toolkit.getDefaultToolkit().getScreenInsets(f.getGraphicsConfiguration()).bottom;
         CANVASHEIGHT = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - CANVASBOTTOM;
         f.dispose();
-    }
-	
-	public static void setCurrentBattle(Battle b){
-		currentBattle = b;
-	}
-    public static Battle getCurrentBattle(){
-        return currentBattle;
     }
     
 	// seconds to frames
