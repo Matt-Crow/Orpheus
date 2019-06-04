@@ -1,7 +1,5 @@
 package controllers;
 
-import java.awt.MouseInfo;
-import java.awt.Point;
 import java.awt.Toolkit;
 import entities.TruePlayer;
 import battle.Battle;
@@ -43,18 +41,5 @@ public class Master {
 	}
 	public static int framesToSeconds(int frames){
 		return frames / FPS;
-	}
-	
-	public static int getMouseX(){
-		// returns the position of the mouse cursor relative to the battlefield corner
-		Point p = MouseInfo.getPointerInfo().getLocation();
-		int[] t = currentBattle.getCanvas().getLastTransform();
-		return (int)p.getX() - t[0];
-	}
-	public static int getMouseY(){
-		// returns the position of the mouse cursor relative to the battlefield corner
-		Point p = MouseInfo.getPointerInfo().getLocation();
-		int[] t = currentBattle.getCanvas().getLastTransform();
-		return (int)p.getY() - t[1];
 	}
 }

@@ -3,6 +3,7 @@ package controllers;
 import ai.Path;
 import ai.PathInfo;
 import ai.PathMinHeap;
+import battle.Battle;
 import battle.Team;
 import entities.Entity;
 import entities.Player;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 
 import static java.lang.System.out;
 import java.util.Stack;
+import windows.WorldCanvas;
 
 /**
  * The World class will act as a controller for the game.
@@ -42,6 +44,9 @@ public class World {
     private final ArrayList<Team> teams; //makes it faster to find nearest enemies
     //maybe just keep track of everything in one linked list?
     
+    private WorldCanvas canvas;
+    private Battle currentMinigame; //in future versions, this will be changed to include other minigames
+    
     public World(int size){
         worldSize = size;
         map = new int[size][size];
@@ -54,6 +59,8 @@ public class World {
         allTiles = new ArrayList<>();
         tangibleTiles = new ArrayList<>();
         teams = new ArrayList<>();
+        canvas = null;
+        currentMinigame = null;
     }
     
     public World setTile(int x, int y, int value){
@@ -280,7 +287,29 @@ public class World {
         return ret;
     }
     
+    public void createCanvas(){
+        canvas = new WorldCanvas(this);
+    }
+    
+    public void setCanvas(WorldCanvas c){
+        canvas = c;
+    }
+    public WorldCanvas getCanvas(){
+        return canvas;
+    }
+    
+    public void setCurrentMinigame(Battle b){
+        currentMinigame = b;
+    }
+    public Battle getCurrentMinigame(){
+        return currentMinigame;
+    }
+    
+    
     public void update(){
+        if(currentMinigame != null){
+            currentMinigame.update();
+        }
         teams.forEach((Team t)->{
             t.update();
             t.forEach((Entity member)->{

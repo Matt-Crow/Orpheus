@@ -2,18 +2,17 @@ package battle;
 
 import controllers.World;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.util.ArrayList;
 import controllers.Master;
-import windows.BattleCanvas;
+import windows.DrawingPlane;
 
 public class Battle {
 	ArrayList<Team> teams;
 	private World host;
-	private final BattleCanvas hostingCanvas;
+	private final DrawingPlane hostingCanvas;
 	private boolean end;
 	
-	public Battle(BattleCanvas b, Team team1, Team team2){
+	public Battle(DrawingPlane b, Team team1, Team team2){
 		teams = new ArrayList<>();
 		teams.add(team1);
 		teams.add(team2);
@@ -26,7 +25,7 @@ public class Battle {
 	public World getHost(){
 		return host;
 	}
-	public BattleCanvas getCanvas(){
+	public DrawingPlane getCanvas(){
 		return hostingCanvas;
 	}
 	

@@ -14,6 +14,7 @@ import ai.PlayerAI;
 import statuses.AbstractStatus;
 import statuses.StatusName;
 import controllers.Master;
+import controllers.World;
 
 public class Player extends Entity{
 	private final String name;
@@ -197,7 +198,8 @@ public class Player extends Entity{
     @Override
 	public void update(){
         if(followingMouse){
-            setPath(getWorld().findPath(getX(), getY(), Master.getMouseX(), Master.getMouseY()));
+            World w = getWorld();
+            setPath(w.findPath(getX(), getY(), w.getCanvas().getMouseX(), w.getCanvas().getMouseY()));
 		}
 		playerAI.update();
         if(path != null){

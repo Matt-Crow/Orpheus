@@ -24,6 +24,7 @@ import battle.Team;
 import customizables.Build;
 import customizables.LoadCharacterClasses;
 import entities.PlayerControls;
+import java.awt.MouseInfo;
 import passives.LoadPassives;
 import util.Chat;
 
@@ -35,11 +36,11 @@ public class WorldCanvas extends DrawingPlane{
     private World world;
     private Timer timer;
     private boolean paused;
-    private int i;
     
     public WorldCanvas(World w){
         super();
         world = w;
+        w.setCanvas(this);
         
         Button b = new Button("Exit");
 		b.addActionListener(new AbstractAction(){
@@ -58,7 +59,6 @@ public class WorldCanvas extends DrawingPlane{
         timer = new Timer(1000 / Master.FPS, update());
         timer.setRepeats(true);
         timer.stop();
-        i = 0;
         
         //change this later
         PlayerControls pc = new PlayerControls(Master.TRUEPLAYER);
@@ -84,7 +84,6 @@ public class WorldCanvas extends DrawingPlane{
     private ActionListener update(){
         return (ActionEvent e) -> {
             world.update();
-            i++;
             repaint();
         };
     }
@@ -115,6 +114,28 @@ public class WorldCanvas extends DrawingPlane{
 		return ret;
 	}
     
+    /**
+     * Returns the point on this canvas where the mouse cursor is located,
+     * this does account for translations
+     * @return the x coordinate on this canvas where the mouse cursor is located
+     */
+    public int getMouseX(){
+        int mouseX = (int)MouseInfo.getPointerInfo().getLocation().getX();
+        int[] translation = getLastTransform();
+        return mouseX - translation[0];
+    }
+    
+    /**
+     * Returns the point on this canvas where the mouse cursor is located,
+     * this does account for translations
+     * @return the y coordinate on this canvas where the mouse cursor is located
+     */
+    public int getMouseY(){
+        int mouseY = (int)MouseInfo.getPointerInfo().getLocation().getY();
+        int[] translation = getLastTransform();
+        return mouseY - translation[1];
+    }
+    
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
@@ -125,12 +146,10 @@ public class WorldCanvas extends DrawingPlane{
 		resetToInit();
 		
 		Master.TRUEPLAYER.drawHUD(getG());
-        /*
-        if(hostedBattle.shouldEnd()){
+        
+        if(world.getCurrentMinigame() != null && world.getCurrentMinigame().shouldEnd()){
 			drawMatchResolution(getG());
-        }*/
-        g.setColor(Color.red);
-        g.fillRect(i, 0, 100, 100);
+        }
         if(paused){
             drawPause(getG());
         }
@@ -142,16 +161,16 @@ public class WorldCanvas extends DrawingPlane{
 		g.drawString("The game is paused", (int) (Master.CANVASWIDTH * 0.3), (int) (Master.CANVASHEIGHT * 0.3));
 		g.drawString("Press 'p' to continue", (int) (Master.CANVASWIDTH * 0.4), (int) (Master.CANVASHEIGHT * 0.5));
 	}
-    /*
+    
 	public void drawMatchResolution(Graphics g){
 		paused = true;
 		g.setColor(new Color(0, 0, 0, 200));
 		g.fillRect(0, 0, Master.CANVASWIDTH, Master.CANVASHEIGHT);
 		g.setColor(Color.yellow);
 		g.drawString("The match is ended,", (int) (Master.CANVASWIDTH * 0.3), (int) (Master.CANVASHEIGHT * 0.3));
-		g.drawString(hostedBattle.getWinner().getName(), (int) (Master.CANVASWIDTH * 0.5), (int) (Master.CANVASHEIGHT * 0.5));
+		g.drawString(world.getCurrentMinigame().getWinner().getName(), (int) (Master.CANVASWIDTH * 0.5), (int) (Master.CANVASHEIGHT * 0.5));
 		g.drawString("is victorious!", (int) (Master.CANVASWIDTH * 0.7), (int) (Master.CANVASHEIGHT * 0.7));
-	}*/
+	}
     
     
     
@@ -193,6 +212,5 @@ public class WorldCanvas extends DrawingPlane{
         f.setVisible(true);
         f.revalidate();
         f.repaint();
-        
     }
 }

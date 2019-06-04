@@ -1,12 +1,10 @@
 package entities;
 
-import controllers.Master;
-import java.awt.MouseInfo;
-import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import windows.DrawingPlane;
+import windows.WorldCanvas;
 
 /**
  *
@@ -39,9 +37,8 @@ public class PlayerControls implements MouseListener{
     }
     
     private void turnToMouse(){
-        Point mousePos = MouseInfo.getPointerInfo().getLocation();
-        int[] t = Master.getCurrentBattle().getCanvas().getLastTransform();
-        p.turnTo(mousePos.x - t[0], mousePos.y - t[1]);
+        WorldCanvas c = p.getWorld().getCanvas();
+        p.turnTo(c.getMouseX(), c.getMouseY());
     }
 
     @Override
