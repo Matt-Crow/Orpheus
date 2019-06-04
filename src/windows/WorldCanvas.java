@@ -204,17 +204,8 @@ public class WorldCanvas extends DrawingPlane{
             .setTile(5, 2, 1)
             .setTile(5, 3, 1);
         c.world.setMap(m);
-        
-        c.world
-            .setBlock(0, new Tile(0, 0, Color.WHITE))
-            .setBlock(1, t)
-            .setTile(0, 0, 1)
-            .setTile(0, 1, 1)
-            .setTile(1, 1, 1)
-            .setTile(2, 1, 1)
-            .setTile(2, 2, 1)
-            .init();
         c.world.addTeam(t1);
+        c.world.init();
         f.setVisible(true);
         f.revalidate();
         f.repaint();

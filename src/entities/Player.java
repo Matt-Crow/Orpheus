@@ -196,7 +196,7 @@ public class Player extends Entity{
 	public void update(){
         if(followingMouse){
             World w = getWorld();
-            setPath(w.findPath(getX(), getY(), w.getCanvas().getMouseX(), w.getCanvas().getMouseY()));
+            setPath(w.getMap().findPath(getX(), getY(), w.getCanvas().getMouseX(), w.getCanvas().getMouseY()));
 		}
 		playerAI.update();
         if(path != null){

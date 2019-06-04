@@ -12,6 +12,7 @@ import battle.Team;
 import customizables.*;
 import controllers.Master;
 import controllers.World;
+import graphics.Map;
 import graphics.Tile;
 
 @SuppressWarnings("serial")
@@ -98,11 +99,14 @@ public class MainCanvas extends DrawingPlane{
         World battleWorld = new World(20);
         //it's like a theme park or something
         battleWorld.createCanvas();
-        battleWorld.setBlock(0, new Tile(0, 0, Color.BLUE));
+        
+        Map m = new Map(20);
         Tile block = new Tile(0, 0, Color.red);
         block.setBlocking(true);
-        battleWorld.setBlock(1, block);
-        battleWorld
+        m
+            .addToTileSet(0, new Tile(0, 0, Color.BLUE))
+            .addToTileSet(1, block);
+        m
             .setTile(8, 10, 1)
             .setTile(8, 11, 1)
             .setTile(8, 12, 1)
@@ -116,6 +120,8 @@ public class MainCanvas extends DrawingPlane{
             .setTile(10, 10, 1)
             .setTile(10, 11, 1)
             .setTile(10, 12, 1);
+        battleWorld.setMap(m);
+        
         battleWorld
             .addTeam(team1)
             .addTeam(team2);

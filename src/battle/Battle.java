@@ -32,7 +32,7 @@ public class Battle {
 	}
 	
 	public void init(){
-		int s = host.getSize();
+		int s = host.getMap().getSize();
 		int spacingFromTopEdge = Player.RADIUS;
 		int spacingBetween = s / 6;
 		teams.get(0).init(spacingFromTopEdge, spacingBetween, 270);

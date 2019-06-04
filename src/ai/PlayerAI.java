@@ -82,7 +82,7 @@ public class PlayerAI{
 			setToAttack();
 		} else {
             appliedTo.setPath(
-                appliedTo.getWorld().findPath(
+                appliedTo.getWorld().getMap().findPath(
                     appliedTo.getX(), 
                     appliedTo.getY(), 
                     latched.getX(), 
