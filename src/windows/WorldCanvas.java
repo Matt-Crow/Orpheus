@@ -3,20 +3,14 @@ package windows;
 
 import actives.LoadActives;
 import controllers.World;
-import graphics.ImageTile;
 import graphics.Tile;
 import controllers.Master;
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.Timer;
@@ -24,6 +18,7 @@ import battle.Team;
 import customizables.Build;
 import customizables.LoadCharacterClasses;
 import entities.PlayerControls;
+import graphics.Map;
 import java.awt.MouseInfo;
 import passives.LoadPassives;
 import util.Chat;
@@ -180,24 +175,35 @@ public class WorldCanvas extends DrawingPlane{
         f.setContentPane(c);
         f.setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        /*
-        try {
-            Image testImage = ImageIO.read(c.getClass().getResourceAsStream("/testImage.PNG"));
-            c.world.setBlock(0, new ImageTile(0, 0, testImage));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }*/
+        
         LoadActives.load();
         LoadPassives.load();
 		LoadCharacterClasses.load();
-        
-        Tile t = new Tile(0, 0, Color.BLACK);
-        t.setBlocking(true);
         
         Master.TRUEPLAYER.applyBuild(Build.getBuildByName("Default Fire"));
         Team t1 = new Team("Test", Color.BLUE);
         t1.addMember(Master.TRUEPLAYER);
         t1.init(0, 50, 0);
+        
+        Tile t = new Tile(0, 0, Color.BLACK);
+        t.setBlocking(true);
+        
+        Map m = new Map(10);
+        m
+            .addToTileSet(0, new Tile(0, 0, Color.WHITE))
+            .addToTileSet(1, t);
+        m
+            .setTile(1, 1, 1)
+            .setTile(1, 2, 1)
+            .setTile(1, 3, 1)
+            .setTile(2, 2, 1)
+            .setTile(3, 1, 1)
+            .setTile(3, 2, 1)
+            .setTile(3, 3, 1)
+            .setTile(5, 1, 1)
+            .setTile(5, 2, 1)
+            .setTile(5, 3, 1);
+        c.world.setMap(m);
         
         c.world
             .setBlock(0, new Tile(0, 0, Color.WHITE))

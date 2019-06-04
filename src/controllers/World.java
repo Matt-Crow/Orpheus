@@ -9,6 +9,7 @@ import entities.Entity;
 import entities.Player;
 import entities.Projectile;
 import graphics.Tile;
+import graphics.Map;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class World {
     private final ArrayList<Team> teams; //makes it faster to find nearest enemies
     //maybe just keep track of everything in one linked list?
     
+    private Map currentMap;
     private WorldCanvas canvas;
     private Battle currentMinigame; //in future versions, this will be changed to include other minigames
     
@@ -58,6 +60,8 @@ public class World {
         allTiles = new ArrayList<>();
         tangibleTiles = new ArrayList<>();
         teams = new ArrayList<>();
+        
+        currentMap = new Map(size);
         canvas = null;
         currentMinigame = null;
     }
@@ -266,6 +270,18 @@ public class World {
             e.printStackTrace();
         }
         return ret;
+    }
+    
+    public World setMap(Map m){
+        if(m == null){
+            throw new NullPointerException();
+        } else {
+            currentMap = m;
+        }
+        return this;
+    }
+    public Map getMap(){
+        return currentMap;
     }
     
     public void createCanvas(){
