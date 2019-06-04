@@ -17,18 +17,20 @@ import java.util.Stack;
  * @author Matt
  */
 public class Map {
-    private final int size;
+    private final int width; //in tiles
+    private final int height;
     private final int[][] tileMap;
     //the base Tiles that are copied to construct the map
     private final HashMap<Integer, Tile> tileSet;
     private final ArrayList<Tile> allTiles;
     private final ArrayList<Tile> tangibleTiles;
     
-    public Map(int s){
-        size = s;
-        tileMap = new int[size][size];
-        for(int i = 0; i < size; i++){
-            for(int j = 0; j < size; j++){
+    public Map(int w, int h){
+        width = w;
+        height = h;
+        tileMap = new int[w][h];
+        for(int i = 0; i < w; i++){
+            for(int j = 0; j < h; j++){
                 tileMap[i][j] = 0;
             }
         }
@@ -62,7 +64,7 @@ public class Map {
      * @return 
      */
     public Map setTile(int xIdx, int yIdx, int value){
-        if(xIdx < 0 || xIdx >= size || yIdx < 0 || yIdx >= size){
+        if(xIdx < 0 || xIdx >= width || yIdx < 0 || yIdx >= height){
             throw new IndexOutOfBoundsException();
         }
         tileMap[xIdx][yIdx] = value;
@@ -73,8 +75,16 @@ public class Map {
      * 
      * @return the width of this map, in pixels
      */
-    public int getSize(){
-        return Tile.TILE_SIZE * size;
+    public int getWidth(){
+        return Tile.TILE_SIZE * width;
+    }
+    
+    /**
+     * 
+     * @return the height of the map, in pixels 
+     */
+    public int getHeight(){
+        return Tile.TILE_SIZE * height;
     }
     
     /**
@@ -85,8 +95,8 @@ public class Map {
         allTiles.clear();
         tangibleTiles.clear();
         Tile t;
-        for(int x = 0; x < size; x++){
-            for(int y = 0; y < size; y++){
+        for(int x = 0; x < width; x++){
+            for(int y = 0; y < height; y++){
                 if(tileSet.containsKey(tileMap[x][y])){
                     t = tileSet.get(tileMap[x][y]).copy(x, y);
                     allTiles.add(t);
@@ -106,17 +116,17 @@ public class Map {
         if(e.getX() - e.getRadius() < 0){
             //outside of left bound
             e.setX(e.getRadius());
-        } else if(e.getX() + e.getRadius() > getSize()){
+        } else if(e.getX() + e.getRadius() > getWidth()){
             //right
-            e.setX(getSize() - e.getRadius());
+            e.setX(getWidth() - e.getRadius());
         }
         
         if(e.getY() - e.getRadius() < 0){
             //top
             e.setY(e.getRadius());
-        } else if(e.getY() + e.getRadius() > getSize()){
+        } else if(e.getY() + e.getRadius() > getHeight()){
             //bottom
-            e.setY(getSize() - e.getRadius());
+            e.setY(getHeight() - e.getRadius());
         }
         
         tangibleTiles.forEach((Tile t)->{
@@ -131,6 +141,7 @@ public class Map {
      * Parameters are the coordinates, NOT indexes in the map array
      * Currently, the only tiles this can find a path on is 0, 
      * but I can add checking to see if the tile is tangible later
+     * 
      * @param x1 the x coordinate of the starting point
      * @param y1 the y coordinate of the starting point
      * @param x2
@@ -144,23 +155,24 @@ public class Map {
         Path ret = new Path();
         
         //check to make sure the points are inside the world
-        int max = size * Tile.TILE_SIZE;
+        int maxW = width * Tile.TILE_SIZE;
+        int maxH = height * Tile.TILE_SIZE;
         if(
             x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0 ||
-            x1 > max || y1 > max || x2 > max || y2 > max
+            x1 > maxW || y1 > maxH || x2 > maxW || y2 > maxH
         ){
             return ret;
         }
         
         int t = Tile.TILE_SIZE;
-        boolean[][] visited = new boolean[size][size];
-        for(int i = 0; i < size; i++){
-            for(int j = 0; j < size; j++){
+        boolean[][] visited = new boolean[width][height];
+        for(int i = 0; i < width; i++){
+            for(int j = 0; j < height; j++){
                 visited[i][j] = false;
             }
         }
         
-        PathMinHeap heap = new PathMinHeap(size * size);
+        PathMinHeap heap = new PathMinHeap(width * height);
         Stack<PathInfo> stack = new Stack<>();
         int currXIdx = x1 / t; //array indexes
         int currYIdx = y1 / t;
@@ -170,20 +182,8 @@ public class Map {
         //these are array indexes
         int minX = 0;
         int minY = 0;
-        int maxX = size - 1;
-        int maxY = size - 1;
-        if(minX < 0){
-            minX = 0;
-        }
-        if(minY < 0){
-            minY = 0;
-        }
-        if(maxX > size - 1){
-            maxX = size - 1;
-        }
-        if(maxY > size - 1){
-            maxY = size - 1;
-        }
+        int maxX = width - 1;
+        int maxY = height - 1;
         
         //make sure the source and destination are intanglible
         if(
@@ -290,7 +290,7 @@ public class Map {
     
     public void draw(Graphics g){
         g.setColor(Color.BLACK);
-        g.fillRect(0, 0, getSize(), getSize());
+        g.fillRect(0, 0, getWidth(), getHeight());
         allTiles.forEach((tile)->tile.draw(g));
     }
 }

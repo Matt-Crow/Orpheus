@@ -100,7 +100,7 @@ public class MainCanvas extends DrawingPlane{
         //it's like a theme park or something
         battleWorld.createCanvas();
         
-        Map m = new Map(20);
+        Map m = new Map(20, 20);
         Tile block = new Tile(0, 0, Color.red);
         block.setBlocking(true);
         m

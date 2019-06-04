@@ -19,7 +19,11 @@ import customizables.Build;
 import customizables.LoadCharacterClasses;
 import entities.PlayerControls;
 import graphics.Map;
+import graphics.MapLoader;
 import java.awt.MouseInfo;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import passives.LoadPassives;
 import util.Chat;
 
@@ -185,25 +189,17 @@ public class WorldCanvas extends DrawingPlane{
         t1.addMember(Master.TRUEPLAYER);
         t1.init(0, 50, 0);
         
+        try {
+            c.world.setMap(MapLoader.readCsv(WorldCanvas.class.getResourceAsStream("/testMap.csv")));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
         Tile t = new Tile(0, 0, Color.BLACK);
         t.setBlocking(true);
-        
-        Map m = new Map(10);
-        m
+        c.world.getMap()
             .addToTileSet(0, new Tile(0, 0, Color.WHITE))
             .addToTileSet(1, t);
-        m
-            .setTile(1, 1, 1)
-            .setTile(1, 2, 1)
-            .setTile(1, 3, 1)
-            .setTile(2, 2, 1)
-            .setTile(3, 1, 1)
-            .setTile(3, 2, 1)
-            .setTile(3, 3, 1)
-            .setTile(5, 1, 1)
-            .setTile(5, 2, 1)
-            .setTile(5, 3, 1);
-        c.world.setMap(m);
+        
         c.world.addTeam(t1);
         c.world.init();
         f.setVisible(true);

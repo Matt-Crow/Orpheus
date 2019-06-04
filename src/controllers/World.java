@@ -1,8 +1,5 @@
 package controllers;
 
-import ai.Path;
-import ai.PathInfo;
-import ai.PathMinHeap;
 import battle.Battle;
 import battle.Team;
 import entities.Entity;
@@ -10,22 +7,14 @@ import entities.Player;
 import entities.Projectile;
 import graphics.Tile;
 import graphics.Map;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import static java.lang.System.out;
-import java.util.Stack;
 import windows.WorldCanvas;
 
 /**
  * The World class will act as a controller for the game.
- * It will keep track of all Entities in the game through one of 2 ways:
- * either (a): by keeping track of each Team, which in turn keeps track of various entities
- * or (b): Keeping track of all Entities as one gigantic linked list (of my own design).
- * (a) has the advantage of being faster to check for collisions, as team members should collide with one another (or should they?)
- * (b) suits a less structured world where Entities can be unaffilliated with a team, and allows me to search faster if the linked list is sorted by ID.
+ * It keeps track of all Entities in the game by keeping track of each Team, 
+ * which in turn keeps track of various entities
  * 
  * The World will handle all the drawing and updating as well.
  * @author Matt Crow
@@ -41,7 +30,7 @@ public class World {
     public World(int size){
         teams = new ArrayList<>();
         
-        currentMap = new Map(size);
+        currentMap = new Map(size, size);
         canvas = null;
         currentMinigame = null;
     }
@@ -81,14 +70,14 @@ public class World {
     public Battle getCurrentMinigame(){
         return currentMinigame;
     }
-    
+    /*
     //working here
+    //move all this checking to Map
     public boolean spawnIntoWorld(Entity e, int x, int y){
         boolean success = false;
         int t = Tile.TILE_SIZE;
         int s = currentMap.getSize();
-        /*
-        move all this checking to Map
+        
         for(int yIdx = y / t; yIdx < worldSize && !success; yIdx++){
             for(int xIdx = x / t; xIdx < worldSize && !success; xIdx++){
                 
@@ -97,10 +86,10 @@ public class World {
                     //spawn the entity
                 }
             }
-        }*/
+        }
         
         return success;
-    }
+    }*/
     
     public void init(){
         if(currentMap != null){
