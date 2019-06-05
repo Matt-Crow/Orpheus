@@ -2,45 +2,54 @@ package PsuedoJson;
 
 import actives.AbstractActive;
 import actives.LoadActives;
+import java.io.StringReader;
 import java.util.Objects;
-import org.json.JSONObject;
 import static java.lang.System.out;
 import java.lang.reflect.Field;
+import javax.json.*;
 
 /**
  *
  * @author Matt
  */
 public class JsonTest {
-    public static void serialize(Object obj) throws Exception{
+    public static String serialize(Object obj) throws Exception{
         if(Objects.isNull(obj)){
             out.println("No object to serialize");
-            return;
+            return null;
         }
         Class<?> objClass = obj.getClass();
         if(!objClass.isAnnotationPresent(JsonableClass.class)){
             out.println("Object needs to have the @JsonableClass annotation");
-            return;
+            return null;
         }
         
-        JSONObject json = new JSONObject();
+        JsonObjectBuilder json = Json.createObjectBuilder();
         while(objClass != null){
             for (Field field : objClass.getDeclaredFields()) {
                 out.println(field);
                 field.setAccessible(true);
                 if (field.isAnnotationPresent(JsonableAttribute.class)) {
-                    json.append(field.getName(), field.get(obj).toString());
+                    json.add(field.getName(), field.get(obj).toString());
                 }
             }
             objClass = objClass.getSuperclass();
         }
         
-        out.println(json.toString(4));
+        return json.build().toString();
+    }
+    
+    public static void deserialize(String s){
+        JsonReader r = Json.createReader(new StringReader(s));
+        JsonObject obj = r.readObject();
+        out.println(obj);
     }
     
     public static void main(String[] args) throws Exception{
         LoadActives.load();
         AbstractActive a = AbstractActive.getActiveByName("Slash");
-        JsonTest.serialize(a);
+        String s = JsonTest.serialize(a);
+        out.println(s);
+        deserialize(s);
     }
 }
