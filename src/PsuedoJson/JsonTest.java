@@ -19,19 +19,19 @@ public class JsonTest {
             return null;
         }
         Class<?> objClass = obj.getClass();
-        if(!objClass.isAnnotationPresent(JsonableClass.class)){
-            out.println("Object needs to have the @JsonableClass annotation");
-            return null;
-        }
+        
         
         JsonObjectBuilder json = Json.createObjectBuilder();
         while(objClass != null){
+            out.println("Class:");
+            out.println(objClass.toString());
+            out.println("Interfaces:");
+            for(Class<?> i : objClass.getInterfaces()){
+                out.println(i);
+            }
+            out.println("Fields:");
             for (Field field : objClass.getDeclaredFields()) {
                 out.println(field);
-                field.setAccessible(true);
-                if (field.isAnnotationPresent(JsonableAttribute.class)) {
-                    json.add(field.getName(), field.get(obj).toString());
-                }
             }
             objClass = objClass.getSuperclass();
         }

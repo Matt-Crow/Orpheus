@@ -1,10 +1,12 @@
 package upgradables;
 
-import PsuedoJson.JsonableAttribute;
-import PsuedoJson.JsonableClass;
+import PsuedoJson.JsonSerialable;
 import java.util.*;
 import entities.Player;
 import controllers.Master;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import statuses.*;
 
 //T is an enum
@@ -24,19 +26,15 @@ import statuses.*;
  * for example, the AbstractActive class extends AbstractUpgradable&lt;ActiveStatName&gt;
  */
 
-@JsonableClass
-public abstract class AbstractUpgradable<T> {
-	@JsonableAttribute
+public abstract class AbstractUpgradable<T> implements JsonSerialable{
     private String name;               // would like to use enum, but looks like I can't
 	private Player registeredTo;
 	private final HashMap<T, Double> stats;
     
-    @JsonableAttribute
 	private final HashMap<T, Integer> bases;
 	private int cooldownTime;          // frames between uses of this upgradable in battle
 	private int framesUntilUse;        // frames until this upgradable can be used in battle again
 	
-    @JsonableAttribute
     private StatusTable inflict;       // statuses that this may inflict. Each subclass handles this themself
 	
 	// constructors
@@ -205,6 +203,14 @@ public abstract class AbstractUpgradable<T> {
 	public void update(){
 		framesUntilUse -= 1;
 	}
+    
+    //not done
+    @Override
+    public JsonObject serializeJson(){
+        JsonObjectBuilder b = Json.createObjectBuilder();
+        b.add("name", name);
+        return b.build();
+    }
     
     public abstract AbstractUpgradable<T> copy();
     public abstract String getDescription();

@@ -1,6 +1,4 @@
 package actives;
-import PsuedoJson.JsonableAttribute;
-import PsuedoJson.JsonableClass;
 import PsuedoJson.PsuedoJsonObject;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,18 +16,15 @@ import upgradables.AbstractUpgradable;
 import util.Op;
 import util.Number; // use later for minMax?
 
-@JsonableClass
 public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
     /**
      * Actives are abilities that the user triggers
      */
     
-    @JsonableAttribute
     private ParticleType particleType;
     private final ActiveType type; // used for upcasting
     private int cost; // the energy cost of the active. Calculated automatically
     
-    @JsonableAttribute
     private final ArrayList<ActiveTag> tags;
     
     private static int nextUseId = 0; // How many actives have been used thus far. Used to prevent double hitting

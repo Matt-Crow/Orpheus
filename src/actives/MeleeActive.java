@@ -1,11 +1,10 @@
 package actives;
 
 //import entities.Player;
-import PsuedoJson.JsonableClass;
 import PsuedoJson.PsuedoJsonObject;
 import entities.ParticleType;
+import javax.json.JsonObject;
 
-@JsonableClass
 public class MeleeActive extends AbstractActive{
 	public MeleeActive(String n, int dmg){
 		super(ActiveType.MELEE, n, 1, 1, 5, 0, dmg);
