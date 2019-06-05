@@ -1,5 +1,7 @@
 package upgradables;
 
+import PsuedoJson.JsonableAttribute;
+import PsuedoJson.JsonableClass;
 import java.util.*;
 import entities.Player;
 import controllers.Master;
@@ -21,14 +23,21 @@ import statuses.*;
  * @param <T> an enum, the type of stats this class will use
  * for example, the AbstractActive class extends AbstractUpgradable&lt;ActiveStatName&gt;
  */
+
+@JsonableClass
 public abstract class AbstractUpgradable<T> {
-	private String name;               // would like to use enum, but looks like I can't
+	@JsonableAttribute
+    private String name;               // would like to use enum, but looks like I can't
 	private Player registeredTo;
 	private final HashMap<T, Double> stats;
+    
+    @JsonableAttribute
 	private final HashMap<T, Integer> bases;
 	private int cooldownTime;          // frames between uses of this upgradable in battle
 	private int framesUntilUse;        // frames until this upgradable can be used in battle again
-	private StatusTable inflict;       // statuses that this may inflict. Each subclass handles this themself
+	
+    @JsonableAttribute
+    private StatusTable inflict;       // statuses that this may inflict. Each subclass handles this themself
 	
 	// constructors
 	public AbstractUpgradable(String n){

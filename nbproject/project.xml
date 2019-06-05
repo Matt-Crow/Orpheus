@@ -6,6 +6,7 @@
             <name>Orpheus</name>
             <source-roots>
                 <root id="src.Resources.dir"/>
+                <root id="src.dependencies.dir"/>
                 <root id="src.dir"/>
             </source-roots>
             <test-roots>
