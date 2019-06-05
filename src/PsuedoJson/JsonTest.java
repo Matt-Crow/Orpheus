@@ -42,7 +42,14 @@ public class JsonTest {
     public static void deserialize(String s){
         JsonReader r = Json.createReader(new StringReader(s));
         JsonObject obj = r.readObject();
-        out.println(obj);
+        
+        obj.forEach((String key, JsonValue value)->{
+            out.println(key + " : " + value.toString());
+            out.println(value.getValueType());
+            switch(value.getValueType()){
+                
+            }
+        });
     }
     
     public static void main(String[] args) throws Exception{
