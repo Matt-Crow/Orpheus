@@ -1,45 +1,45 @@
 package passives;
 
-import statuses.StatusName;
+import statuses.*;
 
 public class LoadPassives {
 	public static void load(){
 		OnMeleeHitPassive lh = new OnMeleeHitPassive("Leechhealer", true);
-		lh.addStatus(StatusName.REGENERATION, 1, 1, 20);
+		lh.addStatus(new Regeneration(1, 1));
 		
 		OnMeleeHitPassive m = new OnMeleeHitPassive("Momentum", true);
-		m.addStatus(StatusName.RUSH, 1, 1, 20);
+		m.addStatus(new Rush(1, 1));
 		
 		OnMeleeHitPassive s = new OnMeleeHitPassive("Sharpen", true);
-		s.addStatus(StatusName.STRENGTH, 1, 1, 20);
+		s.addStatus(new Strength(1, 1));
 		
 		OnMeleeHitPassive ss = new OnMeleeHitPassive("Sparking Strikes", true);
-		ss.addStatus(StatusName.CHARGE, 1, 1, 20);
+		ss.addStatus(new Charge(1, 1));
 		
 		OnBeHitPassive nh = new OnBeHitPassive("Nature's Healing", true);
-		nh.addStatus(StatusName.REGENERATION, 1, 1);
+		nh.addStatus(new Regeneration(1, 1));
 		
 		OnBeHitPassive r = new OnBeHitPassive("Recover", true);
-		r.addStatus(StatusName.REGENERATION, 2, 1, 20);
+		r.addStatus(new Regeneration(2, 1));
 		
 		OnBeHitPassive t = new OnBeHitPassive("Toughness", true);
-		t.addStatus(StatusName.RESISTANCE, 1, 1, 20);
+		t.addStatus(new Resistance(1, 1));
 		
 		ThresholdPassive a = new ThresholdPassive("Adrenaline", 3);
-		a.addStatus(StatusName.CHARGE, 2, 1);
+		a.addStatus(new Charge(2, 1));
 		
 		ThresholdPassive b = new ThresholdPassive("Bracing", 3);
-		b.addStatus(StatusName.RESISTANCE, 2, 1);
+		b.addStatus(new Resistance(2, 1));
 		
 		ThresholdPassive d = new ThresholdPassive("Determination", 3);
-		d.addStatus(StatusName.STRENGTH, 1, 1);
-		d.addStatus(StatusName.RESISTANCE, 1, 1);
+		d.addStatus(new Strength(1, 1));
+		d.addStatus(new Resistance(1, 1));
 		
 		ThresholdPassive e = new ThresholdPassive("Escapist", 3);
-		e.addStatus(StatusName.RUSH, 2, 1);
+		e.addStatus(new Rush(2, 1));
 		
 		ThresholdPassive re = new ThresholdPassive("Retaliation", 3);
-		re.addStatus(StatusName.STRENGTH, 2, 1);
+		re.addStatus(new Strength(2, 1));
 		
 		AbstractPassive.addPassives(new AbstractPassive[]{
 				lh,

@@ -110,16 +110,16 @@ public class Player extends Entity{
 		}
 	}
 	
-	public void inflict(StatusName statusName, int intensity, int duration){
+	public void inflict(AbstractStatus newStat){
 		boolean found = false;
 		boolean shouldReplace = false;
 		for(AbstractStatus s : statuses){
-			if(s.getStatusName() == statusName && !found){
+			if(s.getStatusName() == newStat.getStatusName() && !found){
 				// already inflicted
 				found = true;
-				if(s.getIntensityLevel() <= intensity){
+				if(s.getIntensityLevel() <= newStat.getIntensityLevel()){
 					// better level
-					if(s.getUsesLeft() < duration){
+					if(s.getUsesLeft() < newStat.getBaseUses()){
 						s.terminate();
 						shouldReplace = true;
 					}
@@ -127,7 +127,7 @@ public class Player extends Entity{
 			}
 		}
 		if(shouldReplace || !found){
-			statuses.add(AbstractStatus.decode(statusName, intensity, duration));
+			statuses.add(newStat);
 		}
 	}
 	

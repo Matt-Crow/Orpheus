@@ -43,4 +43,9 @@ public class Strength extends AbstractStatus{
 	public String getDesc(){
 		return "Strength, causing the inflicted's next " + getBaseUses() + " melee attacks to deal an extra " + (3.5 * getIntensityLevel()) + "% of the target's maximum HP and knock them back " + (3.5 * getIntensityLevel()) + " units";
 	}
+
+    @Override
+    public AbstractStatus copy() {
+        return new Strength(getIntensityLevel(), getBaseUses());
+    }
 }

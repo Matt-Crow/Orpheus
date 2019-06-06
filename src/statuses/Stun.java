@@ -37,4 +37,9 @@ public class Stun extends AbstractStatus{
 	public String getDesc(){
 		return "Stun, lowering the inflicted's movement speed by " + (25 * getIntensityLevel()) + "% for " + Master.framesToSeconds(getBaseUses()) + " seconds";
 	}
+
+    @Override
+    public AbstractStatus copy() {
+        return new Stun(getIntensityLevel(), getBaseUses());
+    }
 }

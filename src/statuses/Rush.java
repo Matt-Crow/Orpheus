@@ -37,4 +37,9 @@ public class Rush extends AbstractStatus{
 	public String getDesc(){
 		return "Rush, increasing the inflicted's movement speed by " + (20 * getIntensityLevel()) + "% for the next " + Master.framesToSeconds(getBaseUses()) + " seconds";
 	}
+
+    @Override
+    public AbstractStatus copy() {
+        return new Rush(getIntensityLevel(), getBaseUses());
+    }
 }

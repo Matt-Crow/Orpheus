@@ -97,7 +97,7 @@ public class UpgradableCustomizer<T> extends JComponent{
 	public void addStatusBoxes(){
 		StatusTable s = customizing.getInflict();
 		for(int i = 0; i < s.getSize(); i++){
-			StatusCustomizer c = new StatusCustomizer(customizing, s.getStatusAt(i), s.getChanceAt(i));
+			StatusCustomizer c = new StatusCustomizer(customizing, s.getStatusAt(i));
 			c.addActionListener(new AbstractAction(){
 				public void actionPerformed(ActionEvent e){
 					updateStatuses();

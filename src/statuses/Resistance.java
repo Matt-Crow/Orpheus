@@ -42,4 +42,9 @@ public class Resistance extends AbstractStatus{
 	public String getDesc(){
 		return "Resistance, reducing the speed of damage taken by " + (25 * getIntensityLevel()) + "% for the next " + getBaseUses() + " hits received";
 	}
+
+    @Override
+    public AbstractStatus copy() {
+        return new Resistance(getIntensityLevel(), getBaseUses());
+    }
 }

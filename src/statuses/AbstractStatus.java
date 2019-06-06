@@ -141,4 +141,6 @@ public abstract class AbstractStatus implements JsonSerialable{
      * @return a description
      */
     public abstract String getDesc();
+    
+    public abstract AbstractStatus copy();
 }

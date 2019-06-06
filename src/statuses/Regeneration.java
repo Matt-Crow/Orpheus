@@ -41,4 +41,9 @@ public class Regeneration extends AbstractStatus{
 	public String getDesc(){
 		return "Regeneration, restoring " + (2.5 * getIntensityLevel()) + "% of the inflicted's HP every second for " + Master.framesToSeconds(getBaseUses()) + " seconds";
 	}
+
+    @Override
+    public AbstractStatus copy() {
+        return new Regeneration(getIntensityLevel(), getBaseUses());
+    }
 }

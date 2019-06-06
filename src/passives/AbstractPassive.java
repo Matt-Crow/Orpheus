@@ -8,7 +8,6 @@ import java.util.Set;
 import actions.*;
 import statuses.StatusTable;
 import entities.Player;
-import java.math.BigDecimal;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
@@ -93,7 +92,7 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
 	public void applyEffect(Player p){
 		StatusTable inf = getInflict();
 		for(int i = 0; i < inf.getSize(); i++){
-			p.inflict(inf.getNameAt(i), inf.getIntensityAt(i), inf.getDurationAt(i));
+			p.inflict(inf.getStatusAt(i));
 		}
 	}
 	public OnHitListener getKey(){
@@ -102,13 +101,11 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
 			public void actionPerformed(OnHitEvent t){
 				StatusTable inf = getInflict();
 				for(int i = 0; i < inf.getSize(); i++){
-					if(Random.chance(inf.getChanceAt(i))){
-						if(getTargetsUser()){
-							getRegisteredTo().inflict(inf.getNameAt(i), inf.getIntensityAt(i), inf.getDurationAt(i));
-						} else {
-							((Player)t.getWasHit()).inflict(inf.getNameAt(i), inf.getIntensityAt(i), inf.getDurationAt(i));
-						}
-					}
+                    if(getTargetsUser()){
+                        getRegisteredTo().inflict(inf.getStatusAt(i));
+                    } else {
+                        ((Player)t.getWasHit()).inflict(inf.getStatusAt(i));
+                    }
 				}
 			}
 		};

@@ -38,4 +38,9 @@ public class Charge extends AbstractStatus{
 	public String getDesc(){
 		return "Charge, granting the inflicted " + 2.5 * getIntensityLevel() + " extra energy every second for " + Master.framesToSeconds(getBaseUses()) + " seconds"; 
 	}
+
+    @Override
+    public AbstractStatus copy() {
+        return new Charge(getIntensityLevel(), getBaseUses());
+    }
 }

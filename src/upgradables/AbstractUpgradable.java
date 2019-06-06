@@ -165,11 +165,8 @@ public abstract class AbstractUpgradable<T> implements JsonSerialable{
 	}
 	
 	// status methods. Will document after I redo StatusTable
-	public void addStatus(StatusName n, int intensity, int duration, int chance){
-		inflict.add(n, intensity, duration, chance);
-	}
-	public void addStatus(StatusName n, int intensity, int duration){
-		addStatus(n, intensity, duration, 100);
+	public void addStatus(AbstractStatus s){
+		inflict.add(s);
 	}
 	public void setInflict(StatusTable s){
 		inflict = s.copy();
@@ -185,7 +182,7 @@ public abstract class AbstractUpgradable<T> implements JsonSerialable{
 		 * status table, and copies them to p's
 		 */
 		for(int i = 0; i < inflict.getSize(); i++){
-			a.addStatus(inflict.getNameAt(i), inflict.getIntensityAt(i), inflict.getDurationAt(i), inflict.getChanceAt(i));
+			a.addStatus(inflict.getStatusAt(i));
 		}
 	}
 	

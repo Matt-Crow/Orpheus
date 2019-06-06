@@ -1,7 +1,7 @@
 package actives;
 
 import entities.ParticleType;
-import statuses.StatusName;
+import statuses.*;
 
 public class LoadActives {
 	public static void load(){
@@ -38,11 +38,11 @@ public class LoadActives {
 		ElementalActive wb = new ElementalActive("Waterbolt", 1, 3, 3, 1, 2);
 		wb.setParticleType(ParticleType.BEAM);
 		
-		BoostActive ws = new BoostActive("Warrior's Stance", new StatusName[]{StatusName.STRENGTH, StatusName.RESISTANCE}, new int[]{1, 1}, new int[]{2, 2});
-		BoostActive st = new BoostActive("Speed Test", new StatusName[]{StatusName.RUSH}, new int[]{2}, new int[]{3});
-		BoostActive ss = new BoostActive("Shield Stance", new StatusName[]{StatusName.RESISTANCE}, new int[]{2}, new int[]{3});
-		BoostActive hr = new BoostActive("Healing Rain", new StatusName[]{StatusName.REGENERATION}, new int[]{2}, new int[]{3});
-		BoostActive bs = new BoostActive("Blade Stance", new StatusName[]{StatusName.STRENGTH}, new int[]{2}, new int[]{3});
+		BoostActive ws = new BoostActive("Warrior's Stance", new AbstractStatus[]{new Strength(1, 2), new Resistance(1, 2)});
+		BoostActive st = new BoostActive("Speed Test", new AbstractStatus[]{new Rush(2, 3)});
+		BoostActive ss = new BoostActive("Shield Stance", new AbstractStatus[]{new Resistance(2, 3)});
+		BoostActive hr = new BoostActive("Healing Rain", new AbstractStatus[]{new Regeneration(2, 3)});
+		BoostActive bs = new BoostActive("Blade Stance", new AbstractStatus[]{new Strength(2, 3)});
 		
 		AbstractActive.addActives(new AbstractActive[]{
 			s,
