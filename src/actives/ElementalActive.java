@@ -1,9 +1,14 @@
 package actives;
 
+import PsuedoJson.JsonSerialable;
 import PsuedoJson.PsuedoJsonObject;
 import controllers.Master;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 
-public class ElementalActive extends AbstractActive{
+public class ElementalActive extends AbstractActive implements JsonSerialable{
 	public ElementalActive(String n, int arc, int range, int speed, int aoe, int dmg){
 		super(ActiveType.ELEMENTAL, n, arc, range, speed, aoe, dmg);
 	}
@@ -69,5 +74,20 @@ public class ElementalActive extends AbstractActive{
         j.addPair(ActiveStatName.PARTICLETYPE.toString(), getParticleType().toString());
         j.addPair("Tags", getTagPsuedoJson());
         return j;
+    }
+    
+    @Override
+    public JsonObject serializeJson(){
+        JsonObject obj = super.serializeJson();
+        JsonObjectBuilder b = Json.createObjectBuilder();
+        obj.forEach((String key, JsonValue value)->{
+            b.add(key, value);
+        });
+        b.add("type", "elemental active");
+        return b.build();
+    }
+    
+    public static Object deserializeJson(JsonObject obj){
+        return obj;
     }
 }

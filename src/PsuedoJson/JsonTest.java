@@ -6,39 +6,16 @@ import java.io.StringReader;
 import java.util.Objects;
 import static java.lang.System.out;
 import java.lang.reflect.Field;
+import java.util.Map.Entry;
 import javax.json.*;
+import passives.AbstractPassive;
+import passives.LoadPassives;
 
 /**
  *
  * @author Matt
  */
 public class JsonTest {
-    public static String serialize(Object obj) throws Exception{
-        if(Objects.isNull(obj)){
-            out.println("No object to serialize");
-            return null;
-        }
-        Class<?> objClass = obj.getClass();
-        
-        
-        JsonObjectBuilder json = Json.createObjectBuilder();
-        while(objClass != null){
-            out.println("Class:");
-            out.println(objClass.toString());
-            out.println("Interfaces:");
-            for(Class<?> i : objClass.getInterfaces()){
-                out.println(i);
-            }
-            out.println("Fields:");
-            for (Field field : objClass.getDeclaredFields()) {
-                out.println(field);
-            }
-            objClass = objClass.getSuperclass();
-        }
-        
-        return json.build().toString();
-    }
-    
     public static void deserialize(String s){
         JsonReader r = Json.createReader(new StringReader(s));
         JsonObject obj = r.readObject();
@@ -52,11 +29,37 @@ public class JsonTest {
         });
     }
     
+    public static void pprint(JsonObject obj, int indentLevel){
+        String indent = "";
+        for(int i = 0; i < indentLevel; i++){
+            indent += " ";
+        }
+        out.println(indent + "{");
+        for(Entry<String, JsonValue> val : obj.entrySet()){
+            out.print("    " + indent + val.getKey() + ": ");
+            if(val.getValue() instanceof JsonObject){
+                pprint((JsonObject)val.getValue(), indentLevel + 4);
+            } else if (val.getValue() instanceof JsonArray) {
+                out.println("[");
+                for(JsonValue j : (JsonArray)val.getValue()){
+                    out.println("        " + indent + j);
+                }
+                out.println("    " + indent + "]");
+            } else {
+                out.println(val.getValue().toString());
+            }
+        };
+        out.println(indent + "}");
+    }
+    
     public static void main(String[] args) throws Exception{
         LoadActives.load();
-        AbstractActive a = AbstractActive.getActiveByName("Slash");
-        String s = JsonTest.serialize(a);
-        out.println(s);
-        deserialize(s);
+        LoadPassives.load();
+        for(AbstractActive aa : AbstractActive.getAll()){
+            pprint(aa.serializeJson(), 0);
+        }
+        for(AbstractPassive ap : AbstractPassive.getAll()){
+            pprint(ap.serializeJson(), 0);
+        }
     }
 }

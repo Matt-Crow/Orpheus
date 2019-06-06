@@ -2,7 +2,6 @@ package statuses;
 
 import PsuedoJson.JsonSerialable;
 import entities.Player;
-import java.math.BigDecimal;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;

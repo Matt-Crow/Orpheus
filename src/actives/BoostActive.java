@@ -1,9 +1,14 @@
 package actives;
+import PsuedoJson.JsonSerialable;
 import PsuedoJson.PsuedoJsonObject;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 import statuses.StatusName;
 import statuses.StatusTable;
 
-public class BoostActive extends AbstractActive{
+public class BoostActive extends AbstractActive implements JsonSerialable{
 	public BoostActive(String n, StatusName[] statusNames, int[] intensities, int[] durations){
 		super(ActiveType.BOOST, n, 0, 0, 0, 0, 0);
 		for(int s = 0; s < statusNames.length; s++){
@@ -63,5 +68,20 @@ public class BoostActive extends AbstractActive{
         j.addPair("Tags", getTagPsuedoJson());
         
         return j;
+    }
+    
+    @Override
+    public JsonObject serializeJson(){
+        JsonObject obj = super.serializeJson();
+        JsonObjectBuilder b = Json.createObjectBuilder();
+        obj.forEach((String key, JsonValue value)->{
+            b.add(key, value);
+        });
+        b.add("type", "boost active");
+        return b.build();
+    }
+    
+    public static Object deserializeJson(JsonObject obj){
+        return obj;
     }
 }

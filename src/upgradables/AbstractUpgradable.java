@@ -4,7 +4,6 @@ import PsuedoJson.JsonSerialable;
 import java.util.*;
 import entities.Player;
 import controllers.Master;
-import java.math.BigDecimal;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;

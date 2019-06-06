@@ -1,11 +1,15 @@
 package actives;
 
 //import entities.Player;
+import PsuedoJson.JsonSerialable;
 import PsuedoJson.PsuedoJsonObject;
 import entities.ParticleType;
+import javax.json.Json;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 
-public class MeleeActive extends AbstractActive{
+public class MeleeActive extends AbstractActive implements JsonSerialable{
 	public MeleeActive(String n, int dmg){
 		super(ActiveType.MELEE, n, 1, 1, 5, 0, dmg);
 		setParticleType(ParticleType.SHEAR);
@@ -53,5 +57,20 @@ public class MeleeActive extends AbstractActive{
         j.addPair(ActiveStatName.DAMAGE.toString(), getBase(ActiveStatName.DAMAGE) + "");
         j.addPair("Tags", getTagPsuedoJson());
         return j;
+    }
+    
+    @Override
+    public JsonObject serializeJson(){
+        JsonObject obj = super.serializeJson();
+        JsonObjectBuilder b = Json.createObjectBuilder();
+        obj.forEach((String key, JsonValue value)->{
+            b.add(key, value);
+        });
+        b.add("type", "melee active");
+        return b.build();
+    }
+    
+    public static Object deserializeJson(JsonObject obj){
+        return obj;
     }
 }

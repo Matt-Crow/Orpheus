@@ -1,4 +1,5 @@
 package actives;
+import PsuedoJson.JsonSerialable;
 import PsuedoJson.PsuedoJsonObject;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,11 +13,16 @@ import graphics.CustomColors;
 import controllers.Master;
 import java.io.*;
 import static java.lang.System.out;
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 import upgradables.AbstractUpgradable;
 import util.Op;
 import util.Number; // use later for minMax?
 
-public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
+public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName> implements JsonSerialable{
     /**
      * Actives are abilities that the user triggers
      */
@@ -331,5 +337,23 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
                 g.setColor(CustomColors.red);
         }
         g.drawString("Energy cost: " + getRegisteredTo().getEnergyLog().getEnergy() + "/" + cost, x + 10, y + 33);
+    }
+    
+    @Override
+    public JsonObject serializeJson(){
+        JsonObject obj = super.serializeJson();
+        //javax jsonObjects are immutable
+        JsonObjectBuilder b = Json.createObjectBuilder();
+        obj.forEach((String key, JsonValue value)->{
+            b.add(key, value);
+        });
+        b.add("type", "active");
+        b.add("particle type", particleType.toString());
+        JsonArrayBuilder a = Json.createArrayBuilder();
+        tags.forEach((t) -> {
+            a.add(t.toString());
+        });
+        b.add("tags", a.build());
+        return b.build();
     }
 }

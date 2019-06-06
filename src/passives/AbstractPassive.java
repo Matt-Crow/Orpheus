@@ -1,5 +1,6 @@
 package passives;
 
+import PsuedoJson.JsonSerialable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
@@ -7,11 +8,16 @@ import java.util.Set;
 import actions.*;
 import statuses.StatusTable;
 import entities.Player;
+import java.math.BigDecimal;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 import util.Op;
 import util.Random;
 import upgradables.AbstractUpgradable;
 
-public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName>{
+public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName> implements JsonSerialable{
 	/**
 	 * Passives are abilities that have specific triggers, 
 	 * i.e., the user does not directly trigger them:
@@ -108,7 +114,24 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
 		};
 		return a;
 	}
+    @Override
 	public void update(){
 		
 	}
+    
+    @Override
+    public JsonObject serializeJson(){
+        JsonObject obj = super.serializeJson();
+        JsonObjectBuilder b = Json.createObjectBuilder();
+        obj.forEach((String key, JsonValue value)->{
+            b.add(key, value);
+        });
+        b.add("type", "passive");
+        b.add("targets user", targetsUser);
+        return b.build();
+    }
+    
+    public static Object deserializeJson(JsonObject obj){
+        return obj;
+    }
 }

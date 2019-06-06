@@ -1,6 +1,12 @@
 package passives;
 
-public class OnMeleeHitPassive extends AbstractPassive{
+import PsuedoJson.JsonSerialable;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
+
+public class OnMeleeHitPassive extends AbstractPassive implements JsonSerialable{
 	/*
 	 * Same as onHitPassive, though only triggering off
 	 * of melee hits
@@ -24,4 +30,19 @@ public class OnMeleeHitPassive extends AbstractPassive{
 		desc += getInflict().getStatusString();
 		return desc;
 	}
+    
+    @Override
+    public JsonObject serializeJson(){
+        JsonObject obj = super.serializeJson();
+        JsonObjectBuilder b = Json.createObjectBuilder();
+        obj.forEach((String key, JsonValue value)->{
+            b.add(key, value);
+        });
+        b.add("type", "on melee hit passive");
+        return b.build();
+    }
+    
+    public static Object deserializeJson(JsonObject obj){
+        return obj;
+    }
 }

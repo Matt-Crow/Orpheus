@@ -101,6 +101,7 @@ public class StatusTable implements JsonSerialable{
         for(int i = 0; i < getSize(); i++){
             statuses.add(AbstractStatus.decode(getNameAt(i), getIntensityAt(i), getDurationAt(i)).serializeJson());
         }
+        obj.add("statuses", statuses.build());
         return obj.build();
     }
     

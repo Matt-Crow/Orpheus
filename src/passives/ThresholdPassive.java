@@ -1,8 +1,13 @@
 package passives;
 
+import PsuedoJson.JsonSerialable;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 import util.Number;
 
-public class ThresholdPassive extends AbstractPassive{
+public class ThresholdPassive extends AbstractPassive implements JsonSerialable{
 	/*
 	 * Triggers so long as the user is below a set percentage
 	 * of their maximum HP
@@ -12,11 +17,13 @@ public class ThresholdPassive extends AbstractPassive{
 		super(PassiveType.THRESHOLD, n, true);
 		setStat(PassiveStatName.THRESHOLD, baseThresh);
 	}
+    @Override
 	public ThresholdPassive copy(){
 		ThresholdPassive copy = new ThresholdPassive(getName(), getBase(PassiveStatName.THRESHOLD));
 		copyInflictTo(copy);
 		return copy;
 	}
+    @Override
 	public void setStat(PassiveStatName n, int value){
 		switch(n){
 		case THRESHOLD:
@@ -33,11 +40,13 @@ public class ThresholdPassive extends AbstractPassive{
 			break;
 		}
 	}
+    @Override
 	public void update(){
 		if(getRegisteredTo().getLog().getHPPerc() <= getStatValue(PassiveStatName.THRESHOLD)){
 			applyEffect(getRegisteredTo());
 		}
 	}
+    @Override
 	public String getDescription(){
 		String desc = getName() + ": ";
 		desc += "When the user is at or below " + getStatValue(PassiveStatName.THRESHOLD) + "% ";
@@ -45,4 +54,15 @@ public class ThresholdPassive extends AbstractPassive{
 		desc += getInflict().getStatusString();
 		return desc;
 	}
+    
+    @Override
+    public JsonObject serializeJson(){
+        JsonObject obj = super.serializeJson();
+        JsonObjectBuilder b = Json.createObjectBuilder();
+        obj.forEach((String key, JsonValue value)->{
+            b.add(key, value);
+        });
+        b.add("type", "threshold passive");
+        return b.build();
+    }
 }
