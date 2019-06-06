@@ -1,6 +1,11 @@
 package statuses;
 
+import PsuedoJson.JsonSerialable;
 import entities.Player;
+import java.math.BigDecimal;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 
 /**
  * AbstractStatus is the base class for all statuses in Orpheus.
@@ -11,7 +16,7 @@ import entities.Player;
  * @see OnHitKey
  * @see Player
  */
-public abstract class AbstractStatus {
+public abstract class AbstractStatus implements JsonSerialable{
 	private final StatusName code; //the Enum of this status' name
 	private final String name;
 	
@@ -110,6 +115,20 @@ public abstract class AbstractStatus {
 			terminate();
 		}
 	}
+    
+    @Override
+    public JsonObject serializeJson(){
+        JsonObjectBuilder obj = Json.createObjectBuilder();
+        obj.add("type", "status");
+        obj.add("name", name);
+        obj.add("intensity", level);
+        obj.add("uses", uses);
+        return obj.build();
+    }
+    
+    public static Object deserializeJson(JsonObject obj){
+        return obj;
+    }
     
     /**
      * Generally speaking, this will call p.getActionRegister().add . . .

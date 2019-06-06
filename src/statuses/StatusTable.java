@@ -1,9 +1,15 @@
 package statuses;
 
+import PsuedoJson.JsonSerialable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 
 // redo this to be less aweful
-public class StatusTable {
+public class StatusTable implements JsonSerialable{
 	/**
 	 * Used to store status data for actives and passives
 	 */
@@ -86,4 +92,19 @@ public class StatusTable {
 		}
 		return desc;
 	}
+
+    @Override
+    public JsonObject serializeJson() {
+        JsonObjectBuilder obj = Json.createObjectBuilder();
+        obj.add("type", "status table");
+        JsonArrayBuilder statuses = Json.createArrayBuilder();
+        for(int i = 0; i < getSize(); i++){
+            statuses.add(AbstractStatus.decode(getNameAt(i), getIntensityAt(i), getDurationAt(i)).serializeJson());
+        }
+        return obj.build();
+    }
+    
+    public static Object deserializeJson(JsonObject obj){
+        return obj;
+    }
 }

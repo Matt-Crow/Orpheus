@@ -4,7 +4,9 @@ import PsuedoJson.JsonSerialable;
 import java.util.*;
 import entities.Player;
 import controllers.Master;
+import java.math.BigDecimal;
 import javax.json.Json;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import statuses.*;
@@ -208,7 +210,20 @@ public abstract class AbstractUpgradable<T> implements JsonSerialable{
     @Override
     public JsonObject serializeJson(){
         JsonObjectBuilder b = Json.createObjectBuilder();
+        b.add("type", "upgradable");
         b.add("name", name);
+        b.add("status table", inflict.serializeJson());
+        
+        JsonArrayBuilder statsJson = Json.createArrayBuilder();
+        bases.forEach((T key, Integer value)->{
+            JsonObjectBuilder stat = Json.createObjectBuilder();
+            stat.add("type", "stat");
+            stat.add("name", key.toString());
+            stat.add("base", value);
+            statsJson.add(stat.build());
+        });
+        b.add("stats", statsJson.build());
+        
         return b.build();
     }
     
