@@ -15,15 +15,18 @@ public class OnBeHitPassive extends AbstractPassive implements JsonSerialable{
 		super(PassiveType.ONBEHIT, n, targetsUser);
 	}
 	
+    @Override
 	public OnBeHitPassive copy(){
 		OnBeHitPassive copy = new OnBeHitPassive(getName(), getTargetsUser());
 		copyInflictTo(copy);
 		return copy;
 	}
 	
+    @Override
 	public void update(){
 		getRegisteredTo().getActionRegister().addOnBeHit(getKey());
 	}
+    @Override
 	public String getDescription(){
 		String desc = getName() + ": \n";
 		desc += "When the user is struck by an enemy projectile, \n";
@@ -43,5 +46,12 @@ public class OnBeHitPassive extends AbstractPassive implements JsonSerialable{
         return b.build();
     }
     
-    
+    public static OnBeHitPassive deserializeJson(JsonObject obj){
+        OnBeHitPassive obh = new OnBeHitPassive(
+            getNameFrom(obj),
+            getTargetsUserFrom(obj)
+        );
+        obh.setInflict(getStatusTableFrom(obj));
+        return obh;
+    }
 }

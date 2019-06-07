@@ -61,29 +61,26 @@ public class JsonTest {
         JsonObject obj = null;
         AbstractUpgradable u = null;
         //LoadActives.load();
-        LoadPassives.load();
+        //LoadPassives.load();
         //LoadCharacterClasses.load();
         /*
         for(AbstractActive aa : AbstractActive.getAll()){
             pprint(aa.serializeJson(), 0);
         }*/
+        
+        /*
+        //done
         for(AbstractPassive ap : AbstractPassive.getAll()){
-            if(
-                ap instanceof ThresholdPassive 
-                || ap instanceof OnMeleeHitPassive
-                || ap instanceof OnHitPassive
-            ){
-                continue;
-            }
             obj = ap.serializeJson();
-            //pprint(obj, 0);
+            pprint(obj, 0);
             u = AbstractPassive.deserializeJson(obj);
             if(u != null){
                 pprint(obj, 0);
                 out.println(ap.getDescription());
                 out.println(u.getDescription());
             }
-        }
+        }*/
+        
         /*
         for(CharacterClass cc : CharacterClass.getAll()){
             pprint(cc.serializeJson(), 0);

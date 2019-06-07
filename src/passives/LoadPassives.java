@@ -43,6 +43,9 @@ public class LoadPassives {
         
         OnHitPassive rc = new OnHitPassive("Recharge", true);
         rc.addStatus(new Charge(1, 1));
+        
+        OnBeHitPassive cu = new OnBeHitPassive("Cursed", false);
+        cu.addStatus(new Stun(3, 3));
 		
 		AbstractPassive.addPassives(new AbstractPassive[]{
 				lh,
@@ -57,7 +60,8 @@ public class LoadPassives {
 				d,
 				e,
 				re,
-                rc
+                rc,
+                cu
 		});
 	}
 }

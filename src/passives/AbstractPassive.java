@@ -147,8 +147,11 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
             case ONHIT:
                 ret = OnHitPassive.deserializeJson(obj);
                 break;
+            case ONBEHIT:
+                ret = OnBeHitPassive.deserializeJson(obj);
+                break;
             default:
-                System.out.println("Cannot deserialize " + getTypeFrom(obj));
+                System.out.println("Abstract passive cannot deserialize " + getTypeFrom(obj));
                 break;
         }
         return ret;
