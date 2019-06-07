@@ -68,7 +68,11 @@ public class JsonTest {
             pprint(aa.serializeJson(), 0);
         }*/
         for(AbstractPassive ap : AbstractPassive.getAll()){
-            if(ap instanceof ThresholdPassive || ap instanceof OnMeleeHitPassive){
+            if(
+                ap instanceof ThresholdPassive 
+                || ap instanceof OnMeleeHitPassive
+                || ap instanceof OnHitPassive
+            ){
                 continue;
             }
             obj = ap.serializeJson();

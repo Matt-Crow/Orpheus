@@ -40,6 +40,9 @@ public class LoadPassives {
 		
 		ThresholdPassive re = new ThresholdPassive("Retaliation", 3);
 		re.addStatus(new Strength(2, 1));
+        
+        OnHitPassive rc = new OnHitPassive("Recharge", true);
+        rc.addStatus(new Charge(1, 1));
 		
 		AbstractPassive.addPassives(new AbstractPassive[]{
 				lh,
@@ -53,7 +56,8 @@ public class LoadPassives {
 				b,
 				d,
 				e,
-				re
+				re,
+                rc
 		});
 	}
 }
