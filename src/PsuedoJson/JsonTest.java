@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import javax.json.*;
 import passives.AbstractPassive;
 import passives.LoadPassives;
+import upgradables.AbstractUpgradable;
 
 /**
  *
@@ -54,20 +55,30 @@ public class JsonTest {
     }
     
     public static void main(String[] args) throws Exception{
-        LoadActives.load();
+        JsonObject obj = null;
+        AbstractUpgradable u = null;
+        //LoadActives.load();
         LoadPassives.load();
-        LoadCharacterClasses.load();
+        //LoadCharacterClasses.load();
+        /*
         for(AbstractActive aa : AbstractActive.getAll()){
             pprint(aa.serializeJson(), 0);
-        }
+        }*/
         for(AbstractPassive ap : AbstractPassive.getAll()){
-            pprint(ap.serializeJson(), 0);
+            out.println(ap.getDescription());
+            obj = ap.serializeJson();
+            pprint(obj, 0);
+            u = AbstractPassive.deserializeJson(obj);
+            if(u != null){
+                out.println(u.getDescription());
+            }
         }
+        /*
         for(CharacterClass cc : CharacterClass.getAll()){
             pprint(cc.serializeJson(), 0);
         }
         for(Build b : Build.getAllBuilds()){
             pprint(b.serializeJson(), 0);
-        }
+        }*/
     }
 }

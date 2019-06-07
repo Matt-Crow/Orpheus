@@ -2,17 +2,18 @@ package passives;
 
 import PsuedoJson.JsonSerialable;
 import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 import util.Number;
 
+/**
+ * Triggers so long as the user is below a set percentage
+ * of their maximum HP
+ */
 public class ThresholdPassive extends AbstractPassive implements JsonSerialable{
-	/*
-	 * Triggers so long as the user is below a set percentage
-	 * of their maximum HP
-	 */
-	
 	public ThresholdPassive(String n, int baseThresh){
 		super(PassiveType.THRESHOLD, n, true);
 		setStat(PassiveStatName.THRESHOLD, baseThresh);
@@ -64,5 +65,36 @@ public class ThresholdPassive extends AbstractPassive implements JsonSerialable{
         });
         b.add("type", "threshold passive");
         return b.build();
+    }
+    
+    public static final ThresholdPassive deserializeJson(JsonObject obj){
+        if(!obj.containsKey("name")){
+            throw new JsonException("Json Object is missing key 'name'");
+        }
+        if(!obj.containsKey("stats")){
+            throw new JsonException("Json Object is missing key 'stats'");
+        }
+        JsonArray stats = obj.getJsonArray("stats");
+        if(!stats.stream().anyMatch((JsonValue jv) ->{
+            return jv.getValueType().equals(JsonValue.ValueType.OBJECT) 
+                && ((JsonObject)jv).getString("name").equals("THRESHOLD");
+        })){
+            throw new JsonException("Json Object is missing key 'THRESHOLD'");
+        }
+        
+        int baseThresh = -1;
+        JsonObject temp = null;
+        for(JsonValue v : stats){
+            if(v.getValueType().equals(JsonValue.ValueType.OBJECT)){
+                temp = (JsonObject)v;
+                System.out.println(temp);
+                if(temp.getString("name").equals("THRESHOLD")){
+                    baseThresh = temp.getInt("base");
+                }
+            }
+        }
+        ThresholdPassive pass = new ThresholdPassive(getNameFrom(obj), baseThresh);
+        
+        return pass;
     }
 }

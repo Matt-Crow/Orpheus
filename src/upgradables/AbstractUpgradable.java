@@ -6,6 +6,7 @@ import entities.Player;
 import controllers.Master;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import statuses.*;
@@ -221,6 +222,25 @@ public abstract class AbstractUpgradable<T> implements JsonSerialable{
         b.add("stats", statsJson.build());
         
         return b.build();
+    }
+    
+    public static String getNameFrom(JsonObject obj){
+        if(!obj.containsKey("name")){
+            throw new JsonException("Json Object is missing key 'name'");
+        }
+        return obj.getString("name");
+    }
+    public static String getTypeFrom(JsonObject obj){
+        if(!obj.containsKey("type")){
+            throw new JsonException("Json Object is missing key 'type'");
+        }
+        return obj.getString("type");
+    }
+    public static StatusTable getStatusTableFrom(JsonObject obj){
+        if(!obj.containsKey("status table")){
+            throw new JsonException("Json Object is missing key 'status table'");
+        }
+        return StatusTable.deserializeJson(obj);
     }
     
     public abstract AbstractUpgradable<T> copy();

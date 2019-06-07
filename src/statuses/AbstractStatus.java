@@ -125,8 +125,8 @@ public abstract class AbstractStatus implements JsonSerialable{
         return obj.build();
     }
     
-    public static Object deserializeJson(JsonObject obj){
-        return obj;
+    public static AbstractStatus deserializeJson(JsonObject obj){
+        return null;
     }
     
     /**

@@ -9,6 +9,7 @@ import actions.*;
 import statuses.StatusTable;
 import entities.Player;
 import javax.json.Json;
+import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
@@ -117,6 +118,9 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
 	}
     
     @Override
+    public abstract String getDescription();
+    
+    @Override
     public JsonObject serializeJson(){
         JsonObject obj = super.serializeJson();
         JsonObjectBuilder b = Json.createObjectBuilder();
@@ -128,7 +132,19 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
         return b.build();
     }
     
-    public static Object deserializeJson(JsonObject obj){
-        return obj;
+    public static AbstractPassive deserializeJson(JsonObject obj){
+        if(!obj.containsKey("type")){
+            throw new JsonException("JsonObject missing key 'type'");
+        }
+        AbstractPassive ret = null;
+        switch(getTypeFrom(obj)){
+            case "threshold passive":
+                ret = ThresholdPassive.deserializeJson(obj);
+                break;
+            default:
+                System.out.println("Cannot deserialize");
+                break;
+        }
+        return ret;
     }
 }

@@ -3,9 +3,12 @@ package statuses;
 import PsuedoJson.JsonSerialable;
 import java.util.ArrayList;
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 
 // redo this to be less aweful
 public class StatusTable implements JsonSerialable{
@@ -59,7 +62,18 @@ public class StatusTable implements JsonSerialable{
         return obj.build();
     }
     
-    public static Object deserializeJson(JsonObject obj){
-        return obj;
+    public static StatusTable deserializeJson(JsonObject obj){
+        StatusTable st = new StatusTable();
+        if(!obj.containsKey("statuses")){
+            throw new JsonException("Json Object is missing key 'statuses'");
+        }
+        JsonArray a = obj.getJsonArray("statuses");
+        a
+            .stream()
+            .filter((JsonValue v)->v.getValueType().equals(JsonValue.ValueType.OBJECT))
+            .forEach((JsonValue val)->{
+                st.add(AbstractStatus.deserializeJson((JsonObject)val));
+            });
+        return st;
     }
 }
