@@ -16,7 +16,7 @@ public class Stun extends AbstractStatus{
      * @param dur how many seconds the status will last, also 1-3
      */
 	public Stun(int lv, int dur){
-		super(StatusName.STUN, "Stun", Number.minMax(1, lv, 3), Master.seconds(Number.minMax(1, dur, 3)));
+		super(StatusName.STUN, Number.minMax(1, lv, 3), Master.seconds(Number.minMax(1, dur, 3)));
 		// 1-3 seconds of -0.25 to -0.75 movement speed
 	}
     

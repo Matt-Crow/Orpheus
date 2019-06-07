@@ -16,7 +16,7 @@ public class Rush extends AbstractStatus{
      * @param dur 1-3. Will last for (dur + 2) seconds.
      */
     public Rush(int lv, int dur){
-		super(StatusName.RUSH, "Rush", Number.minMax(1, lv, 3), Master.seconds(Number.minMax(1, dur, 3) + 2));
+		super(StatusName.RUSH, Number.minMax(1, lv, 3), Master.seconds(Number.minMax(1, dur, 3) + 2));
 		// 3 - 5 seconds of + 20% to 60% movement
 	}
     

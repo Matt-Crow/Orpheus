@@ -70,7 +70,4 @@ public class MeleeActive extends AbstractActive implements JsonSerialable{
         return b.build();
     }
     
-    public static Object deserializeJson(JsonObject obj){
-        return obj;
-    }
 }

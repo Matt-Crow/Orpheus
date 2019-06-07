@@ -10,7 +10,7 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-// redo this to be less aweful
+// will probably phase out of future versions
 public class StatusTable implements JsonSerialable{
 	/**
 	 * Used to store status data for actives and passives

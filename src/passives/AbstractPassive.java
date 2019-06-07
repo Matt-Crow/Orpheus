@@ -142,7 +142,7 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
                 ret = ThresholdPassive.deserializeJson(obj);
                 break;
             default:
-                System.out.println("Cannot deserialize");
+                System.out.println("Cannot deserialize " + getTypeFrom(obj));
                 break;
         }
         return ret;

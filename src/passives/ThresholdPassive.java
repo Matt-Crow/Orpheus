@@ -68,31 +68,9 @@ public class ThresholdPassive extends AbstractPassive implements JsonSerialable{
     }
     
     public static final ThresholdPassive deserializeJson(JsonObject obj){
-        if(!obj.containsKey("stats")){
-            throw new JsonException("Json Object is missing key 'stats'");
-        }
-        JsonArray stats = obj.getJsonArray("stats");
-        if(!stats.stream().anyMatch((JsonValue jv) ->{
-            return jv.getValueType().equals(JsonValue.ValueType.OBJECT) 
-                && ((JsonObject)jv).getString("name").equals("THRESHOLD");
-        })){
-            throw new JsonException("Json Object is missing key 'THRESHOLD'");
-        }
-        
-        int baseThresh = -1;
-        JsonObject temp = null;
-        for(JsonValue v : stats){
-            if(v.getValueType().equals(JsonValue.ValueType.OBJECT)){
-                temp = (JsonObject)v;
-                System.out.println(temp);
-                if(temp.getString("name").equals("THRESHOLD")){
-                    baseThresh = temp.getInt("base");
-                }
-            }
-        }
         ThresholdPassive pass = new ThresholdPassive(
             getNameFrom(obj), 
-            baseThresh
+            getStatBaseFrom(obj, PassiveStatName.THRESHOLD.toString())
         );
         pass.setInflict(getStatusTableFrom(obj));
         

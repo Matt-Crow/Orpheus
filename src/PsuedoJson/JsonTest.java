@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import javax.json.*;
 import passives.AbstractPassive;
 import passives.LoadPassives;
+import passives.ThresholdPassive;
 import upgradables.AbstractUpgradable;
 
 /**
@@ -44,7 +45,11 @@ public class JsonTest {
             } else if (val.getValue() instanceof JsonArray) {
                 out.println("[");
                 for(JsonValue j : (JsonArray)val.getValue()){
-                    out.println("        " + indent + j);
+                    if(j.getValueType().equals(JsonValue.ValueType.OBJECT)){
+                        pprint((JsonObject)j, indentLevel + 4);
+                    } else {
+                        out.println("        " + indent + j);
+                    }
                 }
                 out.println("    " + indent + "]");
             } else {
@@ -65,7 +70,9 @@ public class JsonTest {
             pprint(aa.serializeJson(), 0);
         }*/
         for(AbstractPassive ap : AbstractPassive.getAll()){
-            
+            if(ap instanceof ThresholdPassive){
+                continue;
+            }
             obj = ap.serializeJson();
             //pprint(obj, 0);
             u = AbstractPassive.deserializeJson(obj);

@@ -72,7 +72,4 @@ public class BoostActive extends AbstractActive implements JsonSerialable{
         return b.build();
     }
     
-    public static Object deserializeJson(JsonObject obj){
-        return obj;
-    }
 }

@@ -27,9 +27,9 @@ public abstract class AbstractStatus implements JsonSerialable{
 	
 	private boolean shouldTerminate;
 	
-	public AbstractStatus(StatusName enumName, String n, int lv, int use){
+	public AbstractStatus(StatusName enumName, int lv, int use){
 		code = enumName;
-		name = n;
+		name = enumName.toString();
 		level = lv;
 		uses = use;
 		usesLeft = use;

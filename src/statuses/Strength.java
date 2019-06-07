@@ -18,7 +18,7 @@ public class Strength extends AbstractStatus{
      * @param uses effect lasts for the next ((uses * 2) + 1) melee attacks the afflicted performs that hit an enemy.
      */
 	public Strength(int lv, int uses){
-		super(StatusName.STRENGTH, "Strength", Number.minMax(1, lv, 3), Number.minMax(1, uses, 3) * 2 + 1);
+		super(StatusName.STRENGTH, Number.minMax(1, lv, 3), Number.minMax(1, uses, 3) * 2 + 1);
 		// 3 - 7 uses of 3.5% to 10.5% extra damage logged and knocks back lv units
 	}
     

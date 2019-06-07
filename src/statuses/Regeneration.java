@@ -17,7 +17,7 @@ public class Regeneration extends AbstractStatus{
      * @param dur effect lasts for (dur + 2) seconds.
      */
 	public Regeneration(int lv, int dur){
-		super(StatusName.REGENERATION, "Regeneration", Number.minMax(1, lv, 3), Master.seconds(Number.minMax(1, dur, 3)) + 2);
+		super(StatusName.REGENERATION, Number.minMax(1, lv, 3), Master.seconds(Number.minMax(1, dur, 3)) + 2);
 		// 3 - 5 seconds of 2.5% - 7.5% healing each second
 		// balance later
 	}

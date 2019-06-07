@@ -9,6 +9,8 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
+import passives.AbstractPassive;
 import statuses.*;
 
 //T is an enum
@@ -224,11 +226,19 @@ public abstract class AbstractUpgradable<T> implements JsonSerialable{
         return b.build();
     }
     
-    public static String getNameFrom(JsonObject obj){
-        if(!obj.containsKey("name")){
-            throw new JsonException("Json Object is missing key 'name'");
+    public static AbstractUpgradable deserializeJson(JsonObject obj){
+        AbstractUpgradable ret = null;
+        ret = AbstractPassive.deserializeJson(obj);
+        if(ret == null){
+            //try active
         }
-        return obj.getString("name");
+        if(ret == null){
+            //try character class
+        }
+        if(ret == null){
+            //try build
+        }
+        return ret;
     }
     public static String getTypeFrom(JsonObject obj){
         if(!obj.containsKey("type")){
@@ -236,11 +246,32 @@ public abstract class AbstractUpgradable<T> implements JsonSerialable{
         }
         return obj.getString("type");
     }
+    public static String getNameFrom(JsonObject obj){
+        if(!obj.containsKey("name")){
+            throw new JsonException("Json Object is missing key 'name'");
+        }
+        return obj.getString("name");
+    }
     public static StatusTable getStatusTableFrom(JsonObject obj){
         if(!obj.containsKey("status table")){
             throw new JsonException("Json Object is missing key 'status table'");
         }
         return StatusTable.deserializeJson(obj.getJsonObject("status table"));
+    }
+    public static int getStatBaseFrom(JsonObject obj, String statName){
+        if(!obj.containsKey("stats")){
+            throw new JsonException("Json Object is missing key 'stats'");
+        }
+        int ret = -1;
+        JsonObject temp = null;
+        for(JsonValue val : obj.getJsonArray("stats")){
+            temp = (JsonObject)val;
+            if(temp.getString("name").equals(statName)){
+                ret = temp.getInt("base");
+                break;
+            }
+        }
+        return ret;
     }
     
     public abstract AbstractUpgradable<T> copy();

@@ -20,7 +20,7 @@ public class Resistance extends AbstractStatus{
      * @param uses lasts for ((uses * 2) + 1) hits received.
      */
 	public Resistance(int lv, int uses){
-		super(StatusName.RESISTANCE, "Resistance", Number.minMax(1, lv, 3), Number.minMax(1, uses, 3) * 2 + 1);
+		super(StatusName.RESISTANCE, Number.minMax(1, lv, 3), Number.minMax(1, uses, 3) * 2 + 1);
 		// make this stronger
 	}
     
