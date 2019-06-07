@@ -65,11 +65,13 @@ public class JsonTest {
             pprint(aa.serializeJson(), 0);
         }*/
         for(AbstractPassive ap : AbstractPassive.getAll()){
-            out.println(ap.getDescription());
+            
             obj = ap.serializeJson();
-            pprint(obj, 0);
+            //pprint(obj, 0);
             u = AbstractPassive.deserializeJson(obj);
             if(u != null){
+                pprint(obj, 0);
+                out.println(ap.getDescription());
                 out.println(u.getDescription());
             }
         }

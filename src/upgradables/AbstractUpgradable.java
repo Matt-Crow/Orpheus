@@ -240,7 +240,7 @@ public abstract class AbstractUpgradable<T> implements JsonSerialable{
         if(!obj.containsKey("status table")){
             throw new JsonException("Json Object is missing key 'status table'");
         }
-        return StatusTable.deserializeJson(obj);
+        return StatusTable.deserializeJson(obj.getJsonObject("status table"));
     }
     
     public abstract AbstractUpgradable<T> copy();

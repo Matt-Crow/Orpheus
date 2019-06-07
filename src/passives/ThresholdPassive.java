@@ -68,9 +68,6 @@ public class ThresholdPassive extends AbstractPassive implements JsonSerialable{
     }
     
     public static final ThresholdPassive deserializeJson(JsonObject obj){
-        if(!obj.containsKey("name")){
-            throw new JsonException("Json Object is missing key 'name'");
-        }
         if(!obj.containsKey("stats")){
             throw new JsonException("Json Object is missing key 'stats'");
         }
@@ -93,7 +90,11 @@ public class ThresholdPassive extends AbstractPassive implements JsonSerialable{
                 }
             }
         }
-        ThresholdPassive pass = new ThresholdPassive(getNameFrom(obj), baseThresh);
+        ThresholdPassive pass = new ThresholdPassive(
+            getNameFrom(obj), 
+            baseThresh
+        );
+        pass.setInflict(getStatusTableFrom(obj));
         
         return pass;
     }

@@ -3,6 +3,7 @@ package statuses;
 import PsuedoJson.JsonSerialable;
 import entities.Player;
 import javax.json.Json;
+import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
@@ -34,33 +35,6 @@ public abstract class AbstractStatus implements JsonSerialable{
 		usesLeft = use;
 		
 		shouldTerminate = false;
-	}
-	
-	public static AbstractStatus decode(StatusName n, int intensity, int dur){
-		AbstractStatus ret = new Strength(1, 1);
-		switch(n){
-		case CHARGE:
-			ret = new Charge(intensity, dur);
-			break;
-		case REGENERATION:
-			ret = new Regeneration(intensity, dur);
-			break;
-		case RESISTANCE:
-			ret = new Resistance(intensity, dur);
-			break;
-		case RUSH:
-			ret = new Rush(intensity, dur);
-			break;
-		case STRENGTH:
-			ret = new Strength(intensity, dur);
-			break;
-		case STUN:
-			ret = new Stun(intensity, dur);
-			break;
-		default:
-			throw new NullPointerException("Status not found: " + n);	
-		}
-		return ret;
 	}
 	
 	public StatusName getStatusName(){
@@ -115,18 +89,61 @@ public abstract class AbstractStatus implements JsonSerialable{
 		}
 	}
     
+    public static AbstractStatus decode(StatusName n, int intensity, int dur){
+		AbstractStatus ret = new Strength(1, 1);
+		switch(n){
+		case CHARGE:
+			ret = new Charge(intensity, dur);
+			break;
+		case REGENERATION:
+			ret = new Regeneration(intensity, dur);
+			break;
+		case RESISTANCE:
+			ret = new Resistance(intensity, dur);
+			break;
+		case RUSH:
+			ret = new Rush(intensity, dur);
+			break;
+		case STRENGTH:
+			ret = new Strength(intensity, dur);
+			break;
+		case STUN:
+			ret = new Stun(intensity, dur);
+			break;
+		default:
+			throw new NullPointerException("Status not found: " + n);	
+		}
+		return ret;
+	}
+    
     @Override
     public JsonObject serializeJson(){
         JsonObjectBuilder obj = Json.createObjectBuilder();
         obj.add("type", "status");
-        obj.add("name", name);
+        obj.add("name", code.toString());
         obj.add("intensity", level);
         obj.add("uses", uses);
         return obj.build();
     }
     
     public static AbstractStatus deserializeJson(JsonObject obj){
-        return null;
+        if(!obj.containsKey("type")){
+            throw new JsonException("Json Object missing key 'type'");
+        }
+        if(!obj.containsKey("name")){
+            throw new JsonException("Json Object missing key 'name'");
+        }
+        if(!obj.containsKey("intensity")){
+            throw new JsonException("Json Object missing key 'intensity'");
+        }
+        if(!obj.containsKey("uses")){
+            throw new JsonException("Json Object missing key 'uses'");
+        }
+        return decode(
+            StatusName.fromName(obj.getString("name")), 
+            obj.getInt("intensity"), 
+            obj.getInt("uses")
+        );
     }
     
     /**
