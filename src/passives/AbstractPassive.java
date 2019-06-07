@@ -127,7 +127,7 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
         obj.forEach((String key, JsonValue value)->{
             b.add(key, value);
         });
-        b.add("type", "passive");
+        b.add("type", type.toString());
         b.add("targets user", targetsUser);
         return b.build();
     }
@@ -137,14 +137,24 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
             throw new JsonException("JsonObject missing key 'type'");
         }
         AbstractPassive ret = null;
-        switch(getTypeFrom(obj)){
-            case "threshold passive":
+        switch(PassiveType.fromString(getTypeFrom(obj))){
+            case THRESHOLD:
                 ret = ThresholdPassive.deserializeJson(obj);
+                break;
+            case ONMELEEHIT:
+                ret = OnMeleeHitPassive.deserializeJson(obj);
                 break;
             default:
                 System.out.println("Cannot deserialize " + getTypeFrom(obj));
                 break;
         }
         return ret;
+    }
+    
+    public static boolean getTargetsUserFrom(JsonObject obj){
+        if(!obj.containsKey("targets user")){
+            throw new JsonException("JsonObject missing key 'targets user'");
+        }
+        return obj.getBoolean("targets user");
     }
 }

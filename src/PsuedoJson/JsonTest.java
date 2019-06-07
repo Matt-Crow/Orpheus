@@ -9,9 +9,7 @@ import java.io.StringReader;
 import static java.lang.System.out;
 import java.util.Map.Entry;
 import javax.json.*;
-import passives.AbstractPassive;
-import passives.LoadPassives;
-import passives.ThresholdPassive;
+import passives.*;
 import upgradables.AbstractUpgradable;
 
 /**
@@ -70,7 +68,7 @@ public class JsonTest {
             pprint(aa.serializeJson(), 0);
         }*/
         for(AbstractPassive ap : AbstractPassive.getAll()){
-            if(ap instanceof ThresholdPassive){
+            if(ap instanceof ThresholdPassive || ap instanceof OnMeleeHitPassive){
                 continue;
             }
             obj = ap.serializeJson();
