@@ -1,4 +1,5 @@
 package customizables;
+import PsuedoJson.JsonSerialable;
 import upgradables.AbstractUpgradable;
 
 import java.util.Collection;
@@ -6,11 +7,17 @@ import java.util.HashMap;
 import java.util.Set;
 
 import graphics.CustomColors;
+import java.math.BigDecimal;
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 import util.Number;
 import util.Op;
 
 // make this connect better with player somehow
-public class CharacterClass extends AbstractUpgradable<CharacterStatName>{
+public class CharacterClass extends AbstractUpgradable<CharacterStatName> implements JsonSerialable{
     private CustomColors[] colors;
 
     private static HashMap<String, CharacterClass> allCharacterClasses = new HashMap<>();
@@ -110,5 +117,21 @@ public class CharacterClass extends AbstractUpgradable<CharacterStatName>{
                         + "Damage dealt modifier: " + getStatValue(CharacterStatName.DMG) + "\n"
                         + "Damage taken modifier: " + getStatValue(CharacterStatName.REDUCTION) + "\n"
                         + "Movement speed modifier: " + getStatValue(CharacterStatName.SPEED) + "\n";
+    }
+    
+    @Override
+    public JsonObject serializeJson(){
+        JsonObject obj = super.serializeJson();
+        JsonObjectBuilder b = Json.createObjectBuilder();
+        obj.forEach((String key, JsonValue value)->{
+            b.add(key, value);
+        });
+        JsonArrayBuilder cols = Json.createArrayBuilder();
+        for(CustomColors c : colors){
+            cols.add(c.toString());
+        }
+        b.add("type", "character class");
+        b.add("colors", cols.build());
+        return b.build();
     }
 }

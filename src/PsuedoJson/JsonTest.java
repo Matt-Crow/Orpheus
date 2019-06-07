@@ -2,10 +2,11 @@ package PsuedoJson;
 
 import actives.AbstractActive;
 import actives.LoadActives;
+import customizables.Build;
+import customizables.CharacterClass;
+import customizables.LoadCharacterClasses;
 import java.io.StringReader;
-import java.util.Objects;
 import static java.lang.System.out;
-import java.lang.reflect.Field;
 import java.util.Map.Entry;
 import javax.json.*;
 import passives.AbstractPassive;
@@ -55,11 +56,18 @@ public class JsonTest {
     public static void main(String[] args) throws Exception{
         LoadActives.load();
         LoadPassives.load();
+        LoadCharacterClasses.load();
         for(AbstractActive aa : AbstractActive.getAll()){
             pprint(aa.serializeJson(), 0);
         }
         for(AbstractPassive ap : AbstractPassive.getAll()){
             pprint(ap.serializeJson(), 0);
+        }
+        for(CharacterClass cc : CharacterClass.getAll()){
+            pprint(cc.serializeJson(), 0);
+        }
+        for(Build b : Build.getAllBuilds()){
+            pprint(b.serializeJson(), 0);
         }
     }
 }
