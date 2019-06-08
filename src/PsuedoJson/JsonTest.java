@@ -51,11 +51,12 @@ public class JsonTest {
         //LoadCharacterClasses.load();
         
         for(AbstractActive aa : AbstractActive.getAll()){
+            out.println(aa.getName());
             if(
                 aa instanceof MeleeActive
                 || aa instanceof BoostActive
             ){
-                break;
+                continue;
             }
             obj = aa.serializeJson();
             //pprint(obj, 0);
@@ -64,6 +65,8 @@ public class JsonTest {
                 pprint(obj, 0);
                 out.println(aa.getDescription());
                 out.println(u.getDescription());
+            } else {
+                out.println("NULL");
             }
         }
         

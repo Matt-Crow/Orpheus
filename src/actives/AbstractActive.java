@@ -374,6 +374,9 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName> 
             case BOOST:
                 ret = BoostActive.deserializeJson(obj);
                 break;
+            case ELEMENTAL:
+                ret = ElementalActive.deserializeJson(obj);
+                break;
             default:
                 System.out.println("Abstract active cannot deserialize " + obj.getString("type"));
                 break;

@@ -88,4 +88,18 @@ public class ElementalActive extends AbstractActive implements JsonSerialable{
         return b.build();
     }
     
+    public static ElementalActive deserializeJson(JsonObject obj){
+        ElementalActive ret = new ElementalActive(
+            getNameFrom(obj),
+            getStatBaseFrom(obj, ActiveStatName.ARC.toString()),
+            getStatBaseFrom(obj, ActiveStatName.RANGE.toString()),
+            getStatBaseFrom(obj, ActiveStatName.SPEED.toString()),
+            getStatBaseFrom(obj, ActiveStatName.AOE.toString()),
+            getStatBaseFrom(obj, ActiveStatName.DAMAGE.toString())
+        );
+        ret.setInflict(getStatusTableFrom(obj));
+        ret.addTags(getTagsFrom(obj));
+        ret.setParticleType(getParticleTypeFrom(obj));
+        return ret;
+    }
 }
