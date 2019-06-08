@@ -38,7 +38,6 @@ public class OnMeleeHitPassive extends AbstractPassive implements JsonSerialable
         obj.forEach((String key, JsonValue value)->{
             b.add(key, value);
         });
-        b.add("type", "on melee hit passive");
         return b.build();
     }
     public static OnMeleeHitPassive deserializeJson(JsonObject obj){

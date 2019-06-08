@@ -2,8 +2,6 @@ package passives;
 
 import PsuedoJson.JsonSerialable;
 import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
@@ -63,7 +61,6 @@ public class ThresholdPassive extends AbstractPassive implements JsonSerialable{
         obj.forEach((String key, JsonValue value)->{
             b.add(key, value);
         });
-        b.add("type", "threshold passive");
         return b.build();
     }
     

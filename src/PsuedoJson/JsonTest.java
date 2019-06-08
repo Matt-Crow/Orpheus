@@ -1,7 +1,6 @@
 package PsuedoJson;
 
-import actives.AbstractActive;
-import actives.LoadActives;
+import actives.*;
 import customizables.Build;
 import customizables.CharacterClass;
 import customizables.LoadCharacterClasses;
@@ -17,19 +16,6 @@ import upgradables.AbstractUpgradable;
  * @author Matt
  */
 public class JsonTest {
-    public static void deserialize(String s){
-        JsonReader r = Json.createReader(new StringReader(s));
-        JsonObject obj = r.readObject();
-        
-        obj.forEach((String key, JsonValue value)->{
-            out.println(key + " : " + value.toString());
-            out.println(value.getValueType());
-            switch(value.getValueType()){
-                
-            }
-        });
-    }
-    
     public static void pprint(JsonObject obj, int indentLevel){
         String indent = "";
         for(int i = 0; i < indentLevel; i++){
@@ -60,13 +46,26 @@ public class JsonTest {
     public static void main(String[] args) throws Exception{
         JsonObject obj = null;
         AbstractUpgradable u = null;
-        //LoadActives.load();
+        LoadActives.load();
         //LoadPassives.load();
         //LoadCharacterClasses.load();
-        /*
+        
         for(AbstractActive aa : AbstractActive.getAll()){
-            pprint(aa.serializeJson(), 0);
-        }*/
+            if(
+                aa instanceof MeleeActive
+                || aa instanceof BoostActive
+            ){
+                break;
+            }
+            obj = aa.serializeJson();
+            //pprint(obj, 0);
+            u = AbstractActive.deserializeJson(obj);
+            if(u != null){
+                pprint(obj, 0);
+                out.println(aa.getDescription());
+                out.println(u.getDescription());
+            }
+        }
         
         /*
         //done

@@ -15,8 +15,10 @@ import java.io.*;
 import static java.lang.System.out;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonString;
 import javax.json.JsonValue;
 import upgradables.AbstractUpgradable;
 import util.Op;
@@ -268,10 +270,13 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName> 
     public void addTag(ActiveTag t){
         tags.add(t);
     }
+    public void addTags(ArrayList<ActiveTag> a){
+        a.stream().forEach((t)->addTag(t));
+    }
     public void copyTagsTo(AbstractActive a){
-        for(ActiveTag t : tags){
+        tags.forEach((t) -> {
             a.addTag(t);
-        }
+        });
     }
     public boolean containsTag(ActiveTag t){
         return tags.contains(t);
@@ -347,7 +352,7 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName> 
         obj.forEach((String key, JsonValue value)->{
             b.add(key, value);
         });
-        b.add("type", "active");
+        b.add("type", type.toString());
         b.add("particle type", particleType.toString());
         JsonArrayBuilder a = Json.createArrayBuilder();
         tags.forEach((t) -> {
@@ -355,5 +360,48 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName> 
         });
         b.add("tags", a.build());
         return b.build();
+    }
+    
+    public static AbstractActive deserializeJson(JsonObject obj){
+        if(!obj.containsKey("type")){
+            throw new JsonException("JsonObject missing key 'type'");
+        }
+        AbstractActive ret = null;
+        switch(ActiveType.fromString(getTypeFrom(obj))){
+            case MELEE:
+                ret = MeleeActive.deserializeJson(obj);
+                break;
+            case BOOST:
+                ret = BoostActive.deserializeJson(obj);
+                break;
+            default:
+                System.out.println("Abstract active cannot deserialize " + obj.getString("type"));
+                break;
+        }
+        return ret;
+    }
+    public static ParticleType getParticleTypeFrom(JsonObject obj){
+        if(!obj.containsKey("particle type")){
+            throw new JsonException("Json Object is missing key 'particle type'");
+        }
+        return ParticleType.fromString(obj.getString("particle type"));
+    }
+    public static ArrayList<ActiveTag> getTagsFrom(JsonObject obj){
+        if(!obj.containsKey("tags")){
+            throw new JsonException("Json Object missing key 'tags'");
+        }
+        ArrayList<ActiveTag> ret = new ArrayList<>();
+        ActiveTag tag = null;
+        for(JsonValue jv : obj.getJsonArray("tags")){
+            if(jv.getValueType().equals(JsonValue.ValueType.STRING)){
+                tag = ActiveTag.fromString(((JsonString)jv).getString());
+                if(tag == null){
+                    throw new NullPointerException("Unknown tag: " + jv);
+                } else {
+                    ret.add(tag);
+                }
+            }
+        }
+        return ret;
     }
 }

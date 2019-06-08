@@ -213,13 +213,9 @@ public abstract class AbstractUpgradable<T> implements JsonSerialable{
         b.add("name", name);
         b.add("status table", inflict.serializeJson());
         
-        JsonArrayBuilder statsJson = Json.createArrayBuilder();
+        JsonObjectBuilder statsJson = Json.createObjectBuilder();
         bases.forEach((T key, Integer value)->{
-            JsonObjectBuilder stat = Json.createObjectBuilder();
-            stat.add("type", "stat");
-            stat.add("name", key.toString());
-            stat.add("base", value);
-            statsJson.add(stat.build());
+            statsJson.add(key.toString(), value);
         });
         b.add("stats", statsJson.build());
         
@@ -263,14 +259,13 @@ public abstract class AbstractUpgradable<T> implements JsonSerialable{
             throw new JsonException("Json Object is missing key 'stats'");
         }
         int ret = -1;
-        JsonObject temp = null;
-        for(JsonValue val : obj.getJsonArray("stats")){
-            temp = (JsonObject)val;
-            if(temp.getString("name").equals(statName)){
-                ret = temp.getInt("base");
-                break;
-            }
+        JsonObject temp = obj.getJsonObject("stats");
+        if(temp.containsKey(statName)){
+            ret = temp.getInt(statName);
+        } else {
+            throw new JsonException("stats object is missing key " + statName);
         }
+        
         return ret;
     }
     

@@ -14,7 +14,6 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 import util.Op;
-import util.Random;
 import upgradables.AbstractUpgradable;
 
 public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName> implements JsonSerialable{

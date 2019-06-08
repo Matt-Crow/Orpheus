@@ -43,7 +43,6 @@ public class OnHitPassive extends AbstractPassive implements JsonSerialable{
         obj.forEach((String key, JsonValue value)->{
             b.add(key, value);
         });
-        b.add("type", "on hit passive");
         return b.build();
     }
     

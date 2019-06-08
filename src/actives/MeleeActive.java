@@ -14,12 +14,15 @@ public class MeleeActive extends AbstractActive implements JsonSerialable{
 		super(ActiveType.MELEE, n, 1, 1, 5, 0, dmg);
 		setParticleType(ParticleType.SHEAR);
 	}
+    @Override
 	public MeleeActive copy(){
 		MeleeActive copy = new MeleeActive(getName(), getBase(ActiveStatName.DAMAGE));
         copyTagsTo(copy);
+        copy.setInflict(getInflict());
 		return copy;
 	}
 	
+    @Override
 	public String getDescription(){
 		String desc = getName() + ": \n"
 				+ "The user performs a close range attack, \n"
@@ -66,8 +69,18 @@ public class MeleeActive extends AbstractActive implements JsonSerialable{
         obj.forEach((String key, JsonValue value)->{
             b.add(key, value);
         });
-        b.add("type", "melee active");
         return b.build();
+    }
+    
+    public static final MeleeActive deserializeJson(JsonObject obj){
+        MeleeActive ret = new MeleeActive(
+            getNameFrom(obj),
+            getStatBaseFrom(obj, ActiveStatName.DAMAGE.toString())
+        );
+        ret.setInflict(getStatusTableFrom(obj));
+        ret.addTags(getTagsFrom(obj));
+        ret.setParticleType(getParticleTypeFrom(obj));
+        return ret;
     }
     
 }
