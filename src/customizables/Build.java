@@ -4,6 +4,7 @@ import serialization.JsonSerialable;
 import java.util.ArrayList;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
@@ -86,4 +87,39 @@ public class Build implements JsonSerialable{
         
         return b.build();
     }
+    
+    public static Build deserializeJson(JsonObject obj){
+        String[] actives = getActivesFrom(obj);
+        String[] passives = getPassivesFrom(obj);
+        return new Build(
+            getNameFrom(obj),
+            getCharacterClassFrom(obj),
+            actives[0],
+            actives[1],
+            actives[2],
+            passives[0],
+            passives[1],
+            passives[2]
+        );
+    }
+    
+    private static String getNameFrom(JsonObject obj){
+        if(!obj.containsKey("name")){
+            throw new JsonException("Json Object is missing key 'name'");
+        }
+        return obj.getString("name");
+    }
+    private static String getCharacterClassFrom(JsonObject obj){
+        if(!obj.containsKey("character class")){
+            throw new JsonException("Json Object is missing key 'character class'");
+        }
+        return obj.getString("character class");
+    }
+    private static String[] getActivesFrom(JsonObject obj){
+        if(!obj.containsKey("actives")){
+            throw new JsonException("Json Object is missing key 'actives'");
+        }
+        String[] ret = new String[3];
+    }
+    
 }
