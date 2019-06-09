@@ -102,7 +102,7 @@ public class BuildCanvas extends DrawingPlane{
 		finish.addActionListener(new AbstractAction(){
 			public static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent e){
-				new Build(
+				Build.addBuild(new Build(
 						name.getText(), 
 						classSelect.getBox().getSelected().getName(), 
 						actives[0].getBox().getSelected().getName(), 
@@ -111,7 +111,7 @@ public class BuildCanvas extends DrawingPlane{
 						passives[0].getBox().getSelected().getName(), 
 						passives[1].getBox().getSelected().getName(), 
 						passives[2].getBox().getSelected().getName()
-								);
+								));
 				switchTo(new MainCanvas());
 			}
 		});

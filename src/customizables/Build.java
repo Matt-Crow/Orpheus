@@ -3,6 +3,7 @@ package customizables;
 import serialization.JsonSerialable;
 import java.util.ArrayList;
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonException;
 import javax.json.JsonObject;
@@ -17,7 +18,7 @@ public class Build implements JsonSerialable{
 	private static final Build defaultWater = new Build("Default Water", "Water", "Waterbolt", "Slash", "Healing Rain", "Toughness", "Bracing", "Recover");
 	private static final Build defaultAir = new Build("Default Air", "Air", "Mini Windbolt", "Speed Test", "Blade Stance", "Momentum", "Sharpen", "Leechhealer");
 	private static final Build test = new Build("0x138", "Air", "RAINBOW OF DOOM", "Cursed Daggers", "Speed Test", "Momentum", "Recover", "Leechhealer");
-	
+    
 	private final String name;
 	private final String className;
 	private final String[] activeNames;
@@ -28,8 +29,16 @@ public class Build implements JsonSerialable{
 		className = cName;
 		activeNames = new String[]{a1, a2, a3};
 		passiveNames = new String[]{p1, p2, p3};
-		addBuild(this);
 	}
+    
+    public static final void loadAll(){
+        addBuild(defaultEarth);
+        addBuild(defaultFire);
+        addBuild(defaultWater);
+        addBuild(defaultAir);
+        addBuild(test);
+    }
+    
 	public static ArrayList<Build> getAllBuilds(){
 		return builds;
 	}
@@ -65,6 +74,21 @@ public class Build implements JsonSerialable{
 	public String[] getPassiveNames(){
 		return passiveNames;
 	}
+    
+    public String getDescription(){
+        StringBuilder sb = new StringBuilder();
+        sb.append(name).append(": \n");
+        sb.append("Class: ").append(className).append("\n");
+        sb.append("Actives: \n");
+        for(String an : activeNames){
+            sb.append("*").append(an).append("\n");
+        }
+        sb.append("Passives: \n");
+        for(String pn : passiveNames){
+            sb.append("*").append(pn).append("\n");
+        }
+        return sb.toString();
+    }
 
     @Override
     public JsonObject serializeJson() {
@@ -119,7 +143,26 @@ public class Build implements JsonSerialable{
         if(!obj.containsKey("actives")){
             throw new JsonException("Json Object is missing key 'actives'");
         }
-        String[] ret = new String[3];
+        
+        JsonArray a = obj.getJsonArray("actives");
+        int len = a.size();
+        String[] ret = new String[len];
+        for(int i = 0; i < len; i++){
+            ret[i] = a.getString(i);
+        }
+        return ret;
     }
-    
+    private static String[] getPassivesFrom(JsonObject obj){
+        if(!obj.containsKey("passives")){
+            throw new JsonException("Json Object is missing key 'passives'");
+        }
+        
+        JsonArray a = obj.getJsonArray("passives");
+        int len = a.size();
+        String[] ret = new String[len];
+        for(int i = 0; i < len; i++){
+            ret[i] = a.getString(i);
+        }
+        return ret;
+    }
 }

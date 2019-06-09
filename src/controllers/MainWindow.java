@@ -1,6 +1,7 @@
 package controllers;
 
 import actives.LoadActives;
+import customizables.Build;
 import customizables.LoadCharacterClasses;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -26,10 +27,9 @@ public class MainWindow extends JFrame{
         setVisible(true);
 		addWindowListener(winAdapt());
         LoadActives.load();
-        //AbstractActive.logAllPsuedoJson();
-        //AbstractActive.readFile(Run.class.getClass().getResourceAsStream("/actives.csv"));
         LoadPassives.load();
 		LoadCharacterClasses.load();
+        Build.loadAll();
     }
     
     private WindowAdapter winAdapt(){
