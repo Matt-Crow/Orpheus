@@ -1,26 +1,23 @@
 package customizables;
+
+import java.util.*;
+import javax.json.*;
+
 import serialization.JsonSerialable;
 import upgradables.AbstractUpgradable;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Set;
-
 import graphics.CustomColors;
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonValue;
 import util.Number;
-import static java.lang.System.out;
-import java.util.NoSuchElementException;
 
-// make this connect better with player somehow
+
+/**
+ * CharacterClasses are playable characters that every Player plays as.
+ * Each character class has its own set of stats and projectile colors.
+ * @author Matt
+ */
 public class CharacterClass extends AbstractUpgradable<CharacterStatName> implements JsonSerialable{
     private CustomColors[] colors;
 
-    private static HashMap<String, CharacterClass> allCharacterClasses = new HashMap<>();
+    private static final  HashMap<String, CharacterClass> ALL_CHARACTER_CLASSES = new HashMap<>();
     // initializers
     public CharacterClass(String n, CustomColors[] cs, int HP, int energy, int dmg, int reduction, int speed){
             super(n);
@@ -32,59 +29,61 @@ public class CharacterClass extends AbstractUpgradable<CharacterStatName> implem
             setStat(CharacterStatName.REDUCTION, reduction);
             setStat(CharacterStatName.SPEED, speed);
     }
+    
+    @Override
     public CharacterClass copy(){
-            return new CharacterClass(
-                            getName(), 
-                            getColors(), 
-                            getBase(CharacterStatName.HP),
-                            getBase(CharacterStatName.ENERGY),
-                            getBase(CharacterStatName.DMG),
-                            getBase(CharacterStatName.REDUCTION),
-                            getBase(CharacterStatName.SPEED)
-                    );
+        return new CharacterClass(
+            getName(), 
+            getColors(), 
+            getBase(CharacterStatName.HP),
+            getBase(CharacterStatName.ENERGY),
+            getBase(CharacterStatName.DMG),
+            getBase(CharacterStatName.REDUCTION),
+            getBase(CharacterStatName.SPEED)
+        );
     }
 
     // static methods
     public static void addCharacterClass(CharacterClass c){
-            allCharacterClasses.put(c.getName().toUpperCase(), c);
+        ALL_CHARACTER_CLASSES.put(c.getName().toUpperCase(), c);
     }
     public static void addCharacterClasses(CharacterClass[] c){
-            for(CharacterClass cs : c){
-                    addCharacterClass(cs);
-            }
+        for(CharacterClass cs : c){
+            addCharacterClass(cs);
+        }
     }
     public static CharacterClass getCharacterClassByName(String n){
-        if(!allCharacterClasses.containsKey(n.toUpperCase())){
+        if(!ALL_CHARACTER_CLASSES.containsKey(n.toUpperCase())){
             throw new NoSuchElementException("Character class with name " + n + " not found. Did you remember to call CharacterClass.addCharacterClass(...)?");
         }
-        return allCharacterClasses.get(n.toUpperCase());
+        return ALL_CHARACTER_CLASSES.get(n.toUpperCase());
     }
     public static CharacterClass[] getAll(){
-            CharacterClass[] ret = new CharacterClass[allCharacterClasses.size()];
-            Collection<CharacterClass> values = allCharacterClasses.values();
-            int i = 0;
-            for(CharacterClass cc : values){
-                    ret[i] = cc;
-                    i++;
-            }
-            return ret;
+        CharacterClass[] ret = new CharacterClass[ALL_CHARACTER_CLASSES.size()];
+        Collection<CharacterClass> values = ALL_CHARACTER_CLASSES.values();
+        int i = 0;
+        for(CharacterClass cc : values){
+            ret[i] = cc;
+            i++;
+        }
+        return ret;
     }
     public static String[] getAllNames(){
-            String[] ret = new String[allCharacterClasses.size()];
-            Set<String> keys = allCharacterClasses.keySet();
-            int i = 0;
-            for(String key : keys){
-                    ret[i] = key;
-                    i++;
-            }
-            return ret;
+        String[] ret = new String[ALL_CHARACTER_CLASSES.size()];
+        Set<String> keys = ALL_CHARACTER_CLASSES.keySet();
+        int i = 0;
+        for(String key : keys){
+            ret[i] = key;
+            i++;
+        }
+        return ret;
     }
 
     public void setColors(CustomColors[] cs){
-            colors = cs;
+        colors = cs;
     }
     public CustomColors[] getColors(){
-            return colors;
+        return colors;
     }
     public void setStat(CharacterStatName c, int value){
         value = Number.minMax(1, value, 5);
@@ -107,6 +106,7 @@ public class CharacterClass extends AbstractUpgradable<CharacterStatName> implem
             break;
         }
     }
+    @Override
     public String getDescription(){
         return getName() + ": \n" 
                         + "Maximum hit points: " + getStatValue(CharacterStatName.HP) + "\n"
@@ -130,5 +130,30 @@ public class CharacterClass extends AbstractUpgradable<CharacterStatName> implem
         b.add("type", "character class");
         b.add("colors", cols.build());
         return b.build();
+    }
+    
+    public static CharacterClass deserializeJson(JsonObject obj){
+        return new CharacterClass(
+            getNameFrom(obj),
+            getColorsFrom(obj),
+            getStatBaseFrom(obj, CharacterStatName.HP.toString()),
+            getStatBaseFrom(obj, CharacterStatName.ENERGY.toString()),
+            getStatBaseFrom(obj, CharacterStatName.DMG.toString()),
+            getStatBaseFrom(obj, CharacterStatName.REDUCTION.toString()),
+            getStatBaseFrom(obj, CharacterStatName.SPEED.toString())
+        );
+    }
+    
+    public static CustomColors[] getColorsFrom(JsonObject obj){
+        if(!obj.containsKey("colors")){
+            throw new JsonException("Json Object is missing key 'colors'");
+        }
+        JsonArray a = obj.getJsonArray("colors");
+        int len = a.size();
+        CustomColors[] ret = new CustomColors[len];
+        for(int i = 0; i < len; i++){
+            ret[i] = CustomColors.fromString(a.getString(i));
+        }
+        return ret;
     }
 }

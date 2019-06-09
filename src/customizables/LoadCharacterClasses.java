@@ -10,12 +10,12 @@ public class LoadCharacterClasses {
 		CharacterClass water = new CharacterClass("Water", CustomColors.waterColors, 5, 4, 1, 3, 3);
 		
 		CharacterClass.addCharacterClasses(
-				new CharacterClass[]{
-						fire,
-						air,
-						earth,
-						water
-				}
-				);
+            new CharacterClass[]{
+                fire,
+                air,
+                earth,
+                water
+            }
+        );
 	}
 }

@@ -46,18 +46,13 @@ public class JsonTest {
     public static void main(String[] args) throws Exception{
         JsonObject obj = null;
         AbstractUpgradable u = null;
-        LoadActives.load();
+        //LoadActives.load();
         //LoadPassives.load();
-        //LoadCharacterClasses.load();
+        LoadCharacterClasses.load();
         
+        //done
         for(AbstractActive aa : AbstractActive.getAll()){
             out.println(aa.getName());
-            if(
-                aa instanceof MeleeActive
-                || aa instanceof BoostActive
-            ){
-                continue;
-            }
             obj = aa.serializeJson();
             //pprint(obj, 0);
             u = AbstractActive.deserializeJson(obj);
@@ -70,7 +65,6 @@ public class JsonTest {
             }
         }
         
-        /*
         //done
         for(AbstractPassive ap : AbstractPassive.getAll()){
             obj = ap.serializeJson();
@@ -81,12 +75,20 @@ public class JsonTest {
                 out.println(ap.getDescription());
                 out.println(u.getDescription());
             }
-        }*/
-        
-        /*
-        for(CharacterClass cc : CharacterClass.getAll()){
-            pprint(cc.serializeJson(), 0);
         }
+        
+        
+        for(CharacterClass cc : CharacterClass.getAll()){
+            obj = cc.serializeJson();
+            pprint(obj, 0);
+            u = CharacterClass.deserializeJson(obj);
+            if(u != null){
+                pprint(obj, 0);
+                out.println(cc.getDescription());
+                out.println(u.getDescription());
+            }
+        }
+        /*
         for(Build b : Build.getAllBuilds()){
             pprint(b.serializeJson(), 0);
         }*/
