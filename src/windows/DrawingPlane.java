@@ -6,7 +6,6 @@ import javax.swing.SwingUtilities;
 import graphics.CustomColors;
 import gui.Style;
 import controllers.Master;
-import util.Op;
 
 import javax.swing.*;
 
@@ -68,9 +67,8 @@ public class DrawingPlane extends JPanel{
 		return ty;
 	}
 	public void displayTransform(){
-		Op.add("X: " + tx);
-		Op.add("Y: " + ty);
-		Op.dp();
+		System.out.println("X: " + tx);
+		System.out.println("Y: " + ty);
 	}
 	
 	public int[] getLastTransform(){

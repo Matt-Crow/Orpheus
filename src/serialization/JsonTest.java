@@ -1,4 +1,4 @@
-package PsuedoJson;
+package serialization;
 
 import actives.*;
 import customizables.Build;

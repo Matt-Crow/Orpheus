@@ -1,8 +1,7 @@
 package actives;
 
 //import entities.Player;
-import PsuedoJson.JsonSerialable;
-import PsuedoJson.PsuedoJsonObject;
+import serialization.JsonSerialable;
 import entities.ParticleType;
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -52,15 +51,6 @@ public class MeleeActive extends AbstractActive implements JsonSerialable{
 		setToCooldown();
 	}
 	*/
-
-    @Override
-    public PsuedoJsonObject getPsuedoJson() {
-        PsuedoJsonObject j = new PsuedoJsonObject(getName());
-        j.addPair("Type", this.getType().toString());
-        j.addPair(ActiveStatName.DAMAGE.toString(), getBase(ActiveStatName.DAMAGE) + "");
-        j.addPair("Tags", getTagPsuedoJson());
-        return j;
-    }
     
     @Override
     public JsonObject serializeJson(){
@@ -78,7 +68,7 @@ public class MeleeActive extends AbstractActive implements JsonSerialable{
             getStatBaseFrom(obj, ActiveStatName.DAMAGE.toString())
         );
         ret.setInflict(getStatusTableFrom(obj));
-        ret.addTags(getTagsFrom(obj));
+        getTagsFrom(obj).stream().forEach(t->ret.addTag(t));
         ret.setParticleType(getParticleTypeFrom(obj));
         return ret;
     }

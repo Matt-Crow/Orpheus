@@ -2,6 +2,7 @@ package gui;
 
 import passives.AbstractPassive;
 import passives.PassiveStatName;
+import passives.ThresholdPassive;
 
 @SuppressWarnings("serial")
 public class PassiveCustomizer extends UpgradableCustomizer<PassiveStatName>{
@@ -24,7 +25,9 @@ public class PassiveCustomizer extends UpgradableCustomizer<PassiveStatName>{
 	}
 	public void updateField(String n, int val){
 		AbstractPassive p = (AbstractPassive)getCustomizing();
-		p.setStat(PassiveStatName.THRESHOLD, val);
+		if(p instanceof ThresholdPassive){
+            ((ThresholdPassive)p).setStat(PassiveStatName.THRESHOLD, val);
+        }
 		p.init();
 		super.updateField(n, val);
 	}

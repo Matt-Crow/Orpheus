@@ -1,5 +1,5 @@
 package customizables;
-import PsuedoJson.JsonSerialable;
+import serialization.JsonSerialable;
 import upgradables.AbstractUpgradable;
 
 import java.util.Collection;
@@ -7,14 +7,14 @@ import java.util.HashMap;
 import java.util.Set;
 
 import graphics.CustomColors;
-import java.math.BigDecimal;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 import util.Number;
-import util.Op;
+import static java.lang.System.out;
+import java.util.NoSuchElementException;
 
 // make this connect better with player somehow
 public class CharacterClass extends AbstractUpgradable<CharacterStatName> implements JsonSerialable{
@@ -54,13 +54,10 @@ public class CharacterClass extends AbstractUpgradable<CharacterStatName> implem
             }
     }
     public static CharacterClass getCharacterClassByName(String n){
-            CharacterClass ret = allCharacterClasses.getOrDefault(n.toUpperCase(), 
-                            new CharacterClass("ERROR", new CustomColors[0], 3, 3, 3, 3, 3));
-            if(!n.toUpperCase().equals(ret.getName().toUpperCase())){
-                    Op.add("No character class was found with name " + n + " in CharacterClass.getCharacterClassByName");
-                    Op.dp();
-            }
-            return ret;
+        if(!allCharacterClasses.containsKey(n.toUpperCase())){
+            throw new NoSuchElementException("Character class with name " + n + " not found. Did you remember to call CharacterClass.addCharacterClass(...)?");
+        }
+        return allCharacterClasses.get(n.toUpperCase());
     }
     public static CharacterClass[] getAll(){
             CharacterClass[] ret = new CharacterClass[allCharacterClasses.size()];

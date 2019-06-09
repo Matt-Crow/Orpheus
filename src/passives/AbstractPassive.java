@@ -1,6 +1,6 @@
 package passives;
 
-import PsuedoJson.JsonSerialable;
+import serialization.JsonSerialable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
@@ -8,12 +8,12 @@ import java.util.Set;
 import actions.*;
 import statuses.StatusTable;
 import entities.Player;
+import java.util.NoSuchElementException;
 import javax.json.Json;
 import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
-import util.Op;
 import upgradables.AbstractUpgradable;
 
 public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName> implements JsonSerialable{
@@ -32,10 +32,8 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
 		type = t;
 		targetsUser = b;
 	}
-	public AbstractPassive copy(){
-		// DO NOT INVOKE THIS
-		return this;
-	}
+    @Override
+	public abstract AbstractPassive copy();
 	
 	// static methods
 	public static void addPassive(AbstractPassive p){
@@ -47,12 +45,10 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
 		}
 	}
 	public static AbstractPassive getPassiveByName(String n){
-		AbstractPassive ret = allPassives.getOrDefault(n.toUpperCase(), allPassives.get("SLASH"));
-		if(ret.getName().toUpperCase().equals("SLASH") && !n.toUpperCase().equals("SLASH")){
-			Op.add("No passive was found with name " + n + " in AbstractPassive.getPassiveByName");
-			Op.dp();
-		}
-		return ret;
+        if(!allPassives.containsKey(n.toUpperCase())){
+            throw new NoSuchElementException("Passive with name " + n + "not found. Did you remember to call AbstractPassive.addPassive(...)?");
+        }
+		return allPassives.get(n.toUpperCase());
 	}
 	public static AbstractPassive[] getAll(){
 		AbstractPassive[] ret = new AbstractPassive[allPassives.size()];
@@ -75,10 +71,6 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
 		return ret;
 	}
 	
-	public void setStat(PassiveStatName n, int value){
-		Op.add("Method addStat is not defined for class " + getClass().getName());
-		Op.dp();
-	}
 	
 	// setters / getters
 	public PassiveType getType(){

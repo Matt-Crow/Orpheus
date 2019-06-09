@@ -1,6 +1,6 @@
 package statuses;
 
-import PsuedoJson.JsonSerialable;
+import serialization.JsonSerialable;
 import entities.Player;
 import javax.json.Json;
 import javax.json.JsonException;

@@ -1,4 +1,4 @@
-package PsuedoJson;
+package serialization;
 
 import javax.json.JsonObject;
 

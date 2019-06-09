@@ -3,8 +3,7 @@ package windows;
 import java.awt.event.ActionEvent;
 
 import javax.swing.*;
-import gui.*;
-import util.Op;
+import static java.lang.System.out;
 
 @SuppressWarnings("serial")
 public class StartCanvas extends DrawingPlane{
@@ -20,8 +19,7 @@ public class StartCanvas extends DrawingPlane{
 		AbstractAction[] actions = new AbstractAction[3];
 		actions[0] = new AbstractAction("About this game"){
 			public void actionPerformed(ActionEvent e){
-				Op.add("about");
-				Op.dp();
+				out.println("about");
 			}
 		};
 		actions[1] = new AbstractAction("Play"){
@@ -31,8 +29,7 @@ public class StartCanvas extends DrawingPlane{
 		};
 		actions[2] = new AbstractAction("How to play"){
 			public void actionPerformed(ActionEvent e){
-				Op.add("how");
-				Op.dp();
+				out.println("how");
 			}
 		};
 		

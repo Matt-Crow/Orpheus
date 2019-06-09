@@ -10,7 +10,6 @@ import actives.MeleeActive;
 import customizables.CharacterStatName;
 import controllers.Master;
 import util.CombatLog;
-import util.Op;
 import util.Random;
 
 public class Projectile extends Entity{
@@ -138,9 +137,7 @@ public class Projectile extends Entity{
 				spawnParticle(getDir().getDegrees(), 0, rbl);
 				break;
 			default:
-				Op.add("The particle type of " + registeredAttack.getParticleType());
-				Op.add("is not found for Projectile.java");
-				Op.dp();
+				System.out.println("The particle type of " + registeredAttack.getParticleType() + "is not found for Projectile.java");
 			}
 		}
 	}

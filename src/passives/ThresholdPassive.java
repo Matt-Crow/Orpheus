@@ -1,6 +1,6 @@
 package passives;
 
-import PsuedoJson.JsonSerialable;
+import serialization.JsonSerialable;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
@@ -22,7 +22,7 @@ public class ThresholdPassive extends AbstractPassive implements JsonSerialable{
 		copyInflictTo(copy);
 		return copy;
 	}
-    @Override
+    
 	public void setStat(PassiveStatName n, int value){
 		switch(n){
 		case THRESHOLD:

@@ -1,6 +1,6 @@
 package statuses;
 
-import PsuedoJson.JsonSerialable;
+import serialization.JsonSerialable;
 import java.util.ArrayList;
 import javax.json.Json;
 import javax.json.JsonArray;

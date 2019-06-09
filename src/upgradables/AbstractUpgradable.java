@@ -1,6 +1,6 @@
 package upgradables;
 
-import PsuedoJson.JsonSerialable;
+import serialization.JsonSerialable;
 import java.util.*;
 import entities.Player;
 import controllers.Master;

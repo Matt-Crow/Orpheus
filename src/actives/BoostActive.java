@@ -1,6 +1,5 @@
 package actives;
-import PsuedoJson.JsonSerialable;
-import PsuedoJson.PsuedoJsonObject;
+import serialization.JsonSerialable;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
@@ -38,28 +37,6 @@ public class BoostActive extends AbstractActive implements JsonSerialable{
 		desc += getInflict().getStatusString();
 		return desc;
 	}
-
-    @Override
-    public PsuedoJsonObject getPsuedoJson() {
-        PsuedoJsonObject j = new PsuedoJsonObject(getName());
-        
-        j.addPair("Type", this.getType().toString());
-        
-        
-        StatusTable s = getInflict();
-        PsuedoJsonObject status = null;
-        AbstractStatus st;
-        for(int i = 0; i < s.getSize(); i++){
-            st = s.getStatusAt(i);
-            status = new PsuedoJsonObject(st.getName());
-            status.addPair("Intensity", st.getIntensityLevel() + "");
-            status.addPair("Duration", st.getBaseUses() + "");
-            j.addPair(st.getName(), status);
-        }
-        j.addPair("Tags", getTagPsuedoJson());
-        
-        return j;
-    }
     
     @Override
     public JsonObject serializeJson(){
@@ -77,7 +54,7 @@ public class BoostActive extends AbstractActive implements JsonSerialable{
             getNameFrom(obj),
             getStatusTableFrom(obj)
         );
-        ret.addTags(getTagsFrom(obj));
+        getTagsFrom(obj).stream().forEach(t->ret.addTag(t));
         return ret;
     }
 }

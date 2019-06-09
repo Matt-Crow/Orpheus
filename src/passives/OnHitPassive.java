@@ -1,6 +1,6 @@
 package passives;
 
-import PsuedoJson.JsonSerialable;
+import serialization.JsonSerialable;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;

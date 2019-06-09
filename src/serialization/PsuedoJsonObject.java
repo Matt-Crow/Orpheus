@@ -1,9 +1,12 @@
-package PsuedoJson;
+package serialization;
 
 import java.util.HashMap;
 import static java.lang.System.out;
 
 /**
+ * Ultimately, this never got implemented, but it's still pretty neat, so I'll keep it for now
+ * 
+ * 
  * The PsuedoJsonObject is used to generate Json-like, textual representations of an object.
  * 
  * each PsuedoJsonObject contains a name, 

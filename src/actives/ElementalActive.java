@@ -1,7 +1,6 @@
 package actives;
 
-import PsuedoJson.JsonSerialable;
-import PsuedoJson.PsuedoJsonObject;
+import serialization.JsonSerialable;
 import controllers.Master;
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -12,6 +11,7 @@ public class ElementalActive extends AbstractActive implements JsonSerialable{
 	public ElementalActive(String n, int arc, int range, int speed, int aoe, int dmg){
 		super(ActiveType.ELEMENTAL, n, arc, range, speed, aoe, dmg);
 	}
+    @Override
 	public ElementalActive copy(){
 		ElementalActive copy = new ElementalActive(
 				getName(), 
@@ -26,57 +26,48 @@ public class ElementalActive extends AbstractActive implements JsonSerialable{
 		return copy;
 	}
 	
-	public void use(){
-		super.use();
-	}
-	
+    @Override
 	public String getDescription(){
-		String desc = getName() + ": \n";
-		if(getStatValue(ActiveStatName.RANGE) != 0){
-			desc += "The user launches ";
+        StringBuilder desc = new StringBuilder();
+		desc
+            .append(getName())
+            .append(": \n");
+		if(getStatValue(ActiveStatName.RANGE) == 0){
+            desc.append(String.format("The user generates an explosion with a %d unit radius", (int)(getStatValue(ActiveStatName.AOE) / Master.UNITSIZE)));
+        } else {
+			desc.append("The user launches ");
 			if(getStatValue(ActiveStatName.ARC) > 0){
-				desc += "projectiles in a " + (int)getStatValue(ActiveStatName.ARC) + " degree arc, each traveling ";
+				desc.append(
+                    String.format(
+                        "projectiles in a %d degree arc, each traveling ", 
+                        (int)getStatValue(ActiveStatName.ARC)
+                    )
+                );
 			} else {
-				desc += "a projectile, which travels ";
+				desc.append("a projectile, which travels ");
 			}
-			desc += "for " + (int)(getStatValue(ActiveStatName.RANGE) / Master.UNITSIZE) + " units, at " + (int)(getStatValue(ActiveStatName.SPEED) * Master.FPS / Master.UNITSIZE) + " units per second";
+			desc.append(
+                String.format(
+                    "for %d units, at %d units per second", 
+                    (int)(getStatValue(ActiveStatName.RANGE) / Master.UNITSIZE),
+                    (int)(getStatValue(ActiveStatName.SPEED) * Master.FPS / Master.UNITSIZE)
+                )
+            );
 			
 			if(getStatValue(ActiveStatName.AOE) != 0){
-				desc += " before exploding in a " + (int)(getStatValue(ActiveStatName.AOE) / Master.UNITSIZE)+ " unit radius,"; 
+				desc.append(String.format(" before exploding in a %d unit radius", (int)(getStatValue(ActiveStatName.AOE) / Master.UNITSIZE))); 
 			}
-		} else {
-			desc += "The user generates an explosion ";
-			desc += "with a " + (int)(getStatValue(ActiveStatName.AOE) / Master.UNITSIZE) + " unit radius,";
 		}
-		desc += " dealing " + (int)getStatValue(ActiveStatName.DAMAGE) + " damage to enemies it hits. \n";
-		desc += getCost() + " energy cost.";
+        
+		desc.append(String.format(" dealing %d damage to enemies it hits. \n", (int)getStatValue(ActiveStatName.DAMAGE)));
+		desc.append(String.format("%d energy cost.", getCost()));
 		if(getInflict().getSize() > 0){
-			desc += getInflict().getStatusString();
+			desc.append(getInflict().getStatusString());
 		}
 		
-		return desc;
+		return desc.toString();
 	}
 
-    @Override
-    public PsuedoJsonObject getPsuedoJson() {
-        PsuedoJsonObject j = new PsuedoJsonObject(getName());
-        
-        ActiveStatName[] keys = new ActiveStatName[]{
-            ActiveStatName.AOE,
-            ActiveStatName.ARC,
-            ActiveStatName.DAMAGE,
-            ActiveStatName.RANGE,
-            ActiveStatName.SPEED
-        };
-        j.addPair("Type", this.getType().toString());
-        for(ActiveStatName n : keys){
-            j.addPair(n.toString(), getBase(n) + "");
-        }
-        j.addPair(ActiveStatName.PARTICLETYPE.toString(), getParticleType().toString());
-        j.addPair("Tags", getTagPsuedoJson());
-        return j;
-    }
-    
     @Override
     public JsonObject serializeJson(){
         JsonObject obj = super.serializeJson();
@@ -98,7 +89,7 @@ public class ElementalActive extends AbstractActive implements JsonSerialable{
             getStatBaseFrom(obj, ActiveStatName.DAMAGE.toString())
         );
         ret.setInflict(getStatusTableFrom(obj));
-        ret.addTags(getTagsFrom(obj));
+        getTagsFrom(obj).stream().forEach(t->ret.addTag(t));
         ret.setParticleType(getParticleTypeFrom(obj));
         return ret;
     }
