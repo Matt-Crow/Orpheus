@@ -6,10 +6,13 @@ import java.util.HashMap;
 import java.util.Set;
 
 import actions.*;
+import actives.AbstractActive;
 import statuses.StatusTable;
 import entities.Player;
+import java.io.File;
 import java.util.NoSuchElementException;
 import javax.json.*;
+import serialization.JsonTest;
 import statuses.*;
 import upgradables.AbstractUpgradable;
 
@@ -96,6 +99,12 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
                 cu
 		});
 	}
+    public static void saveAll(File f){
+        JsonObject[] objs = allPassives.values().stream().map((AbstractPassive p)->{
+            return p.serializeJson();
+        }).toArray(size -> new JsonObject[size]);
+        JsonTest.writeToFile(objs, f);
+    }
     
     @Override
 	public abstract AbstractPassive copy();

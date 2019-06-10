@@ -9,7 +9,9 @@ import javax.json.*;
 import controllers.Master;
 import upgradables.AbstractUpgradable;
 import entities.*;
+import java.io.File;
 import serialization.JsonSerialable;
+import serialization.JsonTest;
 import statuses.*;
 import util.Number;
 
@@ -132,6 +134,13 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName> 
 			bs
 		});
 	}
+    
+    public static void saveAll(File f){
+        JsonObject[] objs = ALL_ACTIVES.values().stream().map((AbstractActive a)->{
+            return a.serializeJson();
+        }).toArray(size -> new JsonObject[size]);
+        JsonTest.writeToFile(objs, f);
+    }
     
     // static methods
     public static void addActive(AbstractActive a){

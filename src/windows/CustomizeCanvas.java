@@ -4,15 +4,13 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import actives.AbstractActive;
+import customizables.Build;
 import passives.AbstractPassive;
 import upgradables.AbstractUpgradable;
 import customizables.CharacterClass;
 import upgradables.UpgradableType;
 import gui.*;
 import java.io.File;
-import java.util.Arrays;
-import javax.json.JsonObject;
-import serialization.JsonTest;
 
 @SuppressWarnings({"serial", "rawtypes"})
 
@@ -46,13 +44,14 @@ public class CustomizeCanvas extends DrawingPlane{
             choose.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             
             if(choose.showOpenDialog(choose) == JFileChooser.APPROVE_OPTION){
-                AbstractActive[] aa = AbstractActive.getAll();
-                JsonObject[] objs = 
-                Arrays.stream(aa).map((AbstractActive a)->{
-                    return a.serializeJson();
-                }).toArray(size -> new JsonObject[size]);
-                File f = new File(choose.getSelectedFile().getAbsolutePath() + "/test.json");
-                JsonTest.writeToFile(objs, f);
+                String exportName = JOptionPane.showInputDialog("Enter a name for this export:");
+                File dir = new File(choose.getSelectedFile().getAbsolutePath() + "/" + exportName);
+                dir.mkdir();
+                
+                AbstractActive.saveAll(new File(dir.getAbsolutePath() + "/actives.json"));
+                AbstractPassive.saveAll(new File(dir.getAbsolutePath() + "/passives.json"));
+                CharacterClass.saveAll(new File(dir.getAbsolutePath() + "/characterClasses.json"));
+                Build.saveAll(new File(dir.getAbsolutePath() + "/builds.json"));
             }
         });
         addMenuItem(export);

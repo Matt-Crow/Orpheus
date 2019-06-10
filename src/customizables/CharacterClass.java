@@ -6,6 +6,8 @@ import javax.json.*;
 import serialization.JsonSerialable;
 import upgradables.AbstractUpgradable;
 import graphics.CustomColors;
+import java.io.File;
+import serialization.JsonTest;
 import util.Number;
 
 
@@ -50,6 +52,13 @@ public class CharacterClass extends AbstractUpgradable<CharacterStatName> implem
             }
         );
 	}
+    
+    public static void saveAll(File f){
+        JsonObject[] objs = ALL_CHARACTER_CLASSES.values().stream().map((CharacterClass c)->{
+            return c.serializeJson();
+        }).toArray(size -> new JsonObject[size]);
+        JsonTest.writeToFile(objs, f);
+    }
     
     @Override
     public CharacterClass copy(){

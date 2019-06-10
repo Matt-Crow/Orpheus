@@ -2,7 +2,9 @@ package customizables;
 
 import serialization.JsonSerialable;
 import java.util.*;
+import java.io.File;
 import javax.json.*;
+import serialization.JsonTest;
 
 
 /**
@@ -53,6 +55,13 @@ public class Build implements JsonSerialable{
         addBuild(DEFAULT_WATER);
         addBuild(DEFAULT_AIR);
         addBuild(TEST);
+    }
+    
+    public static void saveAll(File f){
+        JsonObject[] objs = ALL.values().stream().map((Build b)->{
+            return b.serializeJson();
+        }).toArray(size -> new JsonObject[size]);
+        JsonTest.writeToFile(objs, f);  
     }
     
 	public static ArrayList<Build> getAllBuilds(){
