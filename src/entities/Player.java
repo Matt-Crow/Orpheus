@@ -101,7 +101,7 @@ public class Player extends Entity{
             ex.printStackTrace();
             c = CharacterClass.getCharacterClassByName("Default");
         }
-		
+		c.registerTo(this);
 	}
 	public void setActives(String[] names){
 		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
@@ -190,7 +190,7 @@ public class Player extends Entity{
 			a.init();
 		}
 		for(AbstractPassive p : passives){
-			p.registerTo(this);
+			p.init();
 		}
 		lastHitById = -1;
 	}

@@ -1,7 +1,6 @@
 
 package windows;
 
-import actives.AbstractActive;
 import controllers.World;
 import graphics.Tile;
 import controllers.Master;
@@ -16,15 +15,11 @@ import javax.swing.JFrame;
 import javax.swing.Timer;
 import battle.Team;
 import customizables.Build;
-import customizables.CharacterClass;
 import entities.PlayerControls;
-import graphics.Map;
 import graphics.MapLoader;
 import java.awt.MouseInfo;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import passives.LoadPassives;
+import upgradables.AbstractUpgradable;
 import util.Chat;
 
 /**
@@ -180,9 +175,7 @@ public class WorldCanvas extends DrawingPlane{
         f.setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        AbstractActive.loadAll();
-        LoadPassives.load();
-		CharacterClass.loadAll();
+        AbstractUpgradable.loadAll();
         Build.loadAll();
         
         Master.TRUEPLAYER.applyBuild(Build.getBuildByName("Default Fire"));

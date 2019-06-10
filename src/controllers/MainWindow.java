@@ -1,12 +1,10 @@
 package controllers;
 
-import actives.AbstractActive;
 import customizables.Build;
-import customizables.CharacterClass;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
-import passives.LoadPassives;
+import upgradables.AbstractUpgradable;
 import util.CombatLog;
 import windows.StartCanvas;
 
@@ -26,9 +24,7 @@ public class MainWindow extends JFrame{
 		setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
         setVisible(true);
 		addWindowListener(winAdapt());
-        AbstractActive.loadAll();
-        LoadPassives.load();
-		CharacterClass.loadAll();
+        AbstractUpgradable.loadAll();
         Build.loadAll();
     }
     

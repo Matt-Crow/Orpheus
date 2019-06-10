@@ -1,9 +1,11 @@
 package upgradables;
 
+import actives.AbstractActive;
 import serialization.JsonSerialable;
 import java.util.*;
 import entities.Player;
 import controllers.Master;
+import customizables.CharacterClass;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonException;
@@ -50,6 +52,12 @@ public abstract class AbstractUpgradable<T> implements JsonSerialable{
 		cooldownTime = 0;
 		framesUntilUse = 0;
 	}
+    
+    public static void loadAll(){
+        CharacterClass.loadAll();
+        AbstractActive.loadAll();
+        AbstractPassive.loadAll();
+    }
 	
 	// setters and getters
 	public final void setName(String s){
