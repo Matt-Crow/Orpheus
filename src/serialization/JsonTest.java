@@ -46,10 +46,8 @@ public class JsonTest {
         JsonObject obj = null;
         AbstractUpgradable u = null;
         Build b = null;
-        //LoadActives.load();
-        //LoadPassives.load();
-        //CharacterClass.loadAll();
-        //Build.loadAll();
+        AbstractUpgradable.loadAll();
+        Build.loadAll();
         
         //done
         for(AbstractActive aa : AbstractActive.getAll()){
