@@ -1,7 +1,7 @@
 
 package windows;
 
-import actives.LoadActives;
+import actives.AbstractActive;
 import controllers.World;
 import graphics.Tile;
 import controllers.Master;
@@ -16,7 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.Timer;
 import battle.Team;
 import customizables.Build;
-import customizables.LoadCharacterClasses;
+import customizables.CharacterClass;
 import entities.PlayerControls;
 import graphics.Map;
 import graphics.MapLoader;
@@ -180,9 +180,10 @@ public class WorldCanvas extends DrawingPlane{
         f.setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        LoadActives.load();
+        AbstractActive.loadAll();
         LoadPassives.load();
-		LoadCharacterClasses.load();
+		CharacterClass.loadAll();
+        Build.loadAll();
         
         Master.TRUEPLAYER.applyBuild(Build.getBuildByName("Default Fire"));
         Team t1 = new Team("Test", Color.BLUE);

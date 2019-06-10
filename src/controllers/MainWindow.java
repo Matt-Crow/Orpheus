@@ -1,8 +1,8 @@
 package controllers;
 
-import actives.LoadActives;
+import actives.AbstractActive;
 import customizables.Build;
-import customizables.LoadCharacterClasses;
+import customizables.CharacterClass;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
@@ -26,9 +26,9 @@ public class MainWindow extends JFrame{
 		setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
         setVisible(true);
 		addWindowListener(winAdapt());
-        LoadActives.load();
+        AbstractActive.loadAll();
         LoadPassives.load();
-		LoadCharacterClasses.load();
+		CharacterClass.loadAll();
         Build.loadAll();
     }
     

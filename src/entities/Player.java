@@ -12,9 +12,9 @@ import customizables.*;
 import passives.*;
 import ai.PlayerAI;
 import statuses.AbstractStatus;
-import statuses.StatusName;
 import controllers.Master;
 import controllers.World;
+import java.util.NoSuchElementException;
 
 public class Player extends Entity{
 	private final String name;
@@ -95,18 +95,34 @@ public class Player extends Entity{
 	}
 	
 	public void setClass(String name){
-		c = CharacterClass.getCharacterClassByName(name.toUpperCase());
+        try{
+            c = CharacterClass.getCharacterClassByName(name.toUpperCase());
+        } catch(NoSuchElementException ex){
+            ex.printStackTrace();
+            c = CharacterClass.getCharacterClassByName("Default");
+        }
+		
 	}
 	public void setActives(String[] names){
 		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
-			actives[nameIndex] = AbstractActive.getActiveByName(names[nameIndex]).copy();
+            try{
+                actives[nameIndex] = AbstractActive.getActiveByName(names[nameIndex]);
+            } catch(NoSuchElementException ex){
+                ex.printStackTrace();
+                actives[nameIndex] = AbstractActive.getActiveByName("Default");
+            }
 			actives[nameIndex].registerTo(this);
 		}
 	}
 	public void setPassives(String[] names){
 		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
-			passives[nameIndex] = AbstractPassive.getPassiveByName(names[nameIndex]).copy();
-			passives[nameIndex].registerTo(this);
+            try{
+                passives[nameIndex] = AbstractPassive.getPassiveByName(names[nameIndex]);
+            } catch(NoSuchElementException ex){
+                ex.printStackTrace();
+                passives[nameIndex] = AbstractPassive.getPassiveByName("Default");
+            }
+            passives[nameIndex].registerTo(this);
 		}
 	}
 	
@@ -163,7 +179,7 @@ public class Player extends Entity{
 		if (!(this instanceof TruePlayer)){
 			playerAI.setEnabled(true);
 		}
-		slash = (MeleeActive)AbstractActive.getActiveByName("Slash").copy();
+        slash = (MeleeActive)AbstractActive.getActiveByName("Slash");
 		slash.registerTo(this);
 		slash.init();
 		c.init();

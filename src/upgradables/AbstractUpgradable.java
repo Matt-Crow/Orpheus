@@ -205,7 +205,6 @@ public abstract class AbstractUpgradable<T> implements JsonSerialable{
 		framesUntilUse -= 1;
 	}
     
-    //not done
     @Override
     public JsonObject serializeJson(){
         JsonObjectBuilder b = Json.createObjectBuilder();

@@ -8,8 +8,8 @@ import javax.swing.JFrame;
 public class Master {
 	public static final TruePlayer TRUEPLAYER = new TruePlayer();
 	public static final int DETECTIONRANGE = 500;
-	public static final int CANVASBOTTOM;// = Toolkit.getDefaultToolkit().getScreenInsets(new DrawingFrame().getGraphicsConfiguration()).bottom;
-	public static final int CANVASWIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+	public static final int CANVASBOTTOM;
+    public static final int CANVASWIDTH;
 	public static final int CANVASHEIGHT;
 	public static final boolean DISABLEHEALING = false;
 	public static final boolean DISABLEALLAI = false;
@@ -23,6 +23,7 @@ public class Master {
         JFrame f = new JFrame();
         CANVASBOTTOM = Toolkit.getDefaultToolkit().getScreenInsets(f.getGraphicsConfiguration()).bottom;
         CANVASHEIGHT = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - CANVASBOTTOM;
+        CANVASWIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
         f.dispose();
     }
     

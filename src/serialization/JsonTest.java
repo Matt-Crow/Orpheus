@@ -3,7 +3,6 @@ package serialization;
 import actives.*;
 import customizables.Build;
 import customizables.CharacterClass;
-import customizables.LoadCharacterClasses;
 import java.io.StringReader;
 import static java.lang.System.out;
 import java.util.Map.Entry;
@@ -49,7 +48,7 @@ public class JsonTest {
         Build b = null;
         //LoadActives.load();
         //LoadPassives.load();
-        //LoadCharacterClasses.load();
+        //CharacterClass.loadAll();
         //Build.loadAll();
         
         //done

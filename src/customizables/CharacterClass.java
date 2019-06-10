@@ -18,6 +18,11 @@ public class CharacterClass extends AbstractUpgradable<CharacterStatName> implem
     private CustomColors[] colors;
 
     private static final  HashMap<String, CharacterClass> ALL_CHARACTER_CLASSES = new HashMap<>();
+    static{
+        //guaranteed to have at least one character class
+        addCharacterClass(new CharacterClass("Default", CustomColors.rainbow, 3, 3, 3, 3, 3));
+    }
+    
     // initializers
     public CharacterClass(String n, CustomColors[] cs, int HP, int energy, int dmg, int reduction, int speed){
             super(n);
@@ -29,6 +34,22 @@ public class CharacterClass extends AbstractUpgradable<CharacterStatName> implem
             setStat(CharacterStatName.REDUCTION, reduction);
             setStat(CharacterStatName.SPEED, speed);
     }
+    
+    public static void loadAll(){
+		CharacterClass fire = new CharacterClass("Fire", CustomColors.fireColors, 2, 4, 5, 3, 3);
+		CharacterClass air = new CharacterClass("Air", CustomColors.airColors, 2, 4, 3, 1, 5);
+		CharacterClass earth = new CharacterClass("Earth", CustomColors.earthColors, 4, 1, 4, 4, 1);
+		CharacterClass water = new CharacterClass("Water", CustomColors.waterColors, 5, 4, 1, 3, 3);
+		
+		addCharacterClasses(
+            new CharacterClass[]{
+                fire,
+                air,
+                earth,
+                water
+            }
+        );
+	}
     
     @Override
     public CharacterClass copy(){
@@ -45,7 +66,7 @@ public class CharacterClass extends AbstractUpgradable<CharacterStatName> implem
 
     // static methods
     public static void addCharacterClass(CharacterClass c){
-        ALL_CHARACTER_CLASSES.put(c.getName().toUpperCase(), c);
+        ALL_CHARACTER_CLASSES.put(c.getName().toUpperCase(), c.copy());
     }
     public static void addCharacterClasses(CharacterClass[] c){
         for(CharacterClass cs : c){
@@ -56,7 +77,7 @@ public class CharacterClass extends AbstractUpgradable<CharacterStatName> implem
         if(!ALL_CHARACTER_CLASSES.containsKey(n.toUpperCase())){
             throw new NoSuchElementException("Character class with name " + n + " not found. Did you remember to call CharacterClass.addCharacterClass(...)?");
         }
-        return ALL_CHARACTER_CLASSES.get(n.toUpperCase());
+        return ALL_CHARACTER_CLASSES.get(n.toUpperCase()).copy();
     }
     public static CharacterClass[] getAll(){
         CharacterClass[] ret = new CharacterClass[ALL_CHARACTER_CLASSES.size()];
