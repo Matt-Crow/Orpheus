@@ -9,6 +9,10 @@ import upgradables.AbstractUpgradable;
 import customizables.CharacterClass;
 import upgradables.UpgradableType;
 import gui.*;
+import java.io.File;
+import java.util.Arrays;
+import javax.json.JsonObject;
+import serialization.JsonTest;
 
 @SuppressWarnings({"serial", "rawtypes"})
 
@@ -35,6 +39,23 @@ public class CustomizeCanvas extends DrawingPlane{
 			}
 		});
 		addMenuItem(quit);
+        
+        JButton export = new JButton("Export all customizables to a file");
+        export.addActionListener((ActionEvent e)->{
+            JFileChooser choose = new JFileChooser();
+            choose.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            
+            if(choose.showOpenDialog(choose) == JFileChooser.APPROVE_OPTION){
+                AbstractActive[] aa = AbstractActive.getAll();
+                JsonObject[] objs = 
+                Arrays.stream(aa).map((AbstractActive a)->{
+                    return a.serializeJson();
+                }).toArray(size -> new JsonObject[size]);
+                File f = new File(choose.getSelectedFile().getAbsolutePath() + "/test.json");
+                JsonTest.writeToFile(objs, f);
+            }
+        });
+        addMenuItem(export);
 		
 		act = new JButton("Active");
 		act.addActionListener(new AbstractAction(){
@@ -60,7 +81,7 @@ public class CustomizeCanvas extends DrawingPlane{
 		});
 		add(pas);
 		resizeComponents(1, 3);
-		resizeMenu(1);
+		resizeMenu(2);
 	}
 	private void phase2(UpgradableType type){
 		removePhase1();

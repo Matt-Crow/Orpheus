@@ -3,7 +3,9 @@ package serialization;
 import actives.*;
 import customizables.Build;
 import customizables.CharacterClass;
-import java.io.StringReader;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import static java.lang.System.out;
 import java.util.Map.Entry;
 import javax.json.*;
@@ -15,6 +17,28 @@ import upgradables.AbstractUpgradable;
  * @author Matt
  */
 public class JsonTest {
+    public static void writeToFile(JsonObject[] objs, File file){
+        try{
+            FileWriter write = new FileWriter(file);
+            for(JsonObject obj : objs){
+                write.append(obj.toString());
+                write.append("\n");
+            }
+            write.close();
+        }catch(IOException ex){
+            ex.printStackTrace();
+        }
+    }
+    public static void writeToFile(JsonObject obj, File file){
+        try {
+            FileWriter write = new FileWriter(file);
+            write.append(obj.toString());
+            write.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
     public static void pprint(JsonObject obj, int indentLevel){
         String indent = "";
         for(int i = 0; i < indentLevel; i++){
