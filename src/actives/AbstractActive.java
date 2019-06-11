@@ -13,6 +13,7 @@ import java.io.File;
 import serialization.JsonSerialable;
 import serialization.JsonTest;
 import statuses.*;
+import upgradables.UpgradableType;
 import util.Number;
 
 /**
@@ -60,7 +61,7 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName> 
      * (dmg * 50) damage.
      */
     public AbstractActive(ActiveType t, String n, int arcLength, int range, int speed, int aoe, int dmg){
-        super(n);
+        super(UpgradableType.ACTIVE, n);
         type = t;
 
         setStat(ActiveStatName.ARC, arcLength);

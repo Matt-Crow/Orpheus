@@ -10,6 +10,7 @@ import customizables.CharacterClass;
 import upgradables.UpgradableType;
 import gui.*;
 import java.io.File;
+import upgradables.UpgradableJsonUtil;
 
 @SuppressWarnings({"serial", "rawtypes"})
 
@@ -42,7 +43,7 @@ public class CustomizeCanvas extends DrawingPlane{
             JFileChooser choose = new JFileChooser();
             choose.setFileSelectionMode(JFileChooser.FILES_ONLY);
             if(choose.showOpenDialog(choose) == JFileChooser.APPROVE_OPTION){
-                AbstractUpgradable.loadFile(choose.getSelectedFile());
+                UpgradableJsonUtil.loadFile(choose.getSelectedFile());
             }
         });
         addMenuItem(imp);

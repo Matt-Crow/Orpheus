@@ -14,6 +14,7 @@ import javax.json.*;
 import serialization.JsonTest;
 import statuses.*;
 import upgradables.AbstractUpgradable;
+import upgradables.UpgradableType;
 
 public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName> implements JsonSerialable{
 	/**
@@ -32,7 +33,7 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
     }
     
 	public AbstractPassive(PassiveType t, String n, boolean b){
-		super(n);
+		super(UpgradableType.PASSIVE, n);
 		type = t;
 		targetsUser = b;
 	}

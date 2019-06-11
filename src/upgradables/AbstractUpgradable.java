@@ -45,7 +45,8 @@ import statuses.*;
  */
 
 public abstract class AbstractUpgradable<T> implements JsonSerialable{
-    private String name;               // would like to use enum, but looks like I can't
+    public final UpgradableType upgradableType;
+    private String name;
 	private Player registeredTo;
 	private final HashMap<T, Double> stats;
     
@@ -56,8 +57,9 @@ public abstract class AbstractUpgradable<T> implements JsonSerialable{
     private StatusTable inflict;       // statuses that this may inflict. Each subclass handles this themself
 	
 	// constructors
-	public AbstractUpgradable(String n){
-		name = n;
+	public AbstractUpgradable(UpgradableType t, String n){
+		upgradableType = t;
+        name = n;
 		stats = new HashMap<>();
 		bases = new HashMap<>();
 		inflict = new StatusTable();
@@ -71,16 +73,6 @@ public abstract class AbstractUpgradable<T> implements JsonSerialable{
         AbstractPassive.loadAll();
     }
     
-    /**
-     * Imports the JSON-serialized 
-     * upgradables from the given file
-     * into the program
-     * @param f the file to import
-     */
-    public static void loadFile(File f){
-        UpgradableJsonUtil.loadFile(f);
-    }
-	
 	// setters and getters
 	public final void setName(String s){
 		name = s;
@@ -139,6 +131,10 @@ public abstract class AbstractUpgradable<T> implements JsonSerialable{
         }
 		return stats.get(n);
 	}
+    
+    public final HashMap<Enum, Integer> getBases(){
+        return (HashMap<Enum, Integer>)bases.clone();
+    }
     
     /**
      * Returns the base value entered into a formula to produce a stat's value.

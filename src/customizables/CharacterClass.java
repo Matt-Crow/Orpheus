@@ -8,6 +8,7 @@ import upgradables.AbstractUpgradable;
 import graphics.CustomColors;
 import java.io.File;
 import serialization.JsonTest;
+import upgradables.UpgradableType;
 import util.Number;
 
 
@@ -27,7 +28,7 @@ public class CharacterClass extends AbstractUpgradable<CharacterStatName> implem
     
     // initializers
     public CharacterClass(String n, CustomColors[] cs, int HP, int energy, int dmg, int reduction, int speed){
-            super(n);
+            super(UpgradableType.CHARACTER_CLASS, n);
             colors = cs;
 
             setStat(CharacterStatName.HP, HP);
