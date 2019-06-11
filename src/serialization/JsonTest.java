@@ -3,10 +3,16 @@ package serialization;
 import actives.*;
 import customizables.Build;
 import customizables.CharacterClass;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
 import static java.lang.System.out;
+import java.util.ArrayList;
 import java.util.Map.Entry;
 import javax.json.*;
 import passives.*;
@@ -17,6 +23,30 @@ import upgradables.AbstractUpgradable;
  * @author Matt
  */
 public class JsonTest {
+    
+    public static JsonObject[] readFromFile(File f){
+        ArrayList<JsonObject> objs = new ArrayList<>();
+        try {
+            BufferedReader buff = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
+            StringBuilder sb = new StringBuilder();
+            JsonReaderFactory jrf = Json.createReaderFactory(null);
+            JsonObject obj = null;
+            while(buff.ready()){
+                sb.append(buff.readLine().trim());
+                if(sb.charAt(sb.length() - 1) == '}'){
+                    //at the end of the object. Maybe make this smarter
+                    obj = jrf.createReader(new StringReader(sb.toString())).readObject();
+                    objs.add(obj);
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return objs.toArray(new JsonObject[objs.size()]);
+    }
+    
     public static void writeToFile(JsonObject[] objs, File file){
         try{
             FileWriter write = new FileWriter(file);

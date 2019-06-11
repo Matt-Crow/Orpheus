@@ -38,6 +38,16 @@ public class CustomizeCanvas extends DrawingPlane{
 		});
 		addMenuItem(quit);
         
+        JButton imp = new JButton("Import all customizables from a file");
+        imp.addActionListener((ActionEvent e)->{
+            JFileChooser choose = new JFileChooser();
+            choose.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            if(choose.showOpenDialog(choose) == JFileChooser.APPROVE_OPTION){
+                AbstractUpgradable.loadFile(choose.getSelectedFile());
+            }
+        });
+        addMenuItem(imp);
+        
         JButton export = new JButton("Export all customizables to a file");
         export.addActionListener((ActionEvent e)->{
             JFileChooser choose = new JFileChooser();

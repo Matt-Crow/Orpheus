@@ -6,13 +6,25 @@ import java.util.*;
 import entities.Player;
 import controllers.Master;
 import customizables.CharacterClass;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
+import javax.json.JsonReaderFactory;
 import javax.json.JsonValue;
 import passives.AbstractPassive;
+import serialization.JsonTest;
 import statuses.*;
 
 //T is an enum
@@ -57,6 +69,31 @@ public abstract class AbstractUpgradable<T> implements JsonSerialable{
         CharacterClass.loadAll();
         AbstractActive.loadAll();
         AbstractPassive.loadAll();
+    }
+    
+    /**
+     * Imports the JSON-serialized 
+     * upgradables from the given file
+     * into the program
+     * @param f the file to import
+     */
+    public static void loadFile(File f){
+        AbstractUpgradable au = null;
+        for(JsonObject obj : JsonTest.readFromFile(f)){
+            au = deserializeJson(obj);
+            if(au != null){
+                if(au instanceof AbstractPassive){
+                    AbstractPassive.addPassive((AbstractPassive)au);
+                } else if(au instanceof AbstractActive){
+                    AbstractActive.addActive((AbstractActive)au);
+                } else if(au instanceof CharacterClass){
+                    CharacterClass.addCharacterClass((CharacterClass)au);
+                } else {
+                    System.out.println("Couldn't deserialize " + au.getClass().getName());
+                    JsonTest.pprint(obj, 0);
+                }
+            }
+        }
     }
 	
 	// setters and getters
@@ -233,13 +270,13 @@ public abstract class AbstractUpgradable<T> implements JsonSerialable{
         AbstractUpgradable ret = null;
         ret = AbstractPassive.deserializeJson(obj);
         if(ret == null){
-            //try active
+            ret = AbstractActive.deserializeJson(obj);
         }
         if(ret == null){
-            //try character class
+            ret = CharacterClass.deserializeJson(obj);
         }
         if(ret == null){
-            //try build
+            throw new NullPointerException("Couldn't deserialize Json Object " + obj);
         }
         return ret;
     }

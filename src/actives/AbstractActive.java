@@ -378,7 +378,11 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName> 
             throw new JsonException("JsonObject missing key 'type'");
         }
         AbstractActive ret = null;
-        switch(ActiveType.fromString(getTypeFrom(obj))){
+        ActiveType type = ActiveType.fromString(getTypeFrom(obj));
+        if(type == null){
+            return null; //not an active
+        }
+        switch(type){
             case MELEE:
                 ret = MeleeActive.deserializeJson(obj);
                 break;

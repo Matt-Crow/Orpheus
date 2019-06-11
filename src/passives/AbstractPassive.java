@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Set;
 
 import actions.*;
-import actives.AbstractActive;
 import statuses.StatusTable;
 import entities.Player;
 import java.io.File;
@@ -202,7 +201,11 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
             throw new JsonException("JsonObject missing key 'type'");
         }
         AbstractPassive ret = null;
-        switch(PassiveType.fromString(getTypeFrom(obj))){
+        PassiveType type = PassiveType.fromString(getTypeFrom(obj));
+        if(type == null){
+            return null; //not a passive
+        }
+        switch(type){
             case THRESHOLD:
                 ret = ThresholdPassive.deserializeJson(obj);
                 break;
