@@ -15,6 +15,8 @@ import static java.lang.System.out;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 import javax.json.*;
+import javax.json.stream.JsonParser;
+import javax.json.stream.JsonParserFactory;
 import passives.*;
 import upgradables.AbstractUpgradable;
 
@@ -31,12 +33,21 @@ public class JsonTest {
             StringBuilder sb = new StringBuilder();
             JsonReaderFactory jrf = Json.createReaderFactory(null);
             JsonObject obj = null;
+            /*
+            JsonParserFactory jpf = Json.createParserFactory(null);
+            JsonParser parser = jpf.createParser(new FileInputStream(f));
+            while(parser.hasNext()){
+                //this can parse multiple it looks like
+            }*/
+            
+            
             while(buff.ready()){
                 sb.append(buff.readLine().trim());
                 if(sb.charAt(sb.length() - 1) == '}'){
                     //at the end of the object. Maybe make this smarter
                     obj = jrf.createReader(new StringReader(sb.toString())).readObject();
                     objs.add(obj);
+                    sb.delete(0, sb.length());
                 }
             }
         } catch (FileNotFoundException ex) {

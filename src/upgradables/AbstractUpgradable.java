@@ -78,22 +78,7 @@ public abstract class AbstractUpgradable<T> implements JsonSerialable{
      * @param f the file to import
      */
     public static void loadFile(File f){
-        AbstractUpgradable au = null;
-        for(JsonObject obj : JsonTest.readFromFile(f)){
-            au = deserializeJson(obj);
-            if(au != null){
-                if(au instanceof AbstractPassive){
-                    AbstractPassive.addPassive((AbstractPassive)au);
-                } else if(au instanceof AbstractActive){
-                    AbstractActive.addActive((AbstractActive)au);
-                } else if(au instanceof CharacterClass){
-                    CharacterClass.addCharacterClass((CharacterClass)au);
-                } else {
-                    System.out.println("Couldn't deserialize " + au.getClass().getName());
-                    JsonTest.pprint(obj, 0);
-                }
-            }
-        }
+        UpgradableJsonUtil.loadFile(f);
     }
 	
 	// setters and getters

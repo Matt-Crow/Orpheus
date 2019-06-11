@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import actives.AbstractActive;
-import customizables.Build;
 import passives.AbstractPassive;
 import upgradables.AbstractUpgradable;
 import customizables.CharacterClass;
@@ -61,7 +60,6 @@ public class CustomizeCanvas extends DrawingPlane{
                 AbstractActive.saveAll(new File(dir.getAbsolutePath() + "/actives.json"));
                 AbstractPassive.saveAll(new File(dir.getAbsolutePath() + "/passives.json"));
                 CharacterClass.saveAll(new File(dir.getAbsolutePath() + "/characterClasses.json"));
-                Build.saveAll(new File(dir.getAbsolutePath() + "/builds.json"));
             }
         });
         addMenuItem(export);

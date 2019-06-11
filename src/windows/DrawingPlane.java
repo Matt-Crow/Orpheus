@@ -12,12 +12,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.geom.AffineTransform;
-import javax.swing.JFrame;
+import javax.swing.*;
 
 public class DrawingPlane extends JPanel{
 	public static final long serialVersionUID = 1L;
 	
-	private JComponent menuBar;
+	private JMenuBar menuBar;
 	private JComponent content;
 	
 	private Graphics2D g;
@@ -37,7 +37,7 @@ public class DrawingPlane extends JPanel{
 		priorY = 0;
 		setLayout(new GridBagLayout());
 		GridBagConstraints c1 = new GridBagConstraints();
-		menuBar = new JComponent(){};
+		menuBar = new JMenuBar();
 		c1.weightx = 1;
 		c1.weighty = 1;
 		c1.fill = GridBagConstraints.BOTH;
