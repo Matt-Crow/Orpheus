@@ -11,7 +11,7 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
-import serialization.JsonTest;
+import serialization.JsonUtil;
 import upgradables.UpgradableJsonUtil;
 
 /**
@@ -23,7 +23,7 @@ public class ActiveJsonUtil{
         JsonObject[] objs = Arrays.stream(AbstractActive.getAll()).map((AbstractActive a)->{
             return serializeJson(a);
         }).toArray(size -> new JsonObject[size]);
-        JsonTest.writeToFile(objs, f);
+        JsonUtil.writeToFile(objs, f);
     }
     
     public static JsonObject serializeJson(AbstractActive act) {

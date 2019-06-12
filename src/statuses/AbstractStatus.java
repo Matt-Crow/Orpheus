@@ -1,11 +1,6 @@
 package statuses;
 
-import serialization.JsonSerialable;
 import entities.Player;
-import javax.json.Json;
-import javax.json.JsonException;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
 
 /**
  * AbstractStatus is the base class for all statuses in Orpheus.
@@ -16,7 +11,7 @@ import javax.json.JsonObjectBuilder;
  * @see OnHitKey
  * @see Player
  */
-public abstract class AbstractStatus implements JsonSerialable{
+public abstract class AbstractStatus{
 	private final StatusName code; //the Enum of this status' name
 	private final String name;
 	
@@ -115,36 +110,6 @@ public abstract class AbstractStatus implements JsonSerialable{
 		}
 		return ret;
 	}
-    
-    @Override
-    public JsonObject serializeJson(){
-        JsonObjectBuilder obj = Json.createObjectBuilder();
-        obj.add("type", "status");
-        obj.add("name", code.toString());
-        obj.add("intensity", level);
-        obj.add("uses", uses);
-        return obj.build();
-    }
-    
-    public static AbstractStatus deserializeJson(JsonObject obj){
-        if(!obj.containsKey("type")){
-            throw new JsonException("Json Object missing key 'type'");
-        }
-        if(!obj.containsKey("name")){
-            throw new JsonException("Json Object missing key 'name'");
-        }
-        if(!obj.containsKey("intensity")){
-            throw new JsonException("Json Object missing key 'intensity'");
-        }
-        if(!obj.containsKey("uses")){
-            throw new JsonException("Json Object missing key 'uses'");
-        }
-        return decode(
-            StatusName.fromName(obj.getString("name")), 
-            obj.getInt("intensity"), 
-            obj.getInt("uses")
-        );
-    }
     
     /**
      * Generally speaking, this will call p.getActionRegister().add . . .

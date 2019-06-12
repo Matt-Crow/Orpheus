@@ -25,7 +25,7 @@ import upgradables.UpgradableJsonUtil;
  *
  * @author Matt
  */
-public class JsonTest {
+public class JsonUtil {
     
     public static JsonObject[] readFromFile(File f){
         ArrayList<JsonObject> objs = new ArrayList<>();

@@ -1,17 +1,9 @@
 package statuses;
 
-import serialization.JsonSerialable;
 import java.util.ArrayList;
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonException;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonValue;
 
 // will probably phase out of future versions
-public class StatusTable implements JsonSerialable{
+public class StatusTable{
 	/**
 	 * Used to store status data for actives and passives
 	 */
@@ -49,31 +41,4 @@ public class StatusTable implements JsonSerialable{
 		}
 		return desc;
 	}
-
-    @Override
-    public JsonObject serializeJson() {
-        JsonObjectBuilder obj = Json.createObjectBuilder();
-        obj.add("type", "status table");
-        JsonArrayBuilder statusJson = Json.createArrayBuilder();
-        for(int i = 0; i < getSize(); i++){
-            statusJson.add(statuses.get(i).serializeJson());
-        }
-        obj.add("statuses", statusJson.build());
-        return obj.build();
-    }
-    
-    public static StatusTable deserializeJson(JsonObject obj){
-        StatusTable st = new StatusTable();
-        if(!obj.containsKey("statuses")){
-            throw new JsonException("Json Object is missing key 'statuses'");
-        }
-        JsonArray a = obj.getJsonArray("statuses");
-        a
-            .stream()
-            .filter((JsonValue v)->v.getValueType().equals(JsonValue.ValueType.OBJECT))
-            .forEach((JsonValue val)->{
-                st.add(AbstractStatus.deserializeJson((JsonObject)val));
-            });
-        return st;
-    }
 }

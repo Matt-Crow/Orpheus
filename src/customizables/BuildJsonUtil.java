@@ -3,7 +3,7 @@ package customizables;
 import java.io.File;
 import java.util.Arrays;
 import javax.json.*;
-import serialization.JsonTest;
+import serialization.JsonUtil;
 
 /**
  *
@@ -14,13 +14,13 @@ public class BuildJsonUtil {
         JsonObject[] objs = Arrays.stream(Build.getAll()).map((Build b)->{
             return serializeJson(b);
         }).toArray(size -> new JsonObject[size]);
-        JsonTest.writeToFile(objs, f);  
+        JsonUtil.writeToFile(objs, f);  
     }
     
     public static void loadFile(File f){
         Build b = null;
-        JsonObject[] bb = JsonTest.readFromFile(f);
-        for(JsonObject obj : JsonTest.readFromFile(f)){
+        JsonObject[] bb = JsonUtil.readFromFile(f);
+        for(JsonObject obj : JsonUtil.readFromFile(f)){
             b = deserializeJson(obj);
             if(b != null){
                 Build.addBuild(b);
