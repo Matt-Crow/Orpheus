@@ -191,10 +191,7 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
     public static AbstractPassive deserializeJson(JsonObject obj){
         AbstractPassive ret = null;
         PassiveType type = PassiveJsonUtil.getPassiveTypeFrom(obj);
-        /*
-        if(type == null){
-            return null; //not a passive
-        }*/
+        
         switch(type){
             case THRESHOLD:
                 ret = ThresholdPassive.deserializeJson(obj);

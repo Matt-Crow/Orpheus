@@ -119,7 +119,7 @@ public class JsonTest {
             out.println(aa.getName());
             obj = aa.serializeJson();
             //pprint(obj, 0);
-            u = AbstractActive.deserializeJson(obj);
+            u = ActiveJsonUtil.deserializeJson(obj);
             if(u != null){
                 pprint(obj, 0);
                 out.println(aa.getDescription());

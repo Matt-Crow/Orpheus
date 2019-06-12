@@ -1,9 +1,11 @@
 package upgradables;
 
 import actives.AbstractActive;
+import actives.ActiveJsonUtil;
 import customizables.CharacterClass;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.function.BiConsumer;
 import javax.json.Json;
 import javax.json.JsonException;
@@ -43,6 +45,7 @@ public class UpgradableJsonUtil {
             }
         }
     }
+    
     
     public static JsonObject serializeJson(AbstractUpgradable au){
         JsonObjectBuilder b = Json.createObjectBuilder();
@@ -99,7 +102,7 @@ public class UpgradableJsonUtil {
         AbstractUpgradable ret = null;
         switch(getUpgradableTypeFrom(obj)){
             case ACTIVE:
-                ret = AbstractActive.deserializeJson(obj);
+                ret = ActiveJsonUtil.deserializeJson(obj);
                 break;
             case PASSIVE:
                 ret = AbstractPassive.deserializeJson(obj);
@@ -110,6 +113,7 @@ public class UpgradableJsonUtil {
             default:
                 throw new JsonException("Couldn't deserialize upgradable type " + getUpgradableTypeFrom(obj));
         }
+        System.out.println(ret.getDescription());
         return ret;
     }
 }

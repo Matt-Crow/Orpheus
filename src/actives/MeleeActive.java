@@ -1,15 +1,9 @@
 package actives;
 
 //import entities.Player;
-import serialization.JsonSerialable;
 import entities.ParticleType;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonValue;
-import upgradables.UpgradableJsonUtil;
 
-public class MeleeActive extends AbstractActive implements JsonSerialable{
+public class MeleeActive extends AbstractActive{
 	public MeleeActive(String n, int dmg){
 		super(ActiveType.MELEE, n, 1, 1, 5, 0, dmg);
 		setParticleType(ParticleType.SHEAR);
@@ -52,26 +46,4 @@ public class MeleeActive extends AbstractActive implements JsonSerialable{
 		setToCooldown();
 	}
 	*/
-    
-    @Override
-    public JsonObject serializeJson(){
-        JsonObject obj = ActiveJsonUtil.serializeJson(this);
-        JsonObjectBuilder b = Json.createObjectBuilder();
-        obj.forEach((String key, JsonValue value)->{
-            b.add(key, value);
-        });
-        return b.build();
-    }
-    
-    public static final MeleeActive deserializeJson(JsonObject obj){
-        MeleeActive ret = new MeleeActive(
-            UpgradableJsonUtil.getNameFrom(obj),
-            UpgradableJsonUtil.getStatBaseFrom(obj, ActiveStatName.DAMAGE)
-        );
-        ret.setInflict(UpgradableJsonUtil.getStatusTableFrom(obj));
-        getTagsFrom(obj).stream().forEach(t->ret.addTag(t));
-        ret.setParticleType(getParticleTypeFrom(obj));
-        return ret;
-    }
-    
 }

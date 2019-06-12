@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import actives.AbstractActive;
+import actives.ActiveJsonUtil;
 import passives.AbstractPassive;
 import upgradables.AbstractUpgradable;
 import customizables.CharacterClass;
@@ -58,7 +59,7 @@ public class CustomizeCanvas extends DrawingPlane{
                 File dir = new File(choose.getSelectedFile().getAbsolutePath() + "/" + exportName);
                 dir.mkdir();
                 
-                AbstractActive.saveAll(new File(dir.getAbsolutePath() + "/actives.json"));
+                ActiveJsonUtil.saveAllToFile(new File(dir.getAbsolutePath() + "/actives.json"));
                 AbstractPassive.saveAll(new File(dir.getAbsolutePath() + "/passives.json"));
                 CharacterClass.saveAll(new File(dir.getAbsolutePath() + "/characterClasses.json"));
             }

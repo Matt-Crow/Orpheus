@@ -1,30 +1,11 @@
 package upgradables;
 
 import actives.AbstractActive;
-import serialization.JsonSerialable;
 import java.util.*;
 import entities.Player;
 import controllers.Master;
 import customizables.CharacterClass;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonException;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonReader;
-import javax.json.JsonReaderFactory;
-import javax.json.JsonValue;
 import passives.AbstractPassive;
-import serialization.JsonTest;
 import statuses.*;
 
 //T is an enum
@@ -44,7 +25,7 @@ import statuses.*;
  * for example, the AbstractActive class extends AbstractUpgradable&lt;ActiveStatName&gt;
  */
 
-public abstract class AbstractUpgradable<T> implements JsonSerialable{
+public abstract class AbstractUpgradable<T>{
     public final UpgradableType upgradableType;
     private String name;
 	private Player registeredTo;
@@ -230,14 +211,6 @@ public abstract class AbstractUpgradable<T> implements JsonSerialable{
 	public void update(){
 		framesUntilUse -= 1;
 	}
-    /*
-    //remove this once I update serialization
-    public static String getTypeFrom(JsonObject obj){
-        if(!obj.containsKey("type")){
-            throw new JsonException("Json Object is missing key 'type'");
-        }
-        return obj.getString("type");
-    }*/
     
     public abstract AbstractUpgradable<T> copy();
     public abstract String getDescription();

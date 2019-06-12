@@ -4,16 +4,11 @@ import java.util.*;
 import java.awt.Color;
 import java.awt.Graphics;
 import graphics.CustomColors;
-import javax.json.*;
 
 import controllers.Master;
 import upgradables.AbstractUpgradable;
 import entities.*;
-import java.io.File;
-import serialization.JsonSerialable;
-import serialization.JsonTest;
 import statuses.*;
-import upgradables.UpgradableJsonUtil;
 import upgradables.UpgradableType;
 import util.Number;
 
@@ -21,7 +16,7 @@ import util.Number;
  * The AbstractActive class serves as the base for active abilities possessed by Players
  * @author Matt
  */
-public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName> implements JsonSerialable{
+public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
     private final ActiveType type; // used for serialization
     private ParticleType particleType; // the type of particles this' projectiles emit @see Projectile
     private int cost; // the energy cost of the active. Calculated automatically
@@ -136,13 +131,6 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName> 
 			bs
 		});
 	}
-    
-    public static void saveAll(File f){
-        JsonObject[] objs = ALL_ACTIVES.values().stream().map((AbstractActive a)->{
-            return a.serializeJson();
-        }).toArray(size -> new JsonObject[size]);
-        JsonTest.writeToFile(objs, f);
-    }
     
     // static methods
     public static void addActive(AbstractActive a){
@@ -286,10 +274,6 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName> 
     public ActiveTag[] getTags(){
         return tags.toArray(new ActiveTag[tags.size()]);
     }
-    
-    
-    
-    
 
     // in battle methods
     public final boolean canUse(){
@@ -359,50 +343,4 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName> 
     
     @Override
     public abstract AbstractActive copy();
-    
-    
-    public static AbstractActive deserializeJson(JsonObject obj){
-        AbstractActive ret = null;
-        ActiveType type = ActiveJsonUtil.getActiveTypeFrom(obj);
-        
-        switch(type){
-            case MELEE:
-                ret = MeleeActive.deserializeJson(obj);
-                break;
-            case BOOST:
-                ret = BoostActive.deserializeJson(obj);
-                break;
-            case ELEMENTAL:
-                ret = ElementalActive.deserializeJson(obj);
-                break;
-            default:
-                System.out.println("Abstract active cannot deserialize " + obj.getString("type"));
-                break;
-        }
-        return ret;
-    }
-    public static ParticleType getParticleTypeFrom(JsonObject obj){
-        if(!obj.containsKey("particle type")){
-            throw new JsonException("Json Object is missing key 'particle type'");
-        }
-        return ParticleType.fromString(obj.getString("particle type"));
-    }
-    public static ArrayList<ActiveTag> getTagsFrom(JsonObject obj){
-        if(!obj.containsKey("tags")){
-            throw new JsonException("Json Object missing key 'tags'");
-        }
-        ArrayList<ActiveTag> ret = new ArrayList<>();
-        ActiveTag tag = null;
-        for(JsonValue jv : obj.getJsonArray("tags")){
-            if(jv.getValueType().equals(JsonValue.ValueType.STRING)){
-                tag = ActiveTag.fromString(((JsonString)jv).getString());
-                if(tag == null){
-                    throw new NullPointerException("Unknown tag: " + jv);
-                } else {
-                    ret.add(tag);
-                }
-            }
-        }
-        return ret;
-    }
 }

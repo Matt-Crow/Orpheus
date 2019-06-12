@@ -1,14 +1,8 @@
 package actives;
 
-import serialization.JsonSerialable;
 import controllers.Master;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonValue;
-import upgradables.UpgradableJsonUtil;
 
-public class ElementalActive extends AbstractActive implements JsonSerialable{
+public class ElementalActive extends AbstractActive{
 	public ElementalActive(String n, int arc, int range, int speed, int aoe, int dmg){
 		super(ActiveType.ELEMENTAL, n, arc, range, speed, aoe, dmg);
 	}
@@ -68,30 +62,4 @@ public class ElementalActive extends AbstractActive implements JsonSerialable{
 		
 		return desc.toString();
 	}
-
-    @Override
-    public JsonObject serializeJson(){
-        JsonObject obj = ActiveJsonUtil.serializeJson(this);
-        JsonObjectBuilder b = Json.createObjectBuilder();
-        obj.forEach((String key, JsonValue value)->{
-            b.add(key, value);
-        });
-        b.add("type", "elemental active");
-        return b.build();
-    }
-    
-    public static ElementalActive deserializeJson(JsonObject obj){
-        ElementalActive ret = new ElementalActive(
-            UpgradableJsonUtil.getNameFrom(obj),
-            UpgradableJsonUtil.getStatBaseFrom(obj, ActiveStatName.ARC),
-            UpgradableJsonUtil.getStatBaseFrom(obj, ActiveStatName.RANGE),
-            UpgradableJsonUtil.getStatBaseFrom(obj, ActiveStatName.SPEED),
-            UpgradableJsonUtil.getStatBaseFrom(obj, ActiveStatName.AOE),
-            UpgradableJsonUtil.getStatBaseFrom(obj, ActiveStatName.DAMAGE)
-        );
-        ret.setInflict(UpgradableJsonUtil.getStatusTableFrom(obj));
-        getTagsFrom(obj).stream().forEach(t->ret.addTag(t));
-        ret.setParticleType(getParticleTypeFrom(obj));
-        return ret;
-    }
 }
