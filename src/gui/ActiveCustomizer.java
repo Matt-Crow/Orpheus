@@ -12,7 +12,7 @@ import entities.ParticleType;
 public class ActiveCustomizer extends UpgradableCustomizer<ActiveStatName>{
 	public ActiveCustomizer(AbstractActive a){
 		super(a);
-		switch(a.getType()){
+		switch(a.getActiveType()){
 		case MELEE:
 			addBox(ActiveStatName.DAMAGE);
 			//need to do more here

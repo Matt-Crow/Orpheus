@@ -8,7 +8,7 @@ import passives.ThresholdPassive;
 public class PassiveCustomizer extends UpgradableCustomizer<PassiveStatName>{
 	public PassiveCustomizer(AbstractPassive a){
 		super(a);
-		switch(a.getType()){
+		switch(a.getPassiveType()){
 		case THRESHOLD:
 			addBox(PassiveStatName.THRESHOLD);
 			addStatusBoxes();

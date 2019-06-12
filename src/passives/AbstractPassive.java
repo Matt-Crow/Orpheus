@@ -14,6 +14,7 @@ import javax.json.*;
 import serialization.JsonTest;
 import statuses.*;
 import upgradables.AbstractUpgradable;
+import upgradables.UpgradableJsonUtil;
 import upgradables.UpgradableType;
 
 public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName> implements JsonSerialable{
@@ -147,7 +148,7 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
 	
 	
 	// setters / getters
-	public PassiveType getType(){
+	public PassiveType getPassiveType(){
 		return type;
 	}
 	public boolean getTargetsUser(){
@@ -185,27 +186,15 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
     @Override
     public abstract String getDescription();
     
-    @Override
-    public JsonObject serializeJson(){
-        JsonObject obj = super.serializeJson();
-        JsonObjectBuilder b = Json.createObjectBuilder();
-        obj.forEach((String key, JsonValue value)->{
-            b.add(key, value);
-        });
-        b.add("type", type.toString());
-        b.add("targets user", targetsUser);
-        return b.build();
-    }
+    
     
     public static AbstractPassive deserializeJson(JsonObject obj){
-        if(!obj.containsKey("type")){
-            throw new JsonException("JsonObject missing key 'type'");
-        }
         AbstractPassive ret = null;
-        PassiveType type = PassiveType.fromString(getTypeFrom(obj));
+        PassiveType type = PassiveJsonUtil.getPassiveTypeFrom(obj);
+        /*
         if(type == null){
             return null; //not a passive
-        }
+        }*/
         switch(type){
             case THRESHOLD:
                 ret = ThresholdPassive.deserializeJson(obj);
@@ -220,7 +209,7 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
                 ret = OnBeHitPassive.deserializeJson(obj);
                 break;
             default:
-                System.out.println("Abstract passive cannot deserialize " + getTypeFrom(obj));
+                System.out.println("Abstract passive cannot deserialize " + type);
                 break;
         }
         return ret;

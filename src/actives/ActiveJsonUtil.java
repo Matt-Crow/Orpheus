@@ -2,8 +2,14 @@ package actives;
 
 import java.io.File;
 import java.util.Arrays;
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonException;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 import serialization.JsonTest;
+import upgradables.UpgradableJsonUtil;
 
 /**
  * Manages JSON representation of AbstractActives
@@ -11,7 +17,7 @@ import serialization.JsonTest;
  */
 public class ActiveJsonUtil{
 
-    /*
+    
     public static JsonObject serializeJson(AbstractActive act) {
         JsonObject obj = UpgradableJsonUtil.serializeJson(act);
         //javax jsonObjects are immutable
@@ -19,15 +25,21 @@ public class ActiveJsonUtil{
         obj.forEach((String key, JsonValue value)->{
             b.add(key, value);
         });
-        b.add("type", type.toString());
-        b.add("particle type", particleType.toString());
+        b.add("active type", act.getActiveType().toString());
+        b.add("particle type", act.getParticleType().toString());
         JsonArrayBuilder a = Json.createArrayBuilder();
-        tags.forEach((t) -> {
+        Arrays.stream(act.getTags()).forEach((t) -> {
             a.add(t.toString());
         });
         b.add("tags", a.build());
         return b.build();
-    }*/
+    }
+    public static ActiveType getActiveTypeFrom(JsonObject obj){
+        if(!obj.containsKey("active type")){
+            throw new JsonException("Json Object is missing key 'active type'");
+        }
+        return ActiveType.fromString(obj.getString("active type"));
+    }
     
     public static void saveAll(File f){
         /*

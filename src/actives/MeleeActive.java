@@ -7,6 +7,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
+import upgradables.UpgradableJsonUtil;
 
 public class MeleeActive extends AbstractActive implements JsonSerialable{
 	public MeleeActive(String n, int dmg){
@@ -54,7 +55,7 @@ public class MeleeActive extends AbstractActive implements JsonSerialable{
     
     @Override
     public JsonObject serializeJson(){
-        JsonObject obj = super.serializeJson();
+        JsonObject obj = ActiveJsonUtil.serializeJson(this);
         JsonObjectBuilder b = Json.createObjectBuilder();
         obj.forEach((String key, JsonValue value)->{
             b.add(key, value);
@@ -64,10 +65,10 @@ public class MeleeActive extends AbstractActive implements JsonSerialable{
     
     public static final MeleeActive deserializeJson(JsonObject obj){
         MeleeActive ret = new MeleeActive(
-            getNameFrom(obj),
-            getStatBaseFrom(obj, ActiveStatName.DAMAGE.toString())
+            UpgradableJsonUtil.getNameFrom(obj),
+            UpgradableJsonUtil.getStatBaseFrom(obj, ActiveStatName.DAMAGE)
         );
-        ret.setInflict(getStatusTableFrom(obj));
+        ret.setInflict(UpgradableJsonUtil.getStatusTableFrom(obj));
         getTagsFrom(obj).stream().forEach(t->ret.addTag(t));
         ret.setParticleType(getParticleTypeFrom(obj));
         return ret;

@@ -6,11 +6,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
 import javax.json.Json;
+import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import passives.AbstractPassive;
 import serialization.JsonTest;
-import static upgradables.AbstractUpgradable.deserializeJson;
+import statuses.StatusTable;
 
 /**
  *
@@ -43,22 +44,15 @@ public class UpgradableJsonUtil {
         }
     }
     
-    public void a(Enum e){
-        
-        e.toString();
-    }
-    
     public static JsonObject serializeJson(AbstractUpgradable au){
         JsonObjectBuilder b = Json.createObjectBuilder();
         b.add("upgradable type", au.upgradableType.toString());
         b.add("name", au.getName());
         b.add("status table", au.getInflict().serializeJson());
         
-        
         JsonObjectBuilder statsJson = Json.createObjectBuilder();
-        
         BiConsumer<Enum, Integer> bi = (Enum key, Integer value)->{
-            //statsJson.add(key.toString(), value.intValue());
+            statsJson.add(key.toString(), value);
         }; 
         au.getBases()
             .forEach(
@@ -66,5 +60,56 @@ public class UpgradableJsonUtil {
         b.add("stats", statsJson.build());
         
         return b.build();
+    }
+    
+    //make method in JsonUtil or annotation
+    public static UpgradableType getUpgradableTypeFrom(JsonObject obj){
+        if(!obj.containsKey("upgradable type")){
+            throw new JsonException("Json Object is missing key 'upgradable type'");
+        }
+        return UpgradableType.fromString(obj.getString("upgradable type"));
+    }
+    public static String getNameFrom(JsonObject obj){
+        if(!obj.containsKey("name")){
+            throw new JsonException("Json Object is missing key 'name'");
+        }
+        return obj.getString("name");
+    }
+    public static StatusTable getStatusTableFrom(JsonObject obj){
+        if(!obj.containsKey("status table")){
+            throw new JsonException("Json Object is missing key 'status table'");
+        }
+        return StatusTable.deserializeJson(obj.getJsonObject("status table"));
+    }
+    public static int getStatBaseFrom(JsonObject obj, Enum statName){
+        if(!obj.containsKey("stats")){
+            throw new JsonException("Json Object is missing key 'stats'");
+        }
+        int ret = -1;
+        JsonObject temp = obj.getJsonObject("stats");
+        if(temp.containsKey(statName.toString())){
+            ret = temp.getInt(statName.toString());
+        } else {
+            throw new JsonException("stats object is missing key " + statName);
+        }
+        
+        return ret;
+    }
+    public static AbstractUpgradable deserializeJson(JsonObject obj){
+        AbstractUpgradable ret = null;
+        switch(getUpgradableTypeFrom(obj)){
+            case ACTIVE:
+                ret = AbstractActive.deserializeJson(obj);
+                break;
+            case PASSIVE:
+                ret = AbstractPassive.deserializeJson(obj);
+                break;
+            case CHARACTER_CLASS:
+                ret = CharacterClass.deserializeJson(obj);
+                break;
+            default:
+                throw new JsonException("Couldn't deserialize upgradable type " + getUpgradableTypeFrom(obj));
+        }
+        return ret;
     }
 }

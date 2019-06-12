@@ -230,69 +230,14 @@ public abstract class AbstractUpgradable<T> implements JsonSerialable{
 	public void update(){
 		framesUntilUse -= 1;
 	}
-    
-    @Override
-    public JsonObject serializeJson(){
-        JsonObjectBuilder b = Json.createObjectBuilder();
-        b.add("type", "upgradable");
-        b.add("name", name);
-        b.add("status table", inflict.serializeJson());
-        
-        JsonObjectBuilder statsJson = Json.createObjectBuilder();
-        bases.forEach((T key, Integer value)->{
-            statsJson.add(key.toString(), value);
-        });
-        b.add("stats", statsJson.build());
-        
-        return b.build();
-    }
-    
-    public static AbstractUpgradable deserializeJson(JsonObject obj){
-        AbstractUpgradable ret = null;
-        ret = AbstractPassive.deserializeJson(obj);
-        if(ret == null){
-            ret = AbstractActive.deserializeJson(obj);
-        }
-        if(ret == null){
-            ret = CharacterClass.deserializeJson(obj);
-        }
-        if(ret == null){
-            throw new NullPointerException("Couldn't deserialize Json Object " + obj);
-        }
-        return ret;
-    }
+    /*
+    //remove this once I update serialization
     public static String getTypeFrom(JsonObject obj){
         if(!obj.containsKey("type")){
             throw new JsonException("Json Object is missing key 'type'");
         }
         return obj.getString("type");
-    }
-    public static String getNameFrom(JsonObject obj){
-        if(!obj.containsKey("name")){
-            throw new JsonException("Json Object is missing key 'name'");
-        }
-        return obj.getString("name");
-    }
-    public static StatusTable getStatusTableFrom(JsonObject obj){
-        if(!obj.containsKey("status table")){
-            throw new JsonException("Json Object is missing key 'status table'");
-        }
-        return StatusTable.deserializeJson(obj.getJsonObject("status table"));
-    }
-    public static int getStatBaseFrom(JsonObject obj, String statName){
-        if(!obj.containsKey("stats")){
-            throw new JsonException("Json Object is missing key 'stats'");
-        }
-        int ret = -1;
-        JsonObject temp = obj.getJsonObject("stats");
-        if(temp.containsKey(statName)){
-            ret = temp.getInt(statName);
-        } else {
-            throw new JsonException("stats object is missing key " + statName);
-        }
-        
-        return ret;
-    }
+    }*/
     
     public abstract AbstractUpgradable<T> copy();
     public abstract String getDescription();

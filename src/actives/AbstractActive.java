@@ -13,6 +13,7 @@ import java.io.File;
 import serialization.JsonSerialable;
 import serialization.JsonTest;
 import statuses.*;
+import upgradables.UpgradableJsonUtil;
 import upgradables.UpgradableType;
 import util.Number;
 
@@ -186,7 +187,7 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName> 
         return ret;
     }
     
-    public final ActiveType getType(){
+    public final ActiveType getActiveType(){
         return type;
     }
     public final int getCost(){
@@ -282,6 +283,9 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName> 
     public boolean containsTag(ActiveTag t){
         return tags.contains(t);
     }
+    public ActiveTag[] getTags(){
+        return tags.toArray(new ActiveTag[tags.size()]);
+    }
     
     
     
@@ -356,33 +360,11 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName> 
     @Override
     public abstract AbstractActive copy();
     
-    @Override
-    public JsonObject serializeJson(){
-        JsonObject obj = super.serializeJson();
-        //javax jsonObjects are immutable
-        JsonObjectBuilder b = Json.createObjectBuilder();
-        obj.forEach((String key, JsonValue value)->{
-            b.add(key, value);
-        });
-        b.add("type", type.toString());
-        b.add("particle type", particleType.toString());
-        JsonArrayBuilder a = Json.createArrayBuilder();
-        tags.forEach((t) -> {
-            a.add(t.toString());
-        });
-        b.add("tags", a.build());
-        return b.build();
-    }
     
     public static AbstractActive deserializeJson(JsonObject obj){
-        if(!obj.containsKey("type")){
-            throw new JsonException("JsonObject missing key 'type'");
-        }
         AbstractActive ret = null;
-        ActiveType type = ActiveType.fromString(getTypeFrom(obj));
-        if(type == null){
-            return null; //not an active
-        }
+        ActiveType type = ActiveJsonUtil.getActiveTypeFrom(obj);
+        
         switch(type){
             case MELEE:
                 ret = MeleeActive.deserializeJson(obj);

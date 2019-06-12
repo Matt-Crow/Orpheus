@@ -8,6 +8,7 @@ import upgradables.AbstractUpgradable;
 import graphics.CustomColors;
 import java.io.File;
 import serialization.JsonTest;
+import upgradables.UpgradableJsonUtil;
 import upgradables.UpgradableType;
 import util.Number;
 
@@ -149,7 +150,7 @@ public class CharacterClass extends AbstractUpgradable<CharacterStatName> implem
     
     @Override
     public JsonObject serializeJson(){
-        JsonObject obj = super.serializeJson();
+        JsonObject obj = UpgradableJsonUtil.serializeJson(this);
         JsonObjectBuilder b = Json.createObjectBuilder();
         obj.forEach((String key, JsonValue value)->{
             b.add(key, value);
@@ -165,13 +166,13 @@ public class CharacterClass extends AbstractUpgradable<CharacterStatName> implem
     
     public static CharacterClass deserializeJson(JsonObject obj){
         return new CharacterClass(
-            getNameFrom(obj),
+            UpgradableJsonUtil.getNameFrom(obj),
             getColorsFrom(obj),
-            getStatBaseFrom(obj, CharacterStatName.HP.toString()),
-            getStatBaseFrom(obj, CharacterStatName.ENERGY.toString()),
-            getStatBaseFrom(obj, CharacterStatName.DMG.toString()),
-            getStatBaseFrom(obj, CharacterStatName.REDUCTION.toString()),
-            getStatBaseFrom(obj, CharacterStatName.SPEED.toString())
+            UpgradableJsonUtil.getStatBaseFrom(obj, CharacterStatName.HP),
+            UpgradableJsonUtil.getStatBaseFrom(obj, CharacterStatName.ENERGY),
+            UpgradableJsonUtil.getStatBaseFrom(obj, CharacterStatName.DMG),
+            UpgradableJsonUtil.getStatBaseFrom(obj, CharacterStatName.REDUCTION),
+            UpgradableJsonUtil.getStatBaseFrom(obj, CharacterStatName.SPEED)
         );
     }
     

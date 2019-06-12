@@ -5,6 +5,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
+import upgradables.UpgradableJsonUtil;
 
 public class OnHitPassive extends AbstractPassive implements JsonSerialable{
 	/**
@@ -38,7 +39,7 @@ public class OnHitPassive extends AbstractPassive implements JsonSerialable{
     
     @Override
     public JsonObject serializeJson(){
-        JsonObject obj = super.serializeJson();
+        JsonObject obj = PassiveJsonUtil.serializeJson(this);
         JsonObjectBuilder b = Json.createObjectBuilder();
         obj.forEach((String key, JsonValue value)->{
             b.add(key, value);
@@ -48,10 +49,10 @@ public class OnHitPassive extends AbstractPassive implements JsonSerialable{
     
     public static OnHitPassive deserializeJson(JsonObject obj){
         OnHitPassive ret = new OnHitPassive(
-            getNameFrom(obj),
+            UpgradableJsonUtil.getNameFrom(obj),
             getTargetsUserFrom(obj)
         );
-        ret.setInflict(getStatusTableFrom(obj));
+        ret.setInflict(UpgradableJsonUtil.getStatusTableFrom(obj));
         return ret;
     }
 }

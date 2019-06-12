@@ -5,6 +5,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
+import upgradables.UpgradableJsonUtil;
 
 public class OnMeleeHitPassive extends AbstractPassive implements JsonSerialable{
 	/*
@@ -33,7 +34,7 @@ public class OnMeleeHitPassive extends AbstractPassive implements JsonSerialable
     
     @Override
     public JsonObject serializeJson(){
-        JsonObject obj = super.serializeJson();
+        JsonObject obj = PassiveJsonUtil.serializeJson(this);
         JsonObjectBuilder b = Json.createObjectBuilder();
         obj.forEach((String key, JsonValue value)->{
             b.add(key, value);
@@ -42,10 +43,10 @@ public class OnMeleeHitPassive extends AbstractPassive implements JsonSerialable
     }
     public static OnMeleeHitPassive deserializeJson(JsonObject obj){
         OnMeleeHitPassive pass = new OnMeleeHitPassive(
-            getNameFrom(obj),
+            UpgradableJsonUtil.getNameFrom(obj),
             getTargetsUserFrom(obj)
         );
-        pass.setInflict(getStatusTableFrom(obj));
+        pass.setInflict(UpgradableJsonUtil.getStatusTableFrom(obj));
         return pass;
     }
 }
