@@ -1,14 +1,9 @@
 package customizables;
 
 import java.util.*;
-import javax.json.*;
 
-import serialization.JsonSerialable;
 import upgradables.AbstractUpgradable;
 import graphics.CustomColors;
-import java.io.File;
-import serialization.JsonTest;
-import upgradables.UpgradableJsonUtil;
 import upgradables.UpgradableType;
 import util.Number;
 
@@ -18,7 +13,7 @@ import util.Number;
  * Each character class has its own set of stats and projectile colors.
  * @author Matt
  */
-public class CharacterClass extends AbstractUpgradable<CharacterStatName> implements JsonSerialable{
+public class CharacterClass extends AbstractUpgradable<CharacterStatName>{
     private CustomColors[] colors;
 
     private static final  HashMap<String, CharacterClass> ALL_CHARACTER_CLASSES = new HashMap<>();
@@ -54,13 +49,6 @@ public class CharacterClass extends AbstractUpgradable<CharacterStatName> implem
             }
         );
 	}
-    
-    public static void saveAll(File f){
-        JsonObject[] objs = ALL_CHARACTER_CLASSES.values().stream().map((CharacterClass c)->{
-            return c.serializeJson();
-        }).toArray(size -> new JsonObject[size]);
-        JsonTest.writeToFile(objs, f);
-    }
     
     @Override
     public CharacterClass copy(){
@@ -146,46 +134,5 @@ public class CharacterClass extends AbstractUpgradable<CharacterStatName> implem
                         + "Damage dealt modifier: " + getStatValue(CharacterStatName.DMG) + "\n"
                         + "Damage taken modifier: " + getStatValue(CharacterStatName.REDUCTION) + "\n"
                         + "Movement speed modifier: " + getStatValue(CharacterStatName.SPEED) + "\n";
-    }
-    
-    @Override
-    public JsonObject serializeJson(){
-        JsonObject obj = UpgradableJsonUtil.serializeJson(this);
-        JsonObjectBuilder b = Json.createObjectBuilder();
-        obj.forEach((String key, JsonValue value)->{
-            b.add(key, value);
-        });
-        JsonArrayBuilder cols = Json.createArrayBuilder();
-        for(CustomColors c : colors){
-            cols.add(c.toString());
-        }
-        b.add("type", "character class");
-        b.add("colors", cols.build());
-        return b.build();
-    }
-    
-    public static CharacterClass deserializeJson(JsonObject obj){
-        return new CharacterClass(
-            UpgradableJsonUtil.getNameFrom(obj),
-            getColorsFrom(obj),
-            UpgradableJsonUtil.getStatBaseFrom(obj, CharacterStatName.HP),
-            UpgradableJsonUtil.getStatBaseFrom(obj, CharacterStatName.ENERGY),
-            UpgradableJsonUtil.getStatBaseFrom(obj, CharacterStatName.DMG),
-            UpgradableJsonUtil.getStatBaseFrom(obj, CharacterStatName.REDUCTION),
-            UpgradableJsonUtil.getStatBaseFrom(obj, CharacterStatName.SPEED)
-        );
-    }
-    
-    public static CustomColors[] getColorsFrom(JsonObject obj){
-        if(!obj.containsKey("colors")){
-            throw new JsonException("Json Object is missing key 'colors'");
-        }
-        JsonArray a = obj.getJsonArray("colors");
-        int len = a.size();
-        CustomColors[] ret = new CustomColors[len];
-        for(int i = 0; i < len; i++){
-            ret[i] = CustomColors.fromString(a.getString(i));
-        }
-        return ret;
     }
 }

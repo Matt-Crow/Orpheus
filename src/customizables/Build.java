@@ -1,10 +1,6 @@
 package customizables;
 
-import serialization.JsonSerialable;
 import java.util.*;
-import java.io.File;
-import javax.json.*;
-import serialization.JsonTest;
 
 
 /**
@@ -16,7 +12,7 @@ import serialization.JsonTest;
  * @author Matt
  */
 @SuppressWarnings("unused")
-public class Build implements JsonSerialable{
+public class Build{
 	private static final HashMap<String, Build> ALL = new HashMap<>();
 	private static final Build DEFAULT_EARTH = new Build("Default Earth", "Earth", "Boulder Toss", "Warrior's Stance", "Earthquake", "Toughness", "Determination", "Nature's Healing");
 	private static final Build DEFAULT_FIRE = new Build("Default Fire", "Fire", "Mega Firebolt", "Fields of Fire", "Fireball", "Escapist", "Sparking Strikes", "Bracing");
@@ -57,16 +53,14 @@ public class Build implements JsonSerialable{
         addBuild(TEST);
     }
     
-    public static void saveAll(File f){
-        JsonObject[] objs = ALL.values().stream().map((Build b)->{
-            return b.serializeJson();
-        }).toArray(size -> new JsonObject[size]);
-        JsonTest.writeToFile(objs, f);  
-    }
+    
     
 	public static ArrayList<Build> getAllBuilds(){
 		return new ArrayList<>(ALL.values());
 	}
+    public static Build[] getAll(){
+        return ALL.values().toArray(new Build[ALL.size()]);
+    }
 	public static void addBuild(Build b){
 		if(b == null){
             throw new NullPointerException();
@@ -106,81 +100,5 @@ public class Build implements JsonSerialable{
             sb.append("*").append(pn).append("\n");
         }
         return sb.toString();
-    }
-
-    @Override
-    public JsonObject serializeJson() {
-        JsonObjectBuilder b = Json.createObjectBuilder();
-        b.add("type", "build");
-        b.add("name", name);
-        b.add("character class", className);
-        
-        JsonArrayBuilder acts = Json.createArrayBuilder();
-        for(String activeName : activeNames){
-            acts.add(activeName);
-        }
-        b.add("actives", acts.build());
-        
-        JsonArrayBuilder pass = Json.createArrayBuilder();
-        for(String passName : passiveNames){
-            pass.add(passName);
-        }
-        b.add("passives", pass.build());
-        
-        return b.build();
-    }
-    
-    public static Build deserializeJson(JsonObject obj){
-        String[] actives = getActivesFrom(obj);
-        String[] passives = getPassivesFrom(obj);
-        return new Build(
-            getNameFrom(obj),
-            getCharacterClassFrom(obj),
-            actives[0],
-            actives[1],
-            actives[2],
-            passives[0],
-            passives[1],
-            passives[2]
-        );
-    }
-    
-    private static String getNameFrom(JsonObject obj){
-        if(!obj.containsKey("name")){
-            throw new JsonException("Json Object is missing key 'name'");
-        }
-        return obj.getString("name");
-    }
-    private static String getCharacterClassFrom(JsonObject obj){
-        if(!obj.containsKey("character class")){
-            throw new JsonException("Json Object is missing key 'character class'");
-        }
-        return obj.getString("character class");
-    }
-    private static String[] getActivesFrom(JsonObject obj){
-        if(!obj.containsKey("actives")){
-            throw new JsonException("Json Object is missing key 'actives'");
-        }
-        
-        JsonArray a = obj.getJsonArray("actives");
-        int len = a.size();
-        String[] ret = new String[len];
-        for(int i = 0; i < len; i++){
-            ret[i] = a.getString(i);
-        }
-        return ret;
-    }
-    private static String[] getPassivesFrom(JsonObject obj){
-        if(!obj.containsKey("passives")){
-            throw new JsonException("Json Object is missing key 'passives'");
-        }
-        
-        JsonArray a = obj.getJsonArray("passives");
-        int len = a.size();
-        String[] ret = new String[len];
-        for(int i = 0; i < len; i++){
-            ret[i] = a.getString(i);
-        }
-        return ret;
     }
 }

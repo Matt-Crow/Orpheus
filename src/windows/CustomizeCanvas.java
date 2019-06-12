@@ -3,16 +3,13 @@ package windows;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
-import actives.AbstractActive;
-import actives.ActiveJsonUtil;
-import passives.AbstractPassive;
-import upgradables.AbstractUpgradable;
-import customizables.CharacterClass;
+import actives.*;
+import passives.*;
+import upgradables.*;
+import customizables.*;
 import upgradables.UpgradableType;
 import gui.*;
 import java.io.File;
-import passives.PassiveJsonUtil;
-import upgradables.UpgradableJsonUtil;
 
 @SuppressWarnings({"serial", "rawtypes"})
 
@@ -62,7 +59,7 @@ public class CustomizeCanvas extends DrawingPlane{
                 
                 ActiveJsonUtil.saveAllToFile(new File(dir.getAbsolutePath() + "/actives.json"));
                 PassiveJsonUtil.saveAll(new File(dir.getAbsolutePath() + "/passives.json"));
-                CharacterClass.saveAll(new File(dir.getAbsolutePath() + "/characterClasses.json"));
+                CharacterClassJsonUtil.saveAll(new File(dir.getAbsolutePath() + "/characterClasses.json"));
             }
         });
         addMenuItem(export);

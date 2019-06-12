@@ -2,7 +2,9 @@ package serialization;
 
 import actives.*;
 import customizables.Build;
+import customizables.BuildJsonUtil;
 import customizables.CharacterClass;
+import customizables.CharacterClassJsonUtil;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,8 +17,6 @@ import static java.lang.System.out;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 import javax.json.*;
-import javax.json.stream.JsonParser;
-import javax.json.stream.JsonParserFactory;
 import passives.*;
 import upgradables.AbstractUpgradable;
 import upgradables.UpgradableJsonUtil;
@@ -144,9 +144,9 @@ public class JsonTest {
         
         //done
         for(CharacterClass cc : CharacterClass.getAll()){
-            obj = cc.serializeJson();
+            obj = UpgradableJsonUtil.serializeJson(cc);
             pprint(obj, 0);
-            u = CharacterClass.deserializeJson(obj);
+            u = CharacterClassJsonUtil.deserializeJson(obj);
             if(u != null){
                 pprint(obj, 0);
                 out.println(cc.getDescription());
@@ -155,9 +155,9 @@ public class JsonTest {
         }
         
         for(Build bu : Build.getAllBuilds()){
-            obj = bu.serializeJson();
+            obj = BuildJsonUtil.serializeJson(bu);
             pprint(obj, 0);
-            b = Build.deserializeJson(obj);
+            b = BuildJsonUtil.deserializeJson(obj);
             if(b != null){
                 pprint(obj, 0);
                 out.println(bu.getDescription());
