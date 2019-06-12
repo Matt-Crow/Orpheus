@@ -3,6 +3,7 @@ package upgradables;
 import actives.AbstractActive;
 import customizables.CharacterClass;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.function.BiConsumer;
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -43,6 +44,7 @@ public class UpgradableJsonUtil {
     }
     
     public void a(Enum e){
+        
         e.toString();
     }
     
@@ -52,17 +54,17 @@ public class UpgradableJsonUtil {
         b.add("name", au.getName());
         b.add("status table", au.getInflict().serializeJson());
         
-        /*
+        
         JsonObjectBuilder statsJson = Json.createObjectBuilder();
         
-        BiConsumer bi = (Enum key, Integer value)->{
-            statsJson.add(key.toString(), value);
+        BiConsumer<Enum, Integer> bi = (Enum key, Integer value)->{
+            //statsJson.add(key.toString(), value.intValue());
         }; 
         au.getBases()
             .forEach(
                 bi);
         b.add("stats", statsJson.build());
-        */
+        
         return b.build();
     }
 }
