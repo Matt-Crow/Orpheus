@@ -12,6 +12,7 @@ import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import passives.AbstractPassive;
+import passives.PassiveJsonUtil;
 import serialization.JsonTest;
 import statuses.StatusTable;
 
@@ -105,7 +106,7 @@ public class UpgradableJsonUtil {
                 ret = ActiveJsonUtil.deserializeJson(obj);
                 break;
             case PASSIVE:
-                ret = AbstractPassive.deserializeJson(obj);
+                ret = PassiveJsonUtil.deserializeJson(obj);
                 break;
             case CHARACTER_CLASS:
                 ret = CharacterClass.deserializeJson(obj);

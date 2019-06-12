@@ -1,13 +1,6 @@
 package passives;
 
-import serialization.JsonSerialable;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonValue;
-import upgradables.UpgradableJsonUtil;
-
-public class OnBeHitPassive extends AbstractPassive implements JsonSerialable{
+public class OnBeHitPassive extends AbstractPassive{
 	/**
 	 * Triggers once the user's hitbox intercepts 
 	 * that of an enemy projectile
@@ -35,23 +28,4 @@ public class OnBeHitPassive extends AbstractPassive implements JsonSerialable{
 		desc += getInflict().getStatusString();
 		return desc;
 	}
-    
-    @Override
-    public JsonObject serializeJson(){
-        JsonObject obj = PassiveJsonUtil.serializeJson(this);
-        JsonObjectBuilder b = Json.createObjectBuilder();
-        obj.forEach((String key, JsonValue value)->{
-            b.add(key, value);
-        });
-        return b.build();
-    }
-    
-    public static OnBeHitPassive deserializeJson(JsonObject obj){
-        OnBeHitPassive obh = new OnBeHitPassive(
-            UpgradableJsonUtil.getNameFrom(obj),
-            getTargetsUserFrom(obj)
-        );
-        obh.setInflict(UpgradableJsonUtil.getStatusTableFrom(obj));
-        return obh;
-    }
 }

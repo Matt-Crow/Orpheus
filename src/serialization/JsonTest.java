@@ -19,6 +19,7 @@ import javax.json.stream.JsonParser;
 import javax.json.stream.JsonParserFactory;
 import passives.*;
 import upgradables.AbstractUpgradable;
+import upgradables.UpgradableJsonUtil;
 
 /**
  *
@@ -117,7 +118,7 @@ public class JsonTest {
         //done
         for(AbstractActive aa : AbstractActive.getAll()){
             out.println(aa.getName());
-            obj = aa.serializeJson();
+            obj = UpgradableJsonUtil.serializeJson(aa);
             //pprint(obj, 0);
             u = ActiveJsonUtil.deserializeJson(obj);
             if(u != null){
@@ -131,9 +132,9 @@ public class JsonTest {
         
         //done
         for(AbstractPassive ap : AbstractPassive.getAll()){
-            obj = ap.serializeJson();
+            obj = UpgradableJsonUtil.serializeJson(ap);
             pprint(obj, 0);
-            u = AbstractPassive.deserializeJson(obj);
+            u = UpgradableJsonUtil.deserializeJson(obj);
             if(u != null){
                 pprint(obj, 0);
                 out.println(ap.getDescription());

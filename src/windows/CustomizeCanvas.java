@@ -11,6 +11,7 @@ import customizables.CharacterClass;
 import upgradables.UpgradableType;
 import gui.*;
 import java.io.File;
+import passives.PassiveJsonUtil;
 import upgradables.UpgradableJsonUtil;
 
 @SuppressWarnings({"serial", "rawtypes"})
@@ -60,7 +61,7 @@ public class CustomizeCanvas extends DrawingPlane{
                 dir.mkdir();
                 
                 ActiveJsonUtil.saveAllToFile(new File(dir.getAbsolutePath() + "/actives.json"));
-                AbstractPassive.saveAll(new File(dir.getAbsolutePath() + "/passives.json"));
+                PassiveJsonUtil.saveAll(new File(dir.getAbsolutePath() + "/passives.json"));
                 CharacterClass.saveAll(new File(dir.getAbsolutePath() + "/characterClasses.json"));
             }
         });

@@ -1,23 +1,16 @@
 package passives;
 
-import serialization.JsonSerialable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 
 import actions.*;
 import statuses.StatusTable;
 import entities.Player;
-import java.io.File;
 import java.util.NoSuchElementException;
-import javax.json.*;
-import serialization.JsonTest;
 import statuses.*;
 import upgradables.AbstractUpgradable;
-import upgradables.UpgradableJsonUtil;
 import upgradables.UpgradableType;
 
-public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName> implements JsonSerialable{
+public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName>{
 	/**
 	 * Passives are abilities that have specific triggers, 
 	 * i.e., the user does not directly trigger them:
@@ -100,12 +93,6 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
                 cu
 		});
 	}
-    public static void saveAll(File f){
-        JsonObject[] objs = allPassives.values().stream().map((AbstractPassive p)->{
-            return p.serializeJson();
-        }).toArray(size -> new JsonObject[size]);
-        JsonTest.writeToFile(objs, f);
-    }
     
     @Override
 	public abstract AbstractPassive copy();
@@ -185,37 +172,4 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
     
     @Override
     public abstract String getDescription();
-    
-    
-    
-    public static AbstractPassive deserializeJson(JsonObject obj){
-        AbstractPassive ret = null;
-        PassiveType type = PassiveJsonUtil.getPassiveTypeFrom(obj);
-        
-        switch(type){
-            case THRESHOLD:
-                ret = ThresholdPassive.deserializeJson(obj);
-                break;
-            case ONMELEEHIT:
-                ret = OnMeleeHitPassive.deserializeJson(obj);
-                break;
-            case ONHIT:
-                ret = OnHitPassive.deserializeJson(obj);
-                break;
-            case ONBEHIT:
-                ret = OnBeHitPassive.deserializeJson(obj);
-                break;
-            default:
-                System.out.println("Abstract passive cannot deserialize " + type);
-                break;
-        }
-        return ret;
-    }
-    
-    public static boolean getTargetsUserFrom(JsonObject obj){
-        if(!obj.containsKey("targets user")){
-            throw new JsonException("JsonObject missing key 'targets user'");
-        }
-        return obj.getBoolean("targets user");
-    }
 }
