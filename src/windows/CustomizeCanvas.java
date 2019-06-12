@@ -39,22 +39,21 @@ public class CustomizeCanvas extends DrawingPlane{
         
         JButton imp = new JButton("Import all customizables from a file");
         imp.addActionListener((ActionEvent e)->{
-            JFileChooser choose = new JFileChooser();
-            choose.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            if(choose.showOpenDialog(choose) == JFileChooser.APPROVE_OPTION){
-                UpgradableJsonUtil.loadFile(choose.getSelectedFile());
+            File[] chosen = FileChooserUtil.chooseFiles();
+            if(chosen != null){
+                for(File f : chosen){
+                    UpgradableJsonUtil.loadFile(f);
+                }
             }
         });
         addMenuItem(imp);
         
         JButton export = new JButton("Export all customizables to a file");
         export.addActionListener((ActionEvent e)->{
-            JFileChooser choose = new JFileChooser();
-            choose.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            
-            if(choose.showOpenDialog(choose) == JFileChooser.APPROVE_OPTION){
+            File f = FileChooserUtil.chooseDir();
+            if(f != null){
                 String exportName = JOptionPane.showInputDialog("Enter a name for this export:");
-                File dir = new File(choose.getSelectedFile().getAbsolutePath() + "/" + exportName);
+                File dir = new File(f.getAbsolutePath() + "/" + exportName);
                 dir.mkdir();
                 
                 ActiveJsonUtil.saveAllToFile(new File(dir.getAbsolutePath() + "/actives.json"));

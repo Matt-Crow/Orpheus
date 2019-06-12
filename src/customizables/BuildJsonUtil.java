@@ -2,12 +2,7 @@ package customizables;
 
 import java.io.File;
 import java.util.Arrays;
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonException;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
+import javax.json.*;
 import serialization.JsonTest;
 
 /**
@@ -20,6 +15,18 @@ public class BuildJsonUtil {
             return serializeJson(b);
         }).toArray(size -> new JsonObject[size]);
         JsonTest.writeToFile(objs, f);  
+    }
+    
+    public static void loadFile(File f){
+        Build b = null;
+        JsonObject[] bb = JsonTest.readFromFile(f);
+        for(JsonObject obj : JsonTest.readFromFile(f)){
+            b = deserializeJson(obj);
+            if(b != null){
+                Build.addBuild(b);
+            }
+            //System.out.println(b.getDescription());
+        }
     }
     
     public static JsonObject serializeJson(Build build) {

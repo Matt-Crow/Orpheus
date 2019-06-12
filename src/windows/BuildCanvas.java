@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import customizables.*;
 import entities.Player;
 import gui.*;
+import java.io.File;
 import passives.*;
 
 //need to redo this
@@ -34,6 +35,28 @@ public class BuildCanvas extends DrawingPlane{
 			}
 		});
 		addMenuItem(quit);
+        
+        JButton impBuild = new JButton("Import Builds");
+        impBuild.addActionListener((e)->{
+            File[] chosen = FileChooserUtil.chooseFiles();
+            if(chosen != null){
+                for(File f : chosen){
+                    BuildJsonUtil.loadFile(f);
+                }
+            }
+        });
+        addMenuItem(impBuild);
+        
+        JButton expBuild = new JButton("Export Builds");
+        expBuild.addActionListener((e)->{
+            File dir = FileChooserUtil.chooseDir();
+            if(dir != null){
+                String name = JOptionPane.showInputDialog("Enter a name for this export:");
+                File buildFile = new File(dir.getAbsolutePath() + "/" + name);
+                BuildJsonUtil.saveAllToFile(buildFile);
+            }
+        });
+        addMenuItem(expBuild);
 		
 		temp = new JButton("customize upgradables");
 		temp.addActionListener(new AbstractAction(){
@@ -65,7 +88,7 @@ public class BuildCanvas extends DrawingPlane{
 		add(setClass);
 		
 		resizeComponents(1, 3);
-		resizeMenu(1);
+		resizeMenu(3);
 	}
 	public void phase2(){
 		remove(temp);
