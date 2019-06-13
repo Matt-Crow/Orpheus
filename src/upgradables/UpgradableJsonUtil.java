@@ -58,7 +58,7 @@ public class UpgradableJsonUtil {
         obj.add("type", "status");
         obj.add("name", s.getStatusName().toString());
         obj.add("intensity", s.getIntensityLevel());
-        obj.add("uses", s.getBaseUses());
+        obj.add("uses", s.getBaseParam());
         return obj.build();
     }
     public static JsonObject serializeStatusTable(StatusTable st){

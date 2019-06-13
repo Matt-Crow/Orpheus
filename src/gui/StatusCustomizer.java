@@ -31,7 +31,7 @@ public class StatusCustomizer extends JComponent{
 		
 		Integer[] v2 = {1, 2, 3};
 		duration = new OptionBox<>("Duration", v2);
-		duration.setSelected((Integer)s.getBaseUses());
+		duration.setSelected((Integer)s.getBaseParam());
 		add(duration);
 		
 		setLayout(new GridLayout(3, 1));

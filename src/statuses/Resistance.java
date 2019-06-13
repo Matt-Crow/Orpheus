@@ -2,6 +2,7 @@ package statuses;
 
 import actions.*;
 import entities.Player;
+import java.util.function.UnaryOperator;
 import util.Number;
 
 /**
@@ -12,7 +13,7 @@ import util.Number;
  * @see battle.DamageBacklog
  */
 public class Resistance extends AbstractStatus{
-    
+    private static final UnaryOperator<Integer> CALC = (i)->{return Number.minMax(1, i, 3) * 2 + 1;};
     /**
      * 
      * @param lv 1-3. Slows damage by 25% per level.
@@ -20,7 +21,7 @@ public class Resistance extends AbstractStatus{
      * @param uses lasts for ((uses * 2) + 1) hits received.
      */
 	public Resistance(int lv, int uses){
-		super(StatusName.RESISTANCE, Number.minMax(1, lv, 3), Number.minMax(1, uses, 3) * 2 + 1);
+		super(StatusName.RESISTANCE, lv, uses, CALC);
 		// make this stronger
 	}
     
@@ -45,6 +46,6 @@ public class Resistance extends AbstractStatus{
 
     @Override
     public AbstractStatus copy() {
-        return new Resistance(getIntensityLevel(), getBaseUses());
+        return new Resistance(getIntensityLevel(), getBaseParam());
     }
 }

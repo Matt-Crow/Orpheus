@@ -4,19 +4,20 @@ import actions.*;
 import entities.Player;
 import util.Number;
 import controllers.Master;
+import java.util.function.UnaryOperator;
 
 /**
  * The Rush status increases an Entity's movement speed
  */
 public class Rush extends AbstractStatus{
-	
+	private static final UnaryOperator<Integer> CALC = (i)->{return Master.seconds(Number.minMax(1, i, 3) + 2);};
     /**
      * Creates the Rush status.
      * @param lv 1-3. The afflicted Entity will receive a 20% increase in speed per level.
      * @param dur 1-3. Will last for (dur + 2) seconds.
      */
     public Rush(int lv, int dur){
-		super(StatusName.RUSH, Number.minMax(1, lv, 3), Master.seconds(Number.minMax(1, dur, 3) + 2));
+		super(StatusName.RUSH, lv, dur, CALC);
 		// 3 - 5 seconds of + 20% to 60% movement
 	}
     
@@ -40,6 +41,6 @@ public class Rush extends AbstractStatus{
 
     @Override
     public AbstractStatus copy() {
-        return new Rush(getIntensityLevel(), getBaseUses());
+        return new Rush(getIntensityLevel(), getBaseParam());
     }
 }

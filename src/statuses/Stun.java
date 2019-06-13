@@ -4,19 +4,20 @@ import actions.*;
 import util.Number;
 import entities.Player;
 import controllers.Master;
+import java.util.function.UnaryOperator;
 
 /**
  * The Stun status decreases an Entity's movement speed
  */
 public class Stun extends AbstractStatus{
-    
+    private static final UnaryOperator<Integer> CALC = (i)->{return Master.seconds(Number.minMax(1, i, 3));};
     /**
      * The Stun status will decrease an Entity's movement speed
      * @param lv 1-3, decreasing the Entity's movement speed by 25% per level.
      * @param dur how many seconds the status will last, also 1-3
      */
 	public Stun(int lv, int dur){
-		super(StatusName.STUN, Number.minMax(1, lv, 3), Master.seconds(Number.minMax(1, dur, 3)));
+		super(StatusName.STUN, lv, dur, CALC);
 		// 1-3 seconds of -0.25 to -0.75 movement speed
 	}
     
@@ -40,6 +41,6 @@ public class Stun extends AbstractStatus{
 
     @Override
     public AbstractStatus copy() {
-        return new Stun(getIntensityLevel(), getBaseUses());
+        return new Stun(getIntensityLevel(), getBaseParam());
     }
 }

@@ -3,6 +3,7 @@ package statuses;
 import actions.*;
 import entities.Player;
 import controllers.Master;
+import java.util.function.UnaryOperator;
 import util.Direction;
 import util.Number;
 
@@ -10,7 +11,7 @@ import util.Number;
  * Strength causes the afflicted Entity to knock back those it hits and do more damage
  */
 public class Strength extends AbstractStatus{
-    
+    private static final UnaryOperator<Integer> CALC = (i)->{return Number.minMax(1, i, 3) * 2 + 1;};
     /**
      * 
      * @param lv 1-3. The afflicted's melee attack do some knockback 
@@ -18,7 +19,7 @@ public class Strength extends AbstractStatus{
      * @param uses effect lasts for the next ((uses * 2) + 1) melee attacks the afflicted performs that hit an enemy.
      */
 	public Strength(int lv, int uses){
-		super(StatusName.STRENGTH, Number.minMax(1, lv, 3), Number.minMax(1, uses, 3) * 2 + 1);
+		super(StatusName.STRENGTH, lv, uses, CALC);
 		// 3 - 7 uses of 3.5% to 10.5% extra damage logged and knocks back lv units
 	}
     
@@ -46,6 +47,6 @@ public class Strength extends AbstractStatus{
 
     @Override
     public AbstractStatus copy() {
-        return new Strength(getIntensityLevel(), getBaseUses());
+        return new Strength(getIntensityLevel(), getBaseParam());
     }
 }

@@ -4,12 +4,13 @@ import actions.*;
 import entities.Player;
 import util.Number;
 import controllers.Master;
+import java.util.function.UnaryOperator;
 
 /**
  * Regeneration restores an Entity's hit points over time.
  */
 public class Regeneration extends AbstractStatus{
-    
+    private static final UnaryOperator<Integer> CALC = (i)->{return Master.seconds(Number.minMax(1, i, 3)) + 2;};
     /**
      * Creates the Regeneration status.
      * @param lv 1-3. The target restores 2.5% of their maximum HP per second for each level of the status. 
@@ -17,7 +18,7 @@ public class Regeneration extends AbstractStatus{
      * @param dur effect lasts for (dur + 2) seconds.
      */
 	public Regeneration(int lv, int dur){
-		super(StatusName.REGENERATION, Number.minMax(1, lv, 3), Master.seconds(Number.minMax(1, dur, 3)) + 2);
+		super(StatusName.REGENERATION, lv, dur, CALC);
 		// 3 - 5 seconds of 2.5% - 7.5% healing each second
 		// balance later
 	}
@@ -44,6 +45,6 @@ public class Regeneration extends AbstractStatus{
 
     @Override
     public AbstractStatus copy() {
-        return new Regeneration(getIntensityLevel(), getBaseUses());
+        return new Regeneration(getIntensityLevel(), getBaseParam());
     }
 }
