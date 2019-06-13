@@ -40,10 +40,10 @@ public class MapLoader {
         for(int y = 0; y < height; y++){
             split = lines.get(y);
             for(int x = 0; x < width && x < split.length; x++){
-                System.out.print(split[x] + " ");
+                //System.out.print(split[x] + " ");
                 ret.setTile(x, y, Integer.parseInt(split[x].trim()));
             }
-            System.out.println();
+            //System.out.println();
         }
         
         return ret;

@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.json.JsonObject;
 import serialization.JsonUtil;
 import upgradables.AbstractUpgradable;
 import util.Chat;
@@ -177,7 +178,7 @@ public class WorldCanvas extends DrawingPlane{
     
     
     
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException{
         WorldCanvas c = new WorldCanvas();
         JFrame f = new JFrame();
         f.setContentPane(c);
@@ -209,7 +210,12 @@ public class WorldCanvas extends DrawingPlane{
         f.revalidate();
         f.repaint();
         
+        JsonObject obj = WorldJsonUtil.serializeMap(c.world.getMap());
         JsonUtil.pprint(WorldJsonUtil.serializeJson(c.world), 0);
+        c.world.setMap(WorldJsonUtil.deserializeMap(obj));
+        c.world.init();
+        JsonUtil.pprint(WorldJsonUtil.serializeJson(c.world), 0);
+        /*
         File saveTo = FileChooserUtil.chooseDir();
         if(saveTo != null){
             try {
@@ -218,6 +224,6 @@ public class WorldCanvas extends DrawingPlane{
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(WorldCanvas.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
+        }*/
     }
 }

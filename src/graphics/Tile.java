@@ -49,6 +49,10 @@ public class Tile {
         return y;
     }
     
+    public Color getColor(){
+        return c;
+    }
+    
     public final boolean contains(Entity e){
         return e.isWithin(x, y, TILE_SIZE, TILE_SIZE);
     }

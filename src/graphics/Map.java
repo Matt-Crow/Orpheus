@@ -39,6 +39,10 @@ public class Map {
         tangibleTiles = new ArrayList<>();
     }
     
+    /**
+     * Converts this' tile map to a csv string
+     * @return the tile map in CSV format
+     */
     public String getCsv(){
         StringBuilder b = new StringBuilder();
         for(int y = 0; y < height; y++){
@@ -67,6 +71,18 @@ public class Map {
     public Map addToTileSet(int valueInMap, Tile t){
         tileSet.put(valueInMap, t);
         return this;
+    }
+    
+    /**
+     * 
+     * @return a deep copy of this' tile set
+     */
+    public HashMap<Integer, Tile> getTileSet(){
+        HashMap<Integer, Tile> ret = new HashMap<>();
+        tileSet.entrySet().forEach((e) -> {
+            ret.put(e.getKey(), e.getValue().copy(0, 0));
+        });
+        return ret;
     }
     
     /**
