@@ -1,9 +1,12 @@
 package graphics;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 /**
@@ -44,5 +47,16 @@ public class MapLoader {
         }
         
         return ret;
+    }
+    public static void saveCsv(OutputStream os, Map m){
+        
+        try {
+            BufferedWriter buff = new BufferedWriter(new OutputStreamWriter(os));
+            buff.write(m.getCsv());
+            buff.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        
     }
 }

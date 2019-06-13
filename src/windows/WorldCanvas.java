@@ -14,11 +14,20 @@ import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 import battle.Team;
+import controllers.WorldJsonUtil;
 import customizables.Build;
 import entities.PlayerControls;
 import graphics.MapLoader;
+import gui.FileChooserUtil;
 import java.awt.MouseInfo;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import serialization.JsonUtil;
 import upgradables.AbstractUpgradable;
 import util.Chat;
 
@@ -199,5 +208,16 @@ public class WorldCanvas extends DrawingPlane{
         f.setVisible(true);
         f.revalidate();
         f.repaint();
+        
+        JsonUtil.pprint(WorldJsonUtil.serializeJson(c.world), 0);
+        File saveTo = FileChooserUtil.chooseDir();
+        if(saveTo != null){
+            try {
+                File file = new File(saveTo.getAbsolutePath() + "/map.csv");
+                MapLoader.saveCsv(new FileOutputStream(file), c.world.getMap());
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(WorldCanvas.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }

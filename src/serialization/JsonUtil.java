@@ -1,18 +1,8 @@
 package serialization;
 
 import actives.*;
-import customizables.Build;
-import customizables.BuildJsonUtil;
-import customizables.CharacterClass;
-import customizables.CharacterClassJsonUtil;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringReader;
+import customizables.*;
+import java.io.*;
 import static java.lang.System.out;
 import java.util.ArrayList;
 import java.util.Map.Entry;
@@ -78,6 +68,19 @@ public class JsonUtil {
             write.close();
         } catch (IOException ex) {
             ex.printStackTrace();
+        }
+    }
+    
+    /**
+     * Throws an exception if the given object 
+     * is missing the given key.
+     * That's all this does.
+     * @param obj the object to check
+     * @param key the key to look for
+     */
+    public static void verify(JsonObject obj, String key){
+        if(!obj.containsKey(key)){
+            throw new JsonException("Json Object is missing key \'" + key + "\'");
         }
     }
     

@@ -39,6 +39,22 @@ public class Map {
         tangibleTiles = new ArrayList<>();
     }
     
+    public String getCsv(){
+        StringBuilder b = new StringBuilder();
+        for(int y = 0; y < height; y++){
+            for(int x = 0; x < width; x++){
+                b.append(Integer.toString(tileMap[x][y]));
+                if(x == width - 1){
+                    // on the last one
+                    b.append('\n');
+                } else {
+                    b.append(",");
+                }
+            }
+        }
+        return b.toString();
+    }
+    
     /**
      * Adds a Tile to this' set.
      * Any array indexes with a 
