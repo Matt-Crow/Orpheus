@@ -5,16 +5,8 @@ import actives.ActiveJsonUtil;
 import customizables.CharacterClass;
 import customizables.CharacterClassJsonUtil;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.function.BiConsumer;
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonException;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonValue;
+import javax.json.*;
 import passives.AbstractPassive;
 import passives.PassiveJsonUtil;
 import serialization.JsonUtil;
@@ -23,7 +15,25 @@ import statuses.StatusName;
 import statuses.StatusTable;
 
 /**
- *
+ * The UpgradableJsonUtil is used to serialize and de-serialize upgradables as JSON objects.
+ * I am currently tying to decide whether or not I want to store these methods in this class,
+ * or back with the upgradables that this is serializing.
+ * <hr/>
+ * Pros to keeping function here:
+ * <ul>
+ * <li>If I ever need to change which JsonObject class I am using, I don't have to change the upgradable classes</li>
+ * <li>Separates the classes to reduce clutter: upgradables don't need to know how to serialize themselves, 
+ * and json doesn't need to know how to update or spawn projectiles</li>
+ * </ul>
+ * <br/>
+ * Cons:
+ * <ul>
+ * <li>Need to keep change both classes whenever one of them changes</li>
+ * <li>More classes means more clutter</li>
+ * </ul>
+ * <hr/>
+ * In spite of all this, I have spent so much time bouncing back and forth on where I want to keep these functions,
+ * and I don't feel like it's best that I make a decision now: I have more important things to do right now.
  * @author Matt Crow
  */
 public class UpgradableJsonUtil {
