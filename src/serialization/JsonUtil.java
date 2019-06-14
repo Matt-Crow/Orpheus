@@ -172,9 +172,9 @@ public class JsonUtil {
         }
         
         for(Build bu : Build.getAllBuilds()){
-            obj = BuildJsonUtil.serializeJson(bu);
+            obj = bu.serializeJson();
             pprint(obj, 0);
-            b = BuildJsonUtil.deserializeJson(obj);
+            b = Build.deserializeJson(obj);
             if(b != null){
                 pprint(obj, 0);
                 out.println(bu.getDescription());

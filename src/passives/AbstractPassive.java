@@ -108,7 +108,7 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
 	}
 	public static AbstractPassive getPassiveByName(String n){
         if(!allPassives.containsKey(n.toUpperCase())){
-            throw new NoSuchElementException("Passive with name " + n + "not found. Did you remember to call AbstractPassive.addPassive(...)?");
+            throw new NoSuchElementException("Passive with name " + n + " not found. Did you remember to call AbstractPassive.addPassive(...)?");
         }
 		return allPassives.get(n.toUpperCase()).copy();
 	}

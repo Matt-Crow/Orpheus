@@ -41,7 +41,7 @@ public class BuildCanvas extends DrawingPlane{
             File[] chosen = FileChooserUtil.chooseFiles();
             if(chosen != null){
                 for(File f : chosen){
-                    BuildJsonUtil.loadFile(f);
+                    Build.loadFile(f);
                 }
             }
         });
@@ -53,7 +53,7 @@ public class BuildCanvas extends DrawingPlane{
             if(dir != null){
                 String name = JOptionPane.showInputDialog("Enter a name for this export:");
                 File buildFile = new File(dir.getAbsolutePath() + "/" + name);
-                BuildJsonUtil.saveAllToFile(buildFile);
+                Build.saveAllToFile(buildFile);
             }
         });
         addMenuItem(expBuild);
