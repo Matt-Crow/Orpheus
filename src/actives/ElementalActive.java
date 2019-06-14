@@ -1,8 +1,11 @@
 package actives;
 
 import controllers.Master;
+import javax.json.*;
+import serialization.JsonSerialable;
+import upgradables.UpgradableJsonUtil;
 
-public class ElementalActive extends AbstractActive{
+public class ElementalActive extends AbstractActive implements JsonSerialable{
 	public ElementalActive(String n, int arc, int range, int speed, int aoe, int dmg){
 		super(ActiveType.ELEMENTAL, n, arc, range, speed, aoe, dmg);
 	}
@@ -20,6 +23,27 @@ public class ElementalActive extends AbstractActive{
         copy.setInflict(getInflict());
 		return copy;
 	}
+    
+    @Override
+    public JsonObject serializeJson(){
+        //no new fields, so Active can handle everything
+        return ActiveJsonUtil.serializeJson(this);
+    }
+    
+    public static ElementalActive deserializeJson(JsonObject obj){
+        ElementalActive ret = new ElementalActive(
+            UpgradableJsonUtil.getNameFrom(obj),
+            UpgradableJsonUtil.getStatBaseFrom(obj, ActiveStatName.ARC),
+            UpgradableJsonUtil.getStatBaseFrom(obj, ActiveStatName.RANGE),
+            UpgradableJsonUtil.getStatBaseFrom(obj, ActiveStatName.SPEED),
+            UpgradableJsonUtil.getStatBaseFrom(obj, ActiveStatName.AOE),
+            UpgradableJsonUtil.getStatBaseFrom(obj, ActiveStatName.DAMAGE)
+        );
+        ret.setInflict(UpgradableJsonUtil.getStatusTableFrom(obj));
+        ActiveJsonUtil.getTagsFrom(obj).stream().forEach(t->ret.addTag(t));
+        ret.setParticleType(ActiveJsonUtil.getParticleTypeFrom(obj));
+        return ret;
+    }
 	
     @Override
 	public String getDescription(){

@@ -3,7 +3,6 @@ package upgradables;
 import actives.AbstractActive;
 import actives.ActiveJsonUtil;
 import customizables.CharacterClass;
-import customizables.CharacterClassJsonUtil;
 import java.io.File;
 import java.util.function.BiConsumer;
 import javax.json.*;
@@ -173,7 +172,7 @@ public class UpgradableJsonUtil {
                 ret = PassiveJsonUtil.deserializeJson(obj);
                 break;
             case CHARACTER_CLASS:
-                ret = CharacterClassJsonUtil.deserializeJson(obj);
+                ret = CharacterClass.deserializeJson(obj);
                 break;
             default:
                 throw new JsonException("Couldn't deserialize upgradable type " + getUpgradableTypeFrom(obj));

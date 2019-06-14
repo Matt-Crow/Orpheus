@@ -1,12 +1,18 @@
 package passives;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
+import serialization.JsonSerialable;
+import upgradables.UpgradableJsonUtil;
 import util.Number;
 
 /**
  * Triggers so long as the user is below a set percentage
  * of their maximum HP
  */
-public class ThresholdPassive extends AbstractPassive{
+public class ThresholdPassive extends AbstractPassive implements JsonSerialable{
 	public ThresholdPassive(String n, int baseThresh){
 		super(PassiveType.THRESHOLD, n, true);
 		setStat(PassiveStatName.THRESHOLD, baseThresh);
@@ -17,6 +23,21 @@ public class ThresholdPassive extends AbstractPassive{
 		copyInflictTo(copy);
 		return copy;
 	}
+    
+    @Override
+    public JsonObject serializeJson(){
+        return PassiveJsonUtil.serializeJson(this);
+    }
+    
+    public static final ThresholdPassive deserializeJson(JsonObject obj){
+        ThresholdPassive pass = new ThresholdPassive(
+            UpgradableJsonUtil.getNameFrom(obj), 
+            UpgradableJsonUtil.getStatBaseFrom(obj, PassiveStatName.THRESHOLD)
+        );
+        pass.setInflict(UpgradableJsonUtil.getStatusTableFrom(obj));
+        
+        return pass;
+    }
     
 	public void setStat(PassiveStatName n, int value){
 		switch(n){

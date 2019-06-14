@@ -163,7 +163,7 @@ public class JsonUtil {
         for(CharacterClass cc : CharacterClass.getAll()){
             obj = UpgradableJsonUtil.serializeJson(cc);
             pprint(obj, 0);
-            u = CharacterClassJsonUtil.deserializeJson(obj);
+            u = CharacterClass.deserializeJson(obj);
             if(u != null){
                 pprint(obj, 0);
                 out.println(cc.getDescription());

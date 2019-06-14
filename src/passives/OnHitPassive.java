@@ -1,6 +1,13 @@
 package passives;
 
-public class OnHitPassive extends AbstractPassive{
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
+import serialization.JsonSerialable;
+import upgradables.UpgradableJsonUtil;
+
+public class OnHitPassive extends AbstractPassive implements JsonSerialable{
 	/**
 	 * Triggers upon a projectile registered to the
 	 * user colliding with an enemy player
@@ -16,6 +23,21 @@ public class OnHitPassive extends AbstractPassive{
 		copyInflictTo(copy);
 		return copy;
 	}
+    
+    @Override
+    public JsonObject serializeJson(){
+        return PassiveJsonUtil.serializeJson(this);
+    }
+    
+    public static OnHitPassive deserializeJson(JsonObject obj){
+        OnHitPassive ret = new OnHitPassive(
+            UpgradableJsonUtil.getNameFrom(obj),
+            PassiveJsonUtil.getTargetsUserFrom(obj)
+        );
+        ret.setInflict(UpgradableJsonUtil.getStatusTableFrom(obj));
+        return ret;
+    }
+    
 	
     @Override
 	public void update(){

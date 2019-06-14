@@ -52,16 +52,16 @@ public class PassiveJsonUtil {
         
         switch(type){
             case THRESHOLD:
-                ret = ThresholdPassiveJsonUtil.deserializeJson(obj);
+                ret = ThresholdPassive.deserializeJson(obj);
                 break;
             case ONMELEEHIT:
-                ret = OnMeleeHitPassiveJsonUtil.deserializeJson(obj);
+                ret = OnMeleeHitPassive.deserializeJson(obj);
                 break;
             case ONHIT:
-                ret = OnHitPassiveJsonUtil.deserializeJson(obj);
+                ret = OnHitPassive.deserializeJson(obj);
                 break;
             case ONBEHIT:
-                ret = OnBeHitPassiveJsonUtil.deserializeJson(obj);
+                ret = OnBeHitPassive.deserializeJson(obj);
                 break;
             default:
                 System.out.println("Abstract passive cannot deserialize " + type);

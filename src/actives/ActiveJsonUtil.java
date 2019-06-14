@@ -80,26 +80,18 @@ public class ActiveJsonUtil{
         
         switch(type){
             case MELEE:
-                ret = MeleeActiveJsonUtil.deserializeJson(obj);
+                ret = MeleeActive.deserializeJson(obj);
                 break;
             case BOOST:
-                ret = BoostActiveJsonUtil.deserializeJson(obj);
+                ret = BoostActive.deserializeJson(obj);
                 break;
             case ELEMENTAL:
-                ret = ElementalActiveJsonUtil.deserializeJson(obj);
+                ret = ElementalActive.deserializeJson(obj);
                 break;
             default:
                 System.out.println("Abstract active cannot deserialize " + obj.getString("type"));
                 break;
         }
         return ret;
-    }
-    
-    public static void saveAll(File f){
-        /*
-        JsonObject[] objs = Arrays.stream(AbstractActive.getAll()).map((AbstractActive a)->{
-            return serializeJson(a);
-        }).toArray(size -> new JsonObject[size]);
-        JsonTest.writeToFile(objs, f);*/
     }
 }
