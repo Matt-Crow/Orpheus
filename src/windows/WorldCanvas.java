@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -210,20 +211,25 @@ public class WorldCanvas extends DrawingPlane{
         f.revalidate();
         f.repaint();
         
+        /*
         JsonObject obj = WorldJsonUtil.serializeMap(c.world.getMap());
         JsonUtil.pprint(WorldJsonUtil.serializeJson(c.world), 0);
         c.world.setMap(WorldJsonUtil.deserializeMap(obj));
         c.world.init();
         JsonUtil.pprint(WorldJsonUtil.serializeJson(c.world), 0);
-        /*
+        */
+        
+        
         File saveTo = FileChooserUtil.chooseDir();
         if(saveTo != null){
             try {
-                File file = new File(saveTo.getAbsolutePath() + "/map.csv");
-                MapLoader.saveCsv(new FileOutputStream(file), c.world.getMap());
+                ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(saveTo.getAbsolutePath() + "/obj.ser"));
+                out.writeObject(c.world);
+                //File file = new File(saveTo.getAbsolutePath() + "/map.csv");
+                //MapLoader.saveCsv(new FileOutputStream(file), c.world.getMap());
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(WorldCanvas.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }*/
+        }
     }
 }

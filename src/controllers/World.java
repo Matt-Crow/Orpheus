@@ -8,6 +8,7 @@ import entities.Projectile;
 import graphics.Tile;
 import graphics.Map;
 import java.awt.Graphics;
+import java.io.Serializable;
 import java.util.ArrayList;
 import windows.WorldCanvas;
 
@@ -19,7 +20,7 @@ import windows.WorldCanvas;
  * The World will handle all the drawing and updating as well.
  * @author Matt Crow
  */
-public class World {
+public class World implements Serializable{
     private final ArrayList<Team> teams; //makes it faster to find nearest enemies
     //maybe just keep track of everything in one linked list?
     

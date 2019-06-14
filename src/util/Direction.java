@@ -1,7 +1,5 @@
 package util;
 
-import java.lang.Math;
-
 /**
  * The Direction class is used to 
  * get vectors that are used for
