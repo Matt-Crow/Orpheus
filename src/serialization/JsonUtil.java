@@ -72,6 +72,20 @@ public class JsonUtil {
     }
     
     /**
+     * Since javax.json.JsonObject is immutable,
+     * I need some way of creating an object builder from that object.
+     * @param obj the object to undo the JsonObjectBuilder build method for
+     * @return the JsonObjectBuilder which, when its build method is called, would return obj
+     */
+    public static JsonObjectBuilder deconstruct(JsonObject obj){
+        JsonObjectBuilder b = Json.createObjectBuilder();
+        obj.forEach((String key, JsonValue value)->{
+            b.add(key, value);
+        });
+        return b;
+    }
+    
+    /**
      * Throws an exception if the given object 
      * is missing the given key.
      * That's all this does.

@@ -6,18 +6,26 @@ import ai.PathMinHeap;
 import entities.Entity;
 import java.awt.Graphics;
 import java.awt.Color;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import static java.lang.System.out;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import serialization.JsonSerialable;
+import serialization.JsonUtil;
 
 /**
  * The Map class is used to store Tiles together to form 
  * a 2-dimensional playing field for players to play on.
  * @author Matt
  */
-public class Map implements Serializable{
+public class Map implements Serializable, JsonSerialable{
     private final int width; //in tiles
     private final int height;
     private final int[][] tileMap;
@@ -325,5 +333,32 @@ public class Map implements Serializable{
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, getWidth(), getHeight());
         allTiles.forEach((tile)->tile.draw(g));
+    }
+
+    @Override
+    public JsonObject serializeJson() {
+        JsonObjectBuilder b = Json.createObjectBuilder();
+        b.add("type", "map");
+        b.add("tile map", getCsv());
+        JsonObjectBuilder tileSetBuilder = Json.createObjectBuilder();
+        tileSet.entrySet().stream().forEach((e)->{
+            tileSetBuilder.add(e.getKey().toString(), e.getValue().serializeJson());
+        });
+        b.add("tile set", tileSetBuilder.build());
+        return b.build();
+    }
+    
+    public static Map deserializeJson(JsonObject obj) throws IOException{
+        JsonUtil.verify(obj, "tile map");
+        JsonUtil.verify(obj, "tile set");
+        InputStream in = new ByteArrayInputStream(obj.getString("tile map").getBytes());
+        Map ret = MapLoader.readCsv(in);
+        
+        //deserialize tile set
+        JsonObject tileSet = obj.getJsonObject("tile set");
+        tileSet.entrySet().forEach((e)->{
+            ret.addToTileSet(Integer.parseInt(e.getKey()), Tile.deserializeJson((JsonObject)e.getValue()));
+        });
+        return ret;
     }
 }

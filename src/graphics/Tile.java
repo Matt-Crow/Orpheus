@@ -4,12 +4,17 @@ import entities.Entity;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.io.Serializable;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import serialization.JsonSerialable;
+import serialization.JsonUtil;
 
 /**
  * Tiles are rendered whenever World.draw is invoked
  * @author Matt Crow
  */
-public class Tile implements Serializable{
+public class Tile implements Serializable, JsonSerialable{
     public static final int TILE_SIZE = 100;
     private static final int TILE_SPACING = (int)(TILE_SIZE * 0.05);
     private static final int RECT_SIZE = (int)(TILE_SIZE * 0.9);
@@ -100,5 +105,43 @@ public class Tile implements Serializable{
         g.fillRect(x, y, TILE_SIZE, TILE_SIZE);
         g.setColor(c);
         g.fillRect(x + TILE_SPACING, y + TILE_SPACING, RECT_SIZE, RECT_SIZE);
+    }
+
+    @Override
+    public JsonObject serializeJson(){
+        JsonObjectBuilder obj = Json.createObjectBuilder();
+        obj.add("type", "tile");
+        obj.add("x index", x / TILE_SIZE);
+        obj.add("y index", y / TILE_SIZE);
+        obj.add("color", String.format("(%d, %d, %d, %d)", c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()));
+        obj.add("blocking", blocking);
+        return obj.build();
+    }
+    
+    //currently does not support any subclasses of Tile
+    public static Tile deserializeJson(JsonObject obj){
+        JsonUtil.verify(obj, "type");
+        JsonUtil.verify(obj, "x index");
+        JsonUtil.verify(obj, "y index");
+        JsonUtil.verify(obj, "color");
+        JsonUtil.verify(obj, "blocking");
+        String[] split = obj
+            .getString("color")
+            .replace('(', ' ')
+            .replace(')', ' ')
+            .split(", ");
+        Color c = new Color(
+            Integer.parseInt(split[0].trim()),
+            Integer.parseInt(split[1].trim()),
+            Integer.parseInt(split[2].trim()),
+            Integer.parseInt(split[3].trim())
+        );
+        Tile ret = new Tile(
+            obj.getInt("x index"),
+            obj.getInt("y index"),
+            c
+        );
+        ret.setBlocking(obj.getBoolean("blocking"));
+        return ret;
     }
 }

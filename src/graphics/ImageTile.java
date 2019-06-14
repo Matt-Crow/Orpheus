@@ -3,12 +3,17 @@ package graphics;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import javax.imageio.ImageIO;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import serialization.JsonSerialable;
+import serialization.JsonUtil;
 
 /**
  * Mostly a test file
  * @author Matt
  */
-public class ImageTile extends Tile{
+public class ImageTile extends Tile implements JsonSerialable{
     private Image image;
     
     public ImageTile(int x, int y, Image i){
@@ -26,5 +31,18 @@ public class ImageTile extends Tile{
     @Override
     public void draw(Graphics g){
         g.drawImage(image, getX(), getY(), TILE_SIZE, TILE_SIZE, null);
+    }
+    
+    @Override
+    public JsonObject serializeJson(){
+        JsonObjectBuilder b = JsonUtil.deconstruct(super.serializeJson());
+        b.add("type", "image tile");
+        b.add("image", "method not supported yet");
+        throw new UnsupportedOperationException();
+        //return b.build();
+    }
+    
+    public static ImageTile deserializeJson(){
+        throw new UnsupportedOperationException();
     }
 }

@@ -14,9 +14,9 @@ import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 import battle.Team;
-import controllers.WorldJsonUtil;
 import customizables.Build;
 import entities.PlayerControls;
+import graphics.Map;
 import graphics.MapLoader;
 import gui.FileChooserUtil;
 import java.awt.MouseInfo;
@@ -213,13 +213,12 @@ public class WorldCanvas extends DrawingPlane{
         f.revalidate();
         f.repaint();
         
-        /*
-        JsonObject obj = WorldJsonUtil.serializeMap(c.world.getMap());
-        JsonUtil.pprint(WorldJsonUtil.serializeJson(c.world), 0);
-        c.world.setMap(WorldJsonUtil.deserializeMap(obj));
+        
+        JsonObject obj = c.world.getMap().serializeJson();
+        JsonUtil.pprint(obj, 0);
+        c.world.setMap(Map.deserializeJson(obj));
         c.world.init();
-        JsonUtil.pprint(WorldJsonUtil.serializeJson(c.world), 0);
-        */
+        
         
         c.world.displayData();
         File saveTo = FileChooserUtil.chooseDir();
