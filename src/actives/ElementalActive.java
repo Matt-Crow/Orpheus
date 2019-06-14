@@ -27,7 +27,7 @@ public class ElementalActive extends AbstractActive implements JsonSerialable{
     @Override
     public JsonObject serializeJson(){
         //no new fields, so Active can handle everything
-        return ActiveJsonUtil.serializeJson(this);
+        return super.serializeJson();
     }
     
     public static ElementalActive deserializeJson(JsonObject obj){
@@ -40,8 +40,8 @@ public class ElementalActive extends AbstractActive implements JsonSerialable{
             UpgradableJsonUtil.getStatBaseFrom(obj, ActiveStatName.DAMAGE)
         );
         ret.setInflict(UpgradableJsonUtil.getStatusTableFrom(obj));
-        ActiveJsonUtil.getTagsFrom(obj).stream().forEach(t->ret.addTag(t));
-        ret.setParticleType(ActiveJsonUtil.getParticleTypeFrom(obj));
+        getTagsFrom(obj).stream().forEach(t->ret.addTag(t));
+        ret.setParticleType(getParticleTypeFrom(obj));
         return ret;
     }
 	

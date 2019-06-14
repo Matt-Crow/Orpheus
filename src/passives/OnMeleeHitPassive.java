@@ -22,12 +22,12 @@ public class OnMeleeHitPassive extends AbstractPassive implements JsonSerialable
     
     @Override
     public JsonObject serializeJson(){
-        return PassiveJsonUtil.serializeJson(this);
+        return super.serializeJson();
     }
     public static OnMeleeHitPassive deserializeJson(JsonObject obj){
         OnMeleeHitPassive pass = new OnMeleeHitPassive(
             UpgradableJsonUtil.getNameFrom(obj),
-            PassiveJsonUtil.getTargetsUserFrom(obj)
+            getTargetsUserFrom(obj)
         );
         pass.setInflict(UpgradableJsonUtil.getStatusTableFrom(obj));
         return pass;

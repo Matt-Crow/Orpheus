@@ -22,13 +22,13 @@ public class OnBeHitPassive extends AbstractPassive implements JsonSerialable{
     
     @Override
     public JsonObject serializeJson(){
-        return PassiveJsonUtil.serializeJson(this);
+        return super.serializeJson();
     }
     
     public static OnBeHitPassive deserializeJson(JsonObject obj){
         OnBeHitPassive obh = new OnBeHitPassive(
             UpgradableJsonUtil.getNameFrom(obj),
-            PassiveJsonUtil.getTargetsUserFrom(obj)
+            getTargetsUserFrom(obj)
         );
         obh.setInflict(UpgradableJsonUtil.getStatusTableFrom(obj));
         return obh;

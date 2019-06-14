@@ -1,13 +1,11 @@
 package upgradables;
 
 import actives.AbstractActive;
-import actives.ActiveJsonUtil;
 import customizables.CharacterClass;
 import java.io.File;
 import java.util.function.BiConsumer;
 import javax.json.*;
 import passives.AbstractPassive;
-import passives.PassiveJsonUtil;
 import serialization.JsonUtil;
 import statuses.AbstractStatus;
 import statuses.StatusName;
@@ -166,10 +164,10 @@ public class UpgradableJsonUtil {
         AbstractUpgradable ret = null;
         switch(getUpgradableTypeFrom(obj)){
             case ACTIVE:
-                ret = ActiveJsonUtil.deserializeJson(obj);
+                ret = AbstractActive.deserializeJson(obj);
                 break;
             case PASSIVE:
-                ret = PassiveJsonUtil.deserializeJson(obj);
+                ret = AbstractPassive.deserializeJson(obj);
                 break;
             case CHARACTER_CLASS:
                 ret = CharacterClass.deserializeJson(obj);

@@ -8,7 +8,18 @@ import graphics.CustomColors;
 import controllers.Master;
 import upgradables.AbstractUpgradable;
 import entities.*;
+import java.io.File;
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonException;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonString;
+import javax.json.JsonValue;
+import serialization.JsonSerialable;
+import serialization.JsonUtil;
 import statuses.*;
+import upgradables.UpgradableJsonUtil;
 import upgradables.UpgradableType;
 import util.Number;
 
@@ -16,14 +27,14 @@ import util.Number;
  * The AbstractActive class serves as the base for active abilities possessed by Players
  * @author Matt
  */
-public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
+public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName> implements JsonSerialable{
     private final ActiveType type; // used for serialization
     private ParticleType particleType; // the type of particles this' projectiles emit @see Projectile
     private int cost; // the energy cost of the active. Calculated automatically
     private final ArrayList<ActiveTag> tags; //tags are used to modify this' behaviour. Only once is currently implemented 
     
     private static int nextUseId = 0; // How many actives have been used thus far. Used to prevent double hitting
-    private static final HashMap<String, AbstractActive> ALL_ACTIVES = new HashMap<>();
+    private static final HashMap<String, AbstractActive> ALL = new HashMap<>();
     static{
         addActive(new ElementalActive(
             "Default",
@@ -71,6 +82,77 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
 
         tags = new ArrayList<>();
     }
+    
+    //########################################
+    // JSON SERIALIZATION
+    //########################################
+    public static void saveAllToFile(File f){
+        JsonObject[] objs = ALL.values().stream().map((AbstractActive a)->{
+            return a.serializeJson();
+        }).toArray(size -> new JsonObject[size]);
+        JsonUtil.writeToFile(objs, f);
+    }
+    
+    @Override
+    public JsonObject serializeJson() {
+        JsonObjectBuilder b = JsonUtil.deconstruct(UpgradableJsonUtil.serializeJson(this));
+        b.add("active type", type.toString());
+        b.add("particle type", particleType.toString());
+        JsonArrayBuilder a = Json.createArrayBuilder();
+        tags.forEach((t) -> {
+            a.add(t.toString());
+        });
+        b.add("tags", a.build());
+        return b.build();
+    }
+    
+    public static ActiveType getActiveTypeFrom(JsonObject obj){
+        JsonUtil.verify(obj, "active type");
+        return ActiveType.fromString(obj.getString("active type"));
+    }
+    public static ParticleType getParticleTypeFrom(JsonObject obj){
+        JsonUtil.verify(obj, "particle type");
+        return ParticleType.fromString(obj.getString("particle type"));
+    }
+    public static ArrayList<ActiveTag> getTagsFrom(JsonObject obj){
+        JsonUtil.verify(obj, "tags");
+        ArrayList<ActiveTag> ret = new ArrayList<>();
+        ActiveTag tag = null;
+        for(JsonValue jv : obj.getJsonArray("tags")){
+            if(jv.getValueType().equals(JsonValue.ValueType.STRING)){
+                tag = ActiveTag.fromString(((JsonString)jv).getString());
+                if(tag == null){
+                    throw new NullPointerException("Unknown tag: " + jv);
+                } else {
+                    ret.add(tag);
+                }
+            }
+        }
+        return ret;
+    }
+    
+    public static AbstractActive deserializeJson(JsonObject obj){
+        AbstractActive ret = null;
+        ActiveType type = getActiveTypeFrom(obj);
+        
+        switch(type){
+            case MELEE:
+                ret = MeleeActive.deserializeJson(obj);
+                break;
+            case BOOST:
+                ret = BoostActive.deserializeJson(obj);
+                break;
+            case ELEMENTAL:
+                ret = ElementalActive.deserializeJson(obj);
+                break;
+            default:
+                System.out.println("Abstract active cannot deserialize " + obj.getString("type"));
+                break;
+        }
+        return ret;
+    }
+    
+    
     
     public static void loadAll(){
 		// read from file later?
@@ -134,7 +216,7 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
     
     // static methods
     public static void addActive(AbstractActive a){
-        ALL_ACTIVES.put(a.getName().toUpperCase(), a.copy());
+        ALL.put(a.getName().toUpperCase(), a.copy());
     }
     public static void addActives(AbstractActive[] as){
         for(AbstractActive a : as){
@@ -149,14 +231,14 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
      * @return the active with that name
      */
     public static AbstractActive getActiveByName(String n){
-        if(!ALL_ACTIVES.containsKey(n.toUpperCase())){
+        if(!ALL.containsKey(n.toUpperCase())){
             throw new NoSuchElementException(n + " is not in the list of actives. Did you remember to call AbstractActive.addActive(...);?");
         }
-        return ALL_ACTIVES.get(n.toUpperCase()).copy();
+        return ALL.get(n.toUpperCase()).copy();
     }
     public static AbstractActive[] getAll(){
-        AbstractActive[] ret = new AbstractActive[ALL_ACTIVES.size()];
-        Collection<AbstractActive> values = ALL_ACTIVES.values();
+        AbstractActive[] ret = new AbstractActive[ALL.size()];
+        Collection<AbstractActive> values = ALL.values();
         int i = 0;
         for(AbstractActive aa : values){
             ret[i] = aa;
@@ -165,8 +247,8 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName>{
         return ret;
     }
     public static String[] getAllNames(){
-        String[] ret = new String[ALL_ACTIVES.size()];
-        Set<String> keys = ALL_ACTIVES.keySet();
+        String[] ret = new String[ALL.size()];
+        Set<String> keys = ALL.keySet();
         int i = 0;
         for(String key : keys){
             ret[i] = key;

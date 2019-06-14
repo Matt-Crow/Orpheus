@@ -1,9 +1,6 @@
 package passives;
 
-import javax.json.Json;
 import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonValue;
 import serialization.JsonSerialable;
 import upgradables.UpgradableJsonUtil;
 
@@ -26,13 +23,13 @@ public class OnHitPassive extends AbstractPassive implements JsonSerialable{
     
     @Override
     public JsonObject serializeJson(){
-        return PassiveJsonUtil.serializeJson(this);
+        return super.serializeJson();
     }
     
     public static OnHitPassive deserializeJson(JsonObject obj){
         OnHitPassive ret = new OnHitPassive(
             UpgradableJsonUtil.getNameFrom(obj),
-            PassiveJsonUtil.getTargetsUserFrom(obj)
+            getTargetsUserFrom(obj)
         );
         ret.setInflict(UpgradableJsonUtil.getStatusTableFrom(obj));
         return ret;

@@ -21,7 +21,7 @@ public class BoostActive extends AbstractActive implements JsonSerialable{
     @Override
     public JsonObject serializeJson(){
         // no new fields are added, so just refer to the superclass' serialization
-        return ActiveJsonUtil.serializeJson(this);
+        return super.serializeJson();
     }
     
     public static BoostActive deserializeJson(JsonObject obj){
@@ -29,7 +29,7 @@ public class BoostActive extends AbstractActive implements JsonSerialable{
             UpgradableJsonUtil.getNameFrom(obj),
             UpgradableJsonUtil.getStatusTableFrom(obj)
         );
-        ActiveJsonUtil.getTagsFrom(obj).stream().forEach(t->ret.addTag(t));
+        getTagsFrom(obj).stream().forEach(t->ret.addTag(t));
         return ret;
     }
 	

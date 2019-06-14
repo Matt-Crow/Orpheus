@@ -15,7 +15,7 @@ public class MeleeActive extends AbstractActive implements JsonSerialable{
     @Override
     public JsonObject serializeJson(){
         //no new fields are added in this subclass yet, so just refer to the superclass' method
-        return ActiveJsonUtil.serializeJson(this);
+        return super.serializeJson();
     }
     
     public static final MeleeActive deserializeJson(JsonObject obj){
@@ -24,8 +24,8 @@ public class MeleeActive extends AbstractActive implements JsonSerialable{
             UpgradableJsonUtil.getStatBaseFrom(obj, ActiveStatName.DAMAGE)
         );
         ret.setInflict(UpgradableJsonUtil.getStatusTableFrom(obj));
-        ActiveJsonUtil.getTagsFrom(obj).stream().forEach(t->ret.addTag(t));
-        ret.setParticleType(ActiveJsonUtil.getParticleTypeFrom(obj));
+        getTagsFrom(obj).stream().forEach(t->ret.addTag(t));
+        ret.setParticleType(getParticleTypeFrom(obj));
         return ret;
     }
     

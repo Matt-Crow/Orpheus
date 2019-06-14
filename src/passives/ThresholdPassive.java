@@ -26,7 +26,7 @@ public class ThresholdPassive extends AbstractPassive implements JsonSerialable{
     
     @Override
     public JsonObject serializeJson(){
-        return PassiveJsonUtil.serializeJson(this);
+        return super.serializeJson();
     }
     
     public static final ThresholdPassive deserializeJson(JsonObject obj){

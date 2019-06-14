@@ -56,8 +56,8 @@ public class CustomizeCanvas extends DrawingPlane{
                 File dir = new File(f.getAbsolutePath() + "/" + exportName);
                 dir.mkdir();
                 
-                ActiveJsonUtil.saveAllToFile(new File(dir.getAbsolutePath() + "/actives.json"));
-                PassiveJsonUtil.saveAll(new File(dir.getAbsolutePath() + "/passives.json"));
+                AbstractActive.saveAllToFile(new File(dir.getAbsolutePath() + "/actives.json"));
+                AbstractPassive.saveAll(new File(dir.getAbsolutePath() + "/passives.json"));
                 CharacterClass.saveAll(new File(dir.getAbsolutePath() + "/characterClasses.json"));
             }
         });

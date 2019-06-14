@@ -137,7 +137,7 @@ public class JsonUtil {
             out.println(aa.getName());
             obj = UpgradableJsonUtil.serializeJson(aa);
             //pprint(obj, 0);
-            u = ActiveJsonUtil.deserializeJson(obj);
+            u = AbstractActive.deserializeJson(obj);
             if(u != null){
                 pprint(obj, 0);
                 out.println(aa.getDescription());
