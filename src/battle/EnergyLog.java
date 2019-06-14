@@ -3,8 +3,9 @@ package battle;
 import customizables.CharacterStatName;
 import entities.Player;
 import controllers.Master;
+import java.io.Serializable;
 
-public class EnergyLog {
+public class EnergyLog implements Serializable{
 	private int maxEnergy;
 	private int energy;
 	private int timeSinceLastEnergy;

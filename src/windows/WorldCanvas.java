@@ -21,9 +21,11 @@ import graphics.MapLoader;
 import gui.FileChooserUtil;
 import java.awt.MouseInfo;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.logging.Level;
@@ -225,10 +227,23 @@ public class WorldCanvas extends DrawingPlane{
             try {
                 ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(saveTo.getAbsolutePath() + "/obj.ser"));
                 out.writeObject(c.world);
+                
+                ObjectInputStream in = new ObjectInputStream(new FileInputStream(saveTo.getAbsolutePath() + "/obj.ser"));
+                World newWorld = (World)in.readObject();
+                Chat.log("Switching worlds in 3 seconds...");
+                Timer time = new Timer(3000, (e)->{
+                    newWorld.createCanvas();
+                    f.setContentPane(newWorld.getCanvas());
+                    Chat.log("done!");
+                });
+                time.setRepeats(false);
+                time.start();
+                
                 //File file = new File(saveTo.getAbsolutePath() + "/map.csv");
                 //MapLoader.saveCsv(new FileOutputStream(file), c.world.getMap());
-            } catch (FileNotFoundException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(WorldCanvas.class.getName()).log(Level.SEVERE, null, ex);
+                System.exit(1);
             }
         }
     }

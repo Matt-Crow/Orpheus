@@ -5,13 +5,13 @@ import util.Direction;
 import battle.Team;
 import actions.ActionRegister;
 import controllers.World;
-import java.math.BigDecimal;
+import java.io.Serializable;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import serialization.JsonSerialable;
 
-public abstract class Entity implements JsonSerialable{
+public abstract class Entity implements Serializable{
 	/**
 	 * The Entity class is used as the base for anything that has to interact with players in game
 	 */
@@ -330,6 +330,7 @@ public abstract class Entity implements JsonSerialable{
     public abstract void update();
 	public abstract void draw(Graphics g);
     
+    /*
     @Override
     public JsonObject serializeJson(){
         JsonObjectBuilder builder = Json.createObjectBuilder();
@@ -359,5 +360,5 @@ public abstract class Entity implements JsonSerialable{
     
     public static Entity deserializeJson(JsonObject obj){
         throw new UnsupportedOperationException();
-    }
+    }*/
 }

@@ -6,6 +6,7 @@ import ai.PathMinHeap;
 import entities.Entity;
 import java.awt.Graphics;
 import java.awt.Color;
+import java.io.Serializable;
 import static java.lang.System.out;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +17,7 @@ import java.util.Stack;
  * a 2-dimensional playing field for players to play on.
  * @author Matt
  */
-public class Map {
+public class Map implements Serializable{
     private final int width; //in tiles
     private final int height;
     private final int[][] tileMap;

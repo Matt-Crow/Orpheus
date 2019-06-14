@@ -1,6 +1,7 @@
 package statuses;
 
 import entities.Player;
+import java.io.Serializable;
 import util.Number;
 import java.util.function.UnaryOperator;
 
@@ -13,7 +14,7 @@ import java.util.function.UnaryOperator;
  * @see OnHitKey
  * @see Player
  */
-public abstract class AbstractStatus{
+public abstract class AbstractStatus implements Serializable{
 	private final StatusName code; //the Enum of this status' name
 	private final String name;
 	

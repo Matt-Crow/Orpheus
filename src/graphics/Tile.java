@@ -3,12 +3,13 @@ package graphics;
 import entities.Entity;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.io.Serializable;
 
 /**
  * Tiles are rendered whenever World.draw is invoked
  * @author Matt Crow
  */
-public class Tile {
+public class Tile implements Serializable{
     public static final int TILE_SIZE = 100;
     private static final int TILE_SPACING = (int)(TILE_SIZE * 0.05);
     private static final int RECT_SIZE = (int)(TILE_SIZE * 0.9);

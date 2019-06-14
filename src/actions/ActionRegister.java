@@ -4,12 +4,13 @@ import java.util.ArrayList;
 
 import entities.Entity;
 import entities.Player;
+import java.io.Serializable;
 
 /**
  * An ActionRegister is used to store OnHit- and OnUpdate-Listeners, and register them to an Entity.
  * It is used by the Player class to store Status effects and passives.
  */
-public class ActionRegister {
+public class ActionRegister implements Serializable{
 	private Entity registeredTo;
 	private ArrayList<OnHitListener> onHitRegister;
 	private ArrayList<OnHitListener> onBeHitRegister;

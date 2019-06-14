@@ -1,9 +1,10 @@
 package statuses;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 // will probably phase out of future versions
-public class StatusTable{
+public class StatusTable implements Serializable{
 	/**
 	 * Used to store status data for actives and passives
 	 */

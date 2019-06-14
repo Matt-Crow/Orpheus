@@ -3,6 +3,7 @@ package battle;
 import customizables.CharacterStatName;
 import entities.Player;
 import controllers.Master;
+import java.io.Serializable;
 
 /**
  * The damage backlog is used to keep track
@@ -23,7 +24,7 @@ import controllers.Master;
  * 
  * Every second, the Player regenerates 5% of their maximum HP.
  */
-public final class DamageBacklog {
+public final class DamageBacklog implements Serializable{
 	private final Player registeredTo;
     private final int maxHP;
 	private int remHP;

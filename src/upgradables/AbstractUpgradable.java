@@ -5,6 +5,7 @@ import java.util.*;
 import entities.Player;
 import controllers.Master;
 import customizables.CharacterClass;
+import java.io.Serializable;
 import passives.AbstractPassive;
 import statuses.*;
 
@@ -25,7 +26,7 @@ import statuses.*;
  * for example, the AbstractActive class extends AbstractUpgradable&lt;ActiveStatName&gt;
  */
 
-public abstract class AbstractUpgradable<T>{
+public abstract class AbstractUpgradable<T> implements Serializable{
     public final UpgradableType upgradableType;
     private String name;
 	private Player registeredTo;

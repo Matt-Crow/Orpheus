@@ -4,6 +4,7 @@ import entities.Player;
 import actions.*;
 import controllers.Master;
 import graphics.Tile;
+import java.io.Serializable;
 import util.Coordinates;
 import util.Random;
 
@@ -17,7 +18,7 @@ import util.Random;
  * I've removed the base AI class.
  * @author Matt
  */
-public class PlayerAI{
+public class PlayerAI implements Serializable{
 	private final Player appliedTo;
     private boolean enabled;
     private AiMode mode;

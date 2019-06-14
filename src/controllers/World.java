@@ -25,7 +25,7 @@ public class World implements Serializable{
     //maybe just keep track of everything in one linked list?
     
     private Map currentMap;
-    private WorldCanvas canvas;
+    private transient WorldCanvas canvas; //transient means "don't serialize me!"
     private Battle currentMinigame; //in future versions, this will be changed to include other minigames
     
     public World(int size){

@@ -7,6 +7,7 @@ import util.Random;
 import util.Coordinates;
 import customizables.Build;
 import entities.EntityManager;
+import java.io.Serializable;
 import java.util.function.Consumer;
 
 /**
@@ -17,7 +18,7 @@ import java.util.function.Consumer;
  * 
  * @author Matt Crow
  */
-public class Team extends EntityManager{
+public class Team extends EntityManager implements Serializable{
 	private final String name;
 	private final Color color;
 	private Team enemyTeam;

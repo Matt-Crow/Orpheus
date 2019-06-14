@@ -1,10 +1,12 @@
 package entities;
 
+import java.io.Serializable;
+
 /**
  * Used by EntityManager to link Entities together
  * @author Matt Crow
  */
-public class EntityNode{
+public class EntityNode implements Serializable{
     private final EntityManager manager;
     private final Entity entity;
     private EntityNode prev;
