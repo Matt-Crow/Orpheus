@@ -7,6 +7,10 @@ import javax.json.JsonObject;
  * (A La UpgradableJsonUtil) for serializing objects as JSON.
  * As I say in UpgradableJsonUtil, I'm not sure which way I want to serialize
  * (in class or in a helper class), so I'm trying both for now.
+ * 
+ * JSON serialization will only be used for storing Upgradables as a file,
+ * not for multiplayer, as java.io.Serializable handles all that
+ * 
  * @author Matt Crow
  */
 

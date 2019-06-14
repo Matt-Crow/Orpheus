@@ -221,7 +221,7 @@ public class WorldCanvas extends DrawingPlane{
         JsonUtil.pprint(WorldJsonUtil.serializeJson(c.world), 0);
         */
         
-        
+        c.world.displayData();
         File saveTo = FileChooserUtil.chooseDir();
         if(saveTo != null){
             try {
@@ -235,6 +235,12 @@ public class WorldCanvas extends DrawingPlane{
                     newWorld.createCanvas();
                     f.setContentPane(newWorld.getCanvas());
                     Chat.log("done!");
+                    Chat.log(Master.TRUEPLAYER.getX() + ", " + Master.TRUEPLAYER.getY());
+                    Master.TRUEPLAYER.setWorld(newWorld);
+                    Chat.log(Master.TRUEPLAYER.getWorld() + " : " + newWorld);
+                    c.world.displayData();
+                    f.revalidate();
+                    f.repaint();
                 });
                 time.setRepeats(false);
                 time.start();

@@ -14,7 +14,7 @@ import java.io.InputStream;
 import serialization.JsonUtil;
 
 /**
- *
+ * Don't need most of this any more, just the map serialization stuff
  * @author Matt
  */
 public class WorldJsonUtil {

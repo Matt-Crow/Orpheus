@@ -11,6 +11,7 @@ import java.awt.Graphics;
 import java.io.Serializable;
 import java.util.ArrayList;
 import windows.WorldCanvas;
+import static java.lang.System.out;
 
 /**
  * The World class will act as a controller for the game.
@@ -125,5 +126,17 @@ public class World implements Serializable{
     public void draw(Graphics g){
         currentMap.draw(g);
         teams.forEach((t)->t.draw(g));
+    }
+    
+    public void displayData(){
+        out.println("WORLD:");
+        out.println("Current minigame:");
+        //currentMinigame.displayData();
+        out.println("Current map:");
+        //currentMap.displayData();
+        out.println("Teams:");
+        teams.forEach((Team t)->{
+            t.displayData();
+        });
     }
 }

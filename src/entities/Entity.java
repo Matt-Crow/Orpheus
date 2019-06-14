@@ -6,10 +6,6 @@ import battle.Team;
 import actions.ActionRegister;
 import controllers.World;
 import java.io.Serializable;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import serialization.JsonSerialable;
 
 public abstract class Entity implements Serializable{
 	/**
@@ -329,36 +325,4 @@ public abstract class Entity implements Serializable{
     public abstract void init();
     public abstract void update();
 	public abstract void draw(Graphics g);
-    
-    /*
-    @Override
-    public JsonObject serializeJson(){
-        JsonObjectBuilder builder = Json.createObjectBuilder();
-        builder.add("type", "entity");
-        builder.add("x", x);
-        builder.add("y", y);
-        builder.add("radius", radius);
-        builder.add("max speed", maxSpeed);
-        builder.add("moving", moving);
-        builder.add("speed filter", speedFilter);
-        builder.add("knockback magnitude", knockbackMag);
-        builder.add("knockback duration", knockbackDur);
-        builder.add("focus x", focusX);
-        builder.add("focus y", focusY);
-        builder.add("has focus", hasFocus);
-        builder.add("should terminate", shouldTerminate);
-        builder.add("id", id);
-        builder.add("dir", dir.getDegrees());
-        builder.add("knockback dir", knockbackDir.getDegrees());
-        
-        //don't need team or inWorld, as those are handled by the JSON this is contained in
-        //how do I serialize actReg?
-        //do I need inNode?
-        
-        return builder.build();
-    }
-    
-    public static Entity deserializeJson(JsonObject obj){
-        throw new UnsupportedOperationException();
-    }*/
 }

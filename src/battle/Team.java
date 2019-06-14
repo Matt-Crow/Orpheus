@@ -1,5 +1,6 @@
 package battle;
 
+import controllers.Master;
 import java.awt.Color;
 import java.util.ArrayList;
 import entities.Player;
@@ -9,6 +10,7 @@ import customizables.Build;
 import entities.EntityManager;
 import java.io.Serializable;
 import java.util.function.Consumer;
+import static java.lang.System.out;
 
 /**
  * The Team class is used to keep track of
@@ -131,5 +133,16 @@ public class Team extends EntityManager implements Serializable{
     public void notifyTerminate(Player p){
         membersRem.remove(p);
         defeated = membersRem.isEmpty();
+    }
+    
+    public void displayData(){
+        out.println("TEAM: " + name);
+        out.println("Roster: ");
+        roster.forEach((Player p)->{
+            if(p.equals(Master.TRUEPLAYER)){
+                out.print("*");
+            }
+            out.println(p.getName());
+        });
     }
 }
