@@ -12,7 +12,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.geom.AffineTransform;
-import javax.swing.*;
 
 public class DrawingPlane extends JPanel{
 	public static final long serialVersionUID = 1L;

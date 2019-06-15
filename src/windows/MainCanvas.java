@@ -14,6 +14,7 @@ import controllers.Master;
 import controllers.World;
 import graphics.Map;
 import graphics.Tile;
+import windows.WorldSelect.WorldSelectCanvas;
 
 @SuppressWarnings("serial")
 public class MainCanvas extends DrawingPlane{
@@ -67,7 +68,8 @@ public class MainCanvas extends DrawingPlane{
 		battle.addActionListener(new AbstractAction(){
             @Override
 			public void actionPerformed(ActionEvent e){
-				startBattle();
+				switchTo(new WorldSelectCanvas());
+                //startBattle();
 			}
 		});
 		addMenuItem(battle);
