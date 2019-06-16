@@ -1,28 +1,13 @@
 package windows;
 
-import battle.Battle;
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
-import java.util.ArrayList;
-
-import gui.OptionBox;
 
 import battle.Team;
-import customizables.*;
-import controllers.Master;
-import controllers.World;
-import graphics.Map;
-import graphics.Tile;
 import windows.WorldSelect.WorldSelectCanvas;
 
 @SuppressWarnings("serial")
 public class MainCanvas extends DrawingPlane{
-	private Team team1;
-	private Team team2;
-	
-	private final OptionBox<String> team1Size;
-	private final OptionBox<String> team2Size;
 	
 	public MainCanvas(){
 		super();
@@ -38,13 +23,6 @@ public class MainCanvas extends DrawingPlane{
 			}
 		});
 		addMenuItem(b);
-		
-		int[] numbers = new int[]{1, 2, 3, 4, 5, 10};
-		String[] numStr = new String[numbers.length];
-		
-		for(int i = 0; i < numbers.length; i++){
-			numStr[i] = Integer.toString(numbers[i]);
-		}
 		
 		JButton newBuild = new JButton("Customize");
 		newBuild.addActionListener(new AbstractAction(){
@@ -62,71 +40,11 @@ public class MainCanvas extends DrawingPlane{
             @Override
 			public void actionPerformed(ActionEvent e){
 				switchTo(new WorldSelectCanvas());
-                //startBattle();
 			}
 		});
-		addMenuItem(battle);
+		add(battle);
 		
-		
-		team1Size = new OptionBox<>("Team 1 size", numStr);
-		team1Size.addActionListener(getRepaint());
-		add(team1Size);
-		
-		team2Size = new OptionBox<>("Team 2 size", numStr);
-		team2Size.addActionListener(getRepaint());
-		add(team2Size);
-		
-		resizeComponents(2, 2);
-		resizeMenu(2);
+		resizeComponents(1, 2);
+		resizeMenu(1);
 	}
-    
-    //this is a lot of work for one function, might want to clean it up a bit
-    private void startBattle(){
-        team1 = Team.constructRandomTeam("Team 1", Color.green, Integer.parseInt(team1Size.getSelected()) - 1);
-        team2 = Team.constructRandomTeam("Team 2", Color.red, Integer.parseInt(team2Size.getSelected()));
-
-        //Master.TRUEPLAYER.applyBuild(Build.getBuildByName(playerBuild.getSelected()));
-        team1.addMember(Master.TRUEPLAYER);
-
-        World battleWorld = new World(20);
-        //it's like a theme park or something
-        battleWorld.createCanvas();
-        
-        Map m = new Map(20, 20);
-        Tile block = new Tile(0, 0, Color.red);
-        block.setBlocking(true);
-        m
-            .addToTileSet(0, new Tile(0, 0, Color.BLUE))
-            .addToTileSet(1, block);
-        m
-            .setTile(8, 10, 1)
-            .setTile(8, 11, 1)
-            .setTile(8, 12, 1)
-            .setTile(7, 12, 1)
-            .setTile(7, 13, 1)
-            .setTile(7, 14, 1)
-            .setTile(8, 14, 1)
-            .setTile(9, 14, 1)
-            .setTile(10, 14, 1)
-            .setTile(10, 13, 1)
-            .setTile(10, 10, 1)
-            .setTile(10, 11, 1)
-            .setTile(10, 12, 1);
-        battleWorld.setMap(m);
-        
-        battleWorld
-            .addTeam(team1)
-            .addTeam(team2);
-        
-        Battle b = new Battle(
-            battleWorld.getCanvas(),
-            team1,
-            team2
-        );
-        battleWorld.setCurrentMinigame(b);
-        b.setHost(battleWorld);
-        
-        battleWorld.init();
-        switchTo(battleWorld.getCanvas());
-    }
 }
