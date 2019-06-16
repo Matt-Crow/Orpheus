@@ -1,0 +1,32 @@
+package windows;
+
+import gui.Style;
+import java.awt.Component;
+import javax.swing.JPanel;
+
+/**
+ * Subpages are rendered by the CardLayout used by the Page class.
+ * The Page acts as a controller for its SubPages, choosing which ones to render.
+ * @author Matt
+ */
+public class SubPage extends JPanel{
+    private final Page inPage; //I'll probably need this somewhere
+    
+    public SubPage(Page p){
+        super();
+        inPage = p;
+        
+        Style.applyStyling(this);
+    }
+    
+    public Page getHostingPage(){
+        return inPage;
+    }
+    
+    @Override
+	public Component add(Component j){
+		super.add(j);
+        Style.applyStyling(j);
+		return j;
+	}
+}

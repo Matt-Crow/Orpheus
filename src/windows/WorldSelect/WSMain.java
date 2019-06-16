@@ -1,18 +1,20 @@
 package windows.WorldSelect;
 
 import gui.Style;
+import windows.SubPage;
 import java.awt.CardLayout;
 import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import windows.Page;
 
 /**
  *
  * @author Matt
  */
-public class WSMain extends JPanel{
-    public WSMain(){
-        super();
+public class WSMain extends SubPage{
+    public WSMain(Page host){
+        super(host);
         setLayout(new GridLayout(1, 3));
         add(soloButton());
         JButton newMulti = new JButton("Host a multiplayer game");
