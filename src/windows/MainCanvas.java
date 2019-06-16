@@ -21,7 +21,6 @@ public class MainCanvas extends DrawingPlane{
 	private Team team1;
 	private Team team2;
 	
-	private final OptionBox<String> playerBuild;
 	private final OptionBox<String> team1Size;
 	private final OptionBox<String> team2Size;
 	
@@ -39,12 +38,6 @@ public class MainCanvas extends DrawingPlane{
 			}
 		});
 		addMenuItem(b);
-		
-		ArrayList<Build> builds = Build.getAllBuilds();
-		String[] buildNameList = new String[builds.size()];
-		for(int i = 0; i < builds.size(); i++){
-			buildNameList[i] = builds.get(i).getName();
-		}
 		
 		int[] numbers = new int[]{1, 2, 3, 4, 5, 10};
 		String[] numStr = new String[numbers.length];
@@ -74,9 +67,6 @@ public class MainCanvas extends DrawingPlane{
 		});
 		addMenuItem(battle);
 		
-		playerBuild = new OptionBox<>("Player build", buildNameList);
-		playerBuild.addActionListener(getRepaint());
-		add(playerBuild);
 		
 		team1Size = new OptionBox<>("Team 1 size", numStr);
 		team1Size.addActionListener(getRepaint());
@@ -95,7 +85,7 @@ public class MainCanvas extends DrawingPlane{
         team1 = Team.constructRandomTeam("Team 1", Color.green, Integer.parseInt(team1Size.getSelected()) - 1);
         team2 = Team.constructRandomTeam("Team 2", Color.red, Integer.parseInt(team2Size.getSelected()));
 
-        Master.TRUEPLAYER.applyBuild(Build.getBuildByName(playerBuild.getSelected()));
+        //Master.TRUEPLAYER.applyBuild(Build.getBuildByName(playerBuild.getSelected()));
         team1.addMember(Master.TRUEPLAYER);
 
         World battleWorld = new World(20);
