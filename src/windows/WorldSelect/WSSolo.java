@@ -13,10 +13,7 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
-import javax.swing.AbstractAction;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import windows.Page;
 import windows.SubPage;
 
@@ -38,7 +35,7 @@ public class WSSolo extends SubPage{
         add(playerBuild);
         
         teamSize = teamSizeSelect();
-        add(teamSizeSelect());
+        add(teamSize);
         
         battle = startBattleButton();
         add(battle);
@@ -70,6 +67,7 @@ public class WSSolo extends SubPage{
                 return Integer.toString(i);
             })
             .toArray(size -> new String[size]);
+        
         OptionBox<String> box = new OptionBox<>("Select team sizes", nums);
         box.addActionListener(new AbstractAction(){
             @Override
@@ -93,7 +91,6 @@ public class WSSolo extends SubPage{
     }
     
     private void startBattle(){
-        System.out.println("In start battle, team size is " + teamSize.getSelected());
         Team team1 = Team.constructRandomTeam("Team 1", Color.green, Integer.parseInt(teamSize.getSelected()) - 1);
         Team team2 = Team.constructRandomTeam("Team 2", Color.red, Integer.parseInt(teamSize.getSelected()));
 
