@@ -44,6 +44,10 @@ public class Chat {
         content.repaint();
     }
     
+    private static void initServer(){
+        
+    }
+    
 	private static void init(){
 		messages = new ArrayList<String>();
 	}
