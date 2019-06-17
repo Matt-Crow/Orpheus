@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -34,8 +35,12 @@ public class Client {
                     
                     String line = "";
                     while(!"done".equals(line)){
-                        line = in.readUTF();
+                        line = JOptionPane.showInputDialog("say something:");
+                        System.out.println("writing utf...");
                         out.writeUTF(line);
+                        System.out.println("flush the buffer");
+                        out.flush();
+                        System.out.println("wrote " + line);
                     }
                     in.close();
                     out.close();
