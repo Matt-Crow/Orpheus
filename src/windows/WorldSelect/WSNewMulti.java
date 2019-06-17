@@ -19,7 +19,7 @@ public class WSNewMulti extends AbstractWSNewWorld{
         Master.TRUEPLAYER.applyBuild(getSelectedBuild());
         SubPage sp = getHostingPage().getCurrentSubPage();
         if(sp instanceof WSWaitForPlayers){
-            ((WSWaitForPlayers)sp).setTeamSize(getTeamSize()).joinTeam1(Master.TRUEPLAYER);
+            ((WSWaitForPlayers)sp).setTeamSize(getTeamSize()).joinTeam1(Master.TRUEPLAYER).startServer();
         }
     }
 }

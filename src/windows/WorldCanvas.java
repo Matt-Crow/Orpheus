@@ -33,7 +33,7 @@ import java.util.logging.Logger;
 import javax.json.JsonObject;
 import serialization.JsonUtil;
 import upgradables.AbstractUpgradable;
-import util.Chat;
+import gui.Chat;
 
 /**
  * Test class for now

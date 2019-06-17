@@ -2,7 +2,13 @@ package windows.WorldSelect;
 
 import entities.Player;
 import java.util.ArrayList;
-import util.Chat;
+import gui.Chat;
+import java.awt.GridLayout;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import windows.Page;
 import windows.SubPage;
 
@@ -17,10 +23,32 @@ public class WSWaitForPlayers extends SubPage{
     
     public WSWaitForPlayers(Page p){
         super(p);
+        
         teamSize = 1;
         team1Players = new ArrayList<>();
         team2Players = new ArrayList<>();
         Chat.addTo(this);
+        setLayout(new GridLayout(1, 1));
+    }
+    
+    public WSWaitForPlayers startServer(){
+        Thread serverListener = new Thread(){
+            @Override
+            public void run(){
+                int port = 6066;
+                String server = "localhost";
+                try {
+                    ServerSocket servSock = new ServerSocket(port);
+                    Socket sock = servSock.accept();
+                    sock.close();
+                } catch (IOException ex) {
+                    Chat.log(ex.getMessage());
+                }
+            }
+        };
+        serverListener.start();
+        
+        return this;
     }
     
     public WSWaitForPlayers setTeamSize(int s){
