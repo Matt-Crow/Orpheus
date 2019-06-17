@@ -57,12 +57,21 @@ public class WSWaitForPlayers extends SubPage{
                     int port = 6066;
                     String server = "localhost";
                     try {
+                        System.out.println("Opening socket...");
                         ServerSocket servSock = new ServerSocket(port);
+                        System.out.println("accepting");
                         socket = servSock.accept();
-                        new DataOutputStream(socket.getOutputStream()).writeUTF("Hello, is this thing on?");
+                        System.out.println("accepted");
+                        DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+                        System.out.println("opened output stream");
+                        dos.writeUTF("Hello, is this thing on?");
+                        System.out.println("wrote UTF, not flush");
+                        dos.flush();
+                        System.out.println("write");
                         while(!socket.isInputShutdown()){
                             System.out.println(new DataInputStream(socket.getInputStream()).readUTF());
                         }
+                        System.out.println("Closing socket");
                         socket.close();
                     } catch (IOException ex) {
                         Chat.log(ex.getMessage());
