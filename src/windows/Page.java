@@ -5,6 +5,8 @@ import graphics.CustomColors;
 import gui.Style;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Arrays;
+import java.util.HashMap;
 import javax.swing.*;
 
 /**
@@ -24,6 +26,8 @@ import javax.swing.*;
 public class Page extends JPanel{
     private final JMenuBar menuBar;
     private final JPanel content;
+    private final HashMap<String, SubPage> subPages; //since CardLayout won't let me extract this
+    private SubPage currentSubPage;
     
     public Page(){
         menuBar = new JMenuBar();
@@ -52,6 +56,9 @@ public class Page extends JPanel{
         setBackground(CustomColors.black);
         setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
         setFocusable(true);
+        
+        subPages = new HashMap<>();
+        currentSubPage = null;
         
         Style.applyStyling(this);
         Style.applyStyling(menuBar);
@@ -86,6 +93,7 @@ public class Page extends JPanel{
      */
     public Page addSubPage(String subPageName, SubPage sub){
         content.add(sub, subPageName);
+        subPages.put(subPageName, sub);
         return this;
     }
     
@@ -125,7 +133,12 @@ public class Page extends JPanel{
      * @param name the name of the SubPage to switch to
      */
     public void switchToSubpage(String name){
+        currentSubPage = subPages.get(name);
         ((CardLayout)content.getLayout()).show(content, name);
+    }
+    
+    public SubPage getCurrentSubPage(){
+        return currentSubPage;
     }
     
     /**

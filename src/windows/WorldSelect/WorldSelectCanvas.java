@@ -15,6 +15,7 @@ public class WorldSelectCanvas extends Page{
     public static final String SOLO = "SOLO";
     public static final String NEW_MULTIPLAYER = "NEW MULTIPLAYER";
     public static final String JOIN_MULTIPLAYER = "JOIN MULTIPLAYER";
+    public static final String WAIT = "WAIT";
     public WorldSelectCanvas(){
         super();
         //addBackButton(new MainCanvas());
@@ -26,7 +27,8 @@ public class WorldSelectCanvas extends Page{
         
         addSubPage(MAIN, new WSMain(this));
         addSubPage(SOLO, new WSSolo(this));
-        addSubPage(NEW_MULTIPLAYER, new SubPage(this));
+        addSubPage(NEW_MULTIPLAYER, new WSNewMulti(this));
         addSubPage(JOIN_MULTIPLAYER, new SubPage(this));
+        addSubPage(WAIT, new WSWaitForPlayers(this));
     }
 }
