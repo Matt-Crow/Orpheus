@@ -6,10 +6,12 @@ import java.util.ArrayList;
 import gui.Chat;
 import gui.Style;
 import java.awt.GridLayout;
+import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import static java.lang.System.out;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -29,6 +31,9 @@ public class WSWaitForPlayers extends SubPage{
     private JButton joinT1Button;
     private JButton joinT2Button;
     private Thread serverListenerThread;
+    
+    private ServerSocket server;
+    private DataInputStream in;
     private Socket socket;
     
     public WSWaitForPlayers(Page p){
@@ -55,24 +60,39 @@ public class WSWaitForPlayers extends SubPage{
                 @Override
                 public void run(){
                     int port = 6066;
-                    String server = "localhost";
+                    String serverName = "localhost";
                     try {
-                        System.out.println("Opening socket...");
+                        String msg = "";
+                        
+                        out.println("Starting server...");
                         ServerSocket servSock = new ServerSocket(port);
-                        System.out.println("accepting");
+                        System.out.println("waiting for client...");
                         socket = servSock.accept();
                         System.out.println("accepted");
+                        
+                        in = new DataInputStream(
+                            new BufferedInputStream(
+                                socket.getInputStream()
+                            )
+                        );
+                        
                         DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
                         System.out.println("opened output stream");
                         dos.writeUTF("Hello, is this thing on?");
                         System.out.println("wrote UTF, not flush");
                         dos.flush();
                         System.out.println("write");
-                        while(!socket.isInputShutdown()){
-                            System.out.println(new DataInputStream(socket.getInputStream()).readUTF());
+                        while(!"no more".equals(msg)){
+                            try{
+                                msg = in.readUTF();
+                                System.out.println(msg);
+                            }catch(IOException bad){
+                                Chat.log(bad.toString());
+                            }
                         }
                         System.out.println("Closing socket");
                         socket.close();
+                        in.close();
                     } catch (IOException ex) {
                         Chat.log(ex.getMessage());
                     }
@@ -81,6 +101,22 @@ public class WSWaitForPlayers extends SubPage{
             serverListenerThread.start();
         }
         
+        return this;
+    }
+    
+    public WSWaitForPlayers joinServer(){
+        Thread t = new Thread(){
+            @Override
+            public void run(){
+                try {
+                    Socket clientSock = new Socket("127.0.0.1", 6066);
+                    System.out.println("connected");
+                } catch (IOException ex) {
+                    Logger.getLogger(WSWaitForPlayers.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        };
+        t.start();
         return this;
     }
     
