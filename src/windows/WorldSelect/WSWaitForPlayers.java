@@ -17,6 +17,7 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
+import net.Server;
 import windows.Page;
 import windows.SubPage;
 
@@ -32,9 +33,13 @@ public class WSWaitForPlayers extends SubPage{
     private JButton joinT2Button;
     private Thread serverListenerThread;
     
-    private ServerSocket server;
+    //private ServerSocket server;
     private DataInputStream in;
     private Socket socket;
+    
+    
+    
+    private Server server;
     
     public WSWaitForPlayers(Page p){
         super(p);
@@ -55,6 +60,13 @@ public class WSWaitForPlayers extends SubPage{
     }
     
     public WSWaitForPlayers startServer(){
+        if(server == null){
+            try {
+                server = new Server(5017);
+            } catch (IOException ex) {
+                Logger.getLogger(WSWaitForPlayers.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         if(serverListenerThread == null){
             serverListenerThread = new Thread(){
                 @Override

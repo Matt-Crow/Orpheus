@@ -1,60 +1,49 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package net;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author Matt
+ * A Server is used to open certain features of Orpheus to other computers.
+ * It works alongside the Client class to manage connections.
+ * Since Orpheus is peer-to-peer at the moment, I'm not sure if Server and Client should just be one class.
+ * @author Matt Crow.
  */
 public class Server {
-    private Socket socket;
     private ServerSocket server;
-    private DataInputStream in;
-    private DataOutputStream out;
-    private Thread t;
+    private final ArrayList<Connection> clientConnections;
+    private Thread t; //listens for new connections
+    private volatile boolean acceptingConn;
+    public static final String SHUTDOWN_MESSAGE = "EXIT";
     
-    public Server(int port){
+    public Server(int port) throws IOException{
+        server = new ServerSocket(port);
+        System.out.println("Server started on " + InetAddress.getLocalHost().getHostAddress());
+        System.out.println(
+            String.format(
+                "To connect to this server, call \'new Socket(\"%s\", %d);\'", 
+                InetAddress.getLocalHost().getHostAddress(), 
+                port
+            )
+        );
+        
+        clientConnections = new ArrayList<>();
+        acceptingConn = true;
+        
         t = new Thread(){
             @Override
             public void run(){
                 try{
-                    server = new ServerSocket(port);
-                    System.out.println("Server started on " + InetAddress.getLocalHost().getHostAddress());
-                    System.out.println(String.format("To connect to this server, call \'new Socket(\"%s\", %d);\'", InetAddress.getLocalHost().getHostAddress(), port));
                     System.out.println("Server started, waiting for client...");
-
-                    socket = server.accept();
-                    System.out.println("accepted");
-
-                    in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-                    out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
                     
-                    String line = "";
-                    while(!"done".equals(line)){
-                        try {
-                            line = in.readUTF();
-                            System.out.println(line);
-                        } catch (IOException ex) {
-                            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                    while(acceptingConn){
+                        connect(server.accept());
                     }
-               
-                    in.close();
-                    socket.close();
                 } catch (IOException ex) {
                     Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -63,19 +52,69 @@ public class Server {
         t.start();
     }
     
-    public void send(String msg){
+    private void connect(Socket otherComputer){
         try{
-            System.out.println("writing " + msg);
-            out.writeUTF(msg);
-            System.out.println("flushing...");
-            out.flush();
-            System.out.println("sent!");
-        } catch(IOException ex){
+            Connection conn = new Connection(otherComputer);
+            clientConnections.add(conn);
+
+            //do I need to store this somewhere?
+            new Thread(){
+                @Override
+                public void run(){
+                    String ip = "";
+                    while(ip != null && !"done".equals(ip)){
+                        try{
+                            ip = conn.readFromClient();
+                            System.out.println(ip);
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                    conn.close();
+                }
+            }.start();
+            System.out.println("connected to " + otherComputer.getInetAddress().getHostAddress());
+        } catch (IOException ex) {
+            System.err.println("Failed to connect to client");
+            ex.printStackTrace();
+        }
+    }
+    
+    public void send(String msg){
+        clientConnections.stream().forEach((Connection c)->{
+            try {
+                c.writeToClient(msg);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+    }
+    
+    public final void setAcceptingConn(boolean b){
+        acceptingConn = b;
+    }
+    
+    public final void shutDown(){
+        clientConnections.stream().forEach((Connection c)->{
+            try {
+                c.writeToClient(SHUTDOWN_MESSAGE);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        try {
+            server.close();
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
     
     public static void main(String[] args){
-        new Server(5000);
+        try {
+            new Server(5000);
+        } catch (IOException ex) {
+            System.err.println("failed to start server");
+            ex.printStackTrace();
+        }
     }
 }

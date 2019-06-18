@@ -28,7 +28,7 @@ public class WorldSelectCanvas extends Page{
         addSubPage(MAIN, new WSMain(this));
         addSubPage(SOLO, new WSSolo(this));
         addSubPage(NEW_MULTIPLAYER, new WSNewMulti(this));
-        addSubPage(JOIN_MULTIPLAYER, new SubPage(this));
+        addSubPage(JOIN_MULTIPLAYER, new WSJoin(this));
         addSubPage(WAIT, new WSWaitForPlayers(this));
     }
 }

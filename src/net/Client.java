@@ -23,8 +23,10 @@ public class Client {
     private DataInputStream in;
     private DataOutputStream out;
     private Thread t;
+    private Consumer<String> receiver;
     
     public Client(String ipAddr, int port, Consumer<String> onReceive){
+        receiver = onReceive;
         t = new Thread(){
             @Override
             public void run(){
@@ -48,7 +50,7 @@ public class Client {
                         try {
                             System.out.println("reading utf...");
                             line = in.readUTF();
-                            onReceive.accept(line);
+                            receiver.accept(line);
                             //System.out.println(line);
                         } catch (IOException ex) {
                             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
@@ -61,6 +63,10 @@ public class Client {
             }
         };
         t.start();
+    }
+    
+    public void receive(String msg){
+        receiver.accept(msg);
     }
     
     public void send(String msg){

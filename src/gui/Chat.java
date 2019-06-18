@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
@@ -55,10 +56,12 @@ public class Chat {
     
     public static void initServer(){
         if(chatServer == null){
-            chatServer = new Server(5000);
             try {
+                chatServer = new Server(5000);
                 logLocal("Initialized chat server on " + InetAddress.getLocalHost().getHostAddress());
             } catch (UnknownHostException ex) {
+                Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
                 Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
