@@ -67,7 +67,7 @@ public class Chat {
         if(chatClient != null){
             chatClient.terminate();
         }else{
-            chatClient = new Client(ipAddr, 5000);
+            chatClient = new Client(ipAddr, 5000, (String s)->logLocal(s));
             logLocal("Initialized chat client on " + ipAddr);
         }
     }
@@ -79,6 +79,7 @@ public class Chat {
 	public static void log(String msg){
         logLocal(msg);
         if(chatServer != null){
+            System.out.println("sending message...");
             chatServer.send(msg);
         }
 	}

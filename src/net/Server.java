@@ -65,8 +65,11 @@ public class Server {
     
     public void send(String msg){
         try{
+            System.out.println("writing " + msg);
             out.writeUTF(msg);
+            System.out.println("flushing...");
             out.flush();
+            System.out.println("sent!");
         } catch(IOException ex){
             ex.printStackTrace();
         }

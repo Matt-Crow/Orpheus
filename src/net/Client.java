@@ -9,6 +9,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -23,14 +24,14 @@ public class Client {
     private DataOutputStream out;
     private Thread t;
     
-    public Client(String ipAddr, int port){
+    public Client(String ipAddr, int port, Consumer<String> onReceive){
         t = new Thread(){
             @Override
             public void run(){
                 try{
                     socket = new Socket(ipAddr, port);
                     System.out.println("connected");
-                    in = new DataInputStream(System.in);
+                    in = new DataInputStream(socket.getInputStream());
                     out = new DataOutputStream(socket.getOutputStream());
                     /*
                     String line = "";
@@ -41,8 +42,19 @@ public class Client {
                         System.out.println("flush the buffer");
                         out.flush();
                         System.out.println("wrote " + line);
+                    }*/
+                    String line = "";
+                    while(!"done".equals(line)){
+                        try {
+                            System.out.println("reading utf...");
+                            line = in.readUTF();
+                            onReceive.accept(line);
+                            //System.out.println(line);
+                        } catch (IOException ex) {
+                            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
-                    terminate();*/
+                    terminate();
                 } catch (IOException ex) {
                     Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -72,6 +84,6 @@ public class Client {
     }
     
     public static void main(String[] args){
-        new Client(JOptionPane.showInputDialog("Enter IP address to connect to: "), 5000);
+        new Client(JOptionPane.showInputDialog("Enter IP address to connect to: "), 5000, (String s)->System.out.println(s));
     }
 }
