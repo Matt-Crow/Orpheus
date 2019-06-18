@@ -3,19 +3,28 @@ package gui;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JPanel;
-import javax.swing.JList;
-import java.util.ArrayList;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import net.Client;
+import net.Server;
 
 public class Chat {
-	private static ArrayList<String> messages;
     private static final JPanel content;
 	private static final JTextArea msgs;
     private static final JScrollPane box;
     private static final JTextField newMsg;
+    
+    private static Server chatServer = null;
+    private static Client chatClient = null;
 	
     static{
         content = new JPanel();
@@ -44,28 +53,50 @@ public class Chat {
         content.repaint();
     }
     
-    private static void initServer(){
-        
+    public static void initServer(){
+        if(chatServer == null){
+            chatServer = new Server(5000);
+            try {
+                logLocal("Initialized chat server on " + InetAddress.getLocalHost().getHostAddress());
+            } catch (UnknownHostException ex) {
+                Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
-    
-	private static void init(){
-		messages = new ArrayList<String>();
-	}
+    public static void listenToServer(String ipAddr){
+        if(chatClient != null){
+            chatClient.terminate();
+        }else{
+            chatClient = new Client(ipAddr, 5000);
+            logLocal("Initialized chat client on " + ipAddr);
+        }
+    }
 	
-	public static void log(String msg){
-		messages.add(msg);
-		String[] contents = new String[messages.size()];
-		for(int i = 0; i < messages.size(); i++){
-			contents[i] = messages.get(i);
-		}
-		JList<String> list = new JList<String>(contents);
-		//box.setViewportView(list);
+    public static void logLocal(String msg){
         msgs.setText(msgs.getText() + '\n' + msg);
 	}
+    
+	public static void log(String msg){
+        logLocal(msg);
+        if(chatServer != null){
+            chatServer.send(msg);
+        }
+	}
 	public static void addTo(JPanel j){
-		init();
-		//box.setBounds(0, 0, 100, 100);
-		//j.add(box);
         j.add(content);
 	}
+    
+    public static void main(String[] args){
+        JFrame f = new JFrame();
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setVisible(true);
+        
+        JPanel p = new JPanel();
+        p.setLayout(new GridLayout(1, 1));
+        f.setContentPane(p);
+        
+        Chat.addTo(p);
+        Chat.initServer();
+        Chat.listenToServer(JOptionPane.showInputDialog("enter IP address to connect to: "));
+    }
 }

@@ -32,7 +32,7 @@ public class Client {
                     System.out.println("connected");
                     in = new DataInputStream(System.in);
                     out = new DataOutputStream(socket.getOutputStream());
-                    
+                    /*
                     String line = "";
                     while(!"done".equals(line)){
                         line = JOptionPane.showInputDialog("say something:");
@@ -42,9 +42,7 @@ public class Client {
                         out.flush();
                         System.out.println("wrote " + line);
                     }
-                    in.close();
-                    out.close();
-                    socket.close();
+                    terminate();*/
                 } catch (IOException ex) {
                     Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -53,7 +51,27 @@ public class Client {
         t.start();
     }
     
+    public void send(String msg){
+        try{
+            out.writeUTF(msg);
+            out.flush();
+        } catch(IOException ex){
+            ex.printStackTrace();
+        }
+    }
+    
+    public void terminate(){
+        try{
+            send("done");
+            in.close();
+            out.close();
+            socket.close();
+        } catch(IOException ex){
+            ex.printStackTrace();
+        }
+    }
+    
     public static void main(String[] args){
-        new Client("127.0.0.1", 5000);
+        new Client(JOptionPane.showInputDialog("Enter IP address to connect to: "), 5000);
     }
 }

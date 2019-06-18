@@ -6,9 +6,11 @@
 package net;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -31,13 +33,15 @@ public class Server {
             public void run(){
                 try{
                     server = new ServerSocket(port);
+                    System.out.println("Server started on " + InetAddress.getLocalHost().getHostAddress());
+                    System.out.println(String.format("To connect to this server, call \'new Socket(\"%s\", %d);\'", InetAddress.getLocalHost().getHostAddress(), port));
                     System.out.println("Server started, waiting for client...");
 
                     socket = server.accept();
                     System.out.println("accepted");
 
                     in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-                    //do something with out?
+                    out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
                     
                     String line = "";
                     while(!"done".equals(line)){
@@ -57,6 +61,15 @@ public class Server {
             }
         };
         t.start();
+    }
+    
+    public void send(String msg){
+        try{
+            out.writeUTF(msg);
+            out.flush();
+        } catch(IOException ex){
+            ex.printStackTrace();
+        }
     }
     
     public static void main(String[] args){
