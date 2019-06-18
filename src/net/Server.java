@@ -44,6 +44,7 @@ public class Server {
                     while(acceptingConn){
                         connect(server.accept());
                     }
+                    System.out.println("done acception connections.");
                 } catch (IOException ex) {
                     Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -90,6 +91,7 @@ public class Server {
         });
     }
     
+    //todo make this restart the listening server if it was shut down
     public final void setAcceptingConn(boolean b){
         acceptingConn = b;
     }

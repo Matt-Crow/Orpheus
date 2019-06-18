@@ -43,12 +43,7 @@ public class WSMain extends SubPage{
         JButton joinMulti = new JButton("Join a multiplayer game");
         Style.applyStyling(joinMulti);
         joinMulti.addActionListener((e)->{
-            //getHostingPage().switchToSubpage(WorldSelectCanvas.JOIN_MULTIPLAYER);
-            getHostingPage().switchToSubpage(WorldSelectCanvas.WAIT);
-            SubPage sp = getHostingPage().getCurrentSubPage();
-            if(sp instanceof WSWaitForPlayers){
-                ((WSWaitForPlayers)sp).joinServer();
-            }
+            getHostingPage().switchToSubpage(WorldSelectCanvas.JOIN_MULTIPLAYER);
         });
         return joinMulti;
     }
