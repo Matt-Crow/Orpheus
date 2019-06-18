@@ -67,6 +67,7 @@ public class OrpheusServer {
         }
     }
     
+    //TODO add ability to disconnect
     private void connect(String ipAddr){
         try {
             connect(new Socket(ipAddr, server.getLocalPort()));

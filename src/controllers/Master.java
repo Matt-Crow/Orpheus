@@ -2,8 +2,9 @@ package controllers;
 
 import java.awt.Toolkit;
 import entities.TruePlayer;
-import battle.Battle;
+import java.io.IOException;
 import javax.swing.JFrame;
+import net.OrpheusServer;
 
 public class Master {
 	public static final TruePlayer TRUEPLAYER = new TruePlayer();
@@ -18,6 +19,7 @@ public class Master {
 	public static final boolean DISABLEPARTICLES = false; // causes lag
 	public static final int FPS = 30;
 	public static final int UNITSIZE = 100;
+    private static OrpheusServer server = null;
     
     static {
         JFrame f = new JFrame();
@@ -34,4 +36,13 @@ public class Master {
 	public static int framesToSeconds(int frames){
 		return frames / FPS;
 	}
+    
+    public static void startServer() throws IOException{
+        if(server == null){
+            server = new OrpheusServer(5000);
+        }
+    }
+    public static OrpheusServer getServer(){
+        return server;
+    }
 }
