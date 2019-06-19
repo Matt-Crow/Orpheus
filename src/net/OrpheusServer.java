@@ -1,5 +1,6 @@
 package net;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -10,6 +11,7 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import static java.lang.System.out;
 
 /**
  * OrpheusServer is a somewhat deceptive title, as this is
@@ -121,7 +123,6 @@ public class OrpheusServer {
                 @Override
                 public void run(){
                     String ip = "";
-                    
                     while(true){
                         try{
                             ip = conn.readFromClient();
@@ -131,15 +132,22 @@ public class OrpheusServer {
                             }
                             receive(ip);
                             
+                        } catch (EOFException ex){
+                            ex.printStackTrace();
+                            out.println("connection terminated");
+                            break;
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         }
                     }
+                    out.println("disconnecting...");
                     disconnect(otherComputer.getInetAddress().getHostAddress());
+                    out.println("closing...");
                     conn.close();
                 }
             }.start();
-            System.out.println("connected to " + otherComputer.getInetAddress().getHostAddress());
+            //out.println("connected to " + otherComputer.getInetAddress().getHostAddress());
+            //out.println("Writing to client: joined " + getIpAddr());
             conn.writeToClient(SOMEONE_JOINED + getIpAddr());
         } catch (IOException ex) {
             System.err.println("Failed to connect to client");
@@ -149,11 +157,14 @@ public class OrpheusServer {
     private void disconnect(String ipAddr){
         if(connections.containsKey(ipAddr)){
             try {
+                out.println("sending someone left " + ipAddr);
                 connections.get(ipAddr).writeToClient(SOMEONE_LEFT + getIpAddr());
                 connections.remove(ipAddr);
             } catch (IOException ex) {
                 Logger.getLogger(OrpheusServer.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }else{
+            out.println("not contains key " + ipAddr);
         }
     }
     
@@ -168,20 +179,25 @@ public class OrpheusServer {
     }
     
     public void receive(String msg){
-        System.out.println(msg.toUpperCase());
+        out.println("Received " + msg.toUpperCase());
         if(msg.toUpperCase().contains(SOMEONE_JOINED.toUpperCase())){
             String ipAddr = msg.replace(SOMEONE_JOINED, "");
+            //out.println(ipAddr + " joined"); 
             if(!connections.containsKey(ipAddr)){
+                out.println("connect");
                 connect(ipAddr);
+            }else{
+                out.println("already connected");
             }
-            //System.out.println(ipAddr);
         }else if(msg.toUpperCase().contains(SOMEONE_LEFT.toUpperCase())){
             String ipAddr = msg.replace(SOMEONE_LEFT, "");
-            
+            out.println(ipAddr + " left"); 
             if(connections.containsKey(ipAddr)){
+                out.println("disconnect");
                 disconnect(ipAddr);
+            }else{
+                out.println("no disconnect");
             }
-            System.out.println(ipAddr);
         }else{
             receiver.accept(msg);
         }
