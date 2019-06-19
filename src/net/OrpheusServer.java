@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -75,7 +76,13 @@ public class OrpheusServer {
     }
     
     public String getIpAddr(){
-        return server.getInetAddress().getHostAddress();
+        String ret = "ERROR";
+        try {
+            ret = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(OrpheusServer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ret;
     }
     
     //todo make this change how it reacts to receiving messages

@@ -1,6 +1,9 @@
 package windows.WorldSelect;
 
-import javax.swing.JTextArea;
+import controllers.Master;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JTextField;
 import windows.Page;
 import windows.SubPage;
@@ -15,7 +18,18 @@ public class WSJoin extends SubPage{
         //work in progress
         JTextField ip = new JTextField("enter host address here");
         ip.addActionListener((e)->{
-            
+            if(Master.getServer() == null){
+                try {
+                    Master.startServer();
+                } catch (IOException ex) {
+                    ip.setText("Failed to start local server");
+                    ex.printStackTrace();
+                }
+            }
+            if(Master.getServer() != null){
+                Master.getServer().connect(ip.getText());
+                this.getHostingPage().switchToSubpage(WorldSelectCanvas.WAIT);
+            }
         });
         add(ip);
     }

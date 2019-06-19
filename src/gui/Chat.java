@@ -7,7 +7,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -75,29 +74,6 @@ public class Chat {
             logLocal("Joined chat with " + ipAddr);
         }
     }
-    
-    /*
-    public static void initServer(){
-        
-        if(chatServer == null){
-            try {
-                chatServer = new Server(5000);
-                logLocal("Initialized chat server on " + InetAddress.getLocalHost().getHostAddress());
-            } catch (UnknownHostException ex) {
-                Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-    public static void listenToServer(String ipAddr){
-        if(chatClient != null){
-            chatClient.terminate();
-        }else{
-            chatClient = new Client(ipAddr, 5000, (String s)->logLocal(s));
-            logLocal("Initialized chat client on " + ipAddr);
-        }
-    }*/
 	
     public static void logLocal(String msg){
         msgs.setText(msgs.getText() + '\n' + msg);
