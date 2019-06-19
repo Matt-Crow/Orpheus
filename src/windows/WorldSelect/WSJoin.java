@@ -27,8 +27,10 @@ public class WSJoin extends SubPage{
                 }
             }
             if(Master.getServer() != null){
-                Master.getServer().connect(ip.getText());
-                this.getHostingPage().switchToSubpage(WorldSelectCanvas.WAIT);
+                getHostingPage().switchToSubpage(WorldSelectCanvas.WAIT);
+                if(getHostingPage().getCurrentSubPage() instanceof WSWaitForPlayers){
+                    ((WSWaitForPlayers)getHostingPage().getCurrentSubPage()).joinServer(ip.getText());
+                }
             }
         });
         add(ip);

@@ -76,6 +76,7 @@ public class WSWaitForPlayers extends SubPage{
         }
         if(Master.getServer() != null){//successfully started
             Master.getServer().connect(ipAddr);
+            Chat.joinChat(ipAddr);
             Master.getServer().send("yay I connected");
         }
         return this;
