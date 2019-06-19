@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -53,11 +54,19 @@ public class Chat {
         if(Master.getServer() == null){
             try {
                 Master.startServer();
-                Master.getServer().setState(OrpheusServerState.WAITING_ROOM);
-                Master.getServer().setReceiverFunction((String s)->logLocal(s));
-                logLocal("Initialized chat server on " + InetAddress.getLocalHost().getHostAddress());
             } catch (IOException ex) {
                 logLocal("Failed to start chat server");
+                ex.printStackTrace();
+            }
+        }
+        
+        //started successfully
+        if(Master.getServer() != null){
+            Master.getServer().setState(OrpheusServerState.WAITING_ROOM);
+            Master.getServer().setReceiverFunction((String s)->logLocal(s));
+            try {
+                logLocal("Initialized chat server on " + InetAddress.getLocalHost().getHostAddress());
+            } catch (UnknownHostException ex) {
                 ex.printStackTrace();
             }
         }

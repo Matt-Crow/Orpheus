@@ -115,6 +115,11 @@ public class OrpheusServer {
     
     private void connect(Socket otherComputer){
         try{
+            if(connections.containsKey(otherComputer.getInetAddress().getHostAddress())){
+                out.println("Already connected to " + otherComputer.getInetAddress().getHostAddress());
+                return;
+            }
+            
             Connection conn = new Connection(otherComputer);
             connections.put(otherComputer.getInetAddress().getHostAddress(), conn);
 
@@ -181,6 +186,7 @@ public class OrpheusServer {
     public void receive(String msg){
         out.println("Received " + msg.toUpperCase());
         if(msg.toUpperCase().contains(SOMEONE_JOINED.toUpperCase())){
+            logConnections();
             String ipAddr = msg.replace(SOMEONE_JOINED, "");
             //out.println(ipAddr + " joined"); 
             if(!connections.containsKey(ipAddr)){
@@ -227,6 +233,12 @@ public class OrpheusServer {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+    
+    public synchronized void logConnections(){
+        out.println("CONNECTIONS:");
+        connections.keySet().forEach((ipAddr)->out.println(ipAddr));
+        out.println("END OF CONNECTIONS");
     }
     
     public static void main(String[] args){
