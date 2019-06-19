@@ -5,26 +5,35 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
- * Use this to manage all server stuffs
- * that way I don't have to open tons of connections for chat, waiting room, match, etc.
+ * OrpheusServer is a somewhat deceptive title, as this is
+ * used to establish peer-to-peer connections between players.
+ * 
+ * this class handles all of the interactions between computers, including
+ * <ul>
+ * <li>Chat</li>
+ * <li>Joining a pre-match waiting room</li>
+ * <li>Joining a World</li>
+ * </ul>
  * @author Matt Crow
  */
 public class OrpheusServer {
     private final ServerSocket server;
-    private final ArrayList<Connection> connections;
+    private final HashMap<String, Connection> connections;
     private Thread connListener;
     private volatile boolean listenForConn;
     private OrpheusServerState state; //what this server is doing
     private Consumer<String> receiver; //messages sent to the server are fed into this
     
     public static final String SHUTDOWN_MESSAGE = "EXIT";
+    public static final String SOMEONE_JOINED = "Conn: ";
+    public static final String SOMEONE_LEFT = "Discon: ";
     
     public OrpheusServer(int port) throws IOException{
         state = OrpheusServerState.NONE;
@@ -47,7 +56,7 @@ public class OrpheusServer {
             )
         );
         
-        connections = new ArrayList<>();
+        connections = new HashMap<>();
         listenForConn = true;
         
         startConnListener();
@@ -85,7 +94,7 @@ public class OrpheusServer {
         return ret;
     }
     
-    //todo make this change how it reacts to receiving messages
+    //todo make this change how it reacts to receiving messages?
     public void setState(OrpheusServerState s){
         state = s;
     }
@@ -105,33 +114,51 @@ public class OrpheusServer {
     private void connect(Socket otherComputer){
         try{
             Connection conn = new Connection(otherComputer);
-            connections.add(conn);
+            connections.put(otherComputer.getInetAddress().getHostAddress(), conn);
 
             //do I need to store this somewhere?
             new Thread(){
                 @Override
                 public void run(){
                     String ip = "";
-                    while(ip != null && !SHUTDOWN_MESSAGE.equals(ip)){
+                    
+                    while(true){
                         try{
                             ip = conn.readFromClient();
+                            if(ip == null || ip.contains(SHUTDOWN_MESSAGE)){
+                                System.out.println("breaking");
+                                break;
+                            }
                             receive(ip);
+                            
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         }
                     }
+                    disconnect(otherComputer.getInetAddress().getHostAddress());
                     conn.close();
                 }
             }.start();
             System.out.println("connected to " + otherComputer.getInetAddress().getHostAddress());
+            conn.writeToClient(SOMEONE_JOINED + getIpAddr());
         } catch (IOException ex) {
             System.err.println("Failed to connect to client");
             ex.printStackTrace();
         }
     }
+    private void disconnect(String ipAddr){
+        if(connections.containsKey(ipAddr)){
+            try {
+                connections.get(ipAddr).writeToClient(SOMEONE_LEFT + getIpAddr());
+                connections.remove(ipAddr);
+            } catch (IOException ex) {
+                Logger.getLogger(OrpheusServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
     
     public void send(String msg){
-        connections.stream().forEach((Connection c)->{
+        connections.values().stream().forEach((Connection c)->{
             try {
                 c.writeToClient(msg);
             } catch (IOException ex) {
@@ -141,7 +168,23 @@ public class OrpheusServer {
     }
     
     public void receive(String msg){
-        receiver.accept(msg);
+        System.out.println(msg.toUpperCase());
+        if(msg.toUpperCase().contains(SOMEONE_JOINED.toUpperCase())){
+            String ipAddr = msg.replace(SOMEONE_JOINED, "");
+            if(!connections.containsKey(ipAddr)){
+                connect(ipAddr);
+            }
+            //System.out.println(ipAddr);
+        }else if(msg.toUpperCase().contains(SOMEONE_LEFT.toUpperCase())){
+            String ipAddr = msg.replace(SOMEONE_LEFT, "");
+            
+            if(connections.containsKey(ipAddr)){
+                disconnect(ipAddr);
+            }
+            System.out.println(ipAddr);
+        }else{
+            receiver.accept(msg);
+        }
     }
     
     public void setReceiverFunction(Consumer<String> nomNom){
@@ -156,7 +199,7 @@ public class OrpheusServer {
     }
     
     public final void shutDown(){
-        connections.stream().forEach((Connection c)->{
+        connections.values().stream().forEach((Connection c)->{
             try {
                 c.writeToClient(SHUTDOWN_MESSAGE);
             } catch (IOException ex) {
