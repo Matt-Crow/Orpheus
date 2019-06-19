@@ -105,7 +105,7 @@ public class OrpheusServer {
     }
     
     //TODO add ability to disconnect
-    public void connect(String ipAddr){
+    public synchronized void connect(String ipAddr){
         try {
             connect(new Socket(ipAddr, server.getLocalPort()));
         } catch (IOException ex) {
@@ -113,8 +113,9 @@ public class OrpheusServer {
         }
     }
     
-    private void connect(Socket otherComputer){
+    private synchronized void connect(Socket otherComputer){
         try{
+            logConnections();
             if(connections.containsKey(otherComputer.getInetAddress().getHostAddress())){
                 out.println("Already connected to " + otherComputer.getInetAddress().getHostAddress());
                 return;
@@ -151,15 +152,15 @@ public class OrpheusServer {
                     conn.close();
                 }
             }.start();
-            //out.println("connected to " + otherComputer.getInetAddress().getHostAddress());
-            //out.println("Writing to client: joined " + getIpAddr());
+            out.println("connected to " + otherComputer.getInetAddress().getHostAddress());
+            out.println("Writing to client: joined " + getIpAddr());
             conn.writeToClient(SOMEONE_JOINED + getIpAddr());
         } catch (IOException ex) {
             System.err.println("Failed to connect to client");
             ex.printStackTrace();
         }
     }
-    private void disconnect(String ipAddr){
+    private synchronized void disconnect(String ipAddr){
         if(connections.containsKey(ipAddr)){
             try {
                 out.println("sending someone left " + ipAddr);
