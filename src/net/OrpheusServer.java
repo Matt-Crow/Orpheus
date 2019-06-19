@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -19,9 +20,15 @@ public class OrpheusServer {
     private final ArrayList<Connection> connections;
     private Thread connListener;
     private volatile boolean listenForConn;
+    private OrpheusServerState state; //what this server is doing
+    private Consumer<String> receiver; //messages sent to the server are fed into this
+    
     public static final String SHUTDOWN_MESSAGE = "EXIT";
     
     public OrpheusServer(int port) throws IOException{
+        state = OrpheusServerState.NONE;
+        receiver = (String s)->System.out.println(s);
+        
         try{
             server = new ServerSocket(port);
         } catch (IOException ex) {
@@ -67,8 +74,20 @@ public class OrpheusServer {
         }
     }
     
+    public String getIpAddr(){
+        return server.getInetAddress().getHostAddress();
+    }
+    
+    //todo make this change how it reacts to receiving messages
+    public void setState(OrpheusServerState s){
+        state = s;
+    }
+    public OrpheusServerState getState(){
+        return state;
+    }
+    
     //TODO add ability to disconnect
-    private void connect(String ipAddr){
+    public void connect(String ipAddr){
         try {
             connect(new Socket(ipAddr, server.getLocalPort()));
         } catch (IOException ex) {
@@ -115,7 +134,11 @@ public class OrpheusServer {
     }
     
     public void receive(String msg){
-        System.out.println(msg);
+        receiver.accept(msg);
+    }
+    
+    public void setReceiverFunction(Consumer<String> nomNom){
+        receiver = nomNom;
     }
     
     public final void setAcceptingConn(boolean b){

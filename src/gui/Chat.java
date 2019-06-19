@@ -1,5 +1,6 @@
 package gui;
 
+import controllers.Master;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -15,17 +16,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import net.Client;
-import net.Server;
+import net.OrpheusServerState;
 
 public class Chat {
     private static final JPanel content;
 	private static final JTextArea msgs;
     private static final JScrollPane box;
     private static final JTextField newMsg;
-    
-    private static Server chatServer = null;
-    private static Client chatClient = null;
 	
     static{
         content = new JPanel();
@@ -53,8 +50,35 @@ public class Chat {
         content.revalidate();
         content.repaint();
     }
+    public static void openChatServer(){
+        if(Master.getServer() == null){
+            try {
+                Master.startServer();
+                Master.getServer().setState(OrpheusServerState.WAITING_ROOM);
+                Master.getServer().setReceiverFunction((String s)->logLocal(s));
+                logLocal("Initialized chat server on " + InetAddress.getLocalHost().getHostAddress());
+            } catch (IOException ex) {
+                logLocal("Failed to start chat server");
+                ex.printStackTrace();
+            }
+        }
+    }
     
+    public static void joinChat(String ipAddr){
+        if(Master.getServer() == null){
+            openChatServer();
+        }
+        //need to double check to make sure it was started successfully,
+        //so an else statement won't work
+        if(Master.getServer() != null){
+            Master.getServer().connect(ipAddr);
+            logLocal("Joined chat with " + ipAddr);
+        }
+    }
+    
+    /*
     public static void initServer(){
+        
         if(chatServer == null){
             try {
                 chatServer = new Server(5000);
@@ -73,17 +97,17 @@ public class Chat {
             chatClient = new Client(ipAddr, 5000, (String s)->logLocal(s));
             logLocal("Initialized chat client on " + ipAddr);
         }
-    }
+    }*/
 	
     public static void logLocal(String msg){
         msgs.setText(msgs.getText() + '\n' + msg);
 	}
     
 	public static void log(String msg){
-        logLocal(msg);
-        if(chatServer != null){
+        logLocal("You: " + msg);
+        if(Master.getServer() != null){
             System.out.println("sending message...");
-            chatServer.send(msg);
+            Master.getServer().send(Master.getServer().getIpAddr() + " " + msg);
         }
 	}
 	public static void addTo(JPanel j){
@@ -100,7 +124,7 @@ public class Chat {
         f.setContentPane(p);
         
         Chat.addTo(p);
-        Chat.initServer();
-        Chat.listenToServer(JOptionPane.showInputDialog("enter IP address to connect to: "));
+        Chat.openChatServer();
+        Chat.joinChat(JOptionPane.showInputDialog("enter IP address to connect to: "));
     }
 }

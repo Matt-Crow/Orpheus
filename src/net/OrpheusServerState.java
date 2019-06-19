@@ -6,5 +6,6 @@ package net;
  */
 public enum OrpheusServerState {
     WAITING_ROOM,
-    MATCH
+    MATCH,
+    NONE
 }
