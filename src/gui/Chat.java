@@ -80,6 +80,8 @@ public class Chat {
         //so an else statement won't work
         if(Master.getServer() != null){
             Master.getServer().connect(ipAddr);
+            Master.getServer().setState(OrpheusServerState.WAITING_ROOM);
+            Master.getServer().setReceiverFunction((String s)->logLocal(s));
             logLocal("Joined chat with " + ipAddr);
         }
     }
