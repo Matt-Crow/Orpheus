@@ -13,6 +13,14 @@ import serialization.JsonUtil;
 /**
  * The ServerMessage class is used to send information back
  * and forth between computers.
+ * <h2>Possible types</h2>
+ * <ul>
+ * <li>ServerMessage.CHAT_MESSAGE</li>
+ * <li>ServerMessage.WAITING_ROOM_UPDATE</li>
+ * <li>ServerMessage.PLAYER_JOINED</li>
+ * <li>ServerMessage.PLAYER_LEFT</li>
+ * <li>ServerMessage.OTHER</li>
+ * </ul>
  * 
  * @author Matt Crow
  */

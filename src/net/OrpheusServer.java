@@ -24,6 +24,13 @@ import javax.json.JsonException;
  * <li>Joining a pre-match waiting room</li>
  * <li>Joining a World</li>
  * </ul>
+ * 
+ * Information is sent between OrpheusServers as ServerMessages,
+ * encoded into JSON format, then converted into a String.
+ * Upon receiving input into its socket, the server will attempt to de-serialize it.
+ * If the de-serialization is successful, it takes the type of that message,
+ * and calls the corresponding Consumer in the 'receivers' HashMap.
+ * 
  * @author Matt Crow
  */
 public class OrpheusServer {
@@ -221,23 +228,6 @@ public class OrpheusServer {
             } else {
                 dealtWith = false;
             }
-            /*
-            switch(sm.getType()){
-                case ServerMessage.CHAT_MESSAGE:
-                    //Chat.logLocal(String.format("(%s): %s", sm.getSenderIpAddr(), sm.getBody()));
-                    break;
-                case ServerMessage.PLAYER_JOINED:
-                    out.println("player joined " + sm.getSenderIpAddr());
-                    if(connections.containsKey(sm.getSenderIpAddr())){
-                        out.println("already connected");
-                    } else {
-                        connect(sm.getSenderIpAddr());
-                    }
-                    break;
-                default:
-                    
-                    break;
-            }*/
         } catch (JsonException ex){
             out.println("nope. not server message");
             ex.printStackTrace();
@@ -262,6 +252,12 @@ public class OrpheusServer {
         }
     }
     
+    /**
+     * 
+     * @param key the type of ServerMessage this should receive. See ServerMessage for possible values this may have
+     * @param nomNom the function to run upon receiving a ServerMessage of the given type. 
+     * @see ServerMessage
+     */
     public void setReceiverFunction(int key, Consumer<ServerMessage> nomNom){
         receivers.put(key, nomNom);
     }
