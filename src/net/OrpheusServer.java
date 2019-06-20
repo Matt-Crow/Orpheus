@@ -36,7 +36,6 @@ public class OrpheusServer {
     private Consumer<String> receiver; //messages sent to the server are fed into this
     
     public static final String SHUTDOWN_MESSAGE = "EXIT";
-    public static final String SOMEONE_JOINED = "Conn: ";
     public static final String SOMEONE_LEFT = "Discon: ";
     
     public OrpheusServer(int port) throws IOException{
@@ -153,7 +152,7 @@ public class OrpheusServer {
             }.start();
             out.println("connected to " + otherComputer.getInetAddress().getHostAddress());
             out.println("Writing to client: joined " + getIpAddr());
-            conn.writeToClient(SOMEONE_JOINED + getIpAddr());
+            //conn.writeToClient(SOMEONE_JOINED + getIpAddr());
             
             conn.writeToClient(new ServerMessage(
                 "hi",
@@ -222,6 +221,7 @@ public class OrpheusServer {
             }
         } catch (JsonException ex){
             out.println("nope. not server message");
+            ex.printStackTrace();
         }
         
         if(dealtWith){
@@ -229,17 +229,7 @@ public class OrpheusServer {
         }
         
         out.println("Received " + msg.toUpperCase());
-        if(msg.toUpperCase().contains(SOMEONE_JOINED.toUpperCase())){
-            logConnections();
-            String ipAddr = msg.replace(SOMEONE_JOINED, "");
-            //out.println(ipAddr + " joined"); 
-            if(!connections.containsKey(ipAddr)){
-                out.println("connect");
-                connect(ipAddr);
-            }else{
-                out.println("already connected");
-            }
-        }else if(msg.toUpperCase().contains(SOMEONE_LEFT.toUpperCase())){
+        if(msg.toUpperCase().contains(SOMEONE_LEFT.toUpperCase())){
             String ipAddr = msg.replace(SOMEONE_LEFT, "");
             out.println(ipAddr + " left"); 
             if(connections.containsKey(ipAddr)){
