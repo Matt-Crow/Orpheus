@@ -1,16 +1,20 @@
 package net;
 
-import java.io.Serializable;
+import java.io.StringReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import javax.json.Json;
+import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import serialization.JsonSerialable;
+import serialization.JsonUtil;
 
 /**
- *
- * @author Matt
+ * The ServerMessage class is used to send information back
+ * and forth between computers.
+ * 
+ * @author Matt Crow
  */
 public class ServerMessage implements JsonSerialable{
     
@@ -74,6 +78,34 @@ public class ServerMessage implements JsonSerialable{
         ret.add("from", fromIpAddr);
         ret.add("body", body);
         return ret.build();
+    }
+    
+    /**
+     * De-serializes an object, then converts it to a ServerMessage
+     * @param obj the JsonObject to de-serialize
+     * @return the ServerMessage encoded as obj
+     * @throws JsonException if the JsonObject is not a ServerMessage
+     */
+    public static ServerMessage deserializeJson(JsonObject obj) throws JsonException{
+        JsonUtil.verify(obj, "type");
+        JsonUtil.verify(obj, "from");
+        JsonUtil.verify(obj, "body");
+        return new ServerMessage(
+            obj.getString("from"),
+            obj.getString("body"),
+            obj.getInt("type")
+        );
+    }
+    
+    /**
+     * Attempts to convert a string to a JsonObject,
+     * then attempts to convert that JsonObject to a ServerMessage
+     * @param s
+     * @return
+     * @throws JsonException 
+     */
+    public static ServerMessage deserializeJson(String s) throws JsonException{
+        return deserializeJson(Json.createReader(new StringReader(s)).readObject());
     }
     
     public String toJsonString(){

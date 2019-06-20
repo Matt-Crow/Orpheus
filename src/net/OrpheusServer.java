@@ -1,5 +1,6 @@
 package net;
 
+import gui.Chat;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -12,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import static java.lang.System.out;
+import javax.json.JsonException;
 
 /**
  * OrpheusServer is a somewhat deceptive title, as this is
@@ -96,7 +98,6 @@ public class OrpheusServer {
         return ret;
     }
     
-    //todo make this change how it reacts to receiving messages?
     public void setState(OrpheusServerState s){
         state = s;
     }
@@ -104,7 +105,6 @@ public class OrpheusServer {
         return state;
     }
     
-    //TODO add ability to disconnect
     public synchronized void connect(String ipAddr){
         try {
             connect(new Socket(ipAddr, server.getLocalPort()));
@@ -112,7 +112,6 @@ public class OrpheusServer {
             Logger.getLogger(OrpheusServer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
     private synchronized void connect(Socket otherComputer){
         try{
             logConnections();
@@ -195,6 +194,15 @@ public class OrpheusServer {
     }
     
     public void receive(String msg){
+        try{
+            ServerMessage sm = ServerMessage.deserializeJson(msg);
+            if(sm.getType() == ServerMessage.CHAT_MESSAGE){
+                Chat.logLocal(String.format("(%s): %s", sm.getSenderIpAddr(), sm.getBody()));
+            }
+        } catch (JsonException ex){
+            out.println("nope. not server message");
+        }
+        
         out.println("Received " + msg.toUpperCase());
         if(msg.toUpperCase().contains(SOMEONE_JOINED.toUpperCase())){
             logConnections();
