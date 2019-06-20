@@ -154,6 +154,12 @@ public class OrpheusServer {
             out.println("connected to " + otherComputer.getInetAddress().getHostAddress());
             out.println("Writing to client: joined " + getIpAddr());
             conn.writeToClient(SOMEONE_JOINED + getIpAddr());
+            
+            conn.writeToClient(new ServerMessage(
+                "hi",
+                ServerMessage.PLAYER_JOINED
+            ).toJsonString());
+            
         } catch (IOException ex) {
             System.err.println("Failed to connect to client");
             ex.printStackTrace();
@@ -194,13 +200,32 @@ public class OrpheusServer {
     }
     
     public void receive(String msg){
+        boolean dealtWith = false; //can get rid of this once I'm done with the switch statement
         try{
             ServerMessage sm = ServerMessage.deserializeJson(msg);
-            if(sm.getType() == ServerMessage.CHAT_MESSAGE){
-                Chat.logLocal(String.format("(%s): %s", sm.getSenderIpAddr(), sm.getBody()));
+            dealtWith = true;
+            switch(sm.getType()){
+                case ServerMessage.CHAT_MESSAGE:
+                    Chat.logLocal(String.format("(%s): %s", sm.getSenderIpAddr(), sm.getBody()));
+                    break;
+                case ServerMessage.PLAYER_JOINED:
+                    out.println("player joined " + sm.getSenderIpAddr());
+                    if(connections.containsKey(sm.getSenderIpAddr())){
+                        out.println("already connected");
+                    } else {
+                        connect(sm.getSenderIpAddr());
+                    }
+                    break;
+                default:
+                    dealtWith = false;
+                    break;
             }
         } catch (JsonException ex){
             out.println("nope. not server message");
+        }
+        
+        if(dealtWith){
+            return;
         }
         
         out.println("Received " + msg.toUpperCase());
