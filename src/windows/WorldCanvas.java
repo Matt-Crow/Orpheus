@@ -43,6 +43,7 @@ public class WorldCanvas extends DrawingPlane{
     private World world;
     private Timer timer;
     private boolean paused;
+    private Chat chat;
     
     public WorldCanvas(World w){
         super();
@@ -58,7 +59,8 @@ public class WorldCanvas extends DrawingPlane{
 		});
 		addMenuItem(b);
 		
-		Chat.addTo(this);
+        chat = new Chat();
+		add(chat);
         resizeComponents(10, 10);
 		resizeMenu(1);
         

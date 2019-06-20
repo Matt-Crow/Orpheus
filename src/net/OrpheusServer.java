@@ -1,6 +1,5 @@
 package net;
 
-import gui.Chat;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -33,14 +32,15 @@ public class OrpheusServer {
     private Thread connListener;
     private volatile boolean listenForConn;
     private OrpheusServerState state; //what this server is doing
-    private Consumer<String> receiver; //messages sent to the server are fed into this
+    
+    private final HashMap<Integer, Consumer<ServerMessage>> receivers; //integer is ServerMessage type
     
     public static final String SHUTDOWN_MESSAGE = "EXIT";
     public static final String SOMEONE_LEFT = "Discon: ";
     
     public OrpheusServer(int port) throws IOException{
         state = OrpheusServerState.NONE;
-        receiver = (String s)->System.out.println(s);
+        receivers = new HashMap<>();
         
         try{
             server = new ServerSocket(port);
@@ -63,6 +63,18 @@ public class OrpheusServer {
         listenForConn = true;
         
         startConnListener();
+        initReceivers();
+    }
+    
+    private void initReceivers(){
+        receivers.put(ServerMessage.PLAYER_JOINED, (ServerMessage sm)->{
+            out.println("player joined " + sm.getSenderIpAddr());
+            if(connections.containsKey(sm.getSenderIpAddr())){
+                out.println("already connected");
+            } else {
+                connect(sm.getSenderIpAddr());
+            }
+        });
     }
     
     private void startConnListener(){
@@ -202,10 +214,17 @@ public class OrpheusServer {
         boolean dealtWith = false; //can get rid of this once I'm done with the switch statement
         try{
             ServerMessage sm = ServerMessage.deserializeJson(msg);
-            dealtWith = true;
+            
+            if(receivers.containsKey(sm.getType())){
+                receivers.get(sm.getType()).accept(sm);
+                dealtWith = true;
+            } else {
+                dealtWith = false;
+            }
+            
             switch(sm.getType()){
                 case ServerMessage.CHAT_MESSAGE:
-                    Chat.logLocal(String.format("(%s): %s", sm.getSenderIpAddr(), sm.getBody()));
+                    //Chat.logLocal(String.format("(%s): %s", sm.getSenderIpAddr(), sm.getBody()));
                     break;
                 case ServerMessage.PLAYER_JOINED:
                     out.println("player joined " + sm.getSenderIpAddr());
@@ -216,7 +235,7 @@ public class OrpheusServer {
                     }
                     break;
                 default:
-                    dealtWith = false;
+                    
                     break;
             }
         } catch (JsonException ex){
@@ -239,12 +258,12 @@ public class OrpheusServer {
                 out.println("no disconnect");
             }
         }else{
-            receiver.accept(msg);
+            out.println("What do I do with this? " + msg);
         }
     }
     
-    public void setReceiverFunction(Consumer<String> nomNom){
-        receiver = nomNom;
+    public void setReceiverFunction(int key, Consumer<ServerMessage> nomNom){
+        receivers.put(key, nomNom);
     }
     
     public final void setAcceptingConn(boolean b){

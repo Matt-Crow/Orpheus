@@ -20,10 +20,11 @@ import windows.SubPage;
  */
 public class WSWaitForPlayers extends SubPage{
     private int teamSize;
-    private ArrayList<Player> team1Players;
-    private ArrayList<Player> team2Players;
-    private JButton joinT1Button;
-    private JButton joinT2Button;
+    private final ArrayList<Player> team1Players;
+    private final ArrayList<Player> team2Players;
+    private final Chat chat;
+    private final JButton joinT1Button;
+    private final JButton joinT2Button;
     
     //todo add build select, start button, display teams
     public WSWaitForPlayers(Page p){
@@ -47,7 +48,9 @@ public class WSWaitForPlayers extends SubPage{
         Style.applyStyling(joinT2Button);
         add(joinT2Button);
         
-        Chat.addTo(this);
+        chat = new Chat();
+        add(chat);
+        
         setLayout(new GridLayout(2, 1));
     }
     
@@ -58,7 +61,7 @@ public class WSWaitForPlayers extends SubPage{
                 Master.startServer();
                 Master.getServer().setState(OrpheusServerState.WAITING_ROOM);
                 Chat.openChatServer(); //this will override any receiver function I set. Not sure what I'll do about that
-                Chat.logLocal("Server started on host address " + Master.getServer().getIpAddr());
+                chat.logLocal("Server started on host address " + Master.getServer().getIpAddr());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -93,13 +96,13 @@ public class WSWaitForPlayers extends SubPage{
             Chat.log(p.getName() + " has left team 2.");
         }
         if(team1Players.contains(p)){
-            Chat.logLocal(p.getName() + " is already on team 1.");
+            chat.logLocal(p.getName() + " is already on team 1.");
         }else if(team1Players.size() < teamSize){
             team1Players.add(p);
             Chat.log(p.getName() + " has joined team 1.");
             Chat.log(team1Players.toString());
         }else{
-            Chat.logLocal(p.getName() + " cannot joint team 1: Team 1 is full.");
+            chat.logLocal(p.getName() + " cannot joint team 1: Team 1 is full.");
         } 
         return this;
     }
@@ -110,13 +113,13 @@ public class WSWaitForPlayers extends SubPage{
             Chat.log(p.getName() + " has left team 1.");
         }
         if(team2Players.contains(p)){
-            Chat.logLocal(p.getName() + " is already on team 2.");
+            chat.logLocal(p.getName() + " is already on team 2.");
         }else if(team2Players.size() < teamSize){
             team2Players.add(p);
             Chat.log(p.getName() + " has joined team 2.");
             Chat.log(team2Players.toString());
         }else{
-            Chat.logLocal(p.getName() + " cannot joint team 2: Team 2 is full.");
+            chat.logLocal(p.getName() + " cannot joint team 2: Team 2 is full.");
         } 
         return this;
     }
