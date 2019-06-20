@@ -184,6 +184,16 @@ public class OrpheusServer {
         });
     }
     
+    public void send(ServerMessage sm){
+        connections.values().stream().forEach((Connection c)->{
+            try {
+                c.writeToClient(sm.toJsonString());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+    }
+    
     public void receive(String msg){
         out.println("Received " + msg.toUpperCase());
         if(msg.toUpperCase().contains(SOMEONE_JOINED.toUpperCase())){

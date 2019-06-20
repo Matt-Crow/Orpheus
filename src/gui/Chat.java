@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import net.OrpheusServerState;
+import net.ServerMessage;
 
 public class Chat {
     private static final JPanel content;
@@ -94,7 +95,8 @@ public class Chat {
         logLocal("You: " + msg);
         if(Master.getServer() != null){
             System.out.println("sending message...");
-            Master.getServer().send(Master.getServer().getIpAddr() + " " + msg);
+            ServerMessage sm = new ServerMessage(Master.getServer().getIpAddr(), msg, ServerMessage.CHAT_MESSAGE);
+            Master.getServer().send(sm);
         }
 	}
 	public static void addTo(JPanel j){
