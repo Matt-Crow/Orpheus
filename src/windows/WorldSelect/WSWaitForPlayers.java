@@ -60,7 +60,7 @@ public class WSWaitForPlayers extends SubPage{
             try {
                 Master.startServer();
                 Master.getServer().setState(OrpheusServerState.WAITING_ROOM);
-                Chat.openChatServer(); //this will override any receiver function I set. Not sure what I'll do about that
+                chat.openChatServer();
                 chat.logLocal("Server started on host address " + Master.getServer().getIpAddr());
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -79,7 +79,7 @@ public class WSWaitForPlayers extends SubPage{
         }
         if(Master.getServer() != null){//successfully started
             Master.getServer().connect(ipAddr);
-            Chat.joinChat(ipAddr);
+            chat.joinChat(ipAddr);
             Master.getServer().send("yay I connected");
         }
         return this;
@@ -93,14 +93,14 @@ public class WSWaitForPlayers extends SubPage{
     public WSWaitForPlayers joinTeam1(Player p){
         if(team2Players.contains(p)){
             team2Players.remove(p);
-            Chat.log(p.getName() + " has left team 2.");
+            chat.log(p.getName() + " has left team 2.");
         }
         if(team1Players.contains(p)){
             chat.logLocal(p.getName() + " is already on team 1.");
         }else if(team1Players.size() < teamSize){
             team1Players.add(p);
-            Chat.log(p.getName() + " has joined team 1.");
-            Chat.log(team1Players.toString());
+            chat.log(p.getName() + " has joined team 1.");
+            chat.log(team1Players.toString());
         }else{
             chat.logLocal(p.getName() + " cannot joint team 1: Team 1 is full.");
         } 
@@ -110,14 +110,14 @@ public class WSWaitForPlayers extends SubPage{
     public WSWaitForPlayers joinTeam2(Player p){
         if(team1Players.contains(p)){
             team1Players.remove(p);
-            Chat.log(p.getName() + " has left team 1.");
+            chat.log(p.getName() + " has left team 1.");
         }
         if(team2Players.contains(p)){
             chat.logLocal(p.getName() + " is already on team 2.");
         }else if(team2Players.size() < teamSize){
             team2Players.add(p);
-            Chat.log(p.getName() + " has joined team 2.");
-            Chat.log(team2Players.toString());
+            chat.log(p.getName() + " has joined team 2.");
+            chat.log(team2Players.toString());
         }else{
             chat.logLocal(p.getName() + " cannot joint team 2: Team 2 is full.");
         } 

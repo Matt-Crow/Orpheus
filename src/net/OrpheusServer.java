@@ -221,7 +221,7 @@ public class OrpheusServer {
             } else {
                 dealtWith = false;
             }
-            
+            /*
             switch(sm.getType()){
                 case ServerMessage.CHAT_MESSAGE:
                     //Chat.logLocal(String.format("(%s): %s", sm.getSenderIpAddr(), sm.getBody()));
@@ -237,7 +237,7 @@ public class OrpheusServer {
                 default:
                     
                     break;
-            }
+            }*/
         } catch (JsonException ex){
             out.println("nope. not server message");
             ex.printStackTrace();

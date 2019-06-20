@@ -231,14 +231,14 @@ public class WorldCanvas extends DrawingPlane{
                 
                 ObjectInputStream in = new ObjectInputStream(new FileInputStream(saveTo.getAbsolutePath() + "/obj.ser"));
                 World newWorld = (World)in.readObject();
-                Chat.log("Switching worlds in 3 seconds...");
+                //Chat.log("Switching worlds in 3 seconds...");
                 Timer time = new Timer(3000, (e)->{
                     newWorld.createCanvas();
                     f.setContentPane(newWorld.getCanvas());
-                    Chat.log("done!");
-                    Chat.log(Master.TRUEPLAYER.getX() + ", " + Master.TRUEPLAYER.getY());
+                    //Chat.log("done!");
+                    //Chat.log(Master.TRUEPLAYER.getX() + ", " + Master.TRUEPLAYER.getY());
                     Master.TRUEPLAYER.setWorld(newWorld);
-                    Chat.log(Master.TRUEPLAYER.getWorld() + " : " + newWorld);
+                    //Chat.log(Master.TRUEPLAYER.getWorld() + " : " + newWorld);
                     c.world.displayData();
                     f.revalidate();
                     f.repaint();

@@ -1,42 +1,21 @@
 package gui;
 
 import controllers.Master;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.*;
 import net.ServerMessage;
 
-/*
-Not liking how this is turning out as a static class,
-will probably change this to a gui component
-*/
-public class Chat extends JComponent{
-    private static final HashMap<String, Consumer<String[]>> CMDS = new HashMap<>();
-	
+public class Chat extends JComponent implements ActionListener{
     private final JTextArea msgs;
     private final JScrollPane box;
     private final JTextField newMsg;
-    
-    
-    static{
-        initCmds();
-    }
+    private final HashMap<String, Consumer<String[]>> CMDS = new HashMap<>();
     
     public Chat(){
         super();
@@ -44,7 +23,8 @@ public class Chat extends JComponent{
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         
-        msgs = new JTextArea("###CHAT###");
+        //need to set how many rows and columns it displays, not the size
+        msgs = new JTextArea("###CHAT###", 20, 20);
         msgs.setEditable(false);
         msgs.setWrapStyleWord(true);
         msgs.setLineWrap(true);
@@ -56,54 +36,87 @@ public class Chat extends JComponent{
         
         newMsg = new JTextField();
         newMsg.setMaximumSize(new Dimension(Integer.MAX_VALUE, newMsg.getPreferredSize().height));
-        newMsg.addActionListener((e)->{
-            if(!runIfCmd(newMsg.getText())){
-                log(newMsg.getText());
-            }
-            newMsg.setText("");
-        });
+        newMsg.addActionListener(this);
         gbc.weighty = 1;
         gbc.gridy = 1;
         add(newMsg, gbc.clone());
+        
+        initCmds();
+        
+        logLocal("enter '/?' to list commands");
         
         revalidate();
         repaint();
     }
     
-    
-    
-    
-    
-    private static void initCmds(){
+    private void initCmds(){
         addCmd("?", (String[] ss)->listCmds());
         addCmd("connect", (ss)->joinChat(ss[0]));
     }
+    public void addCmd(String cmd, Consumer<String[]> function){
+        CMDS.put(cmd.toUpperCase(), function);
+    }
     
-    public static void openChatServer(){
+    //todo make this better, list what cmds do
+    public void listCmds(){
+        logLocal("COMMANDS: ");
+        CMDS.keySet().forEach((cmd)->logLocal("* /" + cmd));
+    }
+    
+    
+    @Override
+    public void actionPerformed(ActionEvent e){
+        String s = newMsg.getText();
+        if(s.startsWith("/")){
+            //is command
+            String[] split = s.toUpperCase().replace("/", "").split(" ");
+            String cmd = split[0];
+            if(CMDS.containsKey(cmd)){
+                CMDS.get(cmd).accept(Arrays.copyOfRange(split, 1, split.length));
+            } else {
+                logLocal("Invalid command: " + cmd);
+            }
+        } else {
+            log(newMsg.getText());
+        }
+        newMsg.setText("");
+    }
+    
+    public void logLocal(String msg){
+        msgs.setText(msgs.getText() + '\n' + msg);
+    }
+    public void log(String msg){
+        logLocal("You: " + msg);
+        if(Master.getServer() != null){
+            System.out.println("sending message...");
+            ServerMessage sm = new ServerMessage(Master.getServer().getIpAddr(), msg, ServerMessage.CHAT_MESSAGE);
+            Master.getServer().send(sm);
+        }
+	}
+    
+    
+    public void openChatServer(){
         if(Master.getServer() == null){
             try {
                 Master.startServer();
             } catch (IOException ex) {
-                //logLocal("Failed to start chat server");
+                logLocal("Failed to start chat server");
                 ex.printStackTrace();
             }
         }
         
         //started successfully
         if(Master.getServer() != null){
-            //Master.getServer().setState(OrpheusServerState.WAITING_ROOM);
-            //Master.getServer().setReceiverFunction((String s)->logLocal(s));
-            /*
-            try {
-                //logLocal("Initialized chat server on " + InetAddress.getLocalHost().getHostAddress());
-                //logLocal("Have other people use the \'/connect " + Master.getServer().getIpAddr() + "\' command (without the quote marks) to connect.");
-            } catch (UnknownHostException ex) {
-                ex.printStackTrace();
-            }*/
+            Master.getServer().setReceiverFunction(ServerMessage.CHAT_MESSAGE, (ServerMessage sm)->{
+                logLocal(String.format("(%s): %s", sm.getSenderIpAddr(), sm.getBody()));
+            });
+            
+            logLocal("Initialized chat server on " + Master.getServer().getIpAddr());
+            logLocal("Have other people use the \'/connect " + Master.getServer().getIpAddr() + "\' command (without the quote marks) to connect.");
         }
     }
     
-    public static void joinChat(String ipAddr){
+    public void joinChat(String ipAddr){
         if(Master.getServer() == null){
             openChatServer();
         }
@@ -111,60 +124,12 @@ public class Chat extends JComponent{
         //so an else statement won't work
         if(Master.getServer() != null){
             Master.getServer().connect(ipAddr);
-            //Master.getServer().setState(OrpheusServerState.WAITING_ROOM);
-            //Master.getServer().setReceiverFunction((String s)->logLocal(s));
-            //logLocal("Joined chat with " + ipAddr);
+            Master.getServer().setReceiverFunction(ServerMessage.CHAT_MESSAGE, (ServerMessage sm)->{
+                logLocal(String.format("(%s): %s", sm.getSenderIpAddr(), sm.getBody()));
+            });
+            logLocal("Joined chat with " + ipAddr);
         }
     }
-    
-    /**
-     * Checks to see if the given string is a command,
-     * if so, evaluates it, if not, 
-     * @param s the string to evaluate
-     * @return whether or not the string is a command
-     */
-    private static boolean runIfCmd(String s){
-        boolean isCmd = s.startsWith("/");
-        
-        if(isCmd){
-            String[] split = s.toUpperCase().replace("/", "").split(" ");
-            String cmd = split[0];
-            if(CMDS.containsKey(cmd)){
-                CMDS.get(cmd).accept(Arrays.copyOfRange(split, 1, split.length));
-            } else {
-                //logLocal("Invalid command: " + cmd);
-            }
-        }
-        
-        return isCmd;
-    }
-    
-    public static void addCmd(String cmd, Consumer<String[]> function){
-        CMDS.put(cmd.toUpperCase(), function);
-    }
-    
-    //todo make this better, list what cmds do
-    public static void listCmds(){
-        //logLocal("COMMANDS: ");
-        //CMDS.keySet().forEach((cmd)->logLocal("* /" + cmd));
-    }
-	/*
-    public static void logLocal(String msg){
-        msgs.setText(msgs.getText() + '\n' + msg);
-	}*/
-    
-    public void logLocal(String msg){
-        msgs.setText(msgs.getText() + '\n' + msg);
-    }
-    
-	public static void log(String msg){
-        //logLocal("You: " + msg);
-        if(Master.getServer() != null){
-            System.out.println("sending message...");
-            ServerMessage sm = new ServerMessage(Master.getServer().getIpAddr(), msg, ServerMessage.CHAT_MESSAGE);
-            Master.getServer().send(sm);
-        }
-	}
     
     public static void main(String[] args){
         JFrame f = new JFrame();
@@ -179,9 +144,8 @@ public class Chat extends JComponent{
         
         Chat c = new Chat();
         p.add(c);
-        Chat.openChatServer();
+        c.openChatServer();
         f.revalidate();
         f.repaint();
-        //Chat.joinChat(JOptionPane.showInputDialog("enter IP address to connect to: "));
     }
 }
