@@ -108,7 +108,7 @@ public final class User implements JsonSerialable{
         JsonUtil.verify(obj, "type");
         JsonUtil.verify(obj, "name");
         JsonUtil.verify(obj, "ip address");
-        JsonUtil.verify(obj, "player");
+        //JsonUtil.verify(obj, "player");
         
         if(!obj.getString("type").equals("user")){
             throw new JsonException("not a user");
