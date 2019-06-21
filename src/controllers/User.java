@@ -65,6 +65,7 @@ public final class User implements JsonSerialable{
         return player;
     }
     
+    //not done
     public boolean startServer(){
         boolean successful = false;
         
@@ -94,17 +95,18 @@ public final class User implements JsonSerialable{
         return obj.build();
     }
     
-    public User deserializeJson(JsonObject obj){
+    public static User deserializeJson(JsonObject obj){
         JsonUtil.verify(obj, "type");
         JsonUtil.verify(obj, "name");
         JsonUtil.verify(obj, "ip address");
-        //JsonUtil.verify(obj, "player");
+        JsonUtil.verify(obj, "player");
+        
         if(!obj.getString("type").equals("user")){
             throw new JsonException("not a user");
         }
         User ret = new User(obj.getString("name"));
         ret.ipAddr = obj.getString("ip address");
-        //set player
+        //ret.player = Player.deserializeJson(obj.getJsonObject("player"));
         return ret;
     }
 }

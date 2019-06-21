@@ -1,7 +1,10 @@
 package net;
 
+import controllers.Master;
+import controllers.User;
 import java.io.EOFException;
 import java.io.IOException;
+import java.io.StringReader;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -12,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import static java.lang.System.out;
+import javax.json.Json;
 import javax.json.JsonException;
 
 /**
@@ -79,7 +83,9 @@ public class OrpheusServer {
             if(connections.containsKey(sm.getSenderIpAddr())){
                 out.println("already connected");
             } else {
+                User u = User.deserializeJson(Json.createReader(new StringReader(sm.getBody())).readObject());
                 connect(sm.getSenderIpAddr());
+                connections.get(sm.getSenderIpAddr()).setUser(u);
             }
         });
     }
@@ -169,12 +175,11 @@ public class OrpheusServer {
                     conn.close();
                 }
             }.start();
-            out.println("connected to " + otherComputer.getInetAddress().getHostAddress());
-            out.println("Writing to client: joined " + getIpAddr());
-            //conn.writeToClient(SOMEONE_JOINED + getIpAddr());
+            //out.println("connected to " + otherComputer.getInetAddress().getHostAddress());
             
+            //includes the User data so the other computer has access to username
             conn.writeToClient(new ServerMessage(
-                "hi",
+                Master.getUser().serializeJson().toString(),
                 ServerMessage.PLAYER_JOINED
             ).toJsonString());
             

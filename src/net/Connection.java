@@ -1,5 +1,6 @@
 package net;
 
+import controllers.User;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
@@ -16,6 +17,7 @@ import java.util.logging.Logger;
  * @author Matt
  */
 public class Connection {
+    private User user; //the user playing Orpheus on the machine this connects to
     private final Socket clientSocket;
     private final DataInputStream ip;
     private final DataOutputStream op;
@@ -69,5 +71,12 @@ public class Connection {
             System.err.println("couldn't close socket");
             ex.printStackTrace();
         }
+    }
+    
+    public void setUser(User u){
+        user = u;
+    }
+    public User getUser(){
+        return user;
     }
 }
