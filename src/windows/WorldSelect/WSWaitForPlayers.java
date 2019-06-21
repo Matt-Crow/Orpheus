@@ -7,10 +7,12 @@ import gui.Chat;
 import gui.Style;
 import java.awt.GridLayout;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import net.OrpheusServerState;
+import net.ServerMessage;
 import windows.Page;
 import windows.SubPage;
 
@@ -34,14 +36,14 @@ public class WSWaitForPlayers extends SubPage{
         team1Players = new ArrayList<>();
         team2Players = new ArrayList<>();
         
-        joinT1Button = new JButton("Joint team 1");
+        joinT1Button = new JButton("Join team 1");
         joinT1Button.addActionListener((e)->{
             joinTeam1(Master.TRUEPLAYER);
         });
         Style.applyStyling(joinT1Button);
         add(joinT1Button);
         
-        joinT2Button = new JButton("Joint team 2");
+        joinT2Button = new JButton("Join team 2");
         joinT2Button.addActionListener((e)->{
             joinTeam2(Master.TRUEPLAYER);
         });
@@ -80,7 +82,10 @@ public class WSWaitForPlayers extends SubPage{
         if(Master.getServer() != null){//successfully started
             Master.getServer().connect(ipAddr);
             chat.joinChat(ipAddr);
-            Master.getServer().send("yay I connected");
+            Master.getServer().setReceiverFunction(ServerMessage.WAITING_ROOM_UPDATE, (ServerMessage sm)->{
+                //oh wait, how do I convert an IP addr to a player?
+                //looks like I'll have to change it to where Users join and leave
+            });
         }
         return this;
     }
@@ -91,16 +96,27 @@ public class WSWaitForPlayers extends SubPage{
     }
     
     public WSWaitForPlayers joinTeam1(Player p){
-        if(team2Players.contains(p)){
-            team2Players.remove(p);
-            chat.log(p.getName() + " has left team 2.");
-        }
         if(team1Players.contains(p)){
             chat.logLocal(p.getName() + " is already on team 1.");
         }else if(team1Players.size() < teamSize){
+            if(team2Players.contains(p)){
+                team2Players.remove(p);
+                chat.log(p.getName() + " has left team 2.");
+            }
             team1Players.add(p);
             chat.log(p.getName() + " has joined team 1.");
-            chat.log(team1Players.toString());
+            if(p.equals(Master.TRUEPLAYER)){
+                //only send an update if the user is the one who changed teams. Prevents infinite loop
+                try {
+                    ServerMessage sm = new ServerMessage(
+                        "join team 1",
+                        ServerMessage.WAITING_ROOM_UPDATE
+                    );
+                    Master.getServer().send(sm);
+                } catch (UnknownHostException ex) {
+                    Logger.getLogger(WSWaitForPlayers.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }else{
             chat.logLocal(p.getName() + " cannot joint team 1: Team 1 is full.");
         } 
@@ -108,16 +124,27 @@ public class WSWaitForPlayers extends SubPage{
     }
     
     public WSWaitForPlayers joinTeam2(Player p){
-        if(team1Players.contains(p)){
-            team1Players.remove(p);
-            chat.log(p.getName() + " has left team 1.");
-        }
         if(team2Players.contains(p)){
             chat.logLocal(p.getName() + " is already on team 2.");
         }else if(team2Players.size() < teamSize){
+            if(team1Players.contains(p)){
+                team1Players.remove(p);
+                chat.log(p.getName() + " has left team 1.");
+            }
             team2Players.add(p);
             chat.log(p.getName() + " has joined team 2.");
-            chat.log(team2Players.toString());
+            if(p.equals(Master.TRUEPLAYER)){
+                //only send an update if the user is the one who changed teams. Prevents infinite loop
+                try {
+                    ServerMessage sm = new ServerMessage(
+                        "join team 2",
+                        ServerMessage.WAITING_ROOM_UPDATE
+                    );
+                    Master.getServer().send(sm);
+                } catch (UnknownHostException ex) {
+                    Logger.getLogger(WSWaitForPlayers.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }else{
             chat.logLocal(p.getName() + " cannot joint team 2: Team 2 is full.");
         } 

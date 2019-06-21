@@ -128,6 +128,7 @@ public class Chat extends JComponent implements ActionListener{
                 logLocal(String.format("(%s): %s", sm.getSenderIpAddr(), sm.getBody()));
             });
             logLocal("Joined chat with " + ipAddr);
+            log(Master.getServer().getIpAddr() + " has joined the chat.");
         }
     }
     

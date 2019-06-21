@@ -21,12 +21,24 @@ public class Master {
 	public static final int UNITSIZE = 100;
     private static OrpheusServer server = null;
     
+    private static User user;
+    
     static {
         JFrame f = new JFrame();
         CANVASBOTTOM = Toolkit.getDefaultToolkit().getScreenInsets(f.getGraphicsConfiguration()).bottom;
         CANVASHEIGHT = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - CANVASBOTTOM;
         CANVASWIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
         f.dispose();
+        
+        login(new User("Orpheus"));
+    }
+    
+    //todo: login credentials
+    public static void login(User u){
+        user = u;
+    }
+    public static User getUser(){
+        return user;
     }
     
 	// seconds to frames
