@@ -1,5 +1,7 @@
 package net;
 
+import controllers.Master;
+import controllers.User;
 import java.io.StringReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -33,7 +35,7 @@ public class ServerMessage implements JsonSerialable{
     public static final int PLAYER_LEFT = 3;
     public static final int OTHER = -1;
     
-    private final String fromIpAddr;
+    private final User fromUser;
     private final String body;
     private final int type;
     
@@ -41,7 +43,7 @@ public class ServerMessage implements JsonSerialable{
      * Creates a message, which will be serialized before being sent to another
      * server.
      * 
-     * @param ipAddr the IP address this is sent from
+     * @param sender the User this is sent from
      * @param bodyText the text of the message
      * @param messageType an enum value representing the type of message this is:
      * <br>
@@ -53,23 +55,28 @@ public class ServerMessage implements JsonSerialable{
      * <li>ServerMessage.OTHER</li>
      * </ul>
      */
-    public ServerMessage(String ipAddr, String bodyText, int messageType){
-        fromIpAddr = ipAddr;
+    public ServerMessage(User sender, String bodyText, int messageType){
+        fromUser = sender;
         body = bodyText;
         type = messageType;
     }
     
-    public ServerMessage(String bodyText, int messageType) throws UnknownHostException{
+    public ServerMessage(String bodyText, int messageType){
         this(
-            InetAddress.getLocalHost().getHostAddress(),
+            Master.getUser(),
             bodyText,
             messageType
         );
     }
     
+    public final User getSender(){
+        return fromUser;
+    }
+    
+    /*
     public final String getSenderIpAddr(){
         return fromIpAddr;
-    }
+    }*/
     
     public final String getBody(){
         return body;
@@ -83,7 +90,7 @@ public class ServerMessage implements JsonSerialable{
     public JsonObject serializeJson() {
         JsonObjectBuilder ret = Json.createObjectBuilder();
         ret.add("type", type);
-        ret.add("from", fromIpAddr);
+        ret.add("from", fromUser.serializeJson());
         ret.add("body", body);
         return ret.build();
     }
@@ -99,7 +106,7 @@ public class ServerMessage implements JsonSerialable{
         JsonUtil.verify(obj, "from");
         JsonUtil.verify(obj, "body");
         return new ServerMessage(
-            obj.getString("from"),
+            User.deserializeJson(obj.getJsonObject("from")),
             obj.getString("body"),
             obj.getInt("type")
         );

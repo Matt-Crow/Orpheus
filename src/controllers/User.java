@@ -2,6 +2,10 @@ package controllers;
 
 import entities.Player;
 import entities.TruePlayer;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonException;
 import javax.json.JsonObject;
@@ -70,6 +74,18 @@ public final class User implements JsonSerialable{
         boolean successful = false;
         
         return successful;
+    }
+    
+    public String getIpAddress(){
+        if(ipAddr == null){
+            //temporary until startServer is done
+            try {
+                ipAddr = InetAddress.getLocalHost().getHostAddress();
+            } catch (UnknownHostException ex) {
+                Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return ipAddr;
     }
     
     

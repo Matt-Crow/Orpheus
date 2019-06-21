@@ -79,13 +79,13 @@ public class OrpheusServer {
     
     private void initReceivers(){
         receivers.put(ServerMessage.PLAYER_JOINED, (ServerMessage sm)->{
-            out.println("player joined " + sm.getSenderIpAddr());
-            if(connections.containsKey(sm.getSenderIpAddr())){
+            String ip = sm.getSender().getIpAddress();
+            out.println("player joined " + sm.getSender().getName());
+            if(connections.containsKey(ip)){
                 out.println("already connected");
             } else {
-                User u = User.deserializeJson(Json.createReader(new StringReader(sm.getBody())).readObject());
-                connect(sm.getSenderIpAddr());
-                connections.get(sm.getSenderIpAddr()).setUser(u);
+                connect(ip);
+                connections.get(ip).setUser(sm.getSender());
             }
         });
     }

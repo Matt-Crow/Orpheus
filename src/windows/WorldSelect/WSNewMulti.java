@@ -16,10 +16,11 @@ public class WSNewMulti extends AbstractWSNewWorld{
     @Override
     public void start(){
         getHostingPage().switchToSubpage(WorldSelectCanvas.WAIT);
+        Master.getUser().initPlayer();
         Master.getUser().getPlayer().applyBuild(getSelectedBuild());
         SubPage sp = getHostingPage().getCurrentSubPage();
         if(sp instanceof WSWaitForPlayers){
-            ((WSWaitForPlayers)sp).setTeamSize(getTeamSize()).joinTeam1(Master.getUser().getPlayer()).startServer();
+            ((WSWaitForPlayers)sp).startServer().setTeamSize(getTeamSize()).joinTeam1(Master.getUser().getPlayer());
         }
     }
 }

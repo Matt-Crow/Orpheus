@@ -107,15 +107,11 @@ public class WSWaitForPlayers extends SubPage{
             chat.log(p.getName() + " has joined team 1.");
             if(p.equals(Master.getUser().getPlayer())){
                 //only send an update if the user is the one who changed teams. Prevents infinite loop
-                try {
-                    ServerMessage sm = new ServerMessage(
-                        "join team 1",
-                        ServerMessage.WAITING_ROOM_UPDATE
-                    );
-                    Master.getServer().send(sm);
-                } catch (UnknownHostException ex) {
-                    Logger.getLogger(WSWaitForPlayers.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                ServerMessage sm = new ServerMessage(
+                    "join team 1",
+                    ServerMessage.WAITING_ROOM_UPDATE
+                );
+                Master.getServer().send(sm);
             }
         }else{
             chat.logLocal(p.getName() + " cannot joint team 1: Team 1 is full.");
@@ -135,15 +131,11 @@ public class WSWaitForPlayers extends SubPage{
             chat.log(p.getName() + " has joined team 2.");
             if(p.equals(Master.getUser().getPlayer())){
                 //only send an update if the user is the one who changed teams. Prevents infinite loop
-                try {
-                    ServerMessage sm = new ServerMessage(
-                        "join team 2",
-                        ServerMessage.WAITING_ROOM_UPDATE
-                    );
-                    Master.getServer().send(sm);
-                } catch (UnknownHostException ex) {
-                    Logger.getLogger(WSWaitForPlayers.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                ServerMessage sm = new ServerMessage(
+                    "join team 2",
+                    ServerMessage.WAITING_ROOM_UPDATE
+                );
+                Master.getServer().send(sm);
             }
         }else{
             chat.logLocal(p.getName() + " cannot joint team 2: Team 2 is full.");

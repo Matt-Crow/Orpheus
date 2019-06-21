@@ -89,7 +89,7 @@ public class Chat extends JComponent implements ActionListener{
         logLocal("You: " + msg);
         if(Master.getServer() != null){
             System.out.println("sending message...");
-            ServerMessage sm = new ServerMessage(Master.getServer().getIpAddr(), msg, ServerMessage.CHAT_MESSAGE);
+            ServerMessage sm = new ServerMessage(msg, ServerMessage.CHAT_MESSAGE);
             Master.getServer().send(sm);
         }
 	}
@@ -108,7 +108,7 @@ public class Chat extends JComponent implements ActionListener{
         //started successfully
         if(Master.getServer() != null){
             Master.getServer().setReceiverFunction(ServerMessage.CHAT_MESSAGE, (ServerMessage sm)->{
-                logLocal(String.format("(%s): %s", sm.getSenderIpAddr(), sm.getBody()));
+                logLocal(String.format("(%s): %s", sm.getSender().getName(), sm.getBody()));
             });
             
             logLocal("Initialized chat server on " + Master.getServer().getIpAddr());
@@ -125,7 +125,7 @@ public class Chat extends JComponent implements ActionListener{
         if(Master.getServer() != null){
             Master.getServer().connect(ipAddr);
             Master.getServer().setReceiverFunction(ServerMessage.CHAT_MESSAGE, (ServerMessage sm)->{
-                logLocal(String.format("(%s): %s", sm.getSenderIpAddr(), sm.getBody()));
+                logLocal(String.format("(%s): %s", sm.getSender().getName(), sm.getBody()));
             });
             logLocal("Joined chat with " + ipAddr);
             log(Master.getServer().getIpAddr() + " has joined the chat.");
