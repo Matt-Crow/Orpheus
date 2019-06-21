@@ -70,7 +70,7 @@ public class WorldCanvas extends DrawingPlane{
         timer.stop();
         
         //change this later
-        PlayerControls pc = new PlayerControls(Master.TRUEPLAYER);
+        PlayerControls pc = new PlayerControls(Master.getUser().getPlayer());
 		addMouseListener(pc);
         pc.registerControlsTo(this);
         registerKey(KeyEvent.VK_P, true, ()->togglePause());
@@ -99,8 +99,8 @@ public class WorldCanvas extends DrawingPlane{
     
     private int[] retTranslate(){
 		int[] ret = new int[2];
-		int x = -Master.TRUEPLAYER.getX() + getW() / 2;
-		int y = -Master.TRUEPLAYER.getY() + getH() / 2;
+		int x = -Master.getUser().getPlayer().getX() + getW() / 2;
+		int y = -Master.getUser().getPlayer().getY() + getH() / 2;
 		
 		/*
 		int minX = -(battlefield.getWidth() - getW());
@@ -154,7 +154,7 @@ public class WorldCanvas extends DrawingPlane{
 		world.draw(getG());
 		resetToInit();
 		
-		Master.TRUEPLAYER.drawHUD(getG());
+		Master.getUser().getPlayer().drawHUD(getG());
         
         if(world.getCurrentMinigame() != null && world.getCurrentMinigame().shouldEnd()){
 			drawMatchResolution(getG());
@@ -193,9 +193,9 @@ public class WorldCanvas extends DrawingPlane{
         AbstractUpgradable.loadAll();
         Build.loadAll();
         
-        Master.TRUEPLAYER.applyBuild(Build.getBuildByName("Default Fire"));
+        Master.getUser().getPlayer().applyBuild(Build.getBuildByName("Default Fire"));
         Team t1 = new Team("Test", Color.BLUE);
-        t1.addMember(Master.TRUEPLAYER);
+        t1.addMember(Master.getUser().getPlayer());
         t1.init(0, 50, 0);
         
         try {
@@ -236,9 +236,9 @@ public class WorldCanvas extends DrawingPlane{
                     newWorld.createCanvas();
                     f.setContentPane(newWorld.getCanvas());
                     //Chat.log("done!");
-                    //Chat.log(Master.TRUEPLAYER.getX() + ", " + Master.TRUEPLAYER.getY());
-                    Master.TRUEPLAYER.setWorld(newWorld);
-                    //Chat.log(Master.TRUEPLAYER.getWorld() + " : " + newWorld);
+                    //Chat.log(Master.getUser().getPlayer().getX() + ", " + Master.getUser().getPlayer().getY());
+                    Master.getUser().getPlayer().setWorld(newWorld);
+                    //Chat.log(Master.getUser().getPlayer().getWorld() + " : " + newWorld);
                     c.world.displayData();
                     f.revalidate();
                     f.repaint();

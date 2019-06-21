@@ -139,7 +139,7 @@ public class Team extends EntityManager implements Serializable{
         out.println("TEAM: " + name);
         out.println("Roster: ");
         roster.forEach((Player p)->{
-            if(p.equals(Master.TRUEPLAYER)){
+            if(p.equals(Master.getUser().getPlayer())){
                 out.print("*");
             }
             out.println(p.getName());

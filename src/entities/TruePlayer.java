@@ -10,8 +10,11 @@ import controllers.Master;
 //get rid of this thing
 public class TruePlayer extends Player{
 	
+    public TruePlayer(String userName){
+        super(userName);
+    }
 	public TruePlayer(){
-		super("Player");
+		this("Player");
 	}
 	
 	public void drawHUD(Graphics g){

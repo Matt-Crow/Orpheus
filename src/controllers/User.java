@@ -1,7 +1,7 @@
 package controllers;
 
 import entities.Player;
-import java.math.BigDecimal;
+import entities.TruePlayer;
 import javax.json.Json;
 import javax.json.JsonException;
 import javax.json.JsonObject;
@@ -11,12 +11,17 @@ import serialization.JsonUtil;
 
 /**
  * not implemented yet
+ * 
+ * A User is meant to replace the TruePlayer class.
+ * The class represents a real person- not just a Player entity
+ * controlled by AI.
+ * 
  * @author Matt Crow
  */
 public final class User implements JsonSerialable{
     private String userName;
     private String ipAddr;
-    private Player player;
+    private TruePlayer player;
     
     private boolean isAdmin;
     
@@ -45,6 +50,19 @@ public final class User implements JsonSerialable{
     }
     public String getName(){
         return userName;
+    }
+    
+    /**
+     * Creates a new Player entity, and associates it with this user
+     * note that this does not call TruePlayer's init method
+     * @return this, for chaining purposes
+     */
+    public User initPlayer(){
+        player = new TruePlayer(userName);
+        return this;
+    }
+    public TruePlayer getPlayer(){
+        return player;
     }
     
     public boolean startServer(){

@@ -1,13 +1,11 @@
 package controllers;
 
 import java.awt.Toolkit;
-import entities.TruePlayer;
 import java.io.IOException;
 import javax.swing.JFrame;
 import net.OrpheusServer;
 
 public class Master {
-	public static final TruePlayer TRUEPLAYER = new TruePlayer();
 	public static final int DETECTIONRANGE = 500;
 	public static final int CANVASBOTTOM;
     public static final int CANVASWIDTH;
@@ -38,6 +36,9 @@ public class Master {
         user = u;
     }
     public static User getUser(){
+        if(user == null){
+            throw new NullPointerException("no user is logged in");
+        }
         return user;
     }
     

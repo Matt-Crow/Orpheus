@@ -38,14 +38,14 @@ public class WSWaitForPlayers extends SubPage{
         
         joinT1Button = new JButton("Join team 1");
         joinT1Button.addActionListener((e)->{
-            joinTeam1(Master.TRUEPLAYER);
+            joinTeam1(Master.getUser().getPlayer());
         });
         Style.applyStyling(joinT1Button);
         add(joinT1Button);
         
         joinT2Button = new JButton("Join team 2");
         joinT2Button.addActionListener((e)->{
-            joinTeam2(Master.TRUEPLAYER);
+            joinTeam2(Master.getUser().getPlayer());
         });
         Style.applyStyling(joinT2Button);
         add(joinT2Button);
@@ -105,7 +105,7 @@ public class WSWaitForPlayers extends SubPage{
             }
             team1Players.add(p);
             chat.log(p.getName() + " has joined team 1.");
-            if(p.equals(Master.TRUEPLAYER)){
+            if(p.equals(Master.getUser().getPlayer())){
                 //only send an update if the user is the one who changed teams. Prevents infinite loop
                 try {
                     ServerMessage sm = new ServerMessage(
@@ -133,7 +133,7 @@ public class WSWaitForPlayers extends SubPage{
             }
             team2Players.add(p);
             chat.log(p.getName() + " has joined team 2.");
-            if(p.equals(Master.TRUEPLAYER)){
+            if(p.equals(Master.getUser().getPlayer())){
                 //only send an update if the user is the one who changed teams. Prevents infinite loop
                 try {
                     ServerMessage sm = new ServerMessage(

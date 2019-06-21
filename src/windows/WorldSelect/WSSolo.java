@@ -4,6 +4,7 @@ import battle.Battle;
 import battle.Team;
 import controllers.Master;
 import controllers.World;
+import entities.TruePlayer;
 import graphics.Map;
 import graphics.Tile;
 import java.awt.Color;
@@ -24,9 +25,11 @@ public class WSSolo extends AbstractWSNewWorld{
     public void start(){
         Team team1 = Team.constructRandomTeam("Team 1", Color.green, getTeamSize() - 1);
         Team team2 = Team.constructRandomTeam("Team 2", Color.red, getTeamSize());
-
-        Master.TRUEPLAYER.applyBuild(getSelectedBuild());
-        team1.addMember(Master.TRUEPLAYER);
+        
+        
+        Master.getUser().initPlayer();
+        Master.getUser().getPlayer().applyBuild(getSelectedBuild());
+        team1.addMember(Master.getUser().getPlayer());
 
         World battleWorld = new World(20);
         //it's like a theme park or something
