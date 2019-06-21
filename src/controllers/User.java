@@ -99,7 +99,7 @@ public final class User implements JsonSerialable{
         JsonObjectBuilder obj = Json.createObjectBuilder();
         obj.add("type", "user");
         obj.add("name", userName);
-        obj.add("ip address", ipAddr);
+        obj.add("ip address", getIpAddress());
         //obj.add("player", player.serializeJson());
         return obj.build();
     }
