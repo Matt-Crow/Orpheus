@@ -39,6 +39,7 @@ public class Chat extends JComponent implements ActionListener{
         newMsg.addActionListener(this);
         gbc.weighty = 1;
         gbc.gridy = 1;
+        gbc.fill = GridBagConstraints.BOTH;
         add(newMsg, gbc.clone());
         
         initCmds();

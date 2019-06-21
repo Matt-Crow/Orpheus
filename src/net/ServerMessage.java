@@ -126,4 +126,11 @@ public class ServerMessage implements JsonSerialable{
     public String toJsonString(){
         return serializeJson().toString();
     }
+    
+    public void displayData(){
+        System.out.println("From: " + fromUser.getName());
+        System.out.println("Type: " + type);
+        System.out.println("Body: " + body);
+        System.out.println("END OF MESSAGE");
+    }
 }

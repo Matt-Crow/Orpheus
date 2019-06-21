@@ -27,6 +27,7 @@ public class WSJoin extends SubPage{
                 }
             }
             if(Master.getServer() != null){
+                Master.loginWindow();
                 getHostingPage().switchToSubpage(WorldSelectCanvas.WAIT);
                 if(getHostingPage().getCurrentSubPage() instanceof WSWaitForPlayers){
                     ((WSWaitForPlayers)getHostingPage().getCurrentSubPage()).joinServer(ip.getText());

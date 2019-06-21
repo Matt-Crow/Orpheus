@@ -1,6 +1,5 @@
 package controllers;
 
-import entities.Player;
 import entities.TruePlayer;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -32,6 +31,7 @@ public final class User implements JsonSerialable{
     //keep in mind that a user will have different IDs on each server
     private final int userId;
     private static int nextId = 0;
+    public static final String DEFAULT_NAME = "name not set";
     
     public User(String name){
         userName = name;
@@ -45,7 +45,7 @@ public final class User implements JsonSerialable{
     }
     
     public User(){
-        this("name not set");
+        this(DEFAULT_NAME);
     }
     
     public User setName(String s){
@@ -67,13 +67,6 @@ public final class User implements JsonSerialable{
     }
     public TruePlayer getPlayer(){
         return player;
-    }
-    
-    //not done
-    public boolean startServer(){
-        boolean successful = false;
-        
-        return successful;
     }
     
     public String getIpAddress(){

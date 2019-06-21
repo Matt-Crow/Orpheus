@@ -3,6 +3,7 @@ package controllers;
 import java.awt.Toolkit;
 import java.io.IOException;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import net.OrpheusServer;
 
 public class Master {
@@ -27,14 +28,17 @@ public class Master {
         CANVASHEIGHT = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - CANVASBOTTOM;
         CANVASWIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
         f.dispose();
-        
-        login(new User("Orpheus"));
+        user = new User();
     }
     
-    //todo: login credentials
-    public static void login(User u){
-        user = u;
+    
+    public static void loginWindow(){
+        if(user.getName().equals(User.DEFAULT_NAME)){
+            user.setName(JOptionPane.showInputDialog("Enter a name: "));
+        }
     }
+    //todo: login credentials
+    
     public static User getUser(){
         if(user == null){
             throw new NullPointerException("no user is logged in");
