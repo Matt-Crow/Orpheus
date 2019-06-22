@@ -38,6 +38,9 @@ public class WSWaitForPlayers extends SubPage{
     private final JButton joinT1Button;
     private final JButton joinT2Button;
     
+    private final Consumer<ServerMessage> receiveJoin = (sm)->{
+        sendInit(sm.getSender().getIpAddress());
+    };
     private final Consumer<ServerMessage> receiveInit = (sm)->{
         JsonReader read = Json.createReader(new StringReader(sm.getBody()));
         JsonObject obj = read.readObject();
@@ -119,8 +122,9 @@ public class WSWaitForPlayers extends SubPage{
                 Master.getServer().setState(OrpheusServerState.WAITING_ROOM);
                 chat.openChatServer();
                 chat.logLocal("Server started on host address " + Master.getServer().getIpAddr());
-                Master.getServer().setReceiverFunction(ServerMessageType.WAITING_ROOM_INIT, receiveInit);
-                Master.getServer().setReceiverFunction(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
+                Master.getServer().addReceiver(ServerMessageType.PLAYER_JOINED, receiveJoin);
+                Master.getServer().addReceiver(ServerMessageType.WAITING_ROOM_INIT, receiveInit);
+                Master.getServer().addReceiver(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -139,8 +143,9 @@ public class WSWaitForPlayers extends SubPage{
         if(Master.getServer() != null){//successfully started
             Master.getServer().connect(ipAddr);
             chat.joinChat(ipAddr);
-            Master.getServer().setReceiverFunction(ServerMessageType.WAITING_ROOM_INIT, receiveInit);
-            Master.getServer().setReceiverFunction(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
+            //Master.getServer().addReceiver(ServerMessageType.PLAYER_JOINED, receiveJoin); I don't think we need this on more than 1 person
+            Master.getServer().addReceiver(ServerMessageType.WAITING_ROOM_INIT, receiveInit);
+            Master.getServer().addReceiver(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
         }
         return this;
     }
@@ -149,7 +154,7 @@ public class WSWaitForPlayers extends SubPage{
      * Sends a message containing the state of this waiting room.
      * Is sent whenever a player joins the server
      */
-    private void sendInit(){
+    private void sendInit(String ipAddr){
         JsonObjectBuilder build = Json.createObjectBuilder();
         build.add("type", "waiting room init");
         build.add("team size", teamSize);
@@ -171,7 +176,7 @@ public class WSWaitForPlayers extends SubPage{
             ServerMessageType.WAITING_ROOM_INIT
         );
         
-        Master.getServer().send(initMsg);
+        Master.getServer().send(initMsg, ipAddr);
     }
     
     public WSWaitForPlayers joinTeam1(User u){

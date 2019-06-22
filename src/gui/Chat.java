@@ -17,6 +17,9 @@ public class Chat extends JComponent implements ActionListener{
     private final JScrollPane box;
     private final JTextField newMsg;
     private final HashMap<String, Consumer<String[]>> CMDS = new HashMap<>();
+    private final Consumer<ServerMessage> receiver = (sm)->{
+        logLocal(String.format("(%s): %s", sm.getSender().getName(), sm.getBody()));
+    };
     
     public Chat(){
         super();
@@ -109,10 +112,7 @@ public class Chat extends JComponent implements ActionListener{
         
         //started successfully
         if(Master.getServer() != null){
-            Master.getServer().setReceiverFunction(ServerMessageType.CHAT, (ServerMessage sm)->{
-                logLocal(String.format("(%s): %s", sm.getSender().getName(), sm.getBody()));
-            });
-            
+            Master.getServer().addReceiver(ServerMessageType.CHAT, receiver);
             logLocal("Initialized chat server on " + Master.getServer().getIpAddr());
             logLocal("Have other people use the \'/connect " + Master.getServer().getIpAddr() + "\' command (without the quote marks) to connect.");
         }
@@ -126,9 +126,7 @@ public class Chat extends JComponent implements ActionListener{
         //so an else statement won't work
         if(Master.getServer() != null){
             Master.getServer().connect(ipAddr);
-            Master.getServer().setReceiverFunction(ServerMessageType.CHAT, (ServerMessage sm)->{
-                logLocal(String.format("(%s): %s", sm.getSender().getName(), sm.getBody()));
-            });
+            Master.getServer().addReceiver(ServerMessageType.CHAT, receiver);
             logLocal("Joined chat with " + ipAddr);
             log(Master.getServer().getIpAddr() + " has joined the chat.");
         }

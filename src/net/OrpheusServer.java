@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import static java.lang.System.out;
+import java.util.ArrayList;
 import javax.json.Json;
 import javax.json.JsonException;
 
@@ -33,7 +34,7 @@ import javax.json.JsonException;
  * encoded into JSON format, then converted into a String.
  * Upon receiving input into its socket, the server will attempt to de-serialize it.
  * If the de-serialization is successful, it takes the type of that message,
- * and calls the corresponding Consumer in the 'receivers' HashMap.
+ * and calls the corresponding Consumers in the 'receivers' HashMap.
  * 
  * @author Matt Crow
  */
@@ -44,7 +45,7 @@ public class OrpheusServer {
     private volatile boolean listenForConn;
     private OrpheusServerState state; //what this server is doing
     
-    private final HashMap<ServerMessageType, Consumer<ServerMessage>> receivers;
+    private final HashMap<ServerMessageType, ArrayList<Consumer<ServerMessage>>> receivers;
     
     public static final String SHUTDOWN_MESSAGE = "EXIT";
     public static final String SOMEONE_LEFT = "Discon: ";
@@ -78,11 +79,10 @@ public class OrpheusServer {
     }
     
     private void initReceivers(){
-        receivers.put(ServerMessageType.PLAYER_JOINED, (ServerMessage sm)->{
+        addReceiver(ServerMessageType.PLAYER_JOINED, (ServerMessage sm)->{
             String ip = sm.getSender().getIpAddress();
-            out.println("player joined " + sm.getSender().getName());
             if(connections.containsKey(ip)){
-                out.println("already connected");
+                //out.println("already connected");
             } else {
                 connect(ip);
                 connections.get(ip).setUser(sm.getSender());
@@ -113,13 +113,15 @@ public class OrpheusServer {
     }
     
     public String getIpAddr(){
+        /*
         String ret = "ERROR";
+        server.getInetAddress();
         try {
             ret = InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException ex) {
             Logger.getLogger(OrpheusServer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return ret;
+        }*/
+        return server.getInetAddress().getHostAddress();
     }
     
     public void setState(OrpheusServerState s){
@@ -213,13 +215,20 @@ public class OrpheusServer {
     }
     
     public void send(ServerMessage sm){
-        connections.values().stream().forEach((Connection c)->{
+        send(sm.toJsonString());
+    }
+    
+    public boolean send(ServerMessage sm, String ipAddr){
+        boolean success = false;
+        if(connections.containsKey(ipAddr)){
             try {
-                c.writeToClient(sm.toJsonString());
+                connections.get(ipAddr).writeToClient(sm.toJsonString());
+                success = true;
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-        });
+        }
+        return success;
     }
     
     public void receive(String msg){
@@ -228,7 +237,7 @@ public class OrpheusServer {
             ServerMessage sm = ServerMessage.deserializeJson(msg);
             
             if(receivers.containsKey(sm.getType())){
-                receivers.get(sm.getType()).accept(sm);
+                receivers.get(sm.getType()).forEach((c)->c.accept(sm));
                 dealtWith = true;
             } else {
                 dealtWith = false;
@@ -263,8 +272,19 @@ public class OrpheusServer {
      * @param nomNom the function to run upon receiving a ServerMessage of the given type. 
      * @see ServerMessage
      */
-    public void setReceiverFunction(ServerMessageType key, Consumer<ServerMessage> nomNom){
-        receivers.put(key, nomNom);
+    public void addReceiver(ServerMessageType key, Consumer<ServerMessage> nomNom){
+        if(!receivers.containsKey(key)){
+            receivers.put(key, new ArrayList<Consumer<ServerMessage>>());
+        }
+        receivers.get(key).add(nomNom);
+    }
+    
+    public boolean removeReceiver(ServerMessageType type, Consumer<ServerMessage> nonNom){
+        boolean wasRemoved = false;
+        if(receivers.containsKey(type)){
+            receivers.get(type).remove(nonNom);
+        }
+        return wasRemoved;
     }
     
     public final void setAcceptingConn(boolean b){
