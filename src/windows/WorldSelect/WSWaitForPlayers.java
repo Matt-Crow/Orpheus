@@ -6,18 +6,22 @@ import gui.Chat;
 import gui.Style;
 import java.awt.FlowLayout;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.HashMap;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.json.*;
 import javax.swing.JButton;
 import net.OrpheusServerState;
 import net.ServerMessage;
 import net.ServerMessageType;
+import serialization.JsonUtil;
 import windows.Page;
 import windows.SubPage;
 
 /**
- *
+ * how to make this send init message when player joins?
  * @author Matt
  */
 public class WSWaitForPlayers extends SubPage{
@@ -33,6 +37,48 @@ public class WSWaitForPlayers extends SubPage{
     private final Chat chat;
     private final JButton joinT1Button;
     private final JButton joinT2Button;
+    
+    private final Consumer<ServerMessage> receiveInit = (sm)->{
+        JsonReader read = Json.createReader(new StringReader(sm.getBody()));
+        JsonObject obj = read.readObject();
+        read.close();
+        
+        JsonUtil.verify(obj, "team size");
+        JsonUtil.verify(obj, "team 1");
+        JsonUtil.verify(obj, "team 2");
+        
+        teamSize = obj.getInt("team size");
+        obj.getJsonArray("team 1").stream().forEach((jv)->{
+            if(jv.getValueType().equals(JsonValue.ValueType.OBJECT)){
+                joinTeam1(User.deserializeJson((JsonObject)jv));
+            }
+        });
+        obj.getJsonArray("team 2").stream().forEach((jv)->{
+            if(jv.getValueType().equals(JsonValue.ValueType.OBJECT)){
+                joinTeam2(User.deserializeJson((JsonObject)jv));
+            }
+        });
+    };
+    private final Consumer<ServerMessage> receiveUpdate = (sm)->{
+        //not sure I like this.
+        //update messages are either 'join team 1', or 'join team 2'
+        String[] split = sm.getBody().split(" ");
+        if(null == split[split.length - 1]){
+            System.out.println("not sure how to handle this: ");
+            sm.displayData();
+        } else switch (split[split.length - 1]) {
+            case "1":
+                joinTeam1(sm.getSender());
+                break;
+            case "2":
+                joinTeam2(sm.getSender());
+                break;
+            default:
+                System.out.println("not sure how to handle this: ");
+                sm.displayData();
+                break;
+        }
+    };
     
     //todo add build select, start button, display teams
     public WSWaitForPlayers(Page p){
@@ -66,7 +112,6 @@ public class WSWaitForPlayers extends SubPage{
         repaint();
     }
     
-    //todo set receiver function
     public WSWaitForPlayers startServer(){
         if(Master.getServer() == null){
             try {
@@ -74,6 +119,8 @@ public class WSWaitForPlayers extends SubPage{
                 Master.getServer().setState(OrpheusServerState.WAITING_ROOM);
                 chat.openChatServer();
                 chat.logLocal("Server started on host address " + Master.getServer().getIpAddr());
+                Master.getServer().setReceiverFunction(ServerMessageType.WAITING_ROOM_INIT, receiveInit);
+                Master.getServer().setReceiverFunction(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -92,19 +139,39 @@ public class WSWaitForPlayers extends SubPage{
         if(Master.getServer() != null){//successfully started
             Master.getServer().connect(ipAddr);
             chat.joinChat(ipAddr);
-            Master.getServer().setReceiverFunction(ServerMessageType.WAITING_ROOM_UPDATE, (ServerMessage sm)->{
-                String[] split = sm.getBody().split(" ");
-                if("1".equals(split[split.length - 1])){
-                    joinTeam1(sm.getSender());
-                } else if("1".equals(split[split.length - 1])){
-                    joinTeam2(sm.getSender());
-                } else {
-                    chat.log("not sure how to handle this: ");
-                    sm.displayData();
-                }
-            });
+            Master.getServer().setReceiverFunction(ServerMessageType.WAITING_ROOM_INIT, receiveInit);
+            Master.getServer().setReceiverFunction(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
         }
         return this;
+    }
+    
+    /**
+     * Sends a message containing the state of this waiting room.
+     * Is sent whenever a player joins the server
+     */
+    private void sendInit(){
+        JsonObjectBuilder build = Json.createObjectBuilder();
+        build.add("type", "waiting room init");
+        build.add("team size", teamSize);
+        
+        JsonArrayBuilder t1 = Json.createArrayBuilder();
+        team1.values().stream().forEach((User u)->{
+            t1.add(u.serializeJson());
+        });
+        build.add("team 1", t1.build());
+        
+        JsonArrayBuilder t2 = Json.createArrayBuilder();
+        team2.values().stream().forEach((User u)->{
+            t2.add(u.serializeJson());
+        });
+        build.add("team 2", t2.build());
+        
+        ServerMessage initMsg = new ServerMessage(
+            build.build().toString(),
+            ServerMessageType.WAITING_ROOM_INIT
+        );
+        
+        Master.getServer().send(initMsg);
     }
     
     public WSWaitForPlayers joinTeam1(User u){
