@@ -265,15 +265,16 @@ public class WSWaitForPlayers extends SubPage{
         Timer t = new Timer(30000, (e)->{
             chat.log("*ding*");
             server.removeReceiver(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
-            /*
-            TODO:
-            obtain player information from each User (don't do this beforehand)
-            construct teams and start world
-            serialize the world and send it to all connected users
-            switch to that new world
-            make orpheus server stop acception connections
-            remove all of this' receivers from the server
-            */
+            server.addReceiver(ServerMessageType.PLAYER_DATA, (sm)->{
+                /*
+                obtain player build information
+                construct teams and start world
+                serialize the world and send it to all connected users
+                switch to that new world
+                notify users that the world has started
+                remove all of this' receivers from the server
+                */
+            });
         });
         t.start();
     }
