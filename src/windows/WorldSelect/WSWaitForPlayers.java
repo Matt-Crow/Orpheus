@@ -2,16 +2,17 @@ package windows.WorldSelect;
 
 import controllers.Master;
 import controllers.User;
-import java.util.ArrayList;
 import gui.Chat;
 import gui.Style;
 import java.awt.FlowLayout;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import net.OrpheusServerState;
 import net.ServerMessage;
+import net.ServerMessageType;
 import windows.Page;
 import windows.SubPage;
 
@@ -21,8 +22,14 @@ import windows.SubPage;
  */
 public class WSWaitForPlayers extends SubPage{
     private int teamSize;
-    private final ArrayList<User> team1;
-    private final ArrayList<User> team2;
+    
+    /*
+    For now, I'm using IP address as the key, and the User as the value.
+    I'm not sure if this will work, I think IP addresses are unique to each computer,
+    but I'm not quite sure
+    */
+    private final HashMap<String, User> team1;
+    private final HashMap<String, User> team2;
     private final Chat chat;
     private final JButton joinT1Button;
     private final JButton joinT2Button;
@@ -32,8 +39,8 @@ public class WSWaitForPlayers extends SubPage{
         super(p);
         
         teamSize = 1;
-        team1 = new ArrayList<>();
-        team2 = new ArrayList<>();
+        team1 = new HashMap<>();
+        team2 = new HashMap<>();
         
         joinT1Button = new JButton("Join team 1");
         joinT1Button.addActionListener((e)->{
@@ -85,7 +92,7 @@ public class WSWaitForPlayers extends SubPage{
         if(Master.getServer() != null){//successfully started
             Master.getServer().connect(ipAddr);
             chat.joinChat(ipAddr);
-            Master.getServer().setReceiverFunction(ServerMessage.WAITING_ROOM_UPDATE, (ServerMessage sm)->{
+            Master.getServer().setReceiverFunction(ServerMessageType.WAITING_ROOM_UPDATE, (ServerMessage sm)->{
                 String[] split = sm.getBody().split(" ");
                 if("1".equals(split[split.length - 1])){
                     joinTeam1(sm.getSender());
@@ -101,23 +108,24 @@ public class WSWaitForPlayers extends SubPage{
     }
     
     public WSWaitForPlayers joinTeam1(User u){
-        if(team1.contains(u)){
+        if(team1.containsKey(u.getIpAddress())){
             chat.logLocal(u.getName() + " is already on team 1.");
         }else if(team1.size() < teamSize){
-            if(team2.contains(u)){
-                team2.remove(u);
+            if(team2.containsKey(u.getIpAddress())){
+                team2.remove(u.getIpAddress());
                 chat.log(u.getName() + " has left team 2.");
             }
-            team1.add(u);
+            team1.put(u.getIpAddress(), u);
             chat.log(u.getName() + " has joined team 1.");
             if(u.equals(Master.getUser())){
                 //only send an update if the user is the one who changed teams. Prevents infinite loop
                 ServerMessage sm = new ServerMessage(
                     "join team 1",
-                    ServerMessage.WAITING_ROOM_UPDATE
+                    ServerMessageType.WAITING_ROOM_UPDATE
                 );
                 Master.getServer().send(sm);
             }
+            displayData();
         }else{
             chat.logLocal(u.getName() + " cannot joint team 1: Team 1 is full.");
         } 
@@ -125,23 +133,24 @@ public class WSWaitForPlayers extends SubPage{
     }
     
     public WSWaitForPlayers joinTeam2(User u){
-        if(team2.contains(u)){
+        if(team2.containsKey(u.getIpAddress())){
             chat.logLocal(u.getName() + " is already on team 2.");
         }else if(team2.size() < teamSize){
-            if(team1.contains(u)){
-                team1.remove(u);
+            if(team1.containsKey(u.getIpAddress())){
+                team1.remove(u.getIpAddress());
                 chat.log(u.getName() + " has left team 1.");
             }
-            team2.add(u);
+            team2.put(u.getIpAddress(), u);
             chat.log(u.getName() + " has joined team 2.");
             if(u.equals(Master.getUser())){
                 //only send an update if the user is the one who changed teams. Prevents infinite loop
                 ServerMessage sm = new ServerMessage(
                     "join team 2",
-                    ServerMessage.WAITING_ROOM_UPDATE
+                    ServerMessageType.WAITING_ROOM_UPDATE
                 );
                 Master.getServer().send(sm);
             }
+            displayData();
         }else{
             chat.logLocal(u.getName() + " cannot joint team 2: Team 2 is full.");
         } 
@@ -151,5 +160,15 @@ public class WSWaitForPlayers extends SubPage{
     public WSWaitForPlayers setTeamSize(int s){
         teamSize = s;
         return this;
+    }
+    
+    public void displayData(){
+        System.out.println("WAITING ROOM");
+        System.out.println("Team size: " + teamSize);
+        System.out.println("Team 1: ");
+        team1.values().forEach((member)->System.out.println("--" + member.getName()));
+        System.out.println("Team 2: ");
+        team2.values().forEach((member)->System.out.println("--" + member.getName()));
+        System.out.println("END OF WAITING ROOM");
     }
 }

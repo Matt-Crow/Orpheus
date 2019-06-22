@@ -3,8 +3,6 @@ package net;
 import controllers.Master;
 import controllers.User;
 import java.io.StringReader;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import javax.json.Json;
 import javax.json.JsonException;
 import javax.json.JsonObject;
@@ -15,29 +13,13 @@ import serialization.JsonUtil;
 /**
  * The ServerMessage class is used to send information back
  * and forth between computers.
- * <h2>Possible types</h2>
- * <ul>
- * <li>ServerMessage.CHAT_MESSAGE</li>
- * <li>ServerMessage.WAITING_ROOM_UPDATE</li>
- * <li>ServerMessage.PLAYER_JOINED</li>
- * <li>ServerMessage.PLAYER_LEFT</li>
- * <li>ServerMessage.OTHER</li>
- * </ul>
- * 
  * @author Matt Crow
  */
 public class ServerMessage implements JsonSerialable{
-    
-    // Enum constants: used to designate what type of message this is
-    public static final int CHAT_MESSAGE = 0;
-    public static final int WAITING_ROOM_UPDATE = 1;
-    public static final int PLAYER_JOINED = 2;
-    public static final int PLAYER_LEFT = 3;
-    public static final int OTHER = -1;
-    
+    //not sure if I want to do this, as serializing an IP address is a lot easier than a User
     private final User fromUser;
     private final String body;
-    private final int type;
+    private final ServerMessageType type;
     
     /**
      * Creates a message, which will be serialized before being sent to another
@@ -45,23 +27,16 @@ public class ServerMessage implements JsonSerialable{
      * 
      * @param sender the User this is sent from
      * @param bodyText the text of the message
-     * @param messageType an enum value representing the type of message this is:
-     * <br>
-     * <ul>
-     * <li>ServerMessage.CHAT_MESSAGE</li>
-     * <li>ServerMessage.WAITING_ROOM_UPDATE</li>
-     * <li>ServerMessage.PLAYER_JOINED</li>
-     * <li>ServerMessage.PLAYER_LEFT</li>
-     * <li>ServerMessage.OTHER</li>
-     * </ul>
+     * @param messageType an enum value representing the type of message this is.
+     * the receiving servers will react to this message based upon this type
      */
-    public ServerMessage(User sender, String bodyText, int messageType){
+    public ServerMessage(User sender, String bodyText, ServerMessageType messageType){
         fromUser = sender;
         body = bodyText;
         type = messageType;
     }
     
-    public ServerMessage(String bodyText, int messageType){
+    public ServerMessage(String bodyText, ServerMessageType messageType){
         this(
             Master.getUser(),
             bodyText,
@@ -82,14 +57,14 @@ public class ServerMessage implements JsonSerialable{
         return body;
     }
     
-    public final int getType(){
+    public final ServerMessageType getType(){
         return type;
     }
 
     @Override
     public JsonObject serializeJson() {
         JsonObjectBuilder ret = Json.createObjectBuilder();
-        ret.add("type", type);
+        ret.add("type", type.toString());
         ret.add("from", fromUser.serializeJson());
         ret.add("body", body);
         return ret.build();
@@ -108,7 +83,7 @@ public class ServerMessage implements JsonSerialable{
         return new ServerMessage(
             User.deserializeJson(obj.getJsonObject("from")),
             obj.getString("body"),
-            obj.getInt("type")
+            ServerMessageType.fromString(obj.getString("type"))
         );
     }
     
@@ -129,7 +104,7 @@ public class ServerMessage implements JsonSerialable{
     
     public void displayData(){
         System.out.println("From: " + fromUser.getName());
-        System.out.println("Type: " + type);
+        System.out.println("Type: " + type.toString());
         System.out.println("Body: " + body);
         System.out.println("END OF MESSAGE");
     }

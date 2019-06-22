@@ -44,7 +44,7 @@ public class OrpheusServer {
     private volatile boolean listenForConn;
     private OrpheusServerState state; //what this server is doing
     
-    private final HashMap<Integer, Consumer<ServerMessage>> receivers; //integer is ServerMessage type
+    private final HashMap<ServerMessageType, Consumer<ServerMessage>> receivers;
     
     public static final String SHUTDOWN_MESSAGE = "EXIT";
     public static final String SOMEONE_LEFT = "Discon: ";
@@ -78,7 +78,7 @@ public class OrpheusServer {
     }
     
     private void initReceivers(){
-        receivers.put(ServerMessage.PLAYER_JOINED, (ServerMessage sm)->{
+        receivers.put(ServerMessageType.PLAYER_JOINED, (ServerMessage sm)->{
             String ip = sm.getSender().getIpAddress();
             out.println("player joined " + sm.getSender().getName());
             if(connections.containsKey(ip)){
@@ -180,7 +180,7 @@ public class OrpheusServer {
             //includes the User data so the other computer has access to username
             conn.writeToClient(new ServerMessage(
                 Master.getUser().serializeJson().toString(),
-                ServerMessage.PLAYER_JOINED
+                ServerMessageType.PLAYER_JOINED
             ).toJsonString());
             
         } catch (IOException ex) {
@@ -259,11 +259,11 @@ public class OrpheusServer {
     
     /**
      * 
-     * @param key the type of ServerMessage this should receive. See ServerMessage for possible values this may have
+     * @param key the type of ServerMessage this should receive.
      * @param nomNom the function to run upon receiving a ServerMessage of the given type. 
      * @see ServerMessage
      */
-    public void setReceiverFunction(int key, Consumer<ServerMessage> nomNom){
+    public void setReceiverFunction(ServerMessageType key, Consumer<ServerMessage> nomNom){
         receivers.put(key, nomNom);
     }
     

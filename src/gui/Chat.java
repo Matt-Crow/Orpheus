@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 import javax.swing.*;
 import net.ServerMessage;
+import net.ServerMessageType;
 
 public class Chat extends JComponent implements ActionListener{
     private final JTextArea msgs;
@@ -90,7 +91,7 @@ public class Chat extends JComponent implements ActionListener{
         logLocal("You: " + msg);
         if(Master.getServer() != null){
             System.out.println("sending message...");
-            ServerMessage sm = new ServerMessage(msg, ServerMessage.CHAT_MESSAGE);
+            ServerMessage sm = new ServerMessage(msg, ServerMessageType.CHAT);
             Master.getServer().send(sm);
         }
 	}
@@ -108,7 +109,7 @@ public class Chat extends JComponent implements ActionListener{
         
         //started successfully
         if(Master.getServer() != null){
-            Master.getServer().setReceiverFunction(ServerMessage.CHAT_MESSAGE, (ServerMessage sm)->{
+            Master.getServer().setReceiverFunction(ServerMessageType.CHAT, (ServerMessage sm)->{
                 logLocal(String.format("(%s): %s", sm.getSender().getName(), sm.getBody()));
             });
             
@@ -125,7 +126,7 @@ public class Chat extends JComponent implements ActionListener{
         //so an else statement won't work
         if(Master.getServer() != null){
             Master.getServer().connect(ipAddr);
-            Master.getServer().setReceiverFunction(ServerMessage.CHAT_MESSAGE, (ServerMessage sm)->{
+            Master.getServer().setReceiverFunction(ServerMessageType.CHAT, (ServerMessage sm)->{
                 logLocal(String.format("(%s): %s", sm.getSender().getName(), sm.getBody()));
             });
             logLocal("Joined chat with " + ipAddr);
