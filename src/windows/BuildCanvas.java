@@ -102,14 +102,14 @@ public class BuildCanvas extends DrawingPlane{
 		name.setEditable(true);
         
 		classSelect = new UpgradableSelector<CharacterStatName>("Character Class", CharacterClass.getAll());
-		classSelect.getBox().setSelected(b.getClassName());
+		classSelect.getBox().setSelectedName(b.getClassName());
 		add(classSelect);
 		
 		actives = new UpgradableSelector[3];
 		for(int i = 0; i < 3; i++){
 			AbstractActive[] options = AbstractActive.getAll();
 			actives[i] = new UpgradableSelector<ActiveStatName>("Active #" + (i + 1), options);
-			actives[i].getBox().setSelected(b.getActiveNames()[i]);
+			actives[i].getBox().setSelectedName(b.getActiveNames()[i]);
 			add(actives[i]);
 		}
 		
@@ -117,7 +117,7 @@ public class BuildCanvas extends DrawingPlane{
 		for(int i = 0; i < 3; i++){
 			AbstractPassive[] options = AbstractPassive.getAll();
 			passives[i] = new UpgradableSelector<PassiveStatName>("Passive #" + (i + 1), options);
-			passives[i].getBox().setSelected(b.getPassiveNames()[i]);
+			passives[i].getBox().setSelectedName(b.getPassiveNames()[i]);
 			add(passives[i]);
 		}
 		

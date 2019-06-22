@@ -13,6 +13,7 @@ public enum ServerMessageType {
     WAITING_ROOM_INIT("waiting room init"),
     WAITING_ROOM_UPDATE("waiting room update"),
     REQUEST_PLAYER_DATA("request player data"),
+    PLAYER_DATA("player data"),
     OTHER("other");
     
     private final String name;

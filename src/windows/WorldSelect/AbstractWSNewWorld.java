@@ -1,6 +1,7 @@
 package windows.WorldSelect;
 
 import customizables.Build;
+import gui.BuildSelect;
 import gui.OptionBox;
 import gui.Style;
 import java.awt.GridLayout;
@@ -16,7 +17,8 @@ import windows.SubPage;
  * @author Matt Crow
  */
 public abstract class AbstractWSNewWorld extends SubPage{
-    private final OptionBox<String> playerBuild;
+    //private final OptionBox<String> playerBuild;
+    private final BuildSelect playerBuild;
     private final OptionBox<Integer> teamSize;
     private final JButton start;
     
@@ -24,7 +26,7 @@ public abstract class AbstractWSNewWorld extends SubPage{
         super(p);
         setLayout(new GridLayout(2, 2));
         
-        playerBuild = buildSelect();
+        playerBuild = new BuildSelect();//buildSelect();
         add(playerBuild);
         
         teamSize = teamSizeSelect();

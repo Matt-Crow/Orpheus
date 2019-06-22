@@ -2,6 +2,7 @@ package windows.WorldSelect;
 
 import controllers.Master;
 import controllers.User;
+import gui.BuildSelect;
 import gui.Chat;
 import gui.Style;
 import java.awt.FlowLayout;
@@ -37,6 +38,7 @@ public class WSWaitForPlayers extends SubPage{
     private final HashMap<String, User> team1;
     private final HashMap<String, User> team2;
     private final Chat chat;
+    private final BuildSelect playerBuild;
     private final JButton joinT1Button;
     private final JButton joinT2Button;
     private final JButton startButton;
@@ -85,16 +87,7 @@ public class WSWaitForPlayers extends SubPage{
                 break;
         }
     };
-    private final Consumer<ServerMessage> receivePlayerRequest = (sm)->{
-        /*
-        Master.getServer().send(
-            new ServerMessage(
-                Master.getUser().getPlayer().serializeJson().toString(),
-                what sm type?
-            ), 
-            sm.getSender().getIpAddress()
-        );*/
-    };
+    private final Consumer<ServerMessage> receivePlayerRequest;
     
     //todo add build select, start button, display teams
     public WSWaitForPlayers(Page p){
@@ -103,6 +96,9 @@ public class WSWaitForPlayers extends SubPage{
         teamSize = 1;
         team1 = new HashMap<>();
         team2 = new HashMap<>();
+        
+        playerBuild = new BuildSelect();
+        add(playerBuild);
         
         joinT1Button = new JButton("Join team 1");
         joinT1Button.addActionListener((e)->{
@@ -126,6 +122,17 @@ public class WSWaitForPlayers extends SubPage{
             startWorld();
         });
         add(startButton);
+        
+        //had to move this here because playerBuild isn't initialized in the field declaration
+        receivePlayerRequest = (sm)->{
+            Master.getServer().send(
+                new ServerMessage(
+                    playerBuild.getSelectedBuild().serializeJson().toString(),
+                    ServerMessageType.PLAYER_DATA
+                ),
+                sm.getSender().getIpAddress()
+            );
+        };
         
         //grid layout was causing problems with chat.
         //since it couldn't fit in 1/4 of the JPanel, it compressed to just a thin line
