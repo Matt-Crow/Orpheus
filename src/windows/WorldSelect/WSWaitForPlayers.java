@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import javax.json.*;
 import javax.swing.JButton;
 import javax.swing.Timer;
+import net.OrpheusServer;
 import net.OrpheusServerState;
 import net.ServerMessage;
 import net.ServerMessageType;
@@ -22,7 +23,7 @@ import windows.Page;
 import windows.SubPage;
 
 /**
- * how to make this send init message when player joins?
+ * need to differentiate between host and other people, so that way only the host can start the match and generate the world
  * @author Matt
  */
 public class WSWaitForPlayers extends SubPage{
@@ -38,6 +39,7 @@ public class WSWaitForPlayers extends SubPage{
     private final Chat chat;
     private final JButton joinT1Button;
     private final JButton joinT2Button;
+    private final JButton startButton;
     
     private final Consumer<ServerMessage> receiveJoin = (sm)->{
         sendInit(sm.getSender().getIpAddress());
@@ -83,6 +85,16 @@ public class WSWaitForPlayers extends SubPage{
                 break;
         }
     };
+    private final Consumer<ServerMessage> receivePlayerRequest = (sm)->{
+        /*
+        Master.getServer().send(
+            new ServerMessage(
+                Master.getUser().getPlayer().serializeJson().toString(),
+                what sm type?
+            ), 
+            sm.getSender().getIpAddress()
+        );*/
+    };
     
     //todo add build select, start button, display teams
     public WSWaitForPlayers(Page p){
@@ -108,6 +120,12 @@ public class WSWaitForPlayers extends SubPage{
         
         chat = new Chat();
         add(chat);
+        
+        startButton = new JButton("Start the match");
+        startButton.addActionListener((e)->{
+            startWorld();
+        });
+        add(startButton);
         
         //grid layout was causing problems with chat.
         //since it couldn't fit in 1/4 of the JPanel, it compressed to just a thin line
@@ -231,10 +249,15 @@ public class WSWaitForPlayers extends SubPage{
     }
     
     private void startWorld(){
-        //TODO: disable start world button
+        OrpheusServer server = Master.getServer();
+        startButton.setEnabled(false);
         chat.log("The game will start in 30 seconds. Please select your build and team.");
-        //TODO prevent new people from joining
+        server.setAcceptingConn(false);
+        server.removeReceiver(ServerMessageType.PLAYER_JOINED, receiveJoin);
+        server.removeReceiver(ServerMessageType.WAITING_ROOM_INIT, receiveInit);
         Timer t = new Timer(30000, (e)->{
+            chat.log("*ding*");
+            server.removeReceiver(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
             /*
             TODO:
             obtain player information from each User (don't do this beforehand)
