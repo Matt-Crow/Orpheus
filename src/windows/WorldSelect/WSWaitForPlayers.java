@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.*;
 import javax.swing.JButton;
+import javax.swing.Timer;
 import net.OrpheusServerState;
 import net.ServerMessage;
 import net.ServerMessageType;
@@ -185,10 +186,10 @@ public class WSWaitForPlayers extends SubPage{
         }else if(team1.size() < teamSize){
             if(team2.containsKey(u.getIpAddress())){
                 team2.remove(u.getIpAddress());
-                chat.log(u.getName() + " has left team 2.");
+                chat.logLocal(u.getName() + " has left team 2.");
             }
             team1.put(u.getIpAddress(), u);
-            chat.log(u.getName() + " has joined team 1.");
+            chat.logLocal(u.getName() + " has joined team 1.");
             if(u.equals(Master.getUser())){
                 //only send an update if the user is the one who changed teams. Prevents infinite loop
                 ServerMessage sm = new ServerMessage(
@@ -210,10 +211,10 @@ public class WSWaitForPlayers extends SubPage{
         }else if(team2.size() < teamSize){
             if(team1.containsKey(u.getIpAddress())){
                 team1.remove(u.getIpAddress());
-                chat.log(u.getName() + " has left team 1.");
+                chat.logLocal(u.getName() + " has left team 1.");
             }
             team2.put(u.getIpAddress(), u);
-            chat.log(u.getName() + " has joined team 2.");
+            chat.logLocal(u.getName() + " has joined team 2.");
             if(u.equals(Master.getUser())){
                 //only send an update if the user is the one who changed teams. Prevents infinite loop
                 ServerMessage sm = new ServerMessage(
@@ -227,6 +228,24 @@ public class WSWaitForPlayers extends SubPage{
             chat.logLocal(u.getName() + " cannot joint team 2: Team 2 is full.");
         } 
         return this;
+    }
+    
+    private void startWorld(){
+        //TODO: disable start world button
+        chat.log("The game will start in 30 seconds. Please select your build and team.");
+        //TODO prevent new people from joining
+        Timer t = new Timer(30000, (e)->{
+            /*
+            TODO:
+            obtain player information from each User (don't do this beforehand)
+            construct teams and start world
+            serialize the world and send it to all connected users
+            switch to that new world
+            make orpheus server stop acception connections
+            remove all of this' receivers from the server
+            */
+        });
+        t.start();
     }
     
     public WSWaitForPlayers setTeamSize(int s){
