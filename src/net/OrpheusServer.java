@@ -40,6 +40,7 @@ import javax.json.JsonException;
  */
 public class OrpheusServer {
     private final ServerSocket server;
+    private String ipAddress;
     private final HashMap<String, Connection> connections;
     private Thread connListener;
     private volatile boolean listenForConn;
@@ -53,6 +54,7 @@ public class OrpheusServer {
     public OrpheusServer(int port) throws IOException{
         state = OrpheusServerState.NONE;
         receivers = new HashMap<>();
+        ipAddress = "ERROR INITIALIZING SERVER";
         
         try{
             server = new ServerSocket(port);
@@ -62,11 +64,12 @@ public class OrpheusServer {
             throw ex;
         }
         
-        System.out.println("Server started on " + InetAddress.getLocalHost().getHostAddress());
+        ipAddress = InetAddress.getLocalHost().getHostAddress();
+        System.out.println("Server started on " + ipAddress);
         System.out.println(
             String.format(
                 "To connect to this server, call \'new Socket(\"%s\", %d);\'", 
-                InetAddress.getLocalHost().getHostAddress(), 
+                ipAddress, 
                 port
             )
         );
@@ -113,15 +116,7 @@ public class OrpheusServer {
     }
     
     public String getIpAddr(){
-        /*
-        String ret = "ERROR";
-        server.getInetAddress();
-        try {
-            ret = InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(OrpheusServer.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
-        return server.getInetAddress().getHostAddress();
+        return ipAddress;
     }
     
     public void setState(OrpheusServerState s){
