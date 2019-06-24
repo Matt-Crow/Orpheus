@@ -113,6 +113,10 @@ public class Team extends EntityManager implements Serializable{
 		return membersRem;
 	}
     
+    public int getRosterSize(){
+        return roster.size();
+    }
+    
     /**
      * Invokes a method on each member in the team
      * note that this is EVERY member,

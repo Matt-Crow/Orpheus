@@ -1,10 +1,14 @@
 package windows.WorldSelect;
 
+import battle.Team;
 import controllers.Master;
 import controllers.User;
+import customizables.Build;
+import entities.TruePlayer;
 import gui.BuildSelect;
 import gui.Chat;
 import gui.Style;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.io.IOException;
 import java.io.StringReader;
@@ -28,13 +32,14 @@ import windows.SubPage;
  * @author Matt
  */
 public class WSWaitForPlayers extends SubPage{
-    private int teamSize;
-    
     /*
     For now, I'm using IP address as the key, and the User as the value.
     I'm not sure if this will work, I think IP addresses are unique to each computer,
     but I'm not quite sure
     */
+    
+    private boolean isHost;
+    
     private final HashMap<String, User> team1;
     private final HashMap<String, User> team2;
     private final Chat chat;
@@ -43,56 +48,18 @@ public class WSWaitForPlayers extends SubPage{
     private final JButton joinT2Button;
     private final JButton startButton;
     
-    private final Consumer<ServerMessage> receiveJoin = (sm)->{
-        sendInit(sm.getSender().getIpAddress());
-    };
-    private final Consumer<ServerMessage> receiveInit = (sm)->{
-        JsonReader read = Json.createReader(new StringReader(sm.getBody()));
-        JsonObject obj = read.readObject();
-        read.close();
-        
-        JsonUtil.verify(obj, "team size");
-        JsonUtil.verify(obj, "team 1");
-        JsonUtil.verify(obj, "team 2");
-        
-        teamSize = obj.getInt("team size");
-        obj.getJsonArray("team 1").stream().forEach((jv)->{
-            if(jv.getValueType().equals(JsonValue.ValueType.OBJECT)){
-                joinTeam1(User.deserializeJson((JsonObject)jv));
-            }
-        });
-        obj.getJsonArray("team 2").stream().forEach((jv)->{
-            if(jv.getValueType().equals(JsonValue.ValueType.OBJECT)){
-                joinTeam2(User.deserializeJson((JsonObject)jv));
-            }
-        });
-    };
-    private final Consumer<ServerMessage> receiveUpdate = (sm)->{
-        //not sure I like this.
-        //update messages are either 'join team 1', or 'join team 2'
-        String[] split = sm.getBody().split(" ");
-        if(null == split[split.length - 1]){
-            System.out.println("not sure how to handle this: ");
-            sm.displayData();
-        } else switch (split[split.length - 1]) {
-            case "1":
-                joinTeam1(sm.getSender());
-                break;
-            case "2":
-                joinTeam2(sm.getSender());
-                break;
-            default:
-                System.out.println("not sure how to handle this: ");
-                sm.displayData();
-                break;
-        }
-    };
+    private int teamSize;
+    
+    private final Consumer<ServerMessage> receiveJoin;
+    private final Consumer<ServerMessage> receiveInit;
+    private final Consumer<ServerMessage> receiveUpdate;
     private final Consumer<ServerMessage> receivePlayerRequest;
     
     //todo add build select, start button, display teams
     public WSWaitForPlayers(Page p){
         super(p);
         
+        isHost = false;
         teamSize = 1;
         team1 = new HashMap<>();
         team2 = new HashMap<>();
@@ -119,11 +86,61 @@ public class WSWaitForPlayers extends SubPage{
         
         startButton = new JButton("Start the match");
         startButton.addActionListener((e)->{
-            startWorld();
+            if(isHost){
+                startWorld();
+            }else{
+                chat.logLocal("only the host can start the world. You'll have to wait for them.");
+            }
         });
         add(startButton);
         
-        //had to move this here because playerBuild isn't initialized in the field declaration
+        receiveJoin  = (sm)->{
+            sendInit(sm.getSender().getIpAddress());
+        };
+        
+        receiveInit = (sm)->{
+            JsonReader read = Json.createReader(new StringReader(sm.getBody()));
+            JsonObject obj = read.readObject();
+            read.close();
+
+            JsonUtil.verify(obj, "team size");
+            JsonUtil.verify(obj, "team 1");
+            JsonUtil.verify(obj, "team 2");
+
+            teamSize = obj.getInt("team size");
+            obj.getJsonArray("team 1").stream().forEach((jv)->{
+                if(jv.getValueType().equals(JsonValue.ValueType.OBJECT)){
+                    joinTeam1(User.deserializeJson((JsonObject)jv));
+                }
+            });
+            obj.getJsonArray("team 2").stream().forEach((jv)->{
+                if(jv.getValueType().equals(JsonValue.ValueType.OBJECT)){
+                    joinTeam2(User.deserializeJson((JsonObject)jv));
+                }
+            });
+        };
+        
+        receiveUpdate = (sm)->{
+            //not sure I like this.
+            //update messages are either 'join team 1', or 'join team 2'
+            String[] split = sm.getBody().split(" ");
+            if(null == split[split.length - 1]){
+                System.out.println("not sure how to handle this: ");
+                sm.displayData();
+            } else switch (split[split.length - 1]) {
+                case "1":
+                    joinTeam1(sm.getSender());
+                    break;
+                case "2":
+                    joinTeam2(sm.getSender());
+                    break;
+                default:
+                    System.out.println("not sure how to handle this: ");
+                    sm.displayData();
+                    break;
+            }
+        };
+        
         receivePlayerRequest = (sm)->{
             Master.getServer().send(
                 new ServerMessage(
@@ -132,6 +149,8 @@ public class WSWaitForPlayers extends SubPage{
                 ),
                 sm.getSender().getIpAddress()
             );
+            joinT1Button.setEnabled(false);
+            joinT2Button.setEnabled(false);
         };
         
         //grid layout was causing problems with chat.
@@ -151,6 +170,7 @@ public class WSWaitForPlayers extends SubPage{
                 Master.getServer().addReceiver(ServerMessageType.PLAYER_JOINED, receiveJoin);
                 Master.getServer().addReceiver(ServerMessageType.WAITING_ROOM_INIT, receiveInit);
                 Master.getServer().addReceiver(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
+                isHost = true;
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -172,6 +192,7 @@ public class WSWaitForPlayers extends SubPage{
             //Master.getServer().addReceiver(ServerMessageType.PLAYER_JOINED, receiveJoin); I don't think we need this on more than 1 person
             Master.getServer().addReceiver(ServerMessageType.WAITING_ROOM_INIT, receiveInit);
             Master.getServer().addReceiver(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
+            Master.getServer().addReceiver(ServerMessageType.REQUEST_PLAYER_DATA, receivePlayerRequest);
         }
         return this;
     }
@@ -255,6 +276,13 @@ public class WSWaitForPlayers extends SubPage{
         return this;
     }
     
+    private void requestBuilds(){
+        Master.getServer().send(new ServerMessage(
+            "please provide build information",
+            ServerMessageType.PLAYER_DATA
+        ));
+    }
+    
     private void startWorld(){
         OrpheusServer server = Master.getServer();
         startButton.setEnabled(false);
@@ -265,18 +293,67 @@ public class WSWaitForPlayers extends SubPage{
         Timer t = new Timer(30000, (e)->{
             chat.log("*ding*");
             server.removeReceiver(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
-            server.addReceiver(ServerMessageType.PLAYER_DATA, (sm)->{
-                /*
-                obtain player build information
-                construct teams and start world
-                serialize the world and send it to all connected users
-                switch to that new world
-                notify users that the world has started
-                remove all of this' receivers from the server
-                */
-            });
+            
+            waitForData();
         });
+        t.setRepeats(false);
         t.start();
+    }
+    
+    private void waitForData(){
+        requestBuilds();
+        
+        Team t1 = Team.constructRandomTeam("Team 1", Color.green, teamSize - team1.size());
+        Team t2 = Team.constructRandomTeam("team 2", Color.red, teamSize - team2.size());
+        
+        Master.getUser().initPlayer().getPlayer().applyBuild(playerBuild.getSelectedBuild());
+        t1.addMember(Master.getUser().getPlayer());
+        
+        Master.getServer().addReceiver(ServerMessageType.PLAYER_DATA, (sm)->{
+            String ip = sm.getSender().getIpAddress();
+            TruePlayer tp;
+            Build b;
+            int teamNum;
+            
+            chat.logLocal(sm.getBody());
+            if(team1.containsKey(ip)){
+                tp = team1.get(ip).initPlayer().getPlayer();
+                teamNum = 1;
+                team1.remove(ip);
+            } else if(team2.containsKey(ip)){
+                tp = team2.get(ip).initPlayer().getPlayer();
+                teamNum = 2;
+                team2.remove(ip);
+            } else {
+                chat.logLocal("Ugh oh, " + sm.getSender().getName() + " isn't on any team!");
+                return;
+            }
+            
+            b = Build.deserializeJson(JsonUtil.fromString(sm.getBody()));
+            tp.applyBuild(b);
+            if(teamNum == 1){
+                t1.addMember(tp);
+            }else{
+                t2.addMember(tp);
+            }
+            t1.displayData();
+            t2.displayData();
+            
+            if(t1.getRosterSize() == teamSize){
+                chat.log("team 1 is done");
+            }
+            if(t2.getRosterSize() == teamSize){
+                chat.log("team 2 is done");
+            }
+            /*
+            start world
+            serialize the world and send it to all connected users
+            switch to that new world
+            notify users that the world has started
+            remove all of this' receivers from the server
+            notify users what team they are on, and their player's ID
+            */
+        });
     }
     
     public WSWaitForPlayers setTeamSize(int s){

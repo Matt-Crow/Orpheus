@@ -17,6 +17,10 @@ import upgradables.UpgradableJsonUtil;
  */
 public class JsonUtil {
     
+    public static JsonObject fromString(String s){
+        return Json.createReader(new StringReader(s)).readObject();
+    }
+    
     public static JsonObject[] readFromFile(File f){
         ArrayList<JsonObject> objs = new ArrayList<>();
         try {
