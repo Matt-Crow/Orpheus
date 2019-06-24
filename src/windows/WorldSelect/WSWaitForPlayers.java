@@ -316,6 +316,7 @@ public class WSWaitForPlayers extends SubPage{
     
     private void waitForData(){
         requestBuilds();
+        OrpheusServer server = Master.getServer();
         
         playerBuild.setEnabled(false);
         joinT1Button.setEnabled(false);
@@ -325,10 +326,15 @@ public class WSWaitForPlayers extends SubPage{
         Team t2 = Team.constructRandomTeam("team 2", Color.red, teamSize - team2.size());
         
         Master.getUser().initPlayer().getPlayer().applyBuild(playerBuild.getSelectedBuild());
-        t1.addMember(Master.getUser().getPlayer());
-        //todo put this User on the correct team, then remove their IP from the HashMap
+        if(team1.containsKey(server.getIpAddr())){
+            t1.addMember(Master.getUser().getPlayer());
+            team1.remove(server.getIpAddr());
+        } else {
+            t2.addMember(Master.getUser().getPlayer());
+            team2.remove(server.getIpAddr());
+        }
         
-        Master.getServer().addReceiver(ServerMessageType.PLAYER_DATA, (sm)->{
+        server.addReceiver(ServerMessageType.PLAYER_DATA, (sm)->{
             String ip = sm.getSender().getIpAddress();
             TruePlayer tp;
             Build b;
@@ -370,7 +376,6 @@ public class WSWaitForPlayers extends SubPage{
             switch to that new world
             notify users that the world has started
             remove all of this' receivers from the server
-            notify users what team they are on, and their player's ID
             */
             ServerMessage idNotify = new ServerMessage(
                 String.format(
@@ -380,7 +385,7 @@ public class WSWaitForPlayers extends SubPage{
                 ),
                 ServerMessageType.NOTIFY_IDS
             );
-            Master.getServer().send(idNotify, ip);
+            server.send(idNotify, ip);
         });
         t1.displayData();
         t2.displayData();
