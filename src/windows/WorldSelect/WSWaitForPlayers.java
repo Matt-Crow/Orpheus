@@ -293,7 +293,7 @@ public class WSWaitForPlayers extends SubPage{
     private void requestBuilds(){
         Master.getServer().send(new ServerMessage(
             "please provide build information",
-            ServerMessageType.PLAYER_DATA
+            ServerMessageType.REQUEST_PLAYER_DATA
         ));
     }
     
