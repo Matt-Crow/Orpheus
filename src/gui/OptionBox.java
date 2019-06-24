@@ -70,4 +70,10 @@ public class OptionBox<T> extends JComponent{
 	public void addActionListener(AbstractAction a){
 		box.addActionListener(a);
 	}
+    
+    @Override
+    public void setEnabled(boolean b){
+        super.setEnabled(b);
+        box.setEnabled(b);
+    }
 }

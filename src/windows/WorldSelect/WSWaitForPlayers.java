@@ -149,6 +149,7 @@ public class WSWaitForPlayers extends SubPage{
                 ),
                 sm.getSender().getIpAddress()
             );
+            playerBuild.setEnabled(false);
             joinT1Button.setEnabled(false);
             joinT2Button.setEnabled(false);
         };
@@ -303,6 +304,10 @@ public class WSWaitForPlayers extends SubPage{
     private void waitForData(){
         requestBuilds();
         
+        playerBuild.setEnabled(false);
+        joinT1Button.setEnabled(false);
+        joinT2Button.setEnabled(false);
+        
         Team t1 = Team.constructRandomTeam("Team 1", Color.green, teamSize - team1.size());
         Team t2 = Team.constructRandomTeam("team 2", Color.red, teamSize - team2.size());
         
@@ -354,6 +359,15 @@ public class WSWaitForPlayers extends SubPage{
             notify users what team they are on, and their player's ID
             */
         });
+        t1.displayData();
+        t2.displayData();
+
+        if(t1.getRosterSize() == teamSize){
+            chat.log("team 1 is done");
+        }
+        if(t2.getRosterSize() == teamSize){
+            chat.log("team 2 is done");
+        }
     }
     
     public WSWaitForPlayers setTeamSize(int s){
