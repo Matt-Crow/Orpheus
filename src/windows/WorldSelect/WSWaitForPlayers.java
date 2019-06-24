@@ -313,6 +313,7 @@ public class WSWaitForPlayers extends SubPage{
         
         Master.getUser().initPlayer().getPlayer().applyBuild(playerBuild.getSelectedBuild());
         t1.addMember(Master.getUser().getPlayer());
+        //todo put this User on the correct team, then remove their IP from the HashMap
         
         Master.getServer().addReceiver(ServerMessageType.PLAYER_DATA, (sm)->{
             String ip = sm.getSender().getIpAddress();
