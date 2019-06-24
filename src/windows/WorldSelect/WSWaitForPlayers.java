@@ -54,6 +54,9 @@ public class WSWaitForPlayers extends SubPage{
     private final Consumer<ServerMessage> receiveInit;
     private final Consumer<ServerMessage> receiveUpdate;
     private final Consumer<ServerMessage> receivePlayerRequest;
+    private final Consumer<ServerMessage> receiveRemoteIds;
+    
+    private static final String SEND_IDS_MSG = "team: %d, player: %d";
     
     //todo add build select, start button, display teams
     public WSWaitForPlayers(Page p){
@@ -141,6 +144,14 @@ public class WSWaitForPlayers extends SubPage{
             }
         };
         
+        receiveRemoteIds = (sm)->{
+            //see SEND_IDS_MSG field
+            String[] split = sm.getBody().split(",");
+            int tId = Integer.parseInt(split[0].replace("team:", "").trim());
+            int pId = Integer.parseInt(split[1].replace("player:", "").trim());
+            System.out.printf("OK, so my team's ID is %d, and my player ID is %d, right?", tId, pId);
+        };
+        
         receivePlayerRequest = (sm)->{
             Master.getServer().send(
                 new ServerMessage(
@@ -152,6 +163,8 @@ public class WSWaitForPlayers extends SubPage{
             playerBuild.setEnabled(false);
             joinT1Button.setEnabled(false);
             joinT2Button.setEnabled(false);
+            
+            Master.getServer().addReceiver(ServerMessageType.NOTIFY_IDS, receiveRemoteIds);
         };
         
         //grid layout was causing problems with chat.
@@ -359,6 +372,15 @@ public class WSWaitForPlayers extends SubPage{
             remove all of this' receivers from the server
             notify users what team they are on, and their player's ID
             */
+            ServerMessage idNotify = new ServerMessage(
+                String.format(
+                    SEND_IDS_MSG, 
+                    (teamNum == 1) ? t1.getId() : t2.getId(), 
+                    tp.id
+                ),
+                ServerMessageType.NOTIFY_IDS
+            );
+            Master.getServer().send(idNotify, ip);
         });
         t1.displayData();
         t2.displayData();
