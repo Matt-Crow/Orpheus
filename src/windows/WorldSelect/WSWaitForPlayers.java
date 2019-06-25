@@ -1,21 +1,27 @@
 package windows.WorldSelect;
 
+import battle.Battle;
 import battle.Team;
 import controllers.Master;
 import controllers.User;
+import controllers.World;
 import customizables.Build;
 import entities.TruePlayer;
 import gui.*;
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.HashMap;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.*;
 import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import net.*;
 import serialization.JsonUtil;
@@ -46,6 +52,9 @@ public class WSWaitForPlayers extends SubPage{
     but I'm not quite sure
     */
     
+    private final JLabel yourTeam;
+    private final JTextArea team1List;
+    private final JTextArea team2List;
     private final Chat chat;
     private final BuildSelect playerBuild;
     private final JButton joinT1Button;
@@ -101,30 +110,46 @@ public class WSWaitForPlayers extends SubPage{
     public WSWaitForPlayers(Page p){
         super(p);
         
+        //grid layout was causing problems with chat.
+        //since it couldn't fit in 1/4 of the JPanel, it compressed to just a thin line
+        setLayout(new BorderLayout());
+        
         isHost = false;
         teamSize = 1;
         team1Proto = new HashMap<>();
         team2Proto = new HashMap<>();
         
-        playerBuild = new BuildSelect();
-        add(playerBuild);
+        JComponent infoSection = new JComponent() {};
+        add(infoSection, BorderLayout.PAGE_START);
+        
+        team1List = new JTextArea("Team 1");
+        infoSection.add(team1List);
+        
+        yourTeam = new JLabel("Your team");
+        infoSection.add(yourTeam);
+        
+        team2List = new JTextArea("Team 2");
+        infoSection.add(team2List);
         
         joinT1Button = new JButton("Join team 1");
         joinT1Button.addActionListener((e)->{
             joinTeam1(Master.getUser());
         });
         Style.applyStyling(joinT1Button);
-        add(joinT1Button);
+        add(joinT1Button, BorderLayout.LINE_START);
         
         joinT2Button = new JButton("Join team 2");
         joinT2Button.addActionListener((e)->{
             joinTeam2(Master.getUser());
         });
         Style.applyStyling(joinT2Button);
-        add(joinT2Button);
+        add(joinT2Button, BorderLayout.LINE_END);
+        
+        playerBuild = new BuildSelect();
+        add(playerBuild, BorderLayout.PAGE_END);
         
         chat = new Chat();
-        add(chat);
+        add(chat, BorderLayout.CENTER);
         
         startButton = new JButton("Start the match");
         startButton.addActionListener((e)->{
@@ -135,7 +160,7 @@ public class WSWaitForPlayers extends SubPage{
                 chat.log("Are we waiting on anyone?");
             }
         });
-        add(startButton);
+        add(startButton, BorderLayout.PAGE_END);
         
         receiveJoin  = (sm)->{
             sendInit(sm.getSender().getIpAddress());
@@ -161,9 +186,6 @@ public class WSWaitForPlayers extends SubPage{
             receiveBuildInfo(sm);
         };
         
-        //grid layout was causing problems with chat.
-        //since it couldn't fit in 1/4 of the JPanel, it compressed to just a thin line
-        setLayout(new FlowLayout());
         revalidate();
         repaint();
     }
@@ -266,8 +288,18 @@ public class WSWaitForPlayers extends SubPage{
             }
             team1Proto.put(u.getIpAddress(), u);
             chat.logLocal(u.getName() + " has joined team 1.");
+            
+            String newStr = "Team 1: \n";
+            newStr = team1Proto
+                .values()
+                .stream()
+                .map((User use) -> "* " + use.getName() + "\n")
+                .reduce(newStr, String::concat);
+            team1List.setText(newStr);
+            
             if(u.equals(Master.getUser())){
                 //only send an update if the user is the one who changed teams. Prevents infinite loop
+                yourTeam.setText("You are on team 1");
                 ServerMessage sm = new ServerMessage(
                     "join team 1",
                     ServerMessageType.WAITING_ROOM_UPDATE
@@ -289,8 +321,18 @@ public class WSWaitForPlayers extends SubPage{
             }
             team2Proto.put(u.getIpAddress(), u);
             chat.logLocal(u.getName() + " has joined team 2.");
+            
+            String newStr = "Team 2: \n";
+            newStr = team2Proto
+                .values()
+                .stream()
+                .map((User use) -> "* " + use.getName() + "\n")
+                .reduce(newStr, String::concat);
+            team2List.setText(newStr);
+            
             if(u.equals(Master.getUser())){
                 //only send an update if the user is the one who changed teams. Prevents infinite loop
+                yourTeam.setText("You are on team 1");
                 ServerMessage sm = new ServerMessage(
                     "join team 2",
                     ServerMessageType.WAITING_ROOM_UPDATE
@@ -422,7 +464,6 @@ public class WSWaitForPlayers extends SubPage{
     /*
     NOT DONE
     
-    
     Since the Player this user is going to be controlling
     is on another computer, this needs some way of knowing
     the IDs of the team and player this user is controlling
@@ -498,18 +539,36 @@ public class WSWaitForPlayers extends SubPage{
         if(team2.getRosterSize() == teamSize){
             chat.log("team 2 is done");
         }
+        if(team1.getRosterSize() == teamSize && team2.getRosterSize() == teamSize){
+            Master.getServer().removeReceiver(ServerMessageType.PLAYER_DATA, receivePlayerBuild);
+            finallyStart();
+        }
     }
     
     
     
     private void finallyStart(){
+        World w = World.createDefaultBattle();
+        Battle b = new Battle(
+            w.getCanvas(),
+            team1,
+            team2
+        );
+        w.addTeam(team1).addTeam(team2).setCurrentMinigame(b);
+        b.setHost(w);
+        w.init();
         /*
-        start world
         serialize the world and send it to all connected users
         switch to that new world
         notify users that the world has started
         remove all of this' receivers from the server
         */
+        
+        //can change this to switchToPage once world canvas is a Page
+        JFrame parent = (JFrame)SwingUtilities.getWindowAncestor(this);
+        parent.setContentPane(w.getCanvas());
+        parent.revalidate();
+        w.getCanvas().requestFocus();
     }
     
     
