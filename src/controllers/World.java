@@ -7,6 +7,8 @@ import entities.Player;
 import entities.Projectile;
 import graphics.Tile;
 import graphics.Map;
+import graphics.MapLoader;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -35,6 +37,41 @@ public class World implements Serializable{
         currentMap = new Map(size, size);
         canvas = null;
         currentMinigame = null;
+    }
+    
+    /**
+     * Creates the classic World where battles 
+     * take place: a 20x20 square.
+     * 
+     * Handles most of the initialization for you,
+     * all you need to do is add teams,
+     * then set it's minigame to a Battle, like so:
+     * <pre>{@code 
+     *  World newWorld = World.createDefaultBattle();
+     *  newWorld.addTeam(team1);
+     *  newWorld.addTeam(team2);
+     *  Battle battle = new Battle(
+     *      newWorld.getCanvas(),
+     *      team1,
+     *      team2
+     *  );
+     *  newWorld.setCurrentMinigame(battle);
+     *  battle.setHost(newWorld);
+     *  newWorld.init();
+     *  //can change this to switchToPage once world canvas is a Page
+     *  JFrame parent = (JFrame)SwingUtilities.getWindowAncestor(this);
+     *  parent.setContentPane(newWorld.getCanvas());
+     *  parent.revalidate();
+     *  newWorld.getCanvas().requestFocus();
+     * }</pre>
+     * it's that simple!
+     * @return the newly created world.
+     */
+    public static World createDefaultBattle(){
+        World w = new World(20);
+        w.createCanvas();
+        w.currentMap.addToTileSet(0, new Tile(0, 0, Color.BLUE));
+        return w;
     }
     
     public final World addTeam(Team t){
