@@ -10,6 +10,7 @@ import entities.TruePlayer;
 import gui.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.GridLayout;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.function.Consumer;
@@ -17,9 +18,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.*;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -42,6 +43,10 @@ import windows.SubPage;
  * be in charge of updating the World. While this does give them the 
  * advantage of not having to deal with latency, I sincerely doubt 
  * Orpheus will become an e-sport any time soon.
+ * 
+ * There is a LOT of stuff here, so I may want to split this into
+ * the graphic components in this class, and all the server stuff
+ * in another
  * 
  * @author Matt Crow
  */
@@ -106,7 +111,6 @@ public class WSWaitForPlayers extends SubPage{
     private final Consumer<ServerMessage> receiveRemoteIds;
     
     
-    //todo add display teams
     public WSWaitForPlayers(Page p){
         super(p);
         
@@ -119,17 +123,23 @@ public class WSWaitForPlayers extends SubPage{
         team1Proto = new HashMap<>();
         team2Proto = new HashMap<>();
         
-        JComponent infoSection = new JComponent() {};
-        add(infoSection, BorderLayout.PAGE_START);
+        JPanel infoSection = new JPanel();
+        infoSection.setLayout(new GridLayout(1, 3));
         
         team1List = new JTextArea("Team 1");
+        Style.applyStyling(team1List);
         infoSection.add(team1List);
         
         yourTeam = new JLabel("Your team");
+        Style.applyStyling(yourTeam);
         infoSection.add(yourTeam);
         
         team2List = new JTextArea("Team 2");
+        Style.applyStyling(team2List);
         infoSection.add(team2List);
+        
+        add(infoSection, BorderLayout.PAGE_START);
+        
         
         joinT1Button = new JButton("Join team 1");
         joinT1Button.addActionListener((e)->{
@@ -289,13 +299,7 @@ public class WSWaitForPlayers extends SubPage{
             team1Proto.put(u.getIpAddress(), u);
             chat.logLocal(u.getName() + " has joined team 1.");
             
-            String newStr = "Team 1: \n";
-            newStr = team1Proto
-                .values()
-                .stream()
-                .map((User use) -> "* " + use.getName() + "\n")
-                .reduce(newStr, String::concat);
-            team1List.setText(newStr);
+            updateTeamDisplays();
             
             if(u.equals(Master.getUser())){
                 //only send an update if the user is the one who changed teams. Prevents infinite loop
@@ -322,17 +326,11 @@ public class WSWaitForPlayers extends SubPage{
             team2Proto.put(u.getIpAddress(), u);
             chat.logLocal(u.getName() + " has joined team 2.");
             
-            String newStr = "Team 2: \n";
-            newStr = team2Proto
-                .values()
-                .stream()
-                .map((User use) -> "* " + use.getName() + "\n")
-                .reduce(newStr, String::concat);
-            team2List.setText(newStr);
+            updateTeamDisplays();
             
             if(u.equals(Master.getUser())){
                 //only send an update if the user is the one who changed teams. Prevents infinite loop
-                yourTeam.setText("You are on team 1");
+                yourTeam.setText("You are on team 2");
                 ServerMessage sm = new ServerMessage(
                     "join team 2",
                     ServerMessageType.WAITING_ROOM_UPDATE
@@ -345,6 +343,24 @@ public class WSWaitForPlayers extends SubPage{
         } 
         return this;
     }
+    private void updateTeamDisplays(){
+        String newStr = "Team 1: \n";
+        newStr = team1Proto
+            .values()
+            .stream()
+            .map((User use) -> "* " + use.getName() + "\n")
+            .reduce(newStr, String::concat);
+        team1List.setText(newStr);
+        
+        newStr = "Team 2: \n";
+        newStr = team2Proto
+            .values()
+            .stream()
+            .map((User use) -> "* " + use.getName() + "\n")
+            .reduce(newStr, String::concat);
+        team2List.setText(newStr);
+    }
+    
     private void receiveUpdate(ServerMessage sm){
         //not sure I like this.
         //update messages are either 'join team 1', or 'join team 2'

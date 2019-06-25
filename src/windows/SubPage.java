@@ -29,4 +29,11 @@ public class SubPage extends JPanel{
         Style.applyStyling(j);
 		return j;
 	}
+    
+    //this is the supermethod called by all variations of add
+    @Override
+    public void addImpl(Component comp, Object constraints, int index){
+        super.addImpl(comp, constraints, index);
+        Style.applyStyling(comp);
+    }
 }
