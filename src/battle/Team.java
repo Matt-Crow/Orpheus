@@ -11,6 +11,7 @@ import entities.EntityManager;
 import java.io.Serializable;
 import java.util.function.Consumer;
 import static java.lang.System.out;
+import serialization.JsonSerialable;
 
 /**
  * The Team class is used to keep track of
@@ -20,7 +21,7 @@ import static java.lang.System.out;
  * 
  * @author Matt Crow
  */
-public class Team extends EntityManager implements Serializable{
+public class Team extends EntityManager implements Serializable, JsonSerialable{
 	private final String name;
 	private final Color color;
 	private Team enemyTeam;

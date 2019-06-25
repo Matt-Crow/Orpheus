@@ -14,6 +14,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import windows.WorldCanvas;
 import static java.lang.System.out;
+import java.math.BigDecimal;
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import serialization.JsonSerialable;
 
 /**
  * The World class will act as a controller for the game.
@@ -23,7 +29,7 @@ import static java.lang.System.out;
  * The World will handle all the drawing and updating as well.
  * @author Matt Crow
  */
-public class World implements Serializable{
+public class World implements Serializable, JsonSerialable{
     private final ArrayList<Team> teams; //makes it faster to find nearest enemies
     //maybe just keep track of everything in one linked list?
     
@@ -176,4 +182,28 @@ public class World implements Serializable{
             t.displayData();
         });
     }
+
+    @Override
+    public JsonObject serializeJson() {
+        JsonObjectBuilder build = Json.createObjectBuilder();
+        
+        JsonArrayBuilder teamBuilder = Json.createArrayBuilder();
+        teams.stream().forEach((Team t)->{
+            teamBuilder.add(t.serializeJson());
+        });
+        build.add("teams", teamBuilder.build());
+        
+        if(currentMap != null){
+            build.add("map", currentMap.serializeJson());
+        }
+        
+        //won't need this until more than one minigame
+        if(currentMinigame != null){
+            //build.add("minigame", currentMinigame.serializeJson());
+        }
+        
+        
+        return build.build();
+    }
+    //still need deserialize
 }

@@ -110,6 +110,11 @@ public class WSWaitForPlayers extends SubPage{
     */
     private final Consumer<ServerMessage> receiveRemoteIds;
     
+    /*
+    allows remote users to receive and deserialize the World
+    created by the host
+    */
+    private final Consumer<ServerMessage> receiveWorldInit;
     
     public WSWaitForPlayers(Page p){
         super(p);
@@ -194,6 +199,10 @@ public class WSWaitForPlayers extends SubPage{
         
         receivePlayerBuild = (sm)->{
             receiveBuildInfo(sm);
+        };
+        
+        receiveWorldInit = (sm)->{
+            receiveWorldInit(sm);
         };
         
         revalidate();
@@ -360,7 +369,6 @@ public class WSWaitForPlayers extends SubPage{
             .reduce(newStr, String::concat);
         team2List.setText(newStr);
     }
-    
     private void receiveUpdate(ServerMessage sm){
         //not sure I like this.
         //update messages are either 'join team 1', or 'join team 2'
@@ -392,7 +400,7 @@ public class WSWaitForPlayers extends SubPage{
     
     //called after the host requests this user's Build data.
     //the game is about to start, so shut down most receivers
-    //also, prepare to receive IDs from the host.
+    //also, prepare to receive IDs and World info from the host.
     private void receivePlayerRequest(ServerMessage sm){
         Master.getServer().send(
             new ServerMessage(
@@ -408,6 +416,7 @@ public class WSWaitForPlayers extends SubPage{
         Master.getServer().addReceiver(ServerMessageType.REQUEST_PLAYER_DATA, receivePlayerRequest);
         
         Master.getServer().addReceiver(ServerMessageType.NOTIFY_IDS, receiveRemoteIds);
+        Master.getServer().addReceiver(ServerMessageType.WORLD_INIT, receiveWorldInit);
     }
     
     /**
@@ -493,6 +502,25 @@ public class WSWaitForPlayers extends SubPage{
         Master.getServer().removeReceiver(ServerMessageType.NOTIFY_IDS, receiveRemoteIds);
     }
     
+    private void sendWorldInit(World w){
+        ServerMessage sm = new ServerMessage(
+            w.serializeJson().toString(),
+            ServerMessageType.WORLD_INIT
+        );
+        Master.getServer().send(sm);
+    }
+    
+    //not done, still need to set User's player to the one denoted by receiveIds
+    private void receiveWorldInit(ServerMessage sm){
+        World w = World.deserializeJson(JsonUtil.fromString(sm.getBody()));
+        w.createCanvas();
+        w.init();
+        //can change this to switchToPage once world canvas is a Page
+        JFrame parent = (JFrame)SwingUtilities.getWindowAncestor(this);
+        parent.setContentPane(w.getCanvas());
+        parent.revalidate();
+        w.getCanvas().requestFocus();
+    }
     
     
     
@@ -573,6 +601,9 @@ public class WSWaitForPlayers extends SubPage{
         w.addTeam(team1).addTeam(team2).setCurrentMinigame(b);
         b.setHost(w);
         w.init();
+        
+        sendWorldInit(w);
+        
         /*
         serialize the world and send it to all connected users
         switch to that new world
