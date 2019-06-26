@@ -231,6 +231,7 @@ public class OrpheusServer {
         try{
             ServerMessage sm = ServerMessage.deserializeJson(msg);
             
+            //something wrong here
             if(receivers.containsKey(sm.getType())){
                 receivers.get(sm.getType()).forEach((c)->c.accept(sm));
                 dealtWith = true;
