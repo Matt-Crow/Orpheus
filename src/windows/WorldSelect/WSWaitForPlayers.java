@@ -10,6 +10,7 @@ import entities.TruePlayer;
 import gui.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.io.IOException;
 import java.util.HashMap;
@@ -160,11 +161,17 @@ public class WSWaitForPlayers extends SubPage{
         Style.applyStyling(joinT2Button);
         add(joinT2Button, BorderLayout.LINE_END);
         
+        JPanel center = new JPanel();
+        center.setLayout(new FlowLayout());
+        
         playerBuild = new BuildSelect();
-        add(playerBuild, BorderLayout.PAGE_END);
+        center.add(playerBuild);
         
         chat = new Chat();
-        add(chat, BorderLayout.CENTER);
+        center.add(chat);
+        
+        add(center, BorderLayout.CENTER);
+        
         
         startButton = new JButton("Start the match");
         startButton.addActionListener((e)->{
