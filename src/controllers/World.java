@@ -7,19 +7,18 @@ import entities.Player;
 import entities.Projectile;
 import graphics.Tile;
 import graphics.Map;
-import graphics.MapLoader;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import windows.WorldCanvas;
 import static java.lang.System.out;
-import java.math.BigDecimal;
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import serialization.JsonSerialable;
+import java.util.Base64;
 
 /**
  * The World class will act as a controller for the game.
@@ -29,9 +28,8 @@ import serialization.JsonSerialable;
  * The World will handle all the drawing and updating as well.
  * @author Matt Crow
  */
-public class World implements Serializable, JsonSerialable{
+public class World implements Serializable{
     private final ArrayList<Team> teams; //makes it faster to find nearest enemies
-    //maybe just keep track of everything in one linked list?
     
     private Map currentMap;
     private transient WorldCanvas canvas; //transient means "don't serialize me!"
@@ -182,28 +180,51 @@ public class World implements Serializable, JsonSerialable{
             t.displayData();
         });
     }
-
-    @Override
-    public JsonObject serializeJson() {
-        JsonObjectBuilder build = Json.createObjectBuilder();
-        
-        JsonArrayBuilder teamBuilder = Json.createArrayBuilder();
-        teams.stream().forEach((Team t)->{
-            teamBuilder.add(t.serializeJson());
-        });
-        build.add("teams", teamBuilder.build());
-        
-        if(currentMap != null){
-            build.add("map", currentMap.serializeJson());
+    
+    /**
+     * Serializes this using ObjectOutputStream.writeObject,
+     * then converts the result to a string so that it can
+     * be used as the body of a ServerMessage
+     * 
+     * @return the serialized version of this World,
+     * converted to a string for convenience.
+     */
+    public String serializeToString(){
+        String ret = "";
+        try{
+            ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+            ObjectOutputStream objOut = new ObjectOutputStream(byteOut);
+            objOut.writeObject(this);
+            objOut.close();
+            ret = Base64.getEncoder().encodeToString(byteOut.toByteArray());
+        }catch(IOException ex){
+            ex.printStackTrace();
         }
-        
-        //won't need this until more than one minigame
-        if(currentMinigame != null){
-            //build.add("minigame", currentMinigame.serializeJson());
-        }
-        
-        
-        return build.build();
+        return ret;
     }
-    //still need deserialize
+    
+    /**
+     * Converts a String generated from World.serializeToString,
+     * and de-serializes it into a copy of that original world.
+     * It is important to note that the World's canvas is not serialized,
+     * so be sure to call either setCanvas, or createCanvas so that the World
+     * can be rendered
+     * 
+     * @param s a string variant of an object stream serialization of a World
+     * @return a copy of the world which was serialized into a string
+     */
+    public static World fromSerializedString(String s){
+        World ret = null;
+        try{
+            byte[] byteData = Base64.getDecoder().decode(s);
+            ObjectInputStream objIn = new ObjectInputStream(new ByteArrayInputStream(byteData));
+            ret = (World)objIn.readObject();
+            objIn.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        return ret;
+    }
 }

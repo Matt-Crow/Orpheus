@@ -502,9 +502,14 @@ public class WSWaitForPlayers extends SubPage{
         Master.getServer().removeReceiver(ServerMessageType.NOTIFY_IDS, receiveRemoteIds);
     }
     
+    /**
+     * Serializes the world, and sends it
+     * to each connected user, excluding the host
+     * @param w 
+     */
     private void sendWorldInit(World w){
         ServerMessage sm = new ServerMessage(
-            w.serializeJson().toString(),
+            w.serializeToString(),
             ServerMessageType.WORLD_INIT
         );
         Master.getServer().send(sm);
@@ -512,7 +517,7 @@ public class WSWaitForPlayers extends SubPage{
     
     //not done, still need to set User's player to the one denoted by receiveIds
     private void receiveWorldInit(ServerMessage sm){
-        World w = World.deserializeJson(JsonUtil.fromString(sm.getBody()));
+        World w = World.fromSerializedString(sm.getBody());
         w.createCanvas();
         w.init();
         //can change this to switchToPage once world canvas is a Page
@@ -520,6 +525,8 @@ public class WSWaitForPlayers extends SubPage{
         parent.setContentPane(w.getCanvas());
         parent.revalidate();
         w.getCanvas().requestFocus();
+        
+        System.out.println("received " + sm.getBody());
     }
     
     
@@ -605,8 +612,6 @@ public class WSWaitForPlayers extends SubPage{
         sendWorldInit(w);
         
         /*
-        serialize the world and send it to all connected users
-        switch to that new world
         notify users that the world has started
         remove all of this' receivers from the server
         */
