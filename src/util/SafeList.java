@@ -6,6 +6,12 @@ import java.util.function.Consumer;
  * Provides a variation of a LinkedList that is immune to
  * concurrent modification exceptions.
  * 
+ * The way it does this is by creating a second SafeList
+ * which receives any changes that would be made to the original
+ * while it is iterating. I could do this with less clutter by just
+ * performing inserts behind the current node, but I'll handle that some
+ * other time
+ * 
  * @author Matt Crow
  * @param <T> the type of element to include in this list
  */
@@ -56,7 +62,6 @@ public class SafeList<T>{
         }
     }
     
-    //untested
     public boolean remove(T val){
         boolean wasRemoved = false;
         
@@ -100,30 +105,37 @@ public class SafeList<T>{
     }
     
     public void forEach(Consumer<T> action) {
+        boolean alreadyIterating = isIterating;
+        //this way, a forEach inside a forEach doesn't reset isIterating
+        
         isIterating = true;
         Node<T> curr = head;
         while(curr != null){
             action.accept(curr.getValue());
             curr = curr.getNext();
         }
-        isIterating = false;
+        if(!alreadyIterating){
+            //System.out.println("break");
+            //is iterating will only be set to false for the outermost use of forEach
+            isIterating = false;
+        }else{
+            //System.out.println("don't break");
+        }
+        
         if(newNodes != null){
             head = null;
             tail = null;
-            
-            //do not call forEach here, as that will reset isIterating
-            curr = newNodes.head;
-            while(curr != null){
-                add(curr.getValue());
-                curr = curr.getNext();
-            }
+            newNodes.forEach((T val)->{
+                add(val);
+            });
             newNodes = null;
         }
     }
     
     public void displayData(){
+        SafeList<T> showList = (isIterating) ? newNodes : this;
         System.out.println("SAFE LIST:");
-        forEach((T val)->{
+        showList.forEach((T val)->{
             System.out.println("* " + val.toString());
         });
         System.out.println("END OF SAFE LIST");
@@ -138,8 +150,12 @@ public class SafeList<T>{
         
         ll.forEach((Integer i)->{
             System.out.println(i);
-            ll.add(i * i);
+            //ll.add(i * i);
+            ll.remove(i);
+            ll.add(i + 1);
+            ll.displayData();
         });
         ll.displayData();
+        System.out.println(ll.isIterating);
     }
 }

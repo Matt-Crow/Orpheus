@@ -18,6 +18,7 @@ import static java.lang.System.out;
 import java.util.ArrayList;
 import javax.json.Json;
 import javax.json.JsonException;
+import util.SafeList;
 
 /**
  * OrpheusServer is a somewhat deceptive title, as this is
@@ -46,7 +47,7 @@ public class OrpheusServer {
     private volatile boolean listenForConn;
     private OrpheusServerState state; //what this server is doing
     
-    private final HashMap<ServerMessageType, ArrayList<Consumer<ServerMessage>>> receivers;
+    private final HashMap<ServerMessageType, SafeList<Consumer<ServerMessage>>> receivers;
     
     public static final String SHUTDOWN_MESSAGE = "EXIT";
     public static final String SOMEONE_LEFT = "Discon: ";
@@ -270,7 +271,7 @@ public class OrpheusServer {
      */
     public void addReceiver(ServerMessageType key, Consumer<ServerMessage> nomNom){
         if(!receivers.containsKey(key)){
-            receivers.put(key, new ArrayList<Consumer<ServerMessage>>());
+            receivers.put(key, new SafeList<Consumer<ServerMessage>>());
         }
         receivers.get(key).add(nomNom);
     }
