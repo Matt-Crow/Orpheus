@@ -487,8 +487,6 @@ public class WSWaitForPlayers extends SubPage{
     
     
     /*
-    NOT DONE
-    
     Since the Player this user is going to be controlling
     is on another computer, this needs some way of knowing
     the IDs of the team and player this user is controlling
@@ -499,6 +497,9 @@ public class WSWaitForPlayers extends SubPage{
         int tId = Integer.parseInt(split[0].replace("team:", "").trim());
         int pId = Integer.parseInt(split[1].replace("player:", "").trim());
         System.out.printf("OK, so my team's ID is %d, and my player ID is %d, right?", tId, pId);
+        
+        Master.getUser().setRemoteTeamId(tId).setRemotePlayerId(pId);
+        
         Master.getServer().removeReceiver(ServerMessageType.NOTIFY_IDS, receiveRemoteIds);
     }
     
@@ -518,8 +519,13 @@ public class WSWaitForPlayers extends SubPage{
     //not done, still need to set User's player to the one denoted by receiveIds
     private void receiveWorldInit(ServerMessage sm){
         World w = World.fromSerializedString(sm.getBody());
+        User me = Master.getUser(); //need to set player before calling createCanvas
+        me.setPlayer((TruePlayer)w.getTeamById(me.getRemoteTeamId()).getMemberById(me.getRemotePlayerId()));
         w.createCanvas();
         w.init();
+        
+        
+        
         //can change this to switchToPage once world canvas is a Page
         JFrame parent = (JFrame)SwingUtilities.getWindowAncestor(this);
         parent.setContentPane(w.getCanvas());

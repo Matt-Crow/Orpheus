@@ -26,6 +26,9 @@ public final class User implements JsonSerialable{
     private String ipAddr;
     private TruePlayer player;
     
+    private int remoteTeamId; //the ID of the Team this' player is on on a remote computer
+    private int remotePlayerId;
+    
     private boolean isAdmin;
     
     //keep in mind that a user will have different IDs on each server
@@ -56,6 +59,22 @@ public final class User implements JsonSerialable{
         return userName;
     }
     
+    public User setRemoteTeamId(int id){
+        remoteTeamId = id;
+        return this;
+    }
+    public int getRemoteTeamId(){
+        return remoteTeamId;
+    }
+    
+    public User setRemotePlayerId(int id){
+        remotePlayerId = id;
+        return this;
+    }
+    public int getRemotePlayerId(){
+        return remotePlayerId;
+    }
+    
     /**
      * Creates a new Player entity, and associates it with this user
      * note that this does not call TruePlayer's init method
@@ -63,6 +82,11 @@ public final class User implements JsonSerialable{
      */
     public User initPlayer(){
         player = new TruePlayer(userName);
+        return this;
+    }
+    //used for receiving remote player
+    public User setPlayer(TruePlayer p){
+        player = p;
         return this;
     }
     public TruePlayer getPlayer(){

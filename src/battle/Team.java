@@ -11,6 +11,7 @@ import entities.EntityManager;
 import java.io.Serializable;
 import java.util.function.Consumer;
 import static java.lang.System.out;
+import java.util.HashMap;
 
 /**
  * The Team class is used to keep track of
@@ -28,7 +29,7 @@ public class Team extends EntityManager implements Serializable{
 	private final int id;
 	private static int nextId = 0;
     
-    private final ArrayList<Player> roster;
+    private final HashMap<Integer, Player> roster;
     private final ArrayList<Player> membersRem;
 	
 	public Team(String n, Color c){
@@ -37,7 +38,7 @@ public class Team extends EntityManager implements Serializable{
 		color = c;
 		id = nextId;
 		nextId++;
-        roster = new ArrayList<>();
+        roster = new HashMap<>();
         membersRem = new ArrayList<>();
 	}
     
@@ -53,10 +54,25 @@ public class Team extends EntityManager implements Serializable{
 	}
 	
 	public void addMember(Player m){
-        roster.add(m);
+        roster.put(m.id, m);
         add(m);
         m.setTeam(this);
 	}
+    
+    /**
+     * Returns the Player on this team
+     * with the given ID, if one exists.
+     * Note that this includes all members
+     * in the roster, not just players that
+     * are still in play.
+     * 
+     * @param id the ID of the member to search for
+     * @return the player on this team with the given id, or null if one doesn't exist
+     */
+    public Player getMemberById(int id){
+        return roster.get(id);
+    }
+    
 	public static Team constructRandomTeam(String name, Color color, int size){
 		Team t = new Team(name, color);
 		for(int teamSize = 0; teamSize < size; teamSize++){
@@ -72,7 +88,7 @@ public class Team extends EntityManager implements Serializable{
 	public void init(int y, int spacing, int facing){
 		int x = spacing;
         membersRem.clear();
-		for(Player p : roster){
+		for(Player p : roster.values()){
 			p.initPos(x, y, facing);
             p.doInit();
             membersRem.add(p);
@@ -124,7 +140,7 @@ public class Team extends EntityManager implements Serializable{
      * @param f 
      */
     public final void forEachMember(Consumer<Player> f){
-        roster.forEach((Player p)->f.accept(p));
+        roster.values().stream().forEach((Player p)->f.accept(p));
     }
     
     /**
@@ -142,7 +158,7 @@ public class Team extends EntityManager implements Serializable{
     public void displayData(){
         out.println("TEAM: " + name + "(ID: " + id + ")");
         out.println("Roster: ");
-        roster.forEach((Player p)->{
+        roster.values().stream().forEach((Player p)->{
             if(p.equals(Master.getUser().getPlayer())){
                 out.print("*");
             }

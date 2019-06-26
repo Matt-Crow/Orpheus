@@ -4,12 +4,13 @@ import controllers.World;
 import java.awt.Color;
 import java.util.ArrayList;
 import entities.Player;
+import java.io.Serializable;
 import windows.DrawingPlane;
 
-public class Battle {
-	ArrayList<Team> teams; //TODO: add support for many teams or a free-for-all
+public class Battle implements Serializable{
+	private ArrayList<Team> teams; //TODO: add support for many teams or a free-for-all
 	private World host;
-	private final DrawingPlane hostingCanvas;
+	private transient final DrawingPlane hostingCanvas;
 	private boolean end;
 	
 	public Battle(DrawingPlane b, Team team1, Team team2){
