@@ -149,4 +149,16 @@ public class Team extends EntityManager implements Serializable{
             out.println(p.getName() + "(ID: " + p.id + ")");
         });
     }
+    
+    @Override
+    public boolean equals(Object obj){
+        return obj != null && obj instanceof Team && ((Team)obj).getId() == id;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 73 * hash + this.id;
+        return hash;
+    }
 }

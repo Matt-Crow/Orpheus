@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import windows.WorldCanvas;
 import static java.lang.System.out;
 import java.util.Base64;
+import java.util.HashMap;
 
 /**
  * The World class will act as a controller for the game.
@@ -29,14 +30,15 @@ import java.util.Base64;
  * @author Matt Crow
  */
 public class World implements Serializable{
-    private final ArrayList<Team> teams; //makes it faster to find nearest enemies
+    //key is team ID
+    private final HashMap<Integer, Team> teams; //makes it faster to find nearest enemies
     
     private Map currentMap;
     private transient WorldCanvas canvas; //transient means "don't serialize me!"
     private Battle currentMinigame; //in future versions, this will be changed to include other minigames
     
     public World(int size){
-        teams = new ArrayList<>();
+        teams = new HashMap<>();
         
         currentMap = new Map(size, size);
         canvas = null;
@@ -79,9 +81,21 @@ public class World implements Serializable{
     }
     
     public final World addTeam(Team t){
-        teams.add(t);
+        teams.put(t.getId(), t);
         t.forEachMember((Player p)->p.setWorld(this));
         return this;
+    }
+    
+    /**
+     * Returns the team with the given ID,
+     * if one exists. This is used for serialization
+     * so that users know which team they are on 
+     * 
+     * @param id the ID of the team to search for
+     * @return the team in this World with the given ID, or null if one doesn't exist
+     */
+    public Team getTeamById(int id){
+        return teams.get(id);
     }
     
     public World setMap(Map m){
@@ -147,7 +161,7 @@ public class World implements Serializable{
         if(currentMinigame != null){
             currentMinigame.update();
         }
-        teams.forEach((Team t)->{
+        teams.values().stream().forEach((Team t)->{
             t.update();
             t.forEach((Entity member)->{
                 currentMap.checkForTileCollisions(member);
@@ -166,7 +180,7 @@ public class World implements Serializable{
     
     public void draw(Graphics g){
         currentMap.draw(g);
-        teams.forEach((t)->t.draw(g));
+        teams.values().stream().forEach((t)->t.draw(g));
     }
     
     public void displayData(){
@@ -176,7 +190,7 @@ public class World implements Serializable{
         out.println("Current map:");
         //currentMap.displayData();
         out.println("Teams:");
-        teams.forEach((Team t)->{
+        teams.values().stream().forEach((Team t)->{
             t.displayData();
         });
     }
