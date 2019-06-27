@@ -55,10 +55,10 @@ public class SafeList<T>{
             if(newNodes == null){
                 newNodes = new SafeList<>(this);
             }
-            System.out.println(this + " add " + val);
+            //System.out.println(this + " add " + val);
             newNodes.add(val);
         }else{
-            System.out.println(this + " add " + val);
+            //System.out.println(this + " add " + val);
             if(head == null){
                 //no nodes
                 head = nn;

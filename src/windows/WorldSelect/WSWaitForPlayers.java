@@ -140,6 +140,12 @@ public class WSWaitForPlayers extends SubPage{
         repaint();
     }
     
+    /**
+     * starts the backend server (if it isn't
+     * already started) as the host of a game.
+     * 
+     * @return this 
+     */
     public WSWaitForPlayers startServer(){
         if(!backend.serverIsStarted()){
             boolean success = backend.initHostServer();
@@ -153,6 +159,14 @@ public class WSWaitForPlayers extends SubPage{
         return this;
     }
     
+    /**
+     * starts the backend server (if it isn't already
+     * started) and connects it to the given ipAddress,
+     * which should be the host of a game.
+     * 
+     * @param ipAddr the ipAddress to connect to
+     * @return this
+     */
     public WSWaitForPlayers joinServer(String ipAddr){
         if(!backend.serverIsStarted()){
             boolean success = backend.initClientServer();
@@ -174,6 +188,7 @@ public class WSWaitForPlayers extends SubPage{
         if(backend.tryJoinTeam1(u)){
             chat.logLocal(u.getName() + " has joined team 1.");
             updateTeamDisplays();
+            yourTeam.setText("You are on team 1");
         }else if(backend.team1Full() && backend.team2Full()){
             chat.logLocal(u.getName() + " cannot join either team: both teams are full");
         }else{
@@ -185,6 +200,7 @@ public class WSWaitForPlayers extends SubPage{
         if(backend.tryJoinTeam2(u)){
             chat.logLocal(u.getName() + " has joined team 2.");
             updateTeamDisplays();
+            yourTeam.setText("You are on team 2");
         }else if(backend.team1Full() && backend.team2Full()){
             chat.logLocal(u.getName() + " cannot join either team: both teams are full");
         }else{

@@ -61,16 +61,16 @@ public class WaitingRoomBackend {
     private boolean isHost;
     private boolean gameAboutToStart;
     
-    //applied only to the host. Notifies when a user initially joins
+    
+    //all of these link to the method with the same name
     private final Consumer<ServerMessage> receiveJoin;
-    
-    //not applied to the host. After a user initially joins, 
-    //the host must notify them of the current state of the waiting room.
-    //this allows the user to do that
     private final Consumer<ServerMessage> receiveInit;
-    
-    //applies to all users. Notifies that a player has changed teams
     private final Consumer<ServerMessage> receiveUpdate;
+    
+    
+    
+    
+    
     
     //not applied to the host. Notifies the user that the host needs their Build information
     //also tells the user that the game is about to start, so it shuts down most of their receivers
@@ -104,7 +104,7 @@ public class WaitingRoomBackend {
         team2Proto = new HashMap<>();
         
         receiveJoin  = (sm)->{
-            sendInit(sm.getSender().getIpAddress());
+            receiveJoin(sm);
         };
         receiveInit = (sm)->{
             receiveInit(sm);
@@ -112,6 +112,8 @@ public class WaitingRoomBackend {
         receiveUpdate = (sm)->{
             receiveUpdate(sm);
         };
+        
+        
         
         receiveRemoteIds = (sm)->{
             receiveRemoteIds(sm);
@@ -202,29 +204,18 @@ public class WaitingRoomBackend {
         return success;
     }
     
-    
-    
-    
-    
-    public void setTeamSize(int s){
-        if(s <= 1){
-            teamSize = s;
-        }
-    }
-    
-    public User[] getTeam1Proto(){
-        return team1Proto.values().stream().toArray(size -> new User[size]);
-    }
-    public User[] getTeam2Proto(){
-        return team2Proto.values().stream().toArray(size -> new User[size]);
-    }
-    
     /**
-     * Sends a message containing the state of this waiting room.
-     * Is sent whenever a player joins the server
-     * @param ipAddr the ipAddress to end the init info to
+     * applied only to the host. Whenever a user
+     * joins the server, notifies them of the 
+     * current state of the waiting room.
+     * This will then be caught by the client's
+     * receiveInit method.
+     * 
+     * @param sm 
      */
-    public void sendInit(String ipAddr){
+    private void receiveJoin(ServerMessage sm){
+        String ipAddr = sm.getSender().getIpAddress();
+        
         JsonObjectBuilder build = Json.createObjectBuilder();
         build.add("type", "waiting room init");
         build.add("team size", teamSize);
@@ -246,8 +237,17 @@ public class WaitingRoomBackend {
             ServerMessageType.WAITING_ROOM_INIT
         );
         
-        Master.getServer().send(initMsg, ipAddr);
+        server.send(initMsg, ipAddr);
     }
+    
+    /**
+     * Not applied to the host. Allows clients to
+     * receive the waiting room initilization message
+     * that the host sends upon a user connecting.
+     * This message updates the client on the current
+     * state of the waiting room at the time they joined.
+     * @param sm 
+     */
     private void receiveInit(ServerMessage sm){
         JsonObject obj = JsonUtil.fromString(sm.getBody());
         JsonUtil.verify(obj, "team size");
@@ -266,9 +266,13 @@ public class WaitingRoomBackend {
             }
         });
         
-        Master.getServer().removeReceiver(ServerMessageType.WAITING_ROOM_INIT, receiveInit);
+        server.removeReceiver(ServerMessageType.WAITING_ROOM_INIT, receiveInit);
     }
     
+    /**
+     * Notifies that a user has changed teams.
+     * @param sm 
+     */
     private void receiveUpdate(ServerMessage sm){
         //not sure I like this.
         //update messages are either 'join team 1', or 'join team 2'
@@ -289,6 +293,26 @@ public class WaitingRoomBackend {
                 break;
         }
     }
+    
+    
+    
+    
+    public void setTeamSize(int s){
+        if(s <= 1){
+            teamSize = s;
+        }
+    }
+    
+    public User[] getTeam1Proto(){
+        return team1Proto.values().stream().toArray(size -> new User[size]);
+    }
+    public User[] getTeam2Proto(){
+        return team2Proto.values().stream().toArray(size -> new User[size]);
+    }
+    
+    
+    
+    
     
     private void requestBuilds(){
         Master.getServer().send(new ServerMessage(
