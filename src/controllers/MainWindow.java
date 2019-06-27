@@ -33,6 +33,9 @@ public class MainWindow extends JFrame{
             @Override
             public void windowClosing(WindowEvent e) {
                 //CombatLog.displayLog();
+                if(Master.getServer() != null){
+                    Master.getServer().shutDown();
+                }
             }
         };
     }

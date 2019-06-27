@@ -56,8 +56,6 @@ public class OrpheusServer {
     
     private final HashMap<ServerMessageType, SafeList<Consumer<ServerMessage>>> receivers; //see the receive method
     
-    public static final String SHUTDOWN_MESSAGE = "EXIT";
-    
     public OrpheusServer(int port) throws IOException{
         state = OrpheusServerState.NONE;
         receivers = new HashMap<>();
@@ -168,7 +166,7 @@ public class OrpheusServer {
                     while(true){
                         try{
                             ip = conn.readFromClient();
-                            if(ip == null || ip.contains(SHUTDOWN_MESSAGE)){
+                            if(ip == null || ip.toUpperCase().contains(ServerMessageType.SERVER_SHUTDOWN.toString().toUpperCase())){
                                 System.out.println("breaking");
                                 break;
                             }
@@ -294,13 +292,11 @@ public class OrpheusServer {
     }
     
     public final void shutDown(){
-        connections.values().stream().forEach((Connection c)->{
-            try {
-                c.writeToClient(SHUTDOWN_MESSAGE);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        });
+        send(new ServerMessage(
+            "server shutting down",
+            ServerMessageType.SERVER_SHUTDOWN
+        ));
+        
         try {
             server.close();
         } catch (IOException ex) {
