@@ -61,32 +61,13 @@ public class WaitingRoomBackend {
     private boolean isHost;
     private boolean gameAboutToStart;
     
-    
     //all of these link to the method with the same name
     private final Consumer<ServerMessage> receiveJoin;
     private final Consumer<ServerMessage> receiveInit;
     private final Consumer<ServerMessage> receiveUpdate;
     private final Consumer<ServerMessage> receiveBuildRequest;
-    
-    
-    
-    
-    
-    
-    
-    private final Consumer<ServerMessage> receivePlayerBuild;
-    
-    /*
-    Since the Player this user is going to control is stored
-    on a remote computer, they need some way of knowing what
-    their team and player IDs are on that other computer
-    */
+    private final Consumer<ServerMessage> receiveBuildInfo;
     private final Consumer<ServerMessage> receiveRemoteIds;
-    
-    /*
-    allows remote users to receive and deserialize the World
-    created by the host
-    */
     private final Consumer<ServerMessage> receiveWorldInit;
     
     
@@ -113,20 +94,12 @@ public class WaitingRoomBackend {
         receiveBuildRequest = (sm)->{
             receiveBuildRequest(sm);
         };
-        
-        
-        
-        
+        receiveBuildInfo = (sm)->{
+            receiveBuildInfo(sm);
+        };
         receiveRemoteIds = (sm)->{
             receiveRemoteIds(sm);
         };
-        
-        
-        
-        receivePlayerBuild = (sm)->{
-            receiveBuildInfo(sm);
-        };
-        
         receiveWorldInit = (sm)->{
             receiveWorldInit(sm);
         };
@@ -271,6 +244,10 @@ public class WaitingRoomBackend {
     
     /**
      * Notifies that a user has changed teams.
+     * The messages this responds to are sent by 
+     * the tryJoinTeam methods
+     * @see WaitingRoomBackend#tryJoinTeam1(controllers.User) 
+     * @see WaitingRoomBackend#tryJoinTeam2(controllers.User) 
      * @param sm 
      */
     private void receiveUpdate(ServerMessage sm){
@@ -320,40 +297,8 @@ public class WaitingRoomBackend {
         server.addReceiver(ServerMessageType.WORLD_INIT, receiveWorldInit);
     }
     
-    
-    
-    
-    
-    
-    
-    public void setTeamSize(int s){
-        if(s <= 1){
-            teamSize = s;
-        }
-    }
-    
-    public User[] getTeam1Proto(){
-        return team1Proto.values().stream().toArray(size -> new User[size]);
-    }
-    public User[] getTeam2Proto(){
-        return team2Proto.values().stream().toArray(size -> new User[size]);
-    }
-    
-    private void requestBuilds(){
-        Master.getServer().send(new ServerMessage(
-            "please provide build information",
-            ServerMessageType.REQUEST_PLAYER_DATA
-        ));
-    }
-    private void sendIds(String ipAddr, int teamId, int playerId){
-        ServerMessage sm = new ServerMessage(
-            String.format("team: %d, player: %d", teamId, playerId),
-            ServerMessageType.NOTIFY_IDS
-        );
-        Master.getServer().send(sm, ipAddr);
-    }
-    
     /**
+     * Applies only to the host.
      * called after the host receives a user's Build
      * information.
      * 
@@ -403,46 +348,46 @@ public class WaitingRoomBackend {
             out.println("team 2 is done");
         }
         if(team1.getRosterSize() == teamSize && team2.getRosterSize() == teamSize){
-            Master.getServer().removeReceiver(ServerMessageType.PLAYER_DATA, receivePlayerBuild);
+            server.removeReceiver(ServerMessageType.PLAYER_DATA, receiveBuildInfo);
             finallyStart();
         }
     }
-    /*
-    Since the Player this user is going to be controlling
-    is on another computer, this needs some way of knowing
-    the IDs of the team and player this user is controlling
-    on that computer.
+    
+    /**
+     * Doesn't apply to the host.
+     * Since the Player this user is going to be controlling
+     * is on another computer, this needs some way of knowing
+     * the IDs of the team and player this user is controlling
+     * on that computer.
     */
     private void receiveRemoteIds(ServerMessage sm){
         String[] split = sm.getBody().split(",");
         int tId = Integer.parseInt(split[0].replace("team:", "").trim());
         int pId = Integer.parseInt(split[1].replace("player:", "").trim());
-        System.out.printf("OK, so my team's ID is %d, and my player ID is %d, right?", tId, pId);
+        System.out.printf("(receiveRemoteIds) OK, so my team's ID is %d, and my player ID is %d, right?", tId, pId);
         
         Master.getUser().setRemoteTeamId(tId).setRemotePlayerId(pId);
         
-        Master.getServer().removeReceiver(ServerMessageType.NOTIFY_IDS, receiveRemoteIds);
+        server.removeReceiver(ServerMessageType.NOTIFY_IDS, receiveRemoteIds);
     }
     
     /**
-     * Serializes the world, and sends it
-     * to each connected user, excluding the host
-     * @param w 
+     * allows remote users to receive and de-serialize 
+     * the World created by the host.
+     * 
+     * this method is currently having problems, as the enemy team might not serialize,
+     * and it takes a couple seconds to load teams into the world
+     * 
+     * @param sm 
      */
-    private void sendWorldInit(World w){
-        ServerMessage sm = new ServerMessage(
-            w.serializeToString(),
-            ServerMessageType.WORLD_INIT
-        );
-        Master.getServer().send(sm);
-    }
-    
     private void receiveWorldInit(ServerMessage sm){
         World w = World.fromSerializedString(sm.getBody());
         User me = Master.getUser(); //need to set player before calling createCanvas
         me.setPlayer((TruePlayer)w.getTeamById(me.getRemoteTeamId()).getMemberById(me.getRemotePlayerId()));
         w.createCanvas();
         w.init();
+        
+        server.removeReceiver(ServerMessageType.WORLD_INIT, receiveWorldInit);
         
         //can change this to switchToPage once world canvas is a Page
         JFrame parent = (JFrame)SwingUtilities.getWindowAncestor(host);
@@ -451,14 +396,15 @@ public class WaitingRoomBackend {
         w.getCanvas().requestFocus();
     }
     
+    
+    
     /**
      * Begins preparing the server to receive
      * player build information.
      * After 30 seconds, waits for data before starting the world
      */
-    public void startWorld(){
+    public void prepareToStart(){
         gameAboutToStart = true;
-        OrpheusServer server = Master.getServer();
         host.setStartButtonEnabled(false);
         
         server.setAcceptingConn(false);
@@ -473,17 +419,17 @@ public class WaitingRoomBackend {
     
     /**
      * Begins constructing teams, and sends a request for user Build data.
+     * Once all Builds have been obtained, finally starts
      * Note that receiveBuildInfo calls finallyStart, not this method.
      * 
      * @see WSWaitForPlayers#receiveBuildInfo
      */
     private void waitForData(){
-        OrpheusServer server = Master.getServer();
         //need these here, else null pointer in responding to build request
         team1 = Team.constructRandomTeam("Team 1", Color.green, teamSize - team1Proto.size());
         team2 = Team.constructRandomTeam("team 2", Color.red, teamSize - team2Proto.size());
         
-        server.addReceiver(ServerMessageType.PLAYER_DATA, receivePlayerBuild);
+        server.addReceiver(ServerMessageType.PLAYER_DATA, receiveBuildInfo);
         requestBuilds();
         
         host.setInputEnabled(false);
@@ -508,10 +454,19 @@ public class WaitingRoomBackend {
             out.println("team 2 is done");
         }
         if(team1.getRosterSize() == teamSize && team2.getRosterSize() == teamSize){
-            Master.getServer().removeReceiver(ServerMessageType.PLAYER_DATA, receivePlayerBuild);
+            Master.getServer().removeReceiver(ServerMessageType.PLAYER_DATA, receiveBuildInfo);
             finallyStart();
         }
     }
+    
+    /**
+     * this starts the world (it's about time too!)
+     * sends the serialized version of the newly created
+     * World to all connected users, then switches to 
+     * that new World's canvas
+     * 
+     * Might not be completely done
+     */
     private void finallyStart(){
         World w = World.createDefaultBattle();
         Battle b = new Battle(
@@ -526,7 +481,6 @@ public class WaitingRoomBackend {
         sendWorldInit(w);
         
         /*
-        notify users that the world has started
         remove all of this' receivers from the server
         */
         
@@ -537,8 +491,50 @@ public class WaitingRoomBackend {
         w.getCanvas().requestFocus();
     }
     
+    /**
+     * Called by waitForData
+     * @see WaitingRoomBackend#waitForData() 
+     */
+    private void requestBuilds(){
+        Master.getServer().send(new ServerMessage(
+            "please provide build information",
+            ServerMessageType.REQUEST_PLAYER_DATA
+        ));
+    }
+    
+    /**
+     * Called by receiveBuild
+     * @param ipAddr the ip address of the user to send the IDs to.
+     * @param teamId the ID of that user's Team on this computer
+     * @param playerId the ID of that user's Player on this computer
+     */
+    private void sendIds(String ipAddr, int teamId, int playerId){
+        ServerMessage sm = new ServerMessage(
+            String.format("team: %d, player: %d", teamId, playerId),
+            ServerMessageType.NOTIFY_IDS
+        );
+        Master.getServer().send(sm, ipAddr);
+    }
+    
+    /**
+     * Serializes the world, and sends it
+     * to each connected user, excluding the host
+     * @param w the world to send
+     */
+    private void sendWorldInit(World w){
+        ServerMessage sm = new ServerMessage(
+            w.serializeToString(),
+            ServerMessageType.WORLD_INIT
+        );
+        Master.getServer().send(sm);
+    }
+    
     public boolean isAlreadyStarted(){
         return gameAboutToStart;
+    }
+    
+    public boolean isHost(){
+        return isHost;
     }
     
     public boolean team1Full(){
@@ -548,12 +544,32 @@ public class WaitingRoomBackend {
         return team2Proto.size() < teamSize;
     }
     
-    //sending waiting room updates is done in these next two methods
+    public void setTeamSize(int s){
+        if(s <= 1){
+            teamSize = s;
+        }
+    }
+    
+    public User[] getTeam1Proto(){
+        return team1Proto.values().stream().toArray(size -> new User[size]);
+    }
+    public User[] getTeam2Proto(){
+        return team2Proto.values().stream().toArray(size -> new User[size]);
+    }
+    
+    /**
+     * Places a User on team 1.
+     * If said user is the person at this
+     * computer, sends a message to all connected
+     * clients that a team change has occurred.
+     * 
+     * @param u the User to place on team 1
+     * @return whether or not the User was able to join team 1
+     */
     public boolean tryJoinTeam1(User u){
         boolean success = false;
         if(team1Full() && !team1Proto.containsKey(u.getIpAddress())){
             //team is not full, and u is not already on this team
-            
             success = true;
             if(team2Proto.containsKey(u.getIpAddress())){
                 team2Proto.remove(u.getIpAddress());
@@ -568,10 +584,18 @@ public class WaitingRoomBackend {
                 );
                 Master.getServer().send(sm);
             }
-            //displayData();
         }
         return success;
     }
+    /**
+     * Places a User on team 2.
+     * If said user is the person at this
+     * computer, sends a message to all connected
+     * clients that a team change has occurred.
+     * 
+     * @param u the User to place on team 2
+     * @return whether or not the User was able to join team 2
+     */
     public boolean tryJoinTeam2(User u){
         boolean success = false;
         if(team2Full() && !team2Proto.containsKey(u.getIpAddress())){
@@ -596,6 +620,9 @@ public class WaitingRoomBackend {
         return success;
     }
     
+    /**
+     * Sends information about the waiting room to standard output
+     */
     public void displayData(){
         System.out.println("WAITING ROOM");
         System.out.println("Team size: " + teamSize);

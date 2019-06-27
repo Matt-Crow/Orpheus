@@ -30,7 +30,7 @@ public class WSJoin extends SubPage{
                 Master.loginWindow();
                 getHostingPage().switchToSubpage(WorldSelectCanvas.WAIT);
                 if(getHostingPage().getCurrentSubPage() instanceof WSWaitForPlayers){
-                    ((WSWaitForPlayers)getHostingPage().getCurrentSubPage()).joinServer(ip.getText());
+                    ((WSWaitForPlayers)getHostingPage().getCurrentSubPage()).joinServer(ip.getText()).joinTeam2(Master.getUser());
                 }
             }
         });

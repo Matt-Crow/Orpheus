@@ -125,14 +125,13 @@ public class WSWaitForPlayers extends SubPage{
         
         startButton = new JButton("Start the match");
         startButton.addActionListener((e)->{
-            /*
-            if(isHost && !backend.isAlreadyStarted()){
-                backend.startWorld();
+            if(backend.isHost() && !backend.isAlreadyStarted()){
+                backend.prepareToStart();
                 chat.log("The game will start in 30 seconds. Please select your build and team.");
             }else{
                 chat.logLocal("only the host can start the world. You'll have to wait for them.");
                 chat.log("Are we waiting on anyone?");
-            }*/
+            }
         });
         add(startButton, BorderLayout.PAGE_END);
         
@@ -181,9 +180,15 @@ public class WSWaitForPlayers extends SubPage{
         return this;
     }
     
-    
-    
-    //sending waiting room updates is done in these next two methods
+    /**
+     * Places a given User on team 1, if it isn't full.
+     * If team 1 is full, but team 2 isn't, places them on team 2.
+     * Note that if there are no open positions on either team,
+     * that user will not be put on either team.
+     * 
+     * @param u the user to place on team 1.
+     * @return this 
+     */
     public WSWaitForPlayers joinTeam1(User u){
         if(backend.tryJoinTeam1(u)){
             chat.logLocal(u.getName() + " has joined team 1.");
@@ -192,10 +197,20 @@ public class WSWaitForPlayers extends SubPage{
         }else if(backend.team1Full() && backend.team2Full()){
             chat.logLocal(u.getName() + " cannot join either team: both teams are full");
         }else{
-            chat.logLocal(u.getName() + " cannot join team 1: Team 1 is full.");
+            chat.logLocal(u.getName() + " cannot join team 1: Team 1 is full, so they'll join team 2.");
+            joinTeam2(u);
         }
         return this;
     }
+    /**
+     * Places a given User on team 2, if it isn't full.
+     * If team 2 is full, but team 1 isn't, places them on team 1.
+     * Note that if there are no open positions on either team,
+     * that user will not be put on either team.
+     * 
+     * @param u the user to place on team 2.
+     * @return this 
+     */
     public WSWaitForPlayers joinTeam2(User u){
         if(backend.tryJoinTeam2(u)){
             chat.logLocal(u.getName() + " has joined team 2.");
@@ -204,25 +219,15 @@ public class WSWaitForPlayers extends SubPage{
         }else if(backend.team1Full() && backend.team2Full()){
             chat.logLocal(u.getName() + " cannot join either team: both teams are full");
         }else{
-            chat.logLocal(u.getName() + " cannot join team 2: Team 2 is full.");
+            chat.logLocal(u.getName() + " cannot join team 2: Team 2 is full, so they'll join team 1.");
+            joinTeam1(u);
         }
         return this;
     }
-    
-    public Build getSelectedBuild(){
-        return playerBuild.getSelectedBuild();
-    }
-    
-    public void setStartButtonEnabled(boolean b){
-        startButton.setEnabled(b);
-    }
-    
-    public void setInputEnabled(boolean b){
-        playerBuild.setEnabled(b);
-        joinT1Button.setEnabled(b);
-        joinT2Button.setEnabled(b);
-    }
-    
+    /**
+     * Updates the text of this' team displays
+     * to match the proto-teams of the backend.
+     */
     private void updateTeamDisplays(){
         String newStr = "Team 1: \n";
         newStr = Arrays
@@ -237,6 +242,20 @@ public class WSWaitForPlayers extends SubPage{
             .map((User use) -> "* " + use.getName() + "\n")
             .reduce(newStr, String::concat);
         team2List.setText(newStr);
+    }
+    
+    public Build getSelectedBuild(){
+        return playerBuild.getSelectedBuild();
+    }
+    
+    public void setStartButtonEnabled(boolean b){
+        startButton.setEnabled(b);
+    }
+    
+    public void setInputEnabled(boolean b){
+        playerBuild.setEnabled(b);
+        joinT1Button.setEnabled(b);
+        joinT2Button.setEnabled(b);
     }
     
     public WSWaitForPlayers setTeamSize(int s){
