@@ -182,8 +182,6 @@ public class OrpheusServer {
                     }
                     out.println("disconnecting...");
                     disconnect(otherComputer.getInetAddress().getHostAddress());
-                    out.println("closing...");
-                    conn.close();
                 }
             }.start();
             //out.println("connected to " + otherComputer.getInetAddress().getHostAddress());
@@ -201,11 +199,13 @@ public class OrpheusServer {
     }
     private synchronized void disconnect(String ipAddr){
         if(connections.containsKey(ipAddr)){
+            /*
             out.println("sending someone left " + ipAddr);
             send(new ServerMessage(
                 ipAddr,
                 ServerMessageType.PLAYER_LEFT
-            ), ipAddr);
+            ), ipAddr);*/
+            connections.get(ipAddr).close();
             connections.remove(ipAddr);
         }else{
             out.println("not contains key " + ipAddr);

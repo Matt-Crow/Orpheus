@@ -538,8 +538,6 @@ public class WSWaitForPlayers extends SubPage{
         parent.setContentPane(w.getCanvas());
         parent.revalidate();
         w.getCanvas().requestFocus();
-        
-        System.out.println("received " + sm.getBody());
     }
     
     
@@ -574,15 +572,16 @@ public class WSWaitForPlayers extends SubPage{
      */
     private void waitForData(){
         OrpheusServer server = Master.getServer();
+        //need these here, else null pointer in responding to build request
+        team1 = Team.constructRandomTeam("Team 1", Color.green, teamSize - team1Proto.size());
+        team2 = Team.constructRandomTeam("team 2", Color.red, teamSize - team2Proto.size());
+        
         server.addReceiver(ServerMessageType.PLAYER_DATA, receivePlayerBuild);
         requestBuilds();
         
         playerBuild.setEnabled(false);
         joinT1Button.setEnabled(false);
         joinT2Button.setEnabled(false);
-        
-        team1 = Team.constructRandomTeam("Team 1", Color.green, teamSize - team1Proto.size());
-        team2 = Team.constructRandomTeam("team 2", Color.red, teamSize - team2Proto.size());
         
         //first, put the host on the proper team
         Master.getUser().initPlayer().getPlayer().applyBuild(playerBuild.getSelectedBuild());
