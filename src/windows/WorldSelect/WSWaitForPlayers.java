@@ -68,8 +68,6 @@ public class WSWaitForPlayers extends SubPage{
     private final JButton joinT2Button;
     private final JButton startButton;
     
-    private boolean isHost;
-    
     private final WaitingRoomBackend backend;
     
     public WSWaitForPlayers(Page p){
@@ -79,9 +77,7 @@ public class WSWaitForPlayers extends SubPage{
         //since it couldn't fit in 1/4 of the JPanel, it compressed to just a thin line
         setLayout(new BorderLayout());
         
-        backend = new WaitingRoomBackend();
-        
-        isHost = false;
+        backend = new WaitingRoomBackend(this);
         
         JPanel infoSection = new JPanel();
         infoSection.setLayout(new GridLayout(1, 3));
@@ -129,12 +125,14 @@ public class WSWaitForPlayers extends SubPage{
         
         startButton = new JButton("Start the match");
         startButton.addActionListener((e)->{
-            if(isHost){
-                startWorld();
+            /*
+            if(isHost && !backend.isAlreadyStarted()){
+                backend.startWorld();
+                chat.log("The game will start in 30 seconds. Please select your build and team.");
             }else{
                 chat.logLocal("only the host can start the world. You'll have to wait for them.");
                 chat.log("Are we waiting on anyone?");
-            }
+            }*/
         });
         add(startButton, BorderLayout.PAGE_END);
         
@@ -143,20 +141,12 @@ public class WSWaitForPlayers extends SubPage{
     }
     
     public WSWaitForPlayers startServer(){
-        if(Master.getServer() == null){
-            try {
-                Master.startServer();
-                OrpheusServer server = Master.getServer();
-                
-                server.setState(OrpheusServerState.WAITING_ROOM);
+        if(!backend.serverIsStarted()){
+            boolean success = backend.initHostServer();
+            if(success){
                 chat.openChatServer();
                 chat.logLocal("Server started on host address " + Master.getServer().getIpAddr());
-                server.addReceiver(ServerMessageType.PLAYER_JOINED, receiveJoin);
-                //server.addReceiver(ServerMessageType.WAITING_ROOM_INIT, receiveInit);
-                server.addReceiver(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
-                isHost = true;
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            }else{
                 chat.logLocal("Unable to start server :(");
             }
         }
@@ -164,19 +154,15 @@ public class WSWaitForPlayers extends SubPage{
     }
     
     public WSWaitForPlayers joinServer(String ipAddr){
-        if(Master.getServer() == null){
-            try {
-                Master.startServer();
-            } catch (IOException ex) {
-                Logger.getLogger(WSWaitForPlayers.class.getName()).log(Level.SEVERE, null, ex);
+        if(!backend.serverIsStarted()){
+            boolean success = backend.initClientServer();
+            if(success){
+                Master.getServer().connect(ipAddr);
+                chat.joinChat(ipAddr);
+                chat.logLocal("Connected to host " + ipAddr);
+            } else {
+                chat.logLocal("Failed to connect to " + ipAddr);
             }
-        }
-        if(Master.getServer() != null){//successfully started
-            Master.getServer().connect(ipAddr);
-            chat.joinChat(ipAddr);
-            Master.getServer().addReceiver(ServerMessageType.WAITING_ROOM_INIT, receiveInit);
-            Master.getServer().addReceiver(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
-            Master.getServer().addReceiver(ServerMessageType.REQUEST_PLAYER_DATA, receivePlayerRequest);
         }
         return this;
     }

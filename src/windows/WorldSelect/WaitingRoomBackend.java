@@ -8,10 +8,13 @@ import controllers.World;
 import customizables.Build;
 import entities.TruePlayer;
 import java.awt.Color;
+import java.io.IOException;
 import static java.lang.System.err;
 import static java.lang.System.out;
 import java.util.HashMap;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
@@ -21,6 +24,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import net.OrpheusServer;
+import net.OrpheusServerState;
 import net.ServerMessage;
 import net.ServerMessageType;
 import serialization.JsonUtil;
@@ -35,6 +39,7 @@ import serialization.JsonUtil;
  */
 public class WaitingRoomBackend {
     private final WSWaitForPlayers host;
+    private OrpheusServer server;
     
     /*
     these prototype teams allow this to keep track of
@@ -53,6 +58,8 @@ public class WaitingRoomBackend {
     private Team team2;
     
     private int teamSize;
+    private boolean isHost;
+    private boolean gameAboutToStart;
     
     //applied only to the host. Notifies when a user initially joins
     private final Consumer<ServerMessage> receiveJoin;
@@ -88,8 +95,11 @@ public class WaitingRoomBackend {
     
     public WaitingRoomBackend(WSWaitForPlayers page){
         host = page;
-        
+        server = null;
+        isHost = false;
         teamSize = 0;
+        gameAboutToStart = false;
+        
         team1Proto = new HashMap<>();
         team2Proto = new HashMap<>();
         
@@ -119,6 +129,82 @@ public class WaitingRoomBackend {
             receiveWorldInit(sm);
         };
     }
+    
+    /**
+     * Checks to see if the local server 
+     * has started yet
+     * @return whether or not this has been connected to Master's OrpheusServer
+     */
+    public boolean serverIsStarted(){
+        return server != null;
+    }
+    
+    /**
+     * Initializes the server as a host,
+     * setting up the appropriate receivers.
+     * This should only be called by one 
+     * user in each game
+     * 
+     * @return whether or not the server is 
+     * successfully started.
+     * Note that this does return true if 
+     * the server has already initialized.
+     */
+    public boolean initHostServer(){
+        boolean success = true;
+        if(Master.getServer() == null){
+            try {
+                Master.startServer();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                success = false;
+            }
+        }
+        //            need this to make sure this hasn't started yet
+        if(success && server == null){
+            server = Master.getServer();
+            server.setState(OrpheusServerState.WAITING_ROOM);
+            
+            server.addReceiver(ServerMessageType.PLAYER_JOINED, receiveJoin);
+            server.addReceiver(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
+            isHost = true;
+        }
+        return success;
+    }
+    
+    /**
+     * Initializes the server as a client,
+     * that is to say, not the host.
+     * Then, sets up the appropriate receivers.
+     * 
+     * @return whether or not the server is 
+     * ready after the method completes
+     */
+    public boolean initClientServer(){
+        boolean success = true;
+        if(Master.getServer() == null){
+            try {
+                Master.startServer();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                success = false;
+            }
+        }
+        if(success && server == null){
+            server = Master.getServer();
+            server.setState(OrpheusServerState.WAITING_ROOM);
+            
+            server.addReceiver(ServerMessageType.WAITING_ROOM_INIT, receiveInit);
+            server.addReceiver(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
+            server.addReceiver(ServerMessageType.REQUEST_PLAYER_DATA, receivePlayerRequest);
+            isHost = false;
+        }
+        return success;
+    }
+    
+    
+    
+    
     
     public void setTeamSize(int s){
         if(s <= 1){
@@ -348,14 +434,14 @@ public class WaitingRoomBackend {
      * player build information.
      * After 30 seconds, waits for data before starting the world
      */
-    private void startWorld(){
+    public void startWorld(){
+        gameAboutToStart = true;
         OrpheusServer server = Master.getServer();
         host.setStartButtonEnabled(false);
-        chat.log("The game will start in 30 seconds. Please select your build and team.");
+        
         server.setAcceptingConn(false);
         server.removeReceiver(ServerMessageType.PLAYER_JOINED, receiveJoin);
         Timer t = new Timer(30000, (e)->{
-            chat.log("*ding*");
             server.removeReceiver(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
             waitForData();
         });
@@ -378,12 +464,10 @@ public class WaitingRoomBackend {
         server.addReceiver(ServerMessageType.PLAYER_DATA, receivePlayerBuild);
         requestBuilds();
         
-        playerBuild.setEnabled(false);
-        joinT1Button.setEnabled(false);
-        joinT2Button.setEnabled(false);
+        host.setInputEnabled(false);
         
         //first, put the host on the proper team
-        Master.getUser().initPlayer().getPlayer().applyBuild(playerBuild.getSelectedBuild());
+        Master.getUser().initPlayer().getPlayer().applyBuild(host.getSelectedBuild());
         if(team1Proto.containsKey(server.getIpAddr())){
             team1.addMember(Master.getUser().getPlayer());
             team1Proto.remove(server.getIpAddr());
@@ -396,10 +480,10 @@ public class WaitingRoomBackend {
         team2.displayData();
 
         if(team1.getRosterSize() == teamSize){
-            chat.log("team 1 is done");
+            out.println("team 1 is done");
         }
         if(team2.getRosterSize() == teamSize){
-            chat.log("team 2 is done");
+            out.println("team 2 is done");
         }
         if(team1.getRosterSize() == teamSize && team2.getRosterSize() == teamSize){
             Master.getServer().removeReceiver(ServerMessageType.PLAYER_DATA, receivePlayerBuild);
@@ -428,14 +512,16 @@ public class WaitingRoomBackend {
         */
         
         //can change this to switchToPage once world canvas is a Page
-        JFrame parent = (JFrame)SwingUtilities.getWindowAncestor(this);
+        JFrame parent = (JFrame)SwingUtilities.getWindowAncestor(host);
         parent.setContentPane(w.getCanvas());
         parent.revalidate();
         w.getCanvas().requestFocus();
     }
     
     
-    
+    public boolean isAlreadyStarted(){
+        return gameAboutToStart;
+    }
     
     public boolean team1Full(){
         return team1Proto.size() < teamSize;

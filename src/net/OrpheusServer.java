@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import static java.lang.System.out;
+import java.net.SocketException;
 import java.util.ArrayList;
 import javax.json.Json;
 import javax.json.JsonException;
@@ -117,6 +118,9 @@ public class OrpheusServer {
                     while(listenForConn){
                         try {
                             connect(server.accept());
+                        } catch(SocketException ex){
+                            ex.printStackTrace();
+                            break;
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         }
