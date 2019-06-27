@@ -66,15 +66,13 @@ public class WaitingRoomBackend {
     private final Consumer<ServerMessage> receiveJoin;
     private final Consumer<ServerMessage> receiveInit;
     private final Consumer<ServerMessage> receiveUpdate;
+    private final Consumer<ServerMessage> receiveBuildRequest;
     
     
     
     
     
     
-    //not applied to the host. Notifies the user that the host needs their Build information
-    //also tells the user that the game is about to start, so it shuts down most of their receivers
-    private final Consumer<ServerMessage> receivePlayerRequest;
     
     private final Consumer<ServerMessage> receivePlayerBuild;
     
@@ -112,6 +110,10 @@ public class WaitingRoomBackend {
         receiveUpdate = (sm)->{
             receiveUpdate(sm);
         };
+        receiveBuildRequest = (sm)->{
+            receiveBuildRequest(sm);
+        };
+        
         
         
         
@@ -119,9 +121,7 @@ public class WaitingRoomBackend {
             receiveRemoteIds(sm);
         };
         
-        receivePlayerRequest = (sm)->{
-            receivePlayerRequest(sm);
-        };
+        
         
         receivePlayerBuild = (sm)->{
             receiveBuildInfo(sm);
@@ -198,7 +198,7 @@ public class WaitingRoomBackend {
             
             server.addReceiver(ServerMessageType.WAITING_ROOM_INIT, receiveInit);
             server.addReceiver(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
-            server.addReceiver(ServerMessageType.REQUEST_PLAYER_DATA, receivePlayerRequest);
+            server.addReceiver(ServerMessageType.REQUEST_PLAYER_DATA, receiveBuildRequest);
             isHost = false;
         }
         return success;
@@ -294,6 +294,35 @@ public class WaitingRoomBackend {
         }
     }
     
+    /**
+     * called after the host requests this user's Build data.
+     * not applied to the host. Notifies the user that the host 
+     * needs their Build information.
+     * The game is about to start, so shut down most receivers
+     * also, prepare to receive IDs and World info from the host.
+     * 
+     * @param sm 
+     */
+    private synchronized void receiveBuildRequest(ServerMessage sm){
+        server.send(
+            new ServerMessage(
+                host.getSelectedBuild().serializeJson().toString(),
+                ServerMessageType.PLAYER_DATA
+            ),
+            sm.getSender().getIpAddress()
+        );
+        host.setInputEnabled(false);
+        
+        server.removeReceiver(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
+        server.removeReceiver(ServerMessageType.REQUEST_PLAYER_DATA, receiveBuildRequest);
+        
+        server.addReceiver(ServerMessageType.NOTIFY_IDS, receiveRemoteIds);
+        server.addReceiver(ServerMessageType.WORLD_INIT, receiveWorldInit);
+    }
+    
+    
+    
+    
     
     
     
@@ -310,39 +339,12 @@ public class WaitingRoomBackend {
         return team2Proto.values().stream().toArray(size -> new User[size]);
     }
     
-    
-    
-    
-    
     private void requestBuilds(){
         Master.getServer().send(new ServerMessage(
             "please provide build information",
             ServerMessageType.REQUEST_PLAYER_DATA
         ));
     }
-    
-    //called after the host requests this user's Build data.
-    //the game is about to start, so shut down most receivers
-    //also, prepare to receive IDs and World info from the host.
-    private void receivePlayerRequest(ServerMessage sm){
-        Master.getServer().send(
-            new ServerMessage(
-                host.getSelectedBuild().serializeJson().toString(),
-                ServerMessageType.PLAYER_DATA
-            ),
-            sm.getSender().getIpAddress()
-        );
-        host.setInputEnabled(false);
-        
-        Master.getServer().addReceiver(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
-        Master.getServer().addReceiver(ServerMessageType.REQUEST_PLAYER_DATA, receivePlayerRequest);
-        
-        Master.getServer().addReceiver(ServerMessageType.NOTIFY_IDS, receiveRemoteIds);
-        Master.getServer().addReceiver(ServerMessageType.WORLD_INIT, receiveWorldInit);
-    }
-    
-    
-    
     private void sendIds(String ipAddr, int teamId, int playerId){
         ServerMessage sm = new ServerMessage(
             String.format("team: %d, player: %d", teamId, playerId),
@@ -449,10 +451,6 @@ public class WaitingRoomBackend {
         w.getCanvas().requestFocus();
     }
     
-    
-    
-    
-    
     /**
      * Begins preparing the server to receive
      * player build information.
@@ -514,9 +512,6 @@ public class WaitingRoomBackend {
             finallyStart();
         }
     }
-    
-    
-    
     private void finallyStart(){
         World w = World.createDefaultBattle();
         Battle b = new Battle(
@@ -541,7 +536,6 @@ public class WaitingRoomBackend {
         parent.revalidate();
         w.getCanvas().requestFocus();
     }
-    
     
     public boolean isAlreadyStarted(){
         return gameAboutToStart;
