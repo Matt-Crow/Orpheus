@@ -200,6 +200,9 @@ public class World implements Serializable{
      * then converts the result to a string so that it can
      * be used as the body of a ServerMessage
      * 
+     * This has a problem where if there is too much data
+     * in the world, such as in a 99 vs 99, it cannot be encoded
+     * 
      * @return the serialized version of this World,
      * converted to a string for convenience.
      */
