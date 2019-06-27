@@ -1,13 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package util;
 
 /**
- *
- * @author Matt
+ * The Node class is used by
+ * SafeList to contain items
+ * in the list. Functions exactly
+ * as a linked list node.
+ * 
+ * @author Matt Crow
+ * @param <T> the type of element this Node will contain
  */
 public class Node<T> {
     private Node<T> next;

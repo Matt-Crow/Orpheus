@@ -8,9 +8,18 @@ import java.util.function.Consumer;
  * 
  * The way it does this is by creating a second SafeList
  * which receives any changes that would be made to the original
- * while it is iterating. I could do this with less clutter by just
- * performing inserts behind the current node, but I'll handle that some
- * other time
+ * while it is iterating. Once the SafeList is done iterating, it
+ * copies the contents of the second list into itself.
+ * <b>It is important to note that insertions and deletions performed
+ * during iteration do not apply to the SafeList until after the forEach
+ * method completes</b>
+ * 
+ * I could do this with less clutter by just
+ * performing inserts behind the current node, or just in front of the head, but I'll handle that some
+ * other time.
+ * 
+ * I may also use this class for some of the methods of Player and Entity
+ * (managing statuses, action registers, teams, etc)
  * 
  * @author Matt Crow
  * @param <T> the type of element to include in this list

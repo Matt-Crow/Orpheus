@@ -36,21 +36,27 @@ import util.SafeList;
  * Upon receiving input into its socket, the server will attempt to de-serialize it.
  * If the de-serialization is successful, it takes the type of that message,
  * and calls the corresponding Consumers in the 'receivers' HashMap.
+ * @see OrpheusServer#receive() 
  * 
  * @author Matt Crow
  */
 public class OrpheusServer {
     private final ServerSocket server;
     private String ipAddress;
-    private final HashMap<String, Connection> connections;
-    private Thread connListener;
-    private volatile boolean listenForConn;
-    private OrpheusServerState state; //what this server is doing
     
-    private final HashMap<ServerMessageType, SafeList<Consumer<ServerMessage>>> receivers;
+    /*
+    The users connected to this server, where the key is their
+    IP address.
+    */
+    private final HashMap<String, Connection> connections;
+    private Thread connListener; //the thread that listens for attemts to connect to this server
+    private volatile boolean listenForConn; //whether or not the connListener thread is active
+    
+    private OrpheusServerState state; //what this server is doing. Currently not used
+    
+    private final HashMap<ServerMessageType, SafeList<Consumer<ServerMessage>>> receivers; //see the receive method
     
     public static final String SHUTDOWN_MESSAGE = "EXIT";
-    public static final String SOMEONE_LEFT = "Discon: ";
     
     public OrpheusServer(int port) throws IOException{
         state = OrpheusServerState.NONE;
@@ -90,6 +96,15 @@ public class OrpheusServer {
             } else {
                 connect(ip);
                 connections.get(ip).setUser(sm.getSender());
+            }
+        });
+        addReceiver(ServerMessageType.PLAYER_LEFT, (ServerMessage sm)->{
+            String ip = sm.getSender().getIpAddress();
+            if(connections.containsKey(ip)){
+                out.println(ip + " left");
+                disconnect(sm.getSender().getIpAddress());
+            }else{
+                out.println(ip + " is not connected, so I cannot disconnect from them");
             }
         });
     }
@@ -188,13 +203,12 @@ public class OrpheusServer {
     }
     private synchronized void disconnect(String ipAddr){
         if(connections.containsKey(ipAddr)){
-            try {
-                out.println("sending someone left " + ipAddr);
-                connections.get(ipAddr).writeToClient(SOMEONE_LEFT + getIpAddr());
-                connections.remove(ipAddr);
-            } catch (IOException ex) {
-                Logger.getLogger(OrpheusServer.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            out.println("sending someone left " + ipAddr);
+            send(new ServerMessage(
+                ipAddr,
+                ServerMessageType.PLAYER_LEFT
+            ), ipAddr);
+            connections.remove(ipAddr);
         }else{
             out.println("not contains key " + ipAddr);
         }
@@ -248,19 +262,7 @@ public class OrpheusServer {
             return;
         }
         
-        out.println("Received " + msg.toUpperCase());
-        if(msg.toUpperCase().contains(SOMEONE_LEFT.toUpperCase())){
-            String ipAddr = msg.replace(SOMEONE_LEFT, "");
-            out.println(ipAddr + " left"); 
-            if(connections.containsKey(ipAddr)){
-                out.println("disconnect");
-                disconnect(ipAddr);
-            }else{
-                out.println("no disconnect");
-            }
-        }else{
-            out.println("What do I do with this? " + msg);
-        }
+        out.println("What do I do with this? " + msg);
     }
     
     /**
@@ -279,7 +281,7 @@ public class OrpheusServer {
     public boolean removeReceiver(ServerMessageType type, Consumer<ServerMessage> nonNom){
         boolean wasRemoved = false;
         if(receivers.containsKey(type)){
-            receivers.get(type).remove(nonNom);
+            wasRemoved = receivers.get(type).remove(nonNom);
         }
         return wasRemoved;
     }
