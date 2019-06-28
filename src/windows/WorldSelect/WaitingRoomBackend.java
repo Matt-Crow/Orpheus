@@ -389,9 +389,6 @@ public class WaitingRoomBackend {
         ));
         w.init();
         
-        out.println("received: ");
-        w.displayData();
-        
         server.removeReceiver(ServerMessageType.WORLD_INIT, receiveWorldInit);
         
         //can change this to switchToPage once world canvas is a Page
@@ -532,8 +529,6 @@ public class WaitingRoomBackend {
             serial,
             ServerMessageType.WORLD_INIT
         );
-        out.println("sent: ");
-        World.fromSerializedString(serial).displayData();
         
         Master.getServer().send(sm);
     }
