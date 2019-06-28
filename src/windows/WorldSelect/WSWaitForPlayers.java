@@ -1,33 +1,14 @@
 package windows.WorldSelect;
 
-import battle.Battle;
-import battle.Team;
 import controllers.Master;
 import controllers.User;
-import controllers.World;
 import customizables.Build;
-import entities.TruePlayer;
 import gui.*;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.json.*;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
-import net.*;
-import serialization.JsonUtil;
+import javax.swing.*;
 import windows.Page;
 import windows.SubPage;
 
@@ -35,20 +16,6 @@ import windows.SubPage;
  * WSWaitForPlayers is used to provide a "waiting room"
  * where users can stay in while they are waiting for other
  * players to join.
- * 
- * This class also handles generating and starting the World
- * where the Battle will take place.
- * 
- * Currently, this uses a peer-to-peer network, but with the 
- * user who opened this waiting room being designated as the "host".
- * The host basically acts as a regular user in the network, but will 
- * be in charge of updating the World. While this does give them the 
- * advantage of not having to deal with latency, I sincerely doubt 
- * Orpheus will become an e-sport any time soon.
- * 
- * There is a LOT of stuff here, so I may want to split this into
- * the graphic components in this class, and all the server stuff
- * in another
  * 
  * @author Matt Crow
  */

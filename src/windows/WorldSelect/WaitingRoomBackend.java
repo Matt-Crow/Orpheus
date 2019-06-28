@@ -2,9 +2,7 @@ package windows.WorldSelect;
 
 import battle.Battle;
 import battle.Team;
-import controllers.Master;
-import controllers.User;
-import controllers.World;
+import controllers.*;
 import customizables.Build;
 import entities.TruePlayer;
 import java.awt.Color;
@@ -13,20 +11,9 @@ import static java.lang.System.err;
 import static java.lang.System.out;
 import java.util.HashMap;
 import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonValue;
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
-import net.OrpheusServer;
-import net.OrpheusServerState;
-import net.ServerMessage;
-import net.ServerMessageType;
+import javax.json.*;
+import javax.swing.*;
+import net.*;
 import serialization.JsonUtil;
 
 /**
@@ -34,6 +21,16 @@ import serialization.JsonUtil;
  * functionality needed by WSWaitForPlayers,
  * as that class got a bit out of hand with
  * all the functionality in one file.
+ * 
+ * This class also handles generating and starting the World
+ * where the Battle will take place.
+ * 
+ * Currently, this uses a peer-to-peer network, but with the 
+ * user who opened this waiting room being designated as the "host".
+ * The host basically acts as a regular user in the network, but will 
+ * be in charge of updating the World. While this does give them the 
+ * advantage of not having to deal with latency, I sincerely doubt 
+ * Orpheus will become an e-sport any time soon.
  * 
  * @author Matt Crow
  */

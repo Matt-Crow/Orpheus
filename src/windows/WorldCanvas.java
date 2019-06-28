@@ -1,6 +1,7 @@
 
 package windows;
 
+import battle.Battle;
 import controllers.World;
 import graphics.Tile;
 import controllers.Master;
@@ -34,6 +35,7 @@ import javax.json.JsonObject;
 import serialization.JsonUtil;
 import upgradables.AbstractUpgradable;
 import gui.Chat;
+import javax.swing.JButton;
 
 /**
  * Test class for now
@@ -51,7 +53,7 @@ public class WorldCanvas extends DrawingPlane{
         
         w.setCanvas(this);
         
-        Button b = new Button("Exit");
+        JButton b = new JButton("Exit");
 		b.addActionListener(new AbstractAction(){
             @Override
 			public void actionPerformed(ActionEvent e){
@@ -185,38 +187,37 @@ public class WorldCanvas extends DrawingPlane{
     
     
     public static void main(String[] args) throws IOException{
-        WorldCanvas c = new WorldCanvas();
+        AbstractUpgradable.loadAll();
+        Build.loadAll();
+        Master.getUser().initPlayer().getPlayer().applyBuild(Build.getBuildByName("Default Fire"));
+        
+        World w = World.createDefaultBattle();
+        Team t1 = new Team("Test", Color.BLUE);
+        Team t2 = Team.constructRandomTeam("Rando", Color.yellow, 1);
+        WorldCanvas c = new WorldCanvas(w);
         JFrame f = new JFrame();
         f.setContentPane(c);
         f.setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        AbstractUpgradable.loadAll();
-        Build.loadAll();
+        Battle b = new Battle(
+            c,
+            t1,
+            t2
+        );
         
-        Master.getUser().getPlayer().applyBuild(Build.getBuildByName("Default Fire"));
-        Team t1 = new Team("Test", Color.BLUE);
+        
         t1.addMember(Master.getUser().getPlayer());
-        t1.init(0, 50, 0);
+        w.addTeam(t1).addTeam(t2);
+        b.setHost(w);
+        w.setCurrentMinigame(b);
+        w.init();
         
-        try {
-            c.world.setMap(MapLoader.readCsv(WorldCanvas.class.getResourceAsStream("/testMap.csv")));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        Tile t = new Tile(0, 0, Color.BLACK);
-        t.setBlocking(true);
-        c.world.getMap()
-            .addToTileSet(0, new Tile(0, 0, Color.WHITE))
-            .addToTileSet(1, t);
-        
-        c.world.addTeam(t1);
-        c.world.init();
         f.setVisible(true);
         f.revalidate();
         f.repaint();
         
-        
+        /*
         JsonObject obj = c.world.getMap().serializeJson();
         JsonUtil.pprint(obj, 0);
         c.world.setMap(Map.deserializeJson(obj));
@@ -253,6 +254,6 @@ public class WorldCanvas extends DrawingPlane{
                 Logger.getLogger(WorldCanvas.class.getName()).log(Level.SEVERE, null, ex);
                 System.exit(1);
             }
-        }
+        }*/
     }
 }
