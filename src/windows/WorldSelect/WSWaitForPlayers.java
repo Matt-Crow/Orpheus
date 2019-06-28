@@ -231,7 +231,7 @@ public class WSWaitForPlayers extends SubPage{
      * Updates the text of this' team displays
      * to match the proto-teams of the backend.
      */
-    private void updateTeamDisplays(){
+    public void updateTeamDisplays(){
         String newStr = "Team 1: \n";
         newStr = Arrays
             .stream(backend.getTeam1Proto())

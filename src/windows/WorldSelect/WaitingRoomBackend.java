@@ -574,8 +574,10 @@ public class WaitingRoomBackend {
      * @return whether or not the User was able to join team 1
      */
     public boolean tryJoinTeam1(User u){
-        boolean success = false;
-        if(!team1Full() && !team1Proto.containsKey(u.getIpAddress())){
+        boolean success = team1Proto.containsKey(u.getIpAddress());
+        //automatically return true if the player is already on the correct team
+        
+        if(!success && !team1Full()){
             //team is not full, and u is not already on this team
             success = true;
             if(team2Proto.containsKey(u.getIpAddress())){
@@ -591,6 +593,7 @@ public class WaitingRoomBackend {
                 );
                 Master.getServer().send(sm);
             }
+            host.updateTeamDisplays();
         }
         return success;
     }
@@ -604,8 +607,8 @@ public class WaitingRoomBackend {
      * @return whether or not the User was able to join team 2
      */
     public boolean tryJoinTeam2(User u){
-        boolean success = false;
-        if(!team2Full() && !team2Proto.containsKey(u.getIpAddress())){
+        boolean success = team2Proto.containsKey(u.getIpAddress());
+        if(!team2Full() && !success){
             //team is not full, and u is not already on this team
             
             success = true;
@@ -622,7 +625,7 @@ public class WaitingRoomBackend {
                 );
                 Master.getServer().send(sm);
             }
-            //displayData();
+            host.updateTeamDisplays();
         }
         return success;
     }
