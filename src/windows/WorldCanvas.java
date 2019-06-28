@@ -48,6 +48,7 @@ public class WorldCanvas extends DrawingPlane{
     public WorldCanvas(World w){
         super();
         world = w;
+        
         w.setCanvas(this);
         
         Button b = new Button("Exit");
@@ -161,6 +162,9 @@ public class WorldCanvas extends DrawingPlane{
         }
         if(paused){
             drawPause(getG());
+            
+            System.out.println("in world canvas paint component, world is: ");
+            world.displayData();
         }
     }
     public void drawPause(Graphics g){
