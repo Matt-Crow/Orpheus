@@ -67,7 +67,7 @@ public abstract class Entity implements Serializable{
     
     @Override
     public final boolean equals(Object o){
-        return o != null && o instanceof Entity && ((Entity)o).id == id; 
+        return o != null && o instanceof Entity && o == this && ((Entity)o).id == id; 
     }
 
     @Override

@@ -253,7 +253,6 @@ public class Player extends Entity{
 	
     @Override
 	public void draw(Graphics g){
-		System.out.println("player draw");
         
         int w = Master.CANVASWIDTH;
 		int h = Master.CANVASHEIGHT;

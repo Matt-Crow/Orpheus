@@ -55,7 +55,6 @@ public class Team extends EntityManager implements Serializable{
 	
 	public void addMember(Player m){
         roster.put(m.id, m);
-        add(m);
         m.setTeam(this);
 	}
     
@@ -92,6 +91,7 @@ public class Team extends EntityManager implements Serializable{
 			p.initPos(x, y, facing);
             p.doInit();
             membersRem.add(p);
+            add(p);
 			x += spacing;
 		}
 		defeated = false;

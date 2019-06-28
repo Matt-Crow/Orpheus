@@ -137,8 +137,6 @@ public class WorldCanvas extends DrawingPlane{
 		int[] trans = retTranslate();
 		translate(trans[0], trans[1]);
 		world.draw(getG());
-        System.out.println("TEAM 0:");
-        world.getTeams()[0].print();
         
 		resetToInit();
 		
@@ -202,7 +200,7 @@ public class WorldCanvas extends DrawingPlane{
         String serial = w.serializeToString();
         World newWorld = World.fromSerializedString(serial);
         User me = Master.getUser(); //need to set player before calling createCanvas
-        me.setPlayer((TruePlayer)w.getTeamById(me.getRemoteTeamId()).getMemberById(me.getRemotePlayerId()));
+        me.setPlayer((TruePlayer)newWorld.getTeamById(me.getRemoteTeamId()).getMemberById(me.getRemotePlayerId()));
         newWorld.createCanvas();
         newWorld.setCurrentMinigame(new Battle(
             newWorld.getCanvas(),
