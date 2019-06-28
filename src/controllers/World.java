@@ -191,6 +191,7 @@ public class World implements Serializable{
     public void displayData(){
         out.println("WORLD:");
         out.println("Current minigame:");
+        out.println((currentMinigame == null) ? "null" : "battle");
         //currentMinigame.displayData();
         out.println("Current map:");
         //currentMap.displayData();

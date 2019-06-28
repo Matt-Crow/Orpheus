@@ -86,7 +86,7 @@ public class Team extends EntityManager implements Serializable{
     
     //OK to have different params, as this does not extend entity
 	public void init(int y, int spacing, int facing){
-		int x = spacing;
+        int x = spacing;
         membersRem.clear();
 		for(Player p : roster.values()){
 			p.initPos(x, y, facing);

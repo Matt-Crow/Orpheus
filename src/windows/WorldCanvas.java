@@ -3,36 +3,18 @@ package windows;
 
 import battle.Battle;
 import controllers.World;
-import graphics.Tile;
 import controllers.Master;
-import java.awt.Button;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import javax.swing.AbstractAction;
-import javax.swing.JFrame;
-import javax.swing.Timer;
+import java.awt.event.*;
+import javax.swing.*;
 import battle.Team;
+import controllers.User;
 import customizables.Build;
 import entities.PlayerControls;
-import graphics.Map;
-import graphics.MapLoader;
-import gui.FileChooserUtil;
+import entities.TruePlayer;
 import java.awt.MouseInfo;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.json.JsonObject;
-import serialization.JsonUtil;
 import upgradables.AbstractUpgradable;
 import gui.Chat;
 import javax.swing.JButton;
@@ -155,6 +137,9 @@ public class WorldCanvas extends DrawingPlane{
 		int[] trans = retTranslate();
 		translate(trans[0], trans[1]);
 		world.draw(getG());
+        System.out.println("TEAM 0:");
+        world.getTeams()[0].print();
+        
 		resetToInit();
 		
 		Master.getUser().getPlayer().drawHUD(getG());
@@ -190,7 +175,6 @@ public class WorldCanvas extends DrawingPlane{
         AbstractUpgradable.loadAll();
         Build.loadAll();
         Master.getUser().initPlayer().getPlayer().applyBuild(Build.getBuildByName("Default Fire"));
-        
         World w = World.createDefaultBattle();
         Team t1 = new Team("Test", Color.BLUE);
         Team t2 = Team.constructRandomTeam("Rando", Color.yellow, 1);
@@ -206,54 +190,31 @@ public class WorldCanvas extends DrawingPlane{
             t2
         );
         
-        
         t1.addMember(Master.getUser().getPlayer());
         w.addTeam(t1).addTeam(t2);
         b.setHost(w);
         w.setCurrentMinigame(b);
         w.init();
         
+        Master.getUser().setRemoteTeamId(t1.getId()).setRemotePlayerId(Master.getUser().getPlayer().id);
+        
+        //now to try serializing it...
+        String serial = w.serializeToString();
+        World newWorld = World.fromSerializedString(serial);
+        User me = Master.getUser(); //need to set player before calling createCanvas
+        me.setPlayer((TruePlayer)w.getTeamById(me.getRemoteTeamId()).getMemberById(me.getRemotePlayerId()));
+        newWorld.createCanvas();
+        newWorld.setCurrentMinigame(new Battle(
+            newWorld.getCanvas(),
+            newWorld.getTeams()[0],
+            newWorld.getTeams()[1]
+        ));
+        newWorld.init();
+        
+        f.setContentPane(newWorld.getCanvas());
+        
         f.setVisible(true);
         f.revalidate();
         f.repaint();
-        
-        /*
-        JsonObject obj = c.world.getMap().serializeJson();
-        JsonUtil.pprint(obj, 0);
-        c.world.setMap(Map.deserializeJson(obj));
-        c.world.init();
-        
-        
-        c.world.displayData();
-        File saveTo = FileChooserUtil.chooseDir();
-        if(saveTo != null){
-            try {
-                ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(saveTo.getAbsolutePath() + "/obj.ser"));
-                out.writeObject(c.world);
-                
-                ObjectInputStream in = new ObjectInputStream(new FileInputStream(saveTo.getAbsolutePath() + "/obj.ser"));
-                World newWorld = (World)in.readObject();
-                //Chat.log("Switching worlds in 3 seconds...");
-                Timer time = new Timer(3000, (e)->{
-                    newWorld.createCanvas();
-                    f.setContentPane(newWorld.getCanvas());
-                    //Chat.log("done!");
-                    //Chat.log(Master.getUser().getPlayer().getX() + ", " + Master.getUser().getPlayer().getY());
-                    Master.getUser().getPlayer().setWorld(newWorld);
-                    //Chat.log(Master.getUser().getPlayer().getWorld() + " : " + newWorld);
-                    c.world.displayData();
-                    f.revalidate();
-                    f.repaint();
-                });
-                time.setRepeats(false);
-                time.start();
-                
-                //File file = new File(saveTo.getAbsolutePath() + "/map.csv");
-                //MapLoader.saveCsv(new FileOutputStream(file), c.world.getMap());
-            } catch (Exception ex) {
-                Logger.getLogger(WorldCanvas.class.getName()).log(Level.SEVERE, null, ex);
-                System.exit(1);
-            }
-        }*/
     }
 }
