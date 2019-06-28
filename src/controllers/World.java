@@ -98,6 +98,10 @@ public class World implements Serializable{
         return teams.get(id);
     }
     
+    public Team[] getTeams(){
+        return teams.values().toArray(new Team[teams.size()]);
+    }
+    
     public World setMap(Map m){
         if(m == null){
             throw new NullPointerException();

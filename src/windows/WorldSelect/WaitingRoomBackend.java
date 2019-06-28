@@ -385,6 +385,11 @@ public class WaitingRoomBackend {
         User me = Master.getUser(); //need to set player before calling createCanvas
         me.setPlayer((TruePlayer)w.getTeamById(me.getRemoteTeamId()).getMemberById(me.getRemotePlayerId()));
         w.createCanvas();
+        w.setCurrentMinigame(new Battle(
+            w.getCanvas(),
+            w.getTeams()[0],
+            w.getTeams()[1]
+        ));
         w.init();
         
         out.println("received: ");
