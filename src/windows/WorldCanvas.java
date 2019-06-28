@@ -162,9 +162,6 @@ public class WorldCanvas extends DrawingPlane{
         }
         if(paused){
             drawPause(getG());
-            
-            System.out.println("in world canvas paint component, world is: ");
-            world.displayData();
         }
     }
     public void drawPause(Graphics g){
