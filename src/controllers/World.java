@@ -127,6 +127,7 @@ public class World implements Serializable{
     
     public void setCurrentMinigame(Battle b){
         currentMinigame = b;
+        b.setHost(this);
     }
     public Battle getCurrentMinigame(){
         return currentMinigame;
