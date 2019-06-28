@@ -387,6 +387,9 @@ public class WaitingRoomBackend {
         w.createCanvas();
         w.init();
         
+        out.println("received: ");
+        w.displayData();
+        
         server.removeReceiver(ServerMessageType.WORLD_INIT, receiveWorldInit);
         
         //can change this to switchToPage once world canvas is a Page
@@ -522,10 +525,14 @@ public class WaitingRoomBackend {
      * @param w the world to send
      */
     private void sendWorldInit(World w){
+        String serial = w.serializeToString();
         ServerMessage sm = new ServerMessage(
-            w.serializeToString(),
+            serial,
             ServerMessageType.WORLD_INIT
         );
+        out.println("sent: ");
+        World.fromSerializedString(serial).displayData();
+        
         Master.getServer().send(sm);
     }
     
@@ -538,14 +545,14 @@ public class WaitingRoomBackend {
     }
     
     public boolean team1Full(){
-        return team1Proto.size() < teamSize;
+        return team1Proto.size() >= teamSize;
     }
     public boolean team2Full(){
-        return team2Proto.size() < teamSize;
+        return team2Proto.size() >= teamSize;
     }
     
     public void setTeamSize(int s){
-        if(s <= 1){
+        if(s >= 1){
             teamSize = s;
         }
     }
@@ -568,7 +575,7 @@ public class WaitingRoomBackend {
      */
     public boolean tryJoinTeam1(User u){
         boolean success = false;
-        if(team1Full() && !team1Proto.containsKey(u.getIpAddress())){
+        if(!team1Full() && !team1Proto.containsKey(u.getIpAddress())){
             //team is not full, and u is not already on this team
             success = true;
             if(team2Proto.containsKey(u.getIpAddress())){
@@ -598,7 +605,7 @@ public class WaitingRoomBackend {
      */
     public boolean tryJoinTeam2(User u){
         boolean success = false;
-        if(team2Full() && !team2Proto.containsKey(u.getIpAddress())){
+        if(!team2Full() && !team2Proto.containsKey(u.getIpAddress())){
             //team is not full, and u is not already on this team
             
             success = true;

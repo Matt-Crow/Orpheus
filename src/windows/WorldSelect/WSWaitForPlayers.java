@@ -191,12 +191,15 @@ public class WSWaitForPlayers extends SubPage{
      */
     public WSWaitForPlayers joinTeam1(User u){
         if(backend.tryJoinTeam1(u)){
+            System.out.println("joined team 1");
             chat.logLocal(u.getName() + " has joined team 1.");
             updateTeamDisplays();
             yourTeam.setText("You are on team 1");
         }else if(backend.team1Full() && backend.team2Full()){
+            System.out.println("both full");
             chat.logLocal(u.getName() + " cannot join either team: both teams are full");
         }else{
+            System.out.println("no join team 1");
             chat.logLocal(u.getName() + " cannot join team 1: Team 1 is full, so they'll join team 2.");
             joinTeam2(u);
         }
