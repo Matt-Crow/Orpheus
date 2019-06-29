@@ -18,6 +18,7 @@ import java.io.IOException;
 import upgradables.AbstractUpgradable;
 import gui.Chat;
 import javax.swing.JButton;
+import util.SerialUtil;
 
 /**
  * Test class for now
@@ -219,5 +220,7 @@ public class WorldCanvas extends DrawingPlane{
         f.setVisible(true);
         f.revalidate();
         f.repaint();
+        
+        SerialUtil.fromSerializedString(SerialUtil.serializeToString(t1));
     }
 }
