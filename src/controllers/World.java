@@ -219,10 +219,7 @@ public class World implements Serializable{
         if(Master.getServer() != null){
             //successfully started
             isRemotelyHosted = true;
-            Master.getServer().addReceiver(ServerMessageType.WORLD_UPDATE, (sm)->{
-                out.println("World received this in setRemoteHost:");
-                sm.displayData();
-            });
+            Master.getServer().addReceiver(ServerMessageType.WORLD_UPDATE, receiveWorldUpdate);
         }
         return this;
     }

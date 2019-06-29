@@ -6,6 +6,7 @@ import actions.*;
 import statuses.StatusTable;
 import entities.Player;
 import java.io.File;
+import java.io.Serializable;
 import java.util.NoSuchElementException;
 import javax.json.Json;
 import javax.json.JsonException;
@@ -19,7 +20,7 @@ import upgradables.AbstractUpgradable;
 import upgradables.UpgradableJsonUtil;
 import upgradables.UpgradableType;
 
-public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName> implements JsonSerialable{
+public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName> implements JsonSerialable, Serializable{
 	/**
 	 * Passives are abilities that have specific triggers, 
 	 * i.e., the user does not directly trigger them:
