@@ -19,10 +19,12 @@ import windows.WorldCanvas;
 import static java.lang.System.out;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.ServerMessage;
 import net.ServerMessageType;
+import util.SerialUtil;
 
 /**
  * The World class will act as a controller for the game.
@@ -34,7 +36,7 @@ import net.ServerMessageType;
  */
 public class World implements Serializable{
     //key is team ID
-    private final HashMap<Integer, Team> teams; //makes it faster to find nearest enemies
+    private HashMap<Integer, Team> teams; //makes it faster to find nearest enemies
     
     private Map currentMap;
     private transient WorldCanvas canvas; //transient means "don't serialize me!"
@@ -42,6 +44,8 @@ public class World implements Serializable{
     
     private transient boolean isHosting; //whether or not this is the host of a game, and thus should manage itself for every player
     private transient boolean isRemotelyHosted; //whether or not another computer is running this World
+    
+    private transient final Consumer<ServerMessage> receiveWorldUpdate;
     
     public World(int size){
         teams = new HashMap<>();
@@ -52,6 +56,8 @@ public class World implements Serializable{
         
         isHosting = false;
         isRemotelyHosted = false;
+        
+        receiveWorldUpdate = (sm)->receiveWorldUpdate(sm);
     }
     
     /**
@@ -190,6 +196,10 @@ public class World implements Serializable{
         return this;
     }
     
+    public boolean isHosting(){
+        return isHosting;
+    }
+    
     /**
      * Notifies this World that it is being generated
      * by a different computer than this one. 
@@ -215,6 +225,10 @@ public class World implements Serializable{
             });
         }
         return this;
+    }
+    
+    public boolean isRemotelyHosted(){
+        return isRemotelyHosted;
     }
     
     public void init(){
@@ -254,10 +268,20 @@ public class World implements Serializable{
         });
         if(isHosting){
             Master.getServer().send(new ServerMessage(
-                "udate stuff",
+                SerialUtil.serializeToString(teams),
                 ServerMessageType.WORLD_UPDATE
             ));
         }
+    }
+    
+    private void receiveWorldUpdate(ServerMessage sm){
+        HashMap<Integer, Team> ts = (HashMap<Integer, Team>)SerialUtil.fromSerializedString(sm.getBody());
+        ts.forEach((i, t)->{
+            out.println(i + ": ");
+            t.displayData();
+        });
+        
+        teams = ts;
     }
     
     public void draw(Graphics g){
@@ -288,19 +312,11 @@ public class World implements Serializable{
      * 
      * @return the serialized version of this World,
      * converted to a string for convenience.
+     * 
+     * @see SerialUtil#serializeToString
      */
     public String serializeToString(){
-        String ret = "";
-        try{
-            ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-            ObjectOutputStream objOut = new ObjectOutputStream(byteOut);
-            objOut.writeObject(this);
-            objOut.close();
-            ret = Base64.getEncoder().encodeToString(byteOut.toByteArray());
-        }catch(IOException ex){
-            ex.printStackTrace();
-        }
-        return ret;
+        return SerialUtil.serializeToString(this);
     }
     
     /**
@@ -312,19 +328,10 @@ public class World implements Serializable{
      * 
      * @param s a string variant of an object stream serialization of a World
      * @return a copy of the world which was serialized into a string
+     * 
+     * @see SerialUtil#fromSerializedString(java.lang.String) 
      */
     public static World fromSerializedString(String s){
-        World ret = null;
-        try{
-            byte[] byteData = Base64.getDecoder().decode(s);
-            ObjectInputStream objIn = new ObjectInputStream(new ByteArrayInputStream(byteData));
-            ret = (World)objIn.readObject();
-            objIn.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-        }
-        return ret;
+        return (World)SerialUtil.fromSerializedString(s);
     }
 }

@@ -379,6 +379,7 @@ public class WaitingRoomBackend {
      */
     private void receiveWorldInit(ServerMessage sm){
         World w = World.fromSerializedString(sm.getBody());
+        w.setRemoteHost(sm.getSender().getIpAddress());
         User me = Master.getUser(); //need to set player before calling createCanvas
         me.setPlayer((TruePlayer)w.getTeamById(me.getRemoteTeamId()).getMemberById(me.getRemotePlayerId()));
         w.createCanvas();
@@ -388,7 +389,6 @@ public class WaitingRoomBackend {
             w.getTeams()[1]
         ));
         w.init();
-        w.setRemoteHost(sm.getSender().getIpAddress());
         
         server.removeReceiver(ServerMessageType.WORLD_INIT, receiveWorldInit);
         

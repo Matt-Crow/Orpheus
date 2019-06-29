@@ -39,7 +39,7 @@ public class WorldCanvas extends DrawingPlane{
 		b.addActionListener(new AbstractAction(){
             @Override
 			public void actionPerformed(ActionEvent e){
-				switchTo(new MainCanvas());
+                switchTo(new MainCanvas());
 			}
 		});
 		addMenuItem(b);
@@ -58,7 +58,12 @@ public class WorldCanvas extends DrawingPlane{
         PlayerControls pc = new PlayerControls(Master.getUser().getPlayer());
 		addMouseListener(pc);
         pc.registerControlsTo(this);
-        registerKey(KeyEvent.VK_P, true, ()->togglePause());
+        if(world.isRemotelyHosted() || world.isHosting()){
+            //resume, but cannot pause
+            togglePause();
+        }else{
+            registerKey(KeyEvent.VK_P, true, ()->togglePause());
+        }
     }
     public WorldCanvas(int i){
         this(new World(i));
