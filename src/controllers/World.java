@@ -15,11 +15,14 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
 import windows.WorldCanvas;
 import static java.lang.System.out;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.ServerMessage;
+import net.ServerMessageType;
 
 /**
  * The World class will act as a controller for the game.
@@ -37,12 +40,18 @@ public class World implements Serializable{
     private transient WorldCanvas canvas; //transient means "don't serialize me!"
     private Battle currentMinigame; //in future versions, this will be changed to include other minigames
     
+    private transient boolean isHosting; //whether or not this is the host of a game, and thus should manage itself for every player
+    private transient boolean isRemotelyHosted; //whether or not another computer is running this World
+    
     public World(int size){
         teams = new HashMap<>();
         
         currentMap = new Map(size, size);
         canvas = null;
         currentMinigame = null;
+        
+        isHosting = false;
+        isRemotelyHosted = false;
     }
     
     /**
@@ -153,6 +162,61 @@ public class World implements Serializable{
         return success;
     }*/
     
+    /**
+     * Sets whether or not this World is
+     * hosting other players, and thus should
+     * send updates to its clients.
+     * 
+     * @param b whether or not this is a host for other players
+     * @return this
+     */
+    public World setIsHosting(boolean b){
+        if(b){
+            if(Master.getServer() == null){
+                try {
+                    Master.startServer();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            if(Master.getServer() != null){
+                isHosting = b;
+                Master.getServer().addReceiver(ServerMessageType.CONTROL_PRESSED, (sm)->{
+                    out.println("World received this in setIsHosting:");
+                    sm.displayData();
+                });
+            }
+        }
+        return this;
+    }
+    
+    /**
+     * Notifies this World that it is being generated
+     * by a different computer than this one. 
+     * 
+     * @param ipAddr the IP address to listen to 
+     * for changes to this World
+     * @return this
+     */
+    public World setRemoteHost(String ipAddr){
+        if(Master.getServer() == null){
+            try {
+                Master.startServer();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        if(Master.getServer() != null){
+            //successfully started
+            isRemotelyHosted = true;
+            Master.getServer().addReceiver(ServerMessageType.WORLD_UPDATE, (sm)->{
+                out.println("World received this in setRemoteHost:");
+                sm.displayData();
+            });
+        }
+        return this;
+    }
+    
     public void init(){
         if(currentMap != null){
             currentMap.init();
@@ -163,6 +227,13 @@ public class World implements Serializable{
     }
     
     public void update(){
+        if(isRemotelyHosted){
+            /*
+            only the host should
+            update the world
+            */
+            return;
+        }
         if(currentMinigame != null){
             currentMinigame.update();
         }
@@ -181,6 +252,12 @@ public class World implements Serializable{
                 }
             });
         });
+        if(isHosting){
+            Master.getServer().send(new ServerMessage(
+                "udate stuff",
+                ServerMessageType.WORLD_UPDATE
+            ));
+        }
     }
     
     public void draw(Graphics g){

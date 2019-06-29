@@ -388,6 +388,7 @@ public class WaitingRoomBackend {
             w.getTeams()[1]
         ));
         w.init();
+        w.setRemoteHost(sm.getSender().getIpAddress());
         
         server.removeReceiver(ServerMessageType.WORLD_INIT, receiveWorldInit);
         
@@ -482,9 +483,7 @@ public class WaitingRoomBackend {
         
         sendWorldInit(w);
         
-        /*
-        remove all of this' receivers from the server
-        */
+        w.setIsHosting(true);
         
         //can change this to switchToPage once world canvas is a Page
         JFrame parent = (JFrame)SwingUtilities.getWindowAncestor(host);

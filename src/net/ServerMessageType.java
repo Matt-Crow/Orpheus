@@ -16,6 +16,8 @@ public enum ServerMessageType {
     PLAYER_DATA("player data"),
     NOTIFY_IDS("notify ids"), //used by WSWaitForPlayers to tell Users what their Team's and Player's IDs are on the host server
     WORLD_INIT("world init"),
+    WORLD_UPDATE("world update"),
+    CONTROL_PRESSED("control pressed"),
     SERVER_SHUTDOWN("END OF LINE"),
     OTHER("other");
     

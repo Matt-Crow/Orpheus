@@ -1,14 +1,11 @@
 package net;
 
 import controllers.Master;
-import controllers.User;
 import java.io.EOFException;
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -16,8 +13,6 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import static java.lang.System.out;
 import java.net.SocketException;
-import java.util.ArrayList;
-import javax.json.Json;
 import javax.json.JsonException;
 import util.SafeList;
 
