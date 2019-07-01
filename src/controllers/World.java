@@ -275,8 +275,8 @@ public class World implements Serializable{
                 SerialUtil.serializeToString(teams),
                 ServerMessageType.WORLD_UPDATE
             ));
-            System.out.println("sent successfully");
-            isHosting = false;
+            //System.out.println("sent successfully");
+            //isHosting = false;
         }
     }
     

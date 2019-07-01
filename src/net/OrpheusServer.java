@@ -245,9 +245,6 @@ public class OrpheusServer {
             
             //something wrong here
             if(receivers.containsKey(sm.getType())){
-                sm.displayData();
-                receivers.get(sm.getType()).forEach(out::println);
-                
                 receivers.get(sm.getType()).forEach((c)->c.accept(sm));
                 dealtWith = true;
             } else {
