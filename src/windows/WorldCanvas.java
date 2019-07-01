@@ -55,8 +55,7 @@ public class WorldCanvas extends DrawingPlane{
         timer.setRepeats(true);
         timer.stop();
         
-        //change this later
-        PlayerControls pc = new PlayerControls(Master.getUser().getPlayer());
+        PlayerControls pc = new PlayerControls(Master.getUser().getPlayer(), world.isRemotelyHosted());
 		addMouseListener(pc);
         pc.registerControlsTo(this);
         if(world.isRemotelyHosted() || world.isHosting()){

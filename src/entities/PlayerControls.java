@@ -1,8 +1,11 @@
 package entities;
 
+import controllers.Master;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import net.ServerMessage;
+import net.ServerMessageType;
 import windows.DrawingPlane;
 import windows.WorldCanvas;
 
@@ -11,28 +14,65 @@ import windows.WorldCanvas;
  * @author Matt Crow
  */
 public class PlayerControls implements MouseListener{
-    Player p;
+    private final Player p;
+    private boolean isRemote;
+    private String receiverIpAddr;
+    
+    public PlayerControls(Player forPlayer, boolean remote){
+        p = forPlayer;
+        isRemote = remote;
+        if(isRemote){
+            receiverIpAddr = p.getWorld().getHostIp();
+        }else{
+            receiverIpAddr = null;
+        }
+    }
     
     public PlayerControls(Player forPlayer){
-        p = forPlayer;
+        this(forPlayer, false);
+    }
+    
+    private void useMelee(){
+        if(isRemote){
+            Master.getServer().send(
+                new ServerMessage(
+                    turnToMouseString() + "\n use melee",
+                    ServerMessageType.CONTROL_PRESSED
+                ), 
+                receiverIpAddr
+            );
+        }else{
+            turnToMouse();
+            p.useMeleeAttack();
+        }
+    }
+    private void useAtt(int i){
+        if(isRemote){
+            Master.getServer().send(
+                new ServerMessage(
+                    turnToMouseString() + "\n use i",
+                    ServerMessageType.CONTROL_PRESSED
+                ), 
+                receiverIpAddr
+            );
+        } else {
+            turnToMouse();
+            p.useAttack(i);
+        }
     }
     
     public void registerControlsTo(DrawingPlane plane){
         plane.registerKey(KeyEvent.VK_Q, true, ()->{
-            turnToMouse();
-            p.useMeleeAttack();
+            useMelee();
         });
         plane.registerKey(KeyEvent.VK_1, true, ()->{
-            turnToMouse();
-            p.useAttack(0);
+            useAtt(0);
         });
         plane.registerKey(KeyEvent.VK_2, true, ()->{
-            turnToMouse();
-            p.useAttack(1);
+            useAtt(1);
         });
         plane.registerKey(KeyEvent.VK_3, true, ()->{
-            turnToMouse();
-            p.useAttack(2);
+            useAtt(2);
         });
     }
     
@@ -40,21 +80,29 @@ public class PlayerControls implements MouseListener{
         WorldCanvas c = p.getWorld().getCanvas();
         p.turnTo(c.getMouseX(), c.getMouseY());
     }
+    private String turnToMouseString(){
+        WorldCanvas c = p.getWorld().getCanvas();
+        return String.format("turn to %d %d", c.getMouseX(), c.getMouseY());
+    }
 
     @Override
     public void mouseClicked(MouseEvent e) {}
 
     @Override
     public void mousePressed(MouseEvent e) {
-        //toggle following the mouse
-        if(p.getFollowingMouse()){
-            p.setFollowingMouse(false);
-            p.setMoving(false);
-        }else{
-            p.setFollowingMouse(true);
-            p.setMoving(true);
+        if(isRemote){
+            Master.getServer().send(
+                new ServerMessage(
+                    "toggle following mouse",
+                    ServerMessageType.CONTROL_PRESSED
+                ), 
+                receiverIpAddr
+            );
+        } else {
+            boolean b = p.getFollowingMouse();
+            p.setFollowingMouse(!b);
+            p.setMoving(!b);
         }
-        
     }
 
     @Override

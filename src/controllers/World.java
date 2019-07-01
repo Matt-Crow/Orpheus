@@ -44,6 +44,7 @@ public class World implements Serializable{
     
     private transient boolean isHosting; //whether or not this is the host of a game, and thus should manage itself for every player
     private transient boolean isRemotelyHosted; //whether or not another computer is running this World
+    private transient String remoteHostIp;
     
     private transient final Consumer<ServerMessage> receiveWorldUpdate;
     
@@ -56,6 +57,7 @@ public class World implements Serializable{
         
         isHosting = false;
         isRemotelyHosted = false;
+        remoteHostIp = null;
         
         receiveWorldUpdate = (sm)->receiveWorldUpdate(sm);
     }
@@ -219,6 +221,7 @@ public class World implements Serializable{
         if(Master.getServer() != null){
             //successfully started
             isRemotelyHosted = true;
+            remoteHostIp = ipAddr;
             Master.getServer().addReceiver(ServerMessageType.WORLD_UPDATE, receiveWorldUpdate);
         }
         return this;
@@ -226,6 +229,10 @@ public class World implements Serializable{
     
     public boolean isRemotelyHosted(){
         return isRemotelyHosted;
+    }
+    
+    public String getHostIp(){
+        return remoteHostIp;
     }
     
     public void init(){
@@ -273,11 +280,12 @@ public class World implements Serializable{
     
     private void receiveWorldUpdate(ServerMessage sm){
         HashMap<Integer, Team> ts = (HashMap<Integer, Team>)SerialUtil.fromSerializedString(sm.getBody());
+        /*
         ts.forEach((i, t)->{
             out.println(i + ": ");
             t.displayData();
         });
-        
+        */
         teams = ts;
     }
     
