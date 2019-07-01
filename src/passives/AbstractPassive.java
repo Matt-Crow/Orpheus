@@ -209,8 +209,8 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
 		}
 	}
 	public OnHitListener getKey(){
-		/*
-        OnHitListener a = (OnHitEvent t) -> {
+		//                 otherwise, this is un-serializable
+        OnHitListener a = (OnHitListener & Serializable)(OnHitEvent t) -> {
             StatusTable inf = getInflict();
             for(int i = 0; i < inf.getSize(); i++){
                 if(getTargetsUser()){
@@ -220,8 +220,8 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
                 }
             }
         };
-		return a;*/
-        return null;
+		return a;
+        //return null;
 	}
     @Override
 	public void update(){
