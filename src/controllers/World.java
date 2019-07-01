@@ -42,11 +42,11 @@ public class World implements Serializable{
     private transient WorldCanvas canvas; //transient means "don't serialize me!"
     private Battle currentMinigame; //in future versions, this will be changed to include other minigames
     
-    private transient boolean isHosting; //whether or not this is the host of a game, and thus should manage itself for every player
-    private transient boolean isRemotelyHosted; //whether or not another computer is running this World
-    private transient String remoteHostIp;
+    private boolean isHosting; //whether or not this is the host of a game, and thus should manage itself for every player
+    private boolean isRemotelyHosted; //whether or not another computer is running this World
+    private String remoteHostIp;
     
-    private transient final Consumer<ServerMessage> receiveWorldUpdate;
+    private final Consumer<ServerMessage> receiveWorldUpdate;
     
     public World(int size){
         teams = new HashMap<>();
