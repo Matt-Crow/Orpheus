@@ -245,6 +245,9 @@ public class OrpheusServer {
             
             //something wrong here
             if(receivers.containsKey(sm.getType())){
+                sm.displayData();
+                receivers.get(sm.getType()).forEach(out::println);
+                
                 receivers.get(sm.getType()).forEach((c)->c.accept(sm));
                 dealtWith = true;
             } else {
@@ -269,6 +272,9 @@ public class OrpheusServer {
      * @see ServerMessage
      */
     public void addReceiver(ServerMessageType key, Consumer<ServerMessage> nomNom){
+        if(nomNom == null){
+            throw new NullPointerException();
+        }
         if(!receivers.containsKey(key)){
             receivers.put(key, new SafeList<Consumer<ServerMessage>>());
         }
