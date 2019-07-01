@@ -10,7 +10,7 @@ import javax.swing.JPanel;
  * @author Matt
  */
 public class SubPage extends JPanel{
-    private final Page inPage; //I'll probably need this somewhere
+    private final Page inPage;
     
     public SubPage(Page p){
         super();

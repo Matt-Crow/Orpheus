@@ -275,21 +275,19 @@ public class World implements Serializable{
                 SerialUtil.serializeToString(teams),
                 ServerMessageType.WORLD_UPDATE
             ));
-            //System.out.println("sent successfully");
-            //isHosting = false;
         }
     }
     
     private void receiveWorldUpdate(ServerMessage sm){
         HashMap<Integer, Team> ts = (HashMap<Integer, Team>)SerialUtil.fromSerializedString(sm.getBody());
         teams = ts;
-        out.println(this + " received update");
+        out.println(this + "world.receiveWorldUpdate");
         Master.getUser().linkToRemotePlayerInWorld(this); //since teams have changed
     }
     
     public void draw(Graphics g){
         currentMap.draw(g);
-        out.println(this + " drew");
+        //out.println(this + " World.draw");
         teams.values().stream().forEach((t)->t.draw(g));
     }
     

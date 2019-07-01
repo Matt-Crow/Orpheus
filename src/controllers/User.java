@@ -74,6 +74,12 @@ public final class User implements JsonSerialable{
         return remotePlayerId;
     }
     
+    /**
+     * Used to re-associate this User with a Player
+     * received from a serialized world
+     * @param w
+     * @return 
+     */
     public User linkToRemotePlayerInWorld(World w){
         setPlayer((TruePlayer)w.getTeamById(remoteTeamId).getMemberById(remotePlayerId));
         return this;
