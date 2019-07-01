@@ -1,12 +1,13 @@
 package ai;
 
+import java.io.Serializable;
 import static java.lang.System.out;
 
 /**
  *
  * @author Matt
  */
-public class PathMinHeap {
+public class PathMinHeap implements Serializable{
     private final int maxSize;
     private final PathInfo[] heap;
     private int firstEmptyIdx;
