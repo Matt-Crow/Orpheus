@@ -61,11 +61,7 @@ public class WSSolo extends AbstractWSNewWorld{
             .addTeam(team1)
             .addTeam(team2);
         
-        Battle b = new Battle(
-            battleWorld.getCanvas(),
-            team1,
-            team2
-        );
+        Battle b = new Battle();
         battleWorld.setCurrentMinigame(b);
         b.setHost(battleWorld);
         

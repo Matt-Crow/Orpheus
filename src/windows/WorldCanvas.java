@@ -187,11 +187,7 @@ public class WorldCanvas extends DrawingPlane{
         f.setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        Battle b = new Battle(
-            c,
-            t1,
-            t2
-        );
+        Battle b = new Battle();
         
         t1.addMember(Master.getUser().getPlayer());
         w.addTeam(t1).addTeam(t2);
@@ -207,11 +203,7 @@ public class WorldCanvas extends DrawingPlane{
         User me = Master.getUser(); //need to set player before calling createCanvas
         me.setPlayer((TruePlayer)newWorld.getTeamById(me.getRemoteTeamId()).getMemberById(me.getRemotePlayerId()));
         newWorld.createCanvas();
-        newWorld.setCurrentMinigame(new Battle(
-            newWorld.getCanvas(),
-            newWorld.getTeams()[0],
-            newWorld.getTeams()[1]
-        ));
+        newWorld.setCurrentMinigame(new Battle());
         newWorld.init();
         
         f.setContentPane(newWorld.getCanvas());

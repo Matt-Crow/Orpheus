@@ -13,7 +13,6 @@ import serialization.JsonSerialable;
 import serialization.JsonUtil;
 
 /**
- * not implemented yet
  * 
  * A User is meant to replace the TruePlayer class.
  * The class represents a real person- not just a Player entity
@@ -73,6 +72,11 @@ public final class User implements JsonSerialable{
     }
     public int getRemotePlayerId(){
         return remotePlayerId;
+    }
+    
+    public User linkToRemotePlayerInWorld(World w){
+        setPlayer((TruePlayer)w.getTeamById(remoteTeamId).getMemberById(remotePlayerId));
+        return this;
     }
     
     /**

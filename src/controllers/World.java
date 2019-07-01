@@ -289,6 +289,7 @@ public class World implements Serializable{
         });
         */
         teams = ts;
+        Master.getUser().linkToRemotePlayerInWorld(this); //since teams have changed
     }
     
     public void draw(Graphics g){

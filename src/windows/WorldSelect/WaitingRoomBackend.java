@@ -381,13 +381,10 @@ public class WaitingRoomBackend {
         World w = World.fromSerializedString(sm.getBody());
         w.setRemoteHost(sm.getSender().getIpAddress());
         User me = Master.getUser(); //need to set player before calling createCanvas
-        me.setPlayer((TruePlayer)w.getTeamById(me.getRemoteTeamId()).getMemberById(me.getRemotePlayerId()));
+        //me.setPlayer((TruePlayer)w.getTeamById(me.getRemoteTeamId()).getMemberById(me.getRemotePlayerId()));
+        me.linkToRemotePlayerInWorld(w);
         w.createCanvas();
-        w.setCurrentMinigame(new Battle(
-            w.getCanvas(),
-            w.getTeams()[0],
-            w.getTeams()[1]
-        ));
+        w.setCurrentMinigame(new Battle());
         w.init();
         
         server.removeReceiver(ServerMessageType.WORLD_INIT, receiveWorldInit);
@@ -472,11 +469,7 @@ public class WaitingRoomBackend {
      */
     private void finallyStart(){
         World w = World.createDefaultBattle();
-        Battle b = new Battle(
-            w.getCanvas(),
-            team1,
-            team2
-        );
+        Battle b = new Battle();
         w.addTeam(team1).addTeam(team2).setCurrentMinigame(b);
         b.setHost(w);
         w.init();

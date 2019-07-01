@@ -1,25 +1,17 @@
 package battle;
 
 import controllers.World;
-import java.awt.Color;
-import java.util.ArrayList;
 import entities.Player;
 import java.io.Serializable;
-import windows.DrawingPlane;
+import java.util.Arrays;
 
 public class Battle implements Serializable{
-	private ArrayList<Team> teams; //TODO: add support for many teams or a free-for-all
 	private World host;
-	private transient final DrawingPlane hostingCanvas;
 	private boolean end;
 	
-	public Battle(DrawingPlane b, Team team1, Team team2){
-		teams = new ArrayList<>();
-		teams.add(team1);
-		teams.add(team2);
-        team1.setEnemy(team2);
-        team2.setEnemy(team1);
-		hostingCanvas = b;
+	public Battle(){
+		host = null;
+        end = false;
 	}
 	
 	public void setHost(World w){
@@ -28,35 +20,45 @@ public class Battle implements Serializable{
 	public World getHost(){
 		return host;
 	}
-	public DrawingPlane getCanvas(){
-		return hostingCanvas;
-	}
 	
 	public void init(){
 		int s = host.getMap().getWidth();
 		int spacingFromTopEdge = Player.RADIUS;
 		int spacingBetween = s / 6;
-		teams.get(0).init(spacingFromTopEdge, spacingBetween, 270);
-		teams.get(1).init(s - spacingFromTopEdge * 2, spacingBetween, 90);
+        Team[] teams = host.getTeams();
+        teams[0].setEnemy(teams[1]);
+		teams[0].init(spacingFromTopEdge, spacingBetween, 270);
+        teams[1].setEnemy(teams[0]);
+		teams[1].init(s - spacingFromTopEdge * 2, spacingBetween, 90);
 		end = false;
 	}
 	
 	public boolean shouldEnd(){
 		return end;
 	}
-	public Team getWinner(){
-		for(Team t : teams){
-			if(!t.isDefeated()){
-				return t;
-			}
-		}
-		return new Team("ERROR", Color.black);
-	}
-	public void update(){
-        for(Team t : teams){
-            if(t.isDefeated()){
-                end = true;
-            }
+    public boolean checkIfOver(){
+        //is only one team not defeated? 
+        return Arrays
+            .stream(host.getTeams())
+            .filter((Team t)->!t.isDefeated())
+            .toArray(size -> new Team[size])
+            .length == 1;
+    }
+    
+    public Team getWinner(){
+        Team ret = null;
+        if(end){
+            ret = Arrays
+            .stream(host.getTeams())
+            .filter((Team t)->!t.isDefeated())
+            .findFirst().get();
         }
-	}
+        return ret;
+    }
+    
+    public void update(){
+        if(checkIfOver()){
+            end = true;
+        }
+    }
 }
