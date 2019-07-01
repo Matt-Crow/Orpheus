@@ -1,10 +1,7 @@
 package windows.WorldSelect;
 
-import java.awt.CardLayout;
 import javax.swing.*;
-import windows.MainCanvas;
 import windows.Page;
-import windows.SubPage;
 
 /**
  *

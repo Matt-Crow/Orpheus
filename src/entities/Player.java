@@ -240,7 +240,7 @@ public class Player extends Entity{
 			p.update();
 		}
 		updateStatuses();
-		getActionRegister().tripOnUpdate();
+		getActionRegister().triggerOnUpdate();
 		log.update();
 		energyLog.update();
 	}

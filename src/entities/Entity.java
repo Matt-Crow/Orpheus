@@ -298,7 +298,7 @@ public abstract class Entity implements Serializable{
 	public final void doUpdate(){
 		if(!shouldTerminate){
 			updateMovement();
-			actReg.tripOnUpdate();
+			actReg.triggerOnUpdate();
             update();
 		}
 	}

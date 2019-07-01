@@ -68,10 +68,10 @@ public class Projectile extends Entity{
 			user.getEnergyLog().gainEnergy(5);
 			p.getActionRegister().tripOnBeMeleeHit(user);
 		} else {
-			user.getActionRegister().tripOnHit(p);
-			p.getActionRegister().tripOnBeHit(user);
+			user.getActionRegister().triggerOnHit(p);
+			p.getActionRegister().triggerOnHitReceived(user);
 		}
-		getActionRegister().tripOnHit(p);
+		getActionRegister().triggerOnHit(p);
         
         if(registeredAttack.containsTag(ActiveTag.KNOCKSBACK)){
             p.knockBack(range, getDir(), Master.seconds(1));

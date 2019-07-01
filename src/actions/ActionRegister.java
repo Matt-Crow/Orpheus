@@ -11,7 +11,7 @@ import java.io.Serializable;
  * It is used by the Player class to store Status effects and passives.
  */
 public class ActionRegister implements Serializable{
-	private Entity registeredTo;
+	private final Entity registeredTo;
 	private ArrayList<OnHitListener> onHitRegister;
 	private ArrayList<OnHitListener> onBeHitRegister;
 	private ArrayList<OnHitListener> onMeleeHitRegister;
@@ -65,13 +65,13 @@ public class ActionRegister implements Serializable{
 	public void addOnUpdate(OnUpdateListener a){
 		onUpdateRegister.add(a);
 	}
-	public void tripOnHit(Player hit){
+	public void triggerOnHit(Player hit){
 		OnHitEvent t = new OnHitEvent(hit, registeredTo);
-		for(OnHitListener a : onHitRegister){
-			a.actionPerformed(t);
-		}
+        onHitRegister.forEach((a) -> {
+            a.actionPerformed(t);
+        });
 	}
-	public void tripOnBeHit(Player hitBy){
+	public void triggerOnHitReceived(Player hitBy){
 		OnHitEvent t = new OnHitEvent(registeredTo, hitBy);
 		for(OnHitListener a : onBeHitRegister){
 			a.actionPerformed(t);
@@ -82,16 +82,16 @@ public class ActionRegister implements Serializable{
 		for(OnHitListener a : onMeleeHitRegister){
 			a.actionPerformed(t);
 		}
-		tripOnHit(hit);
+		triggerOnHit(hit);
 	}
 	public void tripOnBeMeleeHit(Player hitBy){
 		OnHitEvent t = new OnHitEvent(registeredTo, hitBy);
 		for(OnHitListener a : onBeMeleeHitRegister){
 			a.actionPerformed(t);
 		}
-		tripOnBeHit(hitBy);
+		triggerOnHitReceived(hitBy);
 	}
-	public void tripOnUpdate(){
+	public void triggerOnUpdate(){
 		for(OnUpdateListener a : onUpdateRegister){
 			a.actionPerformed(new OnUpdateEvent(registeredTo));
 		}
