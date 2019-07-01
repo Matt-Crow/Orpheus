@@ -282,18 +282,14 @@ public class World implements Serializable{
     
     private void receiveWorldUpdate(ServerMessage sm){
         HashMap<Integer, Team> ts = (HashMap<Integer, Team>)SerialUtil.fromSerializedString(sm.getBody());
-        
-        ts.forEach((i, t)->{
-            out.println(i + ": ");
-            t.displayData();
-        });
-        
         teams = ts;
+        out.println(this + " received update");
         Master.getUser().linkToRemotePlayerInWorld(this); //since teams have changed
     }
     
     public void draw(Graphics g){
         currentMap.draw(g);
+        out.println(this + " drew");
         teams.values().stream().forEach((t)->t.draw(g));
     }
     
