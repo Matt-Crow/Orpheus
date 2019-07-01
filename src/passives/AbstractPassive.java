@@ -209,19 +209,16 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
 		}
 	}
 	public OnHitListener getKey(){
-		OnHitListener a = new OnHitListener(){
-            @Override
-			public void actionPerformed(OnHitEvent t){
-				StatusTable inf = getInflict();
-				for(int i = 0; i < inf.getSize(); i++){
-                    if(getTargetsUser()){
-                        getRegisteredTo().inflict(inf.getStatusAt(i));
-                    } else {
-                        ((Player)t.getWasHit()).inflict(inf.getStatusAt(i));
-                    }
-				}
-			}
-		};
+		OnHitListener a = (OnHitEvent t) -> {
+            StatusTable inf = getInflict();
+            for(int i = 0; i < inf.getSize(); i++){
+                if(getTargetsUser()){
+                    getRegisteredTo().inflict(inf.getStatusAt(i));
+                } else {
+                    ((Player)t.getWasHit()).inflict(inf.getStatusAt(i));
+                }
+            }
+        };
 		return a;
 	}
     @Override

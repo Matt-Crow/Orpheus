@@ -1,9 +1,11 @@
 package actions;
 
+import java.io.Serializable;
+
 /**
  * Used to respond to when an Entity is hit by another.
  */
-public interface OnHitListener {
+public interface OnHitListener extends Serializable{
     
     /**
      * Triggered whenever an Entity is hit by another.
