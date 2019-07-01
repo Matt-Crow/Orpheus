@@ -219,6 +219,6 @@ public class WorldCanvas extends DrawingPlane{
         f.setVisible(true);
         f.revalidate();
         f.repaint();
-        //SerialUtil.fromSerializedString(SerialUtil.serializeToString(t1));
+        SerialUtil.fromSerializedString(SerialUtil.serializeToString(t1));
     }
 }

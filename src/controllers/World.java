@@ -59,7 +59,7 @@ public class World implements Serializable{
         isRemotelyHosted = false;
         remoteHostIp = null;
         
-        receiveWorldUpdate = (sm)->receiveWorldUpdate(sm);
+        receiveWorldUpdate = (Consumer<ServerMessage> & Serializable)(sm)->receiveWorldUpdate(sm);
     }
     
     /**
