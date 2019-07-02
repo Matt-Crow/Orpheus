@@ -6,6 +6,7 @@ import battle.Team;
 import actions.ActionRegister;
 import controllers.World;
 import java.io.Serializable;
+import static java.lang.System.out;
 
 public abstract class Entity implements Serializable{
 	/**
@@ -64,6 +65,13 @@ public abstract class Entity implements Serializable{
         radius = 50;
 		nextId++;
 	}
+    
+    public void detailedDisplayData(){
+        out.println("ENTITY #" + id);
+        out.println("X: " + x);
+        out.println("Y: " + y);
+        out.println("WORLD: " + inWorld);
+    }
     
     @Override
     public final boolean equals(Object o){

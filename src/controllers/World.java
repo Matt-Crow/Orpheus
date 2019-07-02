@@ -285,7 +285,7 @@ public class World implements Serializable{
         currentMap.draw(g);
         out.println(this + " World.draw");
         teams.values().stream().forEach((t)->{
-            t.displayData();
+            t.detailedDisplayData();
             t.draw(g);
         });
     }
