@@ -66,11 +66,7 @@ public class World implements Serializable{
      *  World newWorld = World.createDefaultBattle();
      *  newWorld.addTeam(team1);
      *  newWorld.addTeam(team2);
-     *  Battle battle = new Battle(
-     *      newWorld.getCanvas(),
-     *      team1,
-     *      team2
-     *  );
+     *  Battle battle = new Battle();
      *  newWorld.setCurrentMinigame(battle);
      *  battle.setHost(newWorld);
      *  newWorld.init();
@@ -273,15 +269,25 @@ public class World implements Serializable{
     
     private void receiveWorldUpdate(ServerMessage sm){
         HashMap<Integer, Team> ts = (HashMap<Integer, Team>)SerialUtil.fromSerializedString(sm.getBody());
+        out.println("OLD:");
+        teams.values().stream().forEach(t -> t.displayData());
+        
+        out.println("NEW:");
+        ts.values().stream().forEach(t -> t.displayData());
+        
         teams = ts;
-        out.println(this + "world.receiveWorldUpdate");
+        
+        out.println(this + " world.receiveWorldUpdate");
         Master.getUser().linkToRemotePlayerInWorld(this); //since teams have changed
     }
     
     public void draw(Graphics g){
         currentMap.draw(g);
-        //out.println(this + " World.draw");
-        teams.values().stream().forEach((t)->t.draw(g));
+        out.println(this + " World.draw");
+        teams.values().stream().forEach((t)->{
+            t.displayData();
+            t.draw(g);
+        });
     }
     
     public void displayData(){

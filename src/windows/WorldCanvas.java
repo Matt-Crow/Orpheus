@@ -64,6 +64,8 @@ public class WorldCanvas extends DrawingPlane{
         }else{
             registerKey(KeyEvent.VK_P, true, ()->togglePause());
         }
+        
+        System.out.println("In world canvas, world is " + world);
     }
     public WorldCanvas(int i){
         this(new World(i));
