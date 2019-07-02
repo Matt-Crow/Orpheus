@@ -389,6 +389,9 @@ public class WaitingRoomBackend {
         
         server.removeReceiver(ServerMessageType.WORLD_INIT, receiveWorldInit);
         
+        out.println("in backend, world is " + w);
+        out.println("it's canvas is " + w.getCanvas());
+        
         //can change this to switchToPage once world canvas is a Page
         JFrame parent = (JFrame)SwingUtilities.getWindowAncestor(host);
         parent.setContentPane(w.getCanvas());
