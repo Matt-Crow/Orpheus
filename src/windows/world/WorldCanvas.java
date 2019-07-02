@@ -14,13 +14,14 @@ import customizables.Build;
 import entities.PlayerControls;
 import entities.TruePlayer;
 import java.awt.MouseInfo;
+import java.awt.Point;
 import java.io.IOException;
 import upgradables.AbstractUpgradable;
 import util.SerialUtil;
 import windows.DrawingPlane;
 
 /**
- * Test class for now
+ * 
  * @author Matt Crow
  */
 public class WorldCanvas extends DrawingPlane{
@@ -65,6 +66,7 @@ public class WorldCanvas extends DrawingPlane{
         } else {
             timer.start();
         }
+        repaint();
     }
     private ActionListener update(){
         return (ActionEvent e) -> {
@@ -75,8 +77,8 @@ public class WorldCanvas extends DrawingPlane{
     
     private int[] retTranslate(){
 		int[] ret = new int[2];
-		int x = -Master.getUser().getPlayer().getX() + getW() / 2;
-		int y = -Master.getUser().getPlayer().getY() + getH() / 2;
+		int x = -Master.getUser().getPlayer().getX() + getWidth() / 2;
+		int y = -Master.getUser().getPlayer().getY() + getHeight() / 2;
 		
 		/*
 		int minX = -(battlefield.getWidth() - getW());
@@ -105,9 +107,13 @@ public class WorldCanvas extends DrawingPlane{
      * @return the x coordinate on this canvas where the mouse cursor is located
      */
     public int getMouseX(){
-        int mouseX = (int)MouseInfo.getPointerInfo().getLocation().getX();
+        Point p = getMousePosition();
+        return (p == null) ? 0 : p.x - getLastTransform()[0];
+        /*
+        //int mouseX = this.getMousePosition().x;
+        int mouseX = (int)MouseInfo.getPointerInfo().getLocation().getX() - getX();
         int[] translation = getLastTransform();
-        return mouseX - translation[0];
+        return mouseX - translation[0];*/
     }
     
     /**
@@ -116,9 +122,13 @@ public class WorldCanvas extends DrawingPlane{
      * @return the y coordinate on this canvas where the mouse cursor is located
      */
     public int getMouseY(){
-        int mouseY = (int)MouseInfo.getPointerInfo().getLocation().getY();
+        Point p = getMousePosition();
+        return (p == null) ? 0 : p.y - getLastTransform()[1];
+        /*
+        int mouseY = (int)MouseInfo.getPointerInfo().getLocation().getY() - getY();
+        //mouseY = this.getMousePosition().y;
         int[] translation = getLastTransform();
-        return mouseY - translation[1];
+        return mouseY - translation[1];*/
     }
     
     public World getWorld(){
@@ -134,8 +144,8 @@ public class WorldCanvas extends DrawingPlane{
 		world.draw(getG());
         
 		resetToInit();
-		
-		Master.getUser().getPlayer().drawHUD(getG());
+        
+		Master.getUser().getPlayer().drawHUD(getG(), this);
         
         if(world.getCurrentMinigame() != null && world.getCurrentMinigame().shouldEnd()){
 			drawMatchResolution(getG());

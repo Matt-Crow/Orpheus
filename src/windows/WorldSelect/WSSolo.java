@@ -71,11 +71,5 @@ public class WSSolo extends AbstractWSNewWorld{
         WorldPage wp = new WorldPage();
         wp.setCanvas(battleWorld.getCanvas());
         getHostingPage().switchToPage(wp);
-        /*
-        //can change this to switchToPage once world canvas is a Page
-        JFrame parent = (JFrame)SwingUtilities.getWindowAncestor(this);
-        parent.setContentPane(battleWorld.getCanvas());
-        parent.revalidate();
-        battleWorld.getCanvas().requestFocus();*/
     }
 }

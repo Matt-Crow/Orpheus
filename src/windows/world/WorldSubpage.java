@@ -5,12 +5,10 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.KeyboardFocusManager;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import windows.Page;
 import windows.SubPage;
 
@@ -58,7 +56,7 @@ public class WorldSubpage extends SubPage{
                 w.requestFocusInWindow();
             }
         });
-        w.requestFocusInWindow();
+        SwingUtilities.invokeLater(()->w.requestFocusInWindow());
         chat.logLocal("Currently rendering World " + w.getWorld());
         chat.logLocal("Rendered on WorldCanvas " + w);
         revalidate();

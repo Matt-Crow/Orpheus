@@ -52,13 +52,6 @@ public class DrawingPlane extends JPanel{
 		setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
 		setFocusable(true);
 	}
-	public int getW(){
-		return Master.CANVASWIDTH;
-	}
-	public int getH(){
-		return Master.CANVASHEIGHT;
-	}
-	
 	public int getTX(){
 		return tx;
 	}

@@ -15,6 +15,7 @@ import javax.json.*;
 import javax.swing.*;
 import net.*;
 import serialization.JsonUtil;
+import windows.world.WorldPage;
 
 /**
  * This class provides all the server
@@ -35,6 +36,8 @@ import serialization.JsonUtil;
  * @author Matt Crow
  */
 public class WaitingRoomBackend {
+    public static final int WAIT_TIME = 0; //in seconds
+    
     private final WSWaitForPlayers host;
     private OrpheusServer server;
     
@@ -392,11 +395,9 @@ public class WaitingRoomBackend {
         out.println("in backend, world is " + w);
         out.println("it's canvas is " + w.getCanvas());
         
-        //can change this to switchToPage once world canvas is a Page
-        JFrame parent = (JFrame)SwingUtilities.getWindowAncestor(host);
-        parent.setContentPane(w.getCanvas());
-        parent.revalidate();
-        w.getCanvas().requestFocus();
+        WorldPage p = new WorldPage();
+        p.setCanvas(w.getCanvas());
+        host.getHostingPage().switchToPage(p);
     }
     
     
@@ -404,7 +405,7 @@ public class WaitingRoomBackend {
     /**
      * Begins preparing the server to receive
      * player build information.
-     * After 30 seconds, waits for data before starting the world
+     * After WAIT_TIME seconds, waits for data before starting the world
      */
     public void prepareToStart(){
         gameAboutToStart = true;
@@ -412,7 +413,7 @@ public class WaitingRoomBackend {
         
         server.setAcceptingConn(false);
         server.removeReceiver(ServerMessageType.PLAYER_JOINED, receiveJoin);
-        Timer t = new Timer(30000, (e)->{
+        Timer t = new Timer(WAIT_TIME * 1000, (e)->{
             server.removeReceiver(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
             waitForData();
         });
@@ -481,11 +482,9 @@ public class WaitingRoomBackend {
         
         w.setIsHosting(true);
         
-        //can change this to switchToPage once world canvas is a Page
-        JFrame parent = (JFrame)SwingUtilities.getWindowAncestor(host);
-        parent.setContentPane(w.getCanvas());
-        parent.revalidate();
-        w.getCanvas().requestFocus();
+        WorldPage p = new WorldPage();
+        p.setCanvas(w.getCanvas());
+        host.getHostingPage().switchToPage(p);
     }
     
     /**
