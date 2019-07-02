@@ -278,19 +278,20 @@ public class World implements Serializable{
         */
         teams = ts;
         
+        
+        Master.getUser().linkToRemotePlayerInWorld(this); //since teams have changed
         out.println(this + " world.receiveWorldUpdate");
         out.println(this.canvas);
-        Master.getUser().linkToRemotePlayerInWorld(this); //since teams have changed
     }
     
     public void draw(Graphics g){
         currentMap.draw(g);
         out.println("this world " + ((this.canvas.isDisplayable()) ? " is " : " is not ") + "displayable");
-        out.println(this + " World.draw");
         teams.values().stream().forEach((t)->{
             t.detailedDisplayData();
             t.draw(g);
         });
+        out.println(this + " World.draw");
     }
     
     public void displayData(){
