@@ -10,6 +10,7 @@ import graphics.Tile;
 import java.awt.Color;
 import javax.swing.*;
 import windows.Page;
+import windows.world.WorldPage;
 
 /**
  *
@@ -67,10 +68,14 @@ public class WSSolo extends AbstractWSNewWorld{
         
         battleWorld.init();
         
+        WorldPage wp = new WorldPage();
+        wp.setCanvas(battleWorld.getCanvas());
+        getHostingPage().switchToPage(wp);
+        /*
         //can change this to switchToPage once world canvas is a Page
         JFrame parent = (JFrame)SwingUtilities.getWindowAncestor(this);
         parent.setContentPane(battleWorld.getCanvas());
         parent.revalidate();
-        battleWorld.getCanvas().requestFocus();
+        battleWorld.getCanvas().requestFocus();*/
     }
 }

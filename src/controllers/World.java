@@ -11,7 +11,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.io.IOException;
 import java.io.Serializable;
-import windows.WorldCanvas;
+import windows.world.WorldCanvas;
 import static java.lang.System.out;
 import java.util.HashMap;
 import java.util.function.Consumer;

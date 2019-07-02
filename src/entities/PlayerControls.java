@@ -7,7 +7,7 @@ import java.awt.event.MouseListener;
 import net.ServerMessage;
 import net.ServerMessageType;
 import windows.DrawingPlane;
-import windows.WorldCanvas;
+import windows.world.WorldCanvas;
 
 /**
  *

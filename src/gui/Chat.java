@@ -28,7 +28,7 @@ public class Chat extends JComponent implements ActionListener{
         GridBagConstraints gbc = new GridBagConstraints();
         
         //need to set how many rows and columns it displays, not the size
-        msgs = new JTextArea("###CHAT###", 20, 20);
+        msgs = new JTextArea("###CHAT###", 4, 20);
         msgs.setEditable(false);
         msgs.setWrapStyleWord(true);
         msgs.setLineWrap(true);

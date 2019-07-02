@@ -25,7 +25,7 @@ public class WSMain extends SubPage{
         JButton solo = new JButton("Play a game offline");
         Style.applyStyling(solo);
         solo.addActionListener((e)->{
-            getHostingPage().switchToSubpage(WorldSelectCanvas.SOLO);
+            getHostingPage().switchToSubpage(WorldSelectPage.SOLO);
         });
         return solo;
     }
@@ -34,7 +34,7 @@ public class WSMain extends SubPage{
         JButton newMulti = new JButton("Host a multiplayer game");
         Style.applyStyling(newMulti);
         newMulti.addActionListener((e)->{
-            getHostingPage().switchToSubpage(WorldSelectCanvas.NEW_MULTIPLAYER);
+            getHostingPage().switchToSubpage(WorldSelectPage.NEW_MULTIPLAYER);
         });
         return newMulti;
     }
@@ -43,7 +43,7 @@ public class WSMain extends SubPage{
         JButton joinMulti = new JButton("Join a multiplayer game");
         Style.applyStyling(joinMulti);
         joinMulti.addActionListener((e)->{
-            getHostingPage().switchToSubpage(WorldSelectCanvas.JOIN_MULTIPLAYER);
+            getHostingPage().switchToSubpage(WorldSelectPage.JOIN_MULTIPLAYER);
         });
         return joinMulti;
     }

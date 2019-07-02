@@ -7,13 +7,13 @@ import windows.Page;
  *
  * @author Matt
  */
-public class WorldSelectCanvas extends Page{
+public class WorldSelectPage extends Page{
     public static final String MAIN = "MAIN";
     public static final String SOLO = "SOLO";
     public static final String NEW_MULTIPLAYER = "NEW MULTIPLAYER";
     public static final String JOIN_MULTIPLAYER = "JOIN MULTIPLAYER";
     public static final String WAIT = "WAIT";
-    public WorldSelectCanvas(){
+    public WorldSelectPage(){
         super();
         //addBackButton(new MainCanvas());
         JButton title = new JButton("Select World Type");

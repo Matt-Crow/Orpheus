@@ -1,5 +1,5 @@
 
-package windows;
+package windows.world;
 
 import battle.Battle;
 import controllers.World;
@@ -19,6 +19,8 @@ import upgradables.AbstractUpgradable;
 import gui.Chat;
 import javax.swing.JButton;
 import util.SerialUtil;
+import windows.DrawingPlane;
+import windows.MainCanvas;
 
 /**
  * Test class for now

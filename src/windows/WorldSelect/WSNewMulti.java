@@ -16,7 +16,7 @@ public class WSNewMulti extends AbstractWSNewWorld{
     @Override
     public void start(){
         Master.loginWindow();
-        getHostingPage().switchToSubpage(WorldSelectCanvas.WAIT);
+        getHostingPage().switchToSubpage(WorldSelectPage.WAIT);
         Master.getUser().initPlayer();
         Master.getUser().getPlayer().applyBuild(getSelectedBuild());
         SubPage sp = getHostingPage().getCurrentSubPage();

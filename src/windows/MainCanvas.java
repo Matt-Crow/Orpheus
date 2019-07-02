@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 import battle.Team;
-import windows.WorldSelect.WorldSelectCanvas;
+import windows.WorldSelect.WorldSelectPage;
 
 @SuppressWarnings("serial")
 public class MainCanvas extends DrawingPlane{
@@ -39,7 +39,7 @@ public class MainCanvas extends DrawingPlane{
 		battle.addActionListener(new AbstractAction(){
             @Override
 			public void actionPerformed(ActionEvent e){
-				switchTo(new WorldSelectCanvas());
+				switchTo(new WorldSelectPage());
 			}
 		});
 		add(battle);
