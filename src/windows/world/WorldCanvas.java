@@ -13,18 +13,18 @@ import controllers.User;
 import customizables.Build;
 import entities.PlayerControls;
 import entities.TruePlayer;
-import java.awt.MouseInfo;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.io.IOException;
 import upgradables.AbstractUpgradable;
 import util.SerialUtil;
-import windows.DrawingPlane;
+import windows.Canvas;
 
 /**
  * 
  * @author Matt Crow
  */
-public class WorldCanvas extends DrawingPlane{
+public class WorldCanvas extends Canvas{
     private World world;
     private Timer timer;
     private boolean paused;
@@ -107,13 +107,8 @@ public class WorldCanvas extends DrawingPlane{
      * @return the x coordinate on this canvas where the mouse cursor is located
      */
     public int getMouseX(){
-        Point p = getMousePosition();
-        return (p == null) ? 0 : p.x - getLastTransform()[0];
-        /*
-        //int mouseX = this.getMousePosition().x;
-        int mouseX = (int)MouseInfo.getPointerInfo().getLocation().getX() - getX();
-        int[] translation = getLastTransform();
-        return mouseX - translation[0];*/
+        Point p = getMousePosition(); //returns mouse position on this, or null if it isn't on this
+        return (p == null) ? 0 : p.x - getPriorTx();
     }
     
     /**
@@ -123,12 +118,7 @@ public class WorldCanvas extends DrawingPlane{
      */
     public int getMouseY(){
         Point p = getMousePosition();
-        return (p == null) ? 0 : p.y - getLastTransform()[1];
-        /*
-        int mouseY = (int)MouseInfo.getPointerInfo().getLocation().getY() - getY();
-        //mouseY = this.getMousePosition().y;
-        int[] translation = getLastTransform();
-        return mouseY - translation[1];*/
+        return (p == null) ? 0 : p.y - getPriorTy();
     }
     
     public World getWorld(){
@@ -138,20 +128,20 @@ public class WorldCanvas extends DrawingPlane{
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-		setG(g);
+		Graphics2D g2d = applyTransforms(g);
 		int[] trans = retTranslate();
 		translate(trans[0], trans[1]);
-		world.draw(getG());
+		world.draw(g2d);
         
-		resetToInit();
+		reset();
         
-		Master.getUser().getPlayer().drawHUD(getG(), this);
+		Master.getUser().getPlayer().drawHUD(g2d, this);
         
         if(world.getCurrentMinigame() != null && world.getCurrentMinigame().shouldEnd()){
-			drawMatchResolution(getG());
+			drawMatchResolution(g2d);
         }
         if(paused){
-            drawPause(getG());
+            drawPause(g2d);
         }
     }
     public void drawPause(Graphics g){

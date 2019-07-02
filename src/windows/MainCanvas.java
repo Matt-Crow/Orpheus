@@ -7,7 +7,7 @@ import battle.Team;
 import windows.WorldSelect.WorldSelectPage;
 
 @SuppressWarnings("serial")
-public class MainCanvas extends DrawingPlane{
+public class MainCanvas extends OldContentPage{
 	
 	public MainCanvas(){
 		super();
@@ -33,7 +33,7 @@ public class MainCanvas extends DrawingPlane{
 		});
 		add(newBuild);
 
-        DrawingPlane p = this;
+        OldContentPage p = this;
         
 		JButton battle = new JButton("Battle");
 		battle.addActionListener(new AbstractAction(){

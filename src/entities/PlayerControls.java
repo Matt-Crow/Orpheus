@@ -6,7 +6,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import net.ServerMessage;
 import net.ServerMessageType;
-import windows.DrawingPlane;
+import windows.Canvas;
 import windows.world.WorldCanvas;
 
 /**
@@ -61,7 +61,7 @@ public class PlayerControls implements MouseListener{
         }
     }
     
-    public void registerControlsTo(DrawingPlane plane){
+    public void registerControlsTo(Canvas plane){
         plane.registerKey(KeyEvent.VK_Q, true, ()->{
             useMelee();
         });

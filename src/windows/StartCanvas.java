@@ -6,7 +6,7 @@ import javax.swing.*;
 import static java.lang.System.out;
 
 @SuppressWarnings("serial")
-public class StartCanvas extends DrawingPlane{
+public class StartCanvas extends OldContentPage{
 	public static final long serialVersionUID = 1L;
 	
 	public StartCanvas(){

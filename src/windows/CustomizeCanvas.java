@@ -14,7 +14,7 @@ import java.io.File;
 @SuppressWarnings({"serial", "rawtypes"})
 
 // looks like I'll have to do seperate active and passive customizers
-public class CustomizeCanvas extends DrawingPlane{
+public class CustomizeCanvas extends OldContentPage{
 	
 	private OptionBox<String> upgradableName;
 	private AbstractUpgradable customizing;

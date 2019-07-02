@@ -12,7 +12,7 @@ import passives.*;
 
 //need to redo this
 @SuppressWarnings("serial")
-public class BuildCanvas extends DrawingPlane{
+public class BuildCanvas extends OldContentPage{
 	private OptionBox<String> baseBuild;
 	private UpgradableSelector<CharacterStatName> classSelect;
 	private UpgradableSelector<ActiveStatName>[] actives;
