@@ -20,8 +20,7 @@ public class WorldPage extends Page{
         switchToSubpage("WORLD");
     }
     public WorldPage setCanvas(WorldCanvas w){
-        ((WorldSubpage)getCurrentSubPage())
-            .setCanvas(w);
+        ((WorldSubpage)getCurrentSubPage()).setCanvas(w);
         return this;
     }
 }

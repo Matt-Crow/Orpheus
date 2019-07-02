@@ -16,11 +16,8 @@ import entities.TruePlayer;
 import java.awt.MouseInfo;
 import java.io.IOException;
 import upgradables.AbstractUpgradable;
-import gui.Chat;
-import javax.swing.JButton;
 import util.SerialUtil;
 import windows.DrawingPlane;
-import windows.MainCanvas;
 
 /**
  * Test class for now
@@ -30,27 +27,12 @@ public class WorldCanvas extends DrawingPlane{
     private World world;
     private Timer timer;
     private boolean paused;
-    private Chat chat;
     
     public WorldCanvas(World w){
         super();
         world = w;
         
         w.setCanvas(this);
-        
-        JButton b = new JButton("Exit");
-		b.addActionListener(new AbstractAction(){
-            @Override
-			public void actionPerformed(ActionEvent e){
-                switchTo(new MainCanvas());
-			}
-		});
-		addMenuItem(b);
-		
-        chat = new Chat();
-		add(chat);
-        resizeComponents(10, 10);
-		resizeMenu(1);
         
         paused = true;
         timer = new Timer(1000 / Master.FPS, update());
@@ -137,6 +119,10 @@ public class WorldCanvas extends DrawingPlane{
         int mouseY = (int)MouseInfo.getPointerInfo().getLocation().getY();
         int[] translation = getLastTransform();
         return mouseY - translation[1];
+    }
+    
+    public World getWorld(){
+        return world;
     }
     
     @Override

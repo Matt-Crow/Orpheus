@@ -286,12 +286,12 @@ public class World implements Serializable{
     
     public void draw(Graphics g){
         currentMap.draw(g);
-        out.println("this world " + ((this.canvas.isDisplayable()) ? " is " : " is not ") + "displayable");
+        //out.println("this world " + ((this.canvas.isDisplayable()) ? " is " : " is not ") + "displayable");
         teams.values().stream().forEach((t)->{
-            t.detailedDisplayData();
+            //t.detailedDisplayData();
             t.draw(g);
         });
-        out.println(this + " World.draw");
+        //out.println(this + " World.draw");
     }
     
     public void displayData(){
