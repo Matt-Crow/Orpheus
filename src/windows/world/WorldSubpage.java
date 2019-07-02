@@ -38,26 +38,7 @@ public class WorldSubpage extends SubPage{
         
         canvasArea = new JPanel();
         canvasArea.setBackground(Color.red);
-        canvasArea.addFocusListener(new FocusListener(){
-            @Override
-            public void focusGained(FocusEvent e) {
-                if(canvas != null){
-                    System.out.println("focus");
-                    canvas.requestFocus();
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {}
-        });
-        canvasArea.addMouseListener(new MouseAdapter(){
-            @Override
-            public void mouseClicked(MouseEvent e){
-                System.out.println("click");
-                //canvasArea.requestFocusInWindow();
-            }
-        });
-        canvasArea.setFocusable(true);
+        canvasArea.setFocusable(false);
         canvasArea.setLayout(new GridLayout(1, 1));
         gbc.weighty = 9;
         add(canvasArea, gbc.clone());
@@ -69,9 +50,15 @@ public class WorldSubpage extends SubPage{
     }
     
     public WorldSubpage setCanvas(WorldCanvas w){
-        //canvasArea.removeAll();
+        canvasArea.removeAll();
         canvasArea.add(w);
-        chat.logLocal("success? " + w.requestFocusInWindow());
+        w.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+                w.requestFocusInWindow();
+            }
+        });
+        w.requestFocusInWindow();
         chat.logLocal("Currently rendering World " + w.getWorld());
         chat.logLocal("Rendered on WorldCanvas " + w);
         revalidate();
