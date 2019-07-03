@@ -24,18 +24,6 @@ public class EntityNode implements Serializable{
     }
     
     @Override
-    public EntityNode clone() throws CloneNotSupportedException{
-        EntityNode ret = new EntityNode(manager, entity);//(EntityNode)super.clone(); //not sure if I need this
-        if(prev != null){
-            ret.prev = prev.clone();
-        }
-        if(next != null){
-            ret.next = next.clone();
-        }
-        return ret;
-    }
-    
-    @Override
     public String toString(){
         return "Entity Node Containing Entity #" + entity.id;
     }

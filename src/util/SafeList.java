@@ -29,14 +29,14 @@ public class SafeList<T>{
     private Node<T> tail;
     
     private boolean isIterating;
-    private SafeList<T> newNodes;
+    //private SafeList<T> newNodes;
     
     public SafeList(){
         head = null;
         tail = null;
         
         isIterating = false;
-        newNodes = null;
+        //newNodes = null;
     }
     public SafeList(SafeList<T> sl){
         this();
@@ -49,8 +49,24 @@ public class SafeList<T>{
         }
     }
     
+    /**
+     * Inserts a given value at the front of
+     * the list. That way, if this is being
+     * iterated over, but add is called, it 
+     * will not alter the iteration: Yay no concmod.
+     * @param val the value to add
+     */
     public void add(T val){
-        Node<T> nn = new Node<>(val);
+        if(head == null){
+            Node<T> nn = new Node<>(this, val);
+            head = nn;
+            tail = nn;
+        } else {
+            head.insert(val);
+        }
+        
+        /*
+        Node<T> nn = new Node<>(this, val);
         if(isIterating){
             if(newNodes == null){
                 newNodes = new SafeList<>(this);
@@ -65,15 +81,26 @@ public class SafeList<T>{
                 tail = nn;
             } else {
                 tail.setNext(nn);
-                nn.setPrev(tail);
+                //nn.setPrev(tail);
                 tail = nn;
             }
+        }*/
+    }
+    
+    public void setHead(Node<T> nn){
+        if(nn == null){
+            throw new NullPointerException();
         }
+        Node<T> curr = nn;
+        while(curr.hasParent()){
+            curr = curr.getPrev();
+        }
+        head = curr;
     }
     
     public boolean remove(T val){
         boolean wasRemoved = false;
-        
+        /*
         SafeList<T> removeFrom = this;
         if(isIterating){
             if(newNodes == null){
@@ -109,7 +136,7 @@ public class SafeList<T>{
                 curr = curr.getNext();
             }
         }
-        
+        */
         return wasRemoved;
     }
     
@@ -130,7 +157,7 @@ public class SafeList<T>{
         }else{
             //System.out.println("don't break");
         }
-        
+        /*
         if(newNodes != null){
             head = null;
             tail = null;
@@ -138,13 +165,13 @@ public class SafeList<T>{
                 add(val);
             });
             newNodes = null;
-        }
+        }*/
     }
     
     public void displayData(){
-        SafeList<T> showList = (isIterating) ? newNodes : this;
+        //SafeList<T> showList = (isIterating) ? newNodes : this;
         System.out.println("SAFE LIST:");
-        showList.forEach((T val)->{
+        forEach((T val)->{
             System.out.println("* " + val.toString());
         });
         System.out.println("END OF SAFE LIST");
@@ -160,7 +187,7 @@ public class SafeList<T>{
         ll.forEach((Integer i)->{
             System.out.println(i);
             //ll.add(i * i);
-            ll.remove(i);
+            //ll.remove(i);
             ll.add(i + 1);
             ll.displayData();
         });
