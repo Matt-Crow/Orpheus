@@ -14,9 +14,7 @@ import customizables.Build;
 import entities.PlayerControls;
 import entities.TruePlayer;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.io.IOException;
-import java.util.Arrays;
 import upgradables.AbstractUpgradable;
 import util.SerialUtil;
 import windows.Canvas;
@@ -77,8 +75,8 @@ public class WorldCanvas extends Canvas{
     private int[] retTranslate(){
 		int[] ret = new int[2];
         //new upper left corner
-		int x = (int) ((Master.getUser().getPlayer().getX() - getWidth() / 2)); // / getPriorZoom());
-		int y = (int) ((Master.getUser().getPlayer().getY() - getHeight() / 2));// / getPriorZoom());
+		int x = (int) ((Master.getUser().getPlayer().getX() * getPriorZoom() - getWidth() / 2));
+		int y = (int) ((Master.getUser().getPlayer().getY() * getPriorZoom() - getHeight() / 2));
 		
 		ret[0] = x;
 		ret[1] = y;
@@ -94,8 +92,9 @@ public class WorldCanvas extends Canvas{
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
+        
+        setZoom(0.5);
         int[] trans = retTranslate();
-        //setZoom(0.5);
         translate(-trans[0], -trans[1]);
         
 		Graphics2D g2d = applyTransforms(g);
