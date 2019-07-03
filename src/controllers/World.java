@@ -29,7 +29,7 @@ import util.SerialUtil;
  */
 public class World implements Serializable{
     //key is team ID
-    private HashMap<Integer, Team> teams; //makes it faster to find nearest enemies
+    private volatile HashMap<Integer, Team> teams; //makes it faster to find nearest enemies
     
     private Map currentMap;
     private transient WorldCanvas canvas; //transient means "don't serialize me!"
@@ -260,6 +260,9 @@ public class World implements Serializable{
         
         
         Master.getUser().linkToRemotePlayerInWorld(this); //since teams have changed
+        if(canvas != null){
+            canvas.repaint();
+        }
     }
     
     public void draw(Graphics g){

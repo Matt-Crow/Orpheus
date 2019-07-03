@@ -392,9 +392,6 @@ public class WaitingRoomBackend {
         
         server.removeReceiver(ServerMessageType.WORLD_INIT, receiveWorldInit);
         
-        out.println("in backend, world is " + w);
-        out.println("it's canvas is " + w.getCanvas());
-        
         WorldPage p = new WorldPage();
         p.setCanvas(w.getCanvas());
         host.getHostingPage().switchToPage(p);
@@ -473,6 +470,8 @@ public class WaitingRoomBackend {
      */
     private void finallyStart(){
         World w = World.createDefaultBattle();
+        w.setIsHosting(true);
+        w.createCanvas(); //need to recreate so that togglepause doesn't work
         Battle b = new Battle();
         w.addTeam(team1).addTeam(team2).setCurrentMinigame(b);
         b.setHost(w);
@@ -480,7 +479,7 @@ public class WaitingRoomBackend {
         
         sendWorldInit(w);
         
-        w.setIsHosting(true);
+        
         
         WorldPage p = new WorldPage();
         p.setCanvas(w.getCanvas());
