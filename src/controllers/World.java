@@ -138,26 +138,6 @@ public class World implements Serializable{
     public Battle getCurrentMinigame(){
         return currentMinigame;
     }
-    /*
-    //working here
-    //move all this checking to Map
-    public boolean spawnIntoWorld(Entity e, int x, int y){
-        boolean success = false;
-        int t = Tile.TILE_SIZE;
-        int s = currentMap.getSize();
-        
-        for(int yIdx = y / t; yIdx < worldSize && !success; yIdx++){
-            for(int xIdx = x / t; xIdx < worldSize && !success; xIdx++){
-                
-                if(!tileSet.containsKey(map[xIdx][yIdx]) || !tileSet.get(map[xIdx][yIdx]).getBlocking()){
-                    success = true;
-                    //spawn the entity
-                }
-            }
-        }
-        
-        return success;
-    }*/
     
     /**
      * Sets whether or not this World is
@@ -280,18 +260,13 @@ public class World implements Serializable{
         
         
         Master.getUser().linkToRemotePlayerInWorld(this); //since teams have changed
-        out.println(this.hashCode() + " world.receiveWorldUpdate");
-        out.println(this.canvas.hashCode());
     }
     
     public void draw(Graphics g){
         currentMap.draw(g);
-        //out.println("this world " + ((this.canvas.isDisplayable()) ? " is " : " is not ") + "displayable");
         teams.values().stream().forEach((t)->{
-            //t.detailedDisplayData();
             t.draw(g);
         });
-        //out.println(this + " World.draw");
     }
     
     public void displayData(){
