@@ -16,6 +16,7 @@ import entities.TruePlayer;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.io.IOException;
+import java.util.Arrays;
 import upgradables.AbstractUpgradable;
 import util.SerialUtil;
 import windows.Canvas;
@@ -77,8 +78,9 @@ public class WorldCanvas extends Canvas{
     
     private int[] retTranslate(){
 		int[] ret = new int[2];
-		int x = -Master.getUser().getPlayer().getX() + getWidth() / 2;
-		int y = -Master.getUser().getPlayer().getY() + getHeight() / 2;
+        //new upper left corner
+		int x = (int) ((Master.getUser().getPlayer().getX() - getWidth() / 2) / getPriorZoom());
+		int y = (int) ((Master.getUser().getPlayer().getY() - getHeight() / 2) / getPriorZoom());
 		
 		/*
 		int minX = -(battlefield.getWidth() - getW());
@@ -101,25 +103,7 @@ public class WorldCanvas extends Canvas{
 		return ret;
 	}
     
-    /**
-     * Returns the point on this canvas where the mouse cursor is located,
-     * this does account for translations
-     * @return the x coordinate on this canvas where the mouse cursor is located
-     */
-    public int getMouseX(){
-        Point p = getMousePosition(); //returns mouse position on this, or null if it isn't on this
-        return (p == null) ? 0 : p.x - getPriorTx();
-    }
     
-    /**
-     * Returns the point on this canvas where the mouse cursor is located,
-     * this does account for translations
-     * @return the y coordinate on this canvas where the mouse cursor is located
-     */
-    public int getMouseY(){
-        Point p = getMousePosition();
-        return (p == null) ? 0 : p.y - getPriorTy();
-    }
     
     public World getWorld(){
         return world;
@@ -128,9 +112,11 @@ public class WorldCanvas extends Canvas{
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
+        int[] trans = retTranslate();
+        translate(-getTx() - trans[0], -getTy() - trans[1]);
+        setZoom(0.5);
 		Graphics2D g2d = applyTransforms(g);
-		int[] trans = retTranslate();
-		translate(trans[0], trans[1]);
+		
 		world.draw(g2d);
         
 		reset();

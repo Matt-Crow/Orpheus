@@ -3,6 +3,7 @@ package windows;
 import graphics.CustomColors;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.geom.AffineTransform;
 import javax.swing.AbstractAction;
@@ -58,17 +59,42 @@ public class Canvas extends JPanel{
         return graphics;
     }
     
+    /**
+     * Returns the point on this canvas where the mouse cursor is located,
+     * this does account for translations
+     * @return the x coordinate on this canvas where the mouse cursor is located
+     */
+    public int getMouseX(){
+        Point p = getMousePosition(); //returns mouse position on this, or null if it isn't on this
+        return (int) (((p == null) ? 0 : (p.x - getPriorTx())) / zoom);
+    }
+    
+    /**
+     * Returns the point on this canvas where the mouse cursor is located,
+     * this does account for translations
+     * @return the y coordinate on this canvas where the mouse cursor is located
+     */
+    public int getMouseY(){
+        Point p = getMousePosition();
+        return (int)(((p == null) ? 0 : (p.y - getPriorTy())) / zoom);
+    }
+    
     public final void translate(int x, int y){
         translateX = x;
         translateY = y;
-        graphics.translate(x, y);
+        if(graphics != null){
+            graphics.translate(x, y);
+        }
     }
     public final void setZoom(double z){
         zoom = z;
-        graphics.scale(z, z);
+        if(graphics != null){
+            graphics.scale(z, z);
+        }
     }
     
     public final void reset(){
+        
         priorTx = translateX;
         priorTy = translateY;
         priorZoom = zoom;
@@ -76,7 +102,10 @@ public class Canvas extends JPanel{
         translateX = 0;
         translateY = 0;
         zoom = 1.0;
-        graphics.setTransform(initialTransform);
+        
+        if(graphics != null){
+            graphics.setTransform(initialTransform);
+        }
     }
     
     public final int getTx(){
@@ -90,6 +119,12 @@ public class Canvas extends JPanel{
     }
     public final int getPriorTy(){
         return priorTy;
+    }
+    public final double getZoom(){
+        return zoom;
+    }
+    public final double getPriorZoom(){
+        return priorZoom;
     }
     public final void displayTransforms(){
         System.out.printf("X translation: %d\n", translateX);
