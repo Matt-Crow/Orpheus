@@ -280,8 +280,8 @@ public class World implements Serializable{
         
         
         Master.getUser().linkToRemotePlayerInWorld(this); //since teams have changed
-        out.println(this + " world.receiveWorldUpdate");
-        out.println(this.canvas);
+        out.println(this.hashCode() + " world.receiveWorldUpdate");
+        out.println(this.canvas.hashCode());
     }
     
     public void draw(Graphics g){

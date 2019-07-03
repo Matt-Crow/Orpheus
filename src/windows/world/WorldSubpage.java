@@ -57,8 +57,8 @@ public class WorldSubpage extends SubPage{
             }
         });
         SwingUtilities.invokeLater(()->w.requestFocusInWindow());
-        chat.logLocal("Currently rendering World " + w.getWorld());
-        chat.logLocal("Rendered on WorldCanvas " + w);
+        chat.logLocal("Currently rendering World " + w.getWorld().hashCode());
+        chat.logLocal("Rendered on WorldCanvas " + w.hashCode());
         revalidate();
         repaint();
         return this;

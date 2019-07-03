@@ -51,7 +51,7 @@ public class WorldCanvas extends Canvas{
             registerKey(KeyEvent.VK_P, true, ()->togglePause());
         }
         
-        System.out.println("In world canvas, world is " + world);
+        System.out.println("In world canvas, world is " + world.hashCode());
     }
     public WorldCanvas(int i){
         this(new World(i));
