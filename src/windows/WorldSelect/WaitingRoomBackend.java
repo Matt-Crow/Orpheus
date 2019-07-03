@@ -479,8 +479,6 @@ public class WaitingRoomBackend {
         
         sendWorldInit(w);
         
-        
-        
         WorldPage p = new WorldPage();
         p.setCanvas(w.getCanvas());
         host.getHostingPage().switchToPage(p);
