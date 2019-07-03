@@ -315,7 +315,6 @@ public class WaitingRoomBackend {
         Build b;
         int teamNum;
 
-        out.println(sm.getBody());
         if(team1Proto.containsKey(ip)){
             tp = team1Proto.get(ip).initPlayer().getPlayer();
             teamNum = 1;
@@ -338,15 +337,15 @@ public class WaitingRoomBackend {
         }
         sendIds(ip, (teamNum == 1) ? team1.getId() : team2.getId(), tp.id);
         
-        team1.displayData();
-        team2.displayData();
-
+        //team1.displayData();
+        //team2.displayData();
+        /*
         if(team1.getRosterSize() == teamSize){
             out.println("team 1 is done");
         }
         if(team2.getRosterSize() == teamSize){
             out.println("team 2 is done");
-        }
+        }*/
         if(team1.getRosterSize() == teamSize && team2.getRosterSize() == teamSize){
             server.removeReceiver(ServerMessageType.PLAYER_DATA, receiveBuildInfo);
             finallyStart();
@@ -364,7 +363,7 @@ public class WaitingRoomBackend {
         String[] split = sm.getBody().split(",");
         int tId = Integer.parseInt(split[0].replace("team:", "").trim());
         int pId = Integer.parseInt(split[1].replace("player:", "").trim());
-        System.out.printf("(receiveRemoteIds) OK, so my team's ID is %d, and my player ID is %d, right?", tId, pId);
+        //System.out.printf("(receiveRemoteIds) OK, so my team's ID is %d, and my player ID is %d, right?", tId, pId);
         
         Master.getUser().setRemoteTeamId(tId).setRemotePlayerId(pId);
         
@@ -445,15 +444,15 @@ public class WaitingRoomBackend {
             team2Proto.remove(server.getIpAddr());
         }
         
-        team1.displayData();
-        team2.displayData();
-
+        //team1.displayData();
+        //team2.displayData();
+        /*
         if(team1.getRosterSize() == teamSize){
             out.println("team 1 is done");
         }
         if(team2.getRosterSize() == teamSize){
             out.println("team 2 is done");
-        }
+        }*/
         if(team1.getRosterSize() == teamSize && team2.getRosterSize() == teamSize){
             Master.getServer().removeReceiver(ServerMessageType.PLAYER_DATA, receiveBuildInfo);
             finallyStart();
