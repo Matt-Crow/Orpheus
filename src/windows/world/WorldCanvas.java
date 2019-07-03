@@ -79,25 +79,9 @@ public class WorldCanvas extends Canvas{
     private int[] retTranslate(){
 		int[] ret = new int[2];
         //new upper left corner
-		int x = (int) ((Master.getUser().getPlayer().getX() - getWidth() / 2) / getPriorZoom());
-		int y = (int) ((Master.getUser().getPlayer().getY() - getHeight() / 2) / getPriorZoom());
+		int x = (int) ((Master.getUser().getPlayer().getX() - getWidth() / 2)); // / getPriorZoom());
+		int y = (int) ((Master.getUser().getPlayer().getY() - getHeight() / 2));// / getPriorZoom());
 		
-		/*
-		int minX = -(battlefield.getWidth() - getW());
-		int minY = -(battlefield.getHeight() - getH());
-		
-		if(x < minX){
-			x = minX;
-		} else if (x > 0){
-			x = 0;
-		}
-		
-		if(y < minY){
-			y = minY;
-		} else if (y > 0){
-			y = 0;
-		}
-		*/
 		ret[0] = x;
 		ret[1] = y;
 		return ret;
@@ -113,8 +97,9 @@ public class WorldCanvas extends Canvas{
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         int[] trans = retTranslate();
-        translate(-getTx() - trans[0], -getTy() - trans[1]);
-        setZoom(0.5);
+        //setZoom(0.5);
+        translate(-trans[0], -trans[1]);
+        
 		Graphics2D g2d = applyTransforms(g);
 		
 		world.draw(g2d);
