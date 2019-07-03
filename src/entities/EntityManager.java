@@ -1,6 +1,7 @@
 package entities;
 
 import java.awt.Graphics;
+import java.io.Serializable;
 import java.util.function.Consumer;
 
 /**
@@ -10,7 +11,7 @@ import java.util.function.Consumer;
  * 
  * @author Matt
  */
-public class EntityManager {
+public class EntityManager implements Serializable{
    private EntityNode head;
    private EntityNode tail;
    private boolean isIterating;
