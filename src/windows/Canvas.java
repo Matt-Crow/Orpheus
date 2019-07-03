@@ -18,27 +18,24 @@ import javax.swing.KeyStroke;
  * @author Matt Crow
  */
 public class Canvas extends JPanel{
+    private static final double ZOOM_SPEED = 0.1; 
+    
     private int translateX;
     private int translateY;
-    
-    //previous translations before calling reset
-    private int priorTx;
-    private int priorTy;
-    
     private double zoom;
-    private double priorZoom;
     
     private Graphics2D graphics;
     private AffineTransform initialTransform;
     
+    /**
+     * Creates a canvas, which keeps track of
+     * translations and transformations
+     */
     public Canvas(){
         super();
         translateX = 0;
         translateY = 0;
-        priorTx = 0;
-        priorTy = 0;
         zoom = 1.0;
-        priorZoom = 1.0;
         graphics = null;
         initialTransform = null;
         setBackground(CustomColors.black);
@@ -47,6 +44,9 @@ public class Canvas extends JPanel{
     /**
      * Applies this alterations to the given Graphics object,
      * then returns it as a Graphics2D.
+     * 
+     * You must call this method in order for this transforms and
+     * translations to apply.
      * 
      * @param g the graphics to apply this transforms to
      * @return the newly transformed graphics
@@ -61,22 +61,30 @@ public class Canvas extends JPanel{
     
     /**
      * Returns the point on this canvas where the mouse cursor is located,
-     * this does account for translations
+     * this does account for translations.
+     * 
+     * Note that this doesn't work after reset is invoked, as then this graphics no longer
+     * has this transforms applied
+     * 
      * @return the x coordinate on this canvas where the mouse cursor is located
      */
     public int getMouseX(){
         Point p = getMousePosition(); //returns mouse position on this, or null if it isn't on this
-        return (int) (((p == null) ? 0 : (p.x - getPriorTx()) / priorZoom));
+        return (int) (((p == null) ? 0 : (p.x - translateX) / zoom));
     }
     
     /**
      * Returns the point on this canvas where the mouse cursor is located,
      * this does account for translations
+     * 
+     * Note that this doesn't work after reset is invoked, as then this graphics no longer
+     * has this transforms applied
+     * 
      * @return the y coordinate on this canvas where the mouse cursor is located
      */
     public int getMouseY(){
         Point p = getMousePosition();
-        return (int)(((p == null) ? 0 : (p.y - getPriorTy())) / priorZoom);
+        return (int)(((p == null) ? 0 : (p.y - translateY)) / zoom);
     }
     
     public final void translate(int x, int y){
@@ -86,23 +94,35 @@ public class Canvas extends JPanel{
             graphics.translate(x, y);
         }
     }
+    
     public final void setZoom(double z){
         zoom = z;
         if(graphics != null){
             graphics.scale(z, z);
         }
     }
+    public final void zoomIn(){
+        zoom += ZOOM_SPEED;
+        if(zoom >= 5.0){
+            zoom = 5.0;
+        }
+    }
+    public final void zoomOut(){
+        zoom -= ZOOM_SPEED;
+        if(zoom <= 0.2){
+            zoom = 0.2;
+        }
+    }
     
+    /**
+     * Resets the Graphics object this translations 
+     * were applied to, so that subsequent calls to 
+     * drawing on that graphics object will not be
+     * resized or translated. Use this before drawing
+     * items on this that should be positioned absolutely,
+     * ignoring translations.
+     */
     public final void reset(){
-        
-        priorTx = translateX;
-        priorTy = translateY;
-        priorZoom = zoom;
-        
-        translateX = 0;
-        translateY = 0;
-        zoom = 1.0;
-        
         if(graphics != null){
             graphics.setTransform(initialTransform);
         }
@@ -111,20 +131,11 @@ public class Canvas extends JPanel{
     public final int getTx(){
         return translateX;
     }
-    public final int getPriorTx(){
-        return priorTx;
-    }
     public final int getTy(){
         return translateY;
     }
-    public final int getPriorTy(){
-        return priorTy;
-    }
     public final double getZoom(){
         return zoom;
-    }
-    public final double getPriorZoom(){
-        return priorZoom;
     }
     public final void displayTransforms(){
         System.out.printf("X translation: %d\n", translateX);

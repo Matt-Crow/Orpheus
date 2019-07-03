@@ -32,32 +32,9 @@ public class WSSolo extends AbstractWSNewWorld{
         Master.getUser().getPlayer().applyBuild(getSelectedBuild());
         team1.addMember(Master.getUser().getPlayer());
 
-        World battleWorld = new World(20);
+        World battleWorld = World.createDefaultBattle();
         //it's like a theme park or something
         battleWorld.createCanvas();
-        
-        Map m = new Map(20, 20);
-        Tile block = new Tile(0, 0, Color.red);
-        block.setBlocking(true);
-        m
-            .addToTileSet(0, new Tile(0, 0, Color.BLUE))
-            .addToTileSet(1, block);
-        m
-            .setTile(8, 10, 1)
-            .setTile(8, 11, 1)
-            .setTile(8, 12, 1)
-            .setTile(7, 12, 1)
-            .setTile(7, 13, 1)
-            .setTile(7, 14, 1)
-            .setTile(8, 14, 1)
-            .setTile(9, 14, 1)
-            .setTile(10, 14, 1)
-            .setTile(10, 13, 1)
-            .setTile(10, 10, 1)
-            .setTile(10, 11, 1)
-            .setTile(10, 12, 1);
-        battleWorld.setMap(m);
-        
         battleWorld
             .addTeam(team1)
             .addTeam(team2);

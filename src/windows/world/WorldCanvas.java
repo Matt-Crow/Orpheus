@@ -20,6 +20,9 @@ import util.SerialUtil;
 import windows.Canvas;
 
 /**
+ * P: pause
+ * Z: zoom in
+ * X: zoom out
  * 
  * @author Matt Crow
  */
@@ -48,6 +51,9 @@ public class WorldCanvas extends Canvas{
         }else{
             registerKey(KeyEvent.VK_P, true, ()->togglePause());
         }
+        registerKey(KeyEvent.VK_Z, true, ()->zoomIn());
+        registerKey(KeyEvent.VK_X, true, ()->zoomOut());
+        setZoom(0.75);
     }
     public WorldCanvas(int i){
         this(new World(i));
@@ -72,31 +78,29 @@ public class WorldCanvas extends Canvas{
         };
     }
     
-    private int[] retTranslate(){
-		int[] ret = new int[2];
-        //new upper left corner
-		int x = (int) ((Master.getUser().getPlayer().getX() * getPriorZoom() - getWidth() / 2));
-		int y = (int) ((Master.getUser().getPlayer().getY() * getPriorZoom() - getHeight() / 2));
-		
-		ret[0] = x;
-		ret[1] = y;
-		return ret;
-	}
-    
-    
-    
     public World getWorld(){
         return world;
+    }
+    
+    /**
+     * Centers the "camera" on a given point.
+     * @param x
+     * @param y 
+     */
+    private void centerOn(int x, int y){
+        translate(
+            -(int)(x * getZoom() - getWidth() / 2),
+            -(int)(y * getZoom() -  getHeight() / 2)
+        );
     }
     
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-        
-        setZoom(0.5);
-        int[] trans = retTranslate();
-        translate(-trans[0], -trans[1]);
-        
+        centerOn(
+            Master.getUser().getPlayer().getX(), 
+            Master.getUser().getPlayer().getY()
+        );
 		Graphics2D g2d = applyTransforms(g);
 		
 		world.draw(g2d);
