@@ -66,7 +66,7 @@ public class Canvas extends JPanel{
      */
     public int getMouseX(){
         Point p = getMousePosition(); //returns mouse position on this, or null if it isn't on this
-        return (int) (((p == null) ? 0 : (p.x - getPriorTx())) / zoom);
+        return (int) (((p == null) ? 0 : (p.x - getPriorTx()) / priorZoom));
     }
     
     /**
@@ -76,7 +76,7 @@ public class Canvas extends JPanel{
      */
     public int getMouseY(){
         Point p = getMousePosition();
-        return (int)(((p == null) ? 0 : (p.y - getPriorTy())) / zoom);
+        return (int)(((p == null) ? 0 : (p.y - getPriorTy())) / priorZoom);
     }
     
     public final void translate(int x, int y){
