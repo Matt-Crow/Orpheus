@@ -69,6 +69,8 @@ public class Server {
                             System.out.println(ip);
                         } catch (IOException ex) {
                             ex.printStackTrace();
+                        } catch (ClassNotFoundException ex) {
+                            ex.printStackTrace();
                         }
                     }
                     conn.close();

@@ -177,6 +177,8 @@ public class OrpheusServer {
                             break;
                         } catch (IOException ex) {
                             ex.printStackTrace();
+                        } catch (ClassNotFoundException ex) {
+                            ex.printStackTrace();
                         }
                     }
                     out.println("disconnecting...");
