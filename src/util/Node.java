@@ -53,7 +53,8 @@ public class Node<T> {
      */
     public synchronized void setPrev(Node<T> n){
         if(n == null){
-            throw new NullPointerException();
+            prev = null;
+            return;
         }
         if(n.hasParent() || n.hasChild()){
             throw new IllegalArgumentException("Cannot insert a Node which already has a parent or child");
@@ -75,7 +76,8 @@ public class Node<T> {
      */
     public synchronized void setNext(Node<T> n){
         if(n == null){
-            throw new NullPointerException();
+            next = null;
+            return;
         }
         if(n.hasParent() || n.hasChild()){
             throw new IllegalArgumentException("Cannot insert a Node which already has a parent or child");
@@ -100,7 +102,6 @@ public class Node<T> {
      * Inserts a new Node in front of this one
      * @param data 
      */
-    //nd
     public synchronized void insert(T data){
         if(data == null){
             throw new NullPointerException();
@@ -118,5 +119,25 @@ public class Node<T> {
         }
         prev = nn;
         nn.next = this;
+    }
+    
+    public synchronized void delete(){
+        if(prev == null){
+            container.headIsDead();
+            if(next != null){
+                next.prev = null; 
+            }
+        } else {
+            prev.next = next;
+        }
+        
+        if(next == null){
+            container.tailFailed();
+            if(prev != null){
+                prev.next = null;
+            }
+        } else {
+            next.prev = prev;
+        }
     }
 }
