@@ -31,8 +31,10 @@ public class Connection {
         clientSocket = s;
         //ip = new DataInputStream(new BufferedInputStream(s.getInputStream()));
         //op = new DataOutputStream(new BufferedOutputStream(s.getOutputStream()));
-        objIn = new ObjectInputStream(s.getInputStream());
         objOut = new ObjectOutputStream(s.getOutputStream());
+        System.out.println("done init out");
+        objIn = new ObjectInputStream(s.getInputStream());
+        System.out.println("done init in");
     }
     
     public void writeToClient(String s) throws IOException{
