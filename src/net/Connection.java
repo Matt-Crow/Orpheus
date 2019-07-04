@@ -32,9 +32,7 @@ public class Connection {
         //ip = new DataInputStream(new BufferedInputStream(s.getInputStream()));
         //op = new DataOutputStream(new BufferedOutputStream(s.getOutputStream()));
         objOut = new ObjectOutputStream(s.getOutputStream());
-        System.out.println("done init out");
         objIn = new ObjectInputStream(s.getInputStream());
-        System.out.println("done init in");
     }
     
     public void writeToClient(String s) throws IOException{
