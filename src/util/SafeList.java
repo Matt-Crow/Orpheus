@@ -126,6 +126,16 @@ public class SafeList<T> implements Serializable{
         System.out.println("END OF SAFE LIST");
     }
     
+    public int length(){
+        int ret = 0;
+        Node<T> curr = head;
+        while(curr != null){
+            ret++;
+            curr = curr.getNext();
+        }
+        return ret;
+    }
+    
     
     public static void main(String[] args){
         SafeList<Integer> ll = new SafeList<>();
