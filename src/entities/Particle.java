@@ -3,7 +3,9 @@ package entities;
 import controllers.Master;
 import java.awt.Color;
 import java.awt.Graphics;
+import serialization.NoSerialize;
 
+@NoSerialize
 public class Particle extends Entity{
 	private final Color color;
 	private final int lifeSpan;

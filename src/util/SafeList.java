@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.function.Consumer;
+import serialization.NoSerialize;
 
 /**
  * Provides a variation of a LinkedList that is immune to
@@ -142,31 +143,32 @@ public class SafeList<T> implements Serializable{
         return ret;
     }
     
-    
-    public static void main(String[] args){
-        SafeList<Integer> ll = new SafeList<>();
-        ll.add(1);
-        ll.add(2);
-        ll.add(3);
-        
-        ll.forEach((Integer i)->{
-            System.out.println(i);
-            //ll.add(i * i);
-            ll.remove(i + 1);
-            ll.add(i + 2);
-            ll.displayData();
-        });
-        ll.displayData();
-        System.out.println(ll.isIterating);
-    }
-    
-    //why isn't this saying override notation missing?
-    private void writeObject(ObjectOutputStream oos) throws IOException{
-        oos.writeBoolean(isIterating);
-        oos.writeInt(length()); //how many elements are in the list
+    /**
+     * Gets the number of nodes
+     * contained in this when it
+     * is serialized
+     * @return 
+     */
+    public int serialLength(){
+        int ret = 0;
         Node<T> curr = head;
         while(curr != null){
-            oos.writeObject(curr);
+            if(!curr.getValue().getClass().isAnnotationPresent(NoSerialize.class)){
+                ret++;
+            }
+            curr = curr.getNext();
+        }
+        return ret;
+    }
+    
+    private void writeObject(ObjectOutputStream oos) throws IOException{
+        oos.writeBoolean(isIterating);
+        oos.writeInt(serialLength()); //how many elements are in the list that should be serialized
+        Node<T> curr = head;
+        while(curr != null){
+            if(!curr.getValue().getClass().isAnnotationPresent(NoSerialize.class)){
+                oos.writeObject(curr);
+            }
             curr = curr.getNext();
         }
     }
@@ -186,5 +188,22 @@ public class SafeList<T> implements Serializable{
             }
             nodesRem--;
         }
+    }
+    
+    public static void main(String[] args){
+        SafeList<Integer> ll = new SafeList<>();
+        ll.add(1);
+        ll.add(2);
+        ll.add(3);
+        
+        ll.forEach((Integer i)->{
+            System.out.println(i);
+            //ll.add(i * i);
+            ll.remove(i + 1);
+            ll.add(i + 2);
+            ll.displayData();
+        });
+        ll.displayData();
+        System.out.println(ll.isIterating);
     }
 }

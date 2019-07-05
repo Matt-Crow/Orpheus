@@ -16,6 +16,7 @@ import entities.TruePlayer;
 import java.awt.Graphics2D;
 import java.io.IOException;
 import upgradables.AbstractUpgradable;
+import util.SerialUtil;
 import windows.Canvas;
 
 /**
@@ -172,5 +173,14 @@ public class WorldCanvas extends Canvas{
         f.setVisible(true);
         f.revalidate();
         f.repaint();
+        
+        newWorld.getCanvas().registerKey(KeyEvent.VK_S, true, ()->{
+            Team t = newWorld.getTeams()[0];
+            System.out.println("Total entities: " + t.length());
+            System.out.println("Serialized entities: " + t.serialLength());
+            Team tClone = (Team)SerialUtil.fromSerializedString(SerialUtil.serializeToString(t));
+            System.out.println("Total entities: " + tClone.length());
+            System.out.println("Total entities: " + tClone.serialLength());
+        });
     }
 }
