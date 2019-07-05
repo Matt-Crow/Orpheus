@@ -1,5 +1,7 @@
 package util;
 
+import java.io.Serializable;
+
 /**
  * The Node class is used by
  * SafeList to contain items
@@ -11,10 +13,10 @@ package util;
  * @author Matt Crow
  * @param <T> the type of element this Node will contain
  */
-public class Node<T> {
-    private final SafeList<T> container; 
+public class Node<T> implements Serializable{
+    private transient final SafeList<T> container; 
+    private transient volatile Node<T> prev;
     private volatile Node<T> next;
-    private volatile Node<T> prev;
     private final T val;
     
     /**
@@ -34,6 +36,10 @@ public class Node<T> {
     
     public T getValue(){
         return val;
+    }
+    
+    public SafeList<T> getContainer(){
+        return container;
     }
     
     public boolean hasParent(){
@@ -106,7 +112,7 @@ public class Node<T> {
         if(data == null){
             throw new NullPointerException();
         }
-        if(data.equals(val)){
+        if(data == val){
             throw new IllegalArgumentException(data + " is trying to inserts itself");
         }
         

@@ -3,6 +3,8 @@ package entities;
 import java.awt.Graphics;
 import java.io.Serializable;
 import java.util.function.Consumer;
+import util.Node;
+import util.SafeList;
 
 /**
  * Used to iterate over Entities,
@@ -11,15 +13,18 @@ import java.util.function.Consumer;
  * 
  * @author Matt
  */
-public class EntityManager implements Serializable{
+public class EntityManager extends SafeList<Entity> implements Serializable{
+   /*
    private EntityNode head;
    private EntityNode tail;
    private boolean isIterating;
-   
+   */
    public EntityManager(){
+       super();
+       /*
        head = null;
        tail = null;
-       isIterating = false;
+       isIterating = false;*/
    }
    
    /**
@@ -29,25 +34,30 @@ public class EntityManager implements Serializable{
     * it would also slow this down
     * @param e 
     */
+   @Override
    public void add(Entity e){
+       super.add(e);
+       e.setNode((EntityNode) getHead());
+       /*
        if(head == null){
            EntityNode en = new EntityNode(this, e);
+           e.setNode(en);
            head = en;
            tail = en;
        } else {
            tail.insert(e);
-       }
+       }*/
    }
-   
+   /*
    public void setHead(EntityNode en){
        if(en == null){
            throw new NullPointerException();
        }
-       EntityNode curr = en;
+       Node<Entity> curr = en;
        while(curr.hasParent()){
            curr = curr.getPrev();
        }
-       head = curr;
+       head = (EntityNode) curr;
    }
    
    public void headIsDead(){
@@ -85,7 +95,7 @@ public class EntityManager implements Serializable{
        }
        isIterating = false;
    }
-   
+   */
    public void update(){
        forEach((Entity e)->{
            e.doUpdate();

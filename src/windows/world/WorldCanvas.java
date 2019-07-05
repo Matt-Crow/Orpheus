@@ -14,7 +14,13 @@ import customizables.Build;
 import entities.PlayerControls;
 import entities.TruePlayer;
 import java.awt.Graphics2D;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import upgradables.AbstractUpgradable;
 import util.SerialUtil;
 import windows.Canvas;
@@ -175,7 +181,20 @@ public class WorldCanvas extends Canvas{
         f.repaint();
         
         newWorld.getCanvas().registerKey(KeyEvent.VK_S, true, ()->{
-            SerialUtil.fromSerializedString(SerialUtil.serializeToString(t1));
+            File file = new File("C:/Users/Matt/Desktop/obj.ser");
+            try {
+                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
+                oos.writeObject(SerialUtil.serializeToString(newWorld.getTeams()));
+                oos.close();
+                System.out.println("done serial");
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(WorldCanvas.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(WorldCanvas.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (StackOverflowError ex){
+                ex.printStackTrace();
+            }
+            //SerialUtil.fromSerializedString(SerialUtil.serializeToString(t1));
         });
     }
 }

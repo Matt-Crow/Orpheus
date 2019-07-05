@@ -1,5 +1,6 @@
 package util;
 
+import java.io.Serializable;
 import java.util.function.Consumer;
 
 /**
@@ -12,7 +13,7 @@ import java.util.function.Consumer;
  * @author Matt Crow
  * @param <T> the type of element to include in this list
  */
-public class SafeList<T>{
+public class SafeList<T> implements Serializable{
     private volatile Node<T> head;
     private volatile Node<T> tail;
     private volatile boolean isIterating;
@@ -22,6 +23,10 @@ public class SafeList<T>{
         tail = null;
         
         isIterating = false;
+    }
+    
+    public Node<T> getHead(){
+        return head;
     }
     
     public synchronized void headIsDead(){

@@ -1,33 +1,37 @@
 package entities;
 
 import java.io.Serializable;
+import util.Node;
 
 /**
  * Used by EntityManager to link Entities together
  * @author Matt Crow
  */
-public class EntityNode implements Serializable{
+public class EntityNode extends Node<Entity> implements Serializable{
+    /*
     private final EntityManager manager;
     private final Entity entity;
     private EntityNode prev;
     private EntityNode next;
-    
+    */
     public EntityNode(EntityManager em, Entity e){
+        super(em, e);
+        /*
         if(e == null){
             throw new NullPointerException();
         }
         manager = em;
         entity = e;
-        e.setNode(this);
         prev = null;
-        next = null;
+        next = null;*/
     }
     
     @Override
     public String toString(){
-        return "Entity Node Containing Entity #" + entity.id;
+        return "Entity Node Containing Entity #" + getValue().id;
     }
     
+    /*
     public Entity get(){
         return entity;
     }
@@ -67,7 +71,7 @@ public class EntityNode implements Serializable{
         }
         next = e;
         e.prev = this;
-    }
+    }*/
     
     /**
      * Inserts a node before this one,
@@ -75,18 +79,27 @@ public class EntityNode implements Serializable{
      * that it enters the game
      * @param e
      */
+    @Override
+    public synchronized void insert(Entity e){
+        super.insert(e);
+        e.setNode((EntityNode) getPrev());
+    }
+    /*
     public final void insert(Entity e){
         if(e == null){
             throw new NullPointerException();
         }
-        if(e.equals(entity)){
+        
+        //don't use .equals, as some Entities have the same ID due to serialization
+        if(e == getValue()){
             try {
                 throw new Exception(this + " is trying to add itself as its parent");
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         } else {
-            EntityNode en = new EntityNode(manager, e);
+            EntityNode en = new EntityNode((EntityManager) getContainer(), e);
+            e.setNode(en);
             if(prev == null){
                 manager.setHead(en);
             } else {
@@ -124,5 +137,5 @@ public class EntityNode implements Serializable{
     
     public EntityNode getNext(){
         return next;
-    }
+    }*/
 }
