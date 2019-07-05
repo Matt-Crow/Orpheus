@@ -14,17 +14,8 @@ import customizables.Build;
 import entities.PlayerControls;
 import entities.TruePlayer;
 import java.awt.Graphics2D;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import upgradables.AbstractUpgradable;
-import util.SerialUtil;
 import windows.Canvas;
 
 /**
@@ -181,28 +172,5 @@ public class WorldCanvas extends Canvas{
         f.setVisible(true);
         f.revalidate();
         f.repaint();
-        
-        newWorld.getCanvas().registerKey(KeyEvent.VK_S, true, ()->{
-            File file = new File("C:/Users/Matt/Desktop/obj.ser");
-            try {
-                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
-                oos.writeObject(SerialUtil.serializeToString(newWorld.getTeams()[0]));
-                oos.close();
-                System.out.println("done serial");
-                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("C:/Users/Matt/Desktop/obj.ser")));
-                Team t = (Team) SerialUtil.fromSerializedString((String) ois.readObject());
-                System.out.println(newWorld.getTeams()[0].length());
-                System.out.println(t.length());
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(WorldCanvas.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(WorldCanvas.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (StackOverflowError ex){
-                ex.printStackTrace();
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(WorldCanvas.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            //SerialUtil.fromSerializedString(SerialUtil.serializeToString(t1));
-        });
     }
 }
