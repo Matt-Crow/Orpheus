@@ -7,11 +7,13 @@ import entities.Player;
 import util.Random;
 import util.Coordinates;
 import customizables.Build;
-import entities.EntityManager;
+import entities.Entity;
+import java.awt.Graphics;
 import java.io.Serializable;
 import java.util.function.Consumer;
 import static java.lang.System.out;
 import java.util.HashMap;
+import util.SafeList;
 
 /**
  * The Team class is used to keep track of
@@ -21,7 +23,7 @@ import java.util.HashMap;
  * 
  * @author Matt Crow
  */
-public class Team extends EntityManager implements Serializable{
+public class Team extends SafeList<Entity> implements Serializable{
 	private final String name;
 	private final Color color;
 	private Team enemyTeam;
@@ -92,6 +94,7 @@ public class Team extends EntityManager implements Serializable{
             p.doInit();
             membersRem.add(p);
             add(p);
+            p.setNode(getHead());
 			x += spacing;
 		}
 		defeated = false;
@@ -142,6 +145,22 @@ public class Team extends EntityManager implements Serializable{
     public final void forEachMember(Consumer<Player> f){
         roster.values().stream().forEach((Player p)->f.accept(p));
     }
+    
+    public void update(){
+       forEach((Entity e)->{
+           e.doUpdate();
+       });
+   }
+   
+   public void draw(Graphics g){
+       forEach((Entity e)->e.draw(g));
+   }
+   
+   public void print(){
+       forEach((e)->{
+           System.out.println(e.toString());
+       });
+   }
     
     /**
      * Notifies this that a member is out of the game.

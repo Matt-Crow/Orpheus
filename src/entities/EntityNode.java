@@ -2,6 +2,7 @@ package entities;
 
 import java.io.Serializable;
 import util.Node;
+import util.SafeList;
 
 /**
  * Used by EntityManager to link Entities together
@@ -14,7 +15,7 @@ public class EntityNode extends Node<Entity> implements Serializable{
     private EntityNode prev;
     private EntityNode next;
     */
-    public EntityNode(EntityManager em, Entity e){
+    public EntityNode(SafeList<Entity> em, Entity e){
         super(em, e);
         /*
         if(e == null){
@@ -82,7 +83,7 @@ public class EntityNode extends Node<Entity> implements Serializable{
     @Override
     public synchronized void insert(Entity e){
         super.insert(e);
-        e.setNode((EntityNode) getPrev());
+        e.setNode(getPrev());
     }
     /*
     public final void insert(Entity e){

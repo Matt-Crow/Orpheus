@@ -7,6 +7,7 @@ import actions.ActionRegister;
 import controllers.World;
 import java.io.Serializable;
 import static java.lang.System.out;
+import util.Node;
 
 public abstract class Entity implements Serializable{
 	/**
@@ -54,7 +55,7 @@ public abstract class Entity implements Serializable{
 	private static int nextId = 0;
     
     
-    private EntityNode inNode; //the EntityNode containing this
+    private Node<Entity> inNode; //the EntityNode containing this
     
     private World inWorld; //the world this is currently in
     
@@ -92,11 +93,10 @@ public abstract class Entity implements Serializable{
 	
     
     /**
-     * Invoked by EntityNode
-     * Notifies this that an EntityNode contains this.
-     * @param n the EntityNode containing this
+     * Notifies this that an Node contains this.
+     * @param n the Node containing this
      */
-    public void setNode(EntityNode n){
+    public void setNode(Node<Entity> n){
         inNode = n;
     }
     
@@ -325,6 +325,8 @@ public abstract class Entity implements Serializable{
         e.setWorld(inWorld);
         if(inNode != null){
             inNode.insert(e);
+            //since insert puts the new node in front of this one...
+            e.setNode(inNode.getPrev());
         } else {
             System.out.println("Cannot spawn: Not in a node!!! (Entity.spawn)");
         }
