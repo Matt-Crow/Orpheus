@@ -95,7 +95,6 @@ public class Projectile extends Entity{
         p.doInit();
 		p.initPos(getX(), getY(), degrees);
 		p.setTeam(this.getTeam());
-        //p.insertAfter(this);
         spawn(p);
 	}
 	@Override

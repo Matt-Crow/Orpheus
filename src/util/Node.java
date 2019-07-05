@@ -121,7 +121,7 @@ public class Node<T> implements Serializable{
             container.setHead(nn);
         } else {
             prev.next = nn;
-            nn.prev = next;
+            nn.prev = prev;
         }
         prev = nn;
         nn.next = this;
