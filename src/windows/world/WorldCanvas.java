@@ -145,7 +145,7 @@ public class WorldCanvas extends Canvas{
     public static void main(String[] args) throws IOException{
         AbstractUpgradable.loadAll();
         Build.loadAll();
-        Master.getUser().initPlayer().getPlayer().applyBuild(Build.getBuildByName("Default Fire"));
+        Master.getUser().initPlayer().getPlayer().applyBuild(Build.getBuildByName("Default Earth"));
         World w = World.createDefaultBattle();
         Team t1 = new Team("Test", Color.BLUE);
         Team t2 = Team.constructRandomTeam("Rando", Color.yellow, 1);
@@ -184,7 +184,7 @@ public class WorldCanvas extends Canvas{
             File file = new File("C:/Users/Matt/Desktop/obj.ser");
             try {
                 ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
-                oos.writeObject(SerialUtil.serializeToString(newWorld.getTeams()));
+                oos.writeObject(SerialUtil.serializeToString(newWorld.getTeams()[0]));
                 oos.close();
                 System.out.println("done serial");
             } catch (FileNotFoundException ex) {

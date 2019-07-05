@@ -1,5 +1,8 @@
 package util;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.function.Consumer;
 
@@ -72,7 +75,10 @@ public class SafeList<T> implements Serializable{
             head.insert(val);
         }
     }
-    
+    public void clear(){
+        head = null;
+        tail = null;
+    }
     public synchronized void setHead(Node<T> nn){
         if(nn == null){
             throw new NullPointerException();
@@ -152,5 +158,33 @@ public class SafeList<T> implements Serializable{
         });
         ll.displayData();
         System.out.println(ll.isIterating);
+    }
+    
+    //why isn't this saying override notation missing?
+    private void writeObject(ObjectOutputStream oos) throws IOException{
+        oos.writeBoolean(isIterating);
+        oos.writeInt(length()); //how many elements are in the list
+        Node<T> curr = head;
+        while(curr != null){
+            oos.writeObject(curr);
+            curr = curr.getNext();
+        }
+    }
+    
+    private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException{
+        isIterating = ois.readBoolean();
+        int nodesRem = ois.readInt(); //how many nodes there are left to read
+        Node<T> prev = null;
+        Node<T> curr = null;
+        while(nodesRem != 0){
+            prev = curr;
+            curr = (Node<T>) ois.readObject();
+            if(prev == null){
+                head = curr;
+            } else {
+                prev.setNext(curr);
+            }
+            nodesRem--;
+        }
     }
 }

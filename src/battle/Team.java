@@ -89,6 +89,7 @@ public class Team extends SafeList<Entity> implements Serializable{
 	public void init(int y, int spacing, int facing){
         int x = spacing;
         membersRem.clear();
+        clear();
 		for(Player p : roster.values()){
 			p.initPos(x, y, facing);
             p.doInit();

@@ -32,6 +32,8 @@ public class SerialUtil {
             ret = Base64.getEncoder().encodeToString(byteOut.toByteArray());
         }catch(IOException ex){
             ex.printStackTrace();
+        }catch(StackOverflowError ex){
+            System.err.println("Stack over on " + obj);
         }
         return ret;
     }

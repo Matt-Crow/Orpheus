@@ -16,7 +16,7 @@ import java.io.Serializable;
 public class Node<T> implements Serializable{
     private transient final SafeList<T> container; 
     private transient volatile Node<T> prev;
-    private volatile Node<T> next;
+    private transient volatile Node<T> next;
     private final T val;
     
     /**

@@ -10,6 +10,8 @@ import graphics.Map;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import windows.world.WorldCanvas;
 import static java.lang.System.out;
@@ -308,4 +310,13 @@ public class World implements Serializable{
     public static World fromSerializedString(String s){
         return (World)SerialUtil.fromSerializedString(s);
     }
+
+    /*
+    private void writeObject(ObjectOutputStream oos){
+        
+    }*/
+    /*
+    private void readObject(ObjectInputStream ois){
+        
+    }*/
 }
