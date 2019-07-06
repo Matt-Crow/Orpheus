@@ -66,15 +66,18 @@ public class SafeList<T> implements Serializable{
      * iterated over, but add is called, it 
      * will not alter the iteration: Yay no concmod.
      * @param val the value to add
+     * @return the node which now contains val
      */
-    public synchronized void add(T val){
+    public synchronized Node<T> add(T val){
+        Node<T> nn;
         if(head == null){
-            Node<T> nn = new Node<>(this, val);
+            nn = new Node<>(this, val);
             head = nn;
             tail = nn;
         } else {
-            head.insert(val);
+            nn = head.insert(val);
         }
+        return nn;
     }
     public void clear(){
         head = null;

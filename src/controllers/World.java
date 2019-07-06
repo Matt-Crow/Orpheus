@@ -3,6 +3,7 @@ package controllers;
 import battle.Battle;
 import battle.Team;
 import entities.Entity;
+import entities.Particle;
 import entities.Player;
 import entities.Projectile;
 import graphics.Tile;
@@ -10,8 +11,6 @@ import graphics.Map;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import windows.world.WorldCanvas;
 import static java.lang.System.out;
@@ -19,6 +18,8 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 import net.ServerMessage;
 import net.ServerMessageType;
+import util.Node;
+import util.SafeList;
 import util.SerialUtil;
 
 /**
@@ -33,6 +34,12 @@ public class World implements Serializable{
     //key is team ID
     private volatile HashMap<Integer, Team> teams; //makes it faster to find nearest enemies
     
+    /*
+    Particles slow down the serialization process significantly
+    if they are included in teams, so they must be kept separate.
+    */
+    private transient final SafeList<Particle> particles;
+    
     private Map currentMap;
     private transient WorldCanvas canvas; //transient means "don't serialize me!"
     private Battle currentMinigame; //in future versions, this will be changed to include other minigames
@@ -45,6 +52,8 @@ public class World implements Serializable{
     
     public World(int size){
         teams = new HashMap<>();
+        
+        particles = new SafeList<>();
         
         currentMap = new Map(size, size);
         canvas = null;
@@ -108,6 +117,12 @@ public class World implements Serializable{
     
     public Team[] getTeams(){
         return teams.values().toArray(new Team[teams.size()]);
+    }
+    
+    public World addParticle(Particle p){
+        Node<Particle> nn = particles.add(p);
+        //p.setNode(nn);
+        return this;
     }
     
     public World setMap(Map m){
@@ -207,6 +222,7 @@ public class World implements Serializable{
     }
     
     public void init(){
+        particles.clear();
         if(currentMap != null){
             currentMap.init();
         }
@@ -216,6 +232,7 @@ public class World implements Serializable{
     }
     
     public void update(){
+        particles.forEach((p)->p.doUpdate()); //both host and client must update their particles
         if(isRemotelyHosted){
             /*
             only the host should
@@ -263,6 +280,7 @@ public class World implements Serializable{
         teams.values().stream().forEach((t)->{
             t.draw(g);
         });
+        particles.forEach((p)->p.draw(g));
     }
     
     public void displayData(){

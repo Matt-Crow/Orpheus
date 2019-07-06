@@ -107,8 +107,9 @@ public class Node<T> implements Serializable{
     /**
      * Inserts a new Node in front of this one
      * @param data 
+     * @return the Node containing data, after it has been inserted
      */
-    public synchronized void insert(T data){
+    public synchronized Node<T> insert(T data){
         if(data == null){
             throw new NullPointerException();
         }
@@ -125,6 +126,7 @@ public class Node<T> implements Serializable{
         }
         prev = nn;
         nn.next = this;
+        return nn;
     }
     
     public synchronized void delete(){
