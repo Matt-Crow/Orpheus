@@ -178,7 +178,8 @@ public class WorldCanvas extends Canvas{
             Team t = newWorld.getTeams()[0];
             System.out.println("Total entities: " + t.length());
             System.out.println("Serialized entities: " + t.serialLength());
-            Team tClone = (Team)SerialUtil.fromSerializedString(SerialUtil.serializeToString(t));
+            String s = SerialUtil.serializeToString(t);
+            Team tClone = (Team)SerialUtil.fromSerializedString(s);
             System.out.println("Total entities: " + tClone.length());
             System.out.println("Total entities: " + tClone.serialLength());
         });

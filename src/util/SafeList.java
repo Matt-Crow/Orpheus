@@ -14,6 +14,11 @@ import serialization.NoSerialize;
  * I may also use this class for some of the methods of Player and Entity
  * (managing statuses, action registers, teams, etc)
  * 
+ * One extremely useful thing this class does is automatically 
+ * remove Nodes as their data terminates
+ * @see Node
+ * @see actions.Terminable
+ * 
  * @author Matt Crow
  * @param <T> the type of element to include in this list
  */

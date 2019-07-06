@@ -11,6 +11,8 @@ import graphics.Map;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import windows.world.WorldCanvas;
 import static java.lang.System.out;
@@ -18,7 +20,6 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 import net.ServerMessage;
 import net.ServerMessageType;
-import util.Node;
 import util.SafeList;
 import util.SerialUtil;
 
@@ -38,7 +39,7 @@ public class World implements Serializable{
     Particles slow down the serialization process significantly
     if they are included in teams, so they must be kept separate.
     */
-    private transient final SafeList<Particle> particles;
+    private transient SafeList<Particle> particles;
     
     private Map currentMap;
     private transient WorldCanvas canvas; //transient means "don't serialize me!"
@@ -48,7 +49,7 @@ public class World implements Serializable{
     private boolean isRemotelyHosted; //whether or not another computer is running this World
     private String remoteHostIp;
     
-    private final Consumer<ServerMessage> receiveWorldUpdate;
+    private Consumer<ServerMessage> receiveWorldUpdate;
     
     public World(int size){
         teams = new HashMap<>();
@@ -61,7 +62,7 @@ public class World implements Serializable{
         
         isHosting = false;
         isRemotelyHosted = false;
-        remoteHostIp = null;
+        remoteHostIp = "";
         
         receiveWorldUpdate = (Consumer<ServerMessage> & Serializable)(sm)->receiveWorldUpdate(sm);
     }
@@ -119,9 +120,26 @@ public class World implements Serializable{
         return teams.values().toArray(new Team[teams.size()]);
     }
     
+    /**
+     * Tracks a Particle in the World,
+     * which updates and renders it.
+     * 
+     * The reason particles are kept separate
+     * from other Entities is because from a
+     * game-play standpoint, they act differently:
+     * <ol>
+     *  <li>They don't need a team association</li>
+     *  <li>They don't need to check collisions</li>
+     * </ol>
+     * Also, it drastically slows down the game to check for
+     * particle collisions, but especially to serialize and 
+     * send them.
+     * 
+     * @param p the Particle to add to this
+     * @return this
+     */
     public World addParticle(Particle p){
-        Node<Particle> nn = particles.add(p);
-        //p.setNode(nn);
+        particles.add(p);
         return this;
     }
     
@@ -231,6 +249,7 @@ public class World implements Serializable{
         }
     }
     
+    //TODO: clients need to be able to cause projectiles to create particles
     public void update(){
         particles.forEach((p)->p.doUpdate()); //both host and client must update their particles
         if(isRemotelyHosted){
@@ -329,12 +348,35 @@ public class World implements Serializable{
         return (World)SerialUtil.fromSerializedString(s);
     }
 
-    /*
-    private void writeObject(ObjectOutputStream oos){
+    
+    private void writeObject(ObjectOutputStream oos) throws IOException{
+        oos.writeObject(teams);
+        oos.writeObject(currentMap);
+        oos.writeObject(currentMinigame);
+        oos.writeBoolean(isHosting);
+        oos.writeBoolean(isRemotelyHosted);
+        oos.writeUTF(remoteHostIp);
+        oos.writeObject(receiveWorldUpdate);
+    }
+    
+    private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException{
+        teams = new HashMap<>();
+        HashMap<Integer, Team> HIT = (HashMap<Integer, Team>) ois.readObject();
+        (HIT)
+            .values()
+            .stream()
+            .forEach((Team t)->addTeam(t));
+        setMap((Map) ois.readObject());
+        setCurrentMinigame((Battle) ois.readObject());
+        setIsHosting(ois.readBoolean());
+        isRemotelyHosted = ois.readBoolean();
+        remoteHostIp = ois.readUTF(); //need to keep this, else readObject will read this
+        if(isRemotelyHosted){
+            setRemoteHost(remoteHostIp);
+        }
+        receiveWorldUpdate = (Consumer<ServerMessage>) ois.readObject();
         
-    }*/
-    /*
-    private void readObject(ObjectInputStream ois){
-        
-    }*/
+        particles = new SafeList<>();
+        createCanvas();
+    }
 }

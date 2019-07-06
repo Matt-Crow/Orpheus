@@ -143,7 +143,11 @@ public class Team extends SafeList<Entity> implements Serializable{
      * @param f 
      */
     public final void forEachMember(Consumer<Player> f){
-        roster.values().stream().forEach((Player p)->f.accept(p));
+        f.getClass();
+        roster
+            .values()
+            .stream()
+            .forEach((Player p)->f.accept(p));
     }
     
     public void update(){
