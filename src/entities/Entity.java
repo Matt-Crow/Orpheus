@@ -324,9 +324,7 @@ public abstract class Entity implements Serializable{
         }
         e.setWorld(inWorld);
         if(inNode != null){
-            inNode.insert(e);
-            //since insert puts the new node in front of this one...
-            e.setNode(inNode.getPrev());
+            e.setNode(inNode.insert(e));
             if(e != inNode.getPrev().getValue()){
                 System.err.println("uh oh in Entity.spawn");
             }
