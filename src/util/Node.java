@@ -10,7 +10,7 @@ import java.io.Serializable;
  * in the list. Functions exactly
  * as a linked list node, except this
  * is thread safe, and immune to concurrent
- * modification exceptions
+ * modification exceptions.
  * 
  * @author Matt Crow
  * @param <T> the type of element this Node will contain
@@ -22,6 +22,10 @@ public class Node<T> implements Serializable, TerminateListener{
     private final T val;
     
     /**
+     * Stores the given value in this Node.
+     * If the given value implements Terminable,
+     * once that Object runs all of its termination
+     * listeners, this will delete itself from its parent.
      * 
      * @param parent the SafeList containing this Node.
      * @param value the value this Node should contain.

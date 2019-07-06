@@ -11,11 +11,10 @@ import java.io.Serializable;
 import static java.lang.System.out;
 import util.SafeList;
 
+/**
+ * The Entity class is used as the base for anything that has to interact with players in game
+ */
 public abstract class Entity implements Serializable, Terminable{
-	/**
-	 * The Entity class is used as the base for anything that has to interact with players in game
-	 */
-	
 	/*
 	 * Position fields
 	 * 
@@ -269,10 +268,6 @@ public abstract class Entity implements Serializable, Terminable{
         terminateListeners.forEach((TerminateListener tl)->{
             tl.objectWasTerminated(this);
         });
-        /*
-        if(inNode != null){
-            inNode.delete();
-        }*/
 	}
 	
 	public final boolean getShouldTerminate(){

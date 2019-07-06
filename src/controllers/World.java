@@ -24,21 +24,21 @@ import util.SafeList;
 import util.SerialUtil;
 
 /**
- * The World class will act as a controller for the game.
+ * The World class acts as a controller for each game.
  * It keeps track of all Entities in the game by keeping track of each Team, 
  * which in turn keeps track of various entities
  * 
- * The World will handle all the drawing and updating as well.
+ * The world also keeps track of all Particles, as leaving them lumped in
+ * with Teams leads to drastic performance issues when serializing and checking
+ * for collisions.
+ * 
+ * The World handles all the drawing and updating as well.
  * @author Matt Crow
  */
 public class World implements Serializable{
     //key is team ID
     private volatile HashMap<Integer, Team> teams; //makes it faster to find nearest enemies
     
-    /*
-    Particles slow down the serialization process significantly
-    if they are included in teams, so they must be kept separate.
-    */
     private transient SafeList<Particle> particles;
     
     private Map currentMap;
@@ -120,24 +120,7 @@ public class World implements Serializable{
         return teams.values().toArray(new Team[teams.size()]);
     }
     
-    /**
-     * Tracks a Particle in the World,
-     * which updates and renders it.
-     * 
-     * The reason particles are kept separate
-     * from other Entities is because from a
-     * game-play standpoint, they act differently:
-     * <ol>
-     *  <li>They don't need a team association</li>
-     *  <li>They don't need to check collisions</li>
-     * </ol>
-     * Also, it drastically slows down the game to check for
-     * particle collisions, but especially to serialize and 
-     * send them.
-     * 
-     * @param p the Particle to add to this
-     * @return this
-     */
+    
     public World addParticle(Particle p){
         particles.add(p);
         return this;
@@ -360,12 +343,7 @@ public class World implements Serializable{
     }
     
     private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException{
-        teams = new HashMap<>();
-        HashMap<Integer, Team> HIT = (HashMap<Integer, Team>) ois.readObject();
-        (HIT)
-            .values()
-            .stream()
-            .forEach((Team t)->addTeam(t));
+        teams = (HashMap<Integer, Team>) ois.readObject();
         setMap((Map) ois.readObject());
         setCurrentMinigame((Battle) ois.readObject());
         setIsHosting(ois.readBoolean());
