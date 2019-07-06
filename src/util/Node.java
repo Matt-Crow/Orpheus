@@ -1,5 +1,7 @@
 package util;
 
+import actions.Terminable;
+import actions.TerminateListener;
 import java.io.Serializable;
 
 /**
@@ -13,7 +15,7 @@ import java.io.Serializable;
  * @author Matt Crow
  * @param <T> the type of element this Node will contain
  */
-public class Node<T> implements Serializable{
+public class Node<T> implements Serializable, TerminateListener{
     private transient final SafeList<T> container; 
     private transient volatile Node<T> prev;
     private transient volatile Node<T> next;
@@ -27,6 +29,9 @@ public class Node<T> implements Serializable{
     public Node(SafeList<T> parent, T value){
         if(parent == null || value == null){
             throw new NullPointerException();
+        }
+        if(value instanceof Terminable){
+            ((Terminable)value).addTerminationListener(this);
         }
         container = parent;
         val = value;
@@ -146,6 +151,16 @@ public class Node<T> implements Serializable{
             }
         } else {
             next.prev = prev;
+        }
+    }
+
+    @Override
+    public void objectWasTerminated(Object o) {
+        if(o == val){
+            delete();
+            if(o instanceof Terminable){
+                ((Terminable)o).removeTerminationListener(this);
+            }
         }
     }
 }

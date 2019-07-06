@@ -11,8 +11,7 @@ public interface TerminateListener {
      * Invoked upon the given object
      * terminating.
      * 
-     * @param <T>
      * @param o
      */
-    public <T extends Object & Terminable> void objectWasTerminated(Class<T> o);
+    public void objectWasTerminated(Object o);
 }

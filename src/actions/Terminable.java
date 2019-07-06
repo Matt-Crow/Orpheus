@@ -6,6 +6,6 @@ package actions;
  */
 public interface Terminable {
     public void addTerminationListener(TerminateListener listen);
-    public void removeTerminationListener(TerminateListener listen);
+    public boolean removeTerminationListener(TerminateListener listen);
     public void terminate();
 }

@@ -95,7 +95,6 @@ public class Team extends SafeList<Entity> implements Serializable{
             p.doInit();
             membersRem.add(p);
             add(p);
-            p.setNode(getHead());
 			x += spacing;
 		}
 		defeated = false;

@@ -4,12 +4,14 @@ import java.awt.Graphics;
 import util.Direction;
 import battle.Team;
 import actions.ActionRegister;
+import actions.Terminable;
+import actions.TerminateListener;
 import controllers.World;
 import java.io.Serializable;
 import static java.lang.System.out;
-import util.Node;
+import util.SafeList;
 
-public abstract class Entity implements Serializable{
+public abstract class Entity implements Serializable, Terminable{
 	/**
 	 * The Entity class is used as the base for anything that has to interact with players in game
 	 */
@@ -54,16 +56,15 @@ public abstract class Entity implements Serializable{
 	public final int id;
 	private static int nextId = 0;
     
-    
-    private Node<Entity> inNode; //the EntityNode containing this
+    private final SafeList<TerminateListener> terminateListeners; //you just can't wait for me to die, can you!
     
     private World inWorld; //the world this is currently in
     
 	public Entity(){
 		id = nextId;
-        inNode = null;
         inWorld = null;
         radius = 50;
+        terminateListeners = new SafeList<>();
 		nextId++;
 	}
     
@@ -89,15 +90,6 @@ public abstract class Entity implements Serializable{
     @Override
     public String toString(){
         return "Entity #" + id;
-    }
-	
-    
-    /**
-     * Notifies this that an Node contains this.
-     * @param n the Node containing this
-     */
-    public void setNode(Node<Entity> n){
-        inNode = n;
     }
     
     public void setWorld(World w){
@@ -271,11 +263,16 @@ public abstract class Entity implements Serializable{
     
     //can't be final, as SeedProjectile needs to override
     //add on terminate?
+    @Override
 	public void terminate(){
 		shouldTerminate = true;
+        terminateListeners.forEach((TerminateListener tl)->{
+            tl.objectWasTerminated(this);
+        });
+        /*
         if(inNode != null){
             inNode.delete();
-        }
+        }*/
 	}
 	
 	public final boolean getShouldTerminate(){
@@ -284,6 +281,7 @@ public abstract class Entity implements Serializable{
     
     public final void doInit(){
 		// called by battle
+        terminateListeners.clear();
         knockbackDir = new Direction(0);
         knockbackMag = 0;
         knockbackDur = 0;
@@ -323,17 +321,20 @@ public abstract class Entity implements Serializable{
             throw new NullPointerException();
         }
         e.setWorld(inWorld);
-        if(inNode != null){
-            e.setNode(inNode.insert(e));
-            if(e != inNode.getPrev().getValue()){
-                System.err.println("uh oh in Entity.spawn");
-            }
-        } else {
-            System.out.println("Cannot spawn: Not in a node!!! (Entity.spawn)");
-        }
+        team.add(e);
     }
     
     public abstract void init();
     public abstract void update();
 	public abstract void draw(Graphics g);
+
+    @Override
+    public void addTerminationListener(TerminateListener listen) {
+        terminateListeners.add(listen);
+    }
+
+    @Override
+    public boolean removeTerminationListener(TerminateListener listen) {
+        return terminateListeners.remove(listen);
+    }
 }
