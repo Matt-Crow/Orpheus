@@ -272,8 +272,8 @@ public class World implements Serializable{
         in hostUpdate, so no need to do this
         */
         if(isRemotelyHosted){
-            System.out.println("update particles in client update");
             teams.values().stream().forEach((Team t)->{
+                out.println(t.length());
                 t.forEach((Entity member)->{
                     if(member instanceof Projectile){
                         System.out.println("yay spawn projectils");
