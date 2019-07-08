@@ -304,7 +304,7 @@ public class World implements Serializable{
      * </table>
      */
     public void update(){
-        out.print(" ");
+        Master.getServer().logReceivers();
         if(!isRemotelyHosted){
             hostUpdate();
         }

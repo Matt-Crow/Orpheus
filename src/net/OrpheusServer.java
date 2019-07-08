@@ -320,6 +320,14 @@ public class OrpheusServer {
         out.println("END OF CONNECTIONS");
     }
     
+    public synchronized void logReceivers(){
+        out.println("RECEIVERS:");
+        receivers.forEach((smt, sl)->{
+            out.println(smt.toString() + ": X" + sl.length());
+        });
+        out.println("END OF RECEIVERS");
+    }
+    
     public static void main(String[] args){
         try {
             OrpheusServer os = new OrpheusServer(5000);

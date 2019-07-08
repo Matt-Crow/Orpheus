@@ -383,7 +383,6 @@ public class WaitingRoomBackend {
         World w = World.fromSerializedString(sm.getBody());
         w.setRemoteHost(sm.getIpAddr());
         User me = Master.getUser(); //need to set player before calling createCanvas
-        //me.setPlayer((TruePlayer)w.getTeamById(me.getRemoteTeamId()).getMemberById(me.getRemotePlayerId()));
         me.linkToRemotePlayerInWorld(w);
         w.createCanvas();
         w.setCurrentMinigame(new Battle());
