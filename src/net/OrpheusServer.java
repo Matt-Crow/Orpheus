@@ -1,6 +1,7 @@
 package net;
 
 import controllers.Master;
+import controllers.User;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -14,7 +15,9 @@ import javax.swing.JOptionPane;
 import static java.lang.System.out;
 import java.net.SocketException;
 import javax.json.JsonException;
+import serialization.JsonUtil;
 import util.SafeList;
+import util.SerialUtil;
 
 /**
  * OrpheusServer is a somewhat deceptive title, as this is
@@ -89,7 +92,7 @@ public class OrpheusServer {
                 //out.println("already connected");
             } else {
                 connect(ip);
-                connections.get(ip).setUser(sm.getSender());
+                connections.get(ip).setUser(User.deserializeJson(JsonUtil.fromString(sm.getBody())));
             }
         });
         addReceiver(ServerMessageType.PLAYER_LEFT, (ServerMessage sm)->{
