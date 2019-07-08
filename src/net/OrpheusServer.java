@@ -89,9 +89,14 @@ public class OrpheusServer {
     private void initReceivers(){
         addReceiver(ServerMessageType.PLAYER_JOINED, (ServerMessage sm)->{
             String ip = sm.getIpAddr();
-            if(connections.containsKey(ip)){
-                //out.println("already connected");
+            if(connections.containsKey(ip) && connections.get(ip).getUser() != null){
+                out.println("already connected");
+            } else if(connections.containsKey(ip)){
+                //connected to IP, but no user data
+                connections.get(ip).setUser(User.deserializeJson(JsonUtil.fromString(sm.getBody())));
+                logConnections();
             } else {
+                //not connected, no user data
                 connect(ip);
                 connections.get(ip).setUser(User.deserializeJson(JsonUtil.fromString(sm.getBody())));
                 logConnections();
@@ -101,7 +106,7 @@ public class OrpheusServer {
             String ip = sm.getSender().getIpAddress();
             if(connections.containsKey(ip)){
                 out.println(ip + " left");
-                disconnect(sm.getSender().getIpAddress());
+                disconnect(sm.getIpAddr());
             }else{
                 out.println(ip + " is not connected, so I cannot disconnect from them");
             }
@@ -246,29 +251,23 @@ public class OrpheusServer {
     }
     
     public void receive(String msg){
-        boolean dealtWith = false; //can get rid of this once I'm done with the switch statement
         try{
             ServerMessage sm = ServerMessage.deserializeJson(msg);
             if(connections.containsKey(sm.getIpAddr())){
                sm.setSender(connections.get(sm.getIpAddr()).getUser()); 
+            } else {
+                out.println("I don't recognize " + sm.getIpAddr());
             }
             
             if(receivers.containsKey(sm.getType())){
                 receivers.get(sm.getType()).forEach((c)->c.accept(sm));
-                dealtWith = true;
             } else {
-                dealtWith = false;
+                out.println("What do I do with this? " + msg);
             }
         } catch (JsonException ex){
             out.println("nope. not server message");
             ex.printStackTrace();
         }
-        
-        if(dealtWith){
-            return;
-        }
-        
-        out.println("What do I do with this? " + msg);
     }
     
     /**
@@ -317,7 +316,6 @@ public class OrpheusServer {
     
     public synchronized void logConnections(){
         out.println("CONNECTIONS:");
-        connections.keySet().forEach((ipAddr)->out.println(ipAddr));
         connections.values().stream().forEach((Connection c)->c.displayData());
         out.println("END OF CONNECTIONS");
     }
