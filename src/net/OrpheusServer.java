@@ -94,6 +94,7 @@ public class OrpheusServer {
             } else {
                 connect(ip);
                 connections.get(ip).setUser(User.deserializeJson(JsonUtil.fromString(sm.getBody())));
+                logConnections();
             }
         });
         addReceiver(ServerMessageType.PLAYER_LEFT, (ServerMessage sm)->{
@@ -196,7 +197,7 @@ public class OrpheusServer {
                 Master.getUser().serializeJson().toString(),
                 ServerMessageType.PLAYER_JOINED
             ).toJsonString());
-            
+            logConnections();
         } catch (IOException ex) {
             System.err.println("Failed to connect to client");
             ex.printStackTrace();
@@ -317,6 +318,7 @@ public class OrpheusServer {
     public synchronized void logConnections(){
         out.println("CONNECTIONS:");
         connections.keySet().forEach((ipAddr)->out.println(ipAddr));
+        connections.values().stream().forEach((Connection c)->c.displayData());
         out.println("END OF CONNECTIONS");
     }
     

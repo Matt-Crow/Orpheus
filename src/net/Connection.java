@@ -94,4 +94,9 @@ public class Connection {
     public User getUser(){
         return user;
     }
+    
+    public void displayData(){
+        System.out.print(clientSocket.getInetAddress().getHostAddress() + ": ");
+        System.out.println((user == null) ? "---" : user.getName());
+    }
 }
