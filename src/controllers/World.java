@@ -143,6 +143,9 @@ public class World implements Serializable{
     }
     
     public void setCanvas(WorldCanvas c){
+        if(c == null){
+            throw new NullPointerException();
+        }
         canvas = c;
     }
     public WorldCanvas getCanvas(){
@@ -150,6 +153,9 @@ public class World implements Serializable{
     }
     
     public void setCurrentMinigame(Battle b){
+        if(b == null){
+            throw new NullPointerException();
+        }
         currentMinigame = b;
         b.setHost(this);
     }
@@ -232,21 +238,11 @@ public class World implements Serializable{
         }
     }
     
-    //TODO: clients need to be able to cause projectiles to create particles
-    public void update(){
-        particles.forEach((p)->p.doUpdate()); //both host and client must update their particles
-        if(isRemotelyHosted){
-            /*
-            only the host should
-            update the world
-            */
-            return;
-        }
-        if(currentMinigame != null){
-            currentMinigame.update();
-        }
+    
+    private void hostUpdate(){
         teams.values().stream().forEach((Team t)->{
             t.update();
+            //update particles
             t.forEach((Entity member)->{
                 currentMap.checkForTileCollisions(member);
                 if(t.getEnemy() != null){
@@ -265,6 +261,49 @@ public class World implements Serializable{
                 SerialUtil.serializeToString(teams),
                 ServerMessageType.WORLD_UPDATE
             ));
+        }
+    }
+    private void clientUpdate(){
+        teams.values().stream().forEach((Team t)->{
+            t.forEach((Entity member)->{
+                if(member instanceof Projectile){
+                    //spawn particles
+                }
+            });
+        });
+    }
+    
+    /**
+     * Updates the world, performing functions based on whether or not the
+     * World is being hosted or is hosting:
+     * <table>
+     *  <tr>
+     *      <td>Table</td>
+     *      <td>isHosting</td>
+     *      <td>isn't hosting</td>
+     *  </tr>
+     *  <tr>
+     *      <td>isHosted</td>
+     *      <td>Shouldn't exist</td>
+     *      <td>Only update particles and minigame</td>
+     *  </tr>
+     *  <tr>
+     *      <td>isn't hosted</td>
+     *      <td>update everything, send update message</td>
+     *      <td>Is playing solo, so update everything</td>
+     *  </tr>
+     * </table>
+     */
+    public void update(){
+        if(!isRemotelyHosted){
+            hostUpdate();
+        }
+        if(!isHosting){
+            clientUpdate();
+        }
+        particles.forEach((p)->p.doUpdate()); //both host and client must update their particles
+        if(currentMinigame != null){
+            currentMinigame.update();
         }
     }
     

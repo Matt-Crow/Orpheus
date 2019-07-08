@@ -51,13 +51,13 @@ public abstract class Entity implements Serializable, Terminable{
 	private boolean shouldTerminate;
 	private ActionRegister actReg;
 	
-	// misc
-	public final int id;
-	private static int nextId = 0;
-    
     private final SafeList<TerminateListener> terminateListeners; //you just can't wait for me to die, can you!
     
     private World inWorld; //the world this is currently in
+    
+	// misc
+	public final int id;
+	private static int nextId = 0;
     
 	public Entity(){
 		id = nextId;
