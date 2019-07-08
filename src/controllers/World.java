@@ -394,8 +394,8 @@ public class World implements Serializable{
         oos.writeUTF(remoteHostIp);
         oos.writeObject(receiveWorldUpdate);
         oos.writeObject(receiveControl);
-        oos.writeBoolean(isHosting);
-        oos.writeBoolean(isRemotelyHosted);
+        //oos.writeBoolean(isHosting);
+        //oos.writeBoolean(isRemotelyHosted);
     }
     
     private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException{
@@ -406,11 +406,21 @@ public class World implements Serializable{
         remoteHostIp = ois.readUTF(); //need to keep this, else readObject will read this
         receiveWorldUpdate = (Consumer<ServerMessage>) ois.readObject();
         receiveControl = (Consumer<ServerMessage>) ois.readObject();
+        
+        /*
+        Was having a problem where serializing the world resulted in all users being hosts, as
+        the serialized world was a host: BAD
+        
+        thus, receivers should set whether or not this is a host or remotely hosted themselves
+        */
+        setIsHosting(false);
+        isRemotelyHosted = false;
+        /*
         setIsHosting(ois.readBoolean());
         isRemotelyHosted = ois.readBoolean();
         if(isRemotelyHosted){
             setRemoteHost(remoteHostIp);
-        }
+        }*/
         
         particles = new SafeList<>();
         createCanvas();
