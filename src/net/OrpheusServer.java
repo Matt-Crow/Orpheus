@@ -85,6 +85,7 @@ public class OrpheusServer {
         initReceivers();
     }
     
+    //where do I need to send user data?
     private void initReceivers(){
         addReceiver(ServerMessageType.PLAYER_JOINED, (ServerMessage sm)->{
             String ip = sm.getIpAddr();
