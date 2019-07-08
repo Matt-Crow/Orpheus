@@ -394,6 +394,7 @@ public class World implements Serializable{
         oos.writeBoolean(isRemotelyHosted);
         oos.writeUTF(remoteHostIp);
         oos.writeObject(receiveWorldUpdate);
+        oos.writeObject(receiveControl);
     }
     
     private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException{
@@ -407,6 +408,7 @@ public class World implements Serializable{
             setRemoteHost(remoteHostIp);
         }
         receiveWorldUpdate = (Consumer<ServerMessage>) ois.readObject();
+        receiveControl = (Consumer<ServerMessage>) ois.readObject();
         
         particles = new SafeList<>();
         createCanvas();
