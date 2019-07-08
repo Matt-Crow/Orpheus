@@ -5,7 +5,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.function.Consumer;
-import serialization.NoSerialize;
 
 /**
  * Provides a variation of a LinkedList that is immune to
@@ -151,32 +150,12 @@ public class SafeList<T> implements Serializable{
         return ret;
     }
     
-    /**
-     * Gets the number of nodes
-     * contained in this when it
-     * is serialized
-     * @return 
-     */
-    public int serialLength(){
-        int ret = 0;
-        Node<T> curr = head;
-        while(curr != null){
-            if(!curr.getValue().getClass().isAnnotationPresent(NoSerialize.class)){
-                ret++;
-            }
-            curr = curr.getNext();
-        }
-        return ret;
-    }
-    
     private void writeObject(ObjectOutputStream oos) throws IOException{
         oos.writeBoolean(isIterating);
-        oos.writeInt(serialLength()); //how many elements are in the list that should be serialized
+        oos.writeInt(length()); //how many elements are in the list that should be serialized
         Node<T> curr = head;
         while(curr != null){
-            if(!curr.getValue().getClass().isAnnotationPresent(NoSerialize.class)){
-                oos.writeObject(curr);
-            }
+            oos.writeObject(curr);
             curr = curr.getNext();
         }
     }

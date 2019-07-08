@@ -96,23 +96,15 @@ public class Projectile extends Entity{
 		p.initPos(getX(), getY(), degrees);
 		p.setTeam(this.getTeam());
         getWorld().addParticle(p);
-        //spawn(p);
 	}
-	@Override
-    public void init() {
-        
-    }
     
-    @Override
-	public void update(){
-        distanceTraveled += getMomentum();
-		
-		// need to change range based on projectile type: attack range for seed, aoe for aoeprojectile
-		if(distanceTraveled >= range && !getShouldTerminate()){
-			terminate();
-		}
-		
-		CustomColors[] cs = user.getCharacterClass().getColors();
+    /**
+     * Needs to be kept separate from update,
+     * as update is not invoked by clients.
+     * Update automatically calls this method.
+     */
+    public void spawnParticles(){
+        CustomColors[] cs = user.getCharacterClass().getColors();
 		
 		if(!Master.DISABLEPARTICLES && !getShouldTerminate()){
 			switch(registeredAttack.getParticleType()){
@@ -140,6 +132,22 @@ public class Projectile extends Entity{
 				System.out.println("The particle type of " + registeredAttack.getParticleType() + "is not found for Projectile.java");
 			}
 		}
+    }
+    
+	@Override
+    public void init() {
+        
+    }
+    
+    @Override
+	public void update(){
+        distanceTraveled += getMomentum();
+		
+		// need to change range based on projectile type: attack range for seed, aoe for aoeprojectile
+		if(distanceTraveled >= range && !getShouldTerminate()){
+			terminate();
+		}
+        spawnParticles();
 	}
     
     @Override

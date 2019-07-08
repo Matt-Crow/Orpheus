@@ -242,7 +242,6 @@ public class World implements Serializable{
     private void hostUpdate(){
         teams.values().stream().forEach((Team t)->{
             t.update();
-            //update particles
             t.forEach((Entity member)->{
                 currentMap.checkForTileCollisions(member);
                 if(t.getEnemy() != null){
@@ -264,13 +263,23 @@ public class World implements Serializable{
         }
     }
     private void clientUpdate(){
-        teams.values().stream().forEach((Team t)->{
-            t.forEach((Entity member)->{
-                if(member instanceof Projectile){
-                    //spawn particles
-                }
+        
+        /*
+        Client update is only called if isHosting is false
+        so it runs for both clients and solo players.
+        But, if this is also not remotely hosted, that makes
+        it a solo player, thus, particles have already been spawned
+        in hostUpdate, so no need to do this
+        */
+        if(isRemotelyHosted){
+            teams.values().stream().forEach((Team t)->{
+                t.forEach((Entity member)->{
+                    if(member instanceof Projectile){
+                        ((Projectile)member).spawnParticles();
+                    }
+                });
             });
-        });
+        }
     }
     
     /**

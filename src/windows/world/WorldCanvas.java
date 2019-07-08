@@ -176,12 +176,10 @@ public class WorldCanvas extends Canvas{
         
         newWorld.getCanvas().registerKey(KeyEvent.VK_S, true, ()->{
             Team t = newWorld.getTeams()[0];
-            System.out.println("Total entities: " + t.length());
-            System.out.println("Serialized entities: " + t.serialLength());
+            System.out.println("Total entities to serialize: " + t.length());
             String s = SerialUtil.serializeToString(t);
             Team tClone = (Team)SerialUtil.fromSerializedString(s);
-            System.out.println("Total entities: " + tClone.length());
-            System.out.println("Total entities: " + tClone.serialLength());
+            System.out.println("Total entities deserialized: " + tClone.length());
         });
     }
 }
