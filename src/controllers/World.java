@@ -390,25 +390,26 @@ public class World implements Serializable{
         oos.writeObject(teams);
         oos.writeObject(currentMap);
         oos.writeObject(currentMinigame);
-        oos.writeBoolean(isHosting);
-        oos.writeBoolean(isRemotelyHosted);
         oos.writeUTF(remoteHostIp);
         oos.writeObject(receiveWorldUpdate);
         oos.writeObject(receiveControl);
+        oos.writeBoolean(isHosting);
+        oos.writeBoolean(isRemotelyHosted);
     }
     
     private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException{
         teams = (HashMap<Integer, Team>) ois.readObject();
         setMap((Map) ois.readObject());
         setCurrentMinigame((Battle) ois.readObject());
+        
+        remoteHostIp = ois.readUTF(); //need to keep this, else readObject will read this
+        receiveWorldUpdate = (Consumer<ServerMessage>) ois.readObject();
+        receiveControl = (Consumer<ServerMessage>) ois.readObject();
         setIsHosting(ois.readBoolean());
         isRemotelyHosted = ois.readBoolean();
-        remoteHostIp = ois.readUTF(); //need to keep this, else readObject will read this
         if(isRemotelyHosted){
             setRemoteHost(remoteHostIp);
         }
-        receiveWorldUpdate = (Consumer<ServerMessage>) ois.readObject();
-        receiveControl = (Consumer<ServerMessage>) ois.readObject();
         
         particles = new SafeList<>();
         createCanvas();
