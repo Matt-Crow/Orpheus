@@ -187,7 +187,7 @@ public class WaitingRoomBackend {
      * @param sm 
      */
     private void receiveJoin(ServerMessage sm){
-        String ipAddr = sm.getSender().getIpAddress();
+        String ipAddr = sm.getIpAddr();
         
         JsonObjectBuilder build = Json.createObjectBuilder();
         build.add("type", "waiting room init");
@@ -286,7 +286,7 @@ public class WaitingRoomBackend {
                 host.getSelectedBuild().serializeJson().toString(),
                 ServerMessageType.PLAYER_DATA
             ),
-            sm.getSender().getIpAddress()
+            sm.getIpAddr()
         );
         host.setInputEnabled(false);
         
@@ -310,7 +310,7 @@ public class WaitingRoomBackend {
      * @param sm a server message containing the sender's Build, serialized as a JSON object string
      */
     private void receiveBuildInfo(ServerMessage sm){
-        String ip = sm.getSender().getIpAddress();
+        String ip = sm.getIpAddr();
         TruePlayer tp;
         Build b;
         int teamNum;
@@ -381,7 +381,7 @@ public class WaitingRoomBackend {
      */
     private void receiveWorldInit(ServerMessage sm){
         World w = World.fromSerializedString(sm.getBody());
-        w.setRemoteHost(sm.getSender().getIpAddress());
+        w.setRemoteHost(sm.getIpAddr());
         User me = Master.getUser(); //need to set player before calling createCanvas
         //me.setPlayer((TruePlayer)w.getTeamById(me.getRemoteTeamId()).getMemberById(me.getRemotePlayerId()));
         me.linkToRemotePlayerInWorld(w);

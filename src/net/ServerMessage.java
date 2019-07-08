@@ -16,8 +16,8 @@ import serialization.JsonUtil;
  * @author Matt Crow
  */
 public class ServerMessage implements JsonSerialable{
-    //not sure if I want to do this, as serializing an IP address is a lot easier than a User
-    private final User fromUser;
+    private final String ipAddr;
+    private User fromUser;
     private final String body;
     private final ServerMessageType type;
     
@@ -25,33 +25,43 @@ public class ServerMessage implements JsonSerialable{
      * Creates a message, which will be serialized before being sent to another
      * server.
      * 
-     * @param sender the User this is sent from
+     * @param ipAddress the IP address this was sent from
      * @param bodyText the text of the message
      * @param messageType an enum value representing the type of message this is.
      * the receiving servers will react to this message based upon this type
      */
-    public ServerMessage(User sender, String bodyText, ServerMessageType messageType){
-        fromUser = sender;
+    public ServerMessage(String ipAddress, String bodyText, ServerMessageType messageType){
+        ipAddr = ipAddress;
         body = bodyText;
         type = messageType;
     }
     
     public ServerMessage(String bodyText, ServerMessageType messageType){
         this(
-            Master.getUser(),
+            Master.getUser().getIpAddress(),
             bodyText,
             messageType
         );
+        setSender(Master.getUser());
     }
     
+    /**
+     * Called by OrpheusServer to associate
+     * a logged-in User with this message.
+     * @param u the user to associate this 
+     * message with
+     */
+    public final void setSender(User u){
+        fromUser = u;
+    }
     public final User getSender(){
         return fromUser;
     }
     
-    /*
-    public final String getSenderIpAddr(){
-        return fromIpAddr;
-    }*/
+    
+    public final String getIpAddr(){
+        return ipAddr;
+    }
     
     public final String getBody(){
         return body;
@@ -65,7 +75,7 @@ public class ServerMessage implements JsonSerialable{
     public JsonObject serializeJson() {
         JsonObjectBuilder ret = Json.createObjectBuilder();
         ret.add("type", type.toString());
-        ret.add("from", fromUser.serializeJson());
+        ret.add("from", ipAddr);
         ret.add("body", body);
         return ret.build();
     }
@@ -81,7 +91,7 @@ public class ServerMessage implements JsonSerialable{
         JsonUtil.verify(obj, "from");
         JsonUtil.verify(obj, "body");
         return new ServerMessage(
-            User.deserializeJson(obj.getJsonObject("from")),
+            obj.getString("from"),
             obj.getString("body"),
             ServerMessageType.fromString(obj.getString("type"))
         );
@@ -103,7 +113,10 @@ public class ServerMessage implements JsonSerialable{
     }
     
     public void displayData(){
-        System.out.println("From: " + fromUser.getName());
+        System.out.println("From: " + ipAddr);
+        if(fromUser != null){
+            System.out.println(fromUser);
+        }
         System.out.println("Type: " + type.toString());
         System.out.println("Body: " + body);
         System.out.println("END OF MESSAGE");

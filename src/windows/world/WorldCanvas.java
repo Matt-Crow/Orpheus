@@ -53,7 +53,7 @@ public class WorldCanvas extends Canvas{
         }
         registerKey(KeyEvent.VK_Z, true, ()->zoomIn());
         registerKey(KeyEvent.VK_X, true, ()->zoomOut());
-        setZoom(0.75);
+        setZoom(0.5);
     }
     public WorldCanvas(int i){
         this(new World(i));

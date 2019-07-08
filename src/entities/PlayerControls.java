@@ -50,7 +50,7 @@ public class PlayerControls implements MouseListener{
         if(isRemote){
             Master.getServer().send(
                 new ServerMessage(
-                    turnToMouseString() + "\n use i",
+                    turnToMouseString() + "\n use " + i,
                     ServerMessageType.CONTROL_PRESSED
                 ), 
                 receiverIpAddr
@@ -82,7 +82,30 @@ public class PlayerControls implements MouseListener{
     }
     private String turnToMouseString(){
         WorldCanvas c = p.getWorld().getCanvas();
-        return String.format("turn to %d %d", c.getMouseX(), c.getMouseY());
+        return String.format("turn to %d, %d", c.getMouseX(), c.getMouseY());
+    }
+    private static void decodeTurnToMouseString(Player p, String s){
+        String coords = s.replace("turn to ", "").trim();
+        String[] split = coords.split(",");
+        int x = Integer.parseInt(split[0].trim());
+        int y = Integer.parseInt(split[1].trim());
+        p.turnTo(x, y);
+    }
+    
+    /**
+     * Decodes the body of a server message sent by
+     * this class, and applies the changes contained
+     * in it to the given player
+     * 
+     * @param p
+     * @param s 
+     */
+    public static void decode(Player p, String s){
+        for(String str : s.split("\n")){
+            if(str.contains("turn to")){
+                decodeTurnToMouseString(p, str);
+            }
+        }
     }
 
     @Override

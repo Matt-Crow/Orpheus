@@ -5,6 +5,7 @@ import battle.Team;
 import entities.Entity;
 import entities.Particle;
 import entities.Player;
+import entities.PlayerControls;
 import entities.Projectile;
 import graphics.Tile;
 import graphics.Map;
@@ -50,6 +51,7 @@ public class World implements Serializable{
     private String remoteHostIp;
     
     private Consumer<ServerMessage> receiveWorldUpdate;
+    private Consumer<ServerMessage> receiveControl;
     
     public World(int size){
         teams = new HashMap<>();
@@ -65,6 +67,7 @@ public class World implements Serializable{
         remoteHostIp = "";
         
         receiveWorldUpdate = (Consumer<ServerMessage> & Serializable)(sm)->receiveWorldUpdate(sm);
+        receiveControl = (Consumer<ServerMessage> & Serializable) (sm)->receiveControl(sm);
     }
     
     /**
@@ -323,6 +326,12 @@ public class World implements Serializable{
         if(canvas != null){
             canvas.repaint();
         }
+    }
+    
+    private void receiveControl(ServerMessage sm){
+        Player p = sm.getSender().getPlayer();
+        System.out.println(p);
+        PlayerControls.decode(p, sm.getBody());
     }
     
     public void draw(Graphics g){

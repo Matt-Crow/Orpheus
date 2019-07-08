@@ -244,8 +244,10 @@ public class OrpheusServer {
         boolean dealtWith = false; //can get rid of this once I'm done with the switch statement
         try{
             ServerMessage sm = ServerMessage.deserializeJson(msg);
+            if(connections.containsKey(sm.getIpAddr())){
+               sm.setSender(connections.get(sm.getIpAddr()).getUser()); 
+            }
             
-            //something wrong here
             if(receivers.containsKey(sm.getType())){
                 receivers.get(sm.getType()).forEach((c)->c.accept(sm));
                 dealtWith = true;
