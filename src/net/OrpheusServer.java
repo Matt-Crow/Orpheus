@@ -87,7 +87,7 @@ public class OrpheusServer {
     
     private void initReceivers(){
         addReceiver(ServerMessageType.PLAYER_JOINED, (ServerMessage sm)->{
-            String ip = sm.getSender().getIpAddress();
+            String ip = sm.getIpAddr();
             if(connections.containsKey(ip)){
                 //out.println("already connected");
             } else {

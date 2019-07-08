@@ -185,10 +185,7 @@ public class World implements Serializable{
             }
             if(Master.getServer() != null){
                 isHosting = b;
-                Master.getServer().addReceiver(ServerMessageType.CONTROL_PRESSED, (sm)->{
-                    out.println("World received this in setIsHosting:");
-                    sm.displayData();
-                });
+                Master.getServer().addReceiver(ServerMessageType.CONTROL_PRESSED, receiveControl);
             }
         }
         return this;
