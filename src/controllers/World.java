@@ -273,14 +273,13 @@ public class World implements Serializable{
         */
         if(isRemotelyHosted){
             teams.values().stream().forEach((Team t)->{
-                out.println(t.length());
                 t.forEach((Entity member)->{
                     if(member instanceof Projectile){
-                        System.out.println("yay spawn projectils");
                         ((Projectile)member).spawnParticles();
                     }
                 });
             });
+            out.println("Now I have " + this.particles.length() + " particles");
         }
     }
     
