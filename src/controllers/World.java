@@ -320,29 +320,35 @@ public class World implements Serializable{
     }
     
     private void receiveWorldUpdate(ServerMessage sm){
-        teams.clear();
-        
-        HashMap<Integer, Team> ts = (HashMap<Integer, Team>)SerialUtil.fromSerializedString(sm.getBody());
-        ts.values().stream().forEach((Team t)->addTeam(t));
-        
-        Master.getUser().linkToRemotePlayerInWorld(this); //since teams have changed
-        if(canvas != null){
-            canvas.repaint();
+        synchronized(this){
+            teams.clear();
+
+            HashMap<Integer, Team> ts = (HashMap<Integer, Team>)SerialUtil.fromSerializedString(sm.getBody());
+            ts.values().stream().forEach((Team t)->addTeam(t));
+
+            Master.getUser().linkToRemotePlayerInWorld(this); //since teams have changed
+            if(canvas != null){
+                canvas.repaint();
+            }
         }
     }
     
     private void receiveControl(ServerMessage sm){
-        Player p = sm.getSender().getPlayer();
-        System.out.println(p);
-        PlayerControls.decode(p, sm.getBody());
+        synchronized(this){
+            Player p = sm.getSender().getPlayer();
+            System.out.println(p);
+            PlayerControls.decode(p, sm.getBody());
+        }
     }
     
     public void draw(Graphics g){
-        currentMap.draw(g);
-        teams.values().stream().forEach((t)->{
-            t.draw(g);
-        });
-        particles.forEach((p)->p.draw(g));
+        synchronized(this){
+            currentMap.draw(g);
+            teams.values().stream().forEach((t)->{
+                t.draw(g);
+            });
+            particles.forEach((p)->p.draw(g));
+        }
     }
     
     public void displayData(){
