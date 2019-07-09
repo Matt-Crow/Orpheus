@@ -38,7 +38,10 @@ public class WorldCanvas extends Canvas{
         w.setCanvas(this);
         
         paused = true;
-        timer = new Timer(1000 / Master.FPS, update());
+        timer = new Timer(1000 / Master.FPS, (ActionEvent e) -> {
+            world.update();
+            repaint();
+        });
         timer.setRepeats(true);
         timer.stop();
         
@@ -70,12 +73,6 @@ public class WorldCanvas extends Canvas{
             timer.start();
         }
         repaint();
-    }
-    private ActionListener update(){
-        return (ActionEvent e) -> {
-            world.update();
-            repaint();
-        };
     }
     
     public World getWorld(){
