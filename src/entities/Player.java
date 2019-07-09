@@ -14,7 +14,9 @@ import ai.PlayerAI;
 import statuses.AbstractStatus;
 import controllers.Master;
 import controllers.World;
+import java.util.Arrays;
 import java.util.NoSuchElementException;
+import util.SafeList;
 
 public class Player extends Entity{
 	private final String name;
@@ -28,7 +30,7 @@ public class Player extends Entity{
 	private EnergyLog energyLog;
 	
 	private MeleeActive slash;
-	private ArrayList<AbstractStatus> statuses;
+	private final SafeList<AbstractStatus> statuses;
 	
 	private PlayerAI playerAI;
 	private int lastHitById; //the useId of the last projectile that hit this player
@@ -47,6 +49,7 @@ public class Player extends Entity{
         setRadius(RADIUS);
         followingMouse = false;
         path = null;
+        statuses = new SafeList<>();
 	}
 	
 	public String getName(){
@@ -129,7 +132,11 @@ public class Player extends Entity{
 	public void inflict(AbstractStatus newStat){
 		boolean found = false;
 		boolean shouldReplace = false;
-		for(AbstractStatus s : statuses){
+        AbstractStatus[] objStatuses = Arrays
+            .stream(statuses.toArray())
+            .toArray(size -> new AbstractStatus[size]);
+        
+		for(AbstractStatus s : objStatuses){
 			if(s.getStatusName() == newStat.getStatusName() && !found){
 				// already inflicted
 				found = true;
@@ -185,7 +192,7 @@ public class Player extends Entity{
 		c.init();
 		log = new DamageBacklog(this);
 		energyLog = new EnergyLog(this);
-		statuses = new ArrayList<>();
+		statuses.clear();
 		for(AbstractActive a : actives){
 			a.init();
 		}
@@ -196,16 +203,8 @@ public class Player extends Entity{
 	}
 	
 	public void updateStatuses(){
-		ArrayList<AbstractStatus> newStatuses = new ArrayList<>();
-		for(AbstractStatus s : statuses){
-			if(!s.getShouldTerminate()){
-				newStatuses.add(s);
-			}
-		}
-		statuses = newStatuses;
-		for(AbstractStatus s : statuses){
-			s.inflictOn(this);
-		}
+		//can get rid of this once I get rid of clearing action register
+        statuses.forEach((status)->status.inflictOn(this));
 	}
 	
     @Override
@@ -274,8 +273,9 @@ public class Player extends Entity{
 		
 		g.setColor(Color.black);
 		int y = getY() + h/10;
-		for(AbstractStatus s : statuses){
-			String iStr = "";
+		for(Object obj : statuses.toArray()){
+			AbstractStatus s = (AbstractStatus)obj;
+            String iStr = "";
 			int i = 0;
 			while(i < s.getIntensityLevel()){
 				iStr += "I";

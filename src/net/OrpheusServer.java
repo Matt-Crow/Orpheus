@@ -225,11 +225,7 @@ public class OrpheusServer {
     
     public void send(String msg){
         connections.values().stream().forEach((Connection c)->{
-            try {
-                c.writeToClient(msg);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            c.writeToClient(msg);
         });
     }
     
@@ -240,12 +236,8 @@ public class OrpheusServer {
     public boolean send(ServerMessage sm, String ipAddr){
         boolean success = false;
         if(connections.containsKey(ipAddr)){
-            try {
-                connections.get(ipAddr).writeToClient(sm.toJsonString());
-                success = true;
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            connections.get(ipAddr).writeToClient(sm.toJsonString());
+            success = true;
         }
         return success;
     }

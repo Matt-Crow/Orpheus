@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 /**
@@ -132,6 +133,20 @@ public class SafeList<T> implements Serializable{
         }
     }
     
+    public Object[] toArray(){
+        synchronized(this){
+            //cannot do generic array
+            int len = length();
+            Object[] ret = new Object[len];
+            Node<T> curr = head;
+            for(int i = 0; i < len; i++){
+                ret[i] = curr.getValue();
+                curr = curr.getNext();
+            }
+            return ret;
+        }
+    }
+    
     public void displayData(){
         System.out.println("SAFE LIST:");
         forEach((T val)->{
@@ -191,6 +206,7 @@ public class SafeList<T> implements Serializable{
             ll.displayData();
         });
         ll.displayData();
+        System.out.println(Arrays.toString(ll.toArray()));
         System.out.println(ll.isIterating);
     }
 }
