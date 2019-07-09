@@ -158,6 +158,7 @@ public class WorldCanvas extends Canvas{
         
         w.getCanvas().registerKey(KeyEvent.VK_T, true, ()->{
             Master.getUser().getPlayer().getActionRegister().displayData();
+            Master.getUser().getPlayer().listStatuses();
         });
         
         f.setContentPane(w.getCanvas());

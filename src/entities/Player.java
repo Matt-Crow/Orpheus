@@ -14,6 +14,7 @@ import ai.PlayerAI;
 import statuses.AbstractStatus;
 import controllers.Master;
 import controllers.World;
+import static java.lang.System.out;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import util.SafeList;
@@ -84,7 +85,6 @@ public class Player extends Entity{
         path = p;
         if(!path.noneLeft()){
             PathInfo pi = path.get();
-            // System.out.println(pi);
             setFocus(pi.getEndX(), pi.getEndY());
         }
     }
@@ -132,6 +132,7 @@ public class Player extends Entity{
 	public void inflict(AbstractStatus newStat){
 		boolean found = false;
 		boolean shouldReplace = false;
+        
         AbstractStatus[] objStatuses = Arrays
             .stream(statuses.toArray())
             .toArray(size -> new AbstractStatus[size]);
@@ -243,6 +244,13 @@ public class Player extends Entity{
 		log.update();
 		energyLog.update();
 	}
+    
+    //can get rid of this later
+    public void listStatuses(){
+        out.println("STATUSES:");
+        statuses.forEach((status)->out.println(status.getName()));
+        out.println("End of statues");
+    }
     
     @Override
     public void terminate(){

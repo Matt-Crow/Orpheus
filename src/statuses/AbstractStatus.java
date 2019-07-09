@@ -1,7 +1,9 @@
 package statuses;
 
+import actions.Triggerable;
 import entities.Player;
 import java.io.Serializable;
+import java.util.function.Consumer;
 import util.Number;
 import java.util.function.UnaryOperator;
 
@@ -14,6 +16,7 @@ import java.util.function.UnaryOperator;
  * @see OnHitKey
  * @see Player
  */
+//extends Triggerable<Player> so that when it is deleted from player's action register, it is also removed from their status list
 public abstract class AbstractStatus implements Serializable{
 	private final StatusName code; //the Enum of this status' name
 	private final String name;

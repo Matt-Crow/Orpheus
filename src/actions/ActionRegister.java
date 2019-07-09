@@ -18,7 +18,7 @@ public class ActionRegister implements Serializable{
 	private SafeList<OnHitListener> onBeHitRegister;
 	private SafeList<OnHitListener> onMeleeHitRegister;
 	private SafeList<OnHitListener> onBeMeleeHitRegister;
-	private ArrayList<OnUpdateListener> onUpdateRegister;
+	private SafeList<OnUpdateListener> onUpdateRegister;
 	
     /**
      * Stores Listeners for an Entity.
@@ -30,7 +30,7 @@ public class ActionRegister implements Serializable{
 		onBeHitRegister = new SafeList<>();
 		onMeleeHitRegister = new SafeList<>();
 		onBeMeleeHitRegister = new SafeList<>();
-		onUpdateRegister = new ArrayList<>();
+		onUpdateRegister = new SafeList<>();
 	}
     
     /**
@@ -86,16 +86,15 @@ public class ActionRegister implements Serializable{
 		triggerOnHitReceived(hitBy);
 	}
 	public void triggerOnUpdate(){
-		for(OnUpdateListener a : onUpdateRegister){
-			a.actionPerformed(new OnUpdateEvent(registeredTo));
-		}
+        OnUpdateEvent e = new OnUpdateEvent(registeredTo);
+		onUpdateRegister.forEach((oul)->oul.actionPerformed(e));
 	}
 	public void resetTrips(){
 		onHitRegister = new SafeList<>();
 		onBeHitRegister = new SafeList<>();
 		onMeleeHitRegister = new SafeList<>();
 		onBeMeleeHitRegister = new SafeList<>();
-		onUpdateRegister = new ArrayList<>();
+		onUpdateRegister = new SafeList<>();
 	}
     
     public void displayData(){
@@ -104,7 +103,7 @@ public class ActionRegister implements Serializable{
         out.println("On be hit: x" + onBeHitRegister.length());
         out.println("On melee hit: x" + onMeleeHitRegister.length());
         out.println("On be melee hit: x" + onBeMeleeHitRegister.length());
-        out.println("On update: x" + onUpdateRegister.size());
+        out.println("On update: x" + onUpdateRegister.length());
         out.println("END ACTION REGISTER");
     }
 }
