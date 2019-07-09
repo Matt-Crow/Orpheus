@@ -46,8 +46,8 @@ public class World implements Serializable{
     private transient WorldCanvas canvas; //transient means "don't serialize me!"
     private Battle currentMinigame; //in future versions, this will be changed to include other minigames
     
-    private boolean isHosting; //whether or not this is the host of a game, and thus should manage itself for every player
-    private boolean isRemotelyHosted; //whether or not another computer is running this World
+    private transient boolean isHosting; //whether or not this is the host of a game, and thus should manage itself for every player
+    private transient boolean isRemotelyHosted; //whether or not another computer is running this World
     private String remoteHostIp;
     
     private Consumer<ServerMessage> receiveWorldUpdate;
@@ -279,7 +279,7 @@ public class World implements Serializable{
                     }
                 });
             });
-            out.println("Now I have " + this.particles.length() + " particles");
+            //out.println("Now I have " + this.particles.length() + " particles");
         }
     }
     
@@ -318,7 +318,10 @@ public class World implements Serializable{
     }
     
     private void receiveWorldUpdate(ServerMessage sm){
-        teams = (HashMap<Integer, Team>)SerialUtil.fromSerializedString(sm.getBody());
+        teams.clear();
+        
+        HashMap<Integer, Team> ts = (HashMap<Integer, Team>)SerialUtil.fromSerializedString(sm.getBody());
+        ts.values().stream().forEach((Team t)->addTeam(t));
         
         Master.getUser().linkToRemotePlayerInWorld(this); //since teams have changed
         if(canvas != null){
