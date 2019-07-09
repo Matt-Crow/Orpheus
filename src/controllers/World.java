@@ -103,7 +103,7 @@ public class World implements Serializable{
     
     public final World addTeam(Team t){
         teams.put(t.getId(), t);
-        //t.forEachMember((Player p)->p.setWorld(this));
+        t.forEachMember((Player p)->p.setWorld(this));
         t.forEach((Entity e)->e.setWorld(this));
         return this;
     }
