@@ -305,15 +305,17 @@ public class World implements Serializable{
      * </table>
      */
     public void update(){
-        if(!isRemotelyHosted){
-            hostUpdate();
-        }
-        if(!isHosting){
-            clientUpdate();
-        }
-        particles.forEach((p)->p.doUpdate()); //both host and client must update their particles
-        if(currentMinigame != null){
-            currentMinigame.update();
+        synchronized(this){
+            if(!isRemotelyHosted){
+                hostUpdate();
+            }
+            if(!isHosting){
+                clientUpdate();
+            }
+            particles.forEach((p)->p.doUpdate()); //both host and client must update their particles
+            if(currentMinigame != null){
+                currentMinigame.update();
+            }
         }
     }
     
