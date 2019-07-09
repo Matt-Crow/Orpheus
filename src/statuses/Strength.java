@@ -25,18 +25,15 @@ public class Strength extends AbstractStatus{
     
     @Override
 	public void inflictOn(Player p){
-		OnHitListener a = new OnHitListener(){
-            @Override
-			public void actionPerformed(OnHitEvent e){
-				Player target = (Player)e.getWasHit();
-				target.getLog().logPercentageDamage(3.5 * getIntensityLevel());
-                
-                Direction angleBetween = Direction.getDegreeByLengths(p.getX(), p.getY(), target.getX(), target.getY());
-                int magnitude = Master.UNITSIZE * getIntensityLevel();
-                target.knockBack(magnitude, angleBetween, Master.seconds(1));
-				use();
-			}
-		};
+		OnHitListener a = new OnHitListener((OnHitEvent e)->{
+            Player target = (Player)e.getWasHit();
+            target.getLog().logPercentageDamage(3.5 * getIntensityLevel());
+
+            Direction angleBetween = Direction.getDegreeByLengths(p.getX(), p.getY(), target.getX(), target.getY());
+            int magnitude = Master.UNITSIZE * getIntensityLevel();
+            target.knockBack(magnitude, angleBetween, Master.seconds(1));
+            use();
+        });
 		p.getActionRegister().addOnMeleeHit(a);
 	}
     

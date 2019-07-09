@@ -209,8 +209,7 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
 		}
 	}
 	public OnHitListener getKey(){
-		//                 otherwise, this is un-serializable
-        OnHitListener a = (OnHitListener & Serializable)(OnHitEvent t) -> {
+        OnHitListener a = new OnHitListener((OnHitEvent t) -> {
             StatusTable inf = getInflict();
             for(int i = 0; i < inf.getSize(); i++){
                 if(getTargetsUser()){
@@ -219,9 +218,8 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
                     ((Player)t.getWasHit()).inflict(inf.getStatusAt(i));
                 }
             }
-        };
+        });
 		return a;
-        //return null;
 	}
     @Override
 	public void update(){

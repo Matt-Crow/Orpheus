@@ -27,15 +27,12 @@ public class Resistance extends AbstractStatus{
     
     @Override
 	public void inflictOn(Player p){
-		OnHitListener a = new OnHitListener(){
-            @Override
-			public void actionPerformed(OnHitEvent t){
-                if(t.getWasHit() instanceof Player){
-                    ((Player)t.getWasHit()).getLog().applyFilter(1 - 0.25 * getIntensityLevel());
-                    use();
-                }
-			}
-		};
+		OnHitListener a = new OnHitListener((OnHitEvent t)->{
+            if(t.getWasHit() instanceof Player){
+                ((Player)t.getWasHit()).getLog().applyFilter(1 - 0.25 * getIntensityLevel());
+                use();
+            }
+		});
 		p.getActionRegister().addOnBeHit(a);
 	}
     

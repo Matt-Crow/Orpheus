@@ -137,13 +137,7 @@ public class PlayerAI implements Serializable{
                 break;
         }
         
-		OnHitListener a = new OnHitListener(){
-            @Override
-			public void actionPerformed(OnHitEvent t){
-				latch((Player)t.getHitter());
-			}
-		};
-		appliedTo.getActionRegister().addOnBeHit(a);
+		appliedTo.getActionRegister().addOnBeHit(new OnHitListener((e)->latch((Player)e.getHitter())));
 	}
     
     

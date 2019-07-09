@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import entities.Entity;
 import entities.Player;
 import java.io.Serializable;
+import static java.lang.System.out;
+import util.SafeList;
 
 /**
  * An ActionRegister is used to store OnHit- and OnUpdate-Listeners, and register them to an Entity.
@@ -12,10 +14,10 @@ import java.io.Serializable;
  */
 public class ActionRegister implements Serializable{
 	private final Entity registeredTo;
-	private ArrayList<OnHitListener> onHitRegister;
-	private ArrayList<OnHitListener> onBeHitRegister;
-	private ArrayList<OnHitListener> onMeleeHitRegister;
-	private ArrayList<OnHitListener> onBeMeleeHitRegister;
+	private SafeList<OnHitListener> onHitRegister;
+	private SafeList<OnHitListener> onBeHitRegister;
+	private SafeList<OnHitListener> onMeleeHitRegister;
+	private SafeList<OnHitListener> onBeMeleeHitRegister;
 	private ArrayList<OnUpdateListener> onUpdateRegister;
 	
     /**
@@ -24,10 +26,10 @@ public class ActionRegister implements Serializable{
      */
 	public ActionRegister(Entity e){
 		registeredTo = e;
-		onHitRegister = new ArrayList<>();
-		onBeHitRegister = new ArrayList<>();
-		onMeleeHitRegister = new ArrayList<>();
-		onBeMeleeHitRegister = new ArrayList<>();
+		onHitRegister = new SafeList<>();
+		onBeHitRegister = new SafeList<>();
+		onMeleeHitRegister = new SafeList<>();
+		onBeMeleeHitRegister = new SafeList<>();
 		onUpdateRegister = new ArrayList<>();
 	}
     
@@ -67,28 +69,20 @@ public class ActionRegister implements Serializable{
 	}
 	public void triggerOnHit(Player hit){
 		OnHitEvent t = new OnHitEvent(hit, registeredTo);
-        onHitRegister.forEach((a) -> {
-            a.actionPerformed(t);
-        });
+        onHitRegister.forEach((ohl)->ohl.trigger(t));
 	}
 	public void triggerOnHitReceived(Player hitBy){
 		OnHitEvent t = new OnHitEvent(registeredTo, hitBy);
-		for(OnHitListener a : onBeHitRegister){
-			a.actionPerformed(t);
-		}
+		onBeHitRegister.forEach((ohl)->ohl.trigger(t));
 	}
 	public void tripOnMeleeHit(Player hit){
 		OnHitEvent t = new OnHitEvent(hit, registeredTo);
-		for(OnHitListener a : onMeleeHitRegister){
-			a.actionPerformed(t);
-		}
+		onMeleeHitRegister.forEach((ohl)->ohl.trigger(t));
 		triggerOnHit(hit);
 	}
 	public void tripOnBeMeleeHit(Player hitBy){
 		OnHitEvent t = new OnHitEvent(registeredTo, hitBy);
-		for(OnHitListener a : onBeMeleeHitRegister){
-			a.actionPerformed(t);
-		}
+		onBeMeleeHitRegister.forEach((ohl)->ohl.trigger(t));
 		triggerOnHitReceived(hitBy);
 	}
 	public void triggerOnUpdate(){
@@ -97,10 +91,20 @@ public class ActionRegister implements Serializable{
 		}
 	}
 	public void resetTrips(){
-		onHitRegister = new ArrayList<>();
-		onBeHitRegister = new ArrayList<>();
-		onMeleeHitRegister = new ArrayList<>();
-		onBeMeleeHitRegister = new ArrayList<>();
+		onHitRegister = new SafeList<>();
+		onBeHitRegister = new SafeList<>();
+		onMeleeHitRegister = new SafeList<>();
+		onBeMeleeHitRegister = new SafeList<>();
 		onUpdateRegister = new ArrayList<>();
 	}
+    
+    public void displayData(){
+        out.println("ACTION REGISTER");
+        out.println("On hit: x" + onHitRegister.length());
+        out.println("On be hit: x" + onBeHitRegister.length());
+        out.println("On melee hit: x" + onMeleeHitRegister.length());
+        out.println("On be melee hit: x" + onBeMeleeHitRegister.length());
+        out.println("On update: x" + onUpdateRegister.size());
+        out.println("END ACTION REGISTER");
+    }
 }

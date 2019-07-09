@@ -156,6 +156,16 @@ public class WorldCanvas extends Canvas{
         
         Master.getUser().setRemoteTeamId(t1.getId()).setRemotePlayerId(Master.getUser().getPlayer().id);
         
+        w.getCanvas().registerKey(KeyEvent.VK_T, true, ()->{
+            Master.getUser().getPlayer().getActionRegister().displayData();
+        });
+        
+        f.setContentPane(w.getCanvas());
+        
+        f.setVisible(true);
+        f.revalidate();
+        f.repaint();
+        /*
         //now to try serializing it...
         String serial = w.serializeToString();
         World newWorld = World.fromSerializedString(serial);
@@ -177,6 +187,6 @@ public class WorldCanvas extends Canvas{
             String s = SerialUtil.serializeToString(t);
             Team tClone = (Team)SerialUtil.fromSerializedString(s);
             System.out.println("Total entities deserialized: " + tClone.length());
-        });
+        });*/
     }
 }
