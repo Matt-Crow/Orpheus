@@ -271,10 +271,12 @@ public class World implements Serializable{
         it a solo player, thus, particles have already been spawned
         in hostUpdate, so no need to do this
         */
+        System.out.println(this + " is updating");
         if(isRemotelyHosted){
             teams.values().stream().forEach((Team t)->{
                 t.forEach((Entity member)->{
                     if(member instanceof Projectile){
+                        System.out.println(member + " spawned a particle into " + member.getWorld());
                         ((Projectile)member).spawnParticles();
                     }
                 });
@@ -336,7 +338,7 @@ public class World implements Serializable{
     private void receiveControl(ServerMessage sm){
         synchronized(this){
             Player p = sm.getSender().getPlayer();
-            System.out.println(p);
+            System.out.println("Received control from " + p);
             PlayerControls.decode(p, sm.getBody());
         }
     }

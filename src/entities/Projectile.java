@@ -94,7 +94,7 @@ public class Projectile extends Entity{
 		Particle p = new Particle(m, c);
         p.doInit();
 		p.initPos(getX(), getY(), degrees);
-		p.setTeam(this.getTeam());
+		p.setTeam(getTeam());
         getWorld().addParticle(p);
 	}
     
