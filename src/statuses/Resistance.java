@@ -47,5 +47,6 @@ public class Resistance extends AbstractStatus implements OnHitListener{
         if(t.getWasHit() instanceof Player){
             ((Player)t.getWasHit()).getLog().applyFilter(1 - 0.25 * getIntensityLevel());
         }
+        use();
     }
 }

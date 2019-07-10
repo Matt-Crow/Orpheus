@@ -49,5 +49,7 @@ public class Strength extends AbstractStatus implements OnHitListener{
         Direction angleBetween = Direction.getDegreeByLengths(user.getX(), user.getY(), target.getX(), target.getY());
         int magnitude = Master.UNITSIZE * getIntensityLevel();
         target.knockBack(magnitude, angleBetween, Master.seconds(1));
+        
+        use();
     }
 }

@@ -41,5 +41,6 @@ public class Charge extends AbstractStatus implements OnUpdateListener{
         if(e.getUpdated() instanceof Player){
             ((Player)e.getUpdated()).getEnergyLog().gainEnergy((int) (2.5 * getIntensityLevel() / Master.FPS)); // make scale with frame count
         }
+        use();
     }
 }

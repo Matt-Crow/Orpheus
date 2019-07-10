@@ -39,5 +39,6 @@ public class Stun extends AbstractStatus implements OnUpdateListener{
     @Override
     public void trigger(OnUpdateEvent e) {
         e.getUpdated().applySpeedFilter(1.0 - 0.25 * getIntensityLevel());
+        use();
     }
 }

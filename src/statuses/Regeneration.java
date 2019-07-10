@@ -43,5 +43,6 @@ public class Regeneration extends AbstractStatus implements OnUpdateListener{
         if(e.getUpdated() instanceof Player){
             ((Player)e.getUpdated()).getLog().healPerc(2.5 * getIntensityLevel() / Master.FPS);
         }
+        use();
     }
 }

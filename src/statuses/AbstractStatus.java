@@ -134,8 +134,16 @@ public abstract class AbstractStatus implements Serializable, Terminable{
         }
     }
     
+    public final void use(){
+        usesLeft--;
+        if(usesLeft <= 0){
+            terminate();
+        }
+    }
+    
     /**
      * Generally speaking, this will call p.getActionRegister().add . . .
+     * this method must call use() in order to update the number of uses left
      * @param p the Player to target 
      * @see Player
      */

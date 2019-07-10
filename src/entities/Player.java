@@ -2,7 +2,6 @@ package entities;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.ArrayList;
 
 import actives.*;
 import ai.Path;
@@ -133,8 +132,6 @@ public class Player extends Entity{
         AbstractStatus[] objStatuses = Arrays
             .stream(statuses.toArray())
             .toArray(size -> new AbstractStatus[size]);
-        
-        listStatuses();
 		
         for(AbstractStatus s : objStatuses){
 			if(s.getStatusName() == newStat.getStatusName()){
