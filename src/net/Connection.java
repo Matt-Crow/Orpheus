@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -22,15 +24,29 @@ public class Connection {
         objIn = new ObjectInputStream(s.getInputStream());
     }
     
-    public void writeToClient(String s){
+    public boolean writeToClient(String s){
+        boolean success = false;
         try{
             objOut.writeObject(s);
             objOut.flush();
+            success = true;
         } catch(IOException ex){
             ex.printStackTrace();
             System.err.println("Failed to write this to client: ");
             System.err.println(s);
+        } catch(ArrayIndexOutOfBoundsException ex){
+            ex.printStackTrace();
+            System.err.println("Too big?");
+            System.err.println(s);
         }
+        if(!success){
+            try {
+                objOut.reset();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return success;
     }
     
     public String readFromClient() throws IOException, ClassNotFoundException{
