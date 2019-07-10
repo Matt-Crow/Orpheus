@@ -114,7 +114,7 @@ public class PlayerControls implements MouseListener{
             if(str.contains("use melee")){
                 p.useMeleeAttack();
             } else if(str.contains("use")){
-                int num = Integer.parseInt(str.substring(str.indexOf("use")).trim());
+                int num = Integer.parseInt(str.substring(str.indexOf("use") + 3).trim());
                 p.useAttack(num);
             }
         }
