@@ -36,7 +36,7 @@ public class PlayerControls implements MouseListener{
         if(isRemote){
             Master.getServer().send(
                 new ServerMessage(
-                    turnToMouseString() + "\n use melee",
+                    "turn to " + mouseString() + "\n use melee",
                     ServerMessageType.CONTROL_PRESSED
                 ), 
                 receiverIpAddr
@@ -50,7 +50,7 @@ public class PlayerControls implements MouseListener{
         if(isRemote){
             Master.getServer().send(
                 new ServerMessage(
-                    turnToMouseString() + "\n use " + i,
+                    "turn to " + mouseString() + "\n use " + i,
                     ServerMessageType.CONTROL_PRESSED
                 ), 
                 receiverIpAddr
@@ -80,16 +80,16 @@ public class PlayerControls implements MouseListener{
         WorldCanvas c = p.getWorld().getCanvas();
         p.turnTo(c.getMouseX(), c.getMouseY());
     }
-    private String turnToMouseString(){
+    private String mouseString(){
         WorldCanvas c = p.getWorld().getCanvas();
-        return String.format("turn to %d, %d", c.getMouseX(), c.getMouseY());
+        return String.format("(%d, %d)", c.getMouseX(), c.getMouseY());
     }
-    private static void decodeTurnToMouseString(Player p, String s){
-        String coords = s.replace("turn to ", "").trim();
+    private static int[] decodeMouseString(String s){
+        String coords = s.substring(s.indexOf('(') + 1, s.indexOf(')'));
         String[] split = coords.split(",");
         int x = Integer.parseInt(split[0].trim());
         int y = Integer.parseInt(split[1].trim());
-        p.turnTo(x, y);
+        return new int[]{x, y};
     }
     
     /**
@@ -101,9 +101,21 @@ public class PlayerControls implements MouseListener{
      * @param s 
      */
     public static void decode(Player p, String s){
+        int[] coords;
         for(String str : s.split("\n")){
             if(str.contains("turn to")){
-                decodeTurnToMouseString(p, str);
+                coords = decodeMouseString(str);
+                p.turnTo(coords[0], coords[1]);
+            }
+            if(str.contains("move to")){
+                coords = decodeMouseString(str);
+                p.setPath(coords[0], coords[1]);
+            }
+            if(str.contains("use melee")){
+                p.useMeleeAttack();
+            } else if(str.contains("use")){
+                int num = Integer.parseInt(str.substring(str.indexOf("use")).trim());
+                p.useAttack(num);
             }
         }
     }
@@ -116,7 +128,7 @@ public class PlayerControls implements MouseListener{
         if(isRemote){
             Master.getServer().send(
                 new ServerMessage(
-                    "toggle following mouse",
+                    "move to " + mouseString(),
                     ServerMessageType.CONTROL_PRESSED
                 ), 
                 receiverIpAddr
