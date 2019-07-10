@@ -85,11 +85,7 @@ public class Server {
     
     public void send(String msg){
         clientConnections.stream().forEach((Connection c)->{
-            try {
-                c.writeToClient(msg);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            c.writeToClient(msg);
         });
     }
     
@@ -100,11 +96,7 @@ public class Server {
     
     public final void shutDown(){
         clientConnections.stream().forEach((Connection c)->{
-            try {
-                c.writeToClient(SHUTDOWN_MESSAGE);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            c.writeToClient(SHUTDOWN_MESSAGE);
         });
         try {
             server.close();
