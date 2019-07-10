@@ -336,8 +336,6 @@ public class World implements Serializable{
     private void receiveControl(ServerMessage sm){
         synchronized(this){
             Player p = sm.getSender().getPlayer();
-            System.out.println("Received control from " + p);
-            System.out.println("they want to " + sm.getBody());
             PlayerControls.decode(p, sm.getBody());
         }
     }
