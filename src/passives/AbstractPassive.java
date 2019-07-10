@@ -8,6 +8,7 @@ import entities.Player;
 import java.io.File;
 import java.io.Serializable;
 import java.util.NoSuchElementException;
+import java.util.function.Consumer;
 import javax.json.*;
 import serialization.JsonSerialable;
 import serialization.JsonUtil;
@@ -209,7 +210,7 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
 		}
 	}
 	public OnHitListener getKey(){
-        OnHitListener a = new OnHitListener((OnHitEvent t) -> {
+        OnHitListener a = new OnHitListener((Consumer<OnHitEvent> & Serializable)(OnHitEvent t) -> {
             StatusTable inf = getInflict();
             for(int i = 0; i < inf.getSize(); i++){
                 if(getTargetsUser()){

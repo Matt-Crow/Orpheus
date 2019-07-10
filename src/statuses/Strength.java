@@ -3,6 +3,8 @@ package statuses;
 import actions.*;
 import entities.Player;
 import controllers.Master;
+import java.io.Serializable;
+import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 import util.Direction;
 import util.Number;
@@ -25,7 +27,7 @@ public class Strength extends AbstractStatus{
     
     @Override
 	public void inflictOn(Player p){
-		OnHitListener a = new OnHitListener((OnHitEvent e)->{
+		OnHitListener a = new OnHitListener((Consumer<OnHitEvent> & Serializable)(OnHitEvent e)->{
             Player target = (Player)e.getWasHit();
             target.getLog().logPercentageDamage(3.5 * getIntensityLevel());
 

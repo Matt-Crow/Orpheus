@@ -2,6 +2,8 @@ package statuses;
 
 import actions.*;
 import entities.Player;
+import java.io.Serializable;
+import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 import util.Number;
 
@@ -27,7 +29,7 @@ public class Resistance extends AbstractStatus{
     
     @Override
 	public void inflictOn(Player p){
-		OnHitListener a = new OnHitListener((OnHitEvent t)->{
+		OnHitListener a = new OnHitListener((Consumer<OnHitEvent> & Serializable)(OnHitEvent t)->{
             if(t.getWasHit() instanceof Player){
                 ((Player)t.getWasHit()).getLog().applyFilter(1 - 0.25 * getIntensityLevel());
                 use();
