@@ -122,9 +122,7 @@ public class PlayerControls implements MouseListener{
                 receiverIpAddr
             );
         } else {
-            boolean b = p.getFollowingMouse();
-            p.setFollowingMouse(!b);
-            p.setMoving(!b);
+            p.moveToMouse();
         }
     }
 

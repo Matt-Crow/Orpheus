@@ -24,8 +24,6 @@ public class Player extends Entity{
 	private CharacterClass c;
 	private final AbstractActive[] actives;
 	private final AbstractPassive[] passives;
-	
-    private boolean followingMouse;
     
 	private DamageBacklog log;
 	private EnergyLog energyLog;
@@ -48,7 +46,6 @@ public class Player extends Entity{
 		actives = new AbstractActive[3];
 		passives = new AbstractPassive[3];
         setRadius(RADIUS);
-        followingMouse = false;
         path = null;
         statuses = new SafeList<>();
 	}
@@ -74,13 +71,13 @@ public class Player extends Entity{
 		return playerAI;
 	}
     
-    public void setFollowingMouse(boolean b){
-		followingMouse = b;
-	}
-	public boolean getFollowingMouse(){
-		return followingMouse;
-	}
-    
+    public void moveToMouse(){
+        setPath(getWorld().getCanvas().getMouseX(), getWorld().getCanvas().getMouseY());
+    }
+    public void setPath(int x, int y){
+        World w = getWorld();
+        setPath(w.getMap().findPath(getX(), getY(), x, y));
+    }
     public void setPath(Path p){
         path = p;
         if(!path.noneLeft()){
@@ -210,10 +207,6 @@ public class Player extends Entity{
 	
     @Override
 	public void update(){
-        if(followingMouse){
-            World w = getWorld();
-            setPath(w.getMap().findPath(getX(), getY(), w.getCanvas().getMouseX(), w.getCanvas().getMouseY()));
-		}
 		playerAI.update();
         if(path != null){
             //follow path
