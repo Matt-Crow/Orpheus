@@ -12,11 +12,11 @@ import util.SafeList;
  */
 public class ActionRegister implements Serializable{
 	private final Entity registeredTo;
-	private SafeList<OnHitListener> onHitRegister;
-	private SafeList<OnHitListener> onBeHitRegister;
-	private SafeList<OnHitListener> onMeleeHitRegister;
-	private SafeList<OnHitListener> onBeMeleeHitRegister;
-	private SafeList<OnUpdateListener> onUpdateRegister;
+	private final SafeList<OnHitListener> onHitRegister;
+	private final SafeList<OnHitListener> onBeHitRegister;
+	private final SafeList<OnHitListener> onMeleeHitRegister;
+	private final SafeList<OnHitListener> onBeMeleeHitRegister;
+	private final SafeList<OnUpdateListener> onUpdateRegister;
 	
     /**
      * Stores Listeners for an Entity.
@@ -85,14 +85,14 @@ public class ActionRegister implements Serializable{
 	}
 	public void triggerOnUpdate(){
         OnUpdateEvent e = new OnUpdateEvent(registeredTo);
-		onUpdateRegister.forEach((oul)->oul.actionPerformed(e));
+		onUpdateRegister.forEach((oul)->oul.trigger(e));
 	}
-	public void resetTrips(){
-		onHitRegister = new SafeList<>();
-		onBeHitRegister = new SafeList<>();
-		onMeleeHitRegister = new SafeList<>();
-		onBeMeleeHitRegister = new SafeList<>();
-		onUpdateRegister = new SafeList<>();
+	public void reset(){
+		onHitRegister.clear();
+		onBeHitRegister.clear();
+		onMeleeHitRegister.clear();
+		onBeMeleeHitRegister.clear();
+		onUpdateRegister.clear();
 	}
     
     public void displayData(){

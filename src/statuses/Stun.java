@@ -9,7 +9,7 @@ import java.util.function.UnaryOperator;
 /**
  * The Stun status decreases an Entity's movement speed
  */
-public class Stun extends AbstractStatus{
+public class Stun extends AbstractStatus implements OnUpdateListener{
     private static final UnaryOperator<Integer> CALC = (i)->{return Master.seconds(Number.minMax(1, i, 3));};
     /**
      * The Stun status will decrease an Entity's movement speed
@@ -23,14 +23,7 @@ public class Stun extends AbstractStatus{
     
     @Override
 	public void inflictOn(Player p){
-		OnUpdateListener a = new OnUpdateListener(){
-            @Override
-			public void actionPerformed(OnUpdateEvent e){
-				e.getUpdated().applySpeedFilter(1.0 - 0.25 * getIntensityLevel());
-			}
-		};
-		
-		p.getActionRegister().addOnUpdate(a);
+		p.getActionRegister().addOnUpdate(this);
 	}
     
     @Override
@@ -41,5 +34,10 @@ public class Stun extends AbstractStatus{
     @Override
     public AbstractStatus copy() {
         return new Stun(getIntensityLevel(), getBaseParam());
+    }
+
+    @Override
+    public void trigger(OnUpdateEvent e) {
+        e.getUpdated().applySpeedFilter(1.0 - 0.25 * getIntensityLevel());
     }
 }

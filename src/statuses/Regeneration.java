@@ -9,7 +9,7 @@ import java.util.function.UnaryOperator;
 /**
  * Regeneration restores an Entity's hit points over time.
  */
-public class Regeneration extends AbstractStatus{
+public class Regeneration extends AbstractStatus implements OnUpdateListener{
     private static final UnaryOperator<Integer> CALC = (i)->{return Master.seconds(Number.minMax(1, i, 3)) + 2;};
     /**
      * Creates the Regeneration status.
@@ -25,16 +25,7 @@ public class Regeneration extends AbstractStatus{
     
     @Override
 	public void inflictOn(Player p){
-		OnUpdateListener a = new OnUpdateListener(){
-            @Override
-			public void actionPerformed(OnUpdateEvent e){
-                if(e.getUpdated() instanceof Player){
-                    ((Player)e.getUpdated()).getLog().healPerc(2.5 * getIntensityLevel() / Master.FPS);
-                }
-			}
-		};
-		
-		p.getActionRegister().addOnUpdate(a);
+		p.getActionRegister().addOnUpdate(this);
 	}
     
     @Override
@@ -45,5 +36,12 @@ public class Regeneration extends AbstractStatus{
     @Override
     public AbstractStatus copy() {
         return new Regeneration(getIntensityLevel(), getBaseParam());
+    }
+
+    @Override
+    public void trigger(OnUpdateEvent e) {
+        if(e.getUpdated() instanceof Player){
+            ((Player)e.getUpdated()).getLog().healPerc(2.5 * getIntensityLevel() / Master.FPS);
+        }
     }
 }

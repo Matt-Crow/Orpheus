@@ -1,11 +1,12 @@
 package statuses;
 
-import actions.Triggerable;
+import actions.Terminable;
+import actions.TerminateListener;
 import entities.Player;
 import java.io.Serializable;
-import java.util.function.Consumer;
 import util.Number;
 import java.util.function.UnaryOperator;
+import util.SafeList;
 
 /**
  * AbstractStatus is the base class for all statuses in Orpheus.
@@ -16,16 +17,18 @@ import java.util.function.UnaryOperator;
  * @see OnHitKey
  * @see Player
  */
-// so that when it is deleted from player's action register, it is also removed from their status list
-public abstract class AbstractStatus extends Triggerable<Player> implements Serializable{
+public abstract class AbstractStatus implements Serializable, Terminable{
 	private final StatusName code; //the Enum of this status' name
 	private final String name;
 	
     private final int useBase; //used for serialization
-        
+    private final int maxUses;
+    private int usesLeft;
 	private final int level;
-	
-	private boolean shouldTerminate;
+    
+    private boolean hasTerminated;
+    private final SafeList<TerminateListener> termListens;
+    
 	
     /**
      * 
@@ -37,15 +40,17 @@ public abstract class AbstractStatus extends Triggerable<Player> implements Seri
      * the class may need this more later
      */
 	public AbstractStatus(StatusName enumName, int lv, int use, UnaryOperator<Integer> useCalc){
-		super(useCalc.apply(Number.minMax(1, use, 3)));
         code = enumName;
 		name = enumName.toString();
 		
         useBase = Number.minMax(1, use, 3);
+        maxUses = useCalc.apply(useBase);
+        usesLeft = maxUses;
         
         level = Number.minMax(1, lv, 3);
-		
-		shouldTerminate = false;
+        
+        hasTerminated = false;
+        termListens = new SafeList<>();
 	}
 	
 	public StatusName getStatusName(){
@@ -69,6 +74,14 @@ public abstract class AbstractStatus extends Triggerable<Player> implements Seri
         return useBase;
     }
     
+    public int getUsesLeft(){
+        return usesLeft;
+    }
+    
+    public int getMaxUses(){
+        return maxUses;
+    }
+    
     /**
      * 
      * @param n
@@ -77,7 +90,7 @@ public abstract class AbstractStatus extends Triggerable<Player> implements Seri
      * @return 
      */
     public static AbstractStatus decode(StatusName n, int intensity, int dur){
-		AbstractStatus ret = new Strength(1, 1);
+		AbstractStatus ret = null;
 		switch(n){
 		case CHARGE:
 			ret = new Charge(intensity, dur);
@@ -102,6 +115,24 @@ public abstract class AbstractStatus extends Triggerable<Player> implements Seri
 		}
 		return ret;
 	}
+    
+    @Override
+    public void addTerminationListener(TerminateListener listen) {
+        termListens.add(listen);
+    }
+
+    @Override
+    public boolean removeTerminationListener(TerminateListener listen) {
+        return termListens.remove(listen);
+    }
+
+    @Override
+    public void terminate() {
+        if(!hasTerminated){
+            hasTerminated = true;
+            termListens.forEach((TerminateListener tl)->tl.objectWasTerminated(this));
+        }
+    }
     
     /**
      * Generally speaking, this will call p.getActionRegister().add . . .

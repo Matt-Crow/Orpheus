@@ -39,7 +39,9 @@ public class PlayerAI implements Serializable{
         enabled = b;
         if(b){
             setToWander();
-            appliedTo.getActionRegister().addOnBeHit(new OnHitListener((e)->latch((Player)e.getHitter())));
+            appliedTo.getActionRegister().addOnBeHit((OnHitEvent e) -> {
+                latch((Player)e.getHitter());
+            });
         }
     }
     

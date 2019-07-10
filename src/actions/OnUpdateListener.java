@@ -12,5 +12,5 @@ public interface OnUpdateListener extends Serializable{
      * @param a an event detailing what Entity was updated.
      * @see ActionRegister
      */
-    public abstract void actionPerformed(OnUpdateEvent a);
+    public abstract void trigger(OnUpdateEvent a);
 }

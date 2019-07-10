@@ -209,8 +209,10 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
 			p.inflict(inf.getStatusAt(i));
 		}
 	}
+    
+    //I don't like this
 	public OnHitListener getKey(){
-        OnHitListener a = new OnHitListener((Consumer<OnHitEvent> & Serializable)(OnHitEvent t) -> {
+        OnHitListener a = (OnHitListener & Serializable)(OnHitEvent t) -> {
             StatusTable inf = getInflict();
             for(int i = 0; i < inf.getSize(); i++){
                 if(getTargetsUser()){
@@ -219,7 +221,7 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
                     ((Player)t.getWasHit()).inflict(inf.getStatusAt(i));
                 }
             }
-        });
+        };
 		return a;
 	}
     @Override

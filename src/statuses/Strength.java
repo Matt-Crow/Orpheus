@@ -12,7 +12,7 @@ import util.Number;
 /**
  * Strength causes the afflicted Entity to knock back those it hits and do more damage
  */
-public class Strength extends AbstractStatus{
+public class Strength extends AbstractStatus implements OnHitListener{
     private static final UnaryOperator<Integer> CALC = (i)->{return Number.minMax(1, i, 3) * 2 + 1;};
     /**
      * 
@@ -23,32 +23,11 @@ public class Strength extends AbstractStatus{
 	public Strength(int lv, int uses){
 		super(StatusName.STRENGTH, lv, uses, CALC);
 		// 3 - 7 uses of 3.5% to 10.5% extra damage logged and knocks back lv units
-        this.setFunction(getEffect());
 	}
-    
-    private OnHitListener getEffect(){
-        return new OnHitListener((Consumer<OnHitEvent> & Serializable)(OnHitEvent e)->{
-            Player user = (Player)e.getHitter();
-            Player target = (Player)e.getWasHit();
-            target.getLog().logPercentageDamage(3.5 * getIntensityLevel());
-
-            Direction angleBetween = Direction.getDegreeByLengths(user.getX(), user.getY(), target.getX(), target.getY());
-            int magnitude = Master.UNITSIZE * getIntensityLevel();
-            target.knockBack(magnitude, angleBetween, Master.seconds(1));
-        });
-    }
     
     @Override
 	public void inflictOn(Player p){
-		OnHitListener a = new OnHitListener((Consumer<OnHitEvent> & Serializable)(OnHitEvent e)->{
-            Player target = (Player)e.getWasHit();
-            target.getLog().logPercentageDamage(3.5 * getIntensityLevel());
-
-            Direction angleBetween = Direction.getDegreeByLengths(p.getX(), p.getY(), target.getX(), target.getY());
-            int magnitude = Master.UNITSIZE * getIntensityLevel();
-            target.knockBack(magnitude, angleBetween, Master.seconds(1));
-        });
-		p.getActionRegister().addOnMeleeHit(a);
+		p.getActionRegister().addOnMeleeHit(this);
 	}
     
     @Override
@@ -59,5 +38,16 @@ public class Strength extends AbstractStatus{
     @Override
     public AbstractStatus copy() {
         return new Strength(getIntensityLevel(), getBaseParam());
+    }
+
+    @Override
+    public void trigger(OnHitEvent e) {
+        Player user = (Player)e.getHitter();
+        Player target = (Player)e.getWasHit();
+        target.getLog().logPercentageDamage(3.5 * getIntensityLevel());
+
+        Direction angleBetween = Direction.getDegreeByLengths(user.getX(), user.getY(), target.getX(), target.getY());
+        int magnitude = Master.UNITSIZE * getIntensityLevel();
+        target.knockBack(magnitude, angleBetween, Master.seconds(1));
     }
 }

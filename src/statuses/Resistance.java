@@ -14,7 +14,7 @@ import util.Number;
  * Needs reworking.
  * @see battle.DamageBacklog
  */
-public class Resistance extends AbstractStatus{
+public class Resistance extends AbstractStatus implements OnHitListener{
     private static final UnaryOperator<Integer> CALC = (i)->{return Number.minMax(1, i, 3) * 2 + 1;};
     /**
      * 
@@ -29,12 +29,7 @@ public class Resistance extends AbstractStatus{
     
     @Override
 	public void inflictOn(Player p){
-		OnHitListener a = new OnHitListener((Consumer<OnHitEvent> & Serializable)(OnHitEvent t)->{
-            if(t.getWasHit() instanceof Player){
-                ((Player)t.getWasHit()).getLog().applyFilter(1 - 0.25 * getIntensityLevel());
-            }
-		});
-		p.getActionRegister().addOnBeHit(a);
+		p.getActionRegister().addOnBeHit(this);
 	}
     
     @Override
@@ -45,5 +40,12 @@ public class Resistance extends AbstractStatus{
     @Override
     public AbstractStatus copy() {
         return new Resistance(getIntensityLevel(), getBaseParam());
+    }
+
+    @Override
+    public void trigger(OnHitEvent t) {
+        if(t.getWasHit() instanceof Player){
+            ((Player)t.getWasHit()).getLog().applyFilter(1 - 0.25 * getIntensityLevel());
+        }
     }
 }

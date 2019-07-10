@@ -183,6 +183,9 @@ public class Player extends Entity{
 	
     @Override
 	public void init(){
+        statuses.clear();
+        getActionRegister().reset();
+        
 		playerAI = new PlayerAI(this);
 		path = null;
 		if (!(this instanceof TruePlayer)){
@@ -194,7 +197,7 @@ public class Player extends Entity{
 		c.init();
 		log = new DamageBacklog(this);
 		energyLog = new EnergyLog(this);
-		statuses.clear();
+		
 		for(AbstractActive a : actives){
 			a.init();
 		}
@@ -202,11 +205,6 @@ public class Player extends Entity{
 			p.init();
 		}
 		lastHitById = -1;
-	}
-	
-	public void updateStatuses(){
-		//can get rid of this once I get rid of clearing action register
-        statuses.forEach((status)->status.inflictOn(this));
 	}
 	
     @Override
@@ -229,14 +227,12 @@ public class Player extends Entity{
             }
         }
 		slash.update();
-		//getActionRegister().resetTrips();
 		for(AbstractActive a : actives){
 			a.update();
 		}
 		for(AbstractPassive p : passives){
 			p.update();
 		}
-		//updateStatuses();
 		getActionRegister().triggerOnUpdate();
 		log.update();
 		energyLog.update();

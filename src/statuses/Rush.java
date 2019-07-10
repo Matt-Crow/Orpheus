@@ -9,7 +9,7 @@ import java.util.function.UnaryOperator;
 /**
  * The Rush status increases an Entity's movement speed
  */
-public class Rush extends AbstractStatus{
+public class Rush extends AbstractStatus implements OnUpdateListener{
 	private static final UnaryOperator<Integer> CALC = (i)->{return Master.seconds(Number.minMax(1, i, 3) + 2);};
     /**
      * Creates the Rush status.
@@ -23,14 +23,7 @@ public class Rush extends AbstractStatus{
     
     @Override
 	public void inflictOn(Player p){
-		OnUpdateListener a = new OnUpdateListener(){
-            @Override
-			public void actionPerformed(OnUpdateEvent e){
-				e.getUpdated().applySpeedFilter(1 + 0.2 * getIntensityLevel());
-			}
-		};
-		
-		p.getActionRegister().addOnUpdate(a);
+		p.getActionRegister().addOnUpdate(this);
 	}
     
     @Override
@@ -41,5 +34,10 @@ public class Rush extends AbstractStatus{
     @Override
     public AbstractStatus copy() {
         return new Rush(getIntensityLevel(), getBaseParam());
+    }
+
+    @Override
+    public void trigger(OnUpdateEvent e) {
+        e.getUpdated().applySpeedFilter(1 + 0.2 * getIntensityLevel());
     }
 }

@@ -9,7 +9,7 @@ import java.util.function.UnaryOperator;
 /**
  * Charge restores energy over time to the afflicted Player
  */
-public class Charge extends AbstractStatus{
+public class Charge extends AbstractStatus implements OnUpdateListener{
     private static final UnaryOperator<Integer> CALC = (i)->{return Master.seconds(Number.minMax(1, i, 3) + 2);};
     /**
      * When inflicted, restores energy to a Player over time.
@@ -23,15 +23,7 @@ public class Charge extends AbstractStatus{
     
     @Override
 	public void inflictOn(Player p){
-		OnUpdateListener a = new OnUpdateListener(){
-            @Override
-			public void actionPerformed(OnUpdateEvent e){
-				if(e.getUpdated() instanceof Player){
-                    ((Player)e.getUpdated()).getEnergyLog().gainEnergy((int) (2.5 * getIntensityLevel() / Master.FPS)); // make scale with frame count
-                }
-			}
-		};
-		p.getActionRegister().addOnUpdate(a);
+		p.getActionRegister().addOnUpdate(this);
 	}
     
     @Override
@@ -42,5 +34,12 @@ public class Charge extends AbstractStatus{
     @Override
     public AbstractStatus copy() {
         return new Charge(getIntensityLevel(), getBaseParam());
+    }
+
+    @Override
+    public void trigger(OnUpdateEvent e) {
+        if(e.getUpdated() instanceof Player){
+            ((Player)e.getUpdated()).getEnergyLog().gainEnergy((int) (2.5 * getIntensityLevel() / Master.FPS)); // make scale with frame count
+        }
     }
 }
