@@ -1,7 +1,5 @@
 package actions;
 
-import java.util.ArrayList;
-
 import entities.Entity;
 import entities.Player;
 import java.io.Serializable;
@@ -68,20 +66,20 @@ public class ActionRegister implements Serializable{
 		onUpdateRegister.add(a);
 	}
 	public void triggerOnHit(Player hit){
-		OnHitEvent t = new OnHitEvent(hit, registeredTo);
+		OnHitEvent t = new OnHitEvent(registeredTo, hit);
         onHitRegister.forEach((ohl)->ohl.trigger(t));
 	}
 	public void triggerOnHitReceived(Player hitBy){
-		OnHitEvent t = new OnHitEvent(registeredTo, hitBy);
+		OnHitEvent t = new OnHitEvent(hitBy, registeredTo);
 		onBeHitRegister.forEach((ohl)->ohl.trigger(t));
 	}
 	public void tripOnMeleeHit(Player hit){
-		OnHitEvent t = new OnHitEvent(hit, registeredTo);
+		OnHitEvent t = new OnHitEvent(registeredTo, hit);
 		onMeleeHitRegister.forEach((ohl)->ohl.trigger(t));
 		triggerOnHit(hit);
 	}
 	public void tripOnBeMeleeHit(Player hitBy){
-		OnHitEvent t = new OnHitEvent(registeredTo, hitBy);
+		OnHitEvent t = new OnHitEvent(hitBy, registeredTo);
 		onBeMeleeHitRegister.forEach((ohl)->ohl.trigger(t));
 		triggerOnHitReceived(hitBy);
 	}

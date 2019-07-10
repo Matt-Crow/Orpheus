@@ -28,7 +28,6 @@ public class Charge extends AbstractStatus{
 			public void actionPerformed(OnUpdateEvent e){
 				if(e.getUpdated() instanceof Player){
                     ((Player)e.getUpdated()).getEnergyLog().gainEnergy((int) (2.5 * getIntensityLevel() / Master.FPS)); // make scale with frame count
-                    use();
                 }
 			}
 		};
@@ -37,7 +36,7 @@ public class Charge extends AbstractStatus{
     
     @Override
 	public String getDesc(){
-		return "Charge, granting the inflicted " + 2.5 * getIntensityLevel() + " extra energy every second for " + Master.framesToSeconds(getBaseUses()) + " seconds"; 
+		return "Charge, granting the inflicted " + 2.5 * getIntensityLevel() + " extra energy every second for " + Master.framesToSeconds(getMaxUses()) + " seconds"; 
 	}
 
     @Override

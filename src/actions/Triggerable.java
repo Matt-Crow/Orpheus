@@ -2,6 +2,8 @@ package actions;
 
 import java.io.Serializable;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import util.SafeList;
 
 /**
@@ -27,7 +29,7 @@ public class Triggerable<T> implements Terminable, Serializable {
     private boolean shouldTerminate;
     private final int maxUses;
     private int usesLeft;
-    private final Consumer<T> f;
+    private Consumer<T> f;
     
     private final SafeList<TerminateListener> termListens;
     
@@ -50,8 +52,38 @@ public class Triggerable<T> implements Terminable, Serializable {
         this(0, function);
     }
     
+    public Triggerable(int i){
+        this(i, (o)->{
+            try {
+                throw new Exception("Function for this Triggerable not set");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+    }
+    
+    public Triggerable(){
+        this(0);
+    }
+    
+    /**
+     * Use for AbstractStatus so I don't have to
+     * pass complex lambdas to the constructor
+     * @param func 
+     */
+    public void setFunction(Consumer<T> func){
+        f = func;
+    }
+    
     public boolean getShouldTerminate(){
         return shouldTerminate;
+    }
+    
+    public int getMaxUses(){
+        return maxUses;
+    }
+    public int getUsesLeft(){
+        return usesLeft;
     }
     
     public void reset(){

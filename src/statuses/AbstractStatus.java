@@ -16,16 +16,14 @@ import java.util.function.UnaryOperator;
  * @see OnHitKey
  * @see Player
  */
-//extends Triggerable<Player> so that when it is deleted from player's action register, it is also removed from their status list
-public abstract class AbstractStatus implements Serializable{
+// so that when it is deleted from player's action register, it is also removed from their status list
+public abstract class AbstractStatus extends Triggerable<Player> implements Serializable{
 	private final StatusName code; //the Enum of this status' name
 	private final String name;
 	
     private final int useBase; //used for serialization
         
 	private final int level;
-	private final int uses;
-	private int usesLeft;
 	
 	private boolean shouldTerminate;
 	
@@ -39,14 +37,13 @@ public abstract class AbstractStatus implements Serializable{
      * the class may need this more later
      */
 	public AbstractStatus(StatusName enumName, int lv, int use, UnaryOperator<Integer> useCalc){
-		code = enumName;
+		super(useCalc.apply(Number.minMax(1, use, 3)));
+        code = enumName;
 		name = enumName.toString();
 		
         useBase = Number.minMax(1, use, 3);
         
         level = Number.minMax(1, lv, 3);
-		uses = useCalc.apply(useBase);
-		usesLeft = uses;
 		
 		shouldTerminate = false;
 	}
@@ -71,54 +68,6 @@ public abstract class AbstractStatus implements Serializable{
     public int getBaseParam(){
         return useBase;
     }
-    
-    /**
-     * Used to get the maximum number of uses of the status
-     * @return the number of uses the status has upon initialization.
-     * Not to be confused with getBaseParam
-     */
-	public int getBaseUses(){
-		return uses;
-	}
-	public int getUsesLeft(){
-		return usesLeft;
-    }
-	
-    
-    /**
-     * Flags that this status should terminate.
-     */
-	public final void terminate(){
-		shouldTerminate = true;
-	}
-    
-    /**
-     * Gets if this is flagged for termination
-     * @return whether or not this should terminate
-     */
-    public boolean getShouldTerminate(){
-		return shouldTerminate;
-	}
-    
-    /**
-     * Sets this' number of uses back to the initial amount.
-     */
-	public final void reset(){
-		shouldTerminate = false;
-		usesLeft = uses;
-	}
-    
-    /**
-     * reduces the number of uses this status has left by 1.
-     * if the number of uses reaches 0, the Status will be flagged for termination.
-     * Note that this does not delete the status.
-     */
-	public final void use(){
-		usesLeft -= 1;
-		if(usesLeft <= 0){
-			terminate();
-		}
-	}
     
     /**
      * 

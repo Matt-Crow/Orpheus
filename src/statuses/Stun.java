@@ -27,7 +27,6 @@ public class Stun extends AbstractStatus{
             @Override
 			public void actionPerformed(OnUpdateEvent e){
 				e.getUpdated().applySpeedFilter(1.0 - 0.25 * getIntensityLevel());
-				use();
 			}
 		};
 		
@@ -36,7 +35,7 @@ public class Stun extends AbstractStatus{
     
     @Override
 	public String getDesc(){
-		return "Stun, lowering the inflicted's movement speed by " + (25 * getIntensityLevel()) + "% for " + Master.framesToSeconds(getBaseUses()) + " seconds";
+		return "Stun, lowering the inflicted's movement speed by " + (25 * getIntensityLevel()) + "% for " + Master.framesToSeconds(getMaxUses()) + " seconds";
 	}
 
     @Override

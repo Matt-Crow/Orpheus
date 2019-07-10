@@ -30,7 +30,6 @@ public class Regeneration extends AbstractStatus{
 			public void actionPerformed(OnUpdateEvent e){
                 if(e.getUpdated() instanceof Player){
                     ((Player)e.getUpdated()).getLog().healPerc(2.5 * getIntensityLevel() / Master.FPS);
-                    use();
                 }
 			}
 		};
@@ -40,7 +39,7 @@ public class Regeneration extends AbstractStatus{
     
     @Override
 	public String getDesc(){
-		return "Regeneration, restoring " + (2.5 * getIntensityLevel()) + "% of the inflicted's HP every second for " + Master.framesToSeconds(getBaseUses()) + " seconds";
+		return "Regeneration, restoring " + (2.5 * getIntensityLevel()) + "% of the inflicted's HP every second for " + Master.framesToSeconds(getMaxUses()) + " seconds";
 	}
 
     @Override

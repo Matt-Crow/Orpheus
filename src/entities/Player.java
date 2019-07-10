@@ -54,37 +54,15 @@ public class Player extends Entity{
 		return name;
 	}
 	
-	public AbstractActive[] getActives(){
-		return actives;
-	}
-	
 	public DamageBacklog getLog(){
 		return log;
 	}
 	public EnergyLog getEnergyLog(){
 		return energyLog;
 	}
-	public CharacterClass getCharacterClass(){
-		return c;
-	}
 	public PlayerAI getPlayerAI(){
 		return playerAI;
 	}
-    
-    public void moveToMouse(){
-        setPath(getWorld().getCanvas().getMouseX(), getWorld().getCanvas().getMouseY());
-    }
-    public void setPath(int x, int y){
-        World w = getWorld();
-        setPath(w.getMap().findPath(getX(), getY(), x, y));
-    }
-    public void setPath(Path p){
-        path = p;
-        if(!path.noneLeft()){
-            PathInfo pi = path.get();
-            setFocus(pi.getEndX(), pi.getEndY());
-        }
-    }
 	
 	// Build stuff
 	public void applyBuild(Build b){
@@ -126,6 +104,28 @@ public class Player extends Entity{
 		}
 	}
 	
+    public CharacterClass getCharacterClass(){
+		return c;
+	}
+    public AbstractActive[] getActives(){
+		return actives;
+    }
+    
+    public void moveToMouse(){
+        setPath(getWorld().getCanvas().getMouseX(), getWorld().getCanvas().getMouseY());
+    }
+    public void setPath(int x, int y){
+        World w = getWorld();
+        setPath(w.getMap().findPath(getX(), getY(), x, y));
+    }
+    public void setPath(Path p){
+        path = p;
+        if(!path.noneLeft()){
+            PathInfo pi = path.get();
+            setFocus(pi.getEndX(), pi.getEndY());
+        }
+    }
+    
 	public void inflict(AbstractStatus newStat){
 		boolean found = false;
 		boolean shouldReplace = false;
@@ -134,21 +134,25 @@ public class Player extends Entity{
             .stream(statuses.toArray())
             .toArray(size -> new AbstractStatus[size]);
         
-		for(AbstractStatus s : objStatuses){
-			if(s.getStatusName() == newStat.getStatusName() && !found){
+        listStatuses();
+		
+        for(AbstractStatus s : objStatuses){
+			if(s.getStatusName() == newStat.getStatusName()){
 				// already inflicted
 				found = true;
-				if(s.getIntensityLevel() <= newStat.getIntensityLevel()){
+				if(s.getIntensityLevel() < newStat.getIntensityLevel()){
 					// better level
-					if(s.getUsesLeft() < newStat.getBaseUses()){
-						s.terminate();
-						shouldReplace = true;
-					}
-				}
+                    s.terminate();
+                    shouldReplace = true;
+				} else if(s.getUsesLeft() < newStat.getMaxUses()){
+                    s.terminate();
+                    shouldReplace = true;
+                }
 			}
 		}
 		if(shouldReplace || !found){
 			statuses.add(newStat);
+            newStat.inflictOn(this);
 		}
 	}
 	
@@ -225,14 +229,14 @@ public class Player extends Entity{
             }
         }
 		slash.update();
-		getActionRegister().resetTrips();
+		//getActionRegister().resetTrips();
 		for(AbstractActive a : actives){
 			a.update();
 		}
 		for(AbstractPassive p : passives){
 			p.update();
 		}
-		updateStatuses();
+		//updateStatuses();
 		getActionRegister().triggerOnUpdate();
 		log.update();
 		energyLog.update();

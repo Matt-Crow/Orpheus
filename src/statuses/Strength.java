@@ -34,14 +34,13 @@ public class Strength extends AbstractStatus{
             Direction angleBetween = Direction.getDegreeByLengths(p.getX(), p.getY(), target.getX(), target.getY());
             int magnitude = Master.UNITSIZE * getIntensityLevel();
             target.knockBack(magnitude, angleBetween, Master.seconds(1));
-            use();
         });
 		p.getActionRegister().addOnMeleeHit(a);
 	}
     
     @Override
 	public String getDesc(){
-		return "Strength, causing the inflicted's next " + getBaseUses() + " melee attacks to deal an extra " + (3.5 * getIntensityLevel()) + "% of the target's maximum HP and knock them back " + (3.5 * getIntensityLevel()) + " units";
+		return "Strength, causing the inflicted's next " + getMaxUses() + " melee attacks to deal an extra " + (3.5 * getIntensityLevel()) + "% of the target's maximum HP and knock them back " + (3.5 * getIntensityLevel()) + " units";
 	}
 
     @Override

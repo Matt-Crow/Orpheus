@@ -36,7 +36,7 @@ public class OnBeHitPassive extends AbstractPassive implements JsonSerialable{
 	
     @Override
 	public void update(){
-		getRegisteredTo().getActionRegister().addOnBeHit(getKey());
+		//getRegisteredTo().getActionRegister().addOnBeHit(getKey());
 	}
     @Override
 	public String getDescription(){

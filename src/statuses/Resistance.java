@@ -32,7 +32,6 @@ public class Resistance extends AbstractStatus{
 		OnHitListener a = new OnHitListener((Consumer<OnHitEvent> & Serializable)(OnHitEvent t)->{
             if(t.getWasHit() instanceof Player){
                 ((Player)t.getWasHit()).getLog().applyFilter(1 - 0.25 * getIntensityLevel());
-                use();
             }
 		});
 		p.getActionRegister().addOnBeHit(a);
@@ -40,7 +39,7 @@ public class Resistance extends AbstractStatus{
     
     @Override
 	public String getDesc(){
-		return "Resistance, reducing the speed of damage taken by " + (25 * getIntensityLevel()) + "% for the next " + getBaseUses() + " hits received";
+		return "Resistance, reducing the speed of damage taken by " + (25 * getIntensityLevel()) + "% for the next " + getMaxUses() + " hits received";
 	}
 
     @Override

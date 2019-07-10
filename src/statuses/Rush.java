@@ -27,7 +27,6 @@ public class Rush extends AbstractStatus{
             @Override
 			public void actionPerformed(OnUpdateEvent e){
 				e.getUpdated().applySpeedFilter(1 + 0.2 * getIntensityLevel());
-				use();
 			}
 		};
 		
@@ -36,7 +35,7 @@ public class Rush extends AbstractStatus{
     
     @Override
 	public String getDesc(){
-		return "Rush, increasing the inflicted's movement speed by " + (20 * getIntensityLevel()) + "% for the next " + Master.framesToSeconds(getBaseUses()) + " seconds";
+		return "Rush, increasing the inflicted's movement speed by " + (20 * getIntensityLevel()) + "% for the next " + Master.framesToSeconds(getMaxUses()) + " seconds";
 	}
 
     @Override

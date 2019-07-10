@@ -39,6 +39,7 @@ public class PlayerAI implements Serializable{
         enabled = b;
         if(b){
             setToWander();
+            appliedTo.getActionRegister().addOnBeHit(new OnHitListener((e)->latch((Player)e.getHitter())));
         }
     }
     
@@ -136,8 +137,6 @@ public class PlayerAI implements Serializable{
                 System.out.println("Uncaught AI Mode in PlayerAI.update: " + mode);
                 break;
         }
-        
-		appliedTo.getActionRegister().addOnBeHit(new OnHitListener((e)->latch((Player)e.getHitter())));
 	}
     
     
