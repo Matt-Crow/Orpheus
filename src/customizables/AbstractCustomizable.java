@@ -22,16 +22,14 @@ import statuses.*;
  * The name is based on the fact that players would be able to upgrade these 3 subclasses,
  * a feature I no longer intend to implement.
  * With that said, this may be renamed in the future
- * @param <T> an enum, the type of stats this class will use
- for example, the AbstractActive class extends AbstractCustomizable&lt;ActiveStatName&gt;
  */
 
-public abstract class AbstractCustomizable<T> implements Serializable{
+public abstract class AbstractCustomizable implements Serializable{
     public final CustomizableType upgradableType;
     private String name;
 	private Player registeredTo;
-	private final HashMap<T, Double> stats;
-	private final HashMap<T, Integer> bases;
+	private final HashMap<Enum, Double> stats;
+	private final HashMap<Enum, Integer> bases;
 	private int cooldownTime;          // frames between uses of this upgradable in battle
 	private int framesUntilUse;        // frames until this upgradable can be used in battle again
 	
@@ -95,7 +93,7 @@ public abstract class AbstractCustomizable<T> implements Serializable{
      * so the value can be recalculated from the base, so I can change the calculation formula
      * @param value the value of the stat.
      */
-	public final void addStat(T name, int base, double value){
+	public final void addStat(Enum name, int base, double value){
 		stats.put(name, value);
         bases.put(name, base);
     }
@@ -106,7 +104,7 @@ public abstract class AbstractCustomizable<T> implements Serializable{
      * @param n the name of the stat to return.
      * @return the value for the stat.
      */
-	public final double getStatValue(T n){
+	public final double getStatValue(Enum n){
         if(!stats.containsKey(n)){
             throw new NullPointerException("Stat not found for " + registeredTo.getName() + " with name " + n.toString());
         }
@@ -122,7 +120,7 @@ public abstract class AbstractCustomizable<T> implements Serializable{
      * @param statName the name of the stat to get the base for.
      * @return the base value used to calculate a stat.
      */
-	public final int getBase(T statName){
+	public final int getBase(Enum statName){
 		return bases.get(statName);
 	}
     
@@ -187,7 +185,7 @@ public abstract class AbstractCustomizable<T> implements Serializable{
 	public void clearInflict(){
 		inflict = new StatusTable();
 	}
-	public void copyInflictTo(AbstractCustomizable<T> a){
+	public void copyInflictTo(AbstractCustomizable a){
 		/* takes all the statuses from this upgradable's
 		 * status table, and copies them to p's
 		 */
@@ -212,6 +210,6 @@ public abstract class AbstractCustomizable<T> implements Serializable{
 		framesUntilUse -= 1;
 	}
     
-    public abstract AbstractCustomizable<T> copy();
+    public abstract AbstractCustomizable copy();
     public abstract String getDescription();
 }

@@ -13,7 +13,7 @@ import customizables.AbstractCustomizable;
 
 @SuppressWarnings("serial")
 public class UpgradableCustomizer<T> extends JComponent{
-	private AbstractCustomizable<T> customizing;
+	private AbstractCustomizable customizing;
 	private JTextArea name;
 	private Pane p1; // used to split into two sections
 	private Pane p2;
@@ -22,7 +22,7 @@ public class UpgradableCustomizer<T> extends JComponent{
 	private int boxCount;
 	private ArrayList<StatusCustomizer> statusBoxes;
 	
-	public UpgradableCustomizer(AbstractCustomizable<T> a){
+	public UpgradableCustomizer(AbstractCustomizable a){
 		super();
 		customizing = a.copy();
 		
@@ -72,7 +72,7 @@ public class UpgradableCustomizer<T> extends JComponent{
 			save.setEnabled(false);
 		}
 	}
-	public AbstractCustomizable<T> getCustomizing(){
+	public AbstractCustomizable getCustomizing(){
 		return customizing;
 	}
 	
@@ -83,7 +83,7 @@ public class UpgradableCustomizer<T> extends JComponent{
 		revalidate();
 		repaint();
 	}
-	public void addBox(T s){
+	public void addBox(Enum s){
 		Integer[] options = new Integer[]{0, 1, 2, 3, 4, 5};
 		OptionBox<Integer> box = new OptionBox<>(s.toString(), options);
 		box.setSelected((Integer)customizing.getBase(s));

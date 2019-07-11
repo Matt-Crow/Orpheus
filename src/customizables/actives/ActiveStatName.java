@@ -1,5 +1,7 @@
 package customizables.actives;
 
+import java.util.NoSuchElementException;
+
 public enum ActiveStatName{
 	NAME("Name"),
     ARC("Arc"),
@@ -13,6 +15,20 @@ public enum ActiveStatName{
     private final String displayValue;
     ActiveStatName(String text){
         displayValue = text;
+    }
+    
+    public static ActiveStatName fromString(String s){
+        ActiveStatName ret = null;
+        for(ActiveStatName asn : values()){
+            if(asn.toString().equalsIgnoreCase(s)){
+                ret = asn;
+                break;
+            }
+        }
+        if(ret == null){
+            throw new NoSuchElementException("There are no character stats called " + s);
+        }
+        return ret;
     }
     
     @Override

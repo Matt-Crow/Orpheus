@@ -44,7 +44,7 @@ public class ActiveCustomizer extends UpgradableCustomizer<ActiveStatName>{
 	}
 	public void updateField(String n, int val){
 		AbstractActive a = (AbstractActive)getCustomizing();
-		a.setStat(ActiveStatName.valueOf(n.toUpperCase()), val);
+		a.setStat(ActiveStatName.fromString(n.toUpperCase()), val);
 		a.init();
 		super.updateField(n, val);
 	}

@@ -19,7 +19,7 @@ public class CharacterClassCustomizer extends UpgradableCustomizer<CharacterStat
 	}
 	public void updateField(String n, int val){
 		CharacterClass c = (CharacterClass)getCustomizing();
-		c.setStat(CharacterStatName.valueOf(n.toUpperCase()), val);
+		c.setStat(CharacterStatName.fromString(n.toUpperCase()), val);
 		c.init();
 		super.updateField(n, val);
 	}

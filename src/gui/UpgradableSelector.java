@@ -9,13 +9,13 @@ import customizables.AbstractCustomizable;
 
 @SuppressWarnings("serial")
 public class UpgradableSelector<T> extends JComponent{
-	private OptionBox<AbstractCustomizable<T>> box;
+	private OptionBox<AbstractCustomizable> box;
 	private JTextArea desc;
 	
-	public UpgradableSelector(String title, AbstractCustomizable<T>[] a){
+	public UpgradableSelector(String title, AbstractCustomizable[] a){
 		super();
 		setLayout(new GridLayout(2, 1));
-		box = new OptionBox<AbstractCustomizable<T>>(title, a);
+		box = new OptionBox<AbstractCustomizable>(title, a);
 		box.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				desc.setText(box.getSelected().getDescription());
@@ -28,7 +28,7 @@ public class UpgradableSelector<T> extends JComponent{
         Style.applyStyling(desc);
 		Style.applyStyling(this);
 	}
-	public OptionBox<AbstractCustomizable<T>> getBox(){
+	public OptionBox<AbstractCustomizable> getBox(){
 		return box;
 	}
 }

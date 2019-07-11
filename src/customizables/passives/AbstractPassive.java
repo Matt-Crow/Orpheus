@@ -17,7 +17,7 @@ import customizables.AbstractCustomizable;
 import customizables.CustomizableJsonUtil;
 import customizables.CustomizableType;
 
-public abstract class AbstractPassive extends AbstractCustomizable<PassiveStatName> implements JsonSerialable, Serializable{
+public abstract class AbstractPassive extends AbstractCustomizable implements JsonSerialable, Serializable{
 	/**
 	 * Passives are abilities that have specific triggers, 
 	 * i.e., the user does not directly trigger them:

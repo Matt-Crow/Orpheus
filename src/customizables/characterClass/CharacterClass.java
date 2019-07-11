@@ -18,7 +18,7 @@ import util.Number;
  * Each character class has its own set of stats and projectile colors.
  * @author Matt
  */
-public class CharacterClass extends AbstractCustomizable<CharacterStatName> implements JsonSerialable{
+public class CharacterClass extends AbstractCustomizable implements JsonSerialable{
     private CustomColors[] colors;
 
     private static final  HashMap<String, CharacterClass> ALL = new HashMap<>();

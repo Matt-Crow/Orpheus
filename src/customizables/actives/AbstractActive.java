@@ -27,7 +27,7 @@ import util.Number;
  * The AbstractActive class serves as the base for active abilities possessed by Players
  * @author Matt
  */
-public abstract class AbstractActive extends AbstractCustomizable<ActiveStatName> implements JsonSerialable{
+public abstract class AbstractActive extends AbstractCustomizable implements JsonSerialable{
     private final ActiveType type; // used for serialization
     private ParticleType particleType; // the type of particles this' projectiles emit @see Projectile
     private int cost; // the energy cost of the active. Calculated automatically
