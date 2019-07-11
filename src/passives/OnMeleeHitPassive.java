@@ -1,10 +1,13 @@
 package passives;
 
+import actions.OnHitEvent;
+import actions.OnHitListener;
+import entities.Player;
 import javax.json.JsonObject;
 import serialization.JsonSerialable;
 import upgradables.UpgradableJsonUtil;
 
-public class OnMeleeHitPassive extends AbstractPassive implements JsonSerialable{
+public class OnMeleeHitPassive extends AbstractPassive implements JsonSerialable, OnHitListener{
 	/*
 	 * Same as onHitPassive, though only triggering off
 	 * of melee hits
@@ -34,8 +37,8 @@ public class OnMeleeHitPassive extends AbstractPassive implements JsonSerialable
     }
     
     @Override
-	public void update(){
-		getRegisteredTo().getActionRegister().addOnMeleeHit(null);
+	public void init(){
+		getRegisteredTo().getActionRegister().addOnMeleeHit(this);
 	}
     @Override
 	public String getDescription(){
@@ -45,4 +48,9 @@ public class OnMeleeHitPassive extends AbstractPassive implements JsonSerialable
 		desc += getInflict().getStatusString();
 		return desc;
 	}
+
+    @Override
+    public void trigger(OnHitEvent e) {
+        applyEffect((Player)((getTargetsUser()) ? e.getHitter() : e.getWasHit()));
+    }
 }

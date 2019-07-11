@@ -23,10 +23,10 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
 	 * i.e., the user does not directly trigger them:
 	 * they are triggered passively
 	 */
-	private PassiveType type; // used when upcasting
-	private boolean targetsUser;
+	private final PassiveType type; // used when upcasting
+	private final boolean targetsUser;
 	
-	private static HashMap<String, AbstractPassive> ALL = new HashMap<>();
+	private static final HashMap<String, AbstractPassive> ALL = new HashMap<>();
 	static{
         ThresholdPassive def = new ThresholdPassive("Default", 2);
         def.addStatus(new Resistance(2, 2));
@@ -93,18 +93,6 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
     
     
     public static void loadAll(){
-		OnMeleeHitPassive lh = new OnMeleeHitPassive("Leechhealer", true);
-		lh.addStatus(new Regeneration(1, 1));
-		
-		OnMeleeHitPassive m = new OnMeleeHitPassive("Momentum", true);
-		m.addStatus(new Rush(1, 1));
-		
-		OnMeleeHitPassive s = new OnMeleeHitPassive("Sharpen", true);
-		s.addStatus(new Strength(1, 1));
-		
-		OnMeleeHitPassive ss = new OnMeleeHitPassive("Sparking Strikes", true);
-		ss.addStatus(new Charge(1, 1));
-		
         // on be hit
 		OnBeHitPassive r = new OnBeHitPassive("Recover", true);
 		r.addStatus(new Regeneration(1, 1));
@@ -118,6 +106,18 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
         rc.addStatus(new Charge(1, 1));
         OnHitPassive ch = new OnHitPassive("Crippling Hits", false);
         ch.addStatus(new Stun(1, 1));
+        
+        // on melee hit
+        OnMeleeHitPassive lh = new OnMeleeHitPassive("Leechhealer", true);
+		lh.addStatus(new Regeneration(1, 1));
+		OnMeleeHitPassive m = new OnMeleeHitPassive("Momentum", true);
+		m.addStatus(new Rush(1, 1));
+		OnMeleeHitPassive s = new OnMeleeHitPassive("Sharpen", true);
+		s.addStatus(new Strength(1, 1));
+		OnMeleeHitPassive ss = new OnMeleeHitPassive("Sparking Strikes", true);
+		ss.addStatus(new Charge(1, 1));
+        OnMeleeHitPassive cg = new OnMeleeHitPassive("Crushing Grip", false);
+        cg.addStatus(new Stun(2, 1));
         
 		
 		ThresholdPassive a = new ThresholdPassive("Adrenaline", 3);
@@ -153,7 +153,8 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
 				re,
                 rc,
                 cu,
-                ch
+                ch,
+                cg
 		});
 	}
     
