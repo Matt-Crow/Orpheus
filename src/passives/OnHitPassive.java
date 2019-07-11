@@ -1,10 +1,13 @@
 package passives;
 
+import actions.OnHitEvent;
+import actions.OnHitListener;
+import entities.Player;
 import javax.json.JsonObject;
 import serialization.JsonSerialable;
 import upgradables.UpgradableJsonUtil;
 
-public class OnHitPassive extends AbstractPassive implements JsonSerialable{
+public class OnHitPassive extends AbstractPassive implements JsonSerialable, OnHitListener{
 	/**
 	 * Triggers upon a projectile registered to the
 	 * user colliding with an enemy player
@@ -35,11 +38,21 @@ public class OnHitPassive extends AbstractPassive implements JsonSerialable{
         return ret;
     }
     
-	
     @Override
-	public void update(){
-		getRegisteredTo().getActionRegister().addOnHit(getKey());
-	}
+    public void init(){
+        super.init();
+        getRegisteredTo().getActionRegister().addOnHit(this);
+    }
+    
+    @Override
+    public void trigger(OnHitEvent e) {
+        if(getTargetsUser()){
+            applyEffect((Player)e.getHitter());
+        } else {
+            applyEffect((Player)e.getWasHit());
+        }
+    }
+	
     @Override
 	public String getDescription(){
 		String desc = getName() + ": ";

@@ -28,8 +28,8 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
 	
 	private static HashMap<String, AbstractPassive> ALL = new HashMap<>();
 	static{
-        ThresholdPassive def = new ThresholdPassive("Default", 3);
-        def.addStatus(new Resistance(3, 3));
+        ThresholdPassive def = new ThresholdPassive("Default", 2);
+        def.addStatus(new Resistance(2, 2));
         addPassive(def);
     }
     
@@ -113,6 +113,11 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
         OnBeHitPassive cu = new OnBeHitPassive("Cursed", false);
         cu.addStatus(new Stun(3, 3));
 		
+        // on hit
+        OnHitPassive rc = new OnHitPassive("Recharge", true);
+        rc.addStatus(new Charge(1, 1));
+        OnHitPassive ch = new OnHitPassive("Crippling Hits", false);
+        ch.addStatus(new Stun(1, 1));
         
 		
 		ThresholdPassive a = new ThresholdPassive("Adrenaline", 3);
@@ -131,8 +136,7 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
 		ThresholdPassive re = new ThresholdPassive("Retaliation", 3);
 		re.addStatus(new Strength(2, 1));
         
-        OnHitPassive rc = new OnHitPassive("Recharge", true);
-        rc.addStatus(new Charge(1, 1));
+        
         
         
 		addPassives(new AbstractPassive[]{
@@ -148,7 +152,8 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
 				e,
 				re,
                 rc,
-                cu
+                cu,
+                ch
 		});
 	}
     
@@ -207,26 +212,4 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
 			p.inflict(inf.getStatusAt(i));
 		}
 	}
-    
-    //I don't like this
-	public OnHitListener getKey(){
-        OnHitListener a = (OnHitListener & Serializable)(OnHitEvent t) -> {
-            StatusTable inf = getInflict();
-            for(int i = 0; i < inf.getSize(); i++){
-                if(getTargetsUser()){
-                    getRegisteredTo().inflict(inf.getStatusAt(i));
-                } else {
-                    ((Player)t.getWasHit()).inflict(inf.getStatusAt(i));
-                }
-            }
-        };
-		return a;
-	}
-    @Override
-	public void update(){
-		
-	}
-    
-    @Override
-    public abstract String getDescription();
 }

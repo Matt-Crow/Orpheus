@@ -16,7 +16,7 @@ import serialization.*;
  */
 public class Build implements JsonSerialable{
 	private static final HashMap<String, Build> ALL = new HashMap<>();
-	private static final Build DEFAULT_EARTH = new Build("Default Earth", "Earth", "Boulder Toss", "Warrior's Stance", "Earthquake", "Toughness", "Determination", "Recover");
+	private static final Build DEFAULT_EARTH = new Build("Default Earth", "Earth", "Boulder Toss", "Warrior's Stance", "Earthquake", "Toughness", "Determination", "Crippling Hits");
 	private static final Build DEFAULT_FIRE = new Build("Default Fire", "Fire", "Mega Firebolt", "Fields of Fire", "Fireball", "Escapist", "Sparking Strikes", "Bracing");
 	private static final Build DEFAULT_WATER = new Build("Default Water", "Water", "Waterbolt", "Slash", "Healing Rain", "Toughness", "Bracing", "Recover");
 	private static final Build DEFAULT_AIR = new Build("Default Air", "Air", "Mini Windbolt", "Speed Test", "Blade Stance", "Momentum", "Sharpen", "Leechhealer");
