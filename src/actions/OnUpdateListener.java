@@ -9,8 +9,8 @@ public interface OnUpdateListener extends Serializable{
     
     /**
      * Triggered at the end of every frame.
-     * @param a an event detailing what Entity was updated.
+     * @param e an event detailing what Entity was updated.
      * @see ActionRegister
      */
-    public abstract void trigger(OnUpdateEvent a);
+    public abstract void trigger(OnUpdateEvent e);
 }

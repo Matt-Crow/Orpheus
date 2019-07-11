@@ -119,23 +119,18 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
         OnMeleeHitPassive cg = new OnMeleeHitPassive("Crushing Grip", false);
         cg.addStatus(new Stun(2, 1));
         
-		
+		//threshold
 		ThresholdPassive a = new ThresholdPassive("Adrenaline", 3);
 		a.addStatus(new Charge(2, 1));
-		
 		ThresholdPassive b = new ThresholdPassive("Bracing", 3);
 		b.addStatus(new Resistance(2, 1));
-		
 		ThresholdPassive d = new ThresholdPassive("Determination", 3);
 		d.addStatus(new Strength(1, 1));
 		d.addStatus(new Resistance(1, 1));
-		
-		ThresholdPassive e = new ThresholdPassive("Escapist", 3);
+		ThresholdPassive e = new ThresholdPassive("Escapist", 2);
 		e.addStatus(new Rush(2, 1));
-		
 		ThresholdPassive re = new ThresholdPassive("Retaliation", 3);
 		re.addStatus(new Strength(2, 1));
-        
         
         
         

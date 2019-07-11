@@ -24,8 +24,8 @@ public class Battle implements Serializable{
 	public void init(){
 		int s = host.getMap().getWidth();
 		int spacingFromTopEdge = Player.RADIUS;
-		int spacingBetween = s / 6;
         Team[] teams = host.getTeams();
+        int spacingBetween = s / (teams[0].getRosterSize() + 1);
         teams[0].setEnemy(teams[1]);
 		teams[0].init(spacingFromTopEdge, spacingBetween, 270);
         teams[1].setEnemy(teams[0]);
