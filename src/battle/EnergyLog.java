@@ -1,6 +1,6 @@
 package battle;
 
-import customizables.CharacterStatName;
+import customizables.characterClass.CharacterStatName;
 import entities.Player;
 import controllers.Master;
 import java.io.Serializable;

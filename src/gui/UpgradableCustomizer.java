@@ -9,11 +9,11 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
-import upgradables.AbstractUpgradable;
+import customizables.AbstractCustomizable;
 
 @SuppressWarnings("serial")
 public class UpgradableCustomizer<T> extends JComponent{
-	private AbstractUpgradable<T> customizing;
+	private AbstractCustomizable<T> customizing;
 	private JTextArea name;
 	private Pane p1; // used to split into two sections
 	private Pane p2;
@@ -22,7 +22,7 @@ public class UpgradableCustomizer<T> extends JComponent{
 	private int boxCount;
 	private ArrayList<StatusCustomizer> statusBoxes;
 	
-	public UpgradableCustomizer(AbstractUpgradable<T> a){
+	public UpgradableCustomizer(AbstractCustomizable<T> a){
 		super();
 		customizing = a.copy();
 		
@@ -72,7 +72,7 @@ public class UpgradableCustomizer<T> extends JComponent{
 			save.setEnabled(false);
 		}
 	}
-	public AbstractUpgradable<T> getCustomizing(){
+	public AbstractCustomizable<T> getCustomizing(){
 		return customizing;
 	}
 	

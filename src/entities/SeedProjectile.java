@@ -1,7 +1,7 @@
 package entities;
 
-import actives.AbstractActive;
-import actives.ActiveStatName;
+import customizables.actives.AbstractActive;
+import customizables.actives.ActiveStatName;
 import controllers.Master;
 
 public class SeedProjectile extends Projectile{

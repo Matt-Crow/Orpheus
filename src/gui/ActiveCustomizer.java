@@ -4,8 +4,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import actives.AbstractActive;
-import actives.ActiveStatName;
+import customizables.actives.AbstractActive;
+import customizables.actives.ActiveStatName;
 import entities.ParticleType;
 
 @SuppressWarnings("serial")

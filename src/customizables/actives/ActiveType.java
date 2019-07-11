@@ -1,4 +1,4 @@
-package actives;
+package customizables.actives;
 
 public enum ActiveType {
 	MELEE("melee active"),

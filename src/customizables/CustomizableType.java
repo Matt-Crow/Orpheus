@@ -1,20 +1,20 @@
-package upgradables;
+package customizables;
 
 import java.util.NoSuchElementException;
 
-public enum UpgradableType {
+public enum CustomizableType {
 	ACTIVE("active ability"),
 	PASSIVE("passive ability"),
 	CHARACTER_CLASS("character class");
     
     private final String name;
-    UpgradableType(String n){
+    CustomizableType(String n){
         name = n;
     }
     
-    public static UpgradableType fromString(String s){
-        UpgradableType ret = null;
-        for(UpgradableType t : values()){
+    public static CustomizableType fromString(String s){
+        CustomizableType ret = null;
+        for(CustomizableType t : values()){
             if(t.toString().equalsIgnoreCase(s)){
                 ret = t;
                 break;

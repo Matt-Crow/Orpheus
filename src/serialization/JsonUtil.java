@@ -1,15 +1,16 @@
 package serialization;
 
-import actives.*;
-import customizables.*;
+import customizables.passives.AbstractPassive;
+import customizables.actives.AbstractActive;
+import customizables.Build;
+import customizables.characterClass.CharacterClass;
 import java.io.*;
 import static java.lang.System.out;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 import javax.json.*;
-import passives.*;
-import upgradables.AbstractUpgradable;
-import upgradables.UpgradableJsonUtil;
+import customizables.AbstractCustomizable;
+import customizables.CustomizableJsonUtil;
 
 /**
  *
@@ -131,15 +132,15 @@ public class JsonUtil {
     
     public static void main(String[] args) throws Exception{
         JsonObject obj = null;
-        AbstractUpgradable u = null;
+        AbstractCustomizable u = null;
         Build b = null;
-        AbstractUpgradable.loadAll();
+        AbstractCustomizable.loadAll();
         Build.loadAll();
         
         //done
         for(AbstractActive aa : AbstractActive.getAll()){
             out.println(aa.getName());
-            obj = UpgradableJsonUtil.serializeJson(aa);
+            obj = CustomizableJsonUtil.serializeJson(aa);
             //pprint(obj, 0);
             u = AbstractActive.deserializeJson(obj);
             if(u != null){
@@ -153,9 +154,9 @@ public class JsonUtil {
         
         //done
         for(AbstractPassive ap : AbstractPassive.getAll()){
-            obj = UpgradableJsonUtil.serializeJson(ap);
+            obj = CustomizableJsonUtil.serializeJson(ap);
             pprint(obj, 0);
-            u = UpgradableJsonUtil.deserializeJson(obj);
+            u = CustomizableJsonUtil.deserializeJson(obj);
             if(u != null){
                 pprint(obj, 0);
                 out.println(ap.getDescription());
@@ -165,7 +166,7 @@ public class JsonUtil {
         
         //done
         for(CharacterClass cc : CharacterClass.getAll()){
-            obj = UpgradableJsonUtil.serializeJson(cc);
+            obj = CustomizableJsonUtil.serializeJson(cc);
             pprint(obj, 0);
             u = CharacterClass.deserializeJson(obj);
             if(u != null){

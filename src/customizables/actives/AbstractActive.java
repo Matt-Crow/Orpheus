@@ -1,4 +1,4 @@
-package actives;
+package customizables.actives;
 
 import java.util.*;
 import java.awt.Color;
@@ -6,7 +6,7 @@ import java.awt.Graphics;
 import graphics.CustomColors;
 
 import controllers.Master;
-import upgradables.AbstractUpgradable;
+import customizables.AbstractCustomizable;
 import entities.*;
 import java.io.File;
 import javax.json.Json;
@@ -19,15 +19,15 @@ import javax.json.JsonValue;
 import serialization.JsonSerialable;
 import serialization.JsonUtil;
 import statuses.*;
-import upgradables.UpgradableJsonUtil;
-import upgradables.UpgradableType;
+import customizables.CustomizableJsonUtil;
+import customizables.CustomizableType;
 import util.Number;
 
 /**
  * The AbstractActive class serves as the base for active abilities possessed by Players
  * @author Matt
  */
-public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName> implements JsonSerialable{
+public abstract class AbstractActive extends AbstractCustomizable<ActiveStatName> implements JsonSerialable{
     private final ActiveType type; // used for serialization
     private ParticleType particleType; // the type of particles this' projectiles emit @see Projectile
     private int cost; // the energy cost of the active. Calculated automatically
@@ -68,7 +68,7 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName> 
      * (dmg * 50) damage.
      */
     public AbstractActive(ActiveType t, String n, int arcLength, int range, int speed, int aoe, int dmg){
-        super(UpgradableType.ACTIVE, n);
+        super(CustomizableType.ACTIVE, n);
         type = t;
 
         setStat(ActiveStatName.ARC, arcLength);
@@ -95,7 +95,7 @@ public abstract class AbstractActive extends AbstractUpgradable<ActiveStatName> 
     
     @Override
     public JsonObject serializeJson() {
-        JsonObjectBuilder b = JsonUtil.deconstruct(UpgradableJsonUtil.serializeJson(this));
+        JsonObjectBuilder b = JsonUtil.deconstruct(CustomizableJsonUtil.serializeJson(this));
         b.add("active type", type.toString());
         b.add("particle type", particleType.toString());
         JsonArrayBuilder a = Json.createArrayBuilder();

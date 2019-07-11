@@ -4,7 +4,7 @@ import customizables.Build;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
-import upgradables.AbstractUpgradable;
+import customizables.AbstractCustomizable;
 import util.CombatLog;
 import windows.StartCanvas;
 
@@ -24,7 +24,7 @@ public class MainWindow extends JFrame{
 		setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
         setVisible(true);
 		addWindowListener(winAdapt());
-        AbstractUpgradable.loadAll();
+        AbstractCustomizable.loadAll();
         Build.loadAll();
     }
     

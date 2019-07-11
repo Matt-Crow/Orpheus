@@ -1,7 +1,7 @@
 package entities;
 
-import actives.AbstractActive;
-import actives.ActiveStatName;
+import customizables.actives.AbstractActive;
+import customizables.actives.ActiveStatName;
 
 //TODO: replace this with explosion later
 public class AOEProjectile extends Projectile{

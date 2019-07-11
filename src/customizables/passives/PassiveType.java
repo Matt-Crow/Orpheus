@@ -1,4 +1,4 @@
-package passives;
+package customizables.passives;
 
 public enum PassiveType {
 	ONBEHIT("on be hit passive"),

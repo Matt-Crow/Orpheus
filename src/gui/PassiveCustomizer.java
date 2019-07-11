@@ -1,8 +1,8 @@
 package gui;
 
-import passives.AbstractPassive;
-import passives.PassiveStatName;
-import passives.ThresholdPassive;
+import customizables.passives.AbstractPassive;
+import customizables.passives.PassiveStatName;
+import customizables.passives.ThresholdPassive;
 
 @SuppressWarnings("serial")
 public class PassiveCustomizer extends UpgradableCustomizer<PassiveStatName>{

@@ -1,18 +1,19 @@
-package upgradables;
+package customizables;
 
-import actives.AbstractActive;
-import customizables.CharacterClass;
+import customizables.AbstractCustomizable;
+import customizables.actives.AbstractActive;
+import customizables.characterClass.CharacterClass;
 import java.io.File;
 import java.util.function.BiConsumer;
 import javax.json.*;
-import passives.AbstractPassive;
+import customizables.passives.AbstractPassive;
 import serialization.JsonUtil;
 import statuses.AbstractStatus;
 import statuses.StatusName;
 import statuses.StatusTable;
 
 /**
- * The UpgradableJsonUtil is used to serialize and de-serialize upgradables as JSON objects.
+ * The CustomizableJsonUtil is used to serialize and de-serialize upgradables as JSON objects.
  * I am currently tying to decide whether or not I want to store these methods in this class,
  * or back with the upgradables that this is serializing.
  * <hr/>
@@ -33,7 +34,7 @@ import statuses.StatusTable;
  * and I don't feel like it's best that I make a decision now: I have more important things to do right now.
  * @author Matt Crow
  */
-public class UpgradableJsonUtil {
+public class CustomizableJsonUtil {
     
     /**
      * Imports the JSON-serialized 
@@ -42,7 +43,7 @@ public class UpgradableJsonUtil {
      * @param f the file to import
      */
     public static void loadFile(File f){
-        AbstractUpgradable au = null;
+        AbstractCustomizable au = null;
         for(JsonObject obj : JsonUtil.readFromFile(f)){
             au = deserializeJson(obj);
             if(au != null){
@@ -79,7 +80,7 @@ public class UpgradableJsonUtil {
         return obj.build();
     }
     
-    public static JsonObject serializeJson(AbstractUpgradable au){
+    public static JsonObject serializeJson(AbstractCustomizable au){
         JsonObjectBuilder b = Json.createObjectBuilder();
         b.add("upgradable type", au.upgradableType.toString());
         b.add("name", au.getName());
@@ -98,11 +99,11 @@ public class UpgradableJsonUtil {
     }
     
     //make method in JsonUtil or annotation
-    public static UpgradableType getUpgradableTypeFrom(JsonObject obj){
+    public static CustomizableType getUpgradableTypeFrom(JsonObject obj){
         if(!obj.containsKey("upgradable type")){
             throw new JsonException("Json Object is missing key 'upgradable type'");
         }
-        return UpgradableType.fromString(obj.getString("upgradable type"));
+        return CustomizableType.fromString(obj.getString("upgradable type"));
     }
     public static String getNameFrom(JsonObject obj){
         if(!obj.containsKey("name")){
@@ -160,8 +161,8 @@ public class UpgradableJsonUtil {
         
         return ret;
     }
-    public static AbstractUpgradable deserializeJson(JsonObject obj){
-        AbstractUpgradable ret = null;
+    public static AbstractCustomizable deserializeJson(JsonObject obj){
+        AbstractCustomizable ret = null;
         switch(getUpgradableTypeFrom(obj)){
             case ACTIVE:
                 ret = AbstractActive.deserializeJson(obj);

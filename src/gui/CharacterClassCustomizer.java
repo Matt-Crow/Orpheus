@@ -4,8 +4,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import customizables.CharacterClass;
-import customizables.CharacterStatName;
+import customizables.characterClass.CharacterClass;
+import customizables.characterClass.CharacterStatName;
 import graphics.CustomColors;
 
 @SuppressWarnings("serial")

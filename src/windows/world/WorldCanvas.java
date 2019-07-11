@@ -15,7 +15,7 @@ import entities.PlayerControls;
 import entities.TruePlayer;
 import java.awt.Graphics2D;
 import java.io.IOException;
-import upgradables.AbstractUpgradable;
+import customizables.AbstractCustomizable;
 import util.SerialUtil;
 import windows.Canvas;
 
@@ -134,7 +134,7 @@ public class WorldCanvas extends Canvas{
     
     
     public static void main(String[] args) throws IOException{
-        AbstractUpgradable.loadAll();
+        AbstractCustomizable.loadAll();
         Build.loadAll();
         Master.getUser().initPlayer().getPlayer().applyBuild(Build.getBuildByName("Default Earth"));
         World w = World.createDefaultBattle();

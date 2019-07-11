@@ -1,10 +1,10 @@
-package actives;
+package customizables.actives;
 
 //import entities.Player;
 import entities.ParticleType;
 import javax.json.*;
 import serialization.JsonSerialable;
-import upgradables.UpgradableJsonUtil;
+import customizables.CustomizableJsonUtil;
 
 public class MeleeActive extends AbstractActive implements JsonSerialable{
 	public MeleeActive(String n, int dmg){
@@ -20,10 +20,10 @@ public class MeleeActive extends AbstractActive implements JsonSerialable{
     
     public static final MeleeActive deserializeJson(JsonObject obj){
         MeleeActive ret = new MeleeActive(
-            UpgradableJsonUtil.getNameFrom(obj),
-            UpgradableJsonUtil.getStatBaseFrom(obj, ActiveStatName.DAMAGE)
+            CustomizableJsonUtil.getNameFrom(obj),
+            CustomizableJsonUtil.getStatBaseFrom(obj, ActiveStatName.DAMAGE)
         );
-        ret.setInflict(UpgradableJsonUtil.getStatusTableFrom(obj));
+        ret.setInflict(CustomizableJsonUtil.getStatusTableFrom(obj));
         getTagsFrom(obj).stream().forEach(t->ret.addTag(t));
         ret.setParticleType(getParticleTypeFrom(obj));
         return ret;

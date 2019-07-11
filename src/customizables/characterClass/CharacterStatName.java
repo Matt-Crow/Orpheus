@@ -1,4 +1,4 @@
-package customizables;
+package customizables.characterClass;
 
 import java.util.NoSuchElementException;
 

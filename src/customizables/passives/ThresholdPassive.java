@@ -1,11 +1,11 @@
-package passives;
+package customizables.passives;
 
 import actions.OnUpdateEvent;
 import actions.OnUpdateListener;
 import entities.Player;
 import javax.json.JsonObject;
 import serialization.JsonSerialable;
-import upgradables.UpgradableJsonUtil;
+import customizables.CustomizableJsonUtil;
 import util.Number;
 
 /**
@@ -31,10 +31,10 @@ public class ThresholdPassive extends AbstractPassive implements JsonSerialable,
     
     public static final ThresholdPassive deserializeJson(JsonObject obj){
         ThresholdPassive pass = new ThresholdPassive(
-            UpgradableJsonUtil.getNameFrom(obj), 
-            UpgradableJsonUtil.getStatBaseFrom(obj, PassiveStatName.THRESHOLD)
+            CustomizableJsonUtil.getNameFrom(obj), 
+            CustomizableJsonUtil.getStatBaseFrom(obj, PassiveStatName.THRESHOLD)
         );
-        pass.setInflict(UpgradableJsonUtil.getStatusTableFrom(obj));
+        pass.setInflict(CustomizableJsonUtil.getStatusTableFrom(obj));
         
         return pass;
     }

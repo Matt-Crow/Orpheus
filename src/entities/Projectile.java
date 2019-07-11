@@ -3,11 +3,11 @@ package entities;
 import java.awt.Graphics;
 
 import graphics.CustomColors;
-import actives.AbstractActive;
-import actives.ActiveStatName;
-import actives.ActiveTag;
-import actives.MeleeActive;
-import customizables.CharacterStatName;
+import customizables.actives.AbstractActive;
+import customizables.actives.ActiveStatName;
+import customizables.actives.ActiveTag;
+import customizables.actives.MeleeActive;
+import customizables.characterClass.CharacterStatName;
 import controllers.Master;
 import util.CombatLog;
 import util.Random;

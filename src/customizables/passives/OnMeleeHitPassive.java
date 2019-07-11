@@ -1,11 +1,11 @@
-package passives;
+package customizables.passives;
 
 import actions.OnHitEvent;
 import actions.OnHitListener;
 import entities.Player;
 import javax.json.JsonObject;
 import serialization.JsonSerialable;
-import upgradables.UpgradableJsonUtil;
+import customizables.CustomizableJsonUtil;
 
 public class OnMeleeHitPassive extends AbstractPassive implements JsonSerialable, OnHitListener{
 	/*
@@ -29,10 +29,10 @@ public class OnMeleeHitPassive extends AbstractPassive implements JsonSerialable
     }
     public static OnMeleeHitPassive deserializeJson(JsonObject obj){
         OnMeleeHitPassive pass = new OnMeleeHitPassive(
-            UpgradableJsonUtil.getNameFrom(obj),
+            CustomizableJsonUtil.getNameFrom(obj),
             getTargetsUserFrom(obj)
         );
-        pass.setInflict(UpgradableJsonUtil.getStatusTableFrom(obj));
+        pass.setInflict(CustomizableJsonUtil.getStatusTableFrom(obj));
         return pass;
     }
     

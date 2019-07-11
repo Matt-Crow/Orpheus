@@ -1,14 +1,17 @@
 package entities;
 
+import customizables.passives.AbstractPassive;
+import customizables.actives.AbstractActive;
+import customizables.actives.MeleeActive;
+import customizables.Build;
+import customizables.characterClass.CharacterStatName;
+import customizables.characterClass.CharacterClass;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import actives.*;
 import ai.Path;
 import ai.PathInfo;
 import battle.*;
-import customizables.*;
-import passives.*;
 import ai.PlayerAI;
 import statuses.AbstractStatus;
 import controllers.Master;

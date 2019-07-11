@@ -5,17 +5,17 @@ import java.awt.GridLayout;
 
 import java.awt.event.ActionEvent;
 import javax.swing.*;
-import upgradables.AbstractUpgradable;
+import customizables.AbstractCustomizable;
 
 @SuppressWarnings("serial")
 public class UpgradableSelector<T> extends JComponent{
-	private OptionBox<AbstractUpgradable<T>> box;
+	private OptionBox<AbstractCustomizable<T>> box;
 	private JTextArea desc;
 	
-	public UpgradableSelector(String title, AbstractUpgradable<T>[] a){
+	public UpgradableSelector(String title, AbstractCustomizable<T>[] a){
 		super();
 		setLayout(new GridLayout(2, 1));
-		box = new OptionBox<AbstractUpgradable<T>>(title, a);
+		box = new OptionBox<AbstractCustomizable<T>>(title, a);
 		box.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
 				desc.setText(box.getSelected().getDescription());
@@ -28,7 +28,7 @@ public class UpgradableSelector<T> extends JComponent{
         Style.applyStyling(desc);
 		Style.applyStyling(this);
 	}
-	public OptionBox<AbstractUpgradable<T>> getBox(){
+	public OptionBox<AbstractCustomizable<T>> getBox(){
 		return box;
 	}
 }

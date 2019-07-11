@@ -3,7 +3,7 @@ package entities;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import actives.AbstractActive;
+import customizables.actives.AbstractActive;
 import graphics.CustomColors;
 import controllers.Master;
 import windows.world.WorldCanvas;

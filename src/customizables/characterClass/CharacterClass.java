@@ -1,15 +1,15 @@
-package customizables;
+package customizables.characterClass;
 
 import java.util.*;
 
-import upgradables.AbstractUpgradable;
+import customizables.AbstractCustomizable;
 import graphics.CustomColors;
 import java.io.File;
 import javax.json.*;
 import serialization.JsonSerialable;
 import serialization.JsonUtil;
-import upgradables.UpgradableJsonUtil;
-import upgradables.UpgradableType;
+import customizables.CustomizableJsonUtil;
+import customizables.CustomizableType;
 import util.Number;
 
 
@@ -18,7 +18,7 @@ import util.Number;
  * Each character class has its own set of stats and projectile colors.
  * @author Matt
  */
-public class CharacterClass extends AbstractUpgradable<CharacterStatName> implements JsonSerialable{
+public class CharacterClass extends AbstractCustomizable<CharacterStatName> implements JsonSerialable{
     private CustomColors[] colors;
 
     private static final  HashMap<String, CharacterClass> ALL = new HashMap<>();
@@ -29,7 +29,7 @@ public class CharacterClass extends AbstractUpgradable<CharacterStatName> implem
     
     // initializers
     public CharacterClass(String n, CustomColors[] cs, int HP, int energy, int dmg, int reduction, int speed){
-            super(UpgradableType.CHARACTER_CLASS, n);
+            super(CustomizableType.CHARACTER_CLASS, n);
             colors = cs;
 
             setStat(CharacterStatName.HP, HP);
@@ -49,7 +49,7 @@ public class CharacterClass extends AbstractUpgradable<CharacterStatName> implem
     
     @Override
     public JsonObject serializeJson(){
-        JsonObject obj = UpgradableJsonUtil.serializeJson(this);
+        JsonObject obj = CustomizableJsonUtil.serializeJson(this);
         JsonObjectBuilder b = Json.createObjectBuilder();
         obj.forEach((String key, JsonValue value)->{
             b.add(key, value);
@@ -65,13 +65,13 @@ public class CharacterClass extends AbstractUpgradable<CharacterStatName> implem
     
     public static CharacterClass deserializeJson(JsonObject obj){
         return new CharacterClass(
-            UpgradableJsonUtil.getNameFrom(obj),
+            CustomizableJsonUtil.getNameFrom(obj),
             getColorsFrom(obj),
-            UpgradableJsonUtil.getStatBaseFrom(obj, CharacterStatName.HP),
-            UpgradableJsonUtil.getStatBaseFrom(obj, CharacterStatName.ENERGY),
-            UpgradableJsonUtil.getStatBaseFrom(obj, CharacterStatName.DMG),
-            UpgradableJsonUtil.getStatBaseFrom(obj, CharacterStatName.REDUCTION),
-            UpgradableJsonUtil.getStatBaseFrom(obj, CharacterStatName.SPEED)
+            CustomizableJsonUtil.getStatBaseFrom(obj, CharacterStatName.HP),
+            CustomizableJsonUtil.getStatBaseFrom(obj, CharacterStatName.ENERGY),
+            CustomizableJsonUtil.getStatBaseFrom(obj, CharacterStatName.DMG),
+            CustomizableJsonUtil.getStatBaseFrom(obj, CharacterStatName.REDUCTION),
+            CustomizableJsonUtil.getStatBaseFrom(obj, CharacterStatName.SPEED)
         );
     }
     

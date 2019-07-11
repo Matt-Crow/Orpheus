@@ -1,19 +1,19 @@
-package upgradables;
+package customizables;
 
-import actives.AbstractActive;
+import customizables.actives.AbstractActive;
 import java.util.*;
 import entities.Player;
 import controllers.Master;
-import customizables.CharacterClass;
+import customizables.characterClass.CharacterClass;
 import java.io.Serializable;
-import passives.AbstractPassive;
+import customizables.passives.AbstractPassive;
 import statuses.*;
 
 //T is an enum
 
 /**
- * The AbstractUpgradable is the base class from which 
- * Actives, Passives, and CharacterClasses derive.
+ * The AbstractCustomizable is the base class from which 
+ Actives, Passives, and CharacterClasses derive.
  * 
  * It allows these classes to store components used by all 3 of them:
  * namely, their name, registered player, stats, cooldowns, and infliction tables;
@@ -23,11 +23,11 @@ import statuses.*;
  * a feature I no longer intend to implement.
  * With that said, this may be renamed in the future
  * @param <T> an enum, the type of stats this class will use
- * for example, the AbstractActive class extends AbstractUpgradable&lt;ActiveStatName&gt;
+ for example, the AbstractActive class extends AbstractCustomizable&lt;ActiveStatName&gt;
  */
 
-public abstract class AbstractUpgradable<T> implements Serializable{
-    public final UpgradableType upgradableType;
+public abstract class AbstractCustomizable<T> implements Serializable{
+    public final CustomizableType upgradableType;
     private String name;
 	private Player registeredTo;
 	private final HashMap<T, Double> stats;
@@ -38,7 +38,7 @@ public abstract class AbstractUpgradable<T> implements Serializable{
     private StatusTable inflict;       // statuses that this may inflict. Each subclass handles this themself
 	
 	// constructors
-	public AbstractUpgradable(UpgradableType t, String n){
+	public AbstractCustomizable(CustomizableType t, String n){
 		upgradableType = t;
         name = n;
 		stats = new HashMap<>();
@@ -187,7 +187,7 @@ public abstract class AbstractUpgradable<T> implements Serializable{
 	public void clearInflict(){
 		inflict = new StatusTable();
 	}
-	public void copyInflictTo(AbstractUpgradable<T> a){
+	public void copyInflictTo(AbstractCustomizable<T> a){
 		/* takes all the statuses from this upgradable's
 		 * status table, and copies them to p's
 		 */
@@ -212,6 +212,6 @@ public abstract class AbstractUpgradable<T> implements Serializable{
 		framesUntilUse -= 1;
 	}
     
-    public abstract AbstractUpgradable<T> copy();
+    public abstract AbstractCustomizable<T> copy();
     public abstract String getDescription();
 }

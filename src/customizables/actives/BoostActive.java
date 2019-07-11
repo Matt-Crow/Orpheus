@@ -1,10 +1,10 @@
-package actives;
+package customizables.actives;
 
 import javax.json.*;
 import serialization.JsonSerialable;
 import statuses.AbstractStatus;
 import statuses.StatusTable;
-import upgradables.UpgradableJsonUtil;
+import customizables.CustomizableJsonUtil;
 
 public class BoostActive extends AbstractActive implements JsonSerialable{
     public BoostActive(String n, StatusTable t){
@@ -26,8 +26,8 @@ public class BoostActive extends AbstractActive implements JsonSerialable{
     
     public static BoostActive deserializeJson(JsonObject obj){
         BoostActive ret = new BoostActive(
-            UpgradableJsonUtil.getNameFrom(obj),
-            UpgradableJsonUtil.getStatusTableFrom(obj)
+            CustomizableJsonUtil.getNameFrom(obj),
+            CustomizableJsonUtil.getStatusTableFrom(obj)
         );
         getTagsFrom(obj).stream().forEach(t->ret.addTag(t));
         return ret;

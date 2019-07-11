@@ -1,14 +1,18 @@
 package windows;
 
+import customizables.passives.AbstractPassive;
+import customizables.passives.PassiveStatName;
+import customizables.actives.ActiveStatName;
+import customizables.actives.AbstractActive;
+import customizables.Build;
+import customizables.characterClass.CharacterStatName;
+import customizables.characterClass.CharacterClass;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
-import actives.*;
 import java.util.ArrayList;
-import customizables.*;
 import entities.Player;
 import gui.*;
 import java.io.File;
-import passives.*;
 
 //need to redo this
 @SuppressWarnings("serial")

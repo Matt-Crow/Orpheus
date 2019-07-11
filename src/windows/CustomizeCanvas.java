@@ -1,13 +1,14 @@
 package windows;
 
+import customizables.passives.AbstractPassive;
+import customizables.actives.AbstractActive;
+import customizables.CustomizableJsonUtil;
+import customizables.AbstractCustomizable;
+import customizables.characterClass.CharacterClass;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
-import actives.*;
-import passives.*;
-import upgradables.*;
-import customizables.*;
-import upgradables.UpgradableType;
+import customizables.CustomizableType;
 import gui.*;
 import java.io.File;
 
@@ -17,7 +18,7 @@ import java.io.File;
 public class CustomizeCanvas extends OldContentPage{
 	
 	private OptionBox<String> upgradableName;
-	private AbstractUpgradable customizing;
+	private AbstractCustomizable customizing;
 	
 	// used to choose the type of what to customize
 	private JButton act;
@@ -42,7 +43,7 @@ public class CustomizeCanvas extends OldContentPage{
             File[] chosen = FileChooserUtil.chooseFiles();
             if(chosen != null){
                 for(File f : chosen){
-                    UpgradableJsonUtil.loadFile(f);
+                    CustomizableJsonUtil.loadFile(f);
                 }
             }
         });
@@ -66,7 +67,7 @@ public class CustomizeCanvas extends OldContentPage{
 		act = new JButton("Active");
 		act.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				phase2(UpgradableType.ACTIVE);
+				phase2(CustomizableType.ACTIVE);
 			}
 		});
 		add(act);
@@ -74,7 +75,7 @@ public class CustomizeCanvas extends OldContentPage{
 		cha = new JButton("Character Class");
 		cha.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				phase2(UpgradableType.CHARACTER_CLASS);
+				phase2(CustomizableType.CHARACTER_CLASS);
 			}
 		});
 		add(cha);
@@ -82,14 +83,14 @@ public class CustomizeCanvas extends OldContentPage{
 		pas = new JButton("Passive");
 		pas.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				phase2(UpgradableType.PASSIVE);
+				phase2(CustomizableType.PASSIVE);
 			}
 		});
 		add(pas);
 		resizeComponents(1, 3);
 		resizeMenu(2);
 	}
-	private void phase2(UpgradableType type){
+	private void phase2(CustomizableType type){
 		removePhase1();
 		
 		String[] names = new String[]{"An error occurred in CustomizeCanvas.phase2..."};
@@ -103,7 +104,7 @@ public class CustomizeCanvas extends OldContentPage{
 				public void actionPerformed(ActionEvent e){
 					customizing = AbstractActive.getActiveByName(upgradableName.getSelected());
 					add(new ActiveCustomizer((AbstractActive)customizing));
-					phase3(UpgradableType.ACTIVE);
+					phase3(CustomizableType.ACTIVE);
 				}
 			});
 			break;
@@ -113,7 +114,7 @@ public class CustomizeCanvas extends OldContentPage{
 				public void actionPerformed(ActionEvent e){
 					customizing = AbstractPassive.getPassiveByName(upgradableName.getSelected());
 					add(new PassiveCustomizer((AbstractPassive)customizing));
-					phase3(UpgradableType.PASSIVE);
+					phase3(CustomizableType.PASSIVE);
 				}
 			});
 			break;
@@ -123,7 +124,7 @@ public class CustomizeCanvas extends OldContentPage{
 				public void actionPerformed(ActionEvent e){
 					customizing = CharacterClass.getCharacterClassByName(upgradableName.getSelected());
 					add(new CharacterClassCustomizer((CharacterClass)customizing));
-					phase3(UpgradableType.PASSIVE);
+					phase3(CustomizableType.PASSIVE);
 				}
 			});
 			break;
@@ -135,7 +136,7 @@ public class CustomizeCanvas extends OldContentPage{
 		revalidate();
 		repaint();
 	}
-	private void phase3(UpgradableType type){
+	private void phase3(CustomizableType type){
 		removePhase2();
 		resizeComponents(1, 2);
 	}

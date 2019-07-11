@@ -1,4 +1,4 @@
-package actives;
+package customizables.actives;
 
 public enum ActiveStatName{
 	NAME("Name"),

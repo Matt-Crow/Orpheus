@@ -1,4 +1,4 @@
-package passives;
+package customizables.passives;
 
 import java.util.*;
 
@@ -13,11 +13,11 @@ import javax.json.*;
 import serialization.JsonSerialable;
 import serialization.JsonUtil;
 import statuses.*;
-import upgradables.AbstractUpgradable;
-import upgradables.UpgradableJsonUtil;
-import upgradables.UpgradableType;
+import customizables.AbstractCustomizable;
+import customizables.CustomizableJsonUtil;
+import customizables.CustomizableType;
 
-public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName> implements JsonSerialable, Serializable{
+public abstract class AbstractPassive extends AbstractCustomizable<PassiveStatName> implements JsonSerialable, Serializable{
 	/**
 	 * Passives are abilities that have specific triggers, 
 	 * i.e., the user does not directly trigger them:
@@ -34,7 +34,7 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
     }
     
 	public AbstractPassive(PassiveType t, String n, boolean b){
-		super(UpgradableType.PASSIVE, n);
+		super(CustomizableType.PASSIVE, n);
 		type = t;
 		targetsUser = b;
 	}
@@ -51,7 +51,7 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
     
     @Override
     public JsonObject serializeJson(){
-        JsonObjectBuilder b = JsonUtil.deconstruct(UpgradableJsonUtil.serializeJson(this));
+        JsonObjectBuilder b = JsonUtil.deconstruct(CustomizableJsonUtil.serializeJson(this));
         b.add("passive type", type.toString());
         b.add("targets user", targetsUser);
         return b.build();

@@ -1,4 +1,4 @@
-package passives;
+package customizables.passives;
 
 import statuses.Regeneration;
 

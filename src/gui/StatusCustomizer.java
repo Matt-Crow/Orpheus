@@ -6,17 +6,17 @@ import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import statuses.AbstractStatus;
 import statuses.StatusName;
-import upgradables.AbstractUpgradable;
+import customizables.AbstractCustomizable;
 
 //TODO: make this take only upgradable as param so that it can do chance
 @SuppressWarnings("serial")
 public class StatusCustomizer extends JComponent{
-	private AbstractUpgradable statusOwner;
+	private AbstractCustomizable statusOwner;
 	private OptionBox<StatusName> box;
 	private OptionBox<Integer> intensity;
 	private OptionBox<Integer> duration;
 	
-	public StatusCustomizer(AbstractUpgradable a, AbstractStatus s){
+	public StatusCustomizer(AbstractCustomizable a, AbstractStatus s){
 		super();
 		statusOwner = a;
 		
