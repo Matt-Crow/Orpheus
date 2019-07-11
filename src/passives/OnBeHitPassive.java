@@ -1,10 +1,13 @@
 package passives;
 
+import actions.OnHitEvent;
+import actions.OnHitListener;
+import entities.Player;
 import javax.json.JsonObject;
 import serialization.JsonSerialable;
 import upgradables.UpgradableJsonUtil;
 
-public class OnBeHitPassive extends AbstractPassive implements JsonSerialable{
+public class OnBeHitPassive extends AbstractPassive implements JsonSerialable, OnHitListener{
 	/**
 	 * Triggers once the user's hitbox intercepts 
 	 * that of an enemy projectile
@@ -33,16 +36,26 @@ public class OnBeHitPassive extends AbstractPassive implements JsonSerialable{
         obh.setInflict(UpgradableJsonUtil.getStatusTableFrom(obj));
         return obh;
     }
-	
+    
     @Override
-	public void update(){
-		//getRegisteredTo().getActionRegister().addOnBeHit(getKey());
-	}
+    public void init(){
+        super.init();
+        getRegisteredTo().getActionRegister().addOnBeHit(this);
+    }
+    
+	@Override
+    public void trigger(OnHitEvent e) {
+        if(getTargetsUser()){
+            applyEffect((Player)e.getWasHit());
+        } else {
+            applyEffect((Player)e.getHitter());
+        }
+    }
     @Override
 	public String getDescription(){
 		String desc = getName() + ": \n";
 		desc += "When the user is struck by an enemy projectile, \n";
-		desc += "inflicts " + ((getTargetsUser()) ? "user" : "target") + " with: \n";
+		desc += "inflicts " + ((getTargetsUser()) ? "user" : "the attacker") + " with: \n";
 		desc += getInflict().getStatusString();
 		return desc;
 	}

@@ -105,14 +105,15 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
 		OnMeleeHitPassive ss = new OnMeleeHitPassive("Sparking Strikes", true);
 		ss.addStatus(new Charge(1, 1));
 		
-		OnBeHitPassive nh = new OnBeHitPassive("Nature's Healing", true);
-		nh.addStatus(new Regeneration(1, 1));
-		
+        // on be hit
 		OnBeHitPassive r = new OnBeHitPassive("Recover", true);
-		r.addStatus(new Regeneration(2, 1));
-		
+		r.addStatus(new Regeneration(1, 1));
 		OnBeHitPassive t = new OnBeHitPassive("Toughness", true);
 		t.addStatus(new Resistance(1, 1));
+        OnBeHitPassive cu = new OnBeHitPassive("Cursed", false);
+        cu.addStatus(new Stun(3, 3));
+		
+        
 		
 		ThresholdPassive a = new ThresholdPassive("Adrenaline", 3);
 		a.addStatus(new Charge(2, 1));
@@ -133,15 +134,12 @@ public abstract class AbstractPassive extends AbstractUpgradable<PassiveStatName
         OnHitPassive rc = new OnHitPassive("Recharge", true);
         rc.addStatus(new Charge(1, 1));
         
-        OnBeHitPassive cu = new OnBeHitPassive("Cursed", false);
-        cu.addStatus(new Stun(3, 3));
-		
+        
 		addPassives(new AbstractPassive[]{
 				lh,
 				m,
 				s,
 				ss,
-				nh,
 				r,
 				t,
 				a,

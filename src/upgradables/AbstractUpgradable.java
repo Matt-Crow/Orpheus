@@ -31,7 +31,6 @@ public abstract class AbstractUpgradable<T> implements Serializable{
     private String name;
 	private Player registeredTo;
 	private final HashMap<T, Double> stats;
-    
 	private final HashMap<T, Integer> bases;
 	private int cooldownTime;          // frames between uses of this upgradable in battle
 	private int framesUntilUse;        // frames until this upgradable can be used in battle again
