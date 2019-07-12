@@ -5,7 +5,7 @@ import customizables.passives.PassiveStatName;
 import customizables.passives.ThresholdPassive;
 
 @SuppressWarnings("serial")
-public class PassiveCustomizer extends UpgradableCustomizer<PassiveStatName>{
+public class PassiveCustomizer extends Customizer<PassiveStatName>{
 	public PassiveCustomizer(AbstractPassive a){
 		super(a);
 		switch(a.getPassiveType()){
@@ -28,7 +28,13 @@ public class PassiveCustomizer extends UpgradableCustomizer<PassiveStatName>{
 		if(p instanceof ThresholdPassive){
             ((ThresholdPassive)p).setStat(PassiveStatName.THRESHOLD, val);
         }
-		p.init();
+        try{
+            p.init();
+        }catch(NullPointerException ex){
+            // p's user isn't initialized yet
+            System.err.println("passive init caused null pointer in PassiveCustomizer.updateField");
+        }
+		
 		super.updateField(n, val);
 	}
 	public void save(){

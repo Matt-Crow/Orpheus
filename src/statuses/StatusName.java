@@ -4,6 +4,7 @@ public enum StatusName {
 	CHARGE("charge"),
 	REGENERATION("regeneration"),
 	RESISTANCE("resistance"),
+    BURN("burn"),
 	RUSH("rush"),
 	STRENGTH("strength"),
 	STUN("stun");

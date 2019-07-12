@@ -2,13 +2,11 @@ package customizables.passives;
 
 import java.util.*;
 
-import actions.*;
 import statuses.StatusTable;
 import entities.Player;
 import java.io.File;
 import java.io.Serializable;
 import java.util.NoSuchElementException;
-import java.util.function.Consumer;
 import javax.json.*;
 import serialization.JsonSerialable;
 import serialization.JsonUtil;

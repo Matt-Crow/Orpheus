@@ -8,11 +8,11 @@ import javax.swing.*;
 import customizables.AbstractCustomizable;
 
 @SuppressWarnings("serial")
-public class UpgradableSelector<T> extends JComponent{
+public class CustomizableSelector<T> extends JComponent{
 	private OptionBox<AbstractCustomizable> box;
 	private JTextArea desc;
 	
-	public UpgradableSelector(String title, AbstractCustomizable[] a){
+	public CustomizableSelector(String title, AbstractCustomizable[] a){
 		super();
 		setLayout(new GridLayout(2, 1));
 		box = new OptionBox<AbstractCustomizable>(title, a);

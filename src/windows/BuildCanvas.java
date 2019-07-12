@@ -18,9 +18,9 @@ import java.io.File;
 @SuppressWarnings("serial")
 public class BuildCanvas extends OldContentPage{
 	private OptionBox<String> baseBuild;
-	private UpgradableSelector<CharacterStatName> classSelect;
-	private UpgradableSelector<ActiveStatName>[] actives;
-	private UpgradableSelector<PassiveStatName>[] passives;
+	private CustomizableSelector<CharacterStatName> classSelect;
+	private CustomizableSelector<ActiveStatName>[] actives;
+	private CustomizableSelector<PassiveStatName>[] passives;
 	
 	private JButton temp;
 	
@@ -105,22 +105,22 @@ public class BuildCanvas extends OldContentPage{
 		add(name);
 		name.setEditable(true);
         
-		classSelect = new UpgradableSelector<CharacterStatName>("Character Class", CharacterClass.getAll());
+		classSelect = new CustomizableSelector<CharacterStatName>("Character Class", CharacterClass.getAll());
 		classSelect.getBox().setSelectedName(b.getClassName());
 		add(classSelect);
 		
-		actives = new UpgradableSelector[3];
+		actives = new CustomizableSelector[3];
 		for(int i = 0; i < 3; i++){
 			AbstractActive[] options = AbstractActive.getAll();
-			actives[i] = new UpgradableSelector<ActiveStatName>("Active #" + (i + 1), options);
+			actives[i] = new CustomizableSelector<ActiveStatName>("Active #" + (i + 1), options);
 			actives[i].getBox().setSelectedName(b.getActiveNames()[i]);
 			add(actives[i]);
 		}
 		
-		passives = new UpgradableSelector[3];
+		passives = new CustomizableSelector[3];
 		for(int i = 0; i < 3; i++){
 			AbstractPassive[] options = AbstractPassive.getAll();
-			passives[i] = new UpgradableSelector<PassiveStatName>("Passive #" + (i + 1), options);
+			passives[i] = new CustomizableSelector<PassiveStatName>("Passive #" + (i + 1), options);
 			passives[i].getBox().setSelectedName(b.getPassiveNames()[i]);
 			add(passives[i]);
 		}
@@ -150,7 +150,7 @@ public class BuildCanvas extends OldContentPage{
 		
 		
 		
-		//TODO: add tooltip of selected item desc instead of UpgradableSelector
+		//TODO: add tooltip of selected item desc instead of CustomizableSelector
 		
 		resizeComponents(3, 3);
 		resizeMenu(2);

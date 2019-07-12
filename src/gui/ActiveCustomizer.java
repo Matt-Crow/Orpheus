@@ -9,7 +9,7 @@ import customizables.actives.ActiveStatName;
 import entities.ParticleType;
 
 @SuppressWarnings("serial")
-public class ActiveCustomizer extends UpgradableCustomizer<ActiveStatName>{
+public class ActiveCustomizer extends Customizer<ActiveStatName>{
 	public ActiveCustomizer(AbstractActive a){
 		super(a);
 		switch(a.getActiveType()){
@@ -49,7 +49,7 @@ public class ActiveCustomizer extends UpgradableCustomizer<ActiveStatName>{
 		super.updateField(n, val);
 	}
 	public void save(){
-		// this is invoked by UpgradableCustomizer
+		// this is invoked by Customizer
 		super.save();
 		AbstractActive.addActive((AbstractActive)getCustomizing());
 	}

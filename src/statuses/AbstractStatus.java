@@ -12,10 +12,10 @@ import util.SafeList;
  * AbstractStatus is the base class for all statuses in Orpheus.
  * 
  * A status is condition which will be applied to a Player,
- * and will apply an OnHitKey or OnUpdateAction of some sort to that Player at the end of each frame.
- * @see OnUpdateAction
- * @see OnHitKey
- * @see Player
+ * adding itself to that Player's ActionRegister as either an OnHitListener, or an OnUpdateListener
+ * 
+ * @see ActionRegister
+ * @see Player#inflict(statuses.AbstractStatus) 
  */
 public abstract class AbstractStatus implements Serializable, Terminable{
 	private final StatusName code; //the Enum of this status' name
@@ -101,6 +101,9 @@ public abstract class AbstractStatus implements Serializable, Terminable{
 		case RESISTANCE:
 			ret = new Resistance(intensity, dur);
 			break;
+        case BURN:
+            ret = new Burn(intensity, dur);
+            break;
 		case RUSH:
 			ret = new Rush(intensity, dur);
 			break;

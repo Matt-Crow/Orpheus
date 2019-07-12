@@ -9,7 +9,7 @@ import customizables.characterClass.CharacterStatName;
 import graphics.CustomColors;
 
 @SuppressWarnings("serial")
-public class CharacterClassCustomizer extends UpgradableCustomizer<CharacterStatName>{
+public class CharacterClassCustomizer extends Customizer<CharacterStatName>{
 	public CharacterClassCustomizer(CharacterClass c){
 		super(c);
 		for(CharacterStatName cs : CharacterStatName.values()){

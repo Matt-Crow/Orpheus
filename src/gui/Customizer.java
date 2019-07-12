@@ -1,5 +1,6 @@
 package gui;
 
+import controllers.Master;
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import customizables.AbstractCustomizable;
 
 @SuppressWarnings("serial")
-public class UpgradableCustomizer<T> extends JComponent{
+public class Customizer<T> extends JComponent{
 	private AbstractCustomizable customizing;
 	private JTextArea name;
 	private Pane p1; // used to split into two sections
@@ -22,9 +23,10 @@ public class UpgradableCustomizer<T> extends JComponent{
 	private int boxCount;
 	private ArrayList<StatusCustomizer> statusBoxes;
 	
-	public UpgradableCustomizer(AbstractCustomizable a){
+	public Customizer(AbstractCustomizable a){
 		super();
 		customizing = a.copy();
+        customizing.registerTo(Master.getUser().getPlayer());
 		
 		p1 = new Pane();
 		p2 = new Pane();

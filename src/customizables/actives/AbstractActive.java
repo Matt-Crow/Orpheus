@@ -172,6 +172,7 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
 		
 		ElementalActive fof = new ElementalActive("Fields of Fire", 1, 0, 5, 3, 2);
 		fof.setParticleType(ParticleType.SHEAR);
+        fof.addStatus(new Burn(3, 3));
 		
 		ElementalActive fb = new ElementalActive("Fireball", 2, 3, 3, 3, 4);
 		fb.setParticleType(ParticleType.BURST);
