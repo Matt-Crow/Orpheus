@@ -2,6 +2,7 @@ package statuses;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 // will probably phase out of future versions
 public class StatusTable implements Serializable{
@@ -31,15 +32,23 @@ public class StatusTable implements Serializable{
 	public AbstractStatus getStatusAt(int i){
 		return statuses.get(i).copy();
 	}
+    
+    public void forEach(Consumer<AbstractStatus> f){
+        statuses.forEach((s) -> {
+            f.accept(s.copy());
+        });
+    }
+    
 	public int getSize(){
 		return statuses.size();
 	}
 	
 	public String getStatusString(){
-		String desc = "~~~STATUS DATA~~~";
+		String desc = "~~~STATUS DATA~~~\n";
 		for(int i = 0; i < getSize(); i++){
-			desc += "\n" + statuses.get(i).getDesc();
+			desc += statuses.get(i).getDesc() + "\n";
 		}
+        desc += "~~~~~~~~~~~~~~~~~\n";
 		return desc;
 	}
 }

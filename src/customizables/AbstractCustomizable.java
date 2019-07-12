@@ -193,6 +193,14 @@ public abstract class AbstractCustomizable implements Serializable{
 			a.addStatus(inflict.getStatusAt(i));
 		}
 	}
+    
+    // in battle methods. These are applied in the subclasses
+	public void applyEffect(Player p){
+		StatusTable inf = getInflict();
+		for(int i = 0; i < inf.getSize(); i++){
+			p.inflict(inf.getStatusAt(i));
+		}
+	}
 	
     /**
      * Sets this to off cooldown.

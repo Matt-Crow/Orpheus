@@ -331,6 +331,11 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
             for(int i = 0; i < bases.length; i++){
                 newCost += bases[i];
             }
+            
+            StatusTable t = getInflict();
+            for(int i = 0; i < t.getSize(); i++){
+                newCost += t.getStatusAt(i).getBaseParam() + t.getStatusAt(i).getIntensityLevel();
+            }
         }
         cost = newCost;
     }
@@ -360,7 +365,7 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
 
     // in battle methods
     public final boolean canUse(){
-        return getRegisteredTo().getEnergyLog().getEnergy() >= cost && !onCooldown();
+        return getRegisteredTo() != null && getRegisteredTo().getEnergyLog().getEnergy() >= cost && !onCooldown();
     }
 
     /**
@@ -394,6 +399,15 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
             spawnArc((int)getStatValue(ActiveStatName.ARC));
             nextUseId++;
         }
+    }
+    
+    /**
+     * Invoked by Projectile upon 
+     * colliding with a player
+     * @param p the Player who one of this Projectiles hit.
+     */
+    public void hit(Player p){
+        applyEffect(p);
     }
     
     /**

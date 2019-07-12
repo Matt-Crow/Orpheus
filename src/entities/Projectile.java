@@ -61,6 +61,7 @@ public class Projectile extends Entity{
 	
 	public void hit(Player p){
 		hit = p;
+        registeredAttack.hit(p);
 		p.logDamage((int) (registeredAttack.getStatValue(ActiveStatName.DAMAGE) * user.getStatValue(CharacterStatName.DMG) * p.getStatValue(CharacterStatName.REDUCTION)));
 		p.setLastHitById(getUseId());
 		if(registeredAttack instanceof MeleeActive){
