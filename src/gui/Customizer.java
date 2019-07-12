@@ -26,7 +26,7 @@ public class Customizer<T> extends JComponent{
 	public Customizer(AbstractCustomizable a){
 		super();
 		customizing = a.copy();
-        customizing.registerTo(Master.getUser().getPlayer());
+        customizing.setUser(Master.getUser().getPlayer());
 		
 		p1 = new Pane();
 		p2 = new Pane();

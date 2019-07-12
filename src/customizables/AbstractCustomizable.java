@@ -9,8 +9,6 @@ import java.io.Serializable;
 import customizables.passives.AbstractPassive;
 import statuses.*;
 
-//T is an enum
-
 /**
  * The AbstractCustomizable is the base class from which 
  Actives, Passives, and CharacterClasses derive.
@@ -27,7 +25,7 @@ import statuses.*;
 public abstract class AbstractCustomizable implements Serializable{
     public final CustomizableType upgradableType;
     private String name;
-	private Player registeredTo;
+	private Player user;
 	private final HashMap<Enum, Double> stats;
 	private final HashMap<Enum, Integer> bases;
 	private int cooldownTime;          // frames between uses of this upgradable in battle
@@ -70,16 +68,16 @@ public abstract class AbstractCustomizable implements Serializable{
      * Used to allow this to target the player using it.
      * @param p the player to apply this to.
      */
-	public final void registerTo(Player p){
-		registeredTo = p;
+	public final void setUser(Player p){
+		user = p;
 	}
     
     /**
      * Gets the player who this is applied to.
      * @return the player registered to this.
      */
-	public final Player getRegisteredTo(){
-		return registeredTo;
+	public final Player getUser(){
+		return user;
 	}
 	
 	/**
@@ -106,7 +104,7 @@ public abstract class AbstractCustomizable implements Serializable{
      */
 	public final double getStatValue(Enum n){
         if(!stats.containsKey(n)){
-            throw new NullPointerException("Stat not found for " + registeredTo.getName() + " with name " + n.toString());
+            throw new NullPointerException("Stat not found for " + user.getName() + " with name " + n.toString());
         }
 		return stats.get(n);
 	}

@@ -40,7 +40,7 @@ public class OnBeHitPassive extends AbstractPassive implements JsonSerialable, O
     @Override
     public void init(){
         super.init();
-        getRegisteredTo().getActionRegister().addOnBeHit(this);
+        getUser().getActionRegister().addOnBeHit(this);
     }
     
 	@Override

@@ -12,7 +12,7 @@ public class Revitalize extends ThresholdPassive{
 	}
 	public void applyEffect(){
 		if(!activated){
-			getRegisteredTo().inflict(new Regeneration(3, 5));
+			getUser().inflict(new Regeneration(3, 5));
 			activated = true;
 		}
 	}

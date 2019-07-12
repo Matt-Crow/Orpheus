@@ -39,7 +39,7 @@ public class OnMeleeHitPassive extends AbstractPassive implements JsonSerialable
     @Override
 	public void init(){
         super.init();
-		getRegisteredTo().getActionRegister().addOnMeleeHit(this);
+		getUser().getActionRegister().addOnMeleeHit(this);
 	}
     @Override
 	public String getDescription(){

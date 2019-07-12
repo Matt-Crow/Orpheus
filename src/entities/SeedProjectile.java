@@ -15,7 +15,7 @@ public class SeedProjectile extends Projectile{
 	
 	public void explode(){
 		for(int i = 0; i < Master.TICKSTOROTATE; i++){
-			getAttack().getRegisteredTo().spawn(new AOEProjectile(useId, getX(), getY(), 360 * i / Master.TICKSTOROTATE, 5, getUser(), getAttack()));
+			getAttack().getUser().spawn(new AOEProjectile(useId, getX(), getY(), 360 * i / Master.TICKSTOROTATE, 5, getUser(), getAttack()));
         }
 		canExplode = false;
 	}

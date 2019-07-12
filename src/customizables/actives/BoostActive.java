@@ -44,7 +44,7 @@ public class BoostActive extends AbstractActive implements JsonSerialable{
 		super.use();
 		StatusTable s = getInflict();
 		for(int i = 0; i < s.getSize(); i++){
-			getRegisteredTo().inflict(s.getStatusAt(i));
+			getUser().inflict(s.getStatusAt(i));
 		}
 	}
     @Override

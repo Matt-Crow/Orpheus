@@ -81,7 +81,7 @@ public class Player extends Entity{
             ex.printStackTrace();
             c = CharacterClass.getCharacterClassByName("Default");
         }
-		c.registerTo(this);
+		c.setUser(this);
 	}
 	public void setActives(String[] names){
 		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
@@ -91,7 +91,7 @@ public class Player extends Entity{
                 ex.printStackTrace();
                 actives[nameIndex] = AbstractActive.getActiveByName("Default");
             }
-			actives[nameIndex].registerTo(this);
+			actives[nameIndex].setUser(this);
 		}
 	}
 	public void setPassives(String[] names){
@@ -102,7 +102,7 @@ public class Player extends Entity{
                 ex.printStackTrace();
                 passives[nameIndex] = AbstractPassive.getPassiveByName("Default");
             }
-            passives[nameIndex].registerTo(this);
+            passives[nameIndex].setUser(this);
 		}
 	}
 	
@@ -192,7 +192,7 @@ public class Player extends Entity{
 			playerAI.setEnabled(true);
 		}
         slash = (MeleeActive)AbstractActive.getActiveByName("Slash");
-		slash.registerTo(this);
+		slash.setUser(this);
 		slash.init();
 		c.init();
 		log = new DamageBacklog(this);

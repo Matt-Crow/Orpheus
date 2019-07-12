@@ -21,6 +21,7 @@ import serialization.JsonUtil;
 import statuses.*;
 import customizables.CustomizableJsonUtil;
 import customizables.CustomizableType;
+import customizables.characterClass.CharacterStatName;
 import util.Number;
 
 /**
@@ -365,7 +366,7 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
 
     // in battle methods
     public final boolean canUse(){
-        return getRegisteredTo() != null && getRegisteredTo().getEnergyLog().getEnergy() >= cost && !onCooldown();
+        return getUser() != null && getUser().getEnergyLog().getEnergy() >= cost && !onCooldown();
     }
 
     /**
@@ -373,7 +374,7 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
      * @param facingDegrees the direction the new projectile will travel
      */
     private void spawnProjectile(int facingDegrees){
-        getRegisteredTo().spawn(new SeedProjectile(nextUseId, getRegisteredTo().getX(), getRegisteredTo().getY(), facingDegrees, (int) getStatValue(ActiveStatName.SPEED), getRegisteredTo(), this));    
+        getUser().spawn(new SeedProjectile(nextUseId, getUser().getX(), getUser().getY(), facingDegrees, (int) getStatValue(ActiveStatName.SPEED), getUser(), this));    
     }
     
     /**
@@ -381,7 +382,7 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
      * @param arcDegrees the number of degrees in the arc
      */
     private void spawnArc(int arcDegrees){
-        int start = getRegisteredTo().getDir().getDegrees() - arcDegrees / 2;
+        int start = getUser().getDir().getDegrees() - arcDegrees / 2;
         // spawn projectiles every 15 degrees
         for(int angleOffset = 0; angleOffset < arcDegrees; angleOffset += 15){
             spawnProjectile(start + angleOffset);
@@ -389,7 +390,7 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
     }
     
     private void consumeEnergy(){
-        getRegisteredTo().getEnergyLog().loseEnergy(cost);
+        getUser().getEnergyLog().loseEnergy(cost);
         setToCooldown();
     }
     
@@ -407,6 +408,22 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
      * @param p the Player who one of this Projectiles hit.
      */
     public void hit(Player p){
+        Player user = getUser();
+        p.logDamage(
+            (int)(
+                getStatValue(ActiveStatName.DAMAGE)
+                * user.getStatValue(CharacterStatName.DMG)
+                / p.getStatValue(CharacterStatName.REDUCTION)
+            )
+        );
+        if(this instanceof MeleeActive){
+            user.getActionRegister().tripOnMeleeHit(p);
+            user.getEnergyLog().gainEnergy(5);
+            p.getActionRegister().tripOnBeMeleeHit(user);
+        } else {
+            user.getActionRegister().triggerOnHit(p);
+            p.getActionRegister().triggerOnHitReceived(user);
+        }
         applyEffect(p);
     }
     
@@ -435,7 +452,7 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
         } else {
             g.setColor(CustomColors.red);
         }
-        g.drawString("Energy cost: " + getRegisteredTo().getEnergyLog().getEnergy() + "/" + cost, x + 10, y + 33);
+        g.drawString("Energy cost: " + getUser().getEnergyLog().getEnergy() + "/" + cost, x + 10, y + 33);
     }
     
     @Override

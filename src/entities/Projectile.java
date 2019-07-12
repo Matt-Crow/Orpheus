@@ -6,8 +6,6 @@ import graphics.CustomColors;
 import customizables.actives.AbstractActive;
 import customizables.actives.ActiveStatName;
 import customizables.actives.ActiveTag;
-import customizables.actives.MeleeActive;
-import customizables.characterClass.CharacterStatName;
 import controllers.Master;
 import util.CombatLog;
 import util.Random;
@@ -62,18 +60,10 @@ public class Projectile extends Entity{
 	public void hit(Player p){
 		hit = p;
         registeredAttack.hit(p);
-		p.logDamage((int) (registeredAttack.getStatValue(ActiveStatName.DAMAGE) * user.getStatValue(CharacterStatName.DMG) * p.getStatValue(CharacterStatName.REDUCTION)));
 		p.setLastHitById(getUseId());
-		if(registeredAttack instanceof MeleeActive){
-			user.getActionRegister().tripOnMeleeHit(p);
-			user.getEnergyLog().gainEnergy(5);
-			p.getActionRegister().tripOnBeMeleeHit(user);
-		} else {
-			user.getActionRegister().triggerOnHit(p);
-			p.getActionRegister().triggerOnHitReceived(user);
-		}
 		getActionRegister().triggerOnHit(p);
         
+        //can't move this to AbstractActive
         if(registeredAttack.containsTag(ActiveTag.KNOCKSBACK)){
             p.knockBack(range, getDir(), Master.seconds(1));
         }
