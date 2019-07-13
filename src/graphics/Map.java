@@ -206,6 +206,8 @@ public class Map implements Serializable, JsonSerialable{
         }
         
         int t = Tile.TILE_SIZE;
+        double diag = Math.sqrt(2) * t;
+        
         boolean[][] visited = new boolean[width][height];
         for(int i = 0; i < width; i++){
             for(int j = 0; j < height; j++){
@@ -217,8 +219,8 @@ public class Map implements Serializable, JsonSerialable{
         Stack<PathInfo> stack = new Stack<>();
         int currXIdx = x1 / t; //array indexes
         int currYIdx = y1 / t;
-        int destX = x2 / Tile.TILE_SIZE;
-        int destY = y2 / Tile.TILE_SIZE;
+        int destX = x2 / t;
+        int destY = y2 / t;
         
         //these are array indexes
         int minX = 0;
@@ -243,52 +245,102 @@ public class Map implements Serializable, JsonSerialable{
         PathInfo p = new PathInfo((int)((currXIdx + 0.5) * t), (int)((currYIdx + 0.5) * t), (int)((currXIdx + 0.5) * t), (int)((currYIdx + 0.5)* t), 0);
         stack.push(p);
         visited[currXIdx][currYIdx] = true;
+        boolean canUp;
+        boolean canDown;
+        boolean canLeft;
+        boolean canRight;
+        int currX;
+        int currY;
+        
         try{
             while(currXIdx != destX || currYIdx != destY){
                 //out.println("Currently at (" + currXIdx + ", " + currYIdx + ")");
                 //push adjacent points to the heap
-                if(currXIdx > minX && tileMap[currXIdx - 1][currYIdx] == 0 && !visited[currXIdx - 1][currYIdx]){
-                    //can go left
+                canUp = currYIdx > minY && tileMap[currXIdx][currYIdx - 1] == 0 && !visited[currXIdx][currYIdx - 1];
+                canDown = currYIdx < maxY && tileMap[currXIdx][currYIdx + 1] == 0 && !visited[currXIdx][currYIdx + 1];
+                canLeft = currXIdx > minX && tileMap[currXIdx - 1][currYIdx] == 0 && !visited[currXIdx - 1][currYIdx];
+                canRight = currXIdx < maxX && tileMap[currXIdx + 1][currYIdx] == 0 && !visited[currXIdx + 1][currYIdx];
+                currX = (int)((currXIdx + 0.5) * t);
+                currY = (int)((currYIdx + 0.5) * t);
+                
+                if(canLeft){
                     //the 0.5 shift is to account for the Idx's being the upper left corner of a tile instead of its center 
                     p = new PathInfo(
-                        (int)((currXIdx + 0.5) * t), 
-                        (int)((currYIdx + 0.5) * t), 
+                        currX, 
+                        currY, 
                         (int)((currXIdx - 0.5) * t), // minus is because - 1 + 0.5
-                        (int)((currYIdx + 0.5) * t), 
+                        currY, 
                         t + stack.peek().getDist()
                     );
                     heap.siftUp(p);
                 }
-                if(currXIdx < maxX && tileMap[currXIdx + 1][currYIdx] == 0 && !visited[currXIdx + 1][currYIdx]){
-                    //can go right
+                if(canRight){
                     p = new PathInfo(
-                        (int)((currXIdx + 0.5) * t), 
-                        (int)((currYIdx + 0.5) * t), 
+                        currX, 
+                        currY, 
                         (int)((currXIdx + 1.5) * t), 
-                        (int)((currYIdx + 0.5) * t), 
+                        currY, 
                         t + stack.peek().getDist()
                     );
                     heap.siftUp(p);
                 }
-                if(currYIdx > minY && tileMap[currXIdx][currYIdx - 1] == 0 && !visited[currXIdx][currYIdx - 1]){
-                    //can go up
+                if(canUp){
                     p = new PathInfo(
-                        (int)((currXIdx + 0.5) * t), 
-                        (int)((currYIdx + 0.5) * t), 
-                        (int)((currXIdx + 0.5) * t), 
+                        currX, 
+                        currY, 
+                        currX, 
                         (int)((currYIdx - 0.5) * t), 
                         t + stack.peek().getDist()
                     );
                     heap.siftUp(p);
                 }
-                if(currYIdx < maxY && tileMap[currXIdx][currYIdx + 1] == 0 && !visited[currXIdx][currYIdx + 1]){
-                    //can go down
+                if(canDown){
                     p = new PathInfo(
-                        (int)((currXIdx + 0.5) * t), 
-                        (int)((currYIdx + 0.5) * t), 
-                        (int)((currXIdx + 0.5) * t), 
+                        currX, 
+                        currY, 
+                        currX, 
                         (int)((currYIdx + 1.5) * t), 
                         t + stack.peek().getDist()
+                    );
+                    heap.siftUp(p);
+                }
+                if(canUp && canLeft){
+                    p = new PathInfo(
+                        currX, 
+                        currY, 
+                        (int)((currXIdx - 0.5) * t),
+                        (int)((currYIdx - 0.5) * t), 
+                        diag + stack.peek().getDist()
+                    );
+                    heap.siftUp(p);
+                }
+                if(canUp && canRight){
+                    p = new PathInfo(
+                        currX, 
+                        currY, 
+                        (int)((currXIdx + 1.5) * t),
+                        (int)((currYIdx - 0.5) * t), 
+                        diag + stack.peek().getDist()
+                    );
+                    heap.siftUp(p);
+                }
+                if(canDown && canLeft){
+                    p = new PathInfo(
+                        currX, 
+                        currY, 
+                        (int)((currXIdx - 0.5) * t),
+                        (int)((currYIdx + 1.5) * t), 
+                        diag + stack.peek().getDist()
+                    );
+                    heap.siftUp(p);
+                }
+                if(canDown && canRight){
+                    p = new PathInfo(
+                        currX, 
+                        currY, 
+                        (int)((currXIdx + 1.5) * t),
+                        (int)((currYIdx + 1.5) * t), 
+                        diag + stack.peek().getDist()
                     );
                     heap.siftUp(p);
                 }
@@ -307,7 +359,7 @@ public class Map implements Serializable, JsonSerialable{
                 if(
                     p.getEndX() == (currXIdx + 0.5) * t 
                     && p.getEndY() == (currYIdx + 0.5) * t 
-                    && accuDist == p.getDist()
+                    && Math.abs(accuDist - p.getDist()) < 0.001
                     && p.getDist() != 0 //don't include the start to start point
                 ){
                     ret.push(p); //need to add to front, as the stack is backwards
@@ -325,6 +377,8 @@ public class Map implements Serializable, JsonSerialable{
             heap.print();
             e.printStackTrace();
         }
+        out.println("Here's your path (Map line ~380):");
+        ret.print();
         return ret;
     }
     

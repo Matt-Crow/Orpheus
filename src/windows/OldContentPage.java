@@ -39,7 +39,9 @@ public class OldContentPage extends JPanel{
 		setLayout(new GridBagLayout());
 		GridBagConstraints c1 = new GridBagConstraints();
 		menuBar = new JMenuBar();
-		c1.weightx = 1;
+        menuBar.setMinimumSize(new Dimension(Integer.MAX_VALUE, 50));
+		
+        c1.weightx = 1;
 		c1.weighty = 1;
 		c1.fill = GridBagConstraints.BOTH;
 		super.add(menuBar, c1);

@@ -161,7 +161,7 @@ public class CharacterClass extends AbstractCustomizable implements JsonSerialab
         value = Number.minMax(1, value, 5);
         switch(c){
         case HP:
-            addStat(CharacterStatName.HP, value, 700 + 100 * value);
+            addStat(CharacterStatName.HP, value, 1500 + 200 * value);
             break;
         case ENERGY:
             addStat(CharacterStatName.ENERGY, value, 12.5 * (value + 1));
