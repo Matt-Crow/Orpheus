@@ -304,7 +304,7 @@ public class Map implements Serializable, JsonSerialable{
                     );
                     heap.siftUp(p);
                 }
-                if(canUp && canLeft){
+                if(canUp && canLeft && tileMap[currXIdx - 1][currYIdx - 1] == 0){
                     p = new PathInfo(
                         currX, 
                         currY, 
@@ -314,7 +314,7 @@ public class Map implements Serializable, JsonSerialable{
                     );
                     heap.siftUp(p);
                 }
-                if(canUp && canRight){
+                if(canUp && canRight && tileMap[currXIdx + 1][currYIdx - 1] == 0){
                     p = new PathInfo(
                         currX, 
                         currY, 
@@ -324,7 +324,7 @@ public class Map implements Serializable, JsonSerialable{
                     );
                     heap.siftUp(p);
                 }
-                if(canDown && canLeft){
+                if(canDown && canLeft && tileMap[currXIdx - 1][currYIdx + 1] == 0){
                     p = new PathInfo(
                         currX, 
                         currY, 
@@ -334,7 +334,7 @@ public class Map implements Serializable, JsonSerialable{
                     );
                     heap.siftUp(p);
                 }
-                if(canDown && canRight){
+                if(canDown && canRight && tileMap[currXIdx + 1][currYIdx + 1] == 0){
                     p = new PathInfo(
                         currX, 
                         currY, 

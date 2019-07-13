@@ -7,8 +7,10 @@ import entities.Particle;
 import entities.Player;
 import entities.PlayerControls;
 import entities.Projectile;
+import graphics.CustomColors;
 import graphics.Tile;
 import graphics.Map;
+import graphics.MapLoader;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.io.IOException;
@@ -19,6 +21,8 @@ import windows.world.WorldCanvas;
 import static java.lang.System.out;
 import java.util.HashMap;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.ServerMessage;
 import net.ServerMessageType;
 import util.SafeList;
@@ -96,8 +100,17 @@ public class World implements Serializable{
      */
     public static World createDefaultBattle(){
         World w = new World(20);
+        try {
+            w.setMap(MapLoader.readCsv(World.class.getResourceAsStream("/testMap.csv")));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
         w.createCanvas();
+        
+        Tile block = new Tile(0, 0, CustomColors.GRAY);
+        block.setBlocking(true);
         w.currentMap.addToTileSet(0, new Tile(0, 0, Color.BLUE));
+        w.currentMap.addToTileSet(1, block);
         return w;
     }
     
