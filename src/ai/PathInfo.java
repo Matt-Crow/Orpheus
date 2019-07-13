@@ -14,6 +14,7 @@ public class PathInfo implements Serializable{
     private final int fromY;
     private final int toX;
     private final int toY;
+    private final double accumDist;
     private final double dist;
     
     /**
@@ -29,7 +30,8 @@ public class PathInfo implements Serializable{
         fromY = startY;
         toX = endX;
         toY = endY;
-        dist = d;
+        accumDist = d;
+        dist = Math.sqrt(Math.pow(fromX - toX, 2) + Math.pow(fromY - toY, 2));
     }
     
     public int getStartX(){
@@ -45,12 +47,15 @@ public class PathInfo implements Serializable{
         return toY;
     }
     
+    public double getAccumDist(){
+        return accumDist;
+    }
     public double getDist(){
         return dist;
     }
     
     @Override
     public String toString(){
-        return String.format("(%d, %d) to (%d, %d): %f", fromX, fromY, toX, toY, dist);
+        return String.format("(%d, %d) to (%d, %d): Distance: %f, Accumulated: %f", fromX, fromY, toX, toY, dist, accumDist);
     }
 }

@@ -270,7 +270,7 @@ public class Map implements Serializable, JsonSerialable{
                         currY, 
                         (int)((currXIdx - 0.5) * t), // minus is because - 1 + 0.5
                         currY, 
-                        t + stack.peek().getDist()
+                        t + stack.peek().getAccumDist()
                     );
                     heap.siftUp(p);
                 }
@@ -280,7 +280,7 @@ public class Map implements Serializable, JsonSerialable{
                         currY, 
                         (int)((currXIdx + 1.5) * t), 
                         currY, 
-                        t + stack.peek().getDist()
+                        t + stack.peek().getAccumDist()
                     );
                     heap.siftUp(p);
                 }
@@ -290,7 +290,7 @@ public class Map implements Serializable, JsonSerialable{
                         currY, 
                         currX, 
                         (int)((currYIdx - 0.5) * t), 
-                        t + stack.peek().getDist()
+                        t + stack.peek().getAccumDist()
                     );
                     heap.siftUp(p);
                 }
@@ -300,7 +300,7 @@ public class Map implements Serializable, JsonSerialable{
                         currY, 
                         currX, 
                         (int)((currYIdx + 1.5) * t), 
-                        t + stack.peek().getDist()
+                        t + stack.peek().getAccumDist()
                     );
                     heap.siftUp(p);
                 }
@@ -310,7 +310,7 @@ public class Map implements Serializable, JsonSerialable{
                         currY, 
                         (int)((currXIdx - 0.5) * t),
                         (int)((currYIdx - 0.5) * t), 
-                        diag + stack.peek().getDist()
+                        diag + stack.peek().getAccumDist()
                     );
                     heap.siftUp(p);
                 }
@@ -320,7 +320,7 @@ public class Map implements Serializable, JsonSerialable{
                         currY, 
                         (int)((currXIdx + 1.5) * t),
                         (int)((currYIdx - 0.5) * t), 
-                        diag + stack.peek().getDist()
+                        diag + stack.peek().getAccumDist()
                     );
                     heap.siftUp(p);
                 }
@@ -330,7 +330,7 @@ public class Map implements Serializable, JsonSerialable{
                         currY, 
                         (int)((currXIdx - 0.5) * t),
                         (int)((currYIdx + 1.5) * t), 
-                        diag + stack.peek().getDist()
+                        diag + stack.peek().getAccumDist()
                     );
                     heap.siftUp(p);
                 }
@@ -340,7 +340,7 @@ public class Map implements Serializable, JsonSerialable{
                         currY, 
                         (int)((currXIdx + 1.5) * t),
                         (int)((currYIdx + 1.5) * t), 
-                        diag + stack.peek().getDist()
+                        diag + stack.peek().getAccumDist()
                     );
                     heap.siftUp(p);
                 }
@@ -353,19 +353,19 @@ public class Map implements Serializable, JsonSerialable{
                 currYIdx = p.getEndY() / t;
                 visited[currXIdx][currYIdx] = true;
             }
-            double accuDist = stack.peek().getDist();
+            double accuDist = stack.peek().getAccumDist();
             while(!stack.empty()){
                 p = stack.pop();
                 if(
                     p.getEndX() == (currXIdx + 0.5) * t 
                     && p.getEndY() == (currYIdx + 0.5) * t 
-                    && Math.abs(accuDist - p.getDist()) < 0.001
-                    && p.getDist() != 0 //don't include the start to start point
+                    && Math.abs(accuDist - p.getAccumDist()) < 0.001
+                    && p.getAccumDist() != 0 //don't include the start to start point
                 ){
                     ret.push(p); //need to add to front, as the stack is backwards
                     currXIdx = p.getStartX() / t;
                     currYIdx = p.getStartY() / t;
-                    accuDist -= t;
+                    accuDist -= p.getDist();
                 }
             }
         } catch(Exception e){
@@ -377,8 +377,6 @@ public class Map implements Serializable, JsonSerialable{
             heap.print();
             e.printStackTrace();
         }
-        out.println("Here's your path (Map line ~380):");
-        ret.print();
         return ret;
     }
     

@@ -32,7 +32,7 @@ public class PathMinHeap implements Serializable{
         
         //out.println("Sifting up...");
         //print();
-        while(parentIdx > 0 && heap[parentIdx].getDist() > p.getDist()){
+        while(parentIdx > 0 && heap[parentIdx].getAccumDist() > p.getAccumDist()){
             //want the smallest on top
             temp = heap[parentIdx];
             heap[parentIdx] = p;
@@ -58,10 +58,10 @@ public class PathMinHeap implements Serializable{
         //out.println("Sifting down...");
         //print();
         while(
-            (left < firstEmptyIdx && heap[currIdx].getDist() > heap[left].getDist()) 
-            || (right < firstEmptyIdx && heap[currIdx].getDist() > heap[right].getDist()))
+            (left < firstEmptyIdx && heap[currIdx].getAccumDist() > heap[left].getAccumDist()) 
+            || (right < firstEmptyIdx && heap[currIdx].getAccumDist() > heap[right].getAccumDist()))
         {
-            if(heap[left].getDist() > heap[right].getDist()){
+            if(heap[left].getAccumDist() > heap[right].getAccumDist()){
                 temp = heap[right];
                 heap[right] = heap[currIdx];
                 heap[currIdx] = temp;
