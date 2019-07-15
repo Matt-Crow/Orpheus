@@ -318,7 +318,7 @@ public class World implements Serializable{
      * </table>
      */
     public void update(){
-        synchronized(this){
+        synchronized(teams){
             if(!isRemotelyHosted){
                 hostUpdate();
             }
@@ -333,7 +333,7 @@ public class World implements Serializable{
     }
     
     private void receiveWorldUpdate(ServerMessage sm){
-        synchronized(this){
+        synchronized(teams){
             teams.clear();
 
             HashMap<Integer, Team> ts = (HashMap<Integer, Team>)SerialUtil.fromSerializedString(sm.getBody());
@@ -341,20 +341,20 @@ public class World implements Serializable{
 
             Master.getUser().linkToRemotePlayerInWorld(this); //since teams have changed
             if(canvas != null){
-                canvas.repaint();
+                //canvas.repaint();
             }
         }
     }
     
     private void receiveControl(ServerMessage sm){
-        synchronized(this){
+        //synchronized(this){
             Player p = sm.getSender().getPlayer();
             PlayerControls.decode(p, sm.getBody());
-        }
+        //}
     }
     
     public void draw(Graphics g){
-        synchronized(this){
+        synchronized(teams){
             currentMap.draw(g);
             teams.values().stream().forEach((t)->{
                 t.draw(g);
