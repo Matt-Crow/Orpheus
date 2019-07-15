@@ -318,7 +318,7 @@ public class World implements Serializable{
      * </table>
      */
     public void update(){
-        synchronized(teams){
+        //synchronized(teams){
             if(!isRemotelyHosted){
                 hostUpdate();
             }
@@ -329,7 +329,7 @@ public class World implements Serializable{
             if(currentMinigame != null){
                 currentMinigame.update();
             }
-        }
+        //}
     }
     
     private void receiveWorldUpdate(ServerMessage sm){
@@ -349,13 +349,13 @@ public class World implements Serializable{
     }
     
     public void draw(Graphics g){
-        synchronized(teams){
+        //synchronized(teams){
             currentMap.draw(g);
             teams.values().stream().forEach((t)->{
                 t.draw(g);
             });
             particles.forEach((p)->p.draw(g));
-        }
+        //}
     }
     
     public void displayData(){
