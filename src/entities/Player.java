@@ -180,6 +180,10 @@ public class Player extends Entity{
 	public int getLastHitById(){
 		return lastHitById;
 	}
+    
+    public Path getPath(){
+        return path;
+    }
 	
     @Override
 	public void init(){

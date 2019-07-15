@@ -23,10 +23,6 @@ public class PlayerAI implements Serializable{
     private boolean enabled;
     private AiMode mode;
     private Player latched;
-    
-    //used for the wander mode
-    private int wanderDistance;
-    private int distanceWandered;
 	
 	public PlayerAI(Player p){
 		appliedTo = p;
@@ -50,10 +46,19 @@ public class PlayerAI implements Serializable{
      */
     public void setToWander(){
         mode = AiMode.WANDER;
-        //wander for 1-5 tiles
-        wanderDistance = Tile.TILE_SIZE * Random.choose(1, 5);
-        distanceWandered = 0;
-        appliedTo.getDir().turnClockwise(Random.choose(0, 360));
+        int attempts = 0;
+        int x;
+        int y;
+        boolean pathFound = false;
+        while(attempts < 10 && !pathFound){
+            attempts++;
+            x = appliedTo.getX() + Random.choose(-3, 3) * Tile.TILE_SIZE;
+            y = appliedTo.getY() + Random.choose(-3, 3) * Tile.TILE_SIZE;
+            if(appliedTo.getWorld().getMap().isValidIndex(x / Tile.TILE_SIZE, y / Tile.TILE_SIZE)){
+                pathFound = true;
+                appliedTo.setPath(appliedTo.getWorld().getMap().findPath(appliedTo.getX(), appliedTo.getY(), x, y));
+            }
+        }
     }
     
     /**
@@ -73,10 +78,9 @@ public class PlayerAI implements Serializable{
     
     private void wander(){
         appliedTo.setMoving(true);
-        distanceWandered += appliedTo.getMomentum();
         if(checkIfPlayerInSightRange()){
             latchOntoNearest();
-        }else if(distanceWandered >= wanderDistance){
+        }else if(appliedTo.getPath() == null || appliedTo.getPath().noneLeft()){
             setToWander();
         }
     }

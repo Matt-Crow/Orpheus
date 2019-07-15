@@ -129,6 +129,31 @@ public class Map implements Serializable, JsonSerialable{
     }
     
     /**
+     * Verifies that a given pair of array indexes
+     * is within the map array.
+     * @param x the x coordinate of the point to verify
+     * @param y the y coordinate of the point to verify
+     * @return whether or not the given coordinates are within the map
+     */
+    public boolean isValidIndex(int x, int y){
+        return x >= 0 && y >= 0 && x < width && y < height;
+    }
+    
+    /**
+     * Checks to see if the given point is on the map,
+     * and contains a non-blocking tile.
+     * 
+     * @param xCoord
+     * @param yCoord
+     * @return 
+     */
+    public boolean isOpenTile(int xCoord, int yCoord){
+        return isValidIndex(xCoord / Tile.TILE_SIZE, yCoord / Tile.TILE_SIZE)
+            && tileSet.containsKey(tileMap[xCoord / Tile.TILE_SIZE][yCoord / Tile.TILE_SIZE])
+            && !tileSet.get(tileMap[xCoord / Tile.TILE_SIZE][yCoord / Tile.TILE_SIZE]).getBlocking();
+    }
+    
+    /**
      * Initialized the map,
      * generating the tiles
      */
@@ -194,19 +219,13 @@ public class Map implements Serializable, JsonSerialable{
         //out.println(String.format("Finding path from (%d, %d) to (%d, %d)", x1, y1, x2, y2));
         
         Path ret = new Path();
-        
-        //check to make sure the points are inside the world
-        int maxW = width * Tile.TILE_SIZE;
-        int maxH = height * Tile.TILE_SIZE;
-        if(
-            x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0 ||
-            x1 > maxW || y1 > maxH || x2 > maxW || y2 > maxH
-        ){
-            return ret;
-        }
-        
         int t = Tile.TILE_SIZE;
         double diag = Math.sqrt(2) * t;
+        
+        //check to make sure the points are inside the world
+        if(!isValidIndex(x1 / t, y1 / t) || !isValidIndex(x2 / t, y2 / t)){
+            return ret;
+        }
         
         boolean[][] visited = new boolean[width][height];
         for(int i = 0; i < width; i++){
@@ -229,18 +248,9 @@ public class Map implements Serializable, JsonSerialable{
         int maxY = height - 1;
         
         //make sure the source and destination are intanglible
-        if(
-            currXIdx < minX || currXIdx > maxX
-            || currYIdx < minY || currYIdx > maxY
-            || destX < minX || destX > maxX
-            || destY < minY || destY > maxY
-            || tileMap[currXIdx][currYIdx] != 0 
-            || tileMap[destX][destY] != 0
-        ){
+        if(!isOpenTile(x1, y1) || !isOpenTile(x2, y2)){
             return ret;
         }
-        
-        
         
         PathInfo p = new PathInfo((int)((currXIdx + 0.5) * t), (int)((currYIdx + 0.5) * t), (int)((currXIdx + 0.5) * t), (int)((currYIdx + 0.5)* t), 0);
         stack.push(p);
