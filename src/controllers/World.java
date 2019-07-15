@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 import net.ServerMessage;
 import net.ServerMessageType;
 import util.SafeList;
@@ -333,14 +334,17 @@ public class World implements Serializable{
     }
     
     private void receiveWorldUpdate(ServerMessage sm){
-        synchronized(teams){
+        //synchronized(teams){
+        SwingUtilities.invokeLater(()->{
             teams.clear();
 
             HashMap<Integer, Team> ts = (HashMap<Integer, Team>)SerialUtil.fromSerializedString(sm.getBody());
             ts.values().stream().forEach((Team t)->addTeam(t));
 
             Master.getUser().linkToRemotePlayerInWorld(this); //since teams have changed
-        }
+        });
+        
+        //}
     }
     
     private void receiveControl(ServerMessage sm){
