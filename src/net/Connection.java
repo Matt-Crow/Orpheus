@@ -24,7 +24,7 @@ public class Connection {
         objIn = new ObjectInputStream(s.getInputStream());
     }
     
-    public boolean writeToClient(String s){
+    public synchronized boolean writeToClient(String s){
         boolean success = false;
         try{
             objOut.writeObject(s);
@@ -49,7 +49,7 @@ public class Connection {
         return success;
     }
     
-    public String readFromClient() throws IOException, ClassNotFoundException{
+    public synchronized String readFromClient() throws IOException, ClassNotFoundException{
         return (String)objIn.readObject();
     }
     
