@@ -49,7 +49,7 @@ public class Connection {
         return success;
     }
     
-    public synchronized String readFromClient() throws IOException, ClassNotFoundException{
+    public String readFromClient() throws IOException, ClassNotFoundException{
         return (String)objIn.readObject();
     }
     
