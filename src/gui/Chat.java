@@ -46,8 +46,10 @@ public class Chat extends JComponent implements ActionListener{
         
         receiver = (sm)->{
             logLocal(String.format("(%s): %s", sm.getSender().getName(), sm.getBody()));
-            box.getVerticalScrollBar().setValue(box.getVerticalScrollBar().getMaximum());
-            box.repaint();
+            SwingUtilities.invokeLater(()->{
+                box.getVerticalScrollBar().setValue(box.getVerticalScrollBar().getMaximum());
+                box.repaint();
+            });
         };
         
         initCmds();
