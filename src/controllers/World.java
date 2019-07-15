@@ -340,17 +340,12 @@ public class World implements Serializable{
             ts.values().stream().forEach((Team t)->addTeam(t));
 
             Master.getUser().linkToRemotePlayerInWorld(this); //since teams have changed
-            if(canvas != null){
-                //canvas.repaint();
-            }
         }
     }
     
     private void receiveControl(ServerMessage sm){
-        //synchronized(this){
-            Player p = sm.getSender().getPlayer();
-            PlayerControls.decode(p, sm.getBody());
-        //}
+        Player p = sm.getSender().getPlayer();
+        PlayerControls.decode(p, sm.getBody());
     }
     
     public void draw(Graphics g){

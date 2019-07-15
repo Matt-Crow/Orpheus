@@ -17,9 +17,7 @@ public class Chat extends JComponent implements ActionListener{
     private final JScrollPane box;
     private final JTextField newMsg;
     private final HashMap<String, Consumer<String[]>> CMDS = new HashMap<>();
-    private final Consumer<ServerMessage> receiver = (sm)->{
-        logLocal(String.format("(%s): %s", sm.getSender().getName(), sm.getBody()));
-    };
+    private  Consumer<ServerMessage> receiver;
     
     public Chat(){
         super();
@@ -45,6 +43,12 @@ public class Chat extends JComponent implements ActionListener{
         gbc.gridy = 1;
         gbc.fill = GridBagConstraints.BOTH;
         add(newMsg, gbc.clone());
+        
+        receiver = (sm)->{
+            logLocal(String.format("(%s): %s", sm.getSender().getName(), sm.getBody()));
+            box.getVerticalScrollBar().setValue(box.getVerticalScrollBar().getMaximum());
+            box.repaint();
+        };
         
         initCmds();
         
