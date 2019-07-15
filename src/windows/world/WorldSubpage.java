@@ -56,6 +56,9 @@ public class WorldSubpage extends SubPage{
                 w.requestFocusInWindow();
             }
         });
+        if(w.getWorld().isHosting() || w.getWorld().isRemotelyHosted()){
+            chat.openChatServer();
+        }
         SwingUtilities.invokeLater(()->w.requestFocusInWindow());
         chat.logLocal("Currently rendering World " + w.getWorld().hashCode());
         chat.logLocal("Rendered on WorldCanvas " + w.hashCode());
