@@ -1,11 +1,13 @@
 package windows.WorldSelect;
 
 import controllers.Master;
+import java.awt.GridLayout;
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -39,47 +41,66 @@ public class WSJoin extends SubPage{
     */
     private static final Pattern REGEX = Pattern.compile(IPV4_REGEX);
     
+    private final JTextArea msgs;
+    private final JTextField ip;
+    
     public WSJoin(Page p) {
         super(p);
         //work in progress
-        JTextArea msgs = new JTextArea("Messages will appear here!");
+        setLayout(new GridLayout(1, 2));
+        
+        //left side
+        msgs = new JTextArea("Messages will appear here!\n");
         msgs.setLineWrap(true);
+        msgs.setEditable(false);
         
         JScrollPane scrolly = new JScrollPane(msgs);
         scrolly.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrolly.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         add(scrolly);
         
-        JTextField ip = new JTextField("enter host address here");
+        //right side
+        ip = new JTextField("enter host address here");
         ip.addActionListener((e)->{
             if(isIpAddr(ip.getText())){
-                System.out.println("OK!");
+                join(ip.getText());
             } else {
-                System.out.println("Not OK!");
-                return;
-            }
-            
-            if(Master.getServer() == null){
-                try {
-                    Master.startServer();
-                } catch (IOException ex) {
-                    ip.setText("Failed to start local server");
-                    ex.printStackTrace();
-                }
-            }
-            if(Master.getServer() != null){
-                Master.loginWindow();
-                getHostingPage().switchToSubpage(WorldSelectPage.WAIT);
-                if(getHostingPage().getCurrentSubPage() instanceof WSWaitForPlayers){
-                    ((WSWaitForPlayers)getHostingPage().getCurrentSubPage()).joinServer(ip.getText()).joinTeam2(Master.getUser());
-                }
+                msgs.append(ip.getText() + " doesn't look like an IP address to me. \n");
             }
         });
-        add(ip);
+        
+        JPanel right = new JPanel();
+        right.add(ip);
+        
+        add(right);
     }
     
     private static boolean isIpAddr(String s){
         return REGEX.matcher(s).find();
+    }
+    
+    private void join(String ipAddr){
+        if(Master.getServer() == null){
+            try {
+                Master.startServer();
+            } catch (IOException ex) {
+                msgs.append("Failed to start local server");
+                msgs.append(ex.getMessage());
+                return;
+            }
+        }
+        if(Master.getServer() != null){
+            Master.loginWindow();
+            try {
+                Master.getServer().connect(ipAddr);
+                getHostingPage().switchToSubpage(WorldSelectPage.WAIT);
+                if(getHostingPage().getCurrentSubPage() instanceof WSWaitForPlayers){
+                    ((WSWaitForPlayers)getHostingPage().getCurrentSubPage()).joinServer(ipAddr).joinTeam2(Master.getUser());
+                }
+            } catch (IOException ex) {
+                msgs.append(ex.getMessage());
+            }
+        }
     }
     
     public static void main(String[] args){

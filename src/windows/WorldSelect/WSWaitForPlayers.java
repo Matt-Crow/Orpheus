@@ -7,6 +7,7 @@ import gui.*;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.io.IOException;
 import java.util.Arrays;
 import javax.swing.*;
 import windows.Page;
@@ -132,8 +133,9 @@ public class WSWaitForPlayers extends SubPage{
      * 
      * @param ipAddr the ipAddress to connect to
      * @return this
+     * @throws java.io.IOException if it cannot connect to the IP address
      */
-    public WSWaitForPlayers joinServer(String ipAddr){
+    public WSWaitForPlayers joinServer(String ipAddr) throws IOException{
         if(!backend.serverIsStarted()){
             boolean success = backend.initClientServer();
             if(success){

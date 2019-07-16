@@ -97,9 +97,13 @@ public class OrpheusServer {
                 logConnections();
             } else {
                 //not connected, no user data
-                connect(ip);
-                connections.get(ip).setUser(User.deserializeJson(JsonUtil.fromString(sm.getBody())));
-                logConnections();
+                try {
+                    connect(ip);
+                    connections.get(ip).setUser(User.deserializeJson(JsonUtil.fromString(sm.getBody())));
+                    logConnections();
+                } catch (IOException ex){
+                    ex.printStackTrace();
+                }
             }
         });
         addReceiver(ServerMessageType.PLAYER_LEFT, (ServerMessage sm)->{
@@ -149,65 +153,57 @@ public class OrpheusServer {
         return state;
     }
     
-    public synchronized void connect(String ipAddr){
-        try {
-            connect(new Socket(ipAddr, server.getLocalPort()));
-        } catch (IOException ex) {
-            Logger.getLogger(OrpheusServer.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public synchronized void connect(String ipAddr) throws IOException{
+        connect(new Socket(ipAddr, server.getLocalPort()));
     }
-    private synchronized void connect(Socket otherComputer){
-        try{
-            logConnections();
-            if(connections.containsKey(otherComputer.getInetAddress().getHostAddress())){
-                out.println("Already connected to " + otherComputer.getInetAddress().getHostAddress());
-                return;
-            }
-            
-            Connection conn = new Connection(otherComputer);
-            connections.put(otherComputer.getInetAddress().getHostAddress(), conn);
+    private synchronized void connect(Socket otherComputer) throws IOException{
+        logConnections();
+        if(connections.containsKey(otherComputer.getInetAddress().getHostAddress())){
+            out.println("Already connected to " + otherComputer.getInetAddress().getHostAddress());
+            return;
+        }
 
-            //do I need to store this somewhere?
-            new Thread(){
-                @Override
-                public void run(){
-                    String ip = "";
-                    while(true){
-                        try{
-                            ip = conn.readFromClient();
-                            if(ip == null || ip.toUpperCase().contains(ServerMessageType.SERVER_SHUTDOWN.toString().toUpperCase())){
-                                System.out.println("breaking");
-                                break;
-                            }
-                            receive(ip);
-                            
-                        } catch (EOFException ex){
-                            ex.printStackTrace();
-                            out.println("connection terminated");
+        Connection conn = new Connection(otherComputer);
+        connections.put(otherComputer.getInetAddress().getHostAddress(), conn);
+
+        //do I need to store this somewhere?
+        new Thread(){
+            @Override
+            public void run(){
+                String ip = "";
+                while(true){
+                    try{
+                        ip = conn.readFromClient();
+                        if(ip == null || ip.toUpperCase().contains(ServerMessageType.SERVER_SHUTDOWN.toString().toUpperCase())){
+                            System.out.println("breaking");
                             break;
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        } catch (ClassNotFoundException ex) {
-                            ex.printStackTrace();
                         }
+                        receive(ip);
+
+                    } catch (EOFException ex){
+                        ex.printStackTrace();
+                        out.println("connection terminated");
+                        break;
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    } catch (ClassNotFoundException ex) {
+                        ex.printStackTrace();
                     }
-                    out.println("disconnecting...");
-                    disconnect(otherComputer.getInetAddress().getHostAddress());
                 }
-            }.start();
-            //out.println("connected to " + otherComputer.getInetAddress().getHostAddress());
-            
-            //includes the User data so the other computer has access to username
-            conn.writeToClient(new ServerMessage(
-                Master.getUser().serializeJson().toString(),
-                ServerMessageType.PLAYER_JOINED
-            ).toJsonString());
-            logConnections();
-        } catch (IOException ex) {
-            System.err.println("Failed to connect to client");
-            ex.printStackTrace();
-        }
+                out.println("disconnecting...");
+                disconnect(otherComputer.getInetAddress().getHostAddress());
+            }
+        }.start();
+        //out.println("connected to " + otherComputer.getInetAddress().getHostAddress());
+
+        //includes the User data so the other computer has access to username
+        conn.writeToClient(new ServerMessage(
+            Master.getUser().serializeJson().toString(),
+            ServerMessageType.PLAYER_JOINED
+        ).toJsonString());
+        logConnections();
     }
+    
     private synchronized void disconnect(String ipAddr){
         if(connections.containsKey(ipAddr)){
             /*

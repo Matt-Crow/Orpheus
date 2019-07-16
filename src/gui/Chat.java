@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import net.ServerMessage;
 import net.ServerMessageType;
@@ -131,10 +133,15 @@ public class Chat extends JComponent implements ActionListener{
         //need to double check to make sure it was started successfully,
         //so an else statement won't work
         if(Master.getServer() != null){
-            Master.getServer().connect(ipAddr);
-            Master.getServer().addReceiver(ServerMessageType.CHAT, receiver);
-            logLocal("Joined chat with " + ipAddr);
-            log(Master.getServer().getIpAddr() + " has joined the chat.");
+            try {
+                Master.getServer().connect(ipAddr);
+                Master.getServer().addReceiver(ServerMessageType.CHAT, receiver);
+                logLocal("Joined chat with " + ipAddr);
+                log(Master.getServer().getIpAddr() + " has joined the chat.");
+            } catch (IOException ex) {
+                logLocal(ex.getMessage());
+            }
+            
         }
     }
     
