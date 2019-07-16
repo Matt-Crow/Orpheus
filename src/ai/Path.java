@@ -54,6 +54,7 @@ public class Path implements Serializable{
             g2d.setColor(Color.green);
             g2d.fillOval(path.getFirst().getStartX(), path.getFirst().getStartY(), 20, 20);
         }
+        g2d.setStroke(new BasicStroke());
     }
     
     public void print(){

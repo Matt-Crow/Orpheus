@@ -7,13 +7,14 @@ import java.awt.event.MouseListener;
 import net.ServerMessage;
 import net.ServerMessageType;
 import windows.Canvas;
+import windows.EndOfFrameListener;
 import windows.world.WorldCanvas;
 
 /**
  *
  * @author Matt Crow
  */
-public class PlayerControls implements MouseListener{
+public class PlayerControls implements MouseListener, EndOfFrameListener{
     private final Player p;
     private boolean isRemote;
     private String receiverIpAddr;
@@ -119,12 +120,13 @@ public class PlayerControls implements MouseListener{
             }
         }
     }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {}
-
-    @Override
-    public void mousePressed(MouseEvent e) {
+    
+    /**
+     * Called at the end of each
+     * frame while the mouse is
+     * held down or pressed
+     */
+    public void moveToMouse(){
         if(isRemote){
             Master.getServer().send(
                 new ServerMessage(
@@ -139,11 +141,40 @@ public class PlayerControls implements MouseListener{
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {}
+    public void mouseClicked(MouseEvent e) {}
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        p.setFollowingMouse(true);
+        /*
+        if(isRemote){
+            Master.getServer().send(
+                new ServerMessage(
+                    "move to " + mouseString(),
+                    ServerMessageType.CONTROL_PRESSED
+                ), 
+                receiverIpAddr
+            );
+        } else {
+            p.moveToMouse();
+        }*/
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        p.setFollowingMouse(false);
+    }
 
     @Override
     public void mouseEntered(MouseEvent e) {}
 
     @Override
     public void mouseExited(MouseEvent e) {}
+
+    @Override
+    public void frameEnded(Canvas c) {
+        if(p.getFollowingMouse()){
+            moveToMouse();
+        }
+    }
 }

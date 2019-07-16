@@ -8,7 +8,6 @@ import customizables.characterClass.CharacterStatName;
 import customizables.characterClass.CharacterClass;
 import java.awt.Color;
 import java.awt.Graphics;
-
 import ai.Path;
 import ai.PathInfo;
 import battle.*;
@@ -37,6 +36,7 @@ public class Player extends Entity{
 	private int lastHitById; //the useId of the last projectile that hit this player
     
     private Path path;
+    private boolean followingMouse;
     
     public static final int RADIUS = 50;
     
@@ -49,6 +49,7 @@ public class Player extends Entity{
 		passives = new AbstractPassive[3];
         setRadius(RADIUS);
         path = null;
+        followingMouse = false;
         statuses = new SafeList<>();
 	}
 	
@@ -72,8 +73,7 @@ public class Player extends Entity{
 		setActives(b.getActiveNames());
 		setPassives(b.getPassiveNames());
 		setSpeed((int) (c.getStatValue(CharacterStatName.SPEED) * (500 / Master.FPS)));
-	}
-	
+    }
 	public void setClass(String name){
         try{
             c = CharacterClass.getCharacterClassByName(name.toUpperCase());
@@ -111,6 +111,13 @@ public class Player extends Entity{
 	}
     public AbstractActive[] getActives(){
 		return actives;
+    }
+    
+    public final void setFollowingMouse(boolean b){
+        followingMouse = b;
+    }
+    public final boolean getFollowingMouse(){
+        return followingMouse;
     }
     
     public void moveToMouse(){

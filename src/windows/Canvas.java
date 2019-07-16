@@ -9,6 +9,7 @@ import java.awt.geom.AffineTransform;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
+import util.SafeList;
 
 /**
  * This is used by WorldCanvas to render
@@ -27,6 +28,8 @@ public class Canvas extends JPanel{
     private Graphics2D graphics;
     private AffineTransform initialTransform;
     
+    private final SafeList<EndOfFrameListener> endOfFrameListeners;
+    
     /**
      * Creates a canvas, which keeps track of
      * translations and transformations
@@ -38,6 +41,7 @@ public class Canvas extends JPanel{
         zoom = 1.0;
         graphics = null;
         initialTransform = null;
+        endOfFrameListeners = new SafeList<>();
         setBackground(CustomColors.black);
     }
     
@@ -85,6 +89,18 @@ public class Canvas extends JPanel{
     public int getMouseY(){
         Point p = getMousePosition();
         return (int)(((p == null) ? 0 : (p.y - translateY)) / zoom);
+    }
+    
+    /**
+     * Centers the "camera" on a given point.
+     * @param x
+     * @param y 
+     */
+    public void centerOn(int x, int y){
+        translate(
+            -(int)(x * getZoom() - getWidth() / 2),
+            -(int)(y * getZoom() -  getHeight() / 2)
+        );
     }
     
     public final void translate(int x, int y){
@@ -141,6 +157,16 @@ public class Canvas extends JPanel{
         System.out.printf("X translation: %d\n", translateX);
         System.out.printf("Y translation: %d\n", translateY);
         System.out.printf("Zoom: %f\n", zoom);
+    }
+    
+    public void addEndOfFrameListener(EndOfFrameListener f){
+        if(f == null){
+            throw new NullPointerException();
+        }
+        endOfFrameListeners.add(f);
+    }
+    public void endOfFrame(){
+        endOfFrameListeners.forEach(eofl -> eofl.frameEnded(this));
     }
     
     public void registerKey(int key, boolean pressed, Runnable r){

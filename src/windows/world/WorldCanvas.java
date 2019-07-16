@@ -40,6 +40,7 @@ public class WorldCanvas extends Canvas{
         paused = true;
         timer = new Timer(1000 / Master.FPS, (ActionEvent e) -> {
             world.update();
+            endOfFrame();
             repaint();
         });
         timer.setRepeats(true);
@@ -47,6 +48,7 @@ public class WorldCanvas extends Canvas{
         
         PlayerControls pc = new PlayerControls(Master.getUser().getPlayer(), world.isRemotelyHosted());
 		addMouseListener(pc);
+        addEndOfFrameListener(pc);
         pc.registerControlsTo(this);
         if(world.isRemotelyHosted() || world.isHosting()){
             //resume, but cannot pause
@@ -77,18 +79,6 @@ public class WorldCanvas extends Canvas{
     
     public World getWorld(){
         return world;
-    }
-    
-    /**
-     * Centers the "camera" on a given point.
-     * @param x
-     * @param y 
-     */
-    private void centerOn(int x, int y){
-        translate(
-            -(int)(x * getZoom() - getWidth() / 2),
-            -(int)(y * getZoom() -  getHeight() / 2)
-        );
     }
     
     @Override

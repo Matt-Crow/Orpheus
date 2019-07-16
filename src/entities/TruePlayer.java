@@ -5,7 +5,6 @@ import java.awt.Graphics;
 
 import customizables.actives.AbstractActive;
 import graphics.CustomColors;
-import controllers.Master;
 import windows.world.WorldCanvas;
 
 //get rid of this thing
@@ -19,7 +18,7 @@ public class TruePlayer extends Player{
 	}
 	
 	public void drawHUD(Graphics g, WorldCanvas wc){
-		int w = wc.getWidth();
+        int w = wc.getWidth();
 		int h = wc.getHeight();
 		
 		// compass
