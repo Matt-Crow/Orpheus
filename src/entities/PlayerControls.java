@@ -120,25 +120,6 @@ public class PlayerControls implements MouseListener, EndOfFrameListener{
             }
         }
     }
-    
-    /**
-     * Called at the end of each
-     * frame while the mouse is
-     * held down or pressed
-     */
-    public void moveToMouse(){
-        if(isRemote){
-            Master.getServer().send(
-                new ServerMessage(
-                    "move to " + mouseString(),
-                    ServerMessageType.CONTROL_PRESSED
-                ), 
-                receiverIpAddr
-            );
-        } else {
-            p.moveToMouse();
-        }
-    }
 
     @Override
     public void mouseClicked(MouseEvent e) {}
@@ -146,35 +127,33 @@ public class PlayerControls implements MouseListener, EndOfFrameListener{
     @Override
     public void mousePressed(MouseEvent e) {
         p.setFollowingMouse(true);
-        /*
-        if(isRemote){
-            Master.getServer().send(
-                new ServerMessage(
-                    "move to " + mouseString(),
-                    ServerMessageType.CONTROL_PRESSED
-                ), 
-                receiverIpAddr
-            );
-        } else {
-            p.moveToMouse();
-        }*/
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         p.setFollowingMouse(false);
     }
-
+    
+    @Override
+    public void frameEnded(Canvas c) {
+        if(p.getFollowingMouse()){
+            if(isRemote){
+                Master.getServer().send(
+                    new ServerMessage(
+                        "move to " + mouseString(),
+                        ServerMessageType.CONTROL_PRESSED
+                    ), 
+                    receiverIpAddr
+                );
+            } else {
+                p.moveToMouse();
+            }
+        }
+    }
+    
     @Override
     public void mouseEntered(MouseEvent e) {}
 
     @Override
     public void mouseExited(MouseEvent e) {}
-
-    @Override
-    public void frameEnded(Canvas c) {
-        if(p.getFollowingMouse()){
-            moveToMouse();
-        }
-    }
 }

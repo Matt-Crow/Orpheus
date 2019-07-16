@@ -2,8 +2,10 @@ package windows.WorldSelect;
 
 import controllers.Master;
 import java.io.IOException;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.JTextField;
 import windows.Page;
 import windows.SubPage;
@@ -13,6 +15,11 @@ import windows.SubPage;
  * @author Matt
  */
 public class WSJoin extends SubPage{
+    //                                     contains 1-3 digits
+    //                                              followed by a period
+    private static final String IP_REGEX = "\\d{1,3}[.]\\d{1,3}[.]\\d{1,3}[.]\\d{1,3}";
+    // BUG: matches strings starting or ending with more than 3 digits
+    
     public WSJoin(Page p) {
         super(p);
         //work in progress
@@ -36,5 +43,20 @@ public class WSJoin extends SubPage{
             }
         });
         add(ip);
+    }
+    
+    public static void main(String[] args){
+        Scanner in = new Scanner(System.in);
+        System.out.println("Enter something to test if it is an IP address, then type 'exit' to quit.");
+        String ip = "";
+        Pattern p = Pattern.compile(IP_REGEX);
+        while(!"exit".equalsIgnoreCase(ip)){
+            ip = in.nextLine();
+            System.out.print(ip + " is ");
+            if(!p.matcher(ip).find()){
+                System.out.print("not ");
+            }
+            System.out.println("an IP address");
+        }
     }
 }
