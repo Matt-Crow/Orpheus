@@ -1,6 +1,7 @@
 package windows.WorldSelect;
 
 import javax.swing.*;
+import windows.MainCanvas;
 import windows.Page;
 
 /**
@@ -16,6 +17,16 @@ public class WorldSelectPage extends Page{
     public WorldSelectPage(){
         super();
         //addBackButton(new MainCanvas());
+        JButton back = new JButton("Go back");
+        back.addActionListener((e)->{
+            MainCanvas mc = new MainCanvas();
+            JFrame parent = (JFrame)SwingUtilities.getWindowAncestor(this);
+            parent.setContentPane(mc);
+            parent.revalidate();
+            mc.requestFocus(); 
+        });
+        addMenuItem(back);
+        
         JButton title = new JButton("Select World Type");
         title.addActionListener((e)->{
             switchToSubpage(MAIN);
