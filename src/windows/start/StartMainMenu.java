@@ -18,6 +18,9 @@ public class StartMainMenu extends SubPage{
         setLayout(new GridLayout(1, 3));
         
         JButton about = new JButton("About this game");
+        about.addActionListener((e)->{
+            getHostingPage().switchToSubpage(StartPage.ABOUT);
+        });
         add(about);
         
         JButton play = new JButton("Play");
