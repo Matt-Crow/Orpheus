@@ -418,7 +418,7 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
         );
         if(this instanceof MeleeActive){
             user.getActionRegister().tripOnMeleeHit(p);
-            user.getEnergyLog().gainEnergy(5);
+            user.getEnergyLog().gainEnergyPerc(15.0);
             p.getActionRegister().tripOnBeMeleeHit(user);
         } else {
             user.getActionRegister().triggerOnHit(p);

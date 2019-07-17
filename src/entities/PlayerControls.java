@@ -34,31 +34,31 @@ public class PlayerControls implements MouseListener, EndOfFrameListener{
     }
     
     private void useMelee(){
+        String msg = "turn to " + mouseString() + "\n use melee";
         if(isRemote){
             Master.getServer().send(
                 new ServerMessage(
-                    "turn to " + mouseString() + "\n use melee",
+                    msg,
                     ServerMessageType.CONTROL_PRESSED
                 ), 
                 receiverIpAddr
             );
         }else{
-            turnToMouse();
-            p.useMeleeAttack();
+            decode(p, msg);
         }
     }
     private void useAtt(int i){
+        String msg = "turn to " + mouseString() + "\n use " + i;
         if(isRemote){
             Master.getServer().send(
                 new ServerMessage(
-                    "turn to " + mouseString() + "\n use " + i,
+                    msg,
                     ServerMessageType.CONTROL_PRESSED
                 ), 
                 receiverIpAddr
             );
         } else {
-            turnToMouse();
-            p.useAttack(i);
+            decode(p, msg);
         }
     }
     
@@ -75,11 +75,6 @@ public class PlayerControls implements MouseListener, EndOfFrameListener{
         plane.registerKey(KeyEvent.VK_3, true, ()->{
             useAtt(2);
         });
-    }
-    
-    private void turnToMouse(){
-        WorldCanvas c = p.getWorld().getCanvas();
-        p.turnTo(c.getMouseX(), c.getMouseY());
     }
     private String mouseString(){
         WorldCanvas c = p.getWorld().getCanvas();
@@ -137,16 +132,17 @@ public class PlayerControls implements MouseListener, EndOfFrameListener{
     @Override
     public void frameEnded(Canvas c) {
         if(p.getFollowingMouse()){
+            String msg = "move to " + mouseString();
             if(isRemote){
                 Master.getServer().send(
                     new ServerMessage(
-                        "move to " + mouseString(),
+                        msg,
                         ServerMessageType.CONTROL_PRESSED
                     ), 
                     receiverIpAddr
                 );
             } else {
-                p.moveToMouse();
+                decode(p, msg);
             }
         }
     }

@@ -122,12 +122,14 @@ public class Canvas extends JPanel{
         if(zoom >= 5.0){
             zoom = 5.0;
         }
+        repaint();
     }
     public final void zoomOut(){
         zoom -= ZOOM_SPEED;
         if(zoom <= 0.2){
             zoom = 0.2;
         }
+        repaint();
     }
     
     /**

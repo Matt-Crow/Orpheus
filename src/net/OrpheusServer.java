@@ -156,7 +156,6 @@ public class OrpheusServer {
     }
     
     public synchronized void connect(String ipAddr) throws IOException{
-        //connect(new Socket(ipAddr, server.getLocalPort()));
         Socket sock = new Socket();
         sock.connect(new InetSocketAddress(ipAddr, server.getLocalPort()), 3000);
         connect(sock);

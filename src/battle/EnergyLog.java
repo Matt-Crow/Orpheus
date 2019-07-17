@@ -29,6 +29,9 @@ public class EnergyLog implements Serializable{
 			energy = maxEnergy;
 		}
 	}
+    public void gainEnergyPerc(double percent){
+        gainEnergy((int) (maxEnergy * (percent / 100)));
+    }
 	public void loseEnergy(int amount){
 		energy -= amount;
 	}

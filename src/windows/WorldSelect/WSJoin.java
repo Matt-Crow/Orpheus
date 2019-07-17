@@ -86,25 +86,26 @@ public class WSJoin extends SubPage{
             try {
                 Master.startServer();
             } catch (IOException ex) {
-                msgs.append("Failed to start local server");
-                msgs.append(ex.getMessage());
-                msgs.append(Arrays.toString(ex.getStackTrace()));
+                msgs.append("Failed to start local server\n");
+                msgs.append(ex.getMessage() + '\n');
+                msgs.append(Arrays.toString(ex.getStackTrace()) + '\n');
                 return;
             }
         }
         if(Master.getServer() != null){
             Master.loginWindow();
             try {
+                msgs.append("Attempting to connect to " + ipAddr + "...\n");
                 Master.getServer().connect(ipAddr);
+                msgs.append("success!\n");
                 getHostingPage().switchToSubpage(WorldSelectPage.WAIT);
                 if(getHostingPage().getCurrentSubPage() instanceof WSWaitForPlayers){
                     ((WSWaitForPlayers)getHostingPage().getCurrentSubPage())
                         .joinServer(ipAddr);
-                        //.joinTeam2(Master.getUser());
                 }
             } catch (IOException ex) {
-                msgs.append(ex.getMessage());
-                msgs.append(Arrays.toString(ex.getStackTrace()));
+                msgs.append(ex.getMessage() + '\n');
+                msgs.append(Arrays.toString(ex.getStackTrace()) + '\n');
             }
         }
     }
