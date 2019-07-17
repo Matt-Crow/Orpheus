@@ -3,8 +3,8 @@ package windows;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 
-import battle.Team;
 import windows.WorldSelect.WorldSelectPage;
+import windows.start.StartPage;
 
 @SuppressWarnings("serial")
 public class MainCanvas extends OldContentPage{
@@ -19,7 +19,7 @@ public class MainCanvas extends OldContentPage{
 		b.addActionListener(new AbstractAction(){
             @Override
 			public void actionPerformed(ActionEvent e){
-				m.switchTo(new StartCanvas());
+                m.switchTo(new StartPage());
 			}
 		});
 		addMenuItem(b);

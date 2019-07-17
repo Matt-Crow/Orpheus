@@ -6,7 +6,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import customizables.AbstractCustomizable;
 import util.CombatLog;
-import windows.StartCanvas;
+import windows.start.StartPage;
 
 /**
  * MainWindow acts as the main frame for the game,
@@ -19,7 +19,7 @@ public class MainWindow extends JFrame{
     public MainWindow(){
         super();
         setTitle("The Orpheus Proposition");
-        setContentPane(new StartCanvas());
+        setContentPane(new StartPage());
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
         setVisible(true);
