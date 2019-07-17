@@ -3,6 +3,7 @@ package windows.WorldSelect;
 import controllers.Master;
 import java.awt.GridLayout;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,6 +53,7 @@ public class WSJoin extends SubPage{
         //left side
         msgs = new JTextArea("Messages will appear here!\n");
         msgs.setLineWrap(true);
+        msgs.setWrapStyleWord(true);
         msgs.setEditable(false);
         
         JScrollPane scrolly = new JScrollPane(msgs);
@@ -86,6 +88,7 @@ public class WSJoin extends SubPage{
             } catch (IOException ex) {
                 msgs.append("Failed to start local server");
                 msgs.append(ex.getMessage());
+                msgs.append(Arrays.toString(ex.getStackTrace()));
                 return;
             }
         }
@@ -95,10 +98,13 @@ public class WSJoin extends SubPage{
                 Master.getServer().connect(ipAddr);
                 getHostingPage().switchToSubpage(WorldSelectPage.WAIT);
                 if(getHostingPage().getCurrentSubPage() instanceof WSWaitForPlayers){
-                    ((WSWaitForPlayers)getHostingPage().getCurrentSubPage()).joinServer(ipAddr).joinTeam2(Master.getUser());
+                    ((WSWaitForPlayers)getHostingPage().getCurrentSubPage())
+                        .joinServer(ipAddr);
+                        //.joinTeam2(Master.getUser());
                 }
             } catch (IOException ex) {
                 msgs.append(ex.getMessage());
+                msgs.append(Arrays.toString(ex.getStackTrace()));
             }
         }
     }

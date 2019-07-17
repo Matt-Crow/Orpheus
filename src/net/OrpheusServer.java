@@ -13,6 +13,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import static java.lang.System.out;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.net.SocketException;
 import javax.json.JsonException;
 import serialization.JsonUtil;
@@ -154,7 +156,11 @@ public class OrpheusServer {
     }
     
     public synchronized void connect(String ipAddr) throws IOException{
-        connect(new Socket(ipAddr, server.getLocalPort()));
+        //connect(new Socket(ipAddr, server.getLocalPort()));
+        Socket sock = new Socket();
+        sock.connect(new InetSocketAddress(ipAddr, server.getLocalPort()), 3000);
+        connect(sock);
+        
     }
     private synchronized void connect(Socket otherComputer) throws IOException{
         logConnections();
