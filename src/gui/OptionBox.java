@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 @SuppressWarnings("serial")
 public class OptionBox<T> extends JComponent{
-	private ArrayList<T> options;
-	private JLabel title;
-	private JComboBox<String> box;
+	private final ArrayList<T> options;
+	private final JLabel title;
+	private final JComboBox<String> box;
 	
 	public OptionBox(String t, T[] opt){
 		super();
