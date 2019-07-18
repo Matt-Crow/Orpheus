@@ -17,7 +17,6 @@ import windows.SubPage;
  * @author Matt Crow
  */
 public abstract class AbstractWSNewWorld extends SubPage{
-    //private final OptionBox<String> playerBuild;
     private final BuildSelect playerBuild;
     private final OptionBox<Integer> teamSize;
     private final JButton start;
@@ -26,7 +25,7 @@ public abstract class AbstractWSNewWorld extends SubPage{
         super(p);
         setLayout(new GridLayout(2, 2));
         
-        playerBuild = new BuildSelect();//buildSelect();
+        playerBuild = new BuildSelect();
         add(playerBuild);
         
         teamSize = teamSizeSelect();
@@ -81,7 +80,7 @@ public abstract class AbstractWSNewWorld extends SubPage{
     }
     
     public Build getSelectedBuild(){
-        return Build.getBuildByName(playerBuild.getSelected());
+        return playerBuild.getSelectedBuild();
     }
     
     public int getTeamSize(){

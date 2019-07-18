@@ -35,7 +35,7 @@ public class BuildCanvas extends OldContentPage{
 		quit.addActionListener(new AbstractAction(){
 			public static final long serialVersionUID = 1L;
 			public void actionPerformed(ActionEvent e){
-				switchTo(new MainCanvas());
+				//switchTo(new MainCanvas());
 			}
 		});
 		addMenuItem(quit);
@@ -139,7 +139,7 @@ public class BuildCanvas extends OldContentPage{
 						passives[1].getBox().getSelected().getName(), 
 						passives[2].getBox().getSelected().getName()
 								));
-				switchTo(new MainCanvas());
+				//switchTo(new MainCanvas());
 			}
 		});
 		addMenuItem(finish);

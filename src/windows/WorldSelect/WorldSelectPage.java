@@ -1,8 +1,8 @@
 package windows.WorldSelect;
 
 import javax.swing.*;
-import windows.MainCanvas;
 import windows.Page;
+import windows.start.StartPage;
 
 /**
  *
@@ -16,14 +16,11 @@ public class WorldSelectPage extends Page{
     public static final String WAIT = "WAIT";
     public WorldSelectPage(){
         super();
-        //addBackButton(new MainCanvas());
         JButton back = new JButton("Go back");
         back.addActionListener((e)->{
-            MainCanvas mc = new MainCanvas();
-            JFrame parent = (JFrame)SwingUtilities.getWindowAncestor(this);
-            parent.setContentPane(mc);
-            parent.revalidate();
-            mc.requestFocus(); 
+            StartPage p = new StartPage();
+            switchToPage(p);
+            p.switchToSubpage(StartPage.PLAY);
         });
         addMenuItem(back);
         

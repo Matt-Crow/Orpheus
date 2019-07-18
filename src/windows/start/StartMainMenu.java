@@ -2,9 +2,6 @@ package windows.start;
 
 import java.awt.GridLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-import windows.MainCanvas;
 import windows.Page;
 import windows.SubPage;
 
@@ -25,10 +22,7 @@ public class StartMainMenu extends SubPage{
         
         JButton play = new JButton("Play");
         play.addActionListener((e)->{
-            JFrame parent = (JFrame)SwingUtilities.getWindowAncestor(this);
-            parent.setContentPane(new MainCanvas());
-            parent.revalidate();
-            p.requestFocus(); 
+            getHostingPage().switchToSubpage(StartPage.PLAY);
         });
         add(play);
         

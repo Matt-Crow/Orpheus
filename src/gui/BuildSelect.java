@@ -3,13 +3,7 @@ package gui;
 import customizables.Build;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.*;
 
 /**
  *
