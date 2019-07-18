@@ -1,9 +1,11 @@
 package customizables;
 
+import customizables.characterClass.CharacterClass;
 import java.io.File;
 import java.util.*;
 import javax.json.*;
 import serialization.*;
+import util.StringUtil;
 
 
 /**
@@ -173,8 +175,8 @@ public class Build implements JsonSerialable{
     
     public String getDescription(){
         StringBuilder sb = new StringBuilder();
-        sb.append(name).append(": \n");
-        sb.append("Class: ").append(className).append("\n");
+        sb.append("Build ").append(name).append(": \n");
+        sb.append("Class: \n").append(StringUtil.entab(CharacterClass.getCharacterClassByName(className).getDescription())).append("\n");
         sb.append("Actives: \n");
         for(String an : activeNames){
             sb.append("*").append(an).append("\n");

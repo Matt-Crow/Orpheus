@@ -1,8 +1,7 @@
 package gui;
 
 import customizables.Build;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JComboBox;
@@ -22,41 +21,29 @@ public class BuildSelect extends JComponent{
     public BuildSelect() {
         super();
         Style.applyStyling(this);
-        setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.FIRST_LINE_START;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
+        setLayout(new BorderLayout());
         
         JLabel title = new JLabel("Select Build");
         Style.applyStyling(title);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        add(title, gbc.clone());
+        add(title, BorderLayout.PAGE_START);
         
         desc = new JTextArea();
         desc.setEditable(false);
         desc.setWrapStyleWord(true);
         desc.setLineWrap(true);
+        desc.setTabSize(4);
         
         JScrollPane scrolly = new JScrollPane(desc);
         scrolly.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrolly.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.anchor = GridBagConstraints.BASELINE_LEADING;
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        add(scrolly, gbc.clone());
+        add(scrolly, BorderLayout.CENTER);
         
         box = new JComboBox<>();
         Build.getAllBuilds().stream().forEach((b)->{
             box.addItem(b.getName());
         });
         Style.applyStyling(box);
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.anchor = GridBagConstraints.LAST_LINE_START;
-        add(box, gbc.clone());
+        add(box, BorderLayout.PAGE_END);
         
         box.addActionListener(new AbstractAction(){
             @Override

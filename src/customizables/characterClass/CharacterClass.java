@@ -10,6 +10,7 @@ import serialization.JsonSerialable;
 import serialization.JsonUtil;
 import customizables.CustomizableJsonUtil;
 import customizables.CustomizableType;
+import java.text.DecimalFormat;
 import util.Number;
 
 
@@ -181,10 +182,10 @@ public class CharacterClass extends AbstractCustomizable implements JsonSerialab
     @Override
     public String getDescription(){
         return getName() + ": \n" 
-                        + "Maximum hit points: " + getStatValue(CharacterStatName.HP) + "\n"
-                        + "Maximum energy: " + getStatValue(CharacterStatName.ENERGY) + "\n"
-                        + "Damage dealt modifier: " + getStatValue(CharacterStatName.DMG) + "\n"
-                        + "Damage taken modifier: " + getStatValue(CharacterStatName.REDUCTION) + "\n"
-                        + "Movement speed modifier: " + getStatValue(CharacterStatName.SPEED) + "\n";
+                        + "(*) Maximum hit points: " + (int)getStatValue(CharacterStatName.HP) + "\n"
+                        + "(*) Maximum energy: " + new DecimalFormat("##.#").format(getStatValue(CharacterStatName.ENERGY)) + "\n"
+                        + "(*) Damage dealt modifier: " + (int)(getStatValue(CharacterStatName.DMG) * 100) + "%\n"
+                        + "(*) Damage taken modifier: " + (int)(getStatValue(CharacterStatName.REDUCTION) * 100) + "%\n"
+                        + "(*) Movement speed modifier: " + (int)(getStatValue(CharacterStatName.SPEED) * 100) + "%\n";
     }
 }
