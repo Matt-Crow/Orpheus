@@ -4,6 +4,7 @@ import controllers.Master;
 import javax.json.*;
 import serialization.JsonSerialable;
 import customizables.CustomizableJsonUtil;
+import util.StringUtil;
 
 public class ElementalActive extends AbstractActive implements JsonSerialable{
 	public ElementalActive(String n, int arc, int range, int speed, int aoe, int dmg){
@@ -48,9 +49,10 @@ public class ElementalActive extends AbstractActive implements JsonSerialable{
     @Override
 	public String getDescription(){
         StringBuilder desc = new StringBuilder();
-		desc
+		/*
+        desc
             .append(getName())
-            .append(": \n");
+            .append(": \n");*/
 		if(getStatValue(ActiveStatName.RANGE) == 0){
             desc.append(String.format("The user generates an explosion with a %d unit radius", (int)(getStatValue(ActiveStatName.AOE) / Master.UNITSIZE)));
         } else {
@@ -79,11 +81,13 @@ public class ElementalActive extends AbstractActive implements JsonSerialable{
 		}
         
 		desc.append(String.format(" dealing %d damage to enemies it hits. \n", (int)getStatValue(ActiveStatName.DAMAGE)));
-		desc.append(String.format("%d energy cost.", getCost()));
+		desc.append(String.format("%d energy cost. \n", getCost()));
 		if(getInflict().getSize() > 0){
 			desc.append(getInflict().getStatusString());
 		}
 		
-		return desc.toString();
+        String ent = StringUtil.entab(desc.toString());
+        return getName() + ": \n" + ent;
+//return desc.toString();
 	}
 }
