@@ -2,13 +2,6 @@ package windows.start;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -20,9 +13,10 @@ import windows.SubPage;
  *
  * @author Matt
  */
-public class StartAbout extends SubPage{
-    public StartAbout(Page p){
+public class StartTextDisplay extends SubPage{
+    public StartTextDisplay(Page p, String displayText){
         super(p);
+        
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         
@@ -33,21 +27,10 @@ public class StartAbout extends SubPage{
         gbc.weighty = 1;
         add(new JPanel(), gbc.clone());
         
-        JTextArea text = new JTextArea("");
+        JTextArea text = new JTextArea(displayText);
         text.setEditable(false);
         text.setWrapStyleWord(true);
         text.setLineWrap(true);
-        InputStream in = StartAbout.class.getResourceAsStream("/README.txt");
-        if(in != null){
-            BufferedReader buff = new BufferedReader(new InputStreamReader(in));
-            try {
-                while(buff.ready()){
-                    text.append(buff.readLine() + "\n");
-                }
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
         
         JScrollPane scrolly = new JScrollPane(text);
         scrolly.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);

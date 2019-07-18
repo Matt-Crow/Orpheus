@@ -33,6 +33,9 @@ public class StartMainMenu extends SubPage{
         add(play);
         
         JButton howToPlay = new JButton("How to play");
+        howToPlay.addActionListener((e)->{
+            getHostingPage().switchToSubpage(StartPage.HOW_TO_PLAY);
+        });
         add(howToPlay);
     }
 }
