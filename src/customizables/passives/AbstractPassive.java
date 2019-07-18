@@ -2,8 +2,6 @@ package customizables.passives;
 
 import java.util.*;
 
-import statuses.StatusTable;
-import entities.Player;
 import java.io.File;
 import java.io.Serializable;
 import java.util.NoSuchElementException;

@@ -57,7 +57,7 @@ public class OnHitPassive extends AbstractPassive implements JsonSerialable, OnH
 	public String getDescription(){
 		String desc = getName() + ": ";
 		desc += "When the user performs an attack that successfully hits an enemy, ";
-		desc += "inflicts " + ((getTargetsUser()) ? "user" : "target") + " with: ";
+		desc += "inflicts " + ((getTargetsUser()) ? "user" : "target") + " with: \n";
 		desc += getInflict().getStatusString();
 		return desc;
 	}

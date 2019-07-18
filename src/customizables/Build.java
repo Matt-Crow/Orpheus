@@ -2,6 +2,7 @@ package customizables;
 
 import customizables.actives.AbstractActive;
 import customizables.characterClass.CharacterClass;
+import customizables.passives.AbstractPassive;
 import java.io.File;
 import java.util.*;
 import javax.json.*;
@@ -176,6 +177,7 @@ public class Build implements JsonSerialable{
     
     public String getDescription(){
         StringBuilder sb = new StringBuilder();
+        String sep = "~~~~~~~~~~~~~~~~~~~~";
         sb.append("Build ").append(name).append(": \n");
         sb.append("Class: \n").append(
             StringUtil.entab(
@@ -186,13 +188,19 @@ public class Build implements JsonSerialable{
         for(String an : activeNames){
             sb.append(
                 StringUtil.entab(
+                    sep + '\n' +
                     AbstractActive.getActiveByName(an).getDescription()
                 )
             ).append("\n");
         }
         sb.append("Passives: \n");
         for(String pn : passiveNames){
-            sb.append("*").append(pn).append("\n");
+            sb.append(
+                StringUtil.entab(
+                    sep + '\n' +
+                    AbstractPassive.getPassiveByName(pn).getDescription()
+                )
+            ).append("\n");
         }
         return sb.toString();
     }

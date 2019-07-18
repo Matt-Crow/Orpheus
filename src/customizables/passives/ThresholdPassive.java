@@ -56,8 +56,8 @@ public class ThresholdPassive extends AbstractPassive implements JsonSerialable,
     @Override
 	public String getDescription(){
 		String desc = getName() + ": ";
-		desc += "When the user is at or below " + getStatValue(PassiveStatName.THRESHOLD) + "% ";
-		desc += "of their maximum HP, inflicts them with: ";
+		desc += "When the user is at or below " + (int)getStatValue(PassiveStatName.THRESHOLD) + "% ";
+		desc += "of their maximum HP, inflicts them with: \n";
 		desc += getInflict().getStatusString();
 		return desc;
 	}

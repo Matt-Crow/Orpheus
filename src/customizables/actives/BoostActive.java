@@ -50,8 +50,8 @@ public class BoostActive extends AbstractActive implements JsonSerialable{
     @Override
 	public String getDescription(){
 		String desc = getName() + ": \n";
-		desc += "   Upon use, inflicts the user with: \n";
-		desc += "\t " + getInflict().getStatusString() + "\n";
+		desc += "Upon use, inflicts the user with: \n";
+		desc += getInflict().getStatusString() + "\n";
 		return desc;
 	}
 }

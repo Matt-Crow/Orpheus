@@ -49,10 +49,10 @@ public class ElementalActive extends AbstractActive implements JsonSerialable{
     @Override
 	public String getDescription(){
         StringBuilder desc = new StringBuilder();
-		/*
+		
         desc
             .append(getName())
-            .append(": \n");*/
+            .append(": \n");
 		if(getStatValue(ActiveStatName.RANGE) == 0){
             desc.append(String.format("The user generates an explosion with a %d unit radius", (int)(getStatValue(ActiveStatName.AOE) / Master.UNITSIZE)));
         } else {
@@ -86,8 +86,6 @@ public class ElementalActive extends AbstractActive implements JsonSerialable{
 			desc.append(getInflict().getStatusString());
 		}
 		
-        String ent = StringUtil.entab(desc.toString());
-        return getName() + ": \n" + ent;
-//return desc.toString();
+        return desc.toString();
 	}
 }

@@ -45,7 +45,7 @@ public class OnMeleeHitPassive extends AbstractPassive implements JsonSerialable
 	public String getDescription(){
 		String desc = getName() + ": ";
 		desc += "When the user strikes a target with a melee attack, ";
-		desc += "inflicts " + ((getTargetsUser()) ? "user" : "target") + " with: ";
+		desc += "inflicts " + ((getTargetsUser()) ? "user" : "target") + " with: \n";
 		desc += getInflict().getStatusString();
 		return desc;
 	}
