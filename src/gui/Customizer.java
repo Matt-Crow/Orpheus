@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import customizables.AbstractCustomizable;
 
+//this is aweful: redo it
 @SuppressWarnings("serial")
 public class Customizer<T> extends JComponent{
 	private AbstractCustomizable customizing;

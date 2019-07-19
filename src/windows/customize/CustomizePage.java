@@ -1,5 +1,6 @@
 package windows.customize;
 
+import customizables.Build;
 import customizables.CustomizableJsonUtil;
 import customizables.CustomizableType;
 import customizables.actives.AbstractActive;
@@ -23,6 +24,8 @@ public class CustomizePage extends Page{
     public static final String CHOOSE_PAS = "CHOOSE PAS";
     public static final String CHOOSE_CHA = "CHOOSE CHA";
     public static final String CUSTOMIZE = "CUSTOMIZE";
+    public static final String CHOOSE_BUI = "CHOOSE BUILD";
+    public static final String CUSTOM_BUILD = "CUSTOMIZE BUILD";
     
     public CustomizePage(){
         super();
@@ -33,6 +36,8 @@ public class CustomizePage extends Page{
             p.switchToSubpage(StartPage.PLAY);
         });
         addMenuItem(exit);
+        
+        
         
         JButton imp = new JButton("Import all customizables from a file");
         imp.addActionListener((ActionEvent e)->{
@@ -60,10 +65,36 @@ public class CustomizePage extends Page{
         });
         addMenuItem(export);
         
+        JButton impBuild = new JButton("Import Builds");
+        impBuild.addActionListener((e)->{
+            File[] chosen = FileChooserUtil.chooseFiles();
+            if(chosen != null){
+                for(File f : chosen){
+                    Build.loadFile(f);
+                }
+            }
+        });
+        addMenuItem(impBuild);
+        
+        JButton expBuild = new JButton("Export Builds");
+        expBuild.addActionListener((e)->{
+            File dir = FileChooserUtil.chooseDir();
+            if(dir != null){
+                String name = JOptionPane.showInputDialog("Enter a name for this export:");
+                File buildFile = new File(dir.getAbsolutePath() + "/" + name);
+                Build.saveAllToFile(buildFile);
+            }
+        });
+        addMenuItem(expBuild);
+        
+        
+        
         addSubPage(MAIN, new CustomizeMain(this));
         addSubPage(CHOOSE_ACT, new CustomizeChoose(this, CustomizableType.ACTIVE));
         addSubPage(CHOOSE_PAS, new CustomizeChoose(this, CustomizableType.PASSIVE));
         addSubPage(CHOOSE_CHA, new CustomizeChoose(this, CustomizableType.CHARACTER_CLASS));
         addSubPage(CUSTOMIZE, new CustomizeCustomize(this));
+        addSubPage(CHOOSE_BUI, new CustomizeChooseBuild(this));
+        addSubPage(CUSTOM_BUILD, new CustomizeBuild(this));
     }
 }

@@ -33,22 +33,40 @@ public class BuildSelect extends JComponent{
         add(scrolly, BorderLayout.CENTER);
         
         box = new JComboBox<>();
-        Build.getAllBuilds().stream().forEach((b)->{
-            box.addItem(b.getName());
-        });
         Style.applyStyling(box);
         add(box, BorderLayout.PAGE_END);
         
         box.addActionListener(new AbstractAction(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                desc.setText(getSelectedBuild().getDescription());
+                Build b = getSelectedBuild();
+                if(b != null){
+                    desc.setText(b.getDescription());
+                }
+                SwingUtilities.invokeLater(()->{
+                    scrolly.getVerticalScrollBar().setValue(0);
+                });
+                
                 repaint();
             }
         });
+        
+        refreshOptions();
+    }
+    
+    public void refreshOptions(){
+        box.removeAllItems();
+        for(Build b : Build.getAll()){
+            box.addItem(b.getName());
+        }
     }
     
     public Build getSelectedBuild(){
-        return Build.getBuildByName((String)box.getSelectedItem());
+        String name = (String)box.getSelectedItem();
+        Build ret = null;
+        if(name != null){
+            ret = Build.getBuildByName(name);
+        }
+        return ret;
     }
 }

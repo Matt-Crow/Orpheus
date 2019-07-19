@@ -40,27 +40,7 @@ public class BuildCanvas extends OldContentPage{
 		});
 		addMenuItem(quit);
         
-        JButton impBuild = new JButton("Import Builds");
-        impBuild.addActionListener((e)->{
-            File[] chosen = FileChooserUtil.chooseFiles();
-            if(chosen != null){
-                for(File f : chosen){
-                    Build.loadFile(f);
-                }
-            }
-        });
-        addMenuItem(impBuild);
         
-        JButton expBuild = new JButton("Export Builds");
-        expBuild.addActionListener((e)->{
-            File dir = FileChooserUtil.chooseDir();
-            if(dir != null){
-                String name = JOptionPane.showInputDialog("Enter a name for this export:");
-                File buildFile = new File(dir.getAbsolutePath() + "/" + name);
-                Build.saveAllToFile(buildFile);
-            }
-        });
-        addMenuItem(expBuild);
 		
 		temp = new JButton("customize upgradables");
 		temp.addActionListener(new AbstractAction(){

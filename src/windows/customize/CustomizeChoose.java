@@ -61,10 +61,4 @@ public class CustomizeChoose extends SubPage{
         revalidate();
         repaint();
     }
-
-    private AbstractCustomizable getSelectedCustomizable() {
-        AbstractCustomizable ret = null;
-        
-        return ret;
-    }
 }

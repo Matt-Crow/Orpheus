@@ -33,6 +33,9 @@ public class CustomizeMain extends SubPage{
         add(cha);
         
         JButton bui = new JButton("Customize Builds");
+        bui.addActionListener((e)->{
+            getHostingPage().switchToSubpage(CustomizePage.CHOOSE_BUI);
+        });
         add(bui);
     }
 }
