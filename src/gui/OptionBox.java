@@ -3,12 +3,11 @@ package gui;
 import javax.swing.*;
 
 import java.awt.GridLayout;
+import java.util.HashMap;
 
-import java.util.ArrayList;
 
-@SuppressWarnings("serial")
 public class OptionBox<T> extends JComponent{
-	private final ArrayList<T> options;
+	private final HashMap<String, T> options;
 	private final JLabel title;
 	private final JComboBox<String> box;
 	
@@ -21,62 +20,52 @@ public class OptionBox<T> extends JComponent{
         Style.applyStyling(title);
 		add(title);
 		
-		options = new ArrayList<T>();
-		for(int i = 0; i < opt.length; i++){
-			options.add(opt[i]);
-		}
-		box = new JComboBox<>(getOptions());
+        box = new JComboBox<>();
 		add(box);
         Style.applyStyling(box);
+        
+		options = new HashMap<>();
+        for (T opt1 : opt) {
+            addOption(opt1);
+        }
 	}
 	public String getTitle(){
 		return title.getText();
 	}
-	public String[] getOptions(){
-		String[] ret = new String[options.size()];
-		for(int i = 0; i < options.size(); i++){
-			ret[i] = options.get(i).toString();
-		}
-		return ret;
-	}
+	
     public void clear(){
         box.removeAllItems();
         options.clear();
     }
     public void addOption(T opt){
-        options.add(opt);
+        options.put(opt.toString(), opt);
         box.addItem(opt.toString());
     }
 	public void setSelected(T item){
-		boolean found = false;
-		for(int i = 0; i < box.getItemCount() && !found; i++){
-			if(box.getItemAt(i).equals(item.toString())){
-				found = true;
-				box.setSelectedIndex(i);
-			}
-		}
-		if(!found){
-			System.out.println("Item not found: " + item);
+        if(options.containsKey(item.toString())){
+            box.setSelectedItem(item.toString());
+        } else {
+			throw new IllegalArgumentException("Item not found: " + item);
 		}
 	}
 	public void setSelectedIndex(int i){
-		box.setSelectedIndex(i);
+		if(i < 0 || i >= box.getItemCount()){
+            throw new IndexOutOfBoundsException();
+        }
+        box.setSelectedIndex(i);
 	}
 	public void setSelectedName(String s){
-		boolean found = false;
-		String[] names = getOptions();
-		for(int i = 0; i < names.length && !found; i++){
-			if(names[i].equals(s)){
-				found = true;
-				setSelectedIndex(i);
-			}
-		}
+        if(options.containsKey(s)){
+            box.setSelectedItem(s);
+        } else {
+            throw new IllegalArgumentException();
+        }
 	}
 	public T getSelected(){
         T ret = null;
-        int i = box.getSelectedIndex();
-        if(i >= 0 && i < options.size()){
-            ret = options.get(i);
+        String name = (String) box.getSelectedItem();
+        if(name != null && options.containsKey(name)){
+            ret = options.get(name);
         }
 		return ret;
 	}
