@@ -33,24 +33,10 @@ public class Page extends JPanel{
         content = new JPanel();
         content.setLayout(new CardLayout());
         
-        /*
-        Menu bar takes up top 10% of the panel,
-        the rest is the content
-        */
+        setLayout(new BorderLayout());
+        add(menuBar, BorderLayout.PAGE_START);
         
-        setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        
-        gbc.weightx = 1;
-        gbc.weighty = 1;
-        gbc.fill = GridBagConstraints.BOTH;
-        add(menuBar, gbc.clone());
-        
-        gbc.gridy = 1;
-        gbc.weightx = 1;
-        gbc.weighty = 9;
-        gbc.fill = GridBagConstraints.BOTH;
-        add(content, gbc.clone());
+        add(content, BorderLayout.CENTER);
         
         setBackground(CustomColors.black);
         setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
