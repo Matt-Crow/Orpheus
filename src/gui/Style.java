@@ -7,6 +7,7 @@ import javax.swing.border.*;
 import graphics.CustomColors;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.text.JTextComponent;
 
 public class Style {
     private final static Border b = BorderFactory.createCompoundBorder(
@@ -50,6 +51,9 @@ public class Style {
             t.setWrapStyleWord(true);
         }
 		c.setVisible(true);
-		c.setBackground(CustomColors.gold);
+        
+        if(!(c instanceof JTextComponent)){
+            c.setBackground(CustomColors.gold);
+        }
 	}
 }

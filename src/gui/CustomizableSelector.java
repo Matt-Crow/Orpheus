@@ -54,7 +54,9 @@ public class CustomizableSelector extends JComponent{
 	public OptionBox<AbstractCustomizable> getBox(){
 		return box;
 	}
-    
+    public void setSelected(AbstractCustomizable ac){
+        box.setSelected(ac);
+    }
     public AbstractCustomizable getSelected(){
         return box.getSelected();
     }

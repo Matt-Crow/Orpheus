@@ -25,8 +25,10 @@ public class CustomizeBuild extends SubPage{
     
     public CustomizeBuild(Page p){
         super(p);
-        setLayout(new GridLayout(3, 3));
-        
+        GridLayout g = new GridLayout(3, 3);
+        g.setHgap(10);
+        g.setVgap(10);
+        setLayout(g);
         JPanel nameArea = new JPanel();
         name = new JTextArea("Build name");
         name.setEditable(true);
@@ -36,9 +38,9 @@ public class CustomizeBuild extends SubPage{
         charClassSel = new CustomizableSelector("Character Class", new CharacterClass[]{});
         add(charClassSel);
         
-        JButton save = new JButton("Save changes");
+        JButton save = new JButton("Save and exit");
         save.addActionListener((e)->{
-            
+            save();
         });
         add(save);
         
@@ -56,7 +58,28 @@ public class CustomizeBuild extends SubPage{
     }
 
     public void setCustomizing(Build selectedBuild) {
-         
+        name.setText(selectedBuild.getName());
+        charClassSel.setSelected(CharacterClass.getCharacterClassByName(selectedBuild.getClassName()));
+        String[] actNames = selectedBuild.getActiveNames();
+        String[] pasNames = selectedBuild.getPassiveNames();
+        for(int i = 0; i < 3; i++){
+            acts[i].setSelected(AbstractActive.getActiveByName(actNames[i]));
+            pass[i].setSelected(AbstractPassive.getPassiveByName(pasNames[i]));
+        }
+    }
+    
+    private void save(){
+        Build.addBuild(new Build(
+            name.getText(),
+            charClassSel.getSelected().getName(),
+            acts[0].getSelected().getName(),
+            acts[1].getSelected().getName(),
+            acts[2].getSelected().getName(),
+            pass[0].getSelected().getName(),
+            pass[1].getSelected().getName(),
+            pass[2].getSelected().getName()
+        ));
+        getHostingPage().switchToSubpage(CustomizePage.MAIN);
     }
     
     @Override

@@ -119,8 +119,10 @@ public class Projectile extends Entity{
 				CustomColors rbl = cs[Random.choose(0, cs.length - 1)];
 				spawnParticle(getDir().getDegrees(), 0, rbl);
 				break;
+            case NONE:
+                break;
 			default:
-				System.out.println("The particle type of " + registeredAttack.getParticleType() + "is not found for Projectile.java");
+				System.out.println("The particle type of " + registeredAttack.getParticleType() + " is not found for Projectile.java");
 			}
 		}
     }
