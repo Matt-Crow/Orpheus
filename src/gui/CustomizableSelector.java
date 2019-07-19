@@ -18,18 +18,29 @@ public class CustomizableSelector extends JComponent{
 		box = new OptionBox<AbstractCustomizable>(title, a);
 		box.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				desc.setText(box.getSelected().getDescription());
-			}
+                if(box.getSelected() != null){
+                    desc.setText(box.getSelected().getDescription());
+                }
+            }
 		});
 		add(box);
 		
-		desc = new JTextArea(box.getSelected().getDescription());
+		desc = new JTextArea();
+        desc.setEditable(false);
+        desc.setLineWrap(true);
+        desc.setWrapStyleWord(true);
+        if(box.getSelected() != null){
+            desc.setText(box.getSelected().getDescription());
+        }
 		add(desc);
         Style.applyStyling(desc);
 		Style.applyStyling(this);
 	}
     public void setOptions(AbstractCustomizable[] acs){
         box.clear();
+        for(AbstractCustomizable ac : acs){
+            box.addOption(ac);
+        }
     }
 	public OptionBox<AbstractCustomizable> getBox(){
 		return box;

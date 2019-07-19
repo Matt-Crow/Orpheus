@@ -41,6 +41,11 @@ public class OptionBox<T> extends JComponent{
 	}
     public void clear(){
         box.removeAllItems();
+        options.clear();
+    }
+    public void addOption(T opt){
+        options.add(opt);
+        box.addItem(opt.toString());
     }
 	public void setSelected(T item){
 		boolean found = false;
@@ -68,7 +73,12 @@ public class OptionBox<T> extends JComponent{
 		}
 	}
 	public T getSelected(){
-		return options.get(box.getSelectedIndex());
+        T ret = null;
+        int i = box.getSelectedIndex();
+        if(i >= 0 && i < options.size()){
+            ret = options.get(i);
+        }
+		return ret;
 	}
 	public void addActionListener(AbstractAction a){
 		box.addActionListener(a);

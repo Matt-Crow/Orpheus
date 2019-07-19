@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import customizables.CustomizableType;
 import gui.*;
-import java.io.File;
 
 @SuppressWarnings({"serial", "rawtypes"})
 

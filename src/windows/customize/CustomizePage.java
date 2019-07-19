@@ -1,6 +1,7 @@
 package windows.customize;
 
 import customizables.CustomizableJsonUtil;
+import customizables.CustomizableType;
 import customizables.actives.AbstractActive;
 import customizables.characterClass.CharacterClass;
 import customizables.passives.AbstractPassive;
@@ -18,6 +19,9 @@ import windows.start.StartPage;
  */
 public class CustomizePage extends Page{
     public static final String MAIN = "MAIN";
+    public static final String CHOOSE_ACT = "CHOOSE ACT";
+    public static final String CHOOSE_PAS = "CHOOSE PAS";
+    public static final String CHOOSE_CHA = "CHOOSE CHA";
     
     public CustomizePage(){
         super();
@@ -56,5 +60,8 @@ public class CustomizePage extends Page{
         addMenuItem(export);
         
         addSubPage(MAIN, new CustomizeMain(this));
+        addSubPage(CHOOSE_ACT, new CustomizeChoose(this, CustomizableType.ACTIVE));
+        addSubPage(CHOOSE_PAS, new CustomizeChoose(this, CustomizableType.PASSIVE));
+        addSubPage(CHOOSE_CHA, new CustomizeChoose(this, CustomizableType.CHARACTER_CLASS));
     }
 }

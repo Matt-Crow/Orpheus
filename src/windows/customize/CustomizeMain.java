@@ -15,12 +15,21 @@ public class CustomizeMain extends SubPage{
         setLayout(new GridLayout(1, 4));
         
         JButton act = new JButton("Customize Actives");
+        act.addActionListener((e)->{
+            getHostingPage().switchToSubpage(CustomizePage.CHOOSE_ACT);
+        });
         add(act);
         
         JButton pas = new JButton("Customize Passives");
+        pas.addActionListener((e)->{
+            getHostingPage().switchToSubpage(CustomizePage.CHOOSE_PAS);
+        });
         add(pas);
         
         JButton cha = new JButton("Customize Character Classes");
+        cha.addActionListener((e)->{
+            getHostingPage().switchToSubpage(CustomizePage.CHOOSE_CHA);
+        });
         add(cha);
         
         JButton bui = new JButton("Customize Builds");

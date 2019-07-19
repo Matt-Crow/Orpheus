@@ -27,12 +27,7 @@ public class CustomizeChoose extends SubPage{
         
         AbstractCustomizable[] options = new AbstractCustomizable[]{};
         
-        JLabel title = new JLabel("Choose " + type.toString() + " to customize");
-        add(title, BorderLayout.PAGE_START);
-        
-        
-        
-        chooser = new CustomizableSelector("what?", options);
+        chooser = new CustomizableSelector("Choose " + type.toString() + " to customize", options);
         add(chooser, BorderLayout.CENTER);
         
         JButton customize = new JButton("Customize");
@@ -43,10 +38,8 @@ public class CustomizeChoose extends SubPage{
     }
 
     @Override
-    public void switchedFromThis() {}
-
-    @Override
     public void switchedToThis() {
+        super.switchedToThis();
         AbstractCustomizable[] options = null;
         switch(t){
             case ACTIVE:
@@ -62,5 +55,7 @@ public class CustomizeChoose extends SubPage{
                 System.err.println("No options for " + t + " in CustomizeChoose");
         }
         chooser.setOptions(options);
+        revalidate();
+        repaint();
     }
 }
