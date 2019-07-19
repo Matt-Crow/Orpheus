@@ -23,6 +23,18 @@ public class SubPage extends JPanel{
         return inPage;
     }
     
+    /**
+     * Fired whenever this' parent switches from this subpage to another.
+     * Subclasses should override this to remove any server functionality they no longer need
+     */
+    public void switchedFromThis(){}
+    
+    /**
+     * Fired whenever this' parent switches to this subpage.
+     * Subclasses should override this to refresh any data or start servers
+     */
+    public void switchedToThis(){}
+    
     @Override
 	public Component add(Component j){
 		super.add(j);

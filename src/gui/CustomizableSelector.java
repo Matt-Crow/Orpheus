@@ -8,7 +8,7 @@ import javax.swing.*;
 import customizables.AbstractCustomizable;
 
 @SuppressWarnings("serial")
-public class CustomizableSelector<T> extends JComponent{
+public class CustomizableSelector extends JComponent{
 	private OptionBox<AbstractCustomizable> box;
 	private JTextArea desc;
 	
@@ -28,6 +28,9 @@ public class CustomizableSelector<T> extends JComponent{
         Style.applyStyling(desc);
 		Style.applyStyling(this);
 	}
+    public void setOptions(AbstractCustomizable[] acs){
+        box.clear();
+    }
 	public OptionBox<AbstractCustomizable> getBox(){
 		return box;
 	}

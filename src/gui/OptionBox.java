@@ -39,6 +39,9 @@ public class OptionBox<T> extends JComponent{
 		}
 		return ret;
 	}
+    public void clear(){
+        box.removeAllItems();
+    }
 	public void setSelected(T item){
 		boolean found = false;
 		for(int i = 0; i < box.getItemCount() && !found; i++){

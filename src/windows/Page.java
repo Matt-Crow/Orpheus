@@ -119,11 +119,31 @@ public class Page extends JPanel{
      */
     public void switchToPage(Page p){
         JFrame parent = (JFrame)SwingUtilities.getWindowAncestor(this);
+        Container oldPage = parent.getContentPane();
+        if(oldPage != null && oldPage instanceof Page){
+            ((Page)oldPage).switchedFromThis();
+        }
         parent.setContentPane(p);
+        p.switchedToThis();
         parent.revalidate();
         p.requestFocus(); 
         //otherwise key controls don't work until the user selects the program in their task bar
     }
+    
+    /**
+     * Fired whenever switchToPage is called
+     * when this was the current page.
+     * 
+     * Subclasses may want to override this
+     */
+    public void switchedFromThis(){}
+    
+    /**
+     * Fired whenever switchToPage is called
+     * and this is passed as the parameter
+     * Subclasses should use this to refresh their data
+     */
+    public void switchedToThis(){}
     
     /**
      * Switches this' content section to showing
@@ -133,7 +153,13 @@ public class Page extends JPanel{
      * @param name the name of the SubPage to switch to
      */
     public void switchToSubpage(String name){
+        if(currentSubPage != null){
+            currentSubPage.switchedFromThis();
+        }
         currentSubPage = subPages.get(name);
+        if(currentSubPage != null){
+            currentSubPage.switchedToThis();
+        }
         ((CardLayout)content.getLayout()).show(content, name);
     }
     
