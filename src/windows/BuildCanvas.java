@@ -29,51 +29,6 @@ public class BuildCanvas extends OldContentPage{
 	private JTextArea name;
 	private Player testPlayer;
 	
-	public BuildCanvas(){
-		super();
-		JButton quit = new JButton("Quit without saving");
-		quit.addActionListener(new AbstractAction(){
-			public static final long serialVersionUID = 1L;
-			public void actionPerformed(ActionEvent e){
-				//switchTo(new MainCanvas());
-			}
-		});
-		addMenuItem(quit);
-        
-        
-		
-		temp = new JButton("customize upgradables");
-		temp.addActionListener(new AbstractAction(){
-			public void actionPerformed(ActionEvent e){
-				//switchTo(new CustomizeCanvas());
-			}
-		});
-		add(temp);
-		
-		ArrayList<Build> builds = Build.getAllBuilds();
-		String[] buildNames = new String[builds.size()];
-		for(int i = 0; i < builds.size(); i++){
-			buildNames[i] = builds.get(i).getName();
-		}
-		
-		baseBuild = new OptionBox<String>("Base build", buildNames);
-		baseBuild.addActionListener(getRepaint());
-		add(baseBuild);
-		
-		setClass = new JButton("Edit/copy build");
-		setClass.addActionListener(new AbstractAction(){
-			public static final long serialVersionUID = 1L;
-			public void actionPerformed(ActionEvent e){
-				remove(baseBuild);
-				remove(setClass);
-				phase2();
-			}
-		});
-		add(setClass);
-		
-		resizeComponents(1, 3);
-		resizeMenu(3);
-	}
 	public void phase2(){
 		remove(temp);
 		testPlayer = new Player("TEST");

@@ -15,25 +15,34 @@ public class CustomizableSelector extends JComponent{
 	public CustomizableSelector(String title, AbstractCustomizable[] a){
 		super();
 		setLayout(new GridLayout(2, 1));
-		box = new OptionBox<AbstractCustomizable>(title, a);
-		box.addActionListener(new AbstractAction(){
-			public void actionPerformed(ActionEvent e){
-                if(box.getSelected() != null){
-                    desc.setText(box.getSelected().getDescription());
-                }
-            }
-		});
-		add(box);
+		
 		
 		desc = new JTextArea();
         desc.setEditable(false);
         desc.setLineWrap(true);
         desc.setWrapStyleWord(true);
-        if(box.getSelected() != null){
-            desc.setText(box.getSelected().getDescription());
-        }
-		add(desc);
+        
+        
+        JScrollPane scrolly = new JScrollPane(desc);
+        scrolly.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scrolly.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		add(scrolly);
+        
         Style.applyStyling(desc);
+        
+        box = new OptionBox<>(title, a);
+		box.addActionListener(new AbstractAction(){
+			public void actionPerformed(ActionEvent e){
+                if(box.getSelected() != null){
+                    desc.setText(box.getSelected().getDescription());
+                    SwingUtilities.invokeLater(()->{
+                        scrolly.getVerticalScrollBar().setValue(0);
+                    });
+                }
+            }
+		});
+		add(box);
+        
 		Style.applyStyling(this);
 	}
     public void setOptions(AbstractCustomizable[] acs){
