@@ -5,7 +5,6 @@ import graphics.CustomColors;
 import gui.Style;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
 import java.util.HashMap;
 import javax.swing.*;
 
@@ -153,6 +152,9 @@ public class Page extends JPanel{
      * @param name the name of the SubPage to switch to
      */
     public void switchToSubpage(String name){
+        if(!subPages.containsKey(name)){
+            throw new IllegalArgumentException("Invalid subpage name: " + name);
+        }
         if(currentSubPage != null){
             currentSubPage.switchedFromThis();
         }

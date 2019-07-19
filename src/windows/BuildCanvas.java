@@ -65,7 +65,7 @@ public class BuildCanvas extends OldContentPage{
 		temp = new JButton("customize upgradables");
 		temp.addActionListener(new AbstractAction(){
 			public void actionPerformed(ActionEvent e){
-				switchTo(new CustomizeCanvas());
+				//switchTo(new CustomizeCanvas());
 			}
 		});
 		add(temp);

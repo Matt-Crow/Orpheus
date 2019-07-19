@@ -8,7 +8,6 @@ import customizables.passives.AbstractPassive;
 import gui.CustomizableSelector;
 import java.awt.BorderLayout;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import windows.Page;
 import windows.SubPage;
 
@@ -32,7 +31,11 @@ public class CustomizeChoose extends SubPage{
         
         JButton customize = new JButton("Customize");
         customize.addActionListener((e)->{
-            
+            getHostingPage().switchToSubpage(CustomizePage.CUSTOMIZE);
+            SubPage page = getHostingPage().getCurrentSubPage();
+            if(page instanceof CustomizeCustomize){
+                ((CustomizeCustomize)page).setCustomizing(chooser.getSelected());
+            }
         });
         add(customize, BorderLayout.PAGE_END);
     }
@@ -57,5 +60,11 @@ public class CustomizeChoose extends SubPage{
         chooser.setOptions(options);
         revalidate();
         repaint();
+    }
+
+    private AbstractCustomizable getSelectedCustomizable() {
+        AbstractCustomizable ret = null;
+        
+        return ret;
     }
 }

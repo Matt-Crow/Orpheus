@@ -22,6 +22,7 @@ public class CustomizePage extends Page{
     public static final String CHOOSE_ACT = "CHOOSE ACT";
     public static final String CHOOSE_PAS = "CHOOSE PAS";
     public static final String CHOOSE_CHA = "CHOOSE CHA";
+    public static final String CUSTOMIZE = "CUSTOMIZE";
     
     public CustomizePage(){
         super();
@@ -63,5 +64,6 @@ public class CustomizePage extends Page{
         addSubPage(CHOOSE_ACT, new CustomizeChoose(this, CustomizableType.ACTIVE));
         addSubPage(CHOOSE_PAS, new CustomizeChoose(this, CustomizableType.PASSIVE));
         addSubPage(CHOOSE_CHA, new CustomizeChoose(this, CustomizableType.CHARACTER_CLASS));
+        addSubPage(CUSTOMIZE, new CustomizeCustomize(this));
     }
 }
