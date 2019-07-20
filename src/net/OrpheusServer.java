@@ -303,6 +303,9 @@ public class OrpheusServer {
     }
     
     public final void shutDown(){
+        if(!isStarted){
+            return;
+        }
         send(new ServerMessage(
             "server shutting down",
             ServerMessageType.SERVER_SHUTDOWN

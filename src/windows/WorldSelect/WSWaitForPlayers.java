@@ -6,6 +6,8 @@ import customizables.Build;
 import gui.*;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.io.IOException;
 import java.util.Arrays;
@@ -80,13 +82,19 @@ public class WSWaitForPlayers extends SubPage{
         add(joinT2Button, BorderLayout.LINE_END);
         
         JPanel center = new JPanel();
-        center.setLayout(new FlowLayout());
+        center.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
         
+        gbc.anchor = GridBagConstraints.LINE_START;
         playerBuild = new BuildSelect();
-        center.add(playerBuild);
+        center.add(playerBuild, gbc.clone());
         
+        gbc.anchor = GridBagConstraints.LINE_END;
         chat = new Chat();
-        center.add(chat);
+        center.add(chat, gbc.clone());
         
         add(center, BorderLayout.CENTER);
         
