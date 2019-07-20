@@ -1,5 +1,6 @@
 package windows.world;
 
+import controllers.Master;
 import gui.Chat;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -99,5 +100,12 @@ public class WorldSubpage extends SubPage{
         revalidate();
         repaint();
         return this;
+    }
+    
+    @Override
+    public void switchedFromThis(){
+        if(Master.SERVER.isStarted()){
+            Master.SERVER.shutDown();
+        }
     }
 }

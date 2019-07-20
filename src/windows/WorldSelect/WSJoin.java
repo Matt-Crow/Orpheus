@@ -64,7 +64,7 @@ public class WSJoin extends SubPage{
             if(isIpAddr(ip.getText())){
                 join(ip.getText());
             } else {
-                msgs.append(ip.getText() + " doesn't look like an IP address to me. \n");
+                msgs.append('"' + ip.getText() + "\" doesn't look like an IP address to me. \n");
             }
         });
         

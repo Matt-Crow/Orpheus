@@ -6,7 +6,6 @@ import gui.OptionBox;
 import gui.Style;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import windows.Page;

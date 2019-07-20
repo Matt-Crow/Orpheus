@@ -80,24 +80,37 @@ public class OrpheusServer {
     /**
      * 
      * @return this
-     * @throws java.net.UnknownHostException 
+     * @throws java.io.IOException
+     *  
      */
-    public OrpheusServer start() throws UnknownHostException, IOException{
+    public OrpheusServer start() throws IOException{
         if(isStarted){
             //don't start if this is already started
             return this;
         }
         
+        server = new ServerSocket(PORT);
+        ipAddress = InetAddress.getLocalHost().getHostAddress();
+        
+        reset();
+        
+        isStarted = true;
+        
+        return this;
+    }
+    
+    /**
+     * Clears all receivers and connections from this,
+     * then restarts the connection listener.
+     * @return this
+     */
+    public OrpheusServer reset(){
         receivers.clear();
         connections.keySet().forEach((ip)->disconnect(ip));
         initReceivers();
         
-        server = new ServerSocket(PORT);
-        ipAddress = InetAddress.getLocalHost().getHostAddress();
         startConnListener();
         listenForConn = true;
-        
-        isStarted = true;
         
         return this;
     }

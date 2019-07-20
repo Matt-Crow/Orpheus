@@ -41,7 +41,7 @@ public class WaitingRoomBackend {
     public static final int WAIT_TIME = 0; //in seconds
     
     private final WSWaitForPlayers host;
-    private OrpheusServer server;
+    private final OrpheusServer server;
     
     /*
     these prototype teams allow this to keep track of
@@ -76,7 +76,7 @@ public class WaitingRoomBackend {
     
     public WaitingRoomBackend(WSWaitForPlayers page){
         host = page;
-        server = null;
+        server = Master.SERVER;
         isHost = false;
         teamSize = 0;
         gameAboutToStart = false;
@@ -108,44 +108,25 @@ public class WaitingRoomBackend {
     }
     
     /**
-     * Checks to see if the local server 
-     * has started yet
-     * @return whether or not this has been connected to Master's OrpheusServer
-     */
-    public boolean serverIsStarted(){
-        return server != null;
-    }
-    
-    /**
      * Initializes the server as a host,
      * setting up the appropriate receivers.
      * This should only be called by one 
      * user in each game
      * 
-     * @return whether or not the server is 
-     * successfully started.
-     * Note that this does return true if 
-     * the server has already initialized.
+     * @throws java.io.IOException if the server cannot be started
      */
-    public boolean initHostServer(){
-        boolean success = true;
-        if(!Master.SERVER.isStarted()){
-            try {
-                Master.SERVER.start();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                success = false;
-            }
+    public void initHostServer() throws IOException{
+        if(!server.isStarted()){
+            server.start();
+        } else {
+            server.reset();
         }
-        //            need this to make sure this hasn't started yet
-        if(success && server == null){
-            server = Master.SERVER;
-            
-            server.addReceiver(ServerMessageType.PLAYER_JOINED, receiveJoin);
-            server.addReceiver(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
-            isHost = true;
-        }
-        return success;
+        
+        clearData();
+        
+        server.addReceiver(ServerMessageType.PLAYER_JOINED, receiveJoin);
+        server.addReceiver(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
+        isHost = true;
     }
     
     /**
@@ -153,28 +134,29 @@ public class WaitingRoomBackend {
      * that is to say, not the host.
      * Then, sets up the appropriate receivers.
      * 
-     * @return whether or not the server is 
-     * ready after the method completes
+     * @throws java.io.IOException
      */
-    public boolean initClientServer(){
-        boolean success = true;
-        if(!Master.SERVER.isStarted()){
-            try {
-                Master.SERVER.start();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                success = false;
-            }
+    public void initClientServer() throws IOException{
+        if(!server.isStarted()){
+            server.start();
+        } else {
+            server.reset();
         }
-        if(success && server == null){
-            server = Master.SERVER;
-            
-            server.addReceiver(ServerMessageType.WAITING_ROOM_INIT, receiveInit);
-            server.addReceiver(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
-            server.addReceiver(ServerMessageType.REQUEST_PLAYER_DATA, receiveBuildRequest);
-            isHost = false;
-        }
-        return success;
+        
+        clearData();
+        
+        server.addReceiver(ServerMessageType.WAITING_ROOM_INIT, receiveInit);
+        server.addReceiver(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
+        server.addReceiver(ServerMessageType.REQUEST_PLAYER_DATA, receiveBuildRequest);
+        isHost = false;
+    }
+    
+    private void clearData(){
+        team1Proto.clear();
+        team2Proto.clear();
+        team1 = null;
+        team2 = null;
+        gameAboutToStart = false;
     }
     
     /**

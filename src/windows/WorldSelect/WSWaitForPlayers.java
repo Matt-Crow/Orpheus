@@ -120,17 +120,12 @@ public class WSWaitForPlayers extends SubPage{
      * already started) as the host of a game.
      * 
      * @return this 
+     * @throws java.io.IOException if the server does not start
      */
-    public WSWaitForPlayers startServer(){
-        if(!backend.serverIsStarted()){
-            boolean success = backend.initHostServer();
-            if(success){
-                chat.openChatServer();
-                chat.logLocal("Server started on host address " + Master.SERVER.getIpAddr());
-            }else{
-                chat.logLocal("Unable to start server :(");
-            }
-        }
+    public WSWaitForPlayers startServerAsHost() throws IOException{
+        backend.initHostServer();
+        chat.openChatServer();
+        chat.logLocal("Server started on host address " + Master.SERVER.getIpAddr());
         return this;
     }
     
@@ -144,16 +139,12 @@ public class WSWaitForPlayers extends SubPage{
      * @throws java.io.IOException if it cannot connect to the IP address
      */
     public WSWaitForPlayers joinServer(String ipAddr) throws IOException{
-        if(!backend.serverIsStarted()){
-            boolean success = backend.initClientServer();
-            if(success){
-                Master.SERVER.connect(ipAddr);
-                chat.joinChat(ipAddr);
-                chat.logLocal("Connected to host " + ipAddr);
-            } else {
-                chat.logLocal("Failed to connect to " + ipAddr);
-            }
-        }
+        backend.initClientServer();
+        
+        Master.SERVER.connect(ipAddr);
+        chat.joinChat(ipAddr);
+        chat.logLocal("Connected to host " + ipAddr);
+        
         return this;
     }
     

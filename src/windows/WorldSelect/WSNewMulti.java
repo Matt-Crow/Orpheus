@@ -1,6 +1,9 @@
 package windows.WorldSelect;
 
 import controllers.Master;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import windows.Page;
 import windows.SubPage;
 
@@ -22,7 +25,11 @@ public class WSNewMulti extends AbstractWSNewWorld{
         SubPage sp = getHostingPage().getCurrentSubPage();
         if(sp instanceof WSWaitForPlayers){
             WSWaitForPlayers wait = (WSWaitForPlayers)sp;
-            wait.startServer();
+            try {
+                wait.startServerAsHost();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
             wait.setTeamSize(getTeamSize());
             wait.joinTeam1(Master.getUser());
         }
