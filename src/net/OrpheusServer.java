@@ -9,11 +9,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.function.Consumer;
-import javax.swing.JOptionPane;
 import static java.lang.System.out;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import javax.json.JsonException;
 import serialization.JsonUtil;
 import util.SafeList;
@@ -60,21 +58,7 @@ public class OrpheusServer {
         connections = new HashMap<>();
         listenForConn = false;
         ipAddress = "server not started yet";
-        
-        /*
-        System.out.println("Server started on " + ipAddress);
-        System.out.println(
-            String.format(
-                "To connect to this server, call \'new Socket(\"%s\", %d);\'", 
-                ipAddress, 
-                port
-            )
-        );*/
-        
         isStarted = false;
-        
-        //startConnListener();
-        //initReceivers();
     }
     
     /**
@@ -105,10 +89,12 @@ public class OrpheusServer {
      * @return this
      */
     public OrpheusServer reset(){
+        System.out.println("Server reset");
         receivers.clear();
-        //connections.values().forEach((conn)->conn.close());
-        connections.clear();
         initReceivers();
+        
+        //connections.values().forEach((conn)->conn.close());
+        //connections.clear();
         
         startConnListener();
         listenForConn = true;
