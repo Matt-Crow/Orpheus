@@ -106,7 +106,7 @@ public class OrpheusServer {
      */
     public OrpheusServer reset(){
         receivers.clear();
-        connections.values().forEach((conn)->conn.close());
+        //connections.values().forEach((conn)->conn.close());
         connections.clear();
         initReceivers();
         
