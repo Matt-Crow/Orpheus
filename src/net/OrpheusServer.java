@@ -9,17 +9,14 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import static java.lang.System.out;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import javax.json.JsonException;
 import serialization.JsonUtil;
 import util.SafeList;
-import util.SerialUtil;
 
 /**
  * OrpheusServer is a somewhat deceptive title, as this is
@@ -42,7 +39,8 @@ import util.SerialUtil;
  * @author Matt Crow
  */
 public class OrpheusServer {
-    private final ServerSocket server;
+    private boolean isStarted;
+    private ServerSocket server;
     private String ipAddress;
     
     /*
@@ -53,24 +51,17 @@ public class OrpheusServer {
     private Thread connListener; //the thread that listens for attemts to connect to this server
     private volatile boolean listenForConn; //whether or not the connListener thread is active
     
-    private OrpheusServerState state; //what this server is doing. Currently not used
-    
     private final HashMap<ServerMessageType, SafeList<Consumer<ServerMessage>>> receivers; //see the receive method
     
-    public OrpheusServer(int port) throws IOException{
-        state = OrpheusServerState.NONE;
+    public static final int PORT = 5000;
+    
+    public OrpheusServer(){
         receivers = new HashMap<>();
-        ipAddress = "ERROR INITIALIZING SERVER";
+        connections = new HashMap<>();
+        listenForConn = false;
+        ipAddress = "server not started yet";
         
-        try{
-            server = new ServerSocket(port);
-        } catch (IOException ex) {
-            //make this test for another open port?
-            System.err.println("Couldn't initialize server on port " + port);
-            throw ex;
-        }
-        
-        ipAddress = InetAddress.getLocalHost().getHostAddress();
+        /*
         System.out.println("Server started on " + ipAddress);
         System.out.println(
             String.format(
@@ -78,13 +69,41 @@ public class OrpheusServer {
                 ipAddress, 
                 port
             )
-        );
+        );*/
         
-        connections = new HashMap<>();
+        isStarted = false;
+        
+        //startConnListener();
+        //initReceivers();
+    }
+    
+    /**
+     * 
+     * @return this
+     * @throws java.net.UnknownHostException 
+     */
+    public OrpheusServer start() throws UnknownHostException, IOException{
+        if(isStarted){
+            //don't start if this is already started
+            return this;
+        }
+        
+        receivers.clear();
+        connections.keySet().forEach((ip)->disconnect(ip));
+        initReceivers();
+        
+        server = new ServerSocket(PORT);
+        ipAddress = InetAddress.getLocalHost().getHostAddress();
+        startConnListener();
         listenForConn = true;
         
-        startConnListener();
-        initReceivers();
+        isStarted = true;
+        
+        return this;
+    }
+    
+    public boolean isStarted(){
+        return isStarted;
     }
     
     //where do I need to send user data?
@@ -144,20 +163,15 @@ public class OrpheusServer {
         }
     }
     
+    
+    
     public String getIpAddr(){
         return ipAddress;
     }
     
-    public void setState(OrpheusServerState s){
-        state = s;
-    }
-    public OrpheusServerState getState(){
-        return state;
-    }
-    
     public synchronized void connect(String ipAddr) throws IOException{
         Socket sock = new Socket();
-        sock.connect(new InetSocketAddress(ipAddr, server.getLocalPort()), 3000);
+        sock.connect(new InetSocketAddress(ipAddr, PORT), 3000);
         connect(sock);
         
     }
@@ -211,12 +225,6 @@ public class OrpheusServer {
     
     private synchronized void disconnect(String ipAddr){
         if(connections.containsKey(ipAddr)){
-            /*
-            out.println("sending someone left " + ipAddr);
-            send(new ServerMessage(
-                ipAddr,
-                ServerMessageType.PLAYER_LEFT
-            ), ipAddr);*/
             connections.get(ipAddr).close();
             connections.remove(ipAddr);
         }else{
@@ -305,6 +313,8 @@ public class OrpheusServer {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+        
+        isStarted = false;
     }
     
     public synchronized void logConnections(){
@@ -323,13 +333,12 @@ public class OrpheusServer {
     
     public static void main(String[] args){
         try {
-            OrpheusServer os = new OrpheusServer(5000);
-            String ip = JOptionPane.showInputDialog("enter host ip address to connect to");
-            if(ip != null){
-                os.connect(ip);
-                os.send("hello?");
-                os.send("is this thing on?");
-            }
+            OrpheusServer os = new OrpheusServer();
+            os.logConnections();
+            os.logReceivers();
+            os.start();
+            os.logConnections();
+            os.logReceivers();
         } catch (IOException ex) {
             ex.printStackTrace();
         }

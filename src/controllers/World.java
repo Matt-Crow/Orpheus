@@ -189,19 +189,13 @@ public class World implements Serializable{
      * @param b whether or not this is a host for other players
      * @return this
      */
-    public World setIsHosting(boolean b){
+    public World setIsHosting(boolean b) throws IOException{
         if(b){
-            if(Master.getServer() == null){
-                try {
-                    Master.startServer();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+            if(!Master.SERVER.isStarted()){
+                Master.SERVER.start();
             }
-            if(Master.getServer() != null){
-                isHosting = b;
-                Master.getServer().addReceiver(ServerMessageType.CONTROL_PRESSED, receiveControl);
-            }
+            Master.SERVER.addReceiver(ServerMessageType.CONTROL_PRESSED, receiveControl);
+            isHosting = true;
         }
         return this;
     }
@@ -217,21 +211,17 @@ public class World implements Serializable{
      * @param ipAddr the IP address to listen to 
      * for changes to this World
      * @return this
+     * @throws java.io.IOException is the server cannot start
      */
-    public World setRemoteHost(String ipAddr){
-        if(Master.getServer() == null){
-            try {
-                Master.startServer();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+    public World setRemoteHost(String ipAddr) throws IOException{
+        if(!Master.SERVER.isStarted()){
+            Master.SERVER.start();
         }
-        if(Master.getServer() != null){
-            //successfully started
-            isRemotelyHosted = true;
-            remoteHostIp = ipAddr;
-            Master.getServer().addReceiver(ServerMessageType.WORLD_UPDATE, receiveWorldUpdate);
-        }
+        
+        isRemotelyHosted = true;
+        remoteHostIp = ipAddr;
+        Master.SERVER.addReceiver(ServerMessageType.WORLD_UPDATE, receiveWorldUpdate);
+        
         return this;
     }
     
@@ -271,7 +261,7 @@ public class World implements Serializable{
             });
         });
         if(isHosting){
-            Master.getServer().send(new ServerMessage(
+            Master.SERVER.send(new ServerMessage(
                 SerialUtil.serializeToString(teams),
                 ServerMessageType.WORLD_UPDATE
             ));

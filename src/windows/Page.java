@@ -106,10 +106,17 @@ public class Page extends JPanel{
         JFrame parent = (JFrame)SwingUtilities.getWindowAncestor(this);
         Container oldPage = parent.getContentPane();
         if(oldPage != null && oldPage instanceof Page){
-            ((Page)oldPage).switchedFromThis();
+            Page op = (Page)oldPage;
+            op.switchedFromThis();
+            if(op.getCurrentSubPage() != null){
+                op.getCurrentSubPage().switchedFromThis();
+            }
         }
         parent.setContentPane(p);
         p.switchedToThis();
+        if(p.getCurrentSubPage() != null){
+            p.getCurrentSubPage().switchedToThis();
+        }
         parent.revalidate();
         p.requestFocus(); 
         //otherwise key controls don't work until the user selects the program in their task bar

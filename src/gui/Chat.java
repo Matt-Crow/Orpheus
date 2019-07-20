@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 import net.ServerMessage;
 import net.ServerMessageType;
@@ -19,7 +17,7 @@ public class Chat extends JComponent implements ActionListener{
     private final JScrollPane box;
     private final JTextField newMsg;
     private final HashMap<String, Consumer<String[]>> CMDS = new HashMap<>();
-    private  Consumer<ServerMessage> receiver;
+    private Consumer<ServerMessage> receiver;
     
     public Chat(){
         super();
@@ -100,18 +98,17 @@ public class Chat extends JComponent implements ActionListener{
     }
     public void log(String msg){
         logLocal("You: " + msg);
-        if(Master.getServer() != null){
-            System.out.println("sending message...");
+        if(Master.SERVER.isStarted()){
             ServerMessage sm = new ServerMessage(msg, ServerMessageType.CHAT);
-            Master.getServer().send(sm);
+            Master.SERVER.send(sm);
         }
 	}
     
     
     public void openChatServer(){
-        if(Master.getServer() == null){
+        if(!Master.SERVER.isStarted()){
             try {
-                Master.startServer();
+                Master.SERVER.start();
             } catch (IOException ex) {
                 logLocal("Failed to start chat server");
                 ex.printStackTrace();
@@ -119,25 +116,24 @@ public class Chat extends JComponent implements ActionListener{
         }
         
         //started successfully
-        if(Master.getServer() != null){
-            Master.getServer().addReceiver(ServerMessageType.CHAT, receiver);
-            logLocal("Initialized chat server on " + Master.getServer().getIpAddr());
-            logLocal("Have other people use the \'/connect " + Master.getServer().getIpAddr() + "\' command (without the quote marks) to connect.");
+        if(Master.SERVER.isStarted()){
+            Master.SERVER.addReceiver(ServerMessageType.CHAT, receiver);
+            logLocal("Initialized chat server on " + Master.SERVER.getIpAddr());
+            logLocal("Have other people use the \'/connect " + Master.SERVER.getIpAddr() + "\' command (without the quote marks) to connect.");
         }
     }
     
     public void joinChat(String ipAddr){
-        if(Master.getServer() == null){
-            openChatServer();
-        }
-        //need to double check to make sure it was started successfully,
-        //so an else statement won't work
-        if(Master.getServer() != null){
+        openChatServer();
+        
+        if(Master.SERVER.isStarted()){
             try {
-                Master.getServer().connect(ipAddr);
-                Master.getServer().addReceiver(ServerMessageType.CHAT, receiver);
+                Master.SERVER.connect(ipAddr);
                 logLocal("Joined chat with " + ipAddr);
-                log(Master.getServer().getIpAddr() + " has joined the chat.");
+                Master.SERVER.send(new ServerMessage(
+                    Master.getUser().getName() + " has joined the chat.",
+                    ServerMessageType.CHAT
+                ));
             } catch (IOException ex) {
                 logLocal(ex.getMessage());
             }

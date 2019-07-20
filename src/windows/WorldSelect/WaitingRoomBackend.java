@@ -11,6 +11,8 @@ import static java.lang.System.err;
 import static java.lang.System.out;
 import java.util.HashMap;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.*;
 import javax.swing.*;
 import net.*;
@@ -127,9 +129,9 @@ public class WaitingRoomBackend {
      */
     public boolean initHostServer(){
         boolean success = true;
-        if(Master.getServer() == null){
+        if(!Master.SERVER.isStarted()){
             try {
-                Master.startServer();
+                Master.SERVER.start();
             } catch (IOException ex) {
                 ex.printStackTrace();
                 success = false;
@@ -137,8 +139,7 @@ public class WaitingRoomBackend {
         }
         //            need this to make sure this hasn't started yet
         if(success && server == null){
-            server = Master.getServer();
-            server.setState(OrpheusServerState.WAITING_ROOM);
+            server = Master.SERVER;
             
             server.addReceiver(ServerMessageType.PLAYER_JOINED, receiveJoin);
             server.addReceiver(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
@@ -157,17 +158,16 @@ public class WaitingRoomBackend {
      */
     public boolean initClientServer(){
         boolean success = true;
-        if(Master.getServer() == null){
+        if(!Master.SERVER.isStarted()){
             try {
-                Master.startServer();
+                Master.SERVER.start();
             } catch (IOException ex) {
                 ex.printStackTrace();
                 success = false;
             }
         }
         if(success && server == null){
-            server = Master.getServer();
-            server.setState(OrpheusServerState.WAITING_ROOM);
+            server = Master.SERVER;
             
             server.addReceiver(ServerMessageType.WAITING_ROOM_INIT, receiveInit);
             server.addReceiver(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
@@ -381,7 +381,11 @@ public class WaitingRoomBackend {
      */
     private void receiveWorldInit(ServerMessage sm){
         World w = World.fromSerializedString(sm.getBody());
-        w.setRemoteHost(sm.getIpAddr());
+        try {
+            w.setRemoteHost(sm.getIpAddr());
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
         User me = Master.getUser(); //need to set player before calling createCanvas
         me.linkToRemotePlayerInWorld(w);
         w.createCanvas();
@@ -453,7 +457,7 @@ public class WaitingRoomBackend {
             out.println("team 2 is done");
         }*/
         if(team1.getRosterSize() == teamSize && team2.getRosterSize() == teamSize){
-            Master.getServer().removeReceiver(ServerMessageType.PLAYER_DATA, receiveBuildInfo);
+            Master.SERVER.removeReceiver(ServerMessageType.PLAYER_DATA, receiveBuildInfo);
             finallyStart();
         }
     }
@@ -468,7 +472,11 @@ public class WaitingRoomBackend {
      */
     private void finallyStart(){
         World w = World.createDefaultBattle();
-        w.setIsHosting(true);
+        try {
+            w.setIsHosting(true);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
         w.createCanvas(); //need to recreate so that togglepause doesn't work
         Battle b = new Battle();
         w.addTeam(team1).addTeam(team2).setCurrentMinigame(b);
@@ -487,7 +495,7 @@ public class WaitingRoomBackend {
      * @see WaitingRoomBackend#waitForData() 
      */
     private void requestBuilds(){
-        Master.getServer().send(new ServerMessage(
+        Master.SERVER.send(new ServerMessage(
             "please provide build information",
             ServerMessageType.REQUEST_PLAYER_DATA
         ));
@@ -504,7 +512,7 @@ public class WaitingRoomBackend {
             String.format("team: %d, player: %d", teamId, playerId),
             ServerMessageType.NOTIFY_IDS
         );
-        Master.getServer().send(sm, ipAddr);
+        Master.SERVER.send(sm, ipAddr);
     }
     
     /**
@@ -519,7 +527,7 @@ public class WaitingRoomBackend {
             ServerMessageType.WORLD_INIT
         );
         
-        Master.getServer().send(sm);
+        Master.SERVER.send(sm);
     }
     
     public boolean isAlreadyStarted(){
@@ -577,7 +585,7 @@ public class WaitingRoomBackend {
                     "join team 1",
                     ServerMessageType.WAITING_ROOM_UPDATE
                 );
-                Master.getServer().send(sm);
+                Master.SERVER.send(sm);
             }
             host.updateTeamDisplays();
         }
@@ -609,7 +617,7 @@ public class WaitingRoomBackend {
                     "join team 2",
                     ServerMessageType.WAITING_ROOM_UPDATE
                 );
-                Master.getServer().send(sm);
+                Master.SERVER.send(sm);
             }
             host.updateTeamDisplays();
         }

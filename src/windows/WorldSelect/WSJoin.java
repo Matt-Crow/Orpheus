@@ -5,8 +5,6 @@ import java.awt.GridLayout;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -47,7 +45,6 @@ public class WSJoin extends SubPage{
     
     public WSJoin(Page p) {
         super(p);
-        //work in progress
         setLayout(new GridLayout(1, 2));
         
         //left side
@@ -82,9 +79,9 @@ public class WSJoin extends SubPage{
     }
     
     private void join(String ipAddr){
-        if(Master.getServer() == null){
+        if(!Master.SERVER.isStarted()){
             try {
-                Master.startServer();
+                Master.SERVER.start();
             } catch (IOException ex) {
                 msgs.append("Failed to start local server\n");
                 msgs.append(ex.getMessage() + '\n');
@@ -92,11 +89,11 @@ public class WSJoin extends SubPage{
                 return;
             }
         }
-        if(Master.getServer() != null){
+        if(Master.SERVER.isStarted()){
             Master.loginWindow();
             try {
                 msgs.append("Attempting to connect to " + ipAddr + "...\n");
-                Master.getServer().connect(ipAddr);
+                Master.SERVER.connect(ipAddr);
                 msgs.append("success!\n");
                 getHostingPage().switchToSubpage(WorldSelectPage.WAIT);
                 if(getHostingPage().getCurrentSubPage() instanceof WSWaitForPlayers){

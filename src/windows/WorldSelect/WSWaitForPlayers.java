@@ -118,7 +118,7 @@ public class WSWaitForPlayers extends SubPage{
             boolean success = backend.initHostServer();
             if(success){
                 chat.openChatServer();
-                chat.logLocal("Server started on host address " + Master.getServer().getIpAddr());
+                chat.logLocal("Server started on host address " + Master.SERVER.getIpAddr());
             }else{
                 chat.logLocal("Unable to start server :(");
             }
@@ -139,7 +139,7 @@ public class WSWaitForPlayers extends SubPage{
         if(!backend.serverIsStarted()){
             boolean success = backend.initClientServer();
             if(success){
-                Master.getServer().connect(ipAddr);
+                Master.SERVER.connect(ipAddr);
                 chat.joinChat(ipAddr);
                 chat.logLocal("Connected to host " + ipAddr);
             } else {

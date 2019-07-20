@@ -36,7 +36,7 @@ public class PlayerControls implements MouseListener, EndOfFrameListener{
     private void useMelee(){
         String msg = "turn to " + mouseString() + "\n use melee";
         if(isRemote){
-            Master.getServer().send(
+            Master.SERVER.send(
                 new ServerMessage(
                     msg,
                     ServerMessageType.CONTROL_PRESSED
@@ -50,7 +50,7 @@ public class PlayerControls implements MouseListener, EndOfFrameListener{
     private void useAtt(int i){
         String msg = "turn to " + mouseString() + "\n use " + i;
         if(isRemote){
-            Master.getServer().send(
+            Master.SERVER.send(
                 new ServerMessage(
                     msg,
                     ServerMessageType.CONTROL_PRESSED
@@ -134,7 +134,7 @@ public class PlayerControls implements MouseListener, EndOfFrameListener{
         if(p.getFollowingMouse()){
             String msg = "move to " + mouseString();
             if(isRemote){
-                Master.getServer().send(
+                Master.SERVER.send(
                     new ServerMessage(
                         msg,
                         ServerMessageType.CONTROL_PRESSED

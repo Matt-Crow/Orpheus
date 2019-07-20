@@ -37,23 +37,6 @@ public abstract class AbstractWSNewWorld extends SubPage{
         Style.applyStyling(this);
     }
     
-    private OptionBox<String> buildSelect(){
-        String[] buildNames = Arrays
-            .stream(Build.getAll())
-            .map((Build b)->{
-                return b.getName();
-            })
-            .toArray(size -> new String[size]);
-        OptionBox<String> buiSel = new OptionBox<>("Select your build", buildNames);
-        buiSel.addActionListener(new AbstractAction(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                repaint();
-            }
-        });
-        return buiSel;
-    }
-    
     private OptionBox<Integer> teamSizeSelect(){
         Integer[] nums = new Integer[]{1, 2, 3, 4, 5, 10, 99};
         
