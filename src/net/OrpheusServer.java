@@ -53,6 +53,11 @@ public class OrpheusServer {
     
     public static final int PORT = 5000;
     
+    /**
+     * Creates an OrpheusServer.
+     * Note that this does not actually start the server,
+     * you need to call start() for that.
+     */
     public OrpheusServer(){
         receivers = new HashMap<>();
         connections = new HashMap<>();
