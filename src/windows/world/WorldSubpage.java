@@ -83,6 +83,7 @@ public class WorldSubpage extends SubPage{
     }
     
     public WorldSubpage setCanvas(WorldCanvas w){
+        canvas = w;
         canvasArea.removeAll();
         canvasArea.add(w);
         w.addMouseListener(new MouseAdapter(){
@@ -106,6 +107,9 @@ public class WorldSubpage extends SubPage{
     public void switchedFromThis(){
         if(Master.SERVER.isStarted()){
             Master.SERVER.shutDown();
+        }
+        if(canvas != null){
+            canvas.stop();
         }
     }
 }

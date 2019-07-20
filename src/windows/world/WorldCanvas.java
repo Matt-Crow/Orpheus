@@ -77,6 +77,12 @@ public class WorldCanvas extends Canvas{
         repaint();
     }
     
+    //need this for when leaving world page
+    public void stop(){
+        paused = true;
+        timer.stop();
+    }
+    
     public World getWorld(){
         return world;
     }
