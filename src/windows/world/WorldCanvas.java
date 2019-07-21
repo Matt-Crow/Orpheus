@@ -111,20 +111,20 @@ public class WorldCanvas extends Canvas{
     }
     public void drawPause(Graphics g){
 		g.setColor(new Color(0, 0, 0, 200));
-		g.fillRect(0, 0, Master.CANVASWIDTH, Master.CANVASHEIGHT);
+		g.fillRect(0, 0, getWidth(), getHeight());
 		g.setColor(Color.red);
-		g.drawString("The game is paused", (int) (Master.CANVASWIDTH * 0.3), (int) (Master.CANVASHEIGHT * 0.3));
-		g.drawString("Press 'p' to continue", (int) (Master.CANVASWIDTH * 0.4), (int) (Master.CANVASHEIGHT * 0.5));
+		g.drawString("The game is paused", (int) (getWidth() * 0.3), (int) (getHeight() * 0.3));
+		g.drawString("Press 'p' to continue", (int) (getWidth() * 0.4), (int) (getHeight() * 0.5));
 	}
     
 	public void drawMatchResolution(Graphics g){
 		paused = true;
 		g.setColor(new Color(0, 0, 0, 200));
-		g.fillRect(0, 0, Master.CANVASWIDTH, Master.CANVASHEIGHT);
+		g.fillRect(0, 0, getWidth(), getHeight());
 		g.setColor(Color.yellow);
-		g.drawString("The match is ended,", (int) (Master.CANVASWIDTH * 0.3), (int) (Master.CANVASHEIGHT * 0.3));
-		g.drawString(world.getCurrentMinigame().getWinner().getName(), (int) (Master.CANVASWIDTH * 0.5), (int) (Master.CANVASHEIGHT * 0.5));
-		g.drawString("is victorious!", (int) (Master.CANVASWIDTH * 0.7), (int) (Master.CANVASHEIGHT * 0.7));
+		g.drawString("The match is ended,", (int) (getWidth() * 0.3), (int) (getHeight() * 0.3));
+		g.drawString(world.getCurrentMinigame().getWinner().getName(), (int) (getWidth() * 0.5), (int) (getHeight() * 0.5));
+		g.drawString("is victorious!", (int) (getWidth() * 0.7), (int) (getHeight() * 0.7));
 	}
     
     

@@ -20,11 +20,11 @@ import util.StringUtil;
  */
 public class Build implements JsonSerialable{
 	private static final HashMap<String, Build> ALL = new HashMap<>();
-	private static final Build DEFAULT_EARTH = new Build("Default Earth", "Earth", "Boulder Toss", "Warrior's Stance", "Earthquake", "Toughness", "Determination", "Crippling Hits");
-	private static final Build DEFAULT_FIRE = new Build("Default Fire", "Fire", "Mega Firebolt", "Fields of Fire", "Fireball", "Escapist", "Sparking Strikes", "Bracing");
-	private static final Build DEFAULT_WATER = new Build("Default Water", "Water", "Waterbolt", "Slash", "Healing Rain", "Toughness", "Bracing", "Recover");
-	private static final Build DEFAULT_AIR = new Build("Default Air", "Air", "Mini Windbolt", "Speed Test", "Blade Stance", "Momentum", "Sharpen", "Leechhealer");
-	private static final Build TEST = new Build("0x138", "Default", "RAINBOW OF DOOM", "Cursed Daggers", "Speed Test", "Crushing Grip", "Recover", "Cursed");
+	private static final Build DEFAULT_EARTH = new Build("Default Earth", "Earth", "Boulder Toss", "Warrior's Stance", "Earthquake", "Toughness", "Retaliation", "Crippling Hits");
+	private static final Build DEFAULT_FIRE = new Build("Default Fire", "Fire", "Fireball", "Fields of Fire", "Burning Rage", "Escapist", "Sparking Strikes", "Bracing");
+	private static final Build DEFAULT_WATER = new Build("Default Water", "Water", "Waterbolt", "Whirlpool", "Healing Rain", "Sharpen", "Bracing", "Recover");
+	private static final Build DEFAULT_AIR = new Build("Default Air", "Air", "Boreus", "Zephyrus", "Speed Test", "Recharge", "Sharpen", "Leechhealer");
+	private static final Build TEST = new Build("0x138", "Default", "RAINBOW OF DOOM", "Healing Rain", "Speed Test", "Crushing Grip", "Recover", "Cursed");
     
 	private final String name;
 	private final String className;

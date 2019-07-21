@@ -345,10 +345,10 @@ public class World implements Serializable{
     public void draw(Graphics g){
         //synchronized(teams){
             currentMap.draw(g);
+            particles.forEach((p)->p.draw(g));
             teams.values().stream().forEach((t)->{
                 t.draw(g);
             });
-            particles.forEach((p)->p.draw(g));
         //}
     }
     

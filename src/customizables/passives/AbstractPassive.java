@@ -118,14 +118,14 @@ public abstract class AbstractPassive extends AbstractCustomizable implements Js
 		//threshold
 		ThresholdPassive a = new ThresholdPassive("Adrenaline", 3);
 		a.addStatus(new Charge(2, 1));
-		ThresholdPassive b = new ThresholdPassive("Bracing", 3);
+		ThresholdPassive b = new ThresholdPassive("Bracing", 1);
 		b.addStatus(new Resistance(2, 1));
-		ThresholdPassive d = new ThresholdPassive("Determination", 3);
+		ThresholdPassive d = new ThresholdPassive("Determination", 2);
 		d.addStatus(new Strength(1, 1));
 		d.addStatus(new Resistance(1, 1));
 		ThresholdPassive e = new ThresholdPassive("Escapist", 2);
 		e.addStatus(new Rush(2, 1));
-		ThresholdPassive re = new ThresholdPassive("Retaliation", 3);
+		ThresholdPassive re = new ThresholdPassive("Retaliation", 2);
 		re.addStatus(new Strength(2, 1));
         
         

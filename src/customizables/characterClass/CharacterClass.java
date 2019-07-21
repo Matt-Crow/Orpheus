@@ -21,6 +21,7 @@ import util.Number;
  */
 public class CharacterClass extends AbstractCustomizable implements JsonSerialable{
     private CustomColors[] colors;
+    public static final int BASE_HP = 2000;
 
     private static final  HashMap<String, CharacterClass> ALL = new HashMap<>();
     static{
@@ -88,8 +89,8 @@ public class CharacterClass extends AbstractCustomizable implements JsonSerialab
     }
     
     public static void loadAll(){
-		CharacterClass fire = new CharacterClass("Fire", CustomColors.fireColors, 2, 4, 5, 3, 3);
-		CharacterClass air = new CharacterClass("Air", CustomColors.airColors, 2, 4, 3, 1, 5);
+		CharacterClass fire = new CharacterClass("Fire", CustomColors.fireColors, 1, 4, 5, 4, 3);
+		CharacterClass air = new CharacterClass("Air", CustomColors.airColors, 2, 5, 3, 1, 5);
 		CharacterClass earth = new CharacterClass("Earth", CustomColors.earthColors, 4, 1, 4, 4, 1);
 		CharacterClass water = new CharacterClass("Water", CustomColors.waterColors, 5, 4, 1, 3, 3);
 		
@@ -162,10 +163,11 @@ public class CharacterClass extends AbstractCustomizable implements JsonSerialab
         value = Number.minMax(1, value, 5);
         switch(c){
         case HP:
-            addStat(CharacterStatName.HP, value, 1500 + 200 * value);
+            //                                             100%, -10% for every point below average, +10% per point above
+            addStat(CharacterStatName.HP, value, BASE_HP * (1 + (value - 3) * 0.1));
             break;
         case ENERGY:
-            addStat(CharacterStatName.ENERGY, value, 12.5 * (value + 1));
+            addStat(CharacterStatName.ENERGY, value, 50 * (1 + (value - 3) * 0.1));
             break;
         case DMG:
             addStat(CharacterStatName.DMG, value, 0.7 + 0.1 * value);

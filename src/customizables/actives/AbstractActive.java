@@ -21,6 +21,7 @@ import serialization.JsonUtil;
 import statuses.*;
 import customizables.CustomizableJsonUtil;
 import customizables.CustomizableType;
+import customizables.characterClass.CharacterClass;
 import customizables.characterClass.CharacterStatName;
 import util.Number;
 
@@ -66,7 +67,7 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
      * which will travel a distance calculated from this aoe.
      * 
      * @param dmg 0 to 5. Upon colliding with a player, this' projectiles will inflict a total of
-     * (dmg * 50) damage.
+     * (dmg * (5% of average character's HP)) damage.
      */
     public AbstractActive(ActiveType t, String n, int arcLength, int range, int speed, int aoe, int dmg){
         super(CustomizableType.ACTIVE, n);
@@ -157,57 +158,60 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
     
     public static void loadAll(){
 		// read from file later?
-		MeleeActive hs = new MeleeActive("Heavy Stroke", 4);
-		MeleeActive s = new MeleeActive("Slash", 2);
+		MeleeActive s = new MeleeActive("Slash", 3);
 		
 		ElementalActive bt = new ElementalActive("Boulder Toss", 1, 2, 2, 3, 4);
 		bt.setParticleType(ParticleType.BURST);
         bt.addTag(ActiveTag.KNOCKSBACK);
 		
-		ElementalActive cd = new ElementalActive("Cursed Daggers", 2, 5, 5, 0, 0);
-		cd.setParticleType(ParticleType.BEAM);
-		
-		ElementalActive eq = new ElementalActive("Earthquake", 1, 0, 2, 3, 2);
+        ElementalActive eq = new ElementalActive("Earthquake", 1, 0, 2, 5, 1);
 		eq.setParticleType(ParticleType.BURST);
-        eq.addTag(ActiveTag.KNOCKSBACK);
-		
-		ElementalActive fof = new ElementalActive("Fields of Fire", 1, 0, 5, 3, 2);
+        eq.addStatus(new Stun(3, 1));
+        
+		ElementalActive fof = new ElementalActive("Fields of Fire", 1, 0, 5, 3, 1);
 		fof.setParticleType(ParticleType.SHEAR);
-        fof.addStatus(new Burn(3, 3));
+        fof.addStatus(new Burn(2, 3));
 		
-		ElementalActive fb = new ElementalActive("Fireball", 2, 3, 3, 3, 4);
+		ElementalActive fb = new ElementalActive("Fireball", 2, 3, 3, 3, 5);
 		fb.setParticleType(ParticleType.BURST);
+        
+		ElementalActive b = new ElementalActive("Boreus", 1, 5, 5, 0, 1);
+		b.setParticleType(ParticleType.BEAM);
+        
+        ElementalActive z = new ElementalActive("Zephyrus", 1, 5, 5, 0, 1);
+		z.setParticleType(ParticleType.BEAM);
 		
-		ElementalActive mfb = new ElementalActive("Mega Firebolt", 1, 3, 3, 3, 4);
-		mfb.setParticleType(ParticleType.SHEAR);
-		
-		ElementalActive mwb = new ElementalActive("Mini Windbolt", 2, 5, 5, 0, 1);
-		mwb.setParticleType(ParticleType.BEAM);
-		
+        ElementalActive wb = new ElementalActive("Waterbolt", 1, 3, 3, 1, 2);
+		wb.setParticleType(ParticleType.BEAM);
+        
+        ElementalActive wp = new ElementalActive("Whirlpool", 1, 0, 4, 4, 3);
+        wp.setParticleType(ParticleType.SHEAR);
+        
+        
 		ElementalActive rod = new ElementalActive("RAINBOW OF DOOM", 4, 3, 5, 5, 1);
 		rod.setParticleType(ParticleType.BURST);
 		
-		ElementalActive wb = new ElementalActive("Waterbolt", 1, 3, 3, 1, 2);
-		wb.setParticleType(ParticleType.BEAM);
+		
 		
 		BoostActive ws = new BoostActive("Warrior's Stance", new AbstractStatus[]{new Strength(1, 2), new Resistance(1, 2)});
 		BoostActive st = new BoostActive("Speed Test", new AbstractStatus[]{new Rush(2, 3)});
 		BoostActive ss = new BoostActive("Shield Stance", new AbstractStatus[]{new Resistance(2, 3)});
 		BoostActive hr = new BoostActive("Healing Rain", new AbstractStatus[]{new Regeneration(2, 3)});
 		BoostActive bs = new BoostActive("Blade Stance", new AbstractStatus[]{new Strength(2, 3)});
+        BoostActive br = new BoostActive("Burning Rage", new AbstractStatus[]{new Strength(3, 3), new Burn(3, 3)});
 		
 		addActives(new AbstractActive[]{
 			s,
-			hs,
 			bt,
-			cd,
 			eq,
 			fof,
 			fb,
-			mfb,
-			mwb,
+			br,
+			b,
+            z,
 			rod,
 			wb,
+            wp,
 			ws,
 			st,
 			ss,
@@ -318,9 +322,9 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
             addStat(ActiveStatName.AOE, value, value * Master.UNITSIZE);
             break;
         case DAMAGE:
-            // 50-250 to 250-500 damage (will need to balance later?)
+            // 5% to 25% of the average character's HP
             value = Number.minMax(1, value, 5);
-            addStat(ActiveStatName.DAMAGE, value, value * 50);
+            addStat(ActiveStatName.DAMAGE, value, value * CharacterClass.BASE_HP / 20);
             break;
         }
         calculateCost();

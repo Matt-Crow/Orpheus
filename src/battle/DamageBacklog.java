@@ -107,7 +107,7 @@ public final class DamageBacklog implements Serializable{
 		timeSinceLastHeal += 1;
 		if(timeSinceLastHeal >= Master.seconds(1)){
 			timeSinceLastHeal = 0;
-			healPerc(5);
+			healPerc(3);
 		}
 	}
 }

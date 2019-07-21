@@ -13,13 +13,13 @@ public class Regeneration extends AbstractStatus implements OnUpdateListener{
     private static final UnaryOperator<Integer> CALC = (i)->{return Master.seconds(Number.minMax(1, i, 3)) + 2;};
     /**
      * Creates the Regeneration status.
-     * @param lv 1-3. The target restores 2.5% of their maximum HP per second for each level of the status. 
-     * Ex: lv 3 will restore 7.5% per second.
+     * @param lv 1-3. The target restores 1.5% of their maximum HP per second for each level of the status. 
+     * Ex: lv 3 will restore 4.5% per second.
      * @param dur effect lasts for (dur + 2) seconds.
      */
 	public Regeneration(int lv, int dur){
 		super(StatusName.REGENERATION, lv, dur, CALC);
-		// 3 - 5 seconds of 2.5% - 7.5% healing each second
+		// 3 - 5 seconds of 1.5% - 4.5% healing each second
 		// balance later
 	}
     
@@ -30,7 +30,7 @@ public class Regeneration extends AbstractStatus implements OnUpdateListener{
     
     @Override
 	public String getDesc(){
-		return "Regeneration, restoring " + (2.5 * getIntensityLevel()) + "% of the inflicted's HP every second for " + Master.framesToSeconds(getMaxUses()) + " seconds";
+		return "Regeneration, restoring " + (1.5 * getIntensityLevel()) + "% of the inflicted's HP every second for " + Master.framesToSeconds(getMaxUses()) + " seconds";
 	}
 
     @Override
