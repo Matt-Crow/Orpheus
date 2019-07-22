@@ -1,5 +1,6 @@
 package windows.customize;
 
+import controllers.MainWindow;
 import customizables.Build;
 import customizables.CustomizableJsonUtil;
 import customizables.CustomizableType;
@@ -27,12 +28,12 @@ public class CustomizePage extends Page{
     public static final String CHOOSE_BUI = "CHOOSE BUILD";
     public static final String CUSTOM_BUILD = "CUSTOMIZE BUILD";
     
-    public CustomizePage(){
-        super();
+    public CustomizePage(MainWindow host){
+        super(host);
         JButton exit = new JButton("Quit");
         exit.addActionListener((e)->{
-            StartPage p = new StartPage();
-            switchToPage(p);
+            StartPage p = new StartPage(host);
+            getHost().switchToPage(p);
             p.switchToSubpage(StartPage.PLAY);
         });
         addMenuItem(exit);

@@ -1,5 +1,6 @@
 package windows.world;
 
+import controllers.MainWindow;
 import windows.Page;
 import windows.WorldSelect.WorldSelectPage;
 
@@ -13,9 +14,9 @@ import windows.WorldSelect.WorldSelectPage;
  * @author Matt Crow
  */
 public class WorldPage extends Page{
-    public WorldPage(){
-        super();
-        addBackButton(new WorldSelectPage());
+    public WorldPage(MainWindow host){
+        super(host);
+        addBackButton(new WorldSelectPage(host));
         addSubPage("WORLD", new WorldSubpage(this));
         switchToSubpage("WORLD");
     }

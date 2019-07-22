@@ -1,5 +1,6 @@
 package windows.WorldSelect;
 
+import controllers.MainWindow;
 import javax.swing.*;
 import windows.Page;
 import windows.start.StartPage;
@@ -14,12 +15,12 @@ public class WorldSelectPage extends Page{
     public static final String NEW_MULTIPLAYER = "NEW MULTIPLAYER";
     public static final String JOIN_MULTIPLAYER = "JOIN MULTIPLAYER";
     public static final String WAIT = "WAIT";
-    public WorldSelectPage(){
-        super();
+    public WorldSelectPage(MainWindow host){
+        super(host);
         JButton back = new JButton("Go back");
         back.addActionListener((e)->{
-            StartPage p = new StartPage();
-            switchToPage(p);
+            StartPage p = new StartPage(host);
+            getHost().switchToPage(p);
             p.switchToSubpage(StartPage.PLAY);
         });
         addMenuItem(back);

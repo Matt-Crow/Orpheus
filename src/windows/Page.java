@@ -1,5 +1,6 @@
 package windows;
 
+import controllers.MainWindow;
 import controllers.Master;
 import graphics.CustomColors;
 import gui.Style;
@@ -7,6 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import javax.swing.*;
+import util.SafeList;
 
 /**
  * The Page class is meant to work with the SubPage class
@@ -23,12 +25,16 @@ import javax.swing.*;
  * @author Matt Crow
  */
 public class Page extends JPanel{
+    private final SafeList<PageSwitchListener> pageSwitchListeners;
+    
+    private final MainWindow host;
     private final JMenuBar menuBar;
     private final JPanel content;
     private final HashMap<String, SubPage> subPages; //since CardLayout won't let me extract this
     private SubPage currentSubPage;
     
-    public Page(){
+    public Page(MainWindow hostingWindow){
+        host = hostingWindow;
         menuBar = new JMenuBar();
         content = new JPanel();
         content.setLayout(new CardLayout());
@@ -44,6 +50,8 @@ public class Page extends JPanel{
         
         subPages = new HashMap<>();
         currentSubPage = null;
+        
+        pageSwitchListeners = new SafeList<>();
         
         Style.applyStyling(this);
         Style.applyStyling(menuBar);
@@ -92,50 +100,15 @@ public class Page extends JPanel{
     public Page addBackButton(Page goBackTo){
         JButton back = new JButton("Back");
         back.addActionListener((e)->{
-            switchToPage(goBackTo);
+            getHost().switchToPage(goBackTo);
         });
         addMenuItem(back);
         return this;
     }
     
-    /**
-     * Switches this' JFrame from rendering this Page to another.
-     * @param p the Page to render
-     */
-    public void switchToPage(Page p){
-        JFrame parent = (JFrame)SwingUtilities.getWindowAncestor(this);
-        Container oldPage = parent.getContentPane();
-        if(oldPage != null && oldPage instanceof Page){
-            Page op = (Page)oldPage;
-            op.switchedFromThis();
-            if(op.getCurrentSubPage() != null){
-                op.getCurrentSubPage().switchedFromThis();
-            }
-        }
-        parent.setContentPane(p);
-        p.switchedToThis();
-        if(p.getCurrentSubPage() != null){
-            p.getCurrentSubPage().switchedToThis();
-        }
-        parent.revalidate();
-        p.requestFocus(); 
-        //otherwise key controls don't work until the user selects the program in their task bar
+    public MainWindow getHost(){
+        return host;
     }
-    
-    /**
-     * Fired whenever switchToPage is called
-     * when this was the current page.
-     * 
-     * Subclasses may want to override this
-     */
-    public void switchedFromThis(){}
-    
-    /**
-     * Fired whenever switchToPage is called
-     * and this is passed as the parameter
-     * Subclasses should use this to refresh their data
-     */
-    public void switchedToThis(){}
     
     /**
      * Switches this' content section to showing
@@ -160,6 +133,25 @@ public class Page extends JPanel{
     
     public SubPage getCurrentSubPage(){
         return currentSubPage;
+    }
+    
+    public void addPageSwitchListener(PageSwitchListener l){
+        if(l == null){
+            throw new NullPointerException();
+        }
+        pageSwitchListeners.add(l);
+    }
+    
+    public final void switchedToThis(){
+        pageSwitchListeners.forEach((l)->{
+            l.switchedToPage(this);
+        });
+    }
+    
+    public final void switchedFromThis(){
+        pageSwitchListeners.forEach((l)->{
+            l.leavingPage(this);
+        });
     }
     
     /**

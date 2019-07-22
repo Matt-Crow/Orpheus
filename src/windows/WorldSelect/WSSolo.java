@@ -2,6 +2,7 @@ package windows.WorldSelect;
 
 import battle.Battle;
 import battle.Team;
+import controllers.MainWindow;
 import controllers.Master;
 import controllers.World;
 import entities.TruePlayer;
@@ -45,8 +46,8 @@ public class WSSolo extends AbstractWSNewWorld{
         
         battleWorld.init();
         
-        WorldPage wp = new WorldPage();
+        WorldPage wp = new WorldPage(getHostingPage().getHost());
         wp.setCanvas(battleWorld.getCanvas());
-        getHostingPage().switchToPage(wp);
+        getHostingPage().getHost().switchToPage(wp);
     }
 }

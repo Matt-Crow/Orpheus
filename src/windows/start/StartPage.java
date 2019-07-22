@@ -1,5 +1,6 @@
 package windows.start;
 
+import controllers.MainWindow;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,8 +18,8 @@ public class StartPage extends Page{
     public static final String PLAY = "PLAY";
     public static final String HOW_TO_PLAY = "HOW TO PLAY";
     
-    public StartPage(){
-        super();
+    public StartPage(MainWindow host){
+        super(host);
         JButton title = new JButton("The Orpheus Proposition");
         title.addActionListener((e)->{
             switchToSubpage(MAIN);

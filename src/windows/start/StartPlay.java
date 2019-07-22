@@ -18,13 +18,13 @@ public class StartPlay extends SubPage{
         
         JButton battle = new JButton("Battle");
         battle.addActionListener((e)->{
-            getHostingPage().switchToPage(new WorldSelectPage());
+            getHostingPage().getHost().switchToPage(new WorldSelectPage(p.getHost()));
         });
         add(battle);
         
         JButton customize = new JButton("Customize");
         customize.addActionListener((e)->{
-            getHostingPage().switchToPage(new CustomizePage());
+            getHostingPage().getHost().switchToPage(new CustomizePage(p.getHost()));
         });
         add(customize);
     }
