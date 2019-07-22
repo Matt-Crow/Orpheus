@@ -1,0 +1,12 @@
+Well, another programming season has come and gone. While I may still have a couple of weeks before I return to college, I've spent enough time on Orpheus this Summer: it's time to focus on other things.
+In it's current state, the program works, multiplayer is just a little... iffy. Given that I knew next to nothing about socket programming when I began, and all the guides I've found have been rather basic, "iffy" is pretty good.
+Am I happy with where Orpheus is? No. I'll never be happy with it, not until it's perfect, and trying to perfect it is a wormhole I don't want to get sucked into.
+I'll probably work on it a bit more over the Summer (I really can't stop myself), but for now, I'll call it done.
+
+With that said, their are many changes that I want to make next time I have a chance to work on this:
+* Improve the MVC model of the program, remove the distinction between Page and SubPage, maybe make an API for this model.
+* Move to 3-D graphics?
+* Change the game to a many vs users so that balancing isn't as much of a problem.
+* Overall improvement to the actives / passives system so that it's easier to work with.
+* Player controls...
+* OrpheusScript
