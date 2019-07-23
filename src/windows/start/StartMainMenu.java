@@ -22,7 +22,7 @@ public class StartMainMenu extends SubPage{
         
         JButton play = new JButton("Play");
         play.addActionListener((e)->{
-            getHostingPage().switchToSubpage(StartPage.PLAY);
+            getHostingPage().getHost().switchToPage(new StartPlay(getHostingPage().getHost()));
         });
         add(play);
         

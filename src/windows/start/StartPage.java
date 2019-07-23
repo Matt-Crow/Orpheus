@@ -15,7 +15,6 @@ import windows.Page;
 public class StartPage extends Page{
     public static final String MAIN = "MAIN";
     public static final String ABOUT = "ABOUT";
-    public static final String PLAY = "PLAY";
     public static final String HOW_TO_PLAY = "HOW TO PLAY";
     
     public StartPage(MainWindow host){
@@ -29,7 +28,6 @@ public class StartPage extends Page{
         
         addSubPage(MAIN, new StartMainMenu(this));
         addSubPage(ABOUT, new StartTextDisplay(this, readFile("README.txt")));
-        addSubPage(PLAY, new StartPlay(this));
         addSubPage(HOW_TO_PLAY, new StartTextDisplay(this, readFile("howToPlay.txt")));
     }
     

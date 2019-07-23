@@ -11,11 +11,8 @@ import javax.swing.*;
 import util.SafeList;
 
 /**
- * The Page class is meant to work with the SubPage class
- * to replace the DrawingPlane class in future versions.
- * Since I don't really feel like spending 99999999 hours
- * porting the old canvases over to this new version yet,
- * I'll hold off until I do some sort of graphics update.
+ * The Page class currently works with the SubPage class,
+ * but I'm working to change this to just one class per page.
  * 
  * A Page consists of two parts: a menu bar along the top,
  * which shouldn't change once stuff is added to it,
@@ -40,9 +37,8 @@ public class Page extends JPanel{
         content.setLayout(new CardLayout());
         
         setLayout(new BorderLayout());
-        add(menuBar, BorderLayout.PAGE_START);
-        
-        add(content, BorderLayout.CENTER);
+        super.add(menuBar, BorderLayout.PAGE_START);
+        super.add(content, BorderLayout.CENTER);
         
         setBackground(CustomColors.black);
         setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
@@ -56,6 +52,10 @@ public class Page extends JPanel{
         Style.applyStyling(this);
         Style.applyStyling(menuBar);
         Style.applyStyling(content);
+    }
+    
+    public JPanel getContent(){
+        return content;
     }
     
     /**
@@ -74,6 +74,13 @@ public class Page extends JPanel{
         menuBar.add(c);
         menuBar.setLayout(new GridLayout(1, menuBar.getComponentCount()));
         return this;
+    }
+    
+    //this is the supermethod called by all variations of add
+    @Override
+    public void addImpl(Component comp, Object constraints, int index){
+        super.addImpl(comp, constraints, index);
+        Style.applyStyling(comp);
     }
     
     /**

@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import windows.Page;
 import windows.start.StartPage;
+import windows.start.StartPlay;
 
 /**
  *
@@ -32,9 +33,7 @@ public class CustomizePage extends Page{
         super(host);
         JButton exit = new JButton("Quit");
         exit.addActionListener((e)->{
-            StartPage p = new StartPage(host);
-            getHost().switchToPage(p);
-            p.switchToSubpage(StartPage.PLAY);
+            getHost().switchToPage(new StartPlay(getHost()));
         });
         addMenuItem(exit);
         

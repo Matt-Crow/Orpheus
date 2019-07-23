@@ -4,6 +4,7 @@ import controllers.MainWindow;
 import javax.swing.*;
 import windows.Page;
 import windows.start.StartPage;
+import windows.start.StartPlay;
 
 /**
  *
@@ -19,9 +20,7 @@ public class WorldSelectPage extends Page{
         super(host);
         JButton back = new JButton("Go back");
         back.addActionListener((e)->{
-            StartPage p = new StartPage(host);
-            getHost().switchToPage(p);
-            p.switchToSubpage(StartPage.PLAY);
+            getHost().switchToPage(new StartPlay(getHost()));
         });
         addMenuItem(back);
         
