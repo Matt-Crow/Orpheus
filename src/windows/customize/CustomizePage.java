@@ -13,7 +13,6 @@ import java.io.File;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import windows.Page;
-import windows.start.StartPage;
 import windows.start.StartPlay;
 
 /**
@@ -33,7 +32,7 @@ public class CustomizePage extends Page{
         super(host);
         JButton exit = new JButton("Quit");
         exit.addActionListener((e)->{
-            getHost().switchToPage(new StartPlay(getHost()));
+            getHost().switchToPage(new StartPlay());
         });
         addMenuItem(exit);
         

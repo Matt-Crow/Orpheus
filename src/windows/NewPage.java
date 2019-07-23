@@ -6,6 +6,8 @@ import gui.Style;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
+import java.awt.LayoutManager;
+import javax.swing.JButton;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
@@ -14,12 +16,11 @@ import javax.swing.JPanel;
  * @author Matt Crow
  */
 public class NewPage extends JPanel{
-    private final MainWindow host;
     private final JMenuBar menuBar;
     private final JPanel content;
+    private boolean hasInstantiated = false;
     
-    public NewPage(MainWindow main){
-        host = main;
+    public NewPage(){
         super.setLayout(new BorderLayout());
         
         menuBar = new JMenuBar();
@@ -27,10 +28,28 @@ public class NewPage extends JPanel{
         
         content = new JPanel();
         super.add(content, BorderLayout.CENTER);
+        
+        hasInstantiated = true;
     }
     
     public MainWindow getHost(){
-        return host;
+        return MainWindow.getInstance();
+    }
+    
+    public NewPage addBackButton(String text, NewPage p, Runnable onGoBack){
+        JButton b = new JButton(text);
+        b.addActionListener((e)->{
+            getHost().switchToPage(p);
+            onGoBack.run();
+        });
+        addMenuItem(b);
+        return this;
+    }
+    public NewPage addBackButton(String text, NewPage p){
+        return addBackButton(text, p, ()->{});
+    }
+    public NewPage addBackButton(NewPage p){
+        return addBackButton("Back", p);
     }
     
     public NewPage addMenuItem(Component c){
@@ -43,11 +62,23 @@ public class NewPage extends JPanel{
         return this;
     }
     
+    @Override
+    public void setLayout(LayoutManager l){
+        if(hasInstantiated){
+            content.setLayout(l);
+        } else {
+            super.setLayout(l);
+        }
+    }
+    
     //this is the supermethod called by all variations of add
     @Override
     public void addImpl(Component comp, Object constraints, int index){
-        super.addImpl(comp, constraints, index);
+        if(hasInstantiated){
+            content.add(comp, constraints, index);
+        } else {
+            super.addImpl(comp, constraints, index);
+        }
         Style.applyStyling(comp);
-        //how do I make this redirect the adding to this' content?
     }
 }

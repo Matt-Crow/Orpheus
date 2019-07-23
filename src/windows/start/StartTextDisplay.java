@@ -6,16 +6,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
-import windows.Page;
-import windows.SubPage;
+import windows.NewPage;
 
 /**
  *
  * @author Matt
  */
-public class StartTextDisplay extends SubPage{
-    public StartTextDisplay(Page p, String displayText){
-        super(p);
+public class StartTextDisplay extends NewPage{
+    public StartTextDisplay(String displayText){
+        addBackButton(new StartMainMenu());
         
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();

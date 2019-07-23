@@ -6,11 +6,11 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import customizables.AbstractCustomizable;
 import java.awt.GridLayout;
-import java.util.HashMap;
 import javax.swing.JPanel;
 import util.CombatLog;
+import windows.NewPage;
 import windows.Page;
-import windows.start.StartPage;
+import windows.start.StartMainMenu;
 
 /**
  * MainWindow acts as the main frame for the game,
@@ -20,18 +20,15 @@ import windows.start.StartPage;
  * @author Matt Crow
  */
 public class MainWindow extends JFrame{
-    private final HashMap<String, Page> pages;
-    //might not want to do this: uses a lot of memory to keep holding Pages
-    
     private final JPanel content;
-    private Page currentPage;
+    private JPanel currentPage;
     
-    private static boolean hasInstance = false;
+    private static MainWindow instance = null;
     
-    public MainWindow(){
+    private MainWindow(){
         super();
         
-        if(hasInstance){
+        if(instance != null){
             throw new ExceptionInInitializerError("Can only have 1 instance of MainWindow");
         }
         
@@ -52,43 +49,14 @@ public class MainWindow extends JFrame{
             }
         });
         
-        pages = new HashMap<>();
         currentPage = null;
         
-        switchToPage(new StartPage(this));
+        switchToPage(new StartMainMenu());
         
         AbstractCustomizable.loadAll();
         Build.loadAll();
         
-        hasInstance = true;
-    }
-    
-    /**
-     * Adds a page to this controller.
-     * 
-     * @param pageName the name associated with the new page.
-     * calling switchToPage(pageName) will switch this to rendering
-     * the given page. If pageName is already used by this, will throw
-     * an exception.
-     * 
-     * @param p the page to add to this
-     * 
-     * @return this
-     */
-    public MainWindow addPage(String pageName, Page p){
-        if(pages.containsKey(pageName)){
-            throw new IllegalArgumentException("There is alread a page with the name \'" + pageName + "\'");
-        }
-        pages.put(pageName, p);
-        return this;
-    }
-    
-    public MainWindow switchToPage(String pageName){
-        if(pages.containsKey(pageName)){
-            
-            setContentPane(pages.get(pageName));
-        }
-        return this;
+        instance = this;
     }
     
     public MainWindow switchToPage(Page p){
@@ -100,15 +68,36 @@ public class MainWindow extends JFrame{
         content.revalidate();
         p.requestFocus();
         content.repaint();
-        if(currentPage != null){
-            currentPage.switchedFromThis();
+        if(currentPage != null && currentPage instanceof Page){
+            ((Page)currentPage).switchedFromThis();
         }
         currentPage = p;
         p.switchedToThis();
         return this;
     }
     
+    public MainWindow switchToPage(NewPage p){
+        if(p == null){
+            throw new NullPointerException();
+        }
+        content.removeAll();
+        content.add(p);
+        content.revalidate();
+        p.requestFocus();
+        content.repaint();
+        if(currentPage != null && currentPage instanceof Page){
+            ((Page)currentPage).switchedFromThis();
+        }
+        currentPage = p;
+        return this;
+    }
     
+    public static MainWindow getInstance(){
+        if(instance == null){
+            instance = new MainWindow();
+        }
+        return instance;
+    }
     
     public static void main(String[] args){
         new MainWindow();

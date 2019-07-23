@@ -3,7 +3,6 @@ package windows.WorldSelect;
 import controllers.MainWindow;
 import javax.swing.*;
 import windows.Page;
-import windows.start.StartPage;
 import windows.start.StartPlay;
 
 /**
@@ -20,7 +19,7 @@ public class WorldSelectPage extends Page{
         super(host);
         JButton back = new JButton("Go back");
         back.addActionListener((e)->{
-            getHost().switchToPage(new StartPlay(getHost()));
+            getHost().switchToPage(new StartPlay());
         });
         addMenuItem(back);
         
