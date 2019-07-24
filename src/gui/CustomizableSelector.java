@@ -1,63 +1,77 @@
 package gui;
 
 import javax.swing.JComponent;
-import java.awt.GridLayout;
-
-import java.awt.event.ActionEvent;
 import javax.swing.*;
 import customizables.AbstractCustomizable;
+import java.awt.BorderLayout;
+import java.util.HashMap;
 
-@SuppressWarnings("serial")
 public class CustomizableSelector extends JComponent{
-	private OptionBox<AbstractCustomizable> box;
-	private JTextArea desc;
+    private final JTextArea desc;
+    private final JComboBox chooser;
+    private final HashMap<String, AbstractCustomizable> options;
 	
 	public CustomizableSelector(String title, AbstractCustomizable[] a){
 		super();
-		setLayout(new GridLayout(2, 1));
+        options = new HashMap<>();
+        
+		setLayout(new BorderLayout());
 		
-		
+		JLabel head = new JLabel(title);
+        Style.applyStyling(head);
+        add(head, BorderLayout.PAGE_START);
+        
 		desc = new JTextArea();
         desc.setEditable(false);
         desc.setLineWrap(true);
         desc.setWrapStyleWord(true);
-        
-        
+        Style.applyStyling(desc);
         JScrollPane scrolly = new JScrollPane(desc);
         scrolly.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrolly.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		add(scrolly);
+		add(scrolly, BorderLayout.CENTER);
+        Style.applyStyling(scrolly);
         
-        Style.applyStyling(desc);
-        
-        box = new OptionBox<>(title, a);
-		box.addActionListener(new AbstractAction(){
-			public void actionPerformed(ActionEvent e){
-                if(box.getSelected() != null){
-                    desc.setText(box.getSelected().getDescription());
-                    SwingUtilities.invokeLater(()->{
-                        scrolly.getVerticalScrollBar().setValue(0);
-                    });
-                }
+        chooser = new JComboBox<>();
+        chooser.addActionListener((e)->{
+            if(getSelected() != null){
+                desc.setText(getSelected().getDescription());
+                SwingUtilities.invokeLater(()->{
+                    scrolly.getVerticalScrollBar().setValue(0);
+                });
             }
-		});
-		add(box);
+        });
+        Style.applyStyling(chooser);
+        add(chooser, BorderLayout.PAGE_END);
         
 		Style.applyStyling(this);
 	}
+    public void addOption(AbstractCustomizable ac){
+        if(options.containsKey(ac.getName())){
+            throw new IllegalArgumentException(ac.getName() + " is already an option.");
+        }
+        options.put(ac.getName(), ac);
+        chooser.addItem(ac.getName());
+    }
     public void setOptions(AbstractCustomizable[] acs){
-        box.clear();
+        chooser.removeAllItems();
+        options.clear();
         for(AbstractCustomizable ac : acs){
-            box.addOption(ac);
+            addOption(ac);
         }
     }
-	public OptionBox<AbstractCustomizable> getBox(){
-		return box;
-	}
     public void setSelected(AbstractCustomizable ac){
-        box.setSelected(ac);
+        /*
+        if(!options.containsValue(ac)){
+            throw new IllegalArgumentException(ac.getName() + " is not a valid option");
+        }*/
+        chooser.setSelectedItem(ac.getName());
     }
     public AbstractCustomizable getSelected(){
-        return box.getSelected();
+        AbstractCustomizable ret = null;
+        if(options.containsKey((String)chooser.getSelectedItem())){
+            ret = options.get((String)chooser.getSelectedItem());
+        }
+        return ret;
     }
 }

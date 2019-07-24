@@ -39,7 +39,9 @@ public class NewPage extends JPanel{
     public NewPage addBackButton(String text, NewPage p, Runnable onGoBack){
         JButton b = new JButton(text);
         b.addActionListener((e)->{
-            getHost().switchToPage(p);
+            if(p != null){
+                getHost().switchToPage(p);
+            }
             onGoBack.run();
         });
         addMenuItem(b);
@@ -50,6 +52,9 @@ public class NewPage extends JPanel{
     }
     public NewPage addBackButton(NewPage p){
         return addBackButton("Back", p);
+    }
+    public NewPage addBackButton(Runnable r){
+        return addBackButton("Back", null, r);
     }
     
     public NewPage addMenuItem(Component c){

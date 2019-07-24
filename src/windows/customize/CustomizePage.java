@@ -25,8 +25,6 @@ public class CustomizePage extends Page{
     public static final String CHOOSE_PAS = "CHOOSE PAS";
     public static final String CHOOSE_CHA = "CHOOSE CHA";
     public static final String CUSTOMIZE = "CUSTOMIZE";
-    public static final String CHOOSE_BUI = "CHOOSE BUILD";
-    public static final String CUSTOM_BUILD = "CUSTOMIZE BUILD";
     
     public CustomizePage(MainWindow host){
         super(host);
@@ -93,7 +91,5 @@ public class CustomizePage extends Page{
         addSubPage(CHOOSE_PAS, new CustomizeChoose(this, CustomizableType.PASSIVE));
         addSubPage(CHOOSE_CHA, new CustomizeChoose(this, CustomizableType.CHARACTER_CLASS));
         addSubPage(CUSTOMIZE, new CustomizeCustomize(this));
-        addSubPage(CHOOSE_BUI, new CustomizeChooseBuild(this));
-        addSubPage(CUSTOM_BUILD, new CustomizeBuild(this));
     }
 }

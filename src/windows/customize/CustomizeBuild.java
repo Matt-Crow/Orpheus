@@ -7,24 +7,22 @@ import customizables.passives.AbstractPassive;
 import gui.CustomizableSelector;
 import java.awt.GridLayout;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import windows.Page;
-import windows.SubPage;
+import windows.NewPage;
 
 /**
  *
  * @author Matt
  */
-public class CustomizeBuild extends SubPage{
+public class CustomizeBuild extends NewPage{
     private final JTextArea name;
     private final CustomizableSelector charClassSel;
     private final CustomizableSelector[] acts;
     private final CustomizableSelector[] pass;
     
-    public CustomizeBuild(Page p){
-        super(p);
+    public CustomizeBuild(){
+        super();
         GridLayout g = new GridLayout(3, 3);
         g.setHgap(10);
         g.setVgap(10);
@@ -41,6 +39,7 @@ public class CustomizeBuild extends SubPage{
         JButton save = new JButton("Save and exit");
         save.addActionListener((e)->{
             save();
+            getHost().switchToPage(new CustomizePage(getHost()));
         });
         add(save);
         
@@ -54,6 +53,12 @@ public class CustomizeBuild extends SubPage{
         for(int i = 0; i < 3; i++){
             pass[i] = new CustomizableSelector("Passive #" + (i + 1), new AbstractPassive[]{});
             add(pass[i]);
+        }
+        
+        charClassSel.setOptions(CharacterClass.getAll());
+        for(int i = 0; i < 3; i++){
+            acts[i].setOptions(AbstractActive.getAll());
+            pass[i].setOptions(AbstractPassive.getAll());
         }
     }
 
@@ -79,16 +84,5 @@ public class CustomizeBuild extends SubPage{
             pass[1].getSelected().getName(),
             pass[2].getSelected().getName()
         ));
-        getHostingPage().switchToSubpage(CustomizePage.MAIN);
-    }
-    
-    @Override
-    public void switchedToThis(){
-        super.switchedToThis();
-        charClassSel.setOptions(CharacterClass.getAll());
-        for(int i = 0; i < 3; i++){
-            acts[i].setOptions(AbstractActive.getAll());
-            pass[i].setOptions(AbstractPassive.getAll());
-        }
     }
 }
