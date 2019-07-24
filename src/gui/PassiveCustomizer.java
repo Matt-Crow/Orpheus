@@ -8,6 +8,7 @@ import customizables.passives.ThresholdPassive;
 public class PassiveCustomizer extends Customizer<PassiveStatName>{
 	public PassiveCustomizer(AbstractPassive a){
 		super(a);
+        a = (AbstractPassive) getCustomizing();
 		switch(a.getPassiveType()){
 		case THRESHOLD:
 			addBox(PassiveStatName.THRESHOLD, 1, 3);
@@ -29,12 +30,7 @@ public class PassiveCustomizer extends Customizer<PassiveStatName>{
 		if(p instanceof ThresholdPassive){
             ((ThresholdPassive)p).setStat(PassiveStatName.THRESHOLD, val);
         }
-        try{
-            p.init();
-        }catch(NullPointerException ex){
-            // p's user isn't initialized yet
-            System.err.println("passive init caused null pointer in PassiveCustomizer.updateField");
-        }
+        p.init();
 		
 		super.updateField(n, val);
 	}

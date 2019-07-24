@@ -100,6 +100,9 @@ public final class User implements JsonSerialable{
         return this;
     }
     public TruePlayer getPlayer(){
+        if(player == null){
+            initPlayer();
+        }
         return player;
     }
     

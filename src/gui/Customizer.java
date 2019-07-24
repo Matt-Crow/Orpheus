@@ -12,6 +12,8 @@ import java.util.ArrayList;
 
 import customizables.AbstractCustomizable;
 import java.awt.BorderLayout;
+import statuses.AbstractStatus;
+import statuses.StatusName;
 
 @SuppressWarnings("serial")
 public abstract class Customizer<T> extends JComponent{
@@ -61,6 +63,7 @@ public abstract class Customizer<T> extends JComponent{
 		
 		save = new JButton("Save changes");
 		save.addActionListener(new AbstractAction(){
+            @Override
 			public void actionPerformed(ActionEvent e){
 				save();
 			}
@@ -101,36 +104,29 @@ public abstract class Customizer<T> extends JComponent{
         box.setSelected(customizing.getBase(s));
 		addBox(box);
 	}
+    public void addStatusBox(AbstractStatus s){
+        StatusCustomizer c = new StatusCustomizer(s);
+        c.addStatusChangedListener((AbstractStatus as)->{
+            customizing.clearInflict();
+            statusBoxes.forEach((sb)->{
+                customizing.addStatus(sb.getStatus());
+            });
+            customizing.init();
+            desc.setText(customizing.getDescription());
+        });
+        addBox(c);
+        statusBoxes.add(c);
+    }
 	public void addStatusBoxes(){
 		StatusTable s = customizing.getInflict();
 		for(int i = 0; i < s.getSize(); i++){
-			StatusCustomizer c = new StatusCustomizer(customizing, s.getStatusAt(i));
-			c.addActionListener(new AbstractAction(){
-				public void actionPerformed(ActionEvent e){
-					updateStatuses();
-				}
-			});
-			boxGroup.add(c);
-			statusBoxes.add(c);
-			boxCount++;
+			addStatusBox(s.getStatusAt(i));
 		}
-		boxGroup.setLayout(new GridLayout(boxCount + 1, 1));
 	}
 	
 	public void updateField(String name, int val){
 		// change a stat of customizing
 		// make subclasses define this
-		desc.setText(customizing.getDescription());
-		setCanSave(true);
-		repaint();
-	}
-	public void updateStatuses(){
-		if(statusBoxes.size() != 0){
-			customizing.clearInflict();
-		}
-		for(StatusCustomizer s : statusBoxes){
-			s.saveStatus();
-		}
 		desc.setText(customizing.getDescription());
 		setCanSave(true);
 		repaint();

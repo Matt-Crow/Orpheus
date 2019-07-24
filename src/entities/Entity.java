@@ -49,7 +49,7 @@ public abstract class Entity implements Serializable, Terminable{
 	 */
 	private Team team;
 	private boolean shouldTerminate;
-	private ActionRegister actReg;
+	private final ActionRegister actReg;
 	
     private final SafeList<TerminateListener> terminateListeners; //you just can't wait for me to die, can you!
     
@@ -64,6 +64,7 @@ public abstract class Entity implements Serializable, Terminable{
         inWorld = null;
         radius = 50;
         terminateListeners = new SafeList<>();
+        actReg = new ActionRegister(this);
 		nextId++;
 	}
     
@@ -283,7 +284,7 @@ public abstract class Entity implements Serializable, Terminable{
         
 		moving = false;
 		speedFilter = 1.0;
-		actReg = new ActionRegister(this);
+		actReg.reset();
 		shouldTerminate = false;
 		
 		hasFocus = false;
