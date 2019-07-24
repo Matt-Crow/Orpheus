@@ -12,16 +12,14 @@ import java.util.ArrayList;
 
 import customizables.AbstractCustomizable;
 import java.awt.BorderLayout;
-import java.awt.event.ActionListener;
 
-//this is aweful: redo it
 @SuppressWarnings("serial")
-public class Customizer<T> extends JComponent{
+public abstract class Customizer<T> extends JComponent{
 	private AbstractCustomizable customizing;
 	private JTextArea name;
     private final JPanel boxGroup;
-	private JTextArea desc;
-	private JButton save;
+	private final JTextArea desc;
+	private final JButton save;
 	private int boxCount;
 	private ArrayList<StatusCustomizer> statusBoxes;
 	
@@ -96,28 +94,11 @@ public class Customizer<T> extends JComponent{
 		repaint();
 	}
 	public void addBox(Enum s, int minValue, int maxValue){
-        JPanel box = new JPanel();
-        box.setLayout(new GridLayout(2, 1));
-        
-        JLabel l = new JLabel(s.toString());
-        Style.applyStyling(l);
-        box.add(l);
-        
-        JPanel radButtons = new JPanel();
-        Style.applyStyling(radButtons);
-        box.add(radButtons);
-        ButtonGroup bg = new ButtonGroup();
-        for(int i = minValue; i <= maxValue; i++){
-            JRadioButton
-            rad = new JRadioButton("" + i);
-            rad.addActionListener((ActionEvent e) -> {
-                updateField(s.toString(), Integer.parseInt(rad.getText()));
-            });
-            bg.add(rad);
-            radButtons.add(rad);
-        }
-        radButtons.setLayout(new GridLayout(1, maxValue - minValue + 1));
-		
+        NumberChoiceBox box = new NumberChoiceBox(s.toString(), minValue, maxValue);
+        box.addSelectionChangeListener((i)->{
+            updateField(s.toString(), i);
+        });
+        box.setSelected(customizing.getBase(s));
 		addBox(box);
 	}
 	public void addStatusBoxes(){
