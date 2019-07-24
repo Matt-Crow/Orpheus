@@ -11,14 +11,15 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 import customizables.AbstractCustomizable;
+import java.awt.BorderLayout;
+import java.awt.event.ActionListener;
 
 //this is aweful: redo it
 @SuppressWarnings("serial")
 public class Customizer<T> extends JComponent{
 	private AbstractCustomizable customizing;
 	private JTextArea name;
-	private Pane p1; // used to split into two sections
-	private Pane p2;
+    private final JPanel boxGroup;
 	private JTextArea desc;
 	private JButton save;
 	private int boxCount;
@@ -29,12 +30,14 @@ public class Customizer<T> extends JComponent{
 		customizing = a.copy();
         customizing.setUser(Master.getUser().getPlayer());
 		
-		p1 = new Pane();
-		p2 = new Pane();
-		p2.setLayout(new GridLayout(1, 1));
-		add(p1);
-		add(p2);
-		
+        setLayout(new GridLayout(1, 2));
+        
+        
+        //customize section
+        JPanel customizeSection = new JPanel();
+        customizeSection.setLayout(new BorderLayout());
+        add(customizeSection);
+        
 		name = new JTextArea(customizing.getName());
 		name.setEditable(true);
 		name.addCaretListener(new CaretListener(){
@@ -43,13 +46,19 @@ public class Customizer<T> extends JComponent{
 				setCanSave(true);
 			}
 		});
-		p1.add(name);
         Style.applyStyling(name);
-        name.setEditable(true);
-		
+		customizeSection.add(name, BorderLayout.PAGE_START);
+        
+        boxGroup = new JPanel();
+        boxGroup.setLayout(new GridLayout(1, 1));
+        JScrollPane scrolly = new JScrollPane(boxGroup);
+        customizeSection.add(scrolly, BorderLayout.CENTER);
+        
+        
+        
+		//non-customize section
 		desc = new JTextArea(customizing.getDescription());
-		p2.setLayout(new GridLayout(2, 1));
-		p2.add(desc);
+		add(desc);
         Style.applyStyling(desc);
 		
 		save = new JButton("Save changes");
@@ -59,10 +68,9 @@ public class Customizer<T> extends JComponent{
 			}
 		});
         Style.applyStyling(save);
-		p2.add(save);
+		add(save);
 		statusBoxes = new ArrayList<>();
 		boxCount = 0;
-		setLayout(new GridLayout(1, 2));
 		Style.applyStyling(this);
 	}
 	private void setCanSave(boolean b){
@@ -79,22 +87,37 @@ public class Customizer<T> extends JComponent{
 		return customizing;
 	}
 	
-	public void addBox(OptionBox box){
-		p1.add(box);
+	public void addBox(JComponent j){
+		Style.applyStyling(j);
+        boxGroup.add(j);
 		boxCount++;
-		p1.setLayout(new GridLayout(boxCount + 1, 1));
+		boxGroup.setLayout(new GridLayout(boxCount + 1, 1));
 		revalidate();
 		repaint();
 	}
-	public void addBox(Enum s){
-		Integer[] options = new Integer[]{0, 1, 2, 3, 4, 5};
-		OptionBox<Integer> box = new OptionBox<>(s.toString(), options);
-		box.setSelected((Integer)customizing.getBase(s));
-		box.addActionListener(new AbstractAction(){
-			public void actionPerformed(ActionEvent e){
-				updateField(box.getTitle(), box.getSelected());
-			}
-		});
+	public void addBox(Enum s, int minValue, int maxValue){
+        JPanel box = new JPanel();
+        box.setLayout(new GridLayout(2, 1));
+        
+        JLabel l = new JLabel(s.toString());
+        Style.applyStyling(l);
+        box.add(l);
+        
+        JPanel radButtons = new JPanel();
+        Style.applyStyling(radButtons);
+        box.add(radButtons);
+        ButtonGroup bg = new ButtonGroup();
+        for(int i = minValue; i <= maxValue; i++){
+            JRadioButton
+            rad = new JRadioButton("" + i);
+            rad.addActionListener((ActionEvent e) -> {
+                updateField(s.toString(), Integer.parseInt(rad.getText()));
+            });
+            bg.add(rad);
+            radButtons.add(rad);
+        }
+        radButtons.setLayout(new GridLayout(1, maxValue - minValue + 1));
+		
 		addBox(box);
 	}
 	public void addStatusBoxes(){
@@ -106,11 +129,11 @@ public class Customizer<T> extends JComponent{
 					updateStatuses();
 				}
 			});
-			p1.add(c);
+			boxGroup.add(c);
 			statusBoxes.add(c);
 			boxCount++;
 		}
-		p1.setLayout(new GridLayout(boxCount + 1, 1));
+		boxGroup.setLayout(new GridLayout(boxCount + 1, 1));
 	}
 	
 	public void updateField(String name, int val){
@@ -135,13 +158,5 @@ public class Customizer<T> extends JComponent{
 	public void save(){
 		// subclasses define this
 		setCanSave(false);
-	}
-	
-	public class Pane extends JComponent{
-		// use this to separate into two panels
-		public Pane(){
-			super();
-			Style.applyStyling(this);
-		}
 	}
 }

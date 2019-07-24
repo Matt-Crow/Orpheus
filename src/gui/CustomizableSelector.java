@@ -45,6 +45,8 @@ public class CustomizableSelector extends JComponent{
         add(chooser, BorderLayout.PAGE_END);
         
 		Style.applyStyling(this);
+        
+        setOptions(a);
 	}
     public void addOption(AbstractCustomizable ac){
         if(options.containsKey(ac.getName())){

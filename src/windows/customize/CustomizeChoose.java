@@ -17,6 +17,8 @@ import windows.NewPage;
 public class CustomizeChoose extends NewPage{
     public CustomizeChoose(CustomizableType type){
         super();
+        addBackButton(new CustomizeMain());
+        
         setLayout(new BorderLayout());
         
         AbstractCustomizable[] options = new AbstractCustomizable[]{};

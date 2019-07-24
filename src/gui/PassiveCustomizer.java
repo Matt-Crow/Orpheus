@@ -10,7 +10,7 @@ public class PassiveCustomizer extends Customizer<PassiveStatName>{
 		super(a);
 		switch(a.getPassiveType()){
 		case THRESHOLD:
-			addBox(PassiveStatName.THRESHOLD);
+			addBox(PassiveStatName.THRESHOLD, 1, 3);
 			addStatusBoxes();
 			break;
 		case ONMELEEHIT:

@@ -14,18 +14,19 @@ public class ActiveCustomizer extends Customizer<ActiveStatName>{
 		super(a);
 		switch(a.getActiveType()){
 		case MELEE:
-			addBox(ActiveStatName.DAMAGE);
+			addBox(ActiveStatName.DAMAGE, 0, 5);
 			//need to do more here
 			break;
 		case BOOST:
 			addStatusBoxes();
 			break;
 		case ELEMENTAL:
-			addBox(ActiveStatName.ARC);
-			addBox(ActiveStatName.RANGE);
-			addBox(ActiveStatName.SPEED);
-			addBox(ActiveStatName.AOE);
-			addBox(ActiveStatName.DAMAGE);
+            //change these to active.getmax / min
+			addBox(ActiveStatName.ARC, 0, 5);
+			addBox(ActiveStatName.RANGE, 0, 5);
+			addBox(ActiveStatName.SPEED, 0, 5);
+			addBox(ActiveStatName.AOE, 0, 5);
+			addBox(ActiveStatName.DAMAGE, 0, 5);
 			addParticleBox();
 			break;
 		}

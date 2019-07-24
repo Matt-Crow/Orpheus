@@ -13,7 +13,7 @@ public class CharacterClassCustomizer extends Customizer<CharacterStatName>{
 	public CharacterClassCustomizer(CharacterClass c){
 		super(c);
 		for(CharacterStatName cs : CharacterStatName.values()){
-			addBox(cs);
+			addBox(cs, 1, 5);
 		}
 		addColorBox();
 	}
