@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import customizables.AbstractCustomizable;
 import java.awt.BorderLayout;
 import statuses.AbstractStatus;
-import statuses.StatusName;
 
 @SuppressWarnings("serial")
 public abstract class Customizer<T> extends JComponent{
@@ -28,7 +27,6 @@ public abstract class Customizer<T> extends JComponent{
 	public Customizer(AbstractCustomizable a){
 		super();
 		customizing = a.copy();
-        customizing.setUser(Master.getUser().getPlayer());
 		
         setLayout(new GridLayout(1, 2));
         
@@ -127,6 +125,7 @@ public abstract class Customizer<T> extends JComponent{
 	public void updateField(String name, int val){
 		// change a stat of customizing
 		// make subclasses define this
+        customizing.init();
 		desc.setText(customizing.getDescription());
 		setCanSave(true);
 		repaint();

@@ -52,7 +52,6 @@ public class ActiveCustomizer extends Customizer<ActiveStatName>{
 	public void updateField(String n, int val){
 		AbstractActive a = (AbstractActive)getCustomizing();
 		a.setStat(ActiveStatName.fromString(n.toUpperCase()), val);
-		a.init();
 		super.updateField(n, val);
 	}
 	public void save(){

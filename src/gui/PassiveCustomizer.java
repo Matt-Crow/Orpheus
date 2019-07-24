@@ -30,7 +30,6 @@ public class PassiveCustomizer extends Customizer<PassiveStatName>{
 		if(p instanceof ThresholdPassive){
             ((ThresholdPassive)p).setStat(PassiveStatName.THRESHOLD, val);
         }
-        p.init();
 		
 		super.updateField(n, val);
 	}

@@ -65,7 +65,9 @@ public class ThresholdPassive extends AbstractPassive implements JsonSerialable,
     @Override
     public void init(){
         super.init();
-        getUser().getActionRegister().addOnUpdate(this);
+        if(getUser() != null){
+            getUser().getActionRegister().addOnUpdate(this);
+        }
     }
     
     @Override
