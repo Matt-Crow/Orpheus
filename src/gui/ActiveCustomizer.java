@@ -16,10 +16,8 @@ public class ActiveCustomizer extends Customizer<ActiveStatName>{
 		case MELEE:
 			addBox(ActiveStatName.DAMAGE, 0, 5);
             updateField(ActiveStatName.DAMAGE.toString(), a.getBase(ActiveStatName.DAMAGE));
-			//need to do more here
 			break;
 		case BOOST:
-			addStatusBoxes();
 			break;
 		case ELEMENTAL:
             //change these to active.getmax / min
@@ -36,6 +34,7 @@ public class ActiveCustomizer extends Customizer<ActiveStatName>{
 			addParticleBox();
 			break;
 		}
+        addStatusBoxes();
 	}
 	private void addParticleBox(){
 		ParticleType[] options = ParticleType.values();

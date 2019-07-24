@@ -24,6 +24,7 @@ public class CustomizeCustomize extends NewPage{
         setLayout(new GridLayout(1, 1));
         
         customArea = new JPanel();
+        customArea.setLayout(new GridLayout(1, 1));
         add(customArea);
         
         newCustom = null;
@@ -34,13 +35,13 @@ public class CustomizeCustomize extends NewPage{
         newCustom = ac;
         switch(newCustom.upgradableType){
             case ACTIVE:
-                add(new ActiveCustomizer((AbstractActive) newCustom));
+                customArea.add(new ActiveCustomizer((AbstractActive) newCustom));
                 break;
             case PASSIVE:
-                add(new PassiveCustomizer((AbstractPassive) newCustom));
+                customArea.add(new PassiveCustomizer((AbstractPassive) newCustom));
                 break;
             case CHARACTER_CLASS:
-                add(new CharacterClassCustomizer((CharacterClass)newCustom));
+                customArea.add(new CharacterClassCustomizer((CharacterClass)newCustom));
                 break;
             default:
                 throw new IllegalArgumentException("Need to add option to customize " + newCustom.upgradableType);

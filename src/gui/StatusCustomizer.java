@@ -5,12 +5,13 @@ import java.awt.GridLayout;
 import javax.swing.JComponent;
 import statuses.AbstractStatus;
 import statuses.StatusName;
-import customizables.AbstractCustomizable;
 import java.util.ArrayList;
 import java.util.function.Consumer;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 
 public class StatusCustomizer extends JComponent{
-	private final OptionBox<StatusName> box;
+	private final JComboBox<String> chooser;
 	private final NumberChoiceBox intensity;
 	private final NumberChoiceBox duration;
     private final ArrayList<Consumer<AbstractStatus>> statusChangedListeners;
@@ -20,11 +21,23 @@ public class StatusCustomizer extends JComponent{
 		super();
         status = s;
         statusChangedListeners = new ArrayList<>();
-		
-		box = new OptionBox<>("Status", StatusName.values());
-		box.setSelected(StatusName.valueOf(s.getName().toUpperCase()));
-		Style.applyStyling(box);
-        add(box);
+        
+        setLayout(new GridLayout(4, 1));
+        
+        JLabel title = new JLabel("Status");
+        Style.applyStyling(title);
+        add(title);
+        
+        chooser = new JComboBox<>();
+		Style.applyStyling(chooser);
+        for(StatusName sn : StatusName.values()){
+            chooser.addItem(sn.toString());
+        }
+        chooser.setSelectedItem(s.getName());
+        chooser.addActionListener((e)->{
+            updateStatus();
+        });
+        add(chooser);
 		
 		intensity = new NumberChoiceBox("Intensity", 1, 3);
 		intensity.setSelected((Integer)s.getIntensityLevel());
@@ -39,15 +52,11 @@ public class StatusCustomizer extends JComponent{
 		add(duration);
 		
         intensity.addSelectionChangeListener((i)->{
-            status = AbstractStatus.decode(box.getSelected(), intensity.getSelected(), duration.getSelected());
-            statusChanged();
+            updateStatus();
         });
         duration.addSelectionChangeListener((i)->{
-            status = AbstractStatus.decode(box.getSelected(), intensity.getSelected(), duration.getSelected());
-            statusChanged();
+            updateStatus();
         });
-        
-		setLayout(new GridLayout(3, 1));
 		
 		Style.applyStyling(this);
 	}
@@ -55,7 +64,8 @@ public class StatusCustomizer extends JComponent{
     public void addStatusChangedListener(Consumer<AbstractStatus> func){
         statusChangedListeners.add(func);
     }
-    private void statusChanged(){
+    private void updateStatus(){
+        status = AbstractStatus.decode(StatusName.fromName((String) chooser.getSelectedItem()), intensity.getSelected(), duration.getSelected());
         statusChangedListeners.forEach((c)->c.accept(status));
     }
     

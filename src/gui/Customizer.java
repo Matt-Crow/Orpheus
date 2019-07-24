@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import customizables.AbstractCustomizable;
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import statuses.AbstractStatus;
 
 @SuppressWarnings("serial")
@@ -22,7 +23,7 @@ public abstract class Customizer<T> extends JComponent{
 	private final JTextArea desc;
 	private final JButton save;
 	private int boxCount;
-	private ArrayList<StatusCustomizer> statusBoxes;
+	private final ArrayList<StatusCustomizer> statusBoxes; //need to keep track of these
 	
 	public Customizer(AbstractCustomizable a){
 		super();
@@ -37,26 +38,33 @@ public abstract class Customizer<T> extends JComponent{
         add(customizeSection);
         
 		name = new JTextArea(customizing.getName());
-		name.setEditable(true);
+		Style.applyStyling(name);
+        name.setEditable(true);
 		name.addCaretListener(new CaretListener(){
 			public void caretUpdate(CaretEvent e){
 				customizing.setName(name.getText());
 				setCanSave(true);
 			}
 		});
-        Style.applyStyling(name);
 		customizeSection.add(name, BorderLayout.PAGE_START);
         
         boxGroup = new JPanel();
         boxGroup.setLayout(new GridLayout(1, 1));
         JScrollPane scrolly = new JScrollPane(boxGroup);
+        scrolly.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrolly.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         customizeSection.add(scrolly, BorderLayout.CENTER);
         
         
         
 		//non-customize section
-		desc = new JTextArea(customizing.getDescription());
-		add(desc);
+        JPanel other = new JPanel();
+        other.setLayout(new BorderLayout());
+		Style.applyStyling(other);
+        add(other);
+        
+        desc = new JTextArea(customizing.getDescription());
+		other.add(desc, BorderLayout.CENTER);
         Style.applyStyling(desc);
 		
 		save = new JButton("Save changes");
@@ -67,8 +75,9 @@ public abstract class Customizer<T> extends JComponent{
 			}
 		});
         Style.applyStyling(save);
-		add(save);
-		statusBoxes = new ArrayList<>();
+		other.add(save, BorderLayout.PAGE_END);
+		
+        statusBoxes = new ArrayList<>();
 		boxCount = 0;
 		Style.applyStyling(this);
 	}
