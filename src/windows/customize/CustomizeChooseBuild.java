@@ -3,7 +3,6 @@ package windows.customize;
 import gui.BuildSelect;
 import java.awt.BorderLayout;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import windows.NewPage;
 
 /**
@@ -14,15 +13,11 @@ public class CustomizeChooseBuild extends NewPage{
     private final BuildSelect buiSel;
     public CustomizeChooseBuild(){
         super();
-        setLayout(new BorderLayout());
+        BorderLayout b = new BorderLayout();
+        b.setVgap(30);
+        setLayout(b);
         
-        addBackButton(()->{
-            CustomizePage p = new CustomizePage(getHost());
-            getHost().switchToPage(p);
-            p.switchToSubpage(CustomizePage.MAIN);
-        });
-        
-        add(new JLabel("Select Built to Customize"), BorderLayout.PAGE_START);
+        addBackButton(new CustomizeMain());
         
         buiSel = new BuildSelect();
         buiSel.refreshOptions();

@@ -8,43 +8,19 @@ import customizables.passives.AbstractPassive;
 import gui.CustomizableSelector;
 import java.awt.BorderLayout;
 import javax.swing.JButton;
-import windows.Page;
-import windows.SubPage;
+import windows.NewPage;
 
 /**
  *
  * @author Matt
  */
-public class CustomizeChoose extends SubPage{
-    private final CustomizableSelector chooser;
-    private final CustomizableType t;
-    public CustomizeChoose(Page p, CustomizableType type){
-        super(p);
+public class CustomizeChoose extends NewPage{
+    public CustomizeChoose(CustomizableType type){
+        super();
         setLayout(new BorderLayout());
         
-        t = type;
-        
         AbstractCustomizable[] options = new AbstractCustomizable[]{};
-        
-        chooser = new CustomizableSelector("Choose " + type.toString() + " to customize", options);
-        add(chooser, BorderLayout.CENTER);
-        
-        JButton customize = new JButton("Customize");
-        customize.addActionListener((e)->{
-            getHostingPage().switchToSubpage(CustomizePage.CUSTOMIZE);
-            SubPage page = getHostingPage().getCurrentSubPage();
-            if(page instanceof CustomizeCustomize){
-                ((CustomizeCustomize)page).setCustomizing(chooser.getSelected());
-            }
-        });
-        add(customize, BorderLayout.PAGE_END);
-    }
-
-    @Override
-    public void switchedToThis() {
-        super.switchedToThis();
-        AbstractCustomizable[] options = null;
-        switch(t){
+        switch(type){
             case ACTIVE:
                 options = AbstractActive.getAll();
                 break;
@@ -55,10 +31,18 @@ public class CustomizeChoose extends SubPage{
                 options = CharacterClass.getAll();
                 break;
             default:
-                System.err.println("No options for " + t + " in CustomizeChoose");
+                System.err.println("No options for " + type + " in CustomizeChoose");
         }
-        chooser.setOptions(options);
-        revalidate();
-        repaint();
+        
+        CustomizableSelector chooser = new CustomizableSelector("Choose " + type.toString() + " to customize", options);
+        add(chooser, BorderLayout.CENTER);
+        
+        JButton customize = new JButton("Customize");
+        customize.addActionListener((e)->{
+            CustomizeCustomize cc = new CustomizeCustomize();
+            cc.setCustomizing(chooser.getSelected());
+            getHost().switchToPage(cc);
+        });
+        add(customize, BorderLayout.PAGE_END);
     }
 }

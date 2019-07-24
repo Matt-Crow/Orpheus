@@ -4,7 +4,7 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 import windows.NewPage;
 import windows.WorldSelect.WorldSelectPage;
-import windows.customize.CustomizePage;
+import windows.customize.CustomizeMain;
 
 /**
  *
@@ -25,7 +25,7 @@ public class StartPlay extends NewPage{
         
         JButton customize = new JButton("Customize");
         customize.addActionListener((e)->{
-            getHost().switchToPage(new CustomizePage(getHost()));
+            getHost().switchToPage(new CustomizeMain());
         });
         add(customize);
     }

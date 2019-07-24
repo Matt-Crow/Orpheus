@@ -9,18 +9,18 @@ import gui.CharacterClassCustomizer;
 import gui.PassiveCustomizer;
 import java.awt.GridLayout;
 import javax.swing.JPanel;
-import windows.Page;
-import windows.SubPage;
+import windows.NewPage;
 
 /**
  * The part where you actually customize things
  * @author Matt
  */
-public class CustomizeCustomize extends SubPage{
+public class CustomizeCustomize extends NewPage{
     private final JPanel customArea;
     private AbstractCustomizable newCustom;
-    public CustomizeCustomize(Page p){
-        super(p);
+    public CustomizeCustomize(){
+        super();
+        addBackButton(new CustomizeMain());
         setLayout(new GridLayout(1, 1));
         
         customArea = new JPanel();
@@ -45,11 +45,5 @@ public class CustomizeCustomize extends SubPage{
             default:
                 throw new IllegalArgumentException("Need to add option to customize " + newCustom.upgradableType);
         }
-    }
-    
-    @Override
-    public void switchedFromThis(){
-        customArea.removeAll();
-        newCustom = null;
     }
 }

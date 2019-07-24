@@ -39,7 +39,7 @@ public class CustomizeBuild extends NewPage{
         JButton save = new JButton("Save and exit");
         save.addActionListener((e)->{
             save();
-            getHost().switchToPage(new CustomizePage(getHost()));
+            getHost().switchToPage(new CustomizeMain());
         });
         add(save);
         

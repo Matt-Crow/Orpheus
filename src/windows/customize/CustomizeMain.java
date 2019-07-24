@@ -1,40 +1,102 @@
 package windows.customize;
 
+import customizables.Build;
+import customizables.CustomizableJsonUtil;
+import customizables.CustomizableType;
+import customizables.actives.AbstractActive;
+import customizables.characterClass.CharacterClass;
+import customizables.passives.AbstractPassive;
+import gui.FileChooserUtil;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.io.File;
 import javax.swing.JButton;
-import windows.Page;
-import windows.SubPage;
+import javax.swing.JOptionPane;
+import windows.NewPage;
+import windows.start.StartPlay;
 
 /**
  *
  * @author Matt
  */
-public class CustomizeMain extends SubPage{
-    public CustomizeMain(Page p){
-        super(p);
+public class CustomizeMain extends NewPage{
+    public CustomizeMain(){
+        super();
+        
+        addBackButton(new StartPlay());
+        JButton imp = new JButton("Import all customizables from a file");
+        imp.addActionListener((ActionEvent e)->{
+            File[] chosen = FileChooserUtil.chooseFiles();
+            if(chosen != null){
+                for(File f : chosen){
+                    CustomizableJsonUtil.loadFile(f);
+                }
+            }
+        });
+        addMenuItem(imp);
+        
+        JButton export = new JButton("Export all customizables to a file");
+        export.addActionListener((ActionEvent e)->{
+            File f = FileChooserUtil.chooseDir();
+            if(f != null){
+                String exportName = JOptionPane.showInputDialog("Enter a name for this export:");
+                File dir = new File(f.getAbsolutePath() + "/" + exportName);
+                dir.mkdir();
+                
+                AbstractActive.saveAllToFile(new File(dir.getAbsolutePath() + "/actives.json"));
+                AbstractPassive.saveAll(new File(dir.getAbsolutePath() + "/passives.json"));
+                CharacterClass.saveAll(new File(dir.getAbsolutePath() + "/characterClasses.json"));
+            }
+        });
+        addMenuItem(export);
+        
+        JButton impBuild = new JButton("Import Builds");
+        impBuild.addActionListener((e)->{
+            File[] chosen = FileChooserUtil.chooseFiles();
+            if(chosen != null){
+                for(File f : chosen){
+                    Build.loadFile(f);
+                }
+            }
+        });
+        addMenuItem(impBuild);
+        
+        JButton expBuild = new JButton("Export Builds");
+        expBuild.addActionListener((e)->{
+            File dir = FileChooserUtil.chooseDir();
+            if(dir != null){
+                String name = JOptionPane.showInputDialog("Enter a name for this export:");
+                File buildFile = new File(dir.getAbsolutePath() + "/" + name);
+                Build.saveAllToFile(buildFile);
+            }
+        });
+        addMenuItem(expBuild);
+        
+        
+        
         setLayout(new GridLayout(1, 4));
         
         JButton act = new JButton("Customize Actives");
         act.addActionListener((e)->{
-            getHostingPage().switchToSubpage(CustomizePage.CHOOSE_ACT);
+            getHost().switchToPage(new CustomizeChoose(CustomizableType.ACTIVE));
         });
         add(act);
         
         JButton pas = new JButton("Customize Passives");
         pas.addActionListener((e)->{
-            getHostingPage().switchToSubpage(CustomizePage.CHOOSE_PAS);
+            getHost().switchToPage(new CustomizeChoose(CustomizableType.PASSIVE));
         });
         add(pas);
         
         JButton cha = new JButton("Customize Character Classes");
         cha.addActionListener((e)->{
-            getHostingPage().switchToSubpage(CustomizePage.CHOOSE_CHA);
+            getHost().switchToPage(new CustomizeChoose(CustomizableType.CHARACTER_CLASS));
         });
         add(cha);
         
         JButton bui = new JButton("Customize Builds");
         bui.addActionListener((e)->{
-            getHostingPage().getHost().switchToPage(new CustomizeChooseBuild());
+            getHost().switchToPage(new CustomizeChooseBuild());
         });
         add(bui);
     }
