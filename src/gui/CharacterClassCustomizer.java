@@ -14,6 +14,7 @@ public class CharacterClassCustomizer extends Customizer<CharacterStatName>{
 		super(c);
 		for(CharacterStatName cs : CharacterStatName.values()){
 			addBox(cs, 1, 5);
+            updateField(cs.toString(), c.getBase(cs));
 		}
 		addColorBox();
 	}

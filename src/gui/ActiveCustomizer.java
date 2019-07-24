@@ -15,6 +15,7 @@ public class ActiveCustomizer extends Customizer<ActiveStatName>{
 		switch(a.getActiveType()){
 		case MELEE:
 			addBox(ActiveStatName.DAMAGE, 0, 5);
+            updateField(ActiveStatName.DAMAGE.toString(), a.getBase(ActiveStatName.DAMAGE));
 			//need to do more here
 			break;
 		case BOOST:
@@ -23,10 +24,15 @@ public class ActiveCustomizer extends Customizer<ActiveStatName>{
 		case ELEMENTAL:
             //change these to active.getmax / min
 			addBox(ActiveStatName.ARC, 0, 5);
+            updateField(ActiveStatName.ARC.toString(), a.getBase(ActiveStatName.ARC));
 			addBox(ActiveStatName.RANGE, 0, 5);
+            updateField(ActiveStatName.RANGE.toString(), a.getBase(ActiveStatName.RANGE));
 			addBox(ActiveStatName.SPEED, 0, 5);
+            updateField(ActiveStatName.SPEED.toString(), a.getBase(ActiveStatName.SPEED));
 			addBox(ActiveStatName.AOE, 0, 5);
+            updateField(ActiveStatName.AOE.toString(), a.getBase(ActiveStatName.AOE));
 			addBox(ActiveStatName.DAMAGE, 0, 5);
+            updateField(ActiveStatName.DAMAGE.toString(), a.getBase(ActiveStatName.DAMAGE));
 			addParticleBox();
 			break;
 		}
