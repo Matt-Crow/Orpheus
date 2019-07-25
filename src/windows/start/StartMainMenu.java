@@ -7,13 +7,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import windows.NewPage;
+import windows.Page;
 
 /**
  *
  * @author Matt
  */
-public class StartMainMenu extends NewPage{
+public class StartMainMenu extends Page{
     public StartMainMenu(){
         addMenuItem(new JLabel("The Orpheus Proposition"));
         setLayout(new GridLayout(1, 3));

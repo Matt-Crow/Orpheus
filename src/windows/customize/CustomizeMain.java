@@ -12,14 +12,14 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import windows.NewPage;
+import windows.Page;
 import windows.start.StartPlay;
 
 /**
  *
  * @author Matt
  */
-public class CustomizeMain extends NewPage{
+public class CustomizeMain extends Page{
     public CustomizeMain(){
         super();
         

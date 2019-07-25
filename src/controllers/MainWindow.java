@@ -8,7 +8,7 @@ import customizables.AbstractCustomizable;
 import java.awt.GridLayout;
 import javax.swing.JPanel;
 import util.CombatLog;
-import windows.NewPage;
+import windows.Page;
 import windows.PageSwitchListener;
 import windows.start.StartMainMenu;
 
@@ -21,7 +21,7 @@ import windows.start.StartMainMenu;
  */
 public class MainWindow extends JFrame{
     private final JPanel content;
-    private NewPage currentPage;
+    private Page currentPage;
     
     private static MainWindow instance = null;
     
@@ -59,7 +59,7 @@ public class MainWindow extends JFrame{
         instance = this;
     }
     
-    public MainWindow switchToPage(NewPage p){
+    public MainWindow switchToPage(Page p){
         if(p == null){
             throw new NullPointerException();
         }

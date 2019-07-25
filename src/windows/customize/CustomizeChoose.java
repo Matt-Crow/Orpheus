@@ -8,13 +8,13 @@ import customizables.passives.AbstractPassive;
 import gui.CustomizableSelector;
 import java.awt.BorderLayout;
 import javax.swing.JButton;
-import windows.NewPage;
+import windows.Page;
 
 /**
  *
  * @author Matt
  */
-public class CustomizeChoose extends NewPage{
+public class CustomizeChoose extends Page{
     public CustomizeChoose(CustomizableType type){
         super();
         addBackButton(new CustomizeMain());

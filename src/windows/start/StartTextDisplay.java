@@ -6,13 +6,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
-import windows.NewPage;
+import windows.Page;
 
 /**
  *
  * @author Matt
  */
-public class StartTextDisplay extends NewPage{
+public class StartTextDisplay extends Page{
     public StartTextDisplay(String displayText){
         addBackButton(new StartMainMenu());
         

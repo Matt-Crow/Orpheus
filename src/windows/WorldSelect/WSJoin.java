@@ -11,13 +11,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
-import windows.NewPage;
+import windows.Page;
 
 /**
  *
  * @author Matt
  */
-public class WSJoin extends NewPage{
+public class WSJoin extends Page{
     private static final String IPV4_REGEX = 
         "^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
         "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +

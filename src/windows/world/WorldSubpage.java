@@ -14,7 +14,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
-import windows.NewPage;
+import windows.Page;
 import windows.WorldSelect.WSMain;
 
 /**
@@ -27,7 +27,7 @@ import windows.WorldSelect.WSMain;
  * 
  * @author Matt Crow
  */
-public class WorldSubpage extends NewPage{
+public class WorldSubpage extends Page{
     private final JPanel canvasArea;
     private WorldCanvas canvas;
     private final Chat chat;

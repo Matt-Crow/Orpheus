@@ -9,13 +9,13 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import windows.NewPage;
+import windows.Page;
 
 /**
  *
  * @author Matt
  */
-public class CustomizeBuild extends NewPage{
+public class CustomizeBuild extends Page{
     private final JTextArea name;
     private final CustomizableSelector charClassSel;
     private final CustomizableSelector[] acts;

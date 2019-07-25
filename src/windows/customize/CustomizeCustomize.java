@@ -9,13 +9,13 @@ import gui.CharacterClassCustomizer;
 import gui.PassiveCustomizer;
 import java.awt.GridLayout;
 import javax.swing.JPanel;
-import windows.NewPage;
+import windows.Page;
 
 /**
  * The part where you actually customize things
  * @author Matt
  */
-public class CustomizeCustomize extends NewPage{
+public class CustomizeCustomize extends Page{
     private final JPanel customArea;
     private AbstractCustomizable newCustom;
     public CustomizeCustomize(){

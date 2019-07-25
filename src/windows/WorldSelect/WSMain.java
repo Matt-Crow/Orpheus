@@ -3,14 +3,14 @@ package windows.WorldSelect;
 import gui.Style;
 import java.awt.GridLayout;
 import javax.swing.JButton;
-import windows.NewPage;
+import windows.Page;
 import windows.start.StartPlay;
 
 /**
  * The Main sub page for the world select canvas.
  * @author Matt Crow
  */
-public class WSMain extends NewPage{
+public class WSMain extends Page{
     public WSMain(){
         super();
         addBackButton(new StartPlay());

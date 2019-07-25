@@ -8,13 +8,13 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
-import windows.NewPage;
+import windows.Page;
 
 /**
  *
  * @author Matt Crow
  */
-public abstract class AbstractWSNewWorld extends NewPage{
+public abstract class AbstractWSNewWorld extends Page{
     private final BuildSelect playerBuild;
     private final OptionBox<Integer> teamSize;
     private final JButton start;

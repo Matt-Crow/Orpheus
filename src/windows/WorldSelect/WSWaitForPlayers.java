@@ -11,7 +11,7 @@ import java.awt.GridLayout;
 import java.io.IOException;
 import java.util.Arrays;
 import javax.swing.*;
-import windows.NewPage;
+import windows.Page;
 
 /**
  * WSWaitForPlayers is used to provide a "waiting room"
@@ -20,7 +20,7 @@ import windows.NewPage;
  * 
  * @author Matt Crow
  */
-public class WSWaitForPlayers extends NewPage{
+public class WSWaitForPlayers extends Page{
     /*
     For now, I'm using IP address as the key, and the User as the value.
     I'm not sure if this will work, I think IP addresses are unique to each computer,

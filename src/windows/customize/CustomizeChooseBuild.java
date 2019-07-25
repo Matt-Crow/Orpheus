@@ -3,13 +3,13 @@ package windows.customize;
 import gui.BuildSelect;
 import java.awt.BorderLayout;
 import javax.swing.JButton;
-import windows.NewPage;
+import windows.Page;
 
 /**
  *
  * @author Matt
  */
-public class CustomizeChooseBuild extends NewPage{
+public class CustomizeChooseBuild extends Page{
     private final BuildSelect buiSel;
     public CustomizeChooseBuild(){
         super();

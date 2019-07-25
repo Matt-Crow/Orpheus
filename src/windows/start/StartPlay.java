@@ -2,7 +2,7 @@ package windows.start;
 
 import java.awt.GridLayout;
 import javax.swing.JButton;
-import windows.NewPage;
+import windows.Page;
 import windows.WorldSelect.WSMain;
 import windows.customize.CustomizeMain;
 
@@ -10,7 +10,7 @@ import windows.customize.CustomizeMain;
  *
  * @author Matt
  */
-public class StartPlay extends NewPage{
+public class StartPlay extends Page{
     public StartPlay(){
         super();
         setLayout(new GridLayout(1, 2));
