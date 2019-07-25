@@ -2,6 +2,7 @@ package windows.world;
 
 import controllers.Master;
 import gui.Chat;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -13,8 +14,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
-import windows.Page;
-import windows.SubPage;
+import windows.NewPage;
+import windows.WorldSelect.WSMain;
 
 /**
  * The WorldSubpage is used to render WorldCanvases.
@@ -26,24 +27,29 @@ import windows.SubPage;
  * 
  * @author Matt Crow
  */
-public class WorldSubpage extends SubPage{
+public class WorldSubpage extends NewPage{
     private final JPanel canvasArea;
     private WorldCanvas canvas;
     private final Chat chat;
     
-    public WorldSubpage(Page p){
-        super(p);
-        setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.weightx = 1;
-        gbc.fill = GridBagConstraints.BOTH;
+    public WorldSubpage(){
+        super();
+        addBackButton(new WSMain(), ()->{
+            if(Master.SERVER.isStarted()){
+                Master.SERVER.shutDown();
+            }
+            if(canvas != null){
+                canvas.stop();
+            }
+        });
+        
+        setLayout(new BorderLayout());
         
         canvasArea = new JPanel();
         canvasArea.setBackground(Color.red);
         canvasArea.setFocusable(false);
         canvasArea.setLayout(new GridLayout(1, 1));
-        gbc.weighty = 9;
-        add(canvasArea, gbc.clone());
+        add(canvasArea, BorderLayout.CENTER);
         
         //other area
         //make this collapsable
@@ -77,9 +83,7 @@ public class WorldSubpage extends SubPage{
         c2.fill = GridBagConstraints.BOTH;
         otherArea.add(scrolly, c2.clone());
         
-        gbc.weighty = 1;
-        gbc.gridy = 1;
-        add(otherArea, gbc.clone());
+        add(otherArea, BorderLayout.PAGE_END);
     }
     
     public WorldSubpage setCanvas(WorldCanvas w){
@@ -101,15 +105,5 @@ public class WorldSubpage extends SubPage{
         revalidate();
         repaint();
         return this;
-    }
-    
-    @Override
-    public void switchedFromThis(){
-        if(Master.SERVER.isStarted()){
-            Master.SERVER.shutDown();
-        }
-        if(canvas != null){
-            canvas.stop();
-        }
     }
 }

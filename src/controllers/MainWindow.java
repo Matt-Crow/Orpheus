@@ -9,7 +9,7 @@ import java.awt.GridLayout;
 import javax.swing.JPanel;
 import util.CombatLog;
 import windows.NewPage;
-import windows.Page;
+import windows.PageSwitchListener;
 import windows.start.StartMainMenu;
 
 /**
@@ -21,7 +21,7 @@ import windows.start.StartMainMenu;
  */
 public class MainWindow extends JFrame{
     private final JPanel content;
-    private JPanel currentPage;
+    private NewPage currentPage;
     
     private static MainWindow instance = null;
     
@@ -59,23 +59,6 @@ public class MainWindow extends JFrame{
         instance = this;
     }
     
-    public MainWindow switchToPage(Page p){
-        if(p == null){
-            throw new NullPointerException();
-        }
-        content.removeAll();
-        content.add(p);
-        content.revalidate();
-        p.requestFocus();
-        content.repaint();
-        if(currentPage != null && currentPage instanceof Page){
-            ((Page)currentPage).switchedFromThis();
-        }
-        currentPage = p;
-        p.switchedToThis();
-        return this;
-    }
-    
     public MainWindow switchToPage(NewPage p){
         if(p == null){
             throw new NullPointerException();
@@ -85,10 +68,13 @@ public class MainWindow extends JFrame{
         content.revalidate();
         p.requestFocus();
         content.repaint();
-        if(currentPage != null && currentPage instanceof Page){
-            ((Page)currentPage).switchedFromThis();
+        if(currentPage != null && currentPage instanceof PageSwitchListener){
+            ((PageSwitchListener)currentPage).leavingPage(currentPage);
         }
         currentPage = p;
+        if(p instanceof PageSwitchListener){
+            ((PageSwitchListener)currentPage).switchedToPage(p);
+        }
         return this;
     }
     

@@ -7,6 +7,6 @@ package windows;
  * @author Matt Crow
  */
 public interface PageSwitchListener {
-    public void leavingPage(Page p);
-    public void switchedToPage(Page p);
+    public void leavingPage(NewPage p);
+    public void switchedToPage(NewPage p);
 }
