@@ -5,7 +5,7 @@ import battle.Team;
 import controllers.Master;
 import controllers.World;
 import java.awt.Color;
-import windows.world.WorldSubpage;
+import windows.world.WorldPage;
 
 /**
  *
@@ -40,7 +40,7 @@ public class WSSolo extends AbstractWSNewWorld{
         
         battleWorld.init();
         
-        WorldSubpage wp = new WorldSubpage();
+        WorldPage wp = new WorldPage();
         wp.setCanvas(battleWorld.getCanvas());
         getHost().switchToPage(wp);
     }

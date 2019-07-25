@@ -171,6 +171,20 @@ public class Canvas extends JPanel{
         endOfFrameListeners.forEach(eofl -> eofl.frameEnded(this));
     }
     
+    /**
+     * Registers a key control to the Canvas.
+     * For example,
+     * <br>
+     * {@code
+     *  registerKey(KeyEvent.VK_X, true, ()->foo());
+     * }
+     * <br>
+     * will cause foo to run whenever the user presses the 'x' key.
+     * 
+     * @param key the KeyEvent code for the key to react to
+     * @param pressed whether to react when the key is pressed or released
+     * @param r the runnable to run when the key is pressed/released
+     */
     public void registerKey(int key, boolean pressed, Runnable r){
         String text = key + ((pressed) ? " pressed" : " released");
         getInputMap().put(KeyStroke.getKeyStroke(key, 0, !pressed), text);

@@ -1,15 +1,10 @@
 package controllers;
 
-import java.awt.Toolkit;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import net.OrpheusServer;
 
 public class Master {
 	public static final int DETECTIONRANGE = 500;
-	public static final int CANVASBOTTOM;
-    public static final int CANVASWIDTH;
-	public static final int CANVASHEIGHT;
 	public static final boolean DISABLEHEALING = false;
 	public static final boolean DISABLEALLAI = false;
 	// number of angles a player can have
@@ -22,11 +17,6 @@ public class Master {
     private static User user;
     
     static {
-        JFrame f = new JFrame();
-        CANVASBOTTOM = Toolkit.getDefaultToolkit().getScreenInsets(f.getGraphicsConfiguration()).bottom;
-        CANVASHEIGHT = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - CANVASBOTTOM;
-        CANVASWIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
-        f.dispose();
         user = new User();
     }
     

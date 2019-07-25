@@ -264,8 +264,8 @@ public class Player extends Entity{
 	
     @Override
 	public void draw(Graphics g){
-        int w = Master.CANVASWIDTH;
-		int h = Master.CANVASHEIGHT;
+        int w = getWorld().getCanvas().getWidth();
+		int h = getWorld().getCanvas().getHeight();
 		int r = getRadius();
         
         if(path != null){

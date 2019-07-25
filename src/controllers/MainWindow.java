@@ -6,6 +6,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import customizables.AbstractCustomizable;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import javax.swing.JPanel;
 import util.CombatLog;
 import windows.Page;
@@ -39,7 +40,10 @@ public class MainWindow extends JFrame{
         setContentPane(content);
         
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
+		setSize(
+            (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(), 
+            (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration()).bottom
+        );
         setVisible(true);
 		addWindowListener(new WindowAdapter(){
             @Override

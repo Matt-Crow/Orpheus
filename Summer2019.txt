@@ -4,9 +4,10 @@ Am I happy with where Orpheus is? No. I'll never be happy with it, not until it'
 I'll probably work on it a bit more over the Summer (I really can't stop myself), but for now, I'll call it done.
 
 With that said, their are many changes that I want to make next time I have a chance to work on this:
-* Improve the MVC model of the program, remove the distinction between Page and SubPage, maybe make an API for this model.
 * Move to 3-D graphics?
 * Change the game to a many vs users so that balancing isn't as much of a problem.
 * Overall improvement to the actives / passives system so that it's easier to work with.
 * Player controls...
 * OrpheusScript
+* Remove the ability to customize anything except Builds?
+* Add Dataset class which contains all actives / passives / characterClasses / builds, so I don't have to use static methods to get by name

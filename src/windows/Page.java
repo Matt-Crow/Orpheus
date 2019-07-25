@@ -8,13 +8,9 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 
 /**
  * Each Page is used as a view to
@@ -159,33 +155,4 @@ public class Page extends JPanel{
         }
         Style.applyStyling(comp);
     }
-    
-    /**
-     * Registers a key control to the Page.
-     * For example,
-     * <br>
-     * {@code
-     *  registerKey(KeyEvent.VK_X, true, ()->foo());
-     * }
-     * <br>
-     * will cause foo to run whenever the user presses the 'x' key.
-     * 
-     * @param key the KeyEvent code for the key to react to
-     * @param pressed whether to react when the key is pressed or released
-     * @param r the runnable to run when the key is pressed/released
-     */
-    public void registerKey(int key, boolean pressed, Runnable r){
-        String text = key + ((pressed) ? " pressed" : " released");
-        getInputMap().put(KeyStroke.getKeyStroke(key, 0, !pressed), text);
-        getActionMap().put(text, new AbstractAction(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                r.run();
-            }
-        });
-    }
-    
-    public void close(){
-		SwingUtilities.getWindowAncestor(this).dispose();
-	}
 }

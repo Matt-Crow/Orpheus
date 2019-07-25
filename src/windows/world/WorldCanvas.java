@@ -9,13 +9,14 @@ import java.awt.Graphics;
 import java.awt.event.*;
 import javax.swing.*;
 import battle.Team;
+import controllers.MainWindow;
 import controllers.User;
 import customizables.Build;
 import entities.PlayerControls;
-import entities.TruePlayer;
 import java.awt.Graphics2D;
 import java.io.IOException;
 import customizables.AbstractCustomizable;
+import entities.TruePlayer;
 import util.SerialUtil;
 import windows.Canvas;
 
@@ -137,10 +138,11 @@ public class WorldCanvas extends Canvas{
         Team t1 = new Team("Test", Color.BLUE);
         Team t2 = Team.constructRandomTeam("Rando", Color.yellow, 1);
         WorldCanvas c = new WorldCanvas(w);
-        JFrame f = new JFrame();
-        f.setContentPane(c);
-        f.setSize(Master.CANVASWIDTH, Master.CANVASHEIGHT);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        MainWindow mw = MainWindow.getInstance();
+        WorldPage wp = new WorldPage();
+        wp.setCanvas(c);
+        mw.switchToPage(wp);
         
         Battle b = new Battle();
         
@@ -157,12 +159,7 @@ public class WorldCanvas extends Canvas{
             Master.getUser().getPlayer().listStatuses();
         });
         
-        f.setContentPane(w.getCanvas());
         
-        f.setVisible(true);
-        f.revalidate();
-        f.repaint();
-        /*
         //now to try serializing it...
         String serial = w.serializeToString();
         World newWorld = World.fromSerializedString(serial);
@@ -172,11 +169,10 @@ public class WorldCanvas extends Canvas{
         newWorld.setCurrentMinigame(new Battle());
         newWorld.init();
         
-        f.setContentPane(newWorld.getCanvas());
+        wp = new WorldPage();
+        wp.setCanvas(newWorld.getCanvas());
+        mw.switchToPage(wp);
         
-        f.setVisible(true);
-        f.revalidate();
-        f.repaint();
         
         newWorld.getCanvas().registerKey(KeyEvent.VK_S, true, ()->{
             Team t = newWorld.getTeams()[0];
@@ -184,6 +180,6 @@ public class WorldCanvas extends Canvas{
             String s = SerialUtil.serializeToString(t);
             Team tClone = (Team)SerialUtil.fromSerializedString(s);
             System.out.println("Total entities deserialized: " + tClone.length());
-        });*/
+        });
     }
 }

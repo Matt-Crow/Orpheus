@@ -17,7 +17,7 @@ import javax.json.*;
 import javax.swing.*;
 import net.*;
 import serialization.JsonUtil;
-import windows.world.WorldSubpage;
+import windows.world.WorldPage;
 
 /**
  * This class provides all the server
@@ -376,7 +376,7 @@ public class WaitingRoomBackend {
         
         server.removeReceiver(ServerMessageType.WORLD_INIT, receiveWorldInit);
         
-        WorldSubpage p = new WorldSubpage();
+        WorldPage p = new WorldPage();
         p.setCanvas(w.getCanvas());
         host.getHost().switchToPage(p);
     }
@@ -467,7 +467,7 @@ public class WaitingRoomBackend {
         
         sendWorldInit(w);
         
-        WorldSubpage p = new WorldSubpage();
+        WorldPage p = new WorldPage();
         p.setCanvas(w.getCanvas());
         host.getHost().switchToPage(p);
     }

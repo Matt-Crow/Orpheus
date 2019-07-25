@@ -18,21 +18,21 @@ import windows.Page;
 import windows.WorldSelect.WSMain;
 
 /**
- * The WorldSubpage is used to render WorldCanvases.
+ * The WorldPage is used to render WorldCanvases.
  * So yes, it is rather convoluted:
- * use the MainWindow to render the WorldPage,
- * which renders the WorldSubpage,
- * which renders the WorldCanvas,
- * which renders the World.
+ use the MainWindow to render the WorldPage,
+ which renders the WorldPage,
+ which renders the WorldCanvas,
+ which renders the World.
  * 
  * @author Matt Crow
  */
-public class WorldSubpage extends Page{
+public class WorldPage extends Page{
     private final JPanel canvasArea;
     private WorldCanvas canvas;
     private final Chat chat;
     
-    public WorldSubpage(){
+    public WorldPage(){
         super();
         addBackButton(new WSMain(), ()->{
             if(Master.SERVER.isStarted()){
@@ -86,7 +86,7 @@ public class WorldSubpage extends Page{
         add(otherArea, BorderLayout.PAGE_END);
     }
     
-    public WorldSubpage setCanvas(WorldCanvas w){
+    public WorldPage setCanvas(WorldCanvas w){
         canvas = w;
         canvasArea.removeAll();
         canvasArea.add(w);
