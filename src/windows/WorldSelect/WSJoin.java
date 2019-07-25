@@ -11,14 +11,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
-import windows.Page;
-import windows.SubPage;
+import windows.NewPage;
 
 /**
  *
  * @author Matt
  */
-public class WSJoin extends SubPage{
+public class WSJoin extends NewPage{
     private static final String IPV4_REGEX = 
         "^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
         "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
@@ -43,8 +42,11 @@ public class WSJoin extends SubPage{
     private final JTextArea msgs;
     private final JTextField ip;
     
-    public WSJoin(Page p) {
-        super(p);
+    public WSJoin() {
+        super();
+        
+        addBackButton(new WSMain());
+        
         setLayout(new GridLayout(1, 2));
         
         //left side
@@ -95,11 +97,9 @@ public class WSJoin extends SubPage{
                 msgs.append("Attempting to connect to " + ipAddr + "...\n");
                 Master.SERVER.connect(ipAddr);
                 msgs.append("success!\n");
-                getHostingPage().switchToSubpage(WorldSelectPage.WAIT);
-                if(getHostingPage().getCurrentSubPage() instanceof WSWaitForPlayers){
-                    ((WSWaitForPlayers)getHostingPage().getCurrentSubPage())
-                        .joinServer(ipAddr);
-                }
+                WSWaitForPlayers wait = new WSWaitForPlayers();
+                getHost().switchToPage(wait);
+                wait.joinServer(ipAddr);
             } catch (IOException ex) {
                 msgs.append(ex.getMessage() + '\n');
                 msgs.append(Arrays.toString(ex.getStackTrace()) + '\n');

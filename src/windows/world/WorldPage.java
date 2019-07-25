@@ -2,7 +2,7 @@ package windows.world;
 
 import controllers.MainWindow;
 import windows.Page;
-import windows.WorldSelect.WorldSelectPage;
+import windows.WorldSelect.WSMain;
 
 /**
  * The World windows are a bit weird.
@@ -16,7 +16,7 @@ import windows.WorldSelect.WorldSelectPage;
 public class WorldPage extends Page{
     public WorldPage(MainWindow host){
         super(host);
-        addBackButton(new WorldSelectPage(host));
+        addBackButton(new WSMain());
         addSubPage("WORLD", new WorldSubpage(this));
         switchToSubpage("WORLD");
     }

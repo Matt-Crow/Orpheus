@@ -5,15 +5,13 @@ import controllers.User;
 import customizables.Build;
 import gui.*;
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.io.IOException;
 import java.util.Arrays;
 import javax.swing.*;
-import windows.Page;
-import windows.SubPage;
+import windows.NewPage;
 
 /**
  * WSWaitForPlayers is used to provide a "waiting room"
@@ -22,7 +20,7 @@ import windows.SubPage;
  * 
  * @author Matt Crow
  */
-public class WSWaitForPlayers extends SubPage{
+public class WSWaitForPlayers extends NewPage{
     /*
     For now, I'm using IP address as the key, and the User as the value.
     I'm not sure if this will work, I think IP addresses are unique to each computer,
@@ -40,8 +38,10 @@ public class WSWaitForPlayers extends SubPage{
     
     private final WaitingRoomBackend backend;
     
-    public WSWaitForPlayers(Page p){
-        super(p);
+    public WSWaitForPlayers(){
+        super();
+        
+        addBackButton(new WSMain());
         
         //grid layout was causing problems with chat.
         //since it couldn't fit in 1/4 of the JPanel, it compressed to just a thin line

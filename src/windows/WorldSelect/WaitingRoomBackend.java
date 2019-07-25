@@ -376,9 +376,9 @@ public class WaitingRoomBackend {
         
         server.removeReceiver(ServerMessageType.WORLD_INIT, receiveWorldInit);
         
-        WorldPage p = new WorldPage(host.getHostingPage().getHost());
+        WorldPage p = new WorldPage(host.getHost());
         p.setCanvas(w.getCanvas());
-        host.getHostingPage().getHost().switchToPage(p);
+        host.getHost().switchToPage(p);
     }
     
     
@@ -467,9 +467,9 @@ public class WaitingRoomBackend {
         
         sendWorldInit(w);
         
-        WorldPage p = new WorldPage(host.getHostingPage().getHost());
+        WorldPage p = new WorldPage(host.getHost());
         p.setCanvas(w.getCanvas());
-        host.getHostingPage().getHost().switchToPage(p);
+        host.getHost().switchToPage(p);
     }
     
     /**

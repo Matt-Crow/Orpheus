@@ -8,20 +8,22 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
-import windows.Page;
-import windows.SubPage;
+import windows.NewPage;
 
 /**
  *
  * @author Matt Crow
  */
-public abstract class AbstractWSNewWorld extends SubPage{
+public abstract class AbstractWSNewWorld extends NewPage{
     private final BuildSelect playerBuild;
     private final OptionBox<Integer> teamSize;
     private final JButton start;
     
-    public AbstractWSNewWorld(Page p){
-        super(p);
+    public AbstractWSNewWorld(){
+        super();
+        
+        addBackButton(new WSMain());
+        
         setLayout(new GridLayout(2, 2));
         
         playerBuild = new BuildSelect();

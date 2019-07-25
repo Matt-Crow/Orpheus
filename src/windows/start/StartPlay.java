@@ -3,7 +3,7 @@ package windows.start;
 import java.awt.GridLayout;
 import javax.swing.JButton;
 import windows.NewPage;
-import windows.WorldSelect.WorldSelectPage;
+import windows.WorldSelect.WSMain;
 import windows.customize.CustomizeMain;
 
 /**
@@ -19,7 +19,7 @@ public class StartPlay extends NewPage{
         
         JButton battle = new JButton("Battle");
         battle.addActionListener((e)->{
-            getHost().switchToPage(new WorldSelectPage(getHost()));
+            getHost().switchToPage(new WSMain());
         });
         add(battle);
         

@@ -2,15 +2,9 @@ package windows.WorldSelect;
 
 import battle.Battle;
 import battle.Team;
-import controllers.MainWindow;
 import controllers.Master;
 import controllers.World;
-import entities.TruePlayer;
-import graphics.Map;
-import graphics.Tile;
 import java.awt.Color;
-import javax.swing.*;
-import windows.Page;
 import windows.world.WorldPage;
 
 /**
@@ -19,8 +13,8 @@ import windows.world.WorldPage;
  */
 public class WSSolo extends AbstractWSNewWorld{
     
-    public WSSolo(Page p){
-        super(p);
+    public WSSolo(){
+        super();
     }
     
     @Override
@@ -46,8 +40,8 @@ public class WSSolo extends AbstractWSNewWorld{
         
         battleWorld.init();
         
-        WorldPage wp = new WorldPage(getHostingPage().getHost());
+        WorldPage wp = new WorldPage(getHost());
         wp.setCanvas(battleWorld.getCanvas());
-        getHostingPage().getHost().switchToPage(wp);
+        getHost().switchToPage(wp);
     }
 }

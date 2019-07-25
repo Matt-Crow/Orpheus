@@ -1,18 +1,19 @@
 package windows.WorldSelect;
 
 import gui.Style;
-import windows.SubPage;
 import java.awt.GridLayout;
 import javax.swing.JButton;
-import windows.Page;
+import windows.NewPage;
+import windows.start.StartPlay;
 
 /**
  * The Main sub page for the world select canvas.
  * @author Matt Crow
  */
-public class WSMain extends SubPage{
-    public WSMain(Page host){
-        super(host);
+public class WSMain extends NewPage{
+    public WSMain(){
+        super();
+        addBackButton(new StartPlay());
         setLayout(new GridLayout(1, 3));
         
         add(soloButton());
@@ -25,7 +26,7 @@ public class WSMain extends SubPage{
         JButton solo = new JButton("Play a game offline");
         Style.applyStyling(solo);
         solo.addActionListener((e)->{
-            getHostingPage().switchToSubpage(WorldSelectPage.SOLO);
+            getHost().switchToPage(new WSSolo());
         });
         return solo;
     }
@@ -34,7 +35,7 @@ public class WSMain extends SubPage{
         JButton newMulti = new JButton("Host a multiplayer game");
         Style.applyStyling(newMulti);
         newMulti.addActionListener((e)->{
-            getHostingPage().switchToSubpage(WorldSelectPage.NEW_MULTIPLAYER);
+            getHost().switchToPage(new WSNewMulti());
         });
         return newMulti;
     }
@@ -43,7 +44,7 @@ public class WSMain extends SubPage{
         JButton joinMulti = new JButton("Join a multiplayer game");
         Style.applyStyling(joinMulti);
         joinMulti.addActionListener((e)->{
-            getHostingPage().switchToSubpage(WorldSelectPage.JOIN_MULTIPLAYER);
+            getHost().switchToPage(new WSJoin());
         });
         return joinMulti;
     }

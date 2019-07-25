@@ -113,6 +113,15 @@ public class Page extends JPanel{
         return this;
     }
     
+    public Page addBackButton(NewPage goBackTo){
+        JButton back = new JButton("Back");
+        back.addActionListener((e)->{
+            getHost().switchToPage(goBackTo);
+        });
+        addMenuItem(back);
+        return this;
+    }
+    
     public MainWindow getHost(){
         return host;
     }
