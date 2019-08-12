@@ -77,7 +77,11 @@ public final class User implements JsonSerialable{
      * @return 
      */
     public User linkToRemotePlayerInWorld(World w){
-        setPlayer((TruePlayer)w.getTeamById(remoteTeamId).getMemberById(remotePlayerId));
+        setPlayer(
+            (TruePlayer)w
+                .getTeamById(remoteTeamId)
+                .getMemberById(remotePlayerId)
+        );
         return this;
     }
     
