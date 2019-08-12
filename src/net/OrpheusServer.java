@@ -12,6 +12,7 @@ import java.util.function.Consumer;
 import static java.lang.System.out;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import javax.json.JsonException;
 import serialization.JsonUtil;
 import util.SafeList;
@@ -39,7 +40,7 @@ import util.SafeList;
 public class OrpheusServer {
     private boolean isStarted;
     private ServerSocket server;
-    private String ipAddress;
+    private final String ipAddress;
     
     /*
     The users connected to this server, where the key is their
@@ -62,7 +63,15 @@ public class OrpheusServer {
         receivers = new HashMap<>();
         connections = new HashMap<>();
         listenForConn = false;
-        ipAddress = "server not started yet";
+        
+        String ip;
+        try {
+            ip = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException ex) {
+            ip = "";
+            ex.printStackTrace();
+        }
+        ipAddress = ip;
         isStarted = false;
     }
     
@@ -79,7 +88,6 @@ public class OrpheusServer {
         }
         
         server = new ServerSocket(PORT);
-        ipAddress = InetAddress.getLocalHost().getHostAddress();
         
         reset();
         

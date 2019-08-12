@@ -43,7 +43,7 @@ import util.SerialUtil;
  */
 public class World implements Serializable{
     //key is team ID
-    private volatile HashMap<Integer, Team> teams; //makes it faster to find nearest enemies
+    private volatile HashMap<String, Team> teams; //makes it faster to find nearest enemies
     
     private transient SafeList<Particle> particles;
     
@@ -130,7 +130,7 @@ public class World implements Serializable{
      * @param id the ID of the team to search for
      * @return the team in this World with the given ID, or null if one doesn't exist
      */
-    public Team getTeamById(int id){
+    public Team getTeamById(String id){
         return teams.get(id);
     }
     
@@ -268,7 +268,6 @@ public class World implements Serializable{
         }
     }
     private void clientUpdate(){
-        
         /*
         Client update is only called if isHosting is false
         so it runs for both clients and solo players.
@@ -328,7 +327,7 @@ public class World implements Serializable{
         SwingUtilities.invokeLater(()->{
             teams.clear();
 
-            HashMap<Integer, Team> ts = (HashMap<Integer, Team>)SerialUtil.fromSerializedString(sm.getBody());
+            HashMap<String, Team> ts = (HashMap<String, Team>)SerialUtil.fromSerializedString(sm.getBody());
             ts.values().stream().forEach((Team t)->addTeam(t));
 
             Master.getUser().linkToRemotePlayerInWorld(this); //since teams have changed
@@ -411,7 +410,7 @@ public class World implements Serializable{
     }
     
     private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException{
-        teams = (HashMap<Integer, Team>) ois.readObject();
+        teams = (HashMap<String, Team>) ois.readObject();
         setMap((Map) ois.readObject());
         setCurrentMinigame((Battle) ois.readObject());
         

@@ -343,8 +343,8 @@ public class WaitingRoomBackend {
     */
     private void receiveRemoteIds(ServerMessage sm){
         String[] split = sm.getBody().split(",");
-        int tId = Integer.parseInt(split[0].replace("team:", "").trim());
-        int pId = Integer.parseInt(split[1].replace("player:", "").trim());
+        String tId = split[0].replace("team:", "").trim();
+        String pId = split[1].replace("player:", "").trim();
         //System.out.printf("(receiveRemoteIds) OK, so my team's ID is %d, and my player ID is %d, right?", tId, pId);
         
         Master.getUser().setRemoteTeamId(tId).setRemotePlayerId(pId);
@@ -489,9 +489,9 @@ public class WaitingRoomBackend {
      * @param teamId the ID of that user's Team on this computer
      * @param playerId the ID of that user's Player on this computer
      */
-    private void sendIds(String ipAddr, int teamId, int playerId){
+    private void sendIds(String ipAddr, String teamId, String playerId){
         ServerMessage sm = new ServerMessage(
-            String.format("team: %d, player: %d", teamId, playerId),
+            String.format("team: %s, player: %s", teamId, playerId),
             ServerMessageType.NOTIFY_IDS
         );
         Master.SERVER.send(sm, ipAddr);

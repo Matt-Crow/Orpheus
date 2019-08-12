@@ -6,6 +6,7 @@ import battle.Team;
 import actions.ActionRegister;
 import actions.Terminable;
 import actions.TerminateListener;
+import controllers.Master;
 import controllers.World;
 import java.io.Serializable;
 import static java.lang.System.out;
@@ -56,11 +57,11 @@ public abstract class Entity implements Serializable, Terminable{
     private World inWorld; //the world this is currently in
     
 	// misc
-	public final int id;
+	public final String id;
 	private static int nextId = 0;
     
 	public Entity(){
-		id = nextId;
+		id = Master.SERVER.getIpAddr() + "#" + nextId;
         inWorld = null;
         radius = 50;
         terminateListeners = new SafeList<>();
@@ -77,14 +78,12 @@ public abstract class Entity implements Serializable, Terminable{
     
     @Override
     public final boolean equals(Object o){
-        return o != null && o instanceof Entity && o == this && ((Entity)o).id == id; 
+        return o != null && o instanceof Entity && o == this && ((Entity)o).id.equals(id); 
     }
 
     @Override
     public final int hashCode() {
-        int hash = 7;
-        hash = 59 * hash + this.id;
-        return hash;
+        return id.hashCode();
     }
     
     @Override

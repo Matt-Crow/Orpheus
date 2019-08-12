@@ -22,28 +22,24 @@ import serialization.JsonUtil;
  */
 public final class User implements JsonSerialable{
     private String userName;
-    private String ipAddr;
+    private final String ipAddr;
     private TruePlayer player;
     
-    private int remoteTeamId; //the ID of the Team this' player is on on a remote computer
-    private int remotePlayerId;
+    private String remoteTeamId; //the ID of the Team this' player is on on a remote computer
+    private String remotePlayerId;
     
     private boolean isAdmin;
-    
-    //keep in mind that a user will have different IDs on each server
-    private final int userId;
-    private static int nextId = 0;
     public static final String DEFAULT_NAME = "name not set";
     
-    public User(String name){
+    public User(String name, String ip){
         userName = name;
-        ipAddr = null;
+        ipAddr = ip;
         player = null;
         isAdmin = false;
-        
-        
-        userId = nextId;
-        nextId++;
+    }
+    
+    public User(String name){
+        this(name, Master.SERVER.getIpAddr());
     }
     
     public User(){
@@ -58,19 +54,19 @@ public final class User implements JsonSerialable{
         return userName;
     }
     
-    public User setRemoteTeamId(int id){
+    public User setRemoteTeamId(String id){
         remoteTeamId = id;
         return this;
     }
-    public int getRemoteTeamId(){
+    public String getRemoteTeamId(){
         return remoteTeamId;
     }
     
-    public User setRemotePlayerId(int id){
+    public User setRemotePlayerId(String id){
         remotePlayerId = id;
         return this;
     }
-    public int getRemotePlayerId(){
+    public String getRemotePlayerId(){
         return remotePlayerId;
     }
     
@@ -107,28 +103,18 @@ public final class User implements JsonSerialable{
     }
     
     public String getIpAddress(){
-        if(ipAddr == null){
-            //temporary until startServer is done
-            try {
-                ipAddr = InetAddress.getLocalHost().getHostAddress();
-            } catch (UnknownHostException ex) {
-                Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
         return ipAddr;
     }
     
     
     @Override
     public boolean equals(Object o){
-        return o != null && o instanceof User && ((User)o).userId == userId;
+        return o != null && o instanceof User && ((User)o).ipAddr.equals(ipAddr);
     }
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 13 * hash + this.userId;
-        return hash;
+        return ipAddr.hashCode();
     }
 
     @Override
@@ -150,8 +136,7 @@ public final class User implements JsonSerialable{
         if(!obj.getString("type").equals("user")){
             throw new JsonException("not a user");
         }
-        User ret = new User(obj.getString("name"));
-        ret.ipAddr = obj.getString("ip address");
+        User ret = new User(obj.getString("name"), obj.getString("ip address"));
         //ret.player = Player.deserializeJson(obj.getJsonObject("player"));
         return ret;
     }

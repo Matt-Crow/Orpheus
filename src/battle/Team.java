@@ -28,23 +28,23 @@ public class Team extends SafeList<Entity> implements Serializable{
 	private final Color color;
 	private Team enemyTeam;
 	private boolean defeated;
-	private final int id;
+	private final String id;
 	private static int nextId = 0;
     
-    private final HashMap<Integer, Player> roster;
+    private final HashMap<String, Player> roster;
     private final ArrayList<Player> membersRem;
 	
 	public Team(String n, Color c){
 		super();
         name = n;
 		color = c;
-		id = nextId;
+		id = Master.SERVER.getIpAddr() + ": " + nextId;
 		nextId++;
         roster = new HashMap<>();
         membersRem = new ArrayList<>();
 	}
     
-	public int getId(){
+	public String getId(){
 		return id;
 	}
 	public String getName(){
@@ -70,7 +70,7 @@ public class Team extends SafeList<Entity> implements Serializable{
      * @param id the ID of the member to search for
      * @return the player on this team with the given id, or null if one doesn't exist
      */
-    public Player getMemberById(int id){
+    public Player getMemberById(String id){
         return roster.get(id);
     }
     
@@ -178,6 +178,7 @@ public class Team extends SafeList<Entity> implements Serializable{
         defeated = membersRem.isEmpty();
     }
     
+    @Override
     public void displayData(){
         out.println("TEAM: " + name + "(ID: " + id + ")");
         out.println("Roster: ");
@@ -197,13 +198,11 @@ public class Team extends SafeList<Entity> implements Serializable{
     
     @Override
     public boolean equals(Object obj){
-        return obj != null && obj instanceof Team && ((Team)obj).getId() == id;
+        return obj != null && obj instanceof Team && ((Team)obj).getId().equals(id);
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 73 * hash + this.id;
-        return hash;
+        return id.hashCode();
     }
 }
