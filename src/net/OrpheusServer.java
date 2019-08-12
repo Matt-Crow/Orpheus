@@ -51,6 +51,7 @@ public class OrpheusServer {
     private volatile boolean listenForConn; //whether or not the connListener thread is active
     
     private final HashMap<ServerMessageType, SafeList<Consumer<ServerMessage>>> receivers; //see the receive method
+    private final SafeList<ServerMessage> cachedMessages; //messages received before the receiver could be
     
     public static final int PORT = 5000;
     
@@ -62,6 +63,7 @@ public class OrpheusServer {
     public OrpheusServer(){
         receivers = new HashMap<>();
         connections = new HashMap<>();
+        cachedMessages = new SafeList<>();
         listenForConn = false;
         
         String ip;
@@ -276,7 +278,9 @@ public class OrpheusServer {
             if(receivers.containsKey(sm.getType())){
                 receivers.get(sm.getType()).forEach((c)->c.accept(sm));
             } else {
-                out.println("What do I do with this? " + msg);
+                out.println("I don't have a receiver for this, so I'll cache it: " + msg);
+                out.println("(" + sm.hashCode() + ")");
+                cachedMessages.add(sm);
             }
         } catch (JsonException ex){
             out.println("nope. not server message");
@@ -298,6 +302,14 @@ public class OrpheusServer {
             receivers.put(key, new SafeList<Consumer<ServerMessage>>());
         }
         receivers.get(key).add(nomNom);
+        
+        cachedMessages.forEach((ServerMessage sm)->{
+            if(sm.getType().equals(key)){
+                nomNom.accept(sm);
+                cachedMessages.remove(sm);
+                out.println("uncached message " + sm.hashCode());
+            }
+        });
     }
     
     public boolean removeReceiver(ServerMessageType type, Consumer<ServerMessage> nonNom){
