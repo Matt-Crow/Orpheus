@@ -25,7 +25,7 @@ To get started, download and unzip the project to your computer.
 
 ### Prerequisites
 
-In order to run the program, you must have Java installed. [Download](https://www.java.com/en/)
+In order to run the program, you must have Java installed, which you can download [here](https://www.java.com/en/).
 The Program currently uses ANT to build the project, but I plan on switching to Gradle soon.
 I always just have Netbeans 8.2 perform the building and running, but if you just plan on running the JAR file, then you needn't install any of these tools, just Java.
 
