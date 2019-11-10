@@ -25,53 +25,22 @@ To get started, download and unzip the project to your computer.
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+In order to run the program, you must have Java installed. [Download](https://www.java.com/en/)
+The Program currently uses ANT to build the project, but I plan on switching to Gradle soon.
+I always just have Netbeans 8.2 perform the building and running, but if you just plan on running the JAR file, then you needn't install any of these tools, just Java.
+
+### Running the program
+
+The game is contained in a JAR file in the dist folder, and doesn't need to run any installer to work.
+If you want, you can safely move the JAR file out of this directory, so long as you move the lib folder from dist with it.
+
+To run the program, either double click the JAR file, or navigate to it in the command line, and run the following:
 
 ```
-Give examples
+java -jar Orpheus.jar
 ```
 
-### Installing
-
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
+You should be confronted by an ugly GUI. If so, the game is ready to play!
 
 ## Built With
 
