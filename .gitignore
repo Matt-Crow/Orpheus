@@ -1,3 +1,4 @@
 .gradle
 *.class
 .nb-gradle/private
+.nb-gradle/profiles/private
