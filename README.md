@@ -21,18 +21,17 @@ I've learned so much from doing this project, far more than what I would have ju
 
 ## Getting Started
 
-To get started, download and unzip the project to your computer.
-
-### Prerequisites
-
-In order to run the program, you must have Java installed, which you can download [here](https://www.java.com/en/).
-The Program currently uses ANT to build the project, but I plan on switching to Gradle soon.
-I always just have Netbeans 8.2 perform the building and running, but if you just plan on running the JAR file, then you needn't install any of these tools, just Java.
+To use this project, you need Java installed on your computer. You can check if Java is installed by attempting to run the project JAR file (see the section "Running the program"), or you can open your terminal, and type
+```
+java -version
+```
+if your computer can find java, you're good! Otherwise, you can download it [here](https://www.java.com/en/). 
+To start, you will want to download the project by clicking the "clone or download button", clicking "download zip", and extracting the files on your computer.
 
 ### Running the program
 
-The game is contained in a JAR file in the dist folder, and doesn't need to run any installer to work.
-If you want, you can safely move the JAR file out of this directory, so long as you move the lib folder from dist with it.
+The game is contained in a JAR file in the build/libs folder, and doesn't need to run any installer to work.
+Feel free to move this to anywhere on your computer, as it is completely self-contained.
 
 To run the program, either double click the JAR file, or navigate to it in the command line, and run the following:
 
@@ -40,12 +39,32 @@ To run the program, either double click the JAR file, or navigate to it in the c
 java -jar Orpheus.jar
 ```
 
+If double clicking the JAR file doesn't work, you can can see what's going wrong by opening up your terminal (Command Prompt for Windows, or Terminal for Mac), and type
+```
+java -jar
+```
+(make sure you have a space after -jar) Drag and drop the JAR file to the terminal window, and you should see something like this:
+```
+java -jar C:\Users\****\Desktop\Orpheus.jar
+```
+You can then hit enter, at which point, if the application doesn't start, the terminal will tell you what went wrong. Feel free to email me, and I can tell you what went wrong (screenshots are helpful).
+
+
 You should be confronted by an ugly GUI. If so, the game is ready to play!
+
+### How to edit the application (for developers)
+
+You will need Netbeans IDE version 8.2 with the Gradle plugin installed to run the project.
+Obviously, Java is needed to allow the project to run. You can use
+```
+gradle jar
+```
+to rebuild the JAR file for the project.
 
 ## Built With
 
 * [Netbeans 8.2](https://netbeans.org/downloads/8.2/) - IDE
-* [ANT](https://ant.apache.org/) - Build tool
+* [Gradle](https://gradle.org/) - Build tool
 
 ## Contributing
 
