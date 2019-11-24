@@ -21,6 +21,18 @@ repositories {
     //   http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:repositories
 }
 
+jar {
+    //need to manually set main class, otherwise, it just compiles the JAR as a library
+    manifest {
+        attributes 'Main-Class': 'controllers.MainWindow'
+    }
+    
+    //include dependencies in JAR file
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
 dependencies {
     // TODO: Add dependencies here ...
     // You can read more about how to add dependency here:
