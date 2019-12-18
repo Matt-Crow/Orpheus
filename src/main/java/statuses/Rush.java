@@ -1,7 +1,7 @@
 package statuses;
 
 import actions.*;
-import entities.Player;
+import entities.AbstractPlayer;
 import util.Number;
 import controllers.Master;
 import java.util.function.UnaryOperator;
@@ -22,7 +22,7 @@ public class Rush extends AbstractStatus implements OnUpdateListener{
 	}
     
     @Override
-	public void inflictOn(Player p){
+	public void inflictOn(AbstractPlayer p){
 		p.getActionRegister().addOnUpdate(this);
 	}
     

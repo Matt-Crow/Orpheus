@@ -15,8 +15,8 @@ import serialization.JsonUtil;
 /**
  * 
  * A User is meant to replace the TruePlayer class.
- * The class represents a real person- not just a Player entity
- * controlled by AI.
+ * The class represents a real person- not just a AbstractPlayer entity
+ controlled by AI.
  * 
  * @author Matt Crow
  */
@@ -71,8 +71,8 @@ public final class User implements JsonSerialable{
     }
     
     /**
-     * Used to re-associate this User with a Player
-     * received from a serialized world
+     * Used to re-associate this User with a AbstractPlayer
+ received from a serialized world
      * @param w
      * @return 
      */
@@ -86,8 +86,8 @@ public final class User implements JsonSerialable{
     }
     
     /**
-     * Creates a new Player entity, and associates it with this user
-     * note that this does not call TruePlayer's init method
+     * Creates a new AbstractPlayer entity, and associates it with this user
+ note that this does not call TruePlayer's init method
      * @return this, for chaining purposes
      */
     public User initPlayer(){
@@ -141,7 +141,7 @@ public final class User implements JsonSerialable{
             throw new JsonException("not a user");
         }
         User ret = new User(obj.getString("name"), obj.getString("ip address"));
-        //ret.player = Player.deserializeJson(obj.getJsonObject("player"));
+        //ret.player = AbstractPlayer.deserializeJson(obj.getJsonObject("player"));
         return ret;
     }
 }

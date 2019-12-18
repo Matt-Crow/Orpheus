@@ -1,14 +1,14 @@
 package actions;
 
 import entities.Entity;
-import entities.Player;
+import entities.AbstractPlayer;
 import java.io.Serializable;
 import static java.lang.System.out;
 import util.SafeList;
 
 /**
  * An ActionRegister is used to store OnHit- and OnUpdate-Listeners, and register them to an Entity.
- * It is used by the Player class to store Status effects and passives.
+ * It is used by the AbstractPlayer class to store Status effects and passives.
  */
 public class ActionRegister implements Serializable{
 	private final Entity registeredTo;
@@ -65,20 +65,20 @@ public class ActionRegister implements Serializable{
 	public void addOnUpdate(OnUpdateListener a){
 		onUpdateRegister.add(a);
 	}
-	public void triggerOnHit(Player hit){
+	public void triggerOnHit(AbstractPlayer hit){
 		OnHitEvent t = new OnHitEvent(registeredTo, hit);
         onHitRegister.forEach((ohl)->ohl.trigger(t));
 	}
-	public void triggerOnHitReceived(Player hitBy){
+	public void triggerOnHitReceived(AbstractPlayer hitBy){
 		OnHitEvent t = new OnHitEvent(hitBy, registeredTo);
 		onBeHitRegister.forEach((ohl)->ohl.trigger(t));
 	}
-	public void tripOnMeleeHit(Player hit){
+	public void tripOnMeleeHit(AbstractPlayer hit){
 		OnHitEvent t = new OnHitEvent(registeredTo, hit);
 		onMeleeHitRegister.forEach((ohl)->ohl.trigger(t));
 		triggerOnHit(hit);
 	}
-	public void tripOnBeMeleeHit(Player hitBy){
+	public void tripOnBeMeleeHit(AbstractPlayer hitBy){
 		OnHitEvent t = new OnHitEvent(hitBy, registeredTo);
 		onBeMeleeHitRegister.forEach((ohl)->ohl.trigger(t));
 		triggerOnHitReceived(hitBy);

@@ -2,7 +2,7 @@ package customizables.passives;
 
 import actions.OnUpdateEvent;
 import actions.OnUpdateListener;
-import entities.Player;
+import entities.AbstractPlayer;
 import javax.json.JsonObject;
 import serialization.JsonSerialable;
 import customizables.CustomizableJsonUtil;
@@ -72,8 +72,8 @@ public class ThresholdPassive extends AbstractPassive implements JsonSerialable,
     
     @Override
     public void trigger(OnUpdateEvent e) {
-        if(((Player)e.getUpdated()).getLog().getHPPerc() <= getStatValue(PassiveStatName.THRESHOLD)){
-            applyEffect((Player)e.getUpdated());
+        if(((AbstractPlayer)e.getUpdated()).getLog().getHPPerc() <= getStatValue(PassiveStatName.THRESHOLD)){
+            applyEffect((AbstractPlayer)e.getUpdated());
         }
     }
 }

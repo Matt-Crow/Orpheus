@@ -2,7 +2,7 @@ package customizables;
 
 import customizables.actives.AbstractActive;
 import java.util.*;
-import entities.Player;
+import entities.AbstractPlayer;
 import controllers.Master;
 import customizables.characterClass.CharacterClass;
 import java.io.Serializable;
@@ -25,7 +25,7 @@ import statuses.*;
 public abstract class AbstractCustomizable implements Serializable{
     public final CustomizableType upgradableType;
     private String name;
-	private Player user;
+	private AbstractPlayer user;
 	private final HashMap<Enum, Double> stats;
 	private final HashMap<Enum, Integer> bases;
 	private int cooldownTime;          // frames between uses of this upgradable in battle
@@ -64,11 +64,11 @@ public abstract class AbstractCustomizable implements Serializable{
 	}
     
     /**
-     * "Registers" a Player to this upgradable.
+     * "Registers" a AbstractPlayer to this upgradable.
      * Used to allow this to target the player using it.
      * @param p the player to apply this to.
      */
-	public final void setUser(Player p){
+	public final void setUser(AbstractPlayer p){
 		user = p;
 	}
     
@@ -76,7 +76,7 @@ public abstract class AbstractCustomizable implements Serializable{
      * Gets the player who this is applied to.
      * @return the player registered to this.
      */
-	public final Player getUser(){
+	public final AbstractPlayer getUser(){
 		return user;
 	}
 	
@@ -193,7 +193,7 @@ public abstract class AbstractCustomizable implements Serializable{
 	}
     
     // in battle methods. These are applied in the subclasses
-	public void applyEffect(Player p){
+	public void applyEffect(AbstractPlayer p){
 		StatusTable inf = getInflict();
 		for(int i = 0; i < inf.getSize(); i++){
 			p.inflict(inf.getStatusAt(i));

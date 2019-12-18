@@ -3,7 +3,7 @@ package statuses;
 import actions.OnUpdateEvent;
 import actions.OnUpdateListener;
 import controllers.Master;
-import entities.Player;
+import entities.AbstractPlayer;
 import java.util.function.UnaryOperator;
 
 /**
@@ -18,7 +18,7 @@ public class Burn  extends AbstractStatus implements OnUpdateListener{
     }
     
     @Override
-	public void inflictOn(Player p){
+	public void inflictOn(AbstractPlayer p){
 		p.getActionRegister().addOnUpdate(this);
 	}
     
@@ -34,7 +34,7 @@ public class Burn  extends AbstractStatus implements OnUpdateListener{
     
     @Override
     public void trigger(OnUpdateEvent t) {
-        ((Player)t.getUpdated()).getLog().applyFilter(1 + 0.25 * getIntensityLevel());
+        ((AbstractPlayer)t.getUpdated()).getLog().applyFilter(1 + 0.25 * getIntensityLevel());
         use();
     }
 }

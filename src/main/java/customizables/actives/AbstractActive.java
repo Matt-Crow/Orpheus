@@ -409,10 +409,10 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
     /**
      * Invoked by Projectile upon 
      * colliding with a player
-     * @param p the Player who one of this Projectiles hit.
+     * @param p the AbstractPlayer who one of this Projectiles hit.
      */
-    public void hit(Player p){
-        Player user = getUser();
+    public void hit(AbstractPlayer p){
+        AbstractPlayer user = getUser();
         p.logDamage(
             (int)(
                 getStatValue(ActiveStatName.DAMAGE)

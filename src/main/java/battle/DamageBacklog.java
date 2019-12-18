@@ -1,7 +1,7 @@
 package battle;
 
 import customizables.characterClass.CharacterStatName;
-import entities.Player;
+import entities.AbstractPlayer;
 import controllers.Master;
 import java.io.Serializable;
 
@@ -10,22 +10,22 @@ import java.io.Serializable;
  * of the damage a player has taken,
  * and how much damage they have "logged".
  * This logged damage is dealt over a period of time, 
- * instead of instantly, giving Players a minimum lifespan over which they will survive.
- *
- * Players lose HP at the end of every frame, 
- * based on the amount in the backlog,
- * losing at most 20% of their maximum HP every second.
- * 
- * For example,
- * if a Player has a maximum HP of 500, 
- * then is assigned 150 points of damage,
- * they will take 100 damage over the first second after receiving the damage,
- * then 50 damage over the half second after that.
- * 
- * Every second, the Player regenerates 5% of their maximum HP.
+ instead of instantly, giving Players a minimum lifespan over which they will survive.
+
+ Players lose HP at the end of every frame, 
+ based on the amount in the backlog,
+ losing at most 20% of their maximum HP every second.
+ 
+ For example,
+ if a AbstractPlayer has a maximum HP of 500, 
+ then is assigned 150 points of damage,
+ they will take 100 damage over the first second after receiving the damage,
+ then 50 damage over the half second after that.
+ 
+ Every second, the AbstractPlayer regenerates 5% of their maximum HP.
  */
 public final class DamageBacklog implements Serializable{
-	private final Player registeredTo;
+	private final AbstractPlayer registeredTo;
     private final int maxHP;
 	private int remHP;
 	private int timeSinceLastHeal; //number of frames since the user last regenerated health.
@@ -34,7 +34,7 @@ public final class DamageBacklog implements Serializable{
 	private double secondaryFilter; //this is altered by some statuses. Resets every frame
     //The maximum percentage of the player's max HP that can be depleted per frame is (maxHP * baseFilter * secondaryFilter) 
 	
-	public DamageBacklog(Player register){
+	public DamageBacklog(AbstractPlayer register){
 		registeredTo = register;
 		dmg = 0;
 		baseFilter = 1.0 / Master.seconds(5);

@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 import util.SafeList;
 
-public class Player extends Entity{
+public class AbstractPlayer extends Entity{
 	private final String name;
 	private CharacterClass c;
 	private final AbstractActive[] actives;
@@ -41,7 +41,7 @@ public class Player extends Entity{
     public static final int RADIUS = 50;
     
 	
-	public Player(String n){
+	public AbstractPlayer(String n){
 		super();
         setSpeed(Master.UNITSIZE * 5 / Master.FPS);
 		name = n;

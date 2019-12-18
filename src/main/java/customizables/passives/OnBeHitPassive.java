@@ -2,7 +2,7 @@ package customizables.passives;
 
 import actions.OnHitEvent;
 import actions.OnHitListener;
-import entities.Player;
+import entities.AbstractPlayer;
 import javax.json.JsonObject;
 import serialization.JsonSerialable;
 import customizables.CustomizableJsonUtil;
@@ -48,9 +48,9 @@ public class OnBeHitPassive extends AbstractPassive implements JsonSerialable, O
 	@Override
     public void trigger(OnHitEvent e) {
         if(getTargetsUser()){
-            applyEffect((Player)e.getWasHit());
+            applyEffect((AbstractPlayer)e.getWasHit());
         } else {
-            applyEffect((Player)e.getHitter());
+            applyEffect((AbstractPlayer)e.getHitter());
         }
     }
     @Override

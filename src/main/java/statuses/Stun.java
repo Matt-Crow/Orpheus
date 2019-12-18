@@ -2,7 +2,7 @@ package statuses;
 
 import actions.*;
 import util.Number;
-import entities.Player;
+import entities.AbstractPlayer;
 import controllers.Master;
 import java.util.function.UnaryOperator;
 
@@ -22,7 +22,7 @@ public class Stun extends AbstractStatus implements OnUpdateListener{
 	}
     
     @Override
-	public void inflictOn(Player p){
+	public void inflictOn(AbstractPlayer p){
 		p.getActionRegister().addOnUpdate(this);
 	}
     

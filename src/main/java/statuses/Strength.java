@@ -1,7 +1,7 @@
 package statuses;
 
 import actions.*;
-import entities.Player;
+import entities.AbstractPlayer;
 import controllers.Master;
 import java.io.Serializable;
 import java.util.function.Consumer;
@@ -26,7 +26,7 @@ public class Strength extends AbstractStatus implements OnHitListener{
 	}
     
     @Override
-	public void inflictOn(Player p){
+	public void inflictOn(AbstractPlayer p){
 		p.getActionRegister().addOnMeleeHit(this);
 	}
     
@@ -42,8 +42,8 @@ public class Strength extends AbstractStatus implements OnHitListener{
 
     @Override
     public void trigger(OnHitEvent e) {
-        Player user = (Player)e.getHitter();
-        Player target = (Player)e.getWasHit();
+        AbstractPlayer user = (AbstractPlayer)e.getHitter();
+        AbstractPlayer target = (AbstractPlayer)e.getWasHit();
         target.getLog().logPercentageDamage(3.5 * getIntensityLevel());
 
         Direction angleBetween = Direction.getDegreeByLengths(user.getX(), user.getY(), target.getX(), target.getY());

@@ -1,6 +1,6 @@
 package ai;
 
-import entities.Player;
+import entities.AbstractPlayer;
 import actions.*;
 import controllers.Master;
 import graphics.Tile;
@@ -19,12 +19,12 @@ import util.Random;
  * @author Matt
  */
 public class PlayerAI implements Serializable{
-	private final Player appliedTo;
+	private final AbstractPlayer appliedTo;
     private boolean enabled;
     private AiMode mode;
-    private Player latched;
+    private AbstractPlayer latched;
 	
-	public PlayerAI(Player p){
+	public PlayerAI(AbstractPlayer p){
 		appliedTo = p;
 		enabled = false;
         mode = AiMode.NONE;
@@ -36,13 +36,13 @@ public class PlayerAI implements Serializable{
         if(b){
             setToWander();
             appliedTo.getActionRegister().addOnBeHit((OnHitEvent e) -> {
-                latch((Player)e.getHitter());
+                latch((AbstractPlayer)e.getHitter());
             });
         }
     }
     
     /**
-     * Get this Player drunk, wander around randomly
+     * Get this AbstractPlayer drunk, wander around randomly
      */
     public void setToWander(){
         mode = AiMode.WANDER;
@@ -62,11 +62,11 @@ public class PlayerAI implements Serializable{
     }
     
     /**
-     * Make this Player target another player,
-     * pursuing them until they are terminated
+     * Make this AbstractPlayer target another player,
+ pursuing them until they are terminated
      * @param p the player to target
      */
-    public void latch(Player p){
+    public void latch(AbstractPlayer p){
         latched = p;
         mode = AiMode.PURSUE;
     }
@@ -149,11 +149,11 @@ public class PlayerAI implements Serializable{
     
     //move these to world
     public boolean checkIfPlayerInSightRange(){
-		Player nearest = nearestEnemy();
+		AbstractPlayer nearest = nearestEnemy();
 		return Coordinates.distanceBetween(appliedTo, nearest) <= Master.DETECTIONRANGE;
 	}
 	
-	public Player nearestEnemy(){
+	public AbstractPlayer nearestEnemy(){
 		return appliedTo.getTeam().getEnemy().nearestPlayerTo(appliedTo.getX(), appliedTo.getY());
 	}
 	public void latchOntoNearest(){

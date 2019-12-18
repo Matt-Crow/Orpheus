@@ -1,18 +1,18 @@
 package statuses;
 
 import actions.*;
-import entities.Player;
+import entities.AbstractPlayer;
 import util.Number;
 import controllers.Master;
 import java.util.function.UnaryOperator;
 
 /**
- * Charge restores energy over time to the afflicted Player
+ * Charge restores energy over time to the afflicted AbstractPlayer
  */
 public class Charge extends AbstractStatus implements OnUpdateListener{
     private static final UnaryOperator<Integer> CALC = (i)->{return Master.seconds(Number.minMax(1, i, 3) + 2);};
     /**
-     * When inflicted, restores energy to a Player over time.
+     * When inflicted, restores energy to a AbstractPlayer over time.
      * @param lv 1-3. 2.5 energy restored per level per second.
      * @param dur Effect lasts (dur + 2) seconds.
      */
@@ -22,7 +22,7 @@ public class Charge extends AbstractStatus implements OnUpdateListener{
 	}
     
     @Override
-	public void inflictOn(Player p){
+	public void inflictOn(AbstractPlayer p){
 		p.getActionRegister().addOnUpdate(this);
 	}
     
@@ -38,8 +38,8 @@ public class Charge extends AbstractStatus implements OnUpdateListener{
 
     @Override
     public void trigger(OnUpdateEvent e) {
-        if(e.getUpdated() instanceof Player){
-            ((Player)e.getUpdated()).getEnergyLog().gainEnergy((int) (2.5 * getIntensityLevel() / Master.FPS)); // make scale with frame count
+        if(e.getUpdated() instanceof AbstractPlayer){
+            ((AbstractPlayer)e.getUpdated()).getEnergyLog().gainEnergy((int) (2.5 * getIntensityLevel() / Master.FPS)); // make scale with frame count
         }
         use();
     }

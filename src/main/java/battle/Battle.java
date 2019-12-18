@@ -1,7 +1,7 @@
 package battle;
 
 import controllers.World;
-import entities.Player;
+import entities.AbstractPlayer;
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -23,7 +23,7 @@ public class Battle implements Serializable{
 	
 	public void init(){
 		int s = host.getMap().getWidth();
-		int spacingFromTopEdge = Player.RADIUS;
+		int spacingFromTopEdge = AbstractPlayer.RADIUS;
         Team[] teams = host.getTeams();
         int spacingBetween = s / (teams[0].getRosterSize() + 1);
         teams[0].setEnemy(teams[1]);

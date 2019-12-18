@@ -4,7 +4,7 @@ import battle.Battle;
 import battle.Team;
 import entities.Entity;
 import entities.Particle;
-import entities.Player;
+import entities.AbstractPlayer;
 import entities.PlayerControls;
 import entities.Projectile;
 import graphics.CustomColors;
@@ -117,7 +117,7 @@ public class World implements Serializable{
     
     public final World addTeam(Team t){
         teams.put(t.getId(), t);
-        t.forEachMember((Player p)->p.setWorld(this));
+        t.forEachMember((AbstractPlayer p)->p.setWorld(this));
         t.forEach((Entity e)->e.setWorld(this));
         return this;
     }
@@ -250,7 +250,7 @@ public class World implements Serializable{
             t.forEach((Entity member)->{
                 currentMap.checkForTileCollisions(member);
                 if(t.getEnemy() != null){
-                    t.getEnemy().getMembersRem().forEach((Player enemy)->{
+                    t.getEnemy().getMembersRem().forEach((AbstractPlayer enemy)->{
                         if(member instanceof Projectile){
                             // I thought that java handled this conversion?
                             ((Projectile)member).checkForCollisions(enemy);
@@ -337,7 +337,7 @@ public class World implements Serializable{
     }
     
     private void receiveControl(ServerMessage sm){
-        Player p = sm.getSender().getPlayer();
+        AbstractPlayer p = sm.getSender().getPlayer();
         PlayerControls.decode(p, sm.getBody());
     }
     

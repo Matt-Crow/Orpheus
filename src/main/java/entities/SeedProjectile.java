@@ -7,7 +7,7 @@ import controllers.Master;
 public class SeedProjectile extends Projectile{
 	private boolean canExplode;
 	private final int useId; // the useId of the attack instance this was spawned from
-	public SeedProjectile(int id, int x, int y, int degrees, int momentum, Player attackUser, AbstractActive a){
+	public SeedProjectile(int id, int x, int y, int degrees, int momentum, AbstractPlayer attackUser, AbstractActive a){
 		super(id, x, y, degrees, momentum, attackUser, a);
 		useId = id;
 		canExplode = getAttack().getStatValue(ActiveStatName.AOE) != 0;

@@ -15,11 +15,11 @@ import windows.world.WorldCanvas;
  * @author Matt Crow
  */
 public class PlayerControls implements MouseListener, EndOfFrameListener{
-    private final Player p;
+    private final AbstractPlayer p;
     private boolean isRemote;
     private String receiverIpAddr;
     
-    public PlayerControls(Player forPlayer, boolean remote){
+    public PlayerControls(AbstractPlayer forPlayer, boolean remote){
         p = forPlayer;
         isRemote = remote;
         if(isRemote){
@@ -29,7 +29,7 @@ public class PlayerControls implements MouseListener, EndOfFrameListener{
         }
     }
     
-    public PlayerControls(Player forPlayer){
+    public PlayerControls(AbstractPlayer forPlayer){
         this(forPlayer, false);
     }
     
@@ -96,7 +96,7 @@ public class PlayerControls implements MouseListener, EndOfFrameListener{
      * @param p
      * @param s 
      */
-    public static void decode(Player p, String s){
+    public static void decode(AbstractPlayer p, String s){
         int[] coords;
         for(String str : s.split("\n")){
             if(str.contains("turn to")){

@@ -1,7 +1,7 @@
 package battle;
 
 import customizables.characterClass.CharacterStatName;
-import entities.Player;
+import entities.AbstractPlayer;
 import controllers.Master;
 import java.io.Serializable;
 
@@ -9,9 +9,9 @@ public class EnergyLog implements Serializable{
 	private int maxEnergy;
 	private int energy;
 	private int timeSinceLastEnergy;
-	private Player registeredTo;
+	private AbstractPlayer registeredTo;
 	
-	public EnergyLog(Player register){
+	public EnergyLog(AbstractPlayer register){
 		registeredTo = register;
 		maxEnergy = (int) register.getStatValue(CharacterStatName.ENERGY);
 		energy = maxEnergy;

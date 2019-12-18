@@ -1,7 +1,7 @@
 package statuses;
 
 import actions.*;
-import entities.Player;
+import entities.AbstractPlayer;
 import util.Number;
 import controllers.Master;
 import java.util.function.UnaryOperator;
@@ -24,7 +24,7 @@ public class Regeneration extends AbstractStatus implements OnUpdateListener{
 	}
     
     @Override
-	public void inflictOn(Player p){
+	public void inflictOn(AbstractPlayer p){
 		p.getActionRegister().addOnUpdate(this);
 	}
     
@@ -40,8 +40,8 @@ public class Regeneration extends AbstractStatus implements OnUpdateListener{
 
     @Override
     public void trigger(OnUpdateEvent e) {
-        if(e.getUpdated() instanceof Player){
-            ((Player)e.getUpdated()).getLog().healPerc(2.5 * getIntensityLevel() / Master.FPS);
+        if(e.getUpdated() instanceof AbstractPlayer){
+            ((AbstractPlayer)e.getUpdated()).getLog().healPerc(2.5 * getIntensityLevel() / Master.FPS);
         }
         use();
     }

@@ -2,7 +2,7 @@ package customizables.passives;
 
 import actions.OnHitEvent;
 import actions.OnHitListener;
-import entities.Player;
+import entities.AbstractPlayer;
 import javax.json.JsonObject;
 import serialization.JsonSerialable;
 import customizables.CustomizableJsonUtil;
@@ -54,6 +54,6 @@ public class OnMeleeHitPassive extends AbstractPassive implements JsonSerialable
 
     @Override
     public void trigger(OnHitEvent e) {
-        applyEffect((Player)((getTargetsUser()) ? e.getHitter() : e.getWasHit()));
+        applyEffect((AbstractPlayer)((getTargetsUser()) ? e.getHitter() : e.getWasHit()));
     }
 }

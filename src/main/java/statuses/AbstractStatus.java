@@ -2,7 +2,7 @@ package statuses;
 
 import actions.Terminable;
 import actions.TerminateListener;
-import entities.Player;
+import entities.AbstractPlayer;
 import java.io.Serializable;
 import util.Number;
 import java.util.function.UnaryOperator;
@@ -11,11 +11,11 @@ import util.SafeList;
 /**
  * AbstractStatus is the base class for all statuses in Orpheus.
  * 
- * A status is condition which will be applied to a Player,
- * adding itself to that Player's ActionRegister as either an OnHitListener, or an OnUpdateListener
+ * A status is condition which will be applied to a AbstractPlayer,
+ adding itself to that AbstractPlayer's ActionRegister as either an OnHitListener, or an OnUpdateListener
  * 
  * @see ActionRegister
- * @see Player#inflict(statuses.AbstractStatus) 
+ * @see AbstractPlayer#inflict(statuses.AbstractStatus) 
  */
 public abstract class AbstractStatus implements Serializable, Terminable{
 	private final StatusName code; //the Enum of this status' name
@@ -147,10 +147,10 @@ public abstract class AbstractStatus implements Serializable, Terminable{
     /**
      * Generally speaking, this will call p.getActionRegister().add . . .
      * <b>this method must call use() in order to update the number of uses left</b>
-     * @param p the Player to target 
-     * @see Player
+     * @param p the AbstractPlayer to target 
+     * @see AbstractPlayer
      */
-    public abstract void inflictOn(Player p);
+    public abstract void inflictOn(AbstractPlayer p);
     
     /**
      * Gives a brief description of the status

@@ -3,7 +3,7 @@ package battle;
 import controllers.Master;
 import java.awt.Color;
 import java.util.ArrayList;
-import entities.Player;
+import entities.AbstractPlayer;
 import util.Random;
 import util.Coordinates;
 import customizables.Build;
@@ -31,8 +31,8 @@ public class Team extends SafeList<Entity> implements Serializable{
 	private final String id;
 	private static int nextId = 0;
     
-    private final HashMap<String, Player> roster;
-    private final ArrayList<Player> membersRem;
+    private final HashMap<String, AbstractPlayer> roster;
+    private final ArrayList<AbstractPlayer> membersRem;
 	
 	public Team(String n, Color c){
 		super();
@@ -55,14 +55,14 @@ public class Team extends SafeList<Entity> implements Serializable{
 		return color;
 	}
 	
-	public void addMember(Player m){
+	public void addMember(AbstractPlayer m){
         roster.put(m.id, m);
         m.setTeam(this);
 	}
     
     /**
-     * Returns the Player on this team
-     * with the given ID, if one exists.
+     * Returns the AbstractPlayer on this team
+ with the given ID, if one exists.
      * Note that this includes all members
      * in the roster, not just players that
      * are still in play.
@@ -70,14 +70,14 @@ public class Team extends SafeList<Entity> implements Serializable{
      * @param id the ID of the member to search for
      * @return the player on this team with the given id, or null if one doesn't exist
      */
-    public Player getMemberById(String id){
+    public AbstractPlayer getMemberById(String id){
         return roster.get(id);
     }
     
 	public static Team constructRandomTeam(String name, Color color, int size){
 		Team t = new Team(name, color);
 		for(int teamSize = 0; teamSize < size; teamSize++){
-			Player p = new Player(name + " member #" + (teamSize + 1));
+			AbstractPlayer p = new AbstractPlayer(name + " member #" + (teamSize + 1));
 			p.applyBuild(Build.getAllBuilds().get(Random.choose(0, Build.getAllBuilds().size() - 1)));
 			
 			t.addMember(p);
@@ -90,7 +90,7 @@ public class Team extends SafeList<Entity> implements Serializable{
         int x = spacing;
         membersRem.clear();
         clear();
-		for(Player p : roster.values()){
+		for(AbstractPlayer p : roster.values()){
 			p.initPos(x, y, facing);
             p.doInit();
             membersRem.add(p);
@@ -110,13 +110,13 @@ public class Team extends SafeList<Entity> implements Serializable{
 		return defeated;
 	}
 	
-    public Player nearestPlayerTo(int x, int y){
+    public AbstractPlayer nearestPlayerTo(int x, int y){
 		if(membersRem.isEmpty()){
 			throw new IndexOutOfBoundsException("No players exist for team " + name);
 		}
-        Player ret = membersRem.get(0);
+        AbstractPlayer ret = membersRem.get(0);
 		int distance = (int)Coordinates.distanceBetween(ret.getX(), ret.getY(), x, y);
-		for(Player p : membersRem){
+		for(AbstractPlayer p : membersRem){
             if(p.getShouldTerminate()){
                 continue;
             }
@@ -128,7 +128,7 @@ public class Team extends SafeList<Entity> implements Serializable{
 		}
 		return ret;
 	}
-	public final ArrayList<Player> getMembersRem(){
+	public final ArrayList<AbstractPlayer> getMembersRem(){
 		return membersRem;
 	}
     
@@ -142,12 +142,12 @@ public class Team extends SafeList<Entity> implements Serializable{
      * NOT just members remaining
      * @param f 
      */
-    public final void forEachMember(Consumer<Player> f){
+    public final void forEachMember(Consumer<AbstractPlayer> f){
         f.getClass();
         roster
             .values()
             .stream()
-            .forEach((Player p)->f.accept(p));
+            .forEach((AbstractPlayer p)->f.accept(p));
     }
     
     public void update(){
@@ -171,9 +171,9 @@ public class Team extends SafeList<Entity> implements Serializable{
      * Updates the list of members remaining accordingly.
      * Note that this does not affect iteration,
      * just anything that references membersRem
-     * @param p the Player who was removed from the game.
+     * @param p the AbstractPlayer who was removed from the game.
      */
-    public void notifyTerminate(Player p){
+    public void notifyTerminate(AbstractPlayer p){
         membersRem.remove(p);
         defeated = membersRem.isEmpty();
     }
@@ -182,7 +182,7 @@ public class Team extends SafeList<Entity> implements Serializable{
     public void displayData(){
         out.println("TEAM: " + name + "(ID: " + id + ")");
         out.println("Roster: ");
-        roster.values().stream().forEach((Player p)->{
+        roster.values().stream().forEach((AbstractPlayer p)->{
             if(p.equals(Master.getUser().getPlayer())){
                 out.print("*");
             }
@@ -191,7 +191,7 @@ public class Team extends SafeList<Entity> implements Serializable{
     }
     public void detailedDisplayData(){
         out.println("TEAM: " + name + "(ID: " + id + ")");
-        roster.values().stream().forEach((Player p)->{
+        roster.values().stream().forEach((AbstractPlayer p)->{
             p.detailedDisplayData();
         });
     }

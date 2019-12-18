@@ -11,15 +11,15 @@ import util.CombatLog;
 import util.Random;
 
 public class Projectile extends Entity{
-	private final Player user;
+	private final AbstractPlayer user;
 	private final AbstractActive registeredAttack;
 	private int distanceTraveled;
 	private int range;
-	private Player hit;
+	private AbstractPlayer hit;
 	
 	private final int useId; //used to prevent double hitting. May not be unique to a single projectile. See AbstractActive for more info
     
-	public Projectile(int useId, int x, int y, int degrees, int momentum, Player attackUser, AbstractActive a){
+	public Projectile(int useId, int x, int y, int degrees, int momentum, AbstractPlayer attackUser, AbstractActive a){
 		super();
         setSpeed(momentum);
         doInit();
@@ -32,7 +32,7 @@ public class Projectile extends Entity{
 		range = (int) a.getStatValue(ActiveStatName.RANGE);
 		setRadius(25);
 		setMoving(true);
-		hit = new Player("Void");
+		hit = new AbstractPlayer("Void");
 	}
 	public int getUseId(){
 		return useId;
@@ -44,10 +44,10 @@ public class Projectile extends Entity{
 	public String getAttackName(){
 		return registeredAttack.getName();
 	}
-	public Player getUser(){
+	public AbstractPlayer getUser(){
 		return user;
 	}
-	public Player getHit(){
+	public AbstractPlayer getHit(){
 		return hit;
 	}
 	public int getDistance(){
@@ -57,7 +57,7 @@ public class Projectile extends Entity{
 		return registeredAttack;
 	}
 	
-	public void hit(Player p){
+	public void hit(AbstractPlayer p){
 		hit = p;
         registeredAttack.hit(p);
 		p.setLastHitById(getUseId());
@@ -72,7 +72,7 @@ public class Projectile extends Entity{
 		terminate();
 	}
     
-	public boolean checkForCollisions(Player p){
+	public boolean checkForCollisions(AbstractPlayer p){
 		boolean ret = super.checkForCollisions(p);
 		if(ret && p.getLastHitById() != useId){
 			ret = true;
