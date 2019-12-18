@@ -33,6 +33,7 @@ public class MeleeActive extends AbstractActive implements JsonSerialable{
 	public MeleeActive copy(){
 		MeleeActive copy = new MeleeActive(getName(), getBase(ActiveStatName.DAMAGE));
         copyTagsTo(copy);
+        copy.setColors(getColors());
         copy.setInflict(getInflict());
 		return copy;
 	}

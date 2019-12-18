@@ -1,6 +1,8 @@
 package entities;
 
 import ai.PlayerAI;
+import customizables.characterClass.CharacterClass;
+import customizables.characterClass.CharacterStatName;
 
 /**
  *
@@ -8,6 +10,8 @@ import ai.PlayerAI;
  */
 public class AIPlayer extends AbstractPlayer{
     private PlayerAI playerAI;
+    
+    private static final CharacterClass TEMP = CharacterClass.getCharacterClassByName("Default");
     
     public AIPlayer(String n) {
         super(n);
@@ -28,5 +32,10 @@ public class AIPlayer extends AbstractPlayer{
     @Override
     public void playerUpdate() {
         playerAI.update();
+    }
+
+    @Override
+    public double getStatValue(CharacterStatName n) {
+        return TEMP.getStatValue(n);
     }
 }

@@ -4,25 +4,29 @@ import customizables.passives.AbstractPassive;
 import customizables.actives.AbstractActive;
 import customizables.actives.MeleeActive;
 import customizables.Build;
-import customizables.characterClass.CharacterStatName;
-import customizables.characterClass.CharacterClass;
 import java.awt.Color;
 import java.awt.Graphics;
 import ai.Path;
 import ai.PathInfo;
 import battle.*;
-import ai.PlayerAI;
 import statuses.AbstractStatus;
 import controllers.Master;
 import controllers.World;
+import customizables.characterClass.CharacterStatName;
 import static java.lang.System.out;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import util.SafeList;
 
+/**
+ * The AbstractPlayer class essentially acts as a
+ * mobile entity with other, battle related capabilities.
+ * 
+ * @author Matt Crow
+ */
 public abstract class AbstractPlayer extends Entity{
 	private final String name;
-	private CharacterClass c;
+	private Color color;
 	private final AbstractActive[] actives;
 	private final AbstractPassive[] passives;
     
@@ -42,6 +46,7 @@ public abstract class AbstractPlayer extends Entity{
 		super();
         setSpeed(Master.UNITSIZE * 5 / Master.FPS);
 		name = n;
+        color = Color.black;
 		actives = new AbstractActive[3];
 		passives = new AbstractPassive[3];
         setRadius(RADIUS);
@@ -53,6 +58,10 @@ public abstract class AbstractPlayer extends Entity{
 		return name;
 	}
 	
+    public final void setColor(Color c){
+        color = c;
+    }
+    
 	public DamageBacklog getLog(){
 		return log;
 	}
@@ -63,20 +72,11 @@ public abstract class AbstractPlayer extends Entity{
 	
 	// Build stuff
 	public void applyBuild(Build b){
-		setClass(b.getClassName());
 		setActives(b.getActiveNames());
 		setPassives(b.getPassiveNames());
-		setSpeed((int) (c.getStatValue(CharacterStatName.SPEED) * (500 / Master.FPS)));
     }
-	public void setClass(String name){
-        try{
-            c = CharacterClass.getCharacterClassByName(name.toUpperCase());
-        } catch(NoSuchElementException ex){
-            ex.printStackTrace();
-            c = CharacterClass.getCharacterClassByName("Default");
-        }
-		c.setUser(this);
-	}
+    
+	
 	public void setActives(String[] names){
 		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
             try{
@@ -100,9 +100,7 @@ public abstract class AbstractPlayer extends Entity{
 		}
 	}
 	
-    public CharacterClass getCharacterClass(){
-		return c;
-	}
+    
     public AbstractActive[] getActives(){
 		return actives;
     }
@@ -152,9 +150,7 @@ public abstract class AbstractPlayer extends Entity{
 		}
 	}
 	
-	public double getStatValue(CharacterStatName n){
-		return c.getStatValue(n);
-	}
+	
 	public void useMeleeAttack(){
 		if(slash.canUse()){
 			slash.use();
@@ -190,7 +186,6 @@ public abstract class AbstractPlayer extends Entity{
         slash = (MeleeActive)AbstractActive.getActiveByName("Slash");
 		slash.setUser(this);
 		slash.init();
-		c.init();
 		log = new DamageBacklog(this);
 		energyLog = new EnergyLog(this);
 		
@@ -268,7 +263,7 @@ public abstract class AbstractPlayer extends Entity{
 		// Update this to sprite later, doesn't scale to prevent hitbox snafoos
 		g.setColor(getTeam().getColor());
 		g.fillOval(getX() - r, getY() - r, 2 * r, 2 * r);
-		g.setColor(c.getColors()[0]);
+		g.setColor(color);
 		g.fillOval(getX() - (int)(r * 0.8), getY() - (int)(r * 0.8), (int)(r * 1.6), (int)(r * 1.6));
 		
 		g.setColor(Color.black);
@@ -286,6 +281,7 @@ public abstract class AbstractPlayer extends Entity{
 		}
 	}
 
+    public abstract double getStatValue(CharacterStatName n);
     public abstract void playerInit();
     public abstract void playerUpdate();
 }

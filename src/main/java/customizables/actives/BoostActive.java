@@ -37,6 +37,7 @@ public class BoostActive extends AbstractActive implements JsonSerialable{
 	public BoostActive copy(){
 		BoostActive ret = new BoostActive(getName(), getInflict().copy());
         copyTagsTo(ret);
+        ret.setColors(getColors());
         return ret;
 	}
     @Override

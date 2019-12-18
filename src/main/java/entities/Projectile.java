@@ -95,7 +95,7 @@ public class Projectile extends Entity{
      * Update automatically calls this method.
      */
     public void spawnParticles(){
-        CustomColors[] cs = user.getCharacterClass().getColors();
+        CustomColors[] cs = registeredAttack.getColors();
 		
 		if(!Master.DISABLEPARTICLES && !getShouldTerminate()){
 			switch(registeredAttack.getParticleType()){

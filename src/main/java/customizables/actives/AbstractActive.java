@@ -23,6 +23,8 @@ import customizables.CustomizableJsonUtil;
 import customizables.CustomizableType;
 import customizables.characterClass.CharacterClass;
 import customizables.characterClass.CharacterStatName;
+import java.math.BigDecimal;
+import javax.json.JsonArray;
 import util.Number;
 
 /**
@@ -32,6 +34,7 @@ import util.Number;
 public abstract class AbstractActive extends AbstractCustomizable implements JsonSerialable{
     private final ActiveType type; // used for serialization
     private ParticleType particleType; // the type of particles this' projectiles emit @see Projectile
+    private CustomColors[] colors;
     private int cost; // the energy cost of the active. Calculated automatically
     private final ArrayList<ActiveTag> tags; //tags are used to modify this' behaviour. Only once is currently implemented 
     
@@ -80,9 +83,17 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
         setStat(ActiveStatName.DAMAGE, dmg);
 
         particleType = ParticleType.NONE;
+        colors = new CustomColors[]{CustomColors.black};
         setCooldown(1);
 
         tags = new ArrayList<>();
+    }
+    
+    public void setColors(CustomColors[] cs){
+        colors = cs.clone();
+    }
+    public CustomColors[] getColors(){
+        return colors;
     }
     
     //########################################
@@ -100,6 +111,11 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
         JsonObjectBuilder b = JsonUtil.deconstruct(CustomizableJsonUtil.serializeJson(this));
         b.add("active type", type.toString());
         b.add("particle type", particleType.toString());
+        JsonArrayBuilder cols = Json.createArrayBuilder();
+        for(CustomColors c : colors){
+            cols.add(c.toString());
+        }
+        b.add("colors", cols.build());
         JsonArrayBuilder a = Json.createArrayBuilder();
         tags.forEach((t) -> {
             a.add(t.toString());
@@ -115,6 +131,16 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
     public static ParticleType getParticleTypeFrom(JsonObject obj){
         JsonUtil.verify(obj, "particle type");
         return ParticleType.fromString(obj.getString("particle type"));
+    }
+    public static CustomColors[] getColorsFrom(JsonObject obj){
+        JsonUtil.verify(obj, "colors");
+        JsonArray a = obj.getJsonArray("colors");
+        int len = a.size();
+        CustomColors[] ret = new CustomColors[len];
+        for(int i = 0; i < len; i++){
+            ret[i] = CustomColors.fromString(a.getString(i));
+        }
+        return ret;
     }
     public static ArrayList<ActiveTag> getTagsFrom(JsonObject obj){
         JsonUtil.verify(obj, "tags");
@@ -151,6 +177,9 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
                 System.out.println("Abstract active cannot deserialize " + obj.getString("type"));
                 break;
         }
+        if(ret != null){
+            ret.setColors(getColorsFrom(obj));
+        }
         return ret;
     }
     
@@ -162,35 +191,42 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
 		
 		ElementalActive bt = new ElementalActive("Boulder Toss", 1, 2, 2, 3, 4);
 		bt.setParticleType(ParticleType.BURST);
+        bt.setColors(CustomColors.earthColors);
         bt.addTag(ActiveTag.KNOCKSBACK);
 		
         ElementalActive eq = new ElementalActive("Earthquake", 1, 0, 2, 5, 1);
 		eq.setParticleType(ParticleType.BURST);
+        eq.setColors(CustomColors.earthColors);
         eq.addStatus(new Stun(3, 1));
         
 		ElementalActive fof = new ElementalActive("Fields of Fire", 1, 0, 5, 3, 1);
 		fof.setParticleType(ParticleType.SHEAR);
+        fof.setColors(CustomColors.fireColors);
         fof.addStatus(new Burn(2, 3));
 		
 		ElementalActive fb = new ElementalActive("Fireball", 2, 3, 3, 3, 5);
 		fb.setParticleType(ParticleType.BURST);
+        fb.setColors(CustomColors.fireColors);
         
 		ElementalActive b = new ElementalActive("Boreus", 1, 5, 5, 0, 1);
 		b.setParticleType(ParticleType.BEAM);
+        b.setColors(CustomColors.airColors);
         
         ElementalActive z = new ElementalActive("Zephyrus", 1, 5, 5, 0, 1);
 		z.setParticleType(ParticleType.BEAM);
-		
+		z.setColors(CustomColors.airColors);
+        
         ElementalActive wb = new ElementalActive("Waterbolt", 1, 3, 3, 1, 2);
 		wb.setParticleType(ParticleType.BEAM);
+        wb.setColors(CustomColors.waterColors);
         
         ElementalActive wp = new ElementalActive("Whirlpool", 1, 0, 4, 4, 3);
         wp.setParticleType(ParticleType.SHEAR);
-        
+        wp.setColors(CustomColors.waterColors);
         
 		ElementalActive rod = new ElementalActive("RAINBOW OF DOOM", 4, 3, 5, 5, 1);
 		rod.setParticleType(ParticleType.BURST);
-		
+		rod.setColors(CustomColors.rainbow);
 		
 		
 		BoostActive ws = new BoostActive("Warrior's Stance", new AbstractStatus[]{new Strength(1, 2), new Resistance(1, 2)});

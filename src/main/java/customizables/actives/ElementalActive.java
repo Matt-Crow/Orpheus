@@ -21,6 +21,7 @@ public class ElementalActive extends AbstractActive implements JsonSerialable{
 				getBase(ActiveStatName.DAMAGE));
 		copy.setParticleType(getParticleType());
 		copyTagsTo(copy);
+        copy.setColors(getColors());
         copy.setInflict(getInflict());
 		return copy;
 	}
