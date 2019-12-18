@@ -7,6 +7,7 @@ import entities.AbstractPlayer;
 import util.Random;
 import util.Coordinates;
 import customizables.Build;
+import entities.AIPlayer;
 import entities.Entity;
 import java.awt.Graphics;
 import java.io.Serializable;
@@ -77,7 +78,7 @@ public class Team extends SafeList<Entity> implements Serializable{
 	public static Team constructRandomTeam(String name, Color color, int size){
 		Team t = new Team(name, color);
 		for(int teamSize = 0; teamSize < size; teamSize++){
-			AbstractPlayer p = new AbstractPlayer(name + " member #" + (teamSize + 1));
+			AbstractPlayer p = new AIPlayer(name + " member #" + (teamSize + 1));
 			p.applyBuild(Build.getAllBuilds().get(Random.choose(0, Build.getAllBuilds().size() - 1)));
 			
 			t.addMember(p);

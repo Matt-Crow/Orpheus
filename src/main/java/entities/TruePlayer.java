@@ -8,7 +8,7 @@ import graphics.CustomColors;
 import windows.world.WorldCanvas;
 
 //get rid of this thing
-public class TruePlayer extends AbstractPlayer{
+public class TruePlayer extends HumanPlayer{
 	
     public TruePlayer(String userName){
         super(userName);

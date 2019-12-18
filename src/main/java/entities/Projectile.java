@@ -32,7 +32,7 @@ public class Projectile extends Entity{
 		range = (int) a.getStatValue(ActiveStatName.RANGE);
 		setRadius(25);
 		setMoving(true);
-		hit = new AbstractPlayer("Void");
+		hit = null;
 	}
 	public int getUseId(){
 		return useId;

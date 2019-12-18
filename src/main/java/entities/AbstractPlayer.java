@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 import util.SafeList;
 
-public class AbstractPlayer extends Entity{
+public abstract class AbstractPlayer extends Entity{
 	private final String name;
 	private CharacterClass c;
 	private final AbstractActive[] actives;
@@ -30,13 +30,10 @@ public class AbstractPlayer extends Entity{
 	private EnergyLog energyLog;
 	
 	private MeleeActive slash;
-	private final SafeList<AbstractStatus> statuses;
-	
-	private PlayerAI playerAI;
+	private final SafeList<AbstractStatus> statuses; //change to hashtable
 	private int lastHitById; //the useId of the last projectile that hit this player
     
     private Path path;
-    private boolean followingMouse;
     
     public static final int RADIUS = 50;
     
@@ -49,7 +46,6 @@ public class AbstractPlayer extends Entity{
 		passives = new AbstractPassive[3];
         setRadius(RADIUS);
         path = null;
-        followingMouse = false;
         statuses = new SafeList<>();
 	}
 	
@@ -63,9 +59,7 @@ public class AbstractPlayer extends Entity{
 	public EnergyLog getEnergyLog(){
 		return energyLog;
 	}
-	public PlayerAI getPlayerAI(){
-		return playerAI;
-	}
+	
 	
 	// Build stuff
 	public void applyBuild(Build b){
@@ -113,12 +107,7 @@ public class AbstractPlayer extends Entity{
 		return actives;
     }
     
-    public final void setFollowingMouse(boolean b){
-        followingMouse = b;
-    }
-    public final boolean getFollowingMouse(){
-        return followingMouse;
-    }
+    
     
     public void moveToMouse(){
         setPath(getWorld().getCanvas().getMouseX(), getWorld().getCanvas().getMouseY());
@@ -197,11 +186,7 @@ public class AbstractPlayer extends Entity{
         statuses.clear();
         getActionRegister().reset();
         
-		playerAI = new PlayerAI(this);
 		path = null;
-		if (!(this instanceof TruePlayer)){
-			playerAI.setEnabled(true);
-		}
         slash = (MeleeActive)AbstractActive.getActiveByName("Slash");
 		slash.setUser(this);
 		slash.init();
@@ -216,11 +201,12 @@ public class AbstractPlayer extends Entity{
 			p.init();
 		}
 		lastHitById = -1;
+        
+        playerInit();
 	}
 	
     @Override
 	public void update(){
-		playerAI.update();
         if(path != null){
             //follow path
             if(path.noneLeft()){
@@ -247,6 +233,8 @@ public class AbstractPlayer extends Entity{
 		getActionRegister().triggerOnUpdate();
 		log.update();
 		energyLog.update();
+        
+        playerUpdate();
 	}
     
     //can get rid of this later
@@ -297,4 +285,7 @@ public class AbstractPlayer extends Entity{
 			y += h/30;
 		}
 	}
+
+    public abstract void playerInit();
+    public abstract void playerUpdate();
 }

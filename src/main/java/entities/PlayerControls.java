@@ -15,11 +15,11 @@ import windows.world.WorldCanvas;
  * @author Matt Crow
  */
 public class PlayerControls implements MouseListener, EndOfFrameListener{
-    private final AbstractPlayer p;
+    private final HumanPlayer p;
     private boolean isRemote;
     private String receiverIpAddr;
     
-    public PlayerControls(AbstractPlayer forPlayer, boolean remote){
+    public PlayerControls(HumanPlayer forPlayer, boolean remote){
         p = forPlayer;
         isRemote = remote;
         if(isRemote){
@@ -29,7 +29,7 @@ public class PlayerControls implements MouseListener, EndOfFrameListener{
         }
     }
     
-    public PlayerControls(AbstractPlayer forPlayer){
+    public PlayerControls(HumanPlayer forPlayer){
         this(forPlayer, false);
     }
     
