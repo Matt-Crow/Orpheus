@@ -27,7 +27,6 @@ import util.SafeList;
 public abstract class AbstractPlayer extends Entity{
 	private final String name;
 	private Color color;
-	private final AbstractActive[] actives;
 	private final AbstractPassive[] passives;
     
 	private DamageBacklog log;
@@ -47,7 +46,6 @@ public abstract class AbstractPlayer extends Entity{
         setSpeed(Master.UNITSIZE * 5 / Master.FPS);
 		name = n;
         color = Color.black;
-		actives = new AbstractActive[3];
 		passives = new AbstractPassive[3];
         setRadius(RADIUS);
         path = null;
@@ -72,22 +70,11 @@ public abstract class AbstractPlayer extends Entity{
 	
 	// Build stuff
 	public void applyBuild(Build b){
-		setActives(b.getActiveNames());
 		setPassives(b.getPassiveNames());
     }
     
 	
-	public void setActives(String[] names){
-		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
-            try{
-                actives[nameIndex] = AbstractActive.getActiveByName(names[nameIndex]);
-            } catch(NoSuchElementException ex){
-                ex.printStackTrace();
-                actives[nameIndex] = AbstractActive.getActiveByName("Default");
-            }
-			actives[nameIndex].setUser(this);
-		}
-	}
+	
 	public void setPassives(String[] names){
 		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
             try{
@@ -100,12 +87,6 @@ public abstract class AbstractPlayer extends Entity{
 		}
 	}
 	
-    
-    public AbstractActive[] getActives(){
-		return actives;
-    }
-    
-    
     
     public void moveToMouse(){
         setPath(getWorld().getCanvas().getMouseX(), getWorld().getCanvas().getMouseY());
@@ -157,11 +138,7 @@ public abstract class AbstractPlayer extends Entity{
 		}
 	}
 	
-	public void useAttack(int num){
-		if(actives[num].canUse()){
-			actives[num].use();
-		}
-	}
+	
 	
 	public void logDamage(int dmg){
 		log.log(dmg);
@@ -189,9 +166,7 @@ public abstract class AbstractPlayer extends Entity{
 		log = new DamageBacklog(this);
 		energyLog = new EnergyLog(this);
 		
-		for(AbstractActive a : actives){
-			a.init();
-		}
+		
 		for(AbstractPassive p : passives){
 			p.init();
 		}
@@ -219,9 +194,7 @@ public abstract class AbstractPlayer extends Entity{
             }
         }
 		slash.update();
-		for(AbstractActive a : actives){
-			a.update();
-		}
+		
 		for(AbstractPassive p : passives){
 			p.update();
 		}

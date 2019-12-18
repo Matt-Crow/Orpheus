@@ -5,6 +5,7 @@ import battle.Team;
 import entities.Entity;
 import entities.Particle;
 import entities.AbstractPlayer;
+import entities.HumanPlayer;
 import entities.PlayerControls;
 import entities.Projectile;
 import graphics.CustomColors;
@@ -337,7 +338,7 @@ public class World implements Serializable{
     }
     
     private void receiveControl(ServerMessage sm){
-        AbstractPlayer p = sm.getSender().getPlayer();
+        HumanPlayer p = sm.getSender().getPlayer();
         PlayerControls.decode(p, sm.getBody());
     }
     

@@ -2,6 +2,7 @@ package entities;
 
 import controllers.Master;
 import customizables.Build;
+import customizables.actives.AbstractActive;
 import customizables.characterClass.CharacterClass;
 import customizables.characterClass.CharacterStatName;
 import java.util.NoSuchElementException;
@@ -12,12 +13,16 @@ import java.util.NoSuchElementException;
  */
 public class HumanPlayer extends AbstractPlayer{
     private CharacterClass c;
+    private final AbstractActive[] actives;
+	
     private boolean followingMouse;
     
     
     public HumanPlayer(String n) {
         super(n);
         c = null;
+        actives = new AbstractActive[3];
+		
         followingMouse = false;
     }
     
@@ -42,9 +47,31 @@ public class HumanPlayer extends AbstractPlayer{
 		return c;
 	}
     
+    public void setActives(String[] names){
+		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
+            try{
+                actives[nameIndex] = AbstractActive.getActiveByName(names[nameIndex]);
+            } catch(NoSuchElementException ex){
+                ex.printStackTrace();
+                actives[nameIndex] = AbstractActive.getActiveByName("Default");
+            }
+			actives[nameIndex].setUser(this);
+		}
+	}
+    public AbstractActive[] getActives(){
+		return actives;
+    }
+    
+    
     @Override
     public double getStatValue(CharacterStatName n){
 		return c.getStatValue(n);
+	}
+    
+    public void useAttack(int num){
+		if(actives[num].canUse()){
+			actives[num].use();
+		}
 	}
     
     public final void setFollowingMouse(boolean b){
@@ -57,10 +84,15 @@ public class HumanPlayer extends AbstractPlayer{
     @Override
     public void playerInit() {
         c.init();
+        for(AbstractActive a : actives){
+			a.init();
+		}
     }
 
     @Override
     public void playerUpdate() {
-        
+        for(AbstractActive a : actives){
+			a.update();
+		}
     }
 }

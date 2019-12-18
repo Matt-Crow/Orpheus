@@ -96,7 +96,7 @@ public class PlayerControls implements MouseListener, EndOfFrameListener{
      * @param p
      * @param s 
      */
-    public static void decode(AbstractPlayer p, String s){
+    public static void decode(HumanPlayer p, String s){
         int[] coords;
         for(String str : s.split("\n")){
             if(str.contains("turn to")){
