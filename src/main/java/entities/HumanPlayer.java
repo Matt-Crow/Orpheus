@@ -5,6 +5,7 @@ import customizables.Build;
 import customizables.actives.AbstractActive;
 import customizables.characterClass.CharacterClass;
 import customizables.characterClass.CharacterStatName;
+import customizables.passives.AbstractPassive;
 import java.util.NoSuchElementException;
 
 /**
@@ -14,7 +15,8 @@ import java.util.NoSuchElementException;
 public class HumanPlayer extends AbstractPlayer{
     private CharacterClass c;
     private final AbstractActive[] actives;
-	
+	private final AbstractPassive[] passives;
+    
     private boolean followingMouse;
     
     
@@ -22,7 +24,8 @@ public class HumanPlayer extends AbstractPlayer{
         super(n);
         c = null;
         actives = new AbstractActive[3];
-		
+		passives = new AbstractPassive[3];
+        setClass("Default");
         followingMouse = false;
     }
     
@@ -62,6 +65,17 @@ public class HumanPlayer extends AbstractPlayer{
 		return actives;
     }
     
+    public void setPassives(String[] names){
+		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
+            try{
+                passives[nameIndex] = AbstractPassive.getPassiveByName(names[nameIndex]);
+            } catch(NoSuchElementException ex){
+                ex.printStackTrace();
+                passives[nameIndex] = AbstractPassive.getPassiveByName("Default");
+            }
+            passives[nameIndex].setUser(this);
+		}
+	}
     
     @Override
     public double getStatValue(CharacterStatName n){
@@ -80,6 +94,9 @@ public class HumanPlayer extends AbstractPlayer{
     public final boolean getFollowingMouse(){
         return followingMouse;
     }
+    public void moveToMouse(){
+        setPath(getWorld().getCanvas().getMouseX(), getWorld().getCanvas().getMouseY());
+    }
 
     @Override
     public void playerInit() {
@@ -87,12 +104,18 @@ public class HumanPlayer extends AbstractPlayer{
         for(AbstractActive a : actives){
 			a.init();
 		}
+        for(AbstractPassive p : passives){
+			p.init();
+		}
     }
 
     @Override
     public void playerUpdate() {
         for(AbstractActive a : actives){
 			a.update();
+		}
+        for(AbstractPassive p : passives){
+			p.update();
 		}
     }
 }

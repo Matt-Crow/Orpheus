@@ -1,9 +1,7 @@
 package entities;
 
-import customizables.passives.AbstractPassive;
 import customizables.actives.AbstractActive;
 import customizables.actives.MeleeActive;
-import customizables.Build;
 import java.awt.Color;
 import java.awt.Graphics;
 import ai.Path;
@@ -15,7 +13,6 @@ import controllers.World;
 import customizables.characterClass.CharacterStatName;
 import static java.lang.System.out;
 import java.util.Arrays;
-import java.util.NoSuchElementException;
 import util.SafeList;
 
 /**
@@ -27,15 +24,14 @@ import util.SafeList;
 public abstract class AbstractPlayer extends Entity{
 	private final String name;
 	private Color color;
-	private final AbstractPassive[] passives;
-    
-	private DamageBacklog log;
-	private EnergyLog energyLog;
 	
-	private MeleeActive slash;
+	private final DamageBacklog log;
+	private final EnergyLog energyLog;
+	private final MeleeActive slash;
+    
 	private final SafeList<AbstractStatus> statuses; //change to hashtable
 	private int lastHitById; //the useId of the last projectile that hit this player
-    
+    //both players and AI need to find paths, given the current controls
     private Path path;
     
     public static final int RADIUS = 50;
@@ -46,16 +42,20 @@ public abstract class AbstractPlayer extends Entity{
         setSpeed(Master.UNITSIZE * 5 / Master.FPS);
 		name = n;
         color = Color.black;
-		passives = new AbstractPassive[3];
-        setRadius(RADIUS);
+        
+        slash = (MeleeActive)AbstractActive.getActiveByName("Slash");
+		slash.setUser(this);
+        log = new DamageBacklog(this);
+		energyLog = new EnergyLog(this);
+        
+		setRadius(RADIUS);
         path = null;
         statuses = new SafeList<>();
 	}
 	
-	public String getName(){
+	public final String getName(){
 		return name;
 	}
-	
     public final void setColor(Color c){
         color = c;
     }
@@ -66,31 +66,7 @@ public abstract class AbstractPlayer extends Entity{
 	public EnergyLog getEnergyLog(){
 		return energyLog;
 	}
-	
-	
-	// Build stuff
-	public void applyBuild(Build b){
-		setPassives(b.getPassiveNames());
-    }
     
-	
-	
-	public void setPassives(String[] names){
-		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
-            try{
-                passives[nameIndex] = AbstractPassive.getPassiveByName(names[nameIndex]);
-            } catch(NoSuchElementException ex){
-                ex.printStackTrace();
-                passives[nameIndex] = AbstractPassive.getPassiveByName("Default");
-            }
-            passives[nameIndex].setUser(this);
-		}
-	}
-	
-    
-    public void moveToMouse(){
-        setPath(getWorld().getCanvas().getMouseX(), getWorld().getCanvas().getMouseY());
-    }
     public void setPath(int x, int y){
         World w = getWorld();
         setPath(w.getMap().findPath(getX(), getY(), x, y));
@@ -101,6 +77,9 @@ public abstract class AbstractPlayer extends Entity{
             PathInfo pi = path.get();
             setFocus(pi.getEndX(), pi.getEndY());
         }
+    }
+    public Path getPath(){
+        return path;
     }
     
 	public void inflict(AbstractStatus newStat){
@@ -131,14 +110,11 @@ public abstract class AbstractPlayer extends Entity{
 		}
 	}
 	
-	
 	public void useMeleeAttack(){
 		if(slash.canUse()){
 			slash.use();
 		}
 	}
-	
-	
 	
 	public void logDamage(int dmg){
 		log.log(dmg);
@@ -150,26 +126,16 @@ public abstract class AbstractPlayer extends Entity{
 		return lastHitById;
 	}
     
-    public Path getPath(){
-        return path;
-    }
-	
     @Override
 	public void init(){
         statuses.clear();
         getActionRegister().reset();
         
-		path = null;
-        slash = (MeleeActive)AbstractActive.getActiveByName("Slash");
-		slash.setUser(this);
 		slash.init();
-		log = new DamageBacklog(this);
-		energyLog = new EnergyLog(this);
+		log.init();
+        energyLog.init();
 		
-		
-		for(AbstractPassive p : passives){
-			p.init();
-		}
+        path = null;
 		lastHitById = -1;
         
         playerInit();
@@ -195,9 +161,7 @@ public abstract class AbstractPlayer extends Entity{
         }
 		slash.update();
 		
-		for(AbstractPassive p : passives){
-			p.update();
-		}
+		
 		getActionRegister().triggerOnUpdate();
 		log.update();
 		energyLog.update();

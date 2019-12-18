@@ -79,8 +79,6 @@ public class Team extends SafeList<Entity> implements Serializable{
 		Team t = new Team(name, color);
 		for(int teamSize = 0; teamSize < size; teamSize++){
 			AbstractPlayer p = new AIPlayer(name + " member #" + (teamSize + 1));
-			p.applyBuild(Build.getAllBuilds().get(Random.choose(0, Build.getAllBuilds().size() - 1)));
-			
 			t.addMember(p);
 		}
 		return t;

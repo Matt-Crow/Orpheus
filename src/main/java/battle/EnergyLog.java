@@ -13,10 +13,13 @@ public class EnergyLog implements Serializable{
 	
 	public EnergyLog(AbstractPlayer register){
 		registeredTo = register;
-		maxEnergy = (int) register.getStatValue(CharacterStatName.ENERGY);
+	}
+    public final void init(){
+        maxEnergy = (int) registeredTo.getStatValue(CharacterStatName.ENERGY);
 		energy = maxEnergy;
 		timeSinceLastEnergy = 0;
-	}
+    }
+    
 	public int getEnergy(){
 		return energy;
 	}

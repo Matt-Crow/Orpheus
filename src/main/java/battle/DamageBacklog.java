@@ -26,7 +26,7 @@ import java.io.Serializable;
  */
 public final class DamageBacklog implements Serializable{
 	private final AbstractPlayer registeredTo;
-    private final int maxHP;
+    private int maxHP;
 	private int remHP;
 	private int timeSinceLastHeal; //number of frames since the user last regenerated health.
 	private int dmg; //backlogged damage
@@ -36,13 +36,17 @@ public final class DamageBacklog implements Serializable{
 	
 	public DamageBacklog(AbstractPlayer register){
 		registeredTo = register;
-		dmg = 0;
 		baseFilter = 1.0 / Master.seconds(5);
+	}
+    
+    public final void init(){
+        dmg = 0;
         secondaryFilter = 1.0;
-		maxHP = (int) register.getStatValue(CharacterStatName.HP);
+		maxHP = (int) registeredTo.getStatValue(CharacterStatName.HP);
 		remHP = maxHP;
 		timeSinceLastHeal = 0;
-	}
+    }
+    
 	public int getHP(){
 		return remHP;
 	}
