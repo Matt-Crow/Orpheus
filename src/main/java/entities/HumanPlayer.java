@@ -1,5 +1,6 @@
 package entities;
 
+import battle.EnergyLog;
 import controllers.Master;
 import customizables.Build;
 import customizables.actives.AbstractActive;
@@ -16,7 +17,7 @@ public class HumanPlayer extends AbstractPlayer{
     private CharacterClass c;
     private final AbstractActive[] actives;
 	private final AbstractPassive[] passives;
-    
+    private final EnergyLog energyLog;
     private boolean followingMouse;
     
     
@@ -26,6 +27,8 @@ public class HumanPlayer extends AbstractPlayer{
         actives = new AbstractActive[3];
 		passives = new AbstractPassive[3];
         setClass("Default");
+        energyLog = new EnergyLog(this);
+        
         followingMouse = false;
     }
     
@@ -82,6 +85,10 @@ public class HumanPlayer extends AbstractPlayer{
 		return c.getStatValue(n);
 	}
     
+    public EnergyLog getEnergyLog(){
+		return energyLog;
+	}
+    
     public void useAttack(int num){
 		if(actives[num].canUse()){
 			actives[num].use();
@@ -107,6 +114,7 @@ public class HumanPlayer extends AbstractPlayer{
         for(AbstractPassive p : passives){
 			p.init();
 		}
+        energyLog.init();
     }
 
     @Override
@@ -117,5 +125,6 @@ public class HumanPlayer extends AbstractPlayer{
         for(AbstractPassive p : passives){
 			p.update();
 		}
+        energyLog.update();
     }
 }

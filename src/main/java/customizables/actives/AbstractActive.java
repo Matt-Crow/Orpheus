@@ -406,7 +406,17 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
 
     // in battle methods
     public final boolean canUse(){
-        return getUser() != null && getUser().getEnergyLog().getEnergy() >= cost && !onCooldown();
+        AbstractPlayer user = getUser();
+        boolean ret = !onCooldown();
+        if(user == null){
+            ret = false;
+        } else if(ret && user instanceof HumanPlayer){
+            ret = ((HumanPlayer)user).getEnergyLog().getEnergy() >= cost;
+        } else if(ret && cost <= 0){
+            ret = true;
+        }
+        // AI can only use if it has no cost
+        return ret;
     }
 
     /**
@@ -430,7 +440,9 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
     }
     
     private void consumeEnergy(){
-        getUser().getEnergyLog().loseEnergy(cost);
+        if(getUser() instanceof HumanPlayer){
+            ((HumanPlayer)getUser()).getEnergyLog().loseEnergy(cost);
+        }
         setToCooldown();
     }
     
@@ -458,7 +470,9 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
         );
         if(this instanceof MeleeActive){
             user.getActionRegister().tripOnMeleeHit(p);
-            user.getEnergyLog().gainEnergyPerc(15.0);
+            if(user instanceof HumanPlayer){
+                ((HumanPlayer)user).getEnergyLog().gainEnergyPerc(15.0);
+            }
             p.getActionRegister().tripOnBeMeleeHit(user);
         } else {
             user.getActionRegister().triggerOnHit(p);
@@ -492,7 +506,9 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
         } else {
             g.setColor(CustomColors.red);
         }
-        g.drawString("Energy cost: " + getUser().getEnergyLog().getEnergy() + "/" + cost, x + 10, y + 33);
+        if(getUser() instanceof HumanPlayer){
+            g.drawString("Energy cost: " + ((HumanPlayer)getUser()).getEnergyLog().getEnergy() + "/" + cost, x + 10, y + 33);
+        }
     }
     
     @Override

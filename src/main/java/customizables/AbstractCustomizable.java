@@ -7,6 +7,7 @@ import controllers.Master;
 import customizables.characterClass.CharacterClass;
 import java.io.Serializable;
 import customizables.passives.AbstractPassive;
+import entities.HumanPlayer;
 import statuses.*;
 
 /**

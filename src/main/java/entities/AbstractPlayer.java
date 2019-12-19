@@ -26,7 +26,7 @@ public abstract class AbstractPlayer extends Entity{
 	private Color color;
 	
 	private final DamageBacklog log;
-	private final EnergyLog energyLog;
+	
 	private final MeleeActive slash;
     
 	private final SafeList<AbstractStatus> statuses; //change to hashtable
@@ -46,8 +46,7 @@ public abstract class AbstractPlayer extends Entity{
         slash = (MeleeActive)AbstractActive.getActiveByName("Slash");
 		slash.setUser(this);
         log = new DamageBacklog(this);
-		energyLog = new EnergyLog(this);
-        
+		
 		setRadius(RADIUS);
         path = null;
         statuses = new SafeList<>();
@@ -62,9 +61,6 @@ public abstract class AbstractPlayer extends Entity{
     
 	public DamageBacklog getLog(){
 		return log;
-	}
-	public EnergyLog getEnergyLog(){
-		return energyLog;
 	}
     
     public void setPath(int x, int y){
@@ -133,7 +129,6 @@ public abstract class AbstractPlayer extends Entity{
         
 		slash.init();
 		log.init();
-        energyLog.init();
 		
         path = null;
 		lastHitById = -1;
@@ -164,7 +159,6 @@ public abstract class AbstractPlayer extends Entity{
 		
 		getActionRegister().triggerOnUpdate();
 		log.update();
-		energyLog.update();
         
         playerUpdate();
 	}

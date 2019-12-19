@@ -4,6 +4,7 @@ import actions.*;
 import entities.AbstractPlayer;
 import util.Number;
 import controllers.Master;
+import entities.HumanPlayer;
 import java.util.function.UnaryOperator;
 
 /**
@@ -38,8 +39,8 @@ public class Charge extends AbstractStatus implements OnUpdateListener{
 
     @Override
     public void trigger(OnUpdateEvent e) {
-        if(e.getUpdated() instanceof AbstractPlayer){
-            ((AbstractPlayer)e.getUpdated()).getEnergyLog().gainEnergy((int) (2.5 * getIntensityLevel() / Master.FPS)); // make scale with frame count
+        if(e.getUpdated() instanceof HumanPlayer){
+            ((HumanPlayer)e.getUpdated()).getEnergyLog().gainEnergy((int) (2.5 * getIntensityLevel() / Master.FPS)); // make scale with frame count
         }
         use();
     }
