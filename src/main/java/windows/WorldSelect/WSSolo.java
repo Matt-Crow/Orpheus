@@ -19,10 +19,8 @@ public class WSSolo extends AbstractWSNewWorld{
     
     @Override
     public void start(){
-        int level = 1; //temporary
-        
-        Team team1 = Team.constructRandomTeam("Team 1", Color.green, getTeamSize() - 1, level);
-        Team team2 = Team.constructRandomTeam("Team 2", Color.red, getTeamSize(),  level);
+        Team team1 = Team.constructRandomTeam("Team 1", Color.green, getTeamSize() - 1, getEnemyLevel());
+        Team team2 = Team.constructRandomTeam("Team 2", Color.red, getTeamSize(),  getEnemyLevel());
         
         
         Master.getUser().initPlayer();

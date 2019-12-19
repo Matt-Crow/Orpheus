@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.io.IOException;
 import static java.lang.System.err;
 import static java.lang.System.out;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -60,6 +61,7 @@ public class WaitingRoomBackend {
     private Team team2;
     
     private int teamSize;
+    private int enemyLevel;
     private boolean isHost;
     private boolean gameAboutToStart;
     
@@ -79,6 +81,7 @@ public class WaitingRoomBackend {
         server = Master.SERVER;
         isHost = false;
         teamSize = 0;
+        enemyLevel = 10;
         gameAboutToStart = false;
         
         team1Proto = new HashMap<>();
@@ -174,7 +177,7 @@ public class WaitingRoomBackend {
         JsonObjectBuilder build = Json.createObjectBuilder();
         build.add("type", "waiting room init");
         build.add("team size", teamSize);
-        
+        build.add("enemy level", enemyLevel);
         JsonArrayBuilder t1 = Json.createArrayBuilder();
         team1Proto.values().stream().forEach((User u)->{
             t1.add(u.serializeJson());
@@ -206,10 +209,12 @@ public class WaitingRoomBackend {
     private void receiveInit(ServerMessage sm){
         JsonObject obj = JsonUtil.fromString(sm.getBody());
         JsonUtil.verify(obj, "team size");
+        JsonUtil.verify(obj, "enemy level");
         JsonUtil.verify(obj, "team 1");
         JsonUtil.verify(obj, "team 2");
 
         setTeamSize(obj.getInt("team size"));
+        setEnemyLevel(obj.getInt("enemy level"));
         obj.getJsonArray("team 1").stream().forEach((jv)->{
             if(jv.getValueType().equals(JsonValue.ValueType.OBJECT)){
                 tryJoinTeam1(User.deserializeJson((JsonObject)jv));
@@ -532,6 +537,16 @@ public class WaitingRoomBackend {
     public void setTeamSize(int s){
         if(s >= 1){
             teamSize = s;
+        } else {
+            throw new IllegalArgumentException("Teams must have at least 1 member");
+        }
+    }
+    
+    public void setEnemyLevel(int l){
+        if(l >= 1){
+            enemyLevel = l;
+        } else {
+            throw new IllegalArgumentException("Enemies must be at least level 1");
         }
     }
     

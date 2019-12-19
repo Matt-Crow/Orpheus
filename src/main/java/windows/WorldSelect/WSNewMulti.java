@@ -25,6 +25,7 @@ public class WSNewMulti extends AbstractWSNewWorld{
             ex.printStackTrace();
         }
         wait.setTeamSize(getTeamSize());
+        wait.setEnemyLevel(getEnemyLevel());
         wait.joinTeam1(Master.getUser());
     }
 }

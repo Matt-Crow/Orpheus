@@ -230,4 +230,8 @@ public class WSWaitForPlayers extends Page{
         backend.setTeamSize(s);
         return this;
     }
+    public WSWaitForPlayers setEnemyLevel(int l){
+        backend.setEnemyLevel(l);
+        return this;
+    }
 }

@@ -17,6 +17,7 @@ import windows.Page;
 public abstract class AbstractWSNewWorld extends Page{
     private final BuildSelect playerBuild;
     private final OptionBox<Integer> teamSize;
+    private final OptionBox<Integer> baseEnemyLevel;
     private final JButton start;
     
     public AbstractWSNewWorld(){
@@ -29,11 +30,14 @@ public abstract class AbstractWSNewWorld extends Page{
         playerBuild = new BuildSelect();
         add(playerBuild);
         
+        start = startButton();
+        add(start);
+        
         teamSize = teamSizeSelect();
         add(teamSize);
         
-        start = startButton();
-        add(start);
+        baseEnemyLevel = enemyLvSelect();
+        add(baseEnemyLevel);
         
         Style.applyStyling(this);
     }
@@ -42,6 +46,19 @@ public abstract class AbstractWSNewWorld extends Page{
         Integer[] nums = new Integer[]{1, 2, 3, 4, 5, 10, 99};
         
         OptionBox<Integer> box = new OptionBox<>("Select team sizes", nums);
+        box.addActionListener(new AbstractAction(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                repaint();
+            }
+        });
+        return box;
+    }
+    
+    private OptionBox<Integer> enemyLvSelect(){
+        Integer[] nums = new Integer[]{1, 5, 10, 20, 1000};
+        
+        OptionBox<Integer> box = new OptionBox<>("Select base enemy level", nums);
         box.addActionListener(new AbstractAction(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -69,6 +86,10 @@ public abstract class AbstractWSNewWorld extends Page{
     
     public int getTeamSize(){
         return teamSize.getSelected();
+    }
+    
+    public int getEnemyLevel(){
+        return baseEnemyLevel.getSelected();
     }
     
     public abstract void start();
