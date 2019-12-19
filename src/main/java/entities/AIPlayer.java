@@ -14,7 +14,7 @@ public class AIPlayer extends AbstractPlayer{
     private static final CharacterClass TEMP = CharacterClass.getCharacterClassByName("Default");
     
     public AIPlayer(String n) {
-        super(n);
+        super(n, 1);
         playerAI = null;
         
     }

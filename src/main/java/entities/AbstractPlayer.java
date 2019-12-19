@@ -37,7 +37,7 @@ public abstract class AbstractPlayer extends Entity{
     public static final int RADIUS = 50;
     
 	
-	public AbstractPlayer(String n){
+	public AbstractPlayer(String n, int minLifeSpan){
 		super();
         setSpeed(Master.UNITSIZE * 5 / Master.FPS);
 		name = n;
@@ -45,7 +45,7 @@ public abstract class AbstractPlayer extends Entity{
         
         slash = (MeleeActive)AbstractActive.getActiveByName("Slash");
 		slash.setUser(this);
-        log = new DamageBacklog(this);
+        log = new DamageBacklog(this, minLifeSpan);
 		
 		setRadius(RADIUS);
         path = null;

@@ -19,10 +19,10 @@ public class HumanPlayer extends AbstractPlayer{
 	private final AbstractPassive[] passives;
     private final EnergyLog energyLog;
     private boolean followingMouse;
-    
+    public static final int MIN_LIFE_SPAN = 10;
     
     public HumanPlayer(String n) {
-        super(n);
+        super(n, MIN_LIFE_SPAN);
         c = null;
         actives = new AbstractActive[3];
 		passives = new AbstractPassive[3];

@@ -22,7 +22,7 @@ import java.io.Serializable;
  they will take 100 damage over the first second after receiving the damage,
  then 50 damage over the half second after that.
  
- Every second, the AbstractPlayer regenerates 5% of their maximum HP.
+ Every second, the AbstractPlayer regenerates 3% of their maximum HP.
  */
 public final class DamageBacklog implements Serializable{
 	private final AbstractPlayer registeredTo;
@@ -34,9 +34,14 @@ public final class DamageBacklog implements Serializable{
 	private double secondaryFilter; //this is altered by some statuses. Resets every frame
     //The maximum percentage of the player's max HP that can be depleted per frame is (maxHP * baseFilter * secondaryFilter) 
 	
-	public DamageBacklog(AbstractPlayer register){
+    /**
+     * 
+     * @param register the player this backlog is attached to.
+     * @param minLifespan the minimum number of seconds this player can survive.
+     */
+	public DamageBacklog(AbstractPlayer register, int minLifespan){
 		registeredTo = register;
-		baseFilter = 1.0 / Master.seconds(5);
+		baseFilter = 1.0 / Master.seconds(minLifespan);
 	}
     
     public final void init(){
