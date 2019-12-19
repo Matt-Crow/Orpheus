@@ -4,9 +4,7 @@ import controllers.Master;
 import java.awt.Color;
 import java.util.ArrayList;
 import entities.AbstractPlayer;
-import util.Random;
 import util.Coordinates;
-import customizables.Build;
 import entities.AIPlayer;
 import entities.Entity;
 import java.awt.Graphics;
@@ -75,10 +73,10 @@ public class Team extends SafeList<Entity> implements Serializable{
         return roster.get(id);
     }
     
-	public static Team constructRandomTeam(String name, Color color, int size){
+	public static Team constructRandomTeam(String name, Color color, int size, int lv){
 		Team t = new Team(name, color);
 		for(int teamSize = 0; teamSize < size; teamSize++){
-			AbstractPlayer p = new AIPlayer(name + " member #" + (teamSize + 1));
+			AbstractPlayer p = new AIPlayer(name + " member #" + (teamSize + 1), lv);
 			t.addMember(p);
 		}
 		return t;

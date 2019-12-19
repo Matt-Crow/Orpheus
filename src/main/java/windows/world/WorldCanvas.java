@@ -136,7 +136,7 @@ public class WorldCanvas extends Canvas{
         Master.getUser().initPlayer().getPlayer().applyBuild(Build.getBuildByName("Default Earth"));
         World w = World.createDefaultBattle();
         Team t1 = new Team("Test", Color.BLUE);
-        Team t2 = Team.constructRandomTeam("Rando", Color.yellow, 1);
+        Team t2 = Team.constructRandomTeam("Rando", Color.yellow, 1, 1);
         WorldCanvas c = new WorldCanvas(w);
         
         MainWindow mw = MainWindow.getInstance();

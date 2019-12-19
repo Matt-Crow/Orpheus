@@ -161,25 +161,17 @@ public class CharacterClass extends AbstractCustomizable implements JsonSerialab
     }
     public void setStat(CharacterStatName c, int value){
         value = Number.minMax(1, value, 5);
-        switch(c){
-        case HP:
-            //                                             100%, -10% for every point below average, +10% per point above
-            addStat(CharacterStatName.HP, value, BASE_HP * (1 + (value - 3) * 0.1));
-            break;
-        case ENERGY:
-            addStat(CharacterStatName.ENERGY, value, 50 * (1 + (value - 3) * 0.1));
-            break;
-        case DMG:
-            addStat(CharacterStatName.DMG, value, 0.7 + 0.1 * value);
-            break;
-        case REDUCTION:
-            // 1: 120%, 5: 80%
-            addStat(CharacterStatName.REDUCTION, value, 1.3 - 0.1 * value);
-            break;
-        case SPEED:
-            addStat(CharacterStatName.SPEED, value, (0.7 + 0.1 * value));
-            break;
-        }
+        
+        /*
+        value | multiplier
+        ------------------
+        1     | 80%
+        2     | 90%
+        3     | 100%
+        4     | 110%
+        5     | 120%
+        */
+        addStat(c, value, c.getDefaultValue() * (1 + 0.1 * (value - 3)));
     }
     @Override
     public String getDescription(){

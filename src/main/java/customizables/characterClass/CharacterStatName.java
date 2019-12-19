@@ -3,15 +3,21 @@ package customizables.characterClass;
 import java.util.NoSuchElementException;
 
 public enum CharacterStatName {
-	HP("hit points"),
-	ENERGY("energy"),
-	DMG("damage dealt modifier"),
-	REDUCTION("damage taken modifier"),
-	SPEED("speed");
+	HP("hit points", 2000),
+	ENERGY("energy", 50),
+	DMG("damage dealt modifier", 1.0),
+	REDUCTION("damage taken modifier", 1.0),
+	SPEED("speed", 1.0);
     
     private final String name;
-    CharacterStatName(String n){
+    private final double defaultValue;
+    CharacterStatName(String n, double base){
         name = n;
+        defaultValue = base;
+    }
+    
+    public final double getDefaultValue(){
+        return defaultValue;
     }
     
     public static CharacterStatName fromString(String s){

@@ -10,13 +10,13 @@ import customizables.characterClass.CharacterStatName;
  */
 public class AIPlayer extends AbstractPlayer{
     private PlayerAI playerAI;
-    
+    private final int level;
     private static final CharacterClass TEMP = CharacterClass.getCharacterClassByName("Default");
     
-    public AIPlayer(String n) {
-        super(n, 1);
+    public AIPlayer(String n, int lv) {
+        super(n, lv);
         playerAI = null;
-        
+        level = lv;
     }
     
     public PlayerAI getPlayerAI(){

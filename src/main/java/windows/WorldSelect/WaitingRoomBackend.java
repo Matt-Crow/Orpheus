@@ -410,9 +410,11 @@ public class WaitingRoomBackend {
      * @see WSWaitForPlayers#receiveBuildInfo
      */
     private void waitForData(){
+        int level = 1; //temp
+        
         //need these here, else null pointer in responding to build request
-        team1 = Team.constructRandomTeam("Team 1", Color.green, teamSize - team1Proto.size());
-        team2 = Team.constructRandomTeam("team 2", Color.red, teamSize - team2Proto.size());
+        team1 = Team.constructRandomTeam("Team 1", Color.green, teamSize - team1Proto.size(), level);
+        team2 = Team.constructRandomTeam("team 2", Color.red, teamSize - team2Proto.size(), level);
         
         server.addReceiver(ServerMessageType.PLAYER_DATA, receiveBuildInfo);
         requestBuilds();
