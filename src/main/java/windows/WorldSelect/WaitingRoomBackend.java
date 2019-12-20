@@ -46,8 +46,7 @@ public class WaitingRoomBackend {
     The key is the user's IP address, while the value
     is a local copy of that user's remote User object.
     */
-    private final HashMap<String, User> team1Proto;
-    private final HashMap<String, User> team2Proto;
+    private final HashMap<String, User> teamProto;
     
     /*
     these are the real teams, constucted once the host
@@ -80,8 +79,7 @@ public class WaitingRoomBackend {
         enemyLevel = 10;
         gameAboutToStart = false;
         
-        team1Proto = new HashMap<>();
-        team2Proto = new HashMap<>();
+        teamProto = new HashMap<>();
         
         receiveJoin  = (sm)->{
             receiveJoin(sm);
@@ -151,8 +149,7 @@ public class WaitingRoomBackend {
     }
     
     private void clearData(){
-        team1Proto.clear();
-        team2Proto.clear();
+        teamProto.clear();
         team1 = null;
         team2 = null;
         gameAboutToStart = false;
@@ -174,17 +171,11 @@ public class WaitingRoomBackend {
         build.add("type", "waiting room init");
         build.add("team size", teamSize);
         build.add("enemy level", enemyLevel);
-        JsonArrayBuilder t1 = Json.createArrayBuilder();
-        team1Proto.values().stream().forEach((User u)->{
-            t1.add(u.serializeJson());
+        JsonArrayBuilder t = Json.createArrayBuilder();
+        teamProto.values().stream().forEach((User u)->{
+            t.add(u.serializeJson());
         });
-        build.add("team 1", t1.build());
-        
-        JsonArrayBuilder t2 = Json.createArrayBuilder();
-        team2Proto.values().stream().forEach((User u)->{
-            t2.add(u.serializeJson());
-        });
-        build.add("team 2", t2.build());
+        build.add("team", t.build());
         
         ServerMessage initMsg = new ServerMessage(
             build.build().toString(),
@@ -206,19 +197,13 @@ public class WaitingRoomBackend {
         JsonObject obj = JsonUtil.fromString(sm.getBody());
         JsonUtil.verify(obj, "team size");
         JsonUtil.verify(obj, "enemy level");
-        JsonUtil.verify(obj, "team 1");
-        JsonUtil.verify(obj, "team 2");
+        JsonUtil.verify(obj, "team");
 
         setTeamSize(obj.getInt("team size"));
         setEnemyLevel(obj.getInt("enemy level"));
-        obj.getJsonArray("team 1").stream().forEach((jv)->{
+        obj.getJsonArray("team").stream().forEach((jv)->{
             if(jv.getValueType().equals(JsonValue.ValueType.OBJECT)){
                 tryJoinTeam1(User.deserializeJson((JsonObject)jv));
-            }
-        });
-        obj.getJsonArray("team 2").stream().forEach((jv)->{
-            if(jv.getValueType().equals(JsonValue.ValueType.OBJECT)){
-                tryJoinTeam2(User.deserializeJson((JsonObject)jv));
             }
         });
         
@@ -243,9 +228,6 @@ public class WaitingRoomBackend {
         } else switch (split[split.length - 1]) {
             case "1":
                 tryJoinTeam1(sm.getSender());
-                break;
-            case "2":
-                tryJoinTeam2(sm.getSender());
                 break;
             default:
                 System.out.println("not sure how to handle this: ");
@@ -296,16 +278,10 @@ public class WaitingRoomBackend {
         String ip = sm.getIpAddr();
         TruePlayer tp;
         Build b;
-        int teamNum;
 
-        if(team1Proto.containsKey(ip)){
-            tp = team1Proto.get(ip).initPlayer().getPlayer();
-            teamNum = 1;
-            team1Proto.remove(ip);
-        } else if(team2Proto.containsKey(ip)){
-            tp = team2Proto.get(ip).initPlayer().getPlayer();
-            teamNum = 2;
-            team2Proto.remove(ip);
+        if(teamProto.containsKey(ip)){
+            tp = teamProto.get(ip).initPlayer().getPlayer();
+            teamProto.remove(ip);
         } else {
             err.println("Ugh oh, " + sm.getSender().getName() + " isn't on any team!");
             return;
@@ -313,22 +289,10 @@ public class WaitingRoomBackend {
 
         b = Build.deserializeJson(JsonUtil.fromString(sm.getBody()));
         tp.applyBuild(b);
-        if(teamNum == 1){
-            team1.addMember(tp);
-        }else{
-            team2.addMember(tp);
-        }
+        team1.addMember(tp);
+        
         sendRemoteId(ip, tp.id);
         
-        //team1.displayData();
-        //team2.displayData();
-        /*
-        if(team1.getRosterSize() == teamSize){
-            out.println("team 1 is done");
-        }
-        if(team2.getRosterSize() == teamSize){
-            out.println("team 2 is done");
-        }*/
         if(team1.getRosterSize() == teamSize && team2.getRosterSize() == teamSize){
             server.removeReceiver(ServerMessageType.PLAYER_DATA, receiveBuildInfo);
             finallyStart();
@@ -405,12 +369,10 @@ public class WaitingRoomBackend {
      * 
      * @see WSWaitForPlayers#receiveBuildInfo
      */
-    private void waitForData(){
-        int level = 1; //temp
-        
+    private void waitForData(){        
         //need these here, else null pointer in responding to build request
-        team1 = Team.constructRandomTeam("Team 1", Color.green, teamSize - team1Proto.size(), level);
-        team2 = Team.constructRandomTeam("team 2", Color.red, teamSize - team2Proto.size(), level);
+        team1 = new Team("Player", Color.green);
+        team2 = Team.constructRandomTeam("AI", Color.red, teamSize, enemyLevel);
         
         server.addReceiver(ServerMessageType.PLAYER_DATA, receiveBuildInfo);
         requestBuilds();
@@ -419,23 +381,13 @@ public class WaitingRoomBackend {
         
         //first, put the host on the proper team
         Master.getUser().initPlayer().getPlayer().applyBuild(host.getSelectedBuild());
-        if(team1Proto.containsKey(server.getIpAddr())){
+        if(teamProto.containsKey(server.getIpAddr())){
             team1.addMember(Master.getUser().getPlayer());
-            team1Proto.remove(server.getIpAddr());
-        } else if (team2Proto.containsKey(server.getIpAddr())){
-            team2.addMember(Master.getUser().getPlayer());
-            team2Proto.remove(server.getIpAddr());
+            teamProto.remove(server.getIpAddr());
+        } else {
+            throw new UnsupportedOperationException();
         }
         
-        //team1.displayData();
-        //team2.displayData();
-        /*
-        if(team1.getRosterSize() == teamSize){
-            out.println("team 1 is done");
-        }
-        if(team2.getRosterSize() == teamSize){
-            out.println("team 2 is done");
-        }*/
         if(team1.getRosterSize() == teamSize && team2.getRosterSize() == teamSize){
             Master.SERVER.removeReceiver(ServerMessageType.PLAYER_DATA, receiveBuildInfo);
             finallyStart();
@@ -518,10 +470,10 @@ public class WaitingRoomBackend {
     }
     
     public boolean team1Full(){
-        return team1Proto.size() >= teamSize;
+        return false;
     }
     public boolean team2Full(){
-        return team2Proto.size() >= teamSize;
+        return true;
     }
     
     public void setTeamSize(int s){
@@ -541,10 +493,10 @@ public class WaitingRoomBackend {
     }
     
     public User[] getTeam1Proto(){
-        return team1Proto.values().stream().toArray(size -> new User[size]);
+        return teamProto.values().stream().toArray(size -> new User[size]);
     }
     public User[] getTeam2Proto(){
-        return team2Proto.values().stream().toArray(size -> new User[size]);
+        return null;
     }
     
     /**
@@ -557,53 +509,19 @@ public class WaitingRoomBackend {
      * @return whether or not the User was able to join team 1
      */
     public boolean tryJoinTeam1(User u){
-        boolean success = team1Proto.containsKey(u.getIpAddress());
+        boolean success = teamProto.containsKey(u.getIpAddress());
         //automatically return true if the player is already on the correct team
         
         if(!success && !team1Full()){
             //team is not full, and u is not already on this team
             success = true;
-            if(team2Proto.containsKey(u.getIpAddress())){
-                team2Proto.remove(u.getIpAddress());
-            }
-            team1Proto.put(u.getIpAddress(), u);
+            
+            teamProto.put(u.getIpAddress(), u);
             
             if(u.equals(Master.getUser())){
                 //only send an update if the user is the one who changed teams. Prevents infinite loop
                 ServerMessage sm = new ServerMessage(
                     "join team 1",
-                    ServerMessageType.WAITING_ROOM_UPDATE
-                );
-                Master.SERVER.send(sm);
-            }
-            host.updateTeamDisplays();
-        }
-        return success;
-    }
-    /**
-     * Places a User on team 2.
-     * If said user is the person at this
-     * computer, sends a message to all connected
-     * clients that a team change has occurred.
-     * 
-     * @param u the User to place on team 2
-     * @return whether or not the User was able to join team 2
-     */
-    public boolean tryJoinTeam2(User u){
-        boolean success = team2Proto.containsKey(u.getIpAddress());
-        if(!team2Full() && !success){
-            //team is not full, and u is not already on this team
-            
-            success = true;
-            if(team1Proto.containsKey(u.getIpAddress())){
-                team1Proto.remove(u.getIpAddress());
-            }
-            team2Proto.put(u.getIpAddress(), u);
-            
-            if(u.equals(Master.getUser())){
-                //only send an update if the user is the one who changed teams. Prevents infinite loop
-                ServerMessage sm = new ServerMessage(
-                    "join team 2",
                     ServerMessageType.WAITING_ROOM_UPDATE
                 );
                 Master.SERVER.send(sm);
@@ -619,10 +537,8 @@ public class WaitingRoomBackend {
     public void displayData(){
         System.out.println("WAITING ROOM");
         System.out.println("Team size: " + teamSize);
-        System.out.println("Team 1: ");
-        team1Proto.values().forEach((member)->System.out.println("--" + member.getName()));
-        System.out.println("Team 2: ");
-        team2Proto.values().forEach((member)->System.out.println("--" + member.getName()));
+        System.out.println("Players: ");
+        teamProto.values().forEach((member)->System.out.println("--" + member.getName()));
         System.out.println("END OF WAITING ROOM");
     }
 }

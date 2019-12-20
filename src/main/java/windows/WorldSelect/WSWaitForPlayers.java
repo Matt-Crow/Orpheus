@@ -33,7 +33,6 @@ public class WSWaitForPlayers extends Page{
     private final Chat chat;
     private final BuildSelect playerBuild;
     private final JButton joinT1Button;
-    private final JButton joinT2Button;
     private final JButton startButton;
     
     private final WaitingRoomBackend backend;
@@ -73,13 +72,6 @@ public class WSWaitForPlayers extends Page{
         });
         Style.applyStyling(joinT1Button);
         add(joinT1Button, BorderLayout.LINE_START);
-        
-        joinT2Button = new JButton("Join team 2");
-        joinT2Button.addActionListener((e)->{
-            joinTeam2(Master.getUser());
-        });
-        Style.applyStyling(joinT2Button);
-        add(joinT2Button, BorderLayout.LINE_END);
         
         JPanel center = new JPanel();
         center.setLayout(new GridBagLayout());
@@ -162,36 +154,10 @@ public class WSWaitForPlayers extends Page{
             chat.logLocal(u.getName() + " has joined team 1.");
             updateTeamDisplays();
             yourTeam.setText("You are on team 1");
-        }else if(backend.team1Full() && backend.team2Full()){
-            chat.logLocal(u.getName() + " cannot join either team: both teams are full");
-        }else{
-            chat.logLocal(u.getName() + " cannot join team 1: Team 1 is full, so they'll join team 2.");
-            joinTeam2(u);
         }
         return this;
     }
-    /**
-     * Places a given User on team 2, if it isn't full.
-     * If team 2 is full, but team 1 isn't, places them on team 1.
-     * Note that if there are no open positions on either team,
-     * that user will not be put on either team.
-     * 
-     * @param u the user to place on team 2.
-     * @return this 
-     */
-    public WSWaitForPlayers joinTeam2(User u){
-        if(backend.tryJoinTeam2(u)){
-            chat.logLocal(u.getName() + " has joined team 2.");
-            updateTeamDisplays();
-            yourTeam.setText("You are on team 2");
-        }else if(backend.team1Full() && backend.team2Full()){
-            chat.logLocal(u.getName() + " cannot join either team: both teams are full");
-        }else{
-            chat.logLocal(u.getName() + " cannot join team 2: Team 2 is full, so they'll join team 1.");
-            joinTeam1(u);
-        }
-        return this;
-    }
+    
     /**
      * Updates the text of this' team displays
      * to match the proto-teams of the backend.
@@ -223,7 +189,6 @@ public class WSWaitForPlayers extends Page{
     public void setInputEnabled(boolean b){
         playerBuild.setEnabled(b);
         joinT1Button.setEnabled(b);
-        joinT2Button.setEnabled(b);
     }
     
     public WSWaitForPlayers setTeamSize(int s){
