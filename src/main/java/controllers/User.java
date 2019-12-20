@@ -1,10 +1,6 @@
 package controllers;
 
 import entities.TruePlayer;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonException;
 import javax.json.JsonObject;
@@ -25,7 +21,6 @@ public final class User implements JsonSerialable{
     private final String ipAddr;
     private TruePlayer player;
     
-    private String remoteTeamId; //the ID of the Team this' player is on on a remote computer
     private String remotePlayerId;
     
     private boolean isAdmin;
@@ -54,14 +49,6 @@ public final class User implements JsonSerialable{
         return userName;
     }
     
-    public User setRemoteTeamId(String id){
-        remoteTeamId = id;
-        return this;
-    }
-    public String getRemoteTeamId(){
-        return remoteTeamId;
-    }
-    
     public User setRemotePlayerId(String id){
         remotePlayerId = id;
         return this;
@@ -79,7 +66,7 @@ public final class User implements JsonSerialable{
     public User linkToRemotePlayerInWorld(World w){
         setPlayer(
             (TruePlayer)w
-                .getTeamById(remoteTeamId)
+                .getPlayerTeam()
                 .getMemberById(remotePlayerId)
         );
         return this;

@@ -24,12 +24,13 @@ public class Battle implements Serializable{
 	public void init(){
 		int s = host.getMap().getWidth();
 		int spacingFromTopEdge = AbstractPlayer.RADIUS;
-        Team[] teams = host.getTeams();
-        int spacingBetween = s / (teams[0].getRosterSize() + 1);
-        teams[0].setEnemy(teams[1]);
-		teams[0].init(spacingFromTopEdge, spacingBetween, 270);
-        teams[1].setEnemy(teams[0]);
-		teams[1].init(s - spacingFromTopEdge * 2, spacingBetween, 90);
+        Team players = host.getPlayerTeam();
+        Team ai = host.getAITeam();
+        int spacingBetween = s / (ai.getRosterSize() + 1);
+        players.setEnemy(ai);
+		players.init(spacingFromTopEdge, spacingBetween, 270);
+        ai.setEnemy(players);
+		ai.init(s - spacingFromTopEdge * 2, spacingBetween, 90);
 		end = false;
 	}
 	
@@ -38,20 +39,17 @@ public class Battle implements Serializable{
 	}
     public boolean checkIfOver(){
         //is only one team not defeated? 
-        return Arrays
-            .stream(host.getTeams())
-            .filter((Team t)->!t.isDefeated())
-            .toArray(size -> new Team[size])
-            .length == 1;
+        Team p = host.getPlayerTeam();
+        Team i = host.getAITeam();
+        return (p.isDefeated() && !i.isDefeated()) || (i.isDefeated() && !p.isDefeated());
     }
     
     public Team getWinner(){
         Team ret = null;
-        if(end){
-            ret = Arrays
-            .stream(host.getTeams())
-            .filter((Team t)->!t.isDefeated())
-            .findFirst().get();
+        if(end && checkIfOver()){
+            Team p = host.getPlayerTeam();
+            Team i = host.getAITeam();
+            ret = (p.isDefeated()) ? i : p;
         }
         return ret;
     }

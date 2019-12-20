@@ -99,7 +99,7 @@ public class WaitingRoomBackend {
             receiveBuildInfo(sm);
         };
         receiveRemoteIds = (sm)->{
-            receiveRemoteIds(sm);
+            receiveRemoteId(sm);
         };
         receiveWorldInit = (sm)->{
             receiveWorldInit(sm);
@@ -318,7 +318,7 @@ public class WaitingRoomBackend {
         }else{
             team2.addMember(tp);
         }
-        sendIds(ip, (teamNum == 1) ? team1.getId() : team2.getId(), tp.id);
+        sendRemoteId(ip, tp.id);
         
         //team1.displayData();
         //team2.displayData();
@@ -342,13 +342,8 @@ public class WaitingRoomBackend {
      * the IDs of the team and player this user is controlling
      * on that computer.
     */
-    private void receiveRemoteIds(ServerMessage sm){
-        String[] split = sm.getBody().split(",");
-        String tId = split[0].replace("team:", "").trim();
-        String pId = split[1].replace("player:", "").trim();
-        //System.out.printf("(receiveRemoteIds) OK, so my team's ID is %d, and my player ID is %d, right?", tId, pId);
-        
-        Master.getUser().setRemoteTeamId(tId).setRemotePlayerId(pId);
+    private void receiveRemoteId(ServerMessage sm){
+        Master.getUser().setRemotePlayerId(sm.getBody());
         
         server.removeReceiver(ServerMessageType.NOTIFY_IDS, receiveRemoteIds);
     }
@@ -489,12 +484,11 @@ public class WaitingRoomBackend {
     /**
      * Called by receiveBuild
      * @param ipAddr the ip address of the user to send the IDs to.
-     * @param teamId the ID of that user's Team on this computer
      * @param playerId the ID of that user's Player on this computer
      */
-    private void sendIds(String ipAddr, String teamId, String playerId){
+    private void sendRemoteId(String ipAddr, String playerId){
         ServerMessage sm = new ServerMessage(
-            String.format("team: %s, player: %s", teamId, playerId),
+            playerId,
             ServerMessageType.NOTIFY_IDS
         );
         Master.SERVER.send(sm, ipAddr);

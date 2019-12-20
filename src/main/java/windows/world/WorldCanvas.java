@@ -152,7 +152,7 @@ public class WorldCanvas extends Canvas{
         w.setCurrentMinigame(b);
         w.init();
         
-        Master.getUser().setRemoteTeamId(t1.getId()).setRemotePlayerId(Master.getUser().getPlayer().id);
+        Master.getUser().setRemotePlayerId(Master.getUser().getPlayer().id);
         
         w.getCanvas().registerKey(KeyEvent.VK_T, true, ()->{
             Master.getUser().getPlayer().getActionRegister().displayData();
@@ -164,7 +164,7 @@ public class WorldCanvas extends Canvas{
         String serial = w.serializeToString();
         World newWorld = World.fromSerializedString(serial);
         User me = Master.getUser(); //need to set player before calling createCanvas
-        me.setPlayer((TruePlayer)newWorld.getTeamById(me.getRemoteTeamId()).getMemberById(me.getRemotePlayerId()));
+        me.setPlayer((TruePlayer)newWorld.getPlayerTeam().getMemberById(me.getRemotePlayerId()));
         newWorld.createCanvas();
         newWorld.setCurrentMinigame(new Battle());
         newWorld.init();
@@ -175,7 +175,7 @@ public class WorldCanvas extends Canvas{
         
         
         newWorld.getCanvas().registerKey(KeyEvent.VK_S, true, ()->{
-            Team t = newWorld.getTeams()[0];
+            Team t = newWorld.getPlayerTeam();
             System.out.println("Total entities to serialize: " + t.length());
             String s = SerialUtil.serializeToString(t);
             Team tClone = (Team)SerialUtil.fromSerializedString(s);

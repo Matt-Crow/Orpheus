@@ -130,33 +130,12 @@ public class World implements Serializable{
         return this;
     }
     
-    
-    
-    
-    
-    
-    
-    
-    /**
-     * Returns the team with the given ID,
-     * if one exists. This is used for serialization
-     * so that users know which team they are on 
-     * 
-     * @param id the ID of the team to search for
-     * @return the team in this World with the given ID, or null if one doesn't exist
-     */
-    public Team getTeamById(String id){
+    public Team getPlayerTeam(){
         return playerTeam;
     }
-    
-    public Team[] getTeams(){
-        return new Team[]{playerTeam, AITeam};
+    public Team getAITeam(){
+        return AITeam;
     }
-    
-    
-    
-    
-    
     
     public World addParticle(Particle p){
         particles.add(p);
@@ -264,26 +243,28 @@ public class World implements Serializable{
     
     
     
-    
-    private void hostUpdate(){
-        Arrays.stream(getTeams()).forEach((Team t)->{
-            t.update();
-            t.forEach((Entity member)->{
-                currentMap.checkForTileCollisions(member);
-                if(t.getEnemy() != null){
-                    t.getEnemy().getMembersRem().forEach((AbstractPlayer enemy)->{
-                        if(member instanceof Projectile){
-                            // I thought that java handled this conversion?
-                            ((Projectile)member).checkForCollisions(enemy);
-                        }
-                        //member.checkForCollisions(enemy);
-                    });
-                }
-            });
+    private void hostUpdateTeam(Team t){
+        t.update();
+        t.forEach((Entity member)->{
+            currentMap.checkForTileCollisions(member);
+            if(t.getEnemy() != null){
+                t.getEnemy().getMembersRem().forEach((AbstractPlayer enemy)->{
+                    if(member instanceof Projectile){
+                        // I thought that java handled this conversion?
+                        ((Projectile)member).checkForCollisions(enemy);
+                    }
+                    //member.checkForCollisions(enemy);
+                });
+            }
         });
+    }
+    private void hostUpdate(){
+        hostUpdateTeam(playerTeam);
+        hostUpdateTeam(AITeam);
+        
         if(isHosting){
             Master.SERVER.send(new ServerMessage(
-                SerialUtil.serializeToString(getTeams()), //this may require changes
+                SerialUtil.serializeToString(new Team[]{playerTeam, AITeam}),
                 ServerMessageType.WORLD_UPDATE
             ));
         }
@@ -303,12 +284,15 @@ public class World implements Serializable{
         in hostUpdate, so no need to do this
         */
         if(isRemotelyHosted){
-            Arrays.stream(getTeams()).forEach((Team t)->{
-                t.forEach((Entity member)->{
-                    if(member instanceof Projectile){
-                        ((Projectile)member).spawnParticles();
-                    }
-                });
+            playerTeam.forEach((Entity member)->{
+                if(member instanceof Projectile){
+                    ((Projectile)member).spawnParticles();
+                }
+            });
+            AITeam.forEach((Entity member)->{
+                if(member instanceof Projectile){
+                    ((Projectile)member).spawnParticles();
+                }
             });
         }
     }
