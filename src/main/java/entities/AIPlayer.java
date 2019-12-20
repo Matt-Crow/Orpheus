@@ -8,12 +8,12 @@ import customizables.characterClass.CharacterStatName;
  * @author Matt
  */
 public class AIPlayer extends AbstractPlayer{
-    private PlayerAI playerAI;
+    private final PlayerAI playerAI;
     private final int level;
      
     public AIPlayer(String n, int lv) {
         super(n, lv);
-        playerAI = null;
+        playerAI = new PlayerAI(this);
         level = lv;
     }
     
@@ -23,8 +23,7 @@ public class AIPlayer extends AbstractPlayer{
 
     @Override
     public void playerInit() {
-        playerAI = new PlayerAI(this);
-        playerAI.setEnabled(true);
+        playerAI.init();
     }
 
     @Override
@@ -34,6 +33,6 @@ public class AIPlayer extends AbstractPlayer{
 
     @Override
     public double getStatValue(CharacterStatName n) {
-        return 0.05 * level * n.getDefaultValue();
+        return 0.1 * level * n.getDefaultValue();
     }
 }

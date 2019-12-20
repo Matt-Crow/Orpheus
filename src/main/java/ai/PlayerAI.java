@@ -20,20 +20,19 @@ import util.Random;
  */
 public class PlayerAI implements Serializable{
 	private final AbstractPlayer appliedTo;
-    private boolean enabled;
     private AiMode mode;
     private AbstractPlayer latched;
 	
 	public PlayerAI(AbstractPlayer p){
 		appliedTo = p;
-		enabled = false;
         mode = AiMode.NONE;
         latched = null;
 	}
     
-    public void setEnabled(boolean b){
-        enabled = b;
-        if(b){
+    public void init(){
+        mode = AiMode.NONE;
+        latched = null;
+        if(!Master.DISABLEALLAI){
             setToWander();
             appliedTo.getActionRegister().addOnBeHit((OnHitEvent e) -> {
                 latch((AbstractPlayer)e.getHitter());
@@ -119,8 +118,7 @@ public class PlayerAI implements Serializable{
 		//don't update if AI is disabled,
         //or the enemy team is defeated
         if(
-            !enabled 
-            || Master.DISABLEALLAI 
+            Master.DISABLEALLAI 
             || appliedTo.getTeam().getEnemy().isDefeated()
         ){
             return;
