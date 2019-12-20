@@ -147,7 +147,7 @@ public class WorldCanvas extends Canvas{
         Battle b = new Battle();
         
         t1.addMember(Master.getUser().getPlayer());
-        w.addTeam(t1).addTeam(t2);
+        w.setPlayerTeam(t1).setEnemyTeam(t2);
         b.setHost(w);
         w.setCurrentMinigame(b);
         w.init();

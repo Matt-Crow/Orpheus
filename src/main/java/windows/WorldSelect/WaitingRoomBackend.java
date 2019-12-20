@@ -8,12 +8,8 @@ import entities.TruePlayer;
 import java.awt.Color;
 import java.io.IOException;
 import static java.lang.System.err;
-import static java.lang.System.out;
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.json.*;
 import javax.swing.*;
 import net.*;
@@ -468,7 +464,7 @@ public class WaitingRoomBackend {
         }
         w.createCanvas(); //need to recreate so that togglepause doesn't work
         Battle b = new Battle();
-        w.addTeam(team1).addTeam(team2).setCurrentMinigame(b);
+        w.setPlayerTeam(team1).setEnemyTeam(team2).setCurrentMinigame(b);
         b.setHost(w);
         w.init();
         

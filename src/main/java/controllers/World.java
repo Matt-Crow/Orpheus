@@ -20,10 +20,9 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import windows.world.WorldCanvas;
 import static java.lang.System.out;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import net.ServerMessage;
 import net.ServerMessageType;
@@ -43,8 +42,9 @@ import util.SerialUtil;
  * @author Matt Crow
  */
 public class World implements Serializable{
-    //key is team ID
-    private volatile HashMap<String, Team> teams; //makes it faster to find nearest enemies
+    private volatile Team playerTeam;
+    private volatile Team AITeam;
+    
     
     private transient SafeList<Particle> particles;
     
@@ -60,8 +60,8 @@ public class World implements Serializable{
     private Consumer<ServerMessage> receiveControl;
     
     public World(int size){
-        teams = new HashMap<>();
-        
+        playerTeam = new Team("Players", Color.green);
+        AITeam = new Team("AI", Color.red);
         particles = new SafeList<>();
         
         currentMap = new Map(size, size);
@@ -116,12 +116,26 @@ public class World implements Serializable{
         return w;
     }
     
-    public final World addTeam(Team t){
-        teams.put(t.getId(), t);
+    public final World setPlayerTeam(Team t){
+        playerTeam = t;
         t.forEachMember((AbstractPlayer p)->p.setWorld(this));
         t.forEach((Entity e)->e.setWorld(this));
         return this;
     }
+    
+    public final World setEnemyTeam(Team t){
+        AITeam = t;
+        t.forEachMember((AbstractPlayer p)->p.setWorld(this));
+        t.forEach((Entity e)->e.setWorld(this));
+        return this;
+    }
+    
+    
+    
+    
+    
+    
+    
     
     /**
      * Returns the team with the given ID,
@@ -132,12 +146,16 @@ public class World implements Serializable{
      * @return the team in this World with the given ID, or null if one doesn't exist
      */
     public Team getTeamById(String id){
-        return teams.get(id);
+        return playerTeam;
     }
     
     public Team[] getTeams(){
-        return teams.values().toArray(new Team[teams.size()]);
+        return new Team[]{playerTeam, AITeam};
     }
+    
+    
+    
+    
     
     
     public World addParticle(Particle p){
@@ -245,8 +263,10 @@ public class World implements Serializable{
     }
     
     
+    
+    
     private void hostUpdate(){
-        teams.values().stream().forEach((Team t)->{
+        Arrays.stream(getTeams()).forEach((Team t)->{
             t.update();
             t.forEach((Entity member)->{
                 currentMap.checkForTileCollisions(member);
@@ -263,11 +283,17 @@ public class World implements Serializable{
         });
         if(isHosting){
             Master.SERVER.send(new ServerMessage(
-                SerialUtil.serializeToString(teams),
+                SerialUtil.serializeToString(getTeams()), //this may require changes
                 ServerMessageType.WORLD_UPDATE
             ));
         }
     }
+    
+    
+    
+    
+    
+    
     private void clientUpdate(){
         /*
         Client update is only called if isHosting is false
@@ -277,7 +303,7 @@ public class World implements Serializable{
         in hostUpdate, so no need to do this
         */
         if(isRemotelyHosted){
-            teams.values().stream().forEach((Team t)->{
+            Arrays.stream(getTeams()).forEach((Team t)->{
                 t.forEach((Entity member)->{
                     if(member instanceof Projectile){
                         ((Projectile)member).spawnParticles();
@@ -326,10 +352,9 @@ public class World implements Serializable{
     private void receiveWorldUpdate(ServerMessage sm){
         //synchronized(teams){
         SwingUtilities.invokeLater(()->{
-            teams.clear();
-
-            HashMap<String, Team> ts = (HashMap<String, Team>)SerialUtil.fromSerializedString(sm.getBody());
-            ts.values().stream().forEach((Team t)->addTeam(t));
+            Team[] ts = (Team[])SerialUtil.fromSerializedString(sm.getBody());
+            setPlayerTeam(ts[0]);
+            setEnemyTeam(ts[1]);
 
             Master.getUser().linkToRemotePlayerInWorld(this); //since teams have changed
         });
@@ -346,9 +371,8 @@ public class World implements Serializable{
         //synchronized(teams){
             currentMap.draw(g);
             particles.forEach((p)->p.draw(g));
-            teams.values().stream().forEach((t)->{
-                t.draw(g);
-            });
+            playerTeam.draw(g);
+            AITeam.draw(g);
         //}
     }
     
@@ -360,9 +384,8 @@ public class World implements Serializable{
         out.println("Current map:");
         //currentMap.displayData();
         out.println("Teams:");
-        teams.values().stream().forEach((Team t)->{
-            t.displayData();
-        });
+        playerTeam.displayData();
+        AITeam.displayData();
     }
     
     /**
@@ -400,7 +423,8 @@ public class World implements Serializable{
 
     
     private void writeObject(ObjectOutputStream oos) throws IOException{
-        oos.writeObject(teams);
+        oos.writeObject(playerTeam);
+        oos.writeObject(AITeam);
         oos.writeObject(currentMap);
         oos.writeObject(currentMinigame);
         oos.writeUTF(remoteHostIp);
@@ -411,7 +435,8 @@ public class World implements Serializable{
     }
     
     private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException{
-        teams = (HashMap<String, Team>) ois.readObject();
+        playerTeam = (Team)ois.readObject();
+        AITeam = (Team)ois.readObject();
         setMap((Map) ois.readObject());
         setCurrentMinigame((Battle) ois.readObject());
         

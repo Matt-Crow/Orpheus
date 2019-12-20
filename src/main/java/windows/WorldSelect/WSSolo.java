@@ -31,8 +31,8 @@ public class WSSolo extends AbstractWSNewWorld{
         //it's like a theme park or something
         battleWorld.createCanvas();
         battleWorld
-            .addTeam(team1)
-            .addTeam(team2);
+            .setPlayerTeam(team1)
+            .setEnemyTeam(team2);
         
         Battle b = new Battle();
         battleWorld.setCurrentMinigame(b);
