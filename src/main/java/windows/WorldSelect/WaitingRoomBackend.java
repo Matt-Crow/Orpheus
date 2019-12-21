@@ -49,11 +49,12 @@ public class WaitingRoomBackend {
     private final HashMap<String, User> teamProto;
     
     /*
-    these are the real teams, constucted once the host
+    this is the real team, constucted once the host
     sends the request for Build data
     */
-    private Team team1;
-    private Team team2;
+    private final Team playerTeam;
+    
+    private Team enemyTeam; //move this to World or Battle later
     
     private int teamSize;
     private int enemyLevel;
@@ -80,6 +81,8 @@ public class WaitingRoomBackend {
         gameAboutToStart = false;
         
         teamProto = new HashMap<>();
+        playerTeam = new Team("Players", Color.green);
+        enemyTeam = null;
         
         receiveJoin  = (sm)->{
             receiveJoin(sm);
@@ -150,8 +153,7 @@ public class WaitingRoomBackend {
     
     private void clearData(){
         teamProto.clear();
-        team1 = null;
-        team2 = null;
+        playerTeam.clear();
         gameAboutToStart = false;
     }
     
@@ -203,7 +205,7 @@ public class WaitingRoomBackend {
         setEnemyLevel(obj.getInt("enemy level"));
         obj.getJsonArray("team").stream().forEach((jv)->{
             if(jv.getValueType().equals(JsonValue.ValueType.OBJECT)){
-                tryJoinTeam1(User.deserializeJson((JsonObject)jv));
+                joinPlayerTeam(User.deserializeJson((JsonObject)jv));
             }
         });
         
@@ -211,28 +213,18 @@ public class WaitingRoomBackend {
     }
     
     /**
-     * Notifies that a user has changed teams.
-     * The messages this responds to are sent by 
-     * the tryJoinTeam methods
-     * @see WaitingRoomBackend#tryJoinTeam1(controllers.User) 
-     * @see WaitingRoomBackend#tryJoinTeam2(controllers.User) 
+     * Notifies that a user has joined the team.
+     * The messages this responds to are sent by
+     * @see WaitingRoomBackend#joinPlayerTeam(controllers.User) 
      * @param sm 
      */
     private void receiveUpdate(ServerMessage sm){
-        //not sure I like this.
-        //update messages are either 'join team 1', or 'join team 2'
-        String[] split = sm.getBody().split(" ");
-        if(null == split[split.length - 1]){
+        //update message is now just 'join team'
+        if(sm.getBody().equals("join player team")){
+            joinPlayerTeam(sm.getSender());
+        } else {
             System.out.println("not sure how to handle this: ");
             sm.displayData();
-        } else switch (split[split.length - 1]) {
-            case "1":
-                tryJoinTeam1(sm.getSender());
-                break;
-            default:
-                System.out.println("not sure how to handle this: ");
-                sm.displayData();
-                break;
         }
     }
     
@@ -289,11 +281,12 @@ public class WaitingRoomBackend {
 
         b = Build.deserializeJson(JsonUtil.fromString(sm.getBody()));
         tp.applyBuild(b);
-        team1.addMember(tp);
+        playerTeam.addMember(tp);
         
         sendRemoteId(ip, tp.id);
         
-        if(team1.getRosterSize() == teamSize && team2.getRosterSize() == teamSize){
+        // may need some other way of checking if this has received all build data
+        if(teamProto.isEmpty()){
             server.removeReceiver(ServerMessageType.PLAYER_DATA, receiveBuildInfo);
             finallyStart();
         }
@@ -341,8 +334,6 @@ public class WaitingRoomBackend {
         host.getHost().switchToPage(p);
     }
     
-    
-    
     /**
      * Begins preparing the server to receive
      * player build information.
@@ -370,9 +361,7 @@ public class WaitingRoomBackend {
      * @see WSWaitForPlayers#receiveBuildInfo
      */
     private void waitForData(){        
-        //need these here, else null pointer in responding to build request
-        team1 = new Team("Player", Color.green);
-        team2 = Team.constructRandomTeam("AI", Color.red, teamSize, enemyLevel);
+        enemyTeam = Team.constructRandomTeam("AI", Color.red, teamSize, enemyLevel);
         
         server.addReceiver(ServerMessageType.PLAYER_DATA, receiveBuildInfo);
         requestBuilds();
@@ -382,13 +371,14 @@ public class WaitingRoomBackend {
         //first, put the host on the proper team
         Master.getUser().initPlayer().getPlayer().applyBuild(host.getSelectedBuild());
         if(teamProto.containsKey(server.getIpAddr())){
-            team1.addMember(Master.getUser().getPlayer());
+            playerTeam.addMember(Master.getUser().getPlayer());
             teamProto.remove(server.getIpAddr());
         } else {
             throw new UnsupportedOperationException();
         }
         
-        if(team1.getRosterSize() == teamSize && team2.getRosterSize() == teamSize){
+        // may need some other way of checking if this has received all build data
+        if(teamProto.isEmpty()){
             Master.SERVER.removeReceiver(ServerMessageType.PLAYER_DATA, receiveBuildInfo);
             finallyStart();
         }
@@ -411,7 +401,7 @@ public class WaitingRoomBackend {
         }
         w.createCanvas(); //need to recreate so that togglepause doesn't work
         Battle b = new Battle();
-        w.setPlayerTeam(team1).setEnemyTeam(team2).setCurrentMinigame(b);
+        w.setPlayerTeam(playerTeam).setEnemyTeam(enemyTeam).setCurrentMinigame(b);
         b.setHost(w);
         w.init();
         
@@ -469,13 +459,6 @@ public class WaitingRoomBackend {
         return isHost;
     }
     
-    public boolean team1Full(){
-        return false;
-    }
-    public boolean team2Full(){
-        return true;
-    }
-    
     public void setTeamSize(int s){
         if(s >= 1){
             teamSize = s;
@@ -492,49 +475,40 @@ public class WaitingRoomBackend {
         }
     }
     
-    public User[] getTeam1Proto(){
+    public User[] getTeamProto(){
         return teamProto.values().stream().toArray(size -> new User[size]);
-    }
-    public User[] getTeam2Proto(){
-        return null;
     }
     
     /**
-     * Places a User on team 1.
-     * If said user is the person at this
-     * computer, sends a message to all connected
-     * clients that a team change has occurred.
+     * Puts the given user on the prototype player team,
+     * if they are not already there. Will change this to
+     * automatically run once the player connects to the server.
      * 
-     * @param u the User to place on team 1
-     * @return whether or not the User was able to join team 1
+     * @param u
+     * @return 
      */
-    public boolean tryJoinTeam1(User u){
-        boolean success = teamProto.containsKey(u.getIpAddress());
-        //automatically return true if the player is already on the correct team
-        
-        if(!success && !team1Full()){
-            //team is not full, and u is not already on this team
-            success = true;
-            
+    public final WaitingRoomBackend joinPlayerTeam(User u){
+        if(!teamProto.containsKey(u.getIpAddress())){
+            //hasn't joined yet
             teamProto.put(u.getIpAddress(), u);
             
             if(u.equals(Master.getUser())){
                 //only send an update if the user is the one who changed teams. Prevents infinite loop
                 ServerMessage sm = new ServerMessage(
-                    "join team 1",
+                    "join player team",
                     ServerMessageType.WAITING_ROOM_UPDATE
                 );
                 Master.SERVER.send(sm);
             }
             host.updateTeamDisplays();
         }
-        return success;
+        return this;
     }
     
     /**
      * Sends information about the waiting room to standard output
      */
-    public void displayData(){
+    public final void displayData(){
         System.out.println("WAITING ROOM");
         System.out.println("Team size: " + teamSize);
         System.out.println("Players: ");

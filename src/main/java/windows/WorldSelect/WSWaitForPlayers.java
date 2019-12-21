@@ -27,12 +27,10 @@ public class WSWaitForPlayers extends Page{
     but I'm not quite sure
     */
     
-    private final JLabel yourTeam;
-    private final JTextArea team1List;
-    private final JTextArea team2List;
+    private final JTextArea teamList;
     private final Chat chat;
     private final BuildSelect playerBuild;
-    private final JButton joinT1Button;
+    private final JButton joinTeamButton;
     private final JButton startButton;
     
     private final WaitingRoomBackend backend;
@@ -51,27 +49,19 @@ public class WSWaitForPlayers extends Page{
         JPanel infoSection = new JPanel();
         infoSection.setLayout(new GridLayout(1, 3));
         
-        team1List = new JTextArea("Team 1");
-        Style.applyStyling(team1List);
-        infoSection.add(team1List);
-        
-        yourTeam = new JLabel("Your team");
-        Style.applyStyling(yourTeam);
-        infoSection.add(yourTeam);
-        
-        team2List = new JTextArea("Team 2");
-        Style.applyStyling(team2List);
-        infoSection.add(team2List);
+        teamList = new JTextArea("Player Team:");
+        Style.applyStyling(teamList);
+        infoSection.add(teamList);
         
         add(infoSection, BorderLayout.PAGE_START);
         
         
-        joinT1Button = new JButton("Join team 1");
-        joinT1Button.addActionListener((e)->{
-            joinTeam1(Master.getUser());
+        joinTeamButton = new JButton("Join team");
+        joinTeamButton.addActionListener((e)->{
+            joinPlayerTeam(Master.getUser());
         });
-        Style.applyStyling(joinT1Button);
-        add(joinT1Button, BorderLayout.LINE_START);
+        Style.applyStyling(joinTeamButton);
+        add(joinTeamButton, BorderLayout.LINE_START);
         
         JPanel center = new JPanel();
         center.setLayout(new GridBagLayout());
@@ -149,12 +139,11 @@ public class WSWaitForPlayers extends Page{
      * @param u the user to place on team 1.
      * @return this 
      */
-    public WSWaitForPlayers joinTeam1(User u){
-        if(backend.tryJoinTeam1(u)){
-            chat.logLocal(u.getName() + " has joined team 1.");
-            updateTeamDisplays();
-            yourTeam.setText("You are on team 1");
-        }
+    public WSWaitForPlayers joinPlayerTeam(User u){
+        backend.joinPlayerTeam(u);
+        chat.logLocal(u.getName() + " has joined the team.");
+        updateTeamDisplays();
+        
         return this;
     }
     
@@ -163,19 +152,12 @@ public class WSWaitForPlayers extends Page{
      * to match the proto-teams of the backend.
      */
     public void updateTeamDisplays(){
-        String newStr = "Team 1: \n";
+        String newStr = "Player Team: \n";
         newStr = Arrays
-            .stream(backend.getTeam1Proto())
+            .stream(backend.getTeamProto())
             .map((User use) -> "* " + use.getName() + "\n")
             .reduce(newStr, String::concat);
-        team1List.setText(newStr);
-        
-        newStr = "Team 2: \n";
-        newStr = Arrays
-            .stream(backend.getTeam2Proto())
-            .map((User use) -> "* " + use.getName() + "\n")
-            .reduce(newStr, String::concat);
-        team2List.setText(newStr);
+        teamList.setText(newStr);
     }
     
     public Build getSelectedBuild(){
@@ -188,7 +170,7 @@ public class WSWaitForPlayers extends Page{
     
     public void setInputEnabled(boolean b){
         playerBuild.setEnabled(b);
-        joinT1Button.setEnabled(b);
+        joinTeamButton.setEnabled(b);
     }
     
     public WSWaitForPlayers setTeamSize(int s){
