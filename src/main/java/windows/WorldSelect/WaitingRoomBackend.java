@@ -169,6 +169,10 @@ public class WaitingRoomBackend {
     private void receiveJoin(ServerMessage sm){
         String ipAddr = sm.getIpAddr();
         
+        
+        //todo: make this automatically make sm's sender join the player team
+        
+        
         JsonObjectBuilder build = Json.createObjectBuilder();
         build.add("type", "waiting room init");
         build.add("team size", teamSize);

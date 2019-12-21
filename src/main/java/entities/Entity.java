@@ -66,6 +66,7 @@ public abstract class Entity implements Serializable, Terminable{
         radius = 50;
         terminateListeners = new SafeList<>();
         actReg = new ActionRegister(this);
+        dir = new Direction(0);
 		nextId++;
 	}
     

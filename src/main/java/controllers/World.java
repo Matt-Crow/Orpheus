@@ -26,6 +26,7 @@ import java.util.function.Consumer;
 import javax.swing.SwingUtilities;
 import net.ServerMessage;
 import net.ServerMessageType;
+import util.Random;
 import util.SafeList;
 import util.SerialUtil;
 
@@ -241,7 +242,29 @@ public class World implements Serializable{
         }
     }
     
-    
+    /**
+     * Sets the coordinates of the given
+     * Entity onto a random valid tile
+     * on this' map.
+     * 
+     * @param e 
+     */
+    public void spawnIntoWorld(Entity e){
+        int minX = 0;
+        int maxX = currentMap.getWidth() / Tile.TILE_SIZE;
+        int minY = 0;
+        int maxY = currentMap.getHeight() / Tile.TILE_SIZE;
+        int rootX = 0;
+        int rootY = 0;
+        
+        do{
+            rootX = Random.choose(minX, maxX);
+            rootY = Random.choose(minY, maxY);
+        } while(!currentMap.isOpenTile(rootX * Tile.TILE_SIZE, rootY * Tile.TILE_SIZE));
+        
+        e.setX(rootX * Tile.TILE_SIZE + Tile.TILE_SIZE / 2);
+        e.setY(rootY * Tile.TILE_SIZE + Tile.TILE_SIZE / 2);
+    }
     
     private void hostUpdateTeam(Team t){
         t.update();
@@ -269,12 +292,7 @@ public class World implements Serializable{
             ));
         }
     }
-    
-    
-    
-    
-    
-    
+        
     private void clientUpdate(){
         /*
         Client update is only called if isHosting is false

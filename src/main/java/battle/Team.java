@@ -1,6 +1,7 @@
 package battle;
 
 import controllers.Master;
+import controllers.World;
 import java.awt.Color;
 import java.util.ArrayList;
 import entities.AbstractPlayer;
@@ -82,17 +83,15 @@ public class Team extends SafeList<Entity> implements Serializable{
 		return t;
 	}
     
-    //OK to have different params, as this does not extend entity
-	public void init(int y, int spacing, int facing){
-        int x = spacing;
+	public void init(World w){
         membersRem.clear();
         clear();
 		for(AbstractPlayer p : roster.values()){
-			p.initPos(x, y, facing);
+			w.spawnIntoWorld(p);
+            //p.initPos(x, y, facing);
             p.doInit();
             membersRem.add(p);
             add(p);
-			x += spacing;
 		}
 		defeated = false;
 	}
