@@ -29,10 +29,6 @@ public abstract class AbstractEntity implements Serializable, Terminable{
 	private boolean moving;
 	private double speedFilter; // amount the entity's speed is multiplied by when moving. May depreciate later
 	
-    private Direction knockbackDir;
-    private int knockbackMag;
-    private int knockbackDur;
-	
 	/*
 	 * In-battle stuff
 	 * 
@@ -139,6 +135,9 @@ public abstract class AbstractEntity implements Serializable, Terminable{
 	public final void applySpeedFilter(double f){
 		speedFilter *= f;
 	}
+    public final void clearSpeedFilter(){
+        speedFilter = 1.0;
+    }
 	public final void setMoving(boolean isMoving){
 		moving = isMoving;
 	}
@@ -158,32 +157,13 @@ public abstract class AbstractEntity implements Serializable, Terminable{
          */
 		dir = Direction.getDegreeByLengths(x, y, xCoord, yCoord);
 	}
-	
-    public final void knockBack(int mag, Direction d, int dur){
-        /**
-         * @param mag : the total distance this entity will be knocked back
-         * @param d : the direction this entity is knocked back
-         * @param dur : the number of frames this will be knocked back for
-         */
-        knockbackMag = mag / dur;
-        knockbackDir = d;
-        knockbackDur = dur;
-    }
     
 	public void updateMovement(){
-        if(knockbackDur <= 0){
-            //can move if not knocked back
-            if(moving){
-                x += getMomentum() * dir.getXMod();
-                y += getMomentum() * dir.getYMod();
-            }
-        } else {
-            x += knockbackMag * knockbackDir.getXMod();
-            y += knockbackMag * knockbackDir.getYMod();
-            knockbackDur--;
+		if(moving){
+            x += getMomentum() * dir.getXMod();
+            y += getMomentum() * dir.getYMod();
         }
-		
-		speedFilter = 1.0;
+		clearSpeedFilter();
 	}
     
     public final void setRadius(int r){
@@ -250,9 +230,6 @@ public abstract class AbstractEntity implements Serializable, Terminable{
     public final void doInit(){
 		// called by battle
         terminateListeners.clear();
-        knockbackDir = new Direction(0);
-        knockbackMag = 0;
-        knockbackDur = 0;
         
 		moving = false;
 		speedFilter = 1.0;

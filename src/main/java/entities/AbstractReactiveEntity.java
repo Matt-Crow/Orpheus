@@ -1,5 +1,7 @@
 package entities;
 
+import util.Direction;
+
 /**
  * The AbstractReactiveEntity takes the basic movement features from
  * AbstractEntity, and adds in more complexity, so that instead of blindly
@@ -17,11 +19,19 @@ public abstract class AbstractReactiveEntity extends AbstractEntity{
 	private int focusY;
 	private boolean hasFocus;
     
+    private Direction knockbackDir;
+    private int knockbackMag;
+    private int knockbackDur;
+    
     public AbstractReactiveEntity(){
         super();
         focusX = 0;
         focusY = 0;
         hasFocus = false;
+        
+        knockbackDir = null;
+        knockbackMag = 0;
+        knockbackDur = 0;
     }
     
     //focus related methods
@@ -43,6 +53,21 @@ public abstract class AbstractReactiveEntity extends AbstractEntity{
 		return withinX && withinY;
 	}
     
+    
+    
+    public final void knockBack(int mag, Direction d, int dur){
+        /**
+         * @param mag : the total distance this entity will be knocked back
+         * @param d : the direction this entity is knocked back
+         * @param dur : the number of frames this will be knocked back for
+         */
+        knockbackMag = mag / dur;
+        knockbackDir = d;
+        knockbackDur = dur;
+    }
+    
+    
+    
     @Override
     public void updateMovement(){
         if(hasFocus){
@@ -54,11 +79,25 @@ public abstract class AbstractReactiveEntity extends AbstractEntity{
 				setMoving(true);
 			}
 		}
-        super.updateMovement();
+        if(knockbackDir != null){
+            //cannot move if being knocked back
+            setX((int) (getX() + knockbackMag * knockbackDir.getXMod()));
+            setY((int) (getY() + knockbackMag * knockbackDir.getYMod()));
+            knockbackDur--;
+            if(knockbackDur == 0){
+                knockbackDir = null;
+            }
+        } else {
+            super.updateMovement();
+        }   
+        clearSpeedFilter();
     }
     
     @Override
     public void init(){
         hasFocus = false;
+        knockbackDir = null;
+        knockbackMag = 0;
+        knockbackDur = 0;
     }
 }
