@@ -138,6 +138,7 @@ public class World implements Serializable{
     
     public World addParticle(Particle p){
         particles.add(p);
+        p.setWorld(this);
         return this;
     }
     
@@ -262,6 +263,7 @@ public class World implements Serializable{
         
         e.setX(rootX * Tile.TILE_SIZE + Tile.TILE_SIZE / 2);
         e.setY(rootY * Tile.TILE_SIZE + Tile.TILE_SIZE / 2);
+        e.setWorld(this);
     }
     
     private void hostUpdateTeam(Team t){

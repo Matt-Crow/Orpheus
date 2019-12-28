@@ -85,9 +85,9 @@ public class Team extends SafeList<Entity> implements Serializable{
 	public void init(World w){
         membersRem.clear();
         clear();
-		for(AbstractPlayer p : roster.values()){
-			initPlayer(p, w);
-		}
+        roster.values().forEach((p) -> {
+            initPlayer(p, w);
+        });
 	}
     public void initPlayer(AbstractPlayer p, World w){
        w.spawnIntoWorld(p);
