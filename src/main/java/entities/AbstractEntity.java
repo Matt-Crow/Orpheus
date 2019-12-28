@@ -3,23 +3,20 @@ package entities;
 import java.awt.Graphics;
 import util.Direction;
 import battle.Team;
-import actions.ActionRegister;
 import actions.Terminable;
 import actions.TerminateListener;
 import controllers.Master;
 import controllers.World;
 import java.io.Serializable;
-import static java.lang.System.out;
 import util.SafeList;
 
 /**
- * The AbstractEntity class is used as the base for anything that has to interact with players in game
+ * The AbstractEntity class is used as the base for anything that has to interact with players in game.
+ * this class only includes behavior associated with vector-based movement and termination.
  */
 public abstract class AbstractEntity implements Serializable, Terminable{
 	/*
 	 * Position fields
-	 * 
-	 * move to a movement manager class later?
 	 */
 	private int x;
 	private int y;
@@ -31,11 +28,6 @@ public abstract class AbstractEntity implements Serializable, Terminable{
 	
 	/*
 	 * In-battle stuff
-	 * 
-	 * shouldTeminate is set to true once the entity should be deleted
-	 * 
-	 * actReg is used to store actions (onBeHit, onUpdate, etc.) see the actions package for more details
-	 * entityAI is the AI that runs this. All entities have this AI, but it must be manually enabled
 	 */
 	private Team team;
 	private boolean shouldTerminate;
@@ -44,7 +36,6 @@ public abstract class AbstractEntity implements Serializable, Terminable{
     
     private World inWorld; //the world this is currently in
     
-	// misc
 	public final String id;
 	private static int nextId = 0;
     
@@ -56,13 +47,6 @@ public abstract class AbstractEntity implements Serializable, Terminable{
         dir = new Direction(0);
 		nextId++;
 	}
-    
-    public void detailedDisplayData(){
-        out.println("ENTITY #" + id);
-        out.println("X: " + x);
-        out.println("Y: " + y);
-        out.println("WORLD: " + inWorld);
-    }
     
     @Override
     public final boolean equals(Object o){
@@ -180,14 +164,12 @@ public abstract class AbstractEntity implements Serializable, Terminable{
 	}
 	
 	
-    
     public double distanceFrom(int xc, int yc){
         return Math.sqrt(Math.pow(xc - x, 2) + Math.pow(yc - y, 2));
     }
     public double distanceFrom(AbstractEntity e){
         return distanceFrom(e.getX(), e.getY());
     }
-    
     public final boolean isWithin(int x, int y, int w, int h){
         return (
             x < this.x + radius //left
@@ -209,8 +191,6 @@ public abstract class AbstractEntity implements Serializable, Terminable{
         return distanceFrom(e) <= e.getRadius() + radius;
 	}
     
-    //can't be final, as SeedProjectile needs to override
-    //add on terminate?
     @Override
 	public void terminate(){
 		shouldTerminate = true;

@@ -203,12 +203,6 @@ public class Team extends SafeList<AbstractEntity> implements Serializable{
             out.println(p.getName() + "(ID: " + p.id + ")");
         });
     }
-    public void detailedDisplayData(){
-        out.println("TEAM: " + name + "(ID: " + id + ")");
-        roster.values().stream().forEach((AbstractPlayer p)->{
-            p.detailedDisplayData();
-        });
-    }
     
     @Override
     public boolean equals(Object obj){
