@@ -10,7 +10,7 @@ import controllers.Master;
 import util.CombatLog;
 import util.Random;
 
-public class Projectile extends AbstractEntity{
+public class Projectile extends AbstractReactiveEntity{
 	private final AbstractPlayer user;
 	private final AbstractActive registeredAttack;
 	private int distanceTraveled;
@@ -133,7 +133,7 @@ public class Projectile extends AbstractEntity{
     
 	@Override
     public void init() {
-        
+        super.init();
     }
     
     @Override

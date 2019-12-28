@@ -32,13 +32,6 @@ public abstract class AbstractEntity implements Serializable, Terminable{
     private Direction knockbackDir;
     private int knockbackMag;
     private int knockbackDur;
-    
-	/*
-	 * (focusX, focusY) is a point that the entity is trying to reach
-	 */
-	private int focusX;
-	private int focusY;
-	private boolean hasFocus;
 	
 	/*
 	 * In-battle stuff
@@ -135,6 +128,10 @@ public abstract class AbstractEntity implements Serializable, Terminable{
 		maxSpeed = speed;
 	}
     
+    public final int getSpeed(){
+        return maxSpeed;
+    }
+    
     //change later
      /**
      * @param f : the amount this entity's speed will be multiplied by
@@ -173,17 +170,7 @@ public abstract class AbstractEntity implements Serializable, Terminable{
         knockbackDur = dur;
     }
     
-	private void updateMovement(){
-		if(hasFocus){
-			if(withinFocus()){
-				hasFocus = false;
-				setMoving(false);
-			}else{
-				turnToFocus();
-				setMoving(true);
-			}
-		}
-		
+	public void updateMovement(){
         if(knockbackDur <= 0){
             //can move if not knocked back
             if(moving){
@@ -205,26 +192,6 @@ public abstract class AbstractEntity implements Serializable, Terminable{
     public final int getRadius(){
         return radius;
     }
-    
-    
-	//focus related methods
-	public final void setFocus(int xCoord, int yCoord){
-		focusX = xCoord;
-		focusY = yCoord;
-		hasFocus = true;
-	}
-	public final void setFocus(AbstractEntity e){
-		setFocus(e.getX(), e.getY());
-	}
-	public final void turnToFocus(){
-		turnTo(focusX, focusY);
-	}
-	public boolean withinFocus(){
-		// returns if has reached focal point
-		boolean withinX = Math.abs(getX() - focusX) < maxSpeed;
-		boolean withinY = Math.abs(getY() - focusY) < maxSpeed;
-		return withinX && withinY;
-	}
 	
 	// inbattle methods
 	public final void setTeam(Team t){
@@ -291,8 +258,6 @@ public abstract class AbstractEntity implements Serializable, Terminable{
 		speedFilter = 1.0;
 		actReg.reset();
 		shouldTerminate = false;
-		
-		hasFocus = false;
         init();
 	}
     

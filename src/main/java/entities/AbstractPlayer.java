@@ -21,7 +21,7 @@ import util.SafeList;
  * 
  * @author Matt Crow
  */
-public abstract class AbstractPlayer extends AbstractEntity{
+public abstract class AbstractPlayer extends AbstractReactiveEntity{
 	private final String name;
 	private Color color;
 	
@@ -124,6 +124,7 @@ public abstract class AbstractPlayer extends AbstractEntity{
     
     @Override
 	public void init(){
+        super.init();
         statuses.clear();
         getActionRegister().reset();
         
