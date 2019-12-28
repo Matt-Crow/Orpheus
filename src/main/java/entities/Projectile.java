@@ -10,7 +10,7 @@ import controllers.Master;
 import util.CombatLog;
 import util.Random;
 
-public class Projectile extends Entity{
+public class Projectile extends AbstractEntity{
 	private final AbstractPlayer user;
 	private final AbstractActive registeredAttack;
 	private int distanceTraveled;

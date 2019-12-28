@@ -7,7 +7,7 @@ import java.util.function.UnaryOperator;
 import util.Number;
 
 /**
- * Resistance slows how fast an Entity takes damage, giving them a longer lifespan.
+ * Resistance slows how fast an AbstractEntity takes damage, giving them a longer lifespan.
  * Note that this does not decrease the damage they take.
  * 
  * Needs reworking.

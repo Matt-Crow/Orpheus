@@ -2,7 +2,7 @@ package controllers;
 
 import battle.Battle;
 import battle.Team;
-import entities.Entity;
+import entities.AbstractEntity;
 import entities.Particle;
 import entities.AbstractPlayer;
 import entities.HumanPlayer;
@@ -118,14 +118,14 @@ public class World implements Serializable{
     public final World setPlayerTeam(Team t){
         playerTeam = t;
         t.forEachMember((AbstractPlayer p)->p.setWorld(this));
-        t.forEach((Entity e)->e.setWorld(this));
+        t.forEach((AbstractEntity e)->e.setWorld(this));
         return this;
     }
     
     public final World setEnemyTeam(Team t){
         AITeam = t;
         t.forEachMember((AbstractPlayer p)->p.setWorld(this));
-        t.forEach((Entity e)->e.setWorld(this));
+        t.forEach((AbstractEntity e)->e.setWorld(this));
         return this;
     }
     
@@ -243,12 +243,12 @@ public class World implements Serializable{
     
     /**
      * Sets the coordinates of the given
-     * Entity onto a random valid tile
-     * on this' map.
+ AbstractEntity onto a random valid tile
+ on this' map.
      * 
      * @param e 
      */
-    public void spawnIntoWorld(Entity e){
+    public void spawnIntoWorld(AbstractEntity e){
         int minX = 0;
         int maxX = currentMap.getWidth() / Tile.TILE_SIZE;
         int minY = 0;
@@ -268,7 +268,7 @@ public class World implements Serializable{
     
     private void hostUpdateTeam(Team t){
         t.update();
-        t.forEach((Entity member)->{
+        t.forEach((AbstractEntity member)->{
             currentMap.checkForTileCollisions(member);
             if(t.getEnemy() != null){
                 t.getEnemy().getMembersRem().forEach((AbstractPlayer enemy)->{
@@ -302,12 +302,12 @@ public class World implements Serializable{
         in hostUpdate, so no need to do this
         */
         if(isRemotelyHosted){
-            playerTeam.forEach((Entity member)->{
+            playerTeam.forEach((AbstractEntity member)->{
                 if(member instanceof Projectile){
                     ((Projectile)member).spawnParticles();
                 }
             });
-            AITeam.forEach((Entity member)->{
+            AITeam.forEach((AbstractEntity member)->{
                 if(member instanceof Projectile){
                     ((Projectile)member).spawnParticles();
                 }

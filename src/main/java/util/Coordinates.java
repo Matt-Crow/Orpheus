@@ -1,7 +1,7 @@
 package util;
 
 import java.lang.Math;
-import entities.Entity;
+import entities.AbstractEntity;
 
 public class Coordinates {
 	/**
@@ -21,7 +21,7 @@ public class Coordinates {
 		return Math.sqrt(insideTheBox);
 	}
 	
-	public static double distanceBetween(Entity e1, Entity e2){
+	public static double distanceBetween(AbstractEntity e1, AbstractEntity e2){
 		return distanceBetween(e1.getX(), e1.getY(), e2.getX(), e2.getY());
 	}
 }

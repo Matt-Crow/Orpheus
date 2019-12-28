@@ -4,7 +4,7 @@ import controllers.Master;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class Particle extends Entity{
+public class Particle extends AbstractEntity{
 	private final Color color;
 	private final int lifeSpan;
 	private int age;

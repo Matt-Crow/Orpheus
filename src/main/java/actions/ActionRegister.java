@@ -1,17 +1,17 @@
 package actions;
 
-import entities.Entity;
+import entities.AbstractEntity;
 import entities.AbstractPlayer;
 import java.io.Serializable;
 import static java.lang.System.out;
 import util.SafeList;
 
 /**
- * An ActionRegister is used to store OnHit- and OnUpdate-Listeners, and register them to an Entity.
+ * An ActionRegister is used to store OnHit- and OnUpdate-Listeners, and register them to an AbstractEntity.
  * It is used by the AbstractPlayer class to store Status effects and passives.
  */
 public class ActionRegister implements Serializable{
-	private final Entity registeredTo;
+	private final AbstractEntity registeredTo;
 	private final SafeList<OnHitListener> onHitRegister;
 	private final SafeList<OnHitListener> onBeHitRegister;
 	private final SafeList<OnHitListener> onMeleeHitRegister;
@@ -19,10 +19,10 @@ public class ActionRegister implements Serializable{
 	private final SafeList<OnUpdateListener> onUpdateRegister;
 	
     /**
-     * Stores Listeners for an Entity.
-     * @param e the Entity to store Listeners for.
+     * Stores Listeners for an AbstractEntity.
+     * @param e the AbstractEntity to store Listeners for.
      */
-	public ActionRegister(Entity e){
+	public ActionRegister(AbstractEntity e){
 		registeredTo = e;
 		onHitRegister = new SafeList<>();
 		onBeHitRegister = new SafeList<>();
@@ -32,7 +32,7 @@ public class ActionRegister implements Serializable{
 	}
     
     /**
-     * adds a Listener that will fire whenever this Entity lands an attack on another.
+     * adds a Listener that will fire whenever this AbstractEntity lands an attack on another.
      * @param a the listener to add.
      */
 	public void addOnHit(OnHitListener a){
@@ -40,7 +40,7 @@ public class ActionRegister implements Serializable{
 	}
     
     /**
-     * Adds a Listener that will fire whenever this Entity is struck by another.
+     * Adds a Listener that will fire whenever this AbstractEntity is struck by another.
      * @param a the listener to add.
      */
 	public void addOnBeHit(OnHitListener a){
@@ -48,7 +48,7 @@ public class ActionRegister implements Serializable{
 	}
     
     /**
-     * adds a Listener that will fire whenever this Entity lands an attack on another.
+     * adds a Listener that will fire whenever this AbstractEntity lands an attack on another.
      * @param a the listener to add.
      */
 	public void addOnMeleeHit(OnHitListener a){

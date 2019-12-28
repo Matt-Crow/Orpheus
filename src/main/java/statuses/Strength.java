@@ -10,7 +10,7 @@ import util.Direction;
 import util.Number;
 
 /**
- * Strength causes the afflicted Entity to knock back those it hits and do more damage
+ * Strength causes the afflicted AbstractEntity to knock back those it hits and do more damage
  */
 public class Strength extends AbstractStatus implements OnHitListener{
     private static final UnaryOperator<Integer> CALC = (i)->{return Number.minMax(1, i, 3) * 2 + 1;};

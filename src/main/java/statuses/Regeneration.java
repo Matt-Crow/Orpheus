@@ -7,7 +7,7 @@ import controllers.Master;
 import java.util.function.UnaryOperator;
 
 /**
- * Regeneration restores an Entity's hit points over time.
+ * Regeneration restores an AbstractEntity's hit points over time.
  */
 public class Regeneration extends AbstractStatus implements OnUpdateListener{
     private static final UnaryOperator<Integer> CALC = (i)->{return Master.seconds(Number.minMax(1, i, 3)) + 2;};

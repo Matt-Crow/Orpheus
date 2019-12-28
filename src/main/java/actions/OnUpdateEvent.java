@@ -1,13 +1,13 @@
 package actions;
 
-import entities.Entity;
+import entities.AbstractEntity;
 
 public class OnUpdateEvent{
-	private final Entity updatee;
-    public OnUpdateEvent(Entity e){
+	private final AbstractEntity updatee;
+    public OnUpdateEvent(AbstractEntity e){
 		updatee = e;
 	}
-    public Entity getUpdated(){
+    public AbstractEntity getUpdated(){
         return updatee;
     }
 }

@@ -21,7 +21,7 @@ import util.SafeList;
  * 
  * @author Matt Crow
  */
-public abstract class AbstractPlayer extends Entity{
+public abstract class AbstractPlayer extends AbstractEntity{
 	private final String name;
 	private Color color;
 	

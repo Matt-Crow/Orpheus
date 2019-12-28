@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import entities.AbstractPlayer;
 import util.Coordinates;
 import entities.AIPlayer;
-import entities.Entity;
+import entities.AbstractEntity;
 import java.awt.Graphics;
 import java.io.Serializable;
 import java.util.function.Consumer;
@@ -23,7 +23,7 @@ import util.SafeList;
  * 
  * @author Matt Crow
  */
-public class Team extends SafeList<Entity> implements Serializable{
+public class Team extends SafeList<AbstractEntity> implements Serializable{
 	private final String name;
 	private final Color color;
 	private Team enemyTeam;
@@ -166,13 +166,13 @@ public class Team extends SafeList<Entity> implements Serializable{
     }
     
     public void update(){
-       forEach((Entity e)->{
+       forEach((AbstractEntity e)->{
            e.doUpdate();
        });
    }
    
    public void draw(Graphics g){
-       forEach((Entity e)->e.draw(g));
+       forEach((AbstractEntity e)->e.draw(g));
    }
    
    public void print(){

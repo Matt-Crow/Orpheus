@@ -3,7 +3,7 @@ package graphics;
 import ai.Path;
 import ai.PathInfo;
 import ai.PathMinHeap;
-import entities.Entity;
+import entities.AbstractEntity;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.io.ByteArrayInputStream;
@@ -177,7 +177,7 @@ public class Map implements Serializable, JsonSerialable{
     }
     
     
-    public void checkForTileCollisions(Entity e){
+    public void checkForTileCollisions(AbstractEntity e){
         //make sure the entity is within the world
         if(e.getX() - e.getRadius() < 0){
             //outside of left bound

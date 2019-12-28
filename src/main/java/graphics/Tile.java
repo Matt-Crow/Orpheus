@@ -1,6 +1,6 @@
 package graphics;
 
-import entities.Entity;
+import entities.AbstractEntity;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.io.Serializable;
@@ -59,11 +59,11 @@ public class Tile implements Serializable, JsonSerialable{
         return c;
     }
     
-    public final boolean contains(Entity e){
+    public final boolean contains(AbstractEntity e){
         return e.isWithin(x, y, TILE_SIZE, TILE_SIZE);
     }
     
-    public void shoveOut(Entity e){
+    public void shoveOut(AbstractEntity e){
         
         //first, check to see which kind of collision to check for
         //if I shove from both axis, results in entities acting strangely with blocks

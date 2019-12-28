@@ -13,9 +13,9 @@ import static java.lang.System.out;
 import util.SafeList;
 
 /**
- * The Entity class is used as the base for anything that has to interact with players in game
+ * The AbstractEntity class is used as the base for anything that has to interact with players in game
  */
-public abstract class Entity implements Serializable, Terminable{
+public abstract class AbstractEntity implements Serializable, Terminable{
 	/*
 	 * Position fields
 	 * 
@@ -60,7 +60,7 @@ public abstract class Entity implements Serializable, Terminable{
 	public final String id;
 	private static int nextId = 0;
     
-	public Entity(){
+	public AbstractEntity(){
 		id = Master.SERVER.getIpAddr() + "#" + nextId;
         inWorld = null;
         radius = 50;
@@ -79,7 +79,7 @@ public abstract class Entity implements Serializable, Terminable{
     
     @Override
     public final boolean equals(Object o){
-        return o != null && o instanceof Entity && o == this && ((Entity)o).id.equals(id); 
+        return o != null && o instanceof AbstractEntity && o == this && ((AbstractEntity)o).id.equals(id); 
     }
 
     @Override
@@ -213,7 +213,7 @@ public abstract class Entity implements Serializable, Terminable{
 		focusY = yCoord;
 		hasFocus = true;
 	}
-	public final void setFocus(Entity e){
+	public final void setFocus(AbstractEntity e){
 		setFocus(e.getX(), e.getY());
 	}
 	public final void turnToFocus(){
@@ -241,7 +241,7 @@ public abstract class Entity implements Serializable, Terminable{
     public double distanceFrom(int xc, int yc){
         return Math.sqrt(Math.pow(xc - x, 2) + Math.pow(yc - y, 2));
     }
-    public double distanceFrom(Entity e){
+    public double distanceFrom(AbstractEntity e){
         return distanceFrom(e.getX(), e.getY());
     }
     
@@ -256,13 +256,13 @@ public abstract class Entity implements Serializable, Terminable{
     
     /**
      * Checks if this entity collides with another entity.
-     * Subclasses should overload this with each subclass of Entity
-     * that needs special reactions
+     * Subclasses should overload this with each subclass of AbstractEntity
+ that needs special reactions
      * 
-     * @param e the Entity to check for collisions with
-     * @return whether or not this collides with the given Entity
+     * @param e the AbstractEntity to check for collisions with
+     * @return whether or not this collides with the given AbstractEntity
      */
-    public boolean checkForCollisions(Entity e){
+    public boolean checkForCollisions(AbstractEntity e){
         return distanceFrom(e) <= e.getRadius() + radius;
 	}
     
@@ -305,13 +305,13 @@ public abstract class Entity implements Serializable, Terminable{
 	}
     
     /**
-     * Inserts an Entity into this' EntityNode chain.
-     * Since the Entity is inserted before this one,
-     * it will not be updated during this iteration of
-     * EntityManager.update
-     * @param e the Entity to insert before this one
+     * Inserts an AbstractEntity into this' EntityNode chain.
+     * Since the AbstractEntity is inserted before this one,
+ it will not be updated during this iteration of
+ EntityManager.update
+     * @param e the AbstractEntity to insert before this one
      */
-    public final void spawn(Entity e){
+    public final void spawn(AbstractEntity e){
         if(e == null){
             throw new NullPointerException();
         }

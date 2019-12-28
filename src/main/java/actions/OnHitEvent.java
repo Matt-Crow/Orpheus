@@ -1,37 +1,37 @@
 package actions;
 
-import entities.Entity;
+import entities.AbstractEntity;
 
 /**
- * Created whenever one Entity hits another.
+ * Created whenever one AbstractEntity hits another.
  */
 public class OnHitEvent {
-    private final Entity hitter;
-    private final Entity wasHit;
+    private final AbstractEntity hitter;
+    private final AbstractEntity wasHit;
     
     /**
      * Creates the event.
-     * @param hitter the Entity who collided with the other.
-     * @param wasHit the Entity who was hit.
+     * @param hitter the AbstractEntity who collided with the other.
+     * @param wasHit the AbstractEntity who was hit.
      */
-    public OnHitEvent(Entity hitter, Entity wasHit){
+    public OnHitEvent(AbstractEntity hitter, AbstractEntity wasHit){
         this.hitter = hitter;
         this.wasHit = wasHit;
     }
     
     /**
      * 
-     * @return the Entity who struck another.
+     * @return the AbstractEntity who struck another.
      */
-    public Entity getHitter(){
+    public AbstractEntity getHitter(){
         return hitter;
     }
     
     /**
      * 
-     * @return the Entity who was hit.
+     * @return the AbstractEntity who was hit.
      */
-    public Entity getWasHit(){
+    public AbstractEntity getWasHit(){
         return wasHit;
     }
 }
