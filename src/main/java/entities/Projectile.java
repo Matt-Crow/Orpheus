@@ -23,7 +23,9 @@ public class Projectile extends Entity{
 		super();
         setSpeed(momentum);
         doInit();
-		initPos(x, y, degrees);
+        setX(x);
+        setY(y);
+        setFacing(degrees);
 		this.useId = useId;
 		distanceTraveled = 0;
 		user = attackUser;
@@ -84,7 +86,9 @@ public class Projectile extends Entity{
 	public void spawnParticle(int degrees, int m, CustomColors c){
 		Particle p = new Particle(m, c);
         p.doInit();
-		p.initPos(getX(), getY(), degrees);
+		p.setX(getX());
+        p.setY(getY());
+        p.setFacing(degrees);
 		p.setTeam(getTeam());
         getWorld().addParticle(p);
 	}

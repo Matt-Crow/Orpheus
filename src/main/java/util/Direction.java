@@ -58,6 +58,11 @@ public class Direction implements Serializable{
 		return new Direction((int)theta);
 	}
 	
+    public final void setDegrees(int deg){
+        degrees = deg;
+        setBounds();
+    }
+    
 	public void turnClockwise(int deg){
 		degrees += deg;
 		setBounds();

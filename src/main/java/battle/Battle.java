@@ -31,6 +31,7 @@ public class Battle implements Serializable{
 	public void init(){
         Team players = host.getPlayerTeam();
         Team ai = host.getAITeam();
+        ai.clear();
         players.setEnemy(ai);
 		players.init(host);
         ai.setEnemy(players);

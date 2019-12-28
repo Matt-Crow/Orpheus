@@ -118,15 +118,20 @@ public abstract class Entity implements Serializable, Terminable{
     public final void setY(int yc){
         y = yc;
     }
+    public final void setFacing(int degrees){
+        dir.setDegrees(degrees);
+    }
     
     
     public final Direction getDir(){
 		return dir;
 	}
+    
+    /**
+     * Sets the movement speed of this entity
+     * @param speed
+     */
 	public final void setSpeed(int speed){
-        /**
-         * Sets the movement speed of this entity
-         */
 		maxSpeed = speed;
 	}
     
@@ -290,12 +295,6 @@ public abstract class Entity implements Serializable, Terminable{
 		hasFocus = false;
         init();
 	}
-    
-    public final void initPos(int xCoord, int yCoord, int degrees){
-        x = xCoord;
-		y = yCoord;
-		dir = new Direction(degrees);
-    }
     
 	public final void doUpdate(){
 		if(!shouldTerminate){

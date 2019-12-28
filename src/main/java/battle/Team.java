@@ -54,6 +54,14 @@ public class Team extends SafeList<Entity> implements Serializable{
 		return color;
 	}
 	
+    /**
+     * Registers a player as a part of this team.
+     * This method is used outside of battle,
+     * as it does not add the player to the list
+     * of members remaining.
+     * 
+     * @param m 
+     */
 	public void addMember(AbstractPlayer m){
         roster.put(m.id, m);
         m.setTeam(this);
@@ -89,6 +97,16 @@ public class Team extends SafeList<Entity> implements Serializable{
             initPlayer(p, w);
         });
 	}
+    
+    /**
+     * Initializes a player into the team.
+     * This method can be invoked while in battle,
+     * so the player will be added to the given world
+     * and fully initialized.
+     * 
+     * @param p
+     * @param w 
+     */
     public void initPlayer(AbstractPlayer p, World w){
        w.spawnIntoWorld(p);
        p.doInit();
