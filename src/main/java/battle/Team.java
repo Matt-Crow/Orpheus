@@ -27,7 +27,6 @@ public class Team extends SafeList<Entity> implements Serializable{
 	private final String name;
 	private final Color color;
 	private Team enemyTeam;
-	private boolean defeated;
 	private final String id;
 	private static int nextId = 0;
     
@@ -89,7 +88,6 @@ public class Team extends SafeList<Entity> implements Serializable{
 		for(AbstractPlayer p : roster.values()){
 			initPlayer(p, w);
 		}
-		defeated = false;
 	}
     public void initPlayer(AbstractPlayer p, World w){
        w.spawnIntoWorld(p);
@@ -106,7 +104,7 @@ public class Team extends SafeList<Entity> implements Serializable{
 	}
 	
 	public boolean isDefeated(){
-		return defeated;
+		return membersRem.isEmpty();
 	}
 	
     public AbstractPlayer nearestPlayerTo(int x, int y){
@@ -174,7 +172,6 @@ public class Team extends SafeList<Entity> implements Serializable{
      */
     public void notifyTerminate(AbstractPlayer p){
         membersRem.remove(p);
-        defeated = membersRem.isEmpty();
     }
     
     @Override
