@@ -62,7 +62,7 @@ public class Team extends SafeList<Entity> implements Serializable{
     
     /**
      * Returns the AbstractPlayer on this team
- with the given ID, if one exists.
+     * with the given ID, if one exists.
      * Note that this includes all members
      * in the roster, not just players that
      * are still in play.
@@ -87,14 +87,17 @@ public class Team extends SafeList<Entity> implements Serializable{
         membersRem.clear();
         clear();
 		for(AbstractPlayer p : roster.values()){
-			w.spawnIntoWorld(p);
-            //p.initPos(x, y, facing);
-            p.doInit();
-            membersRem.add(p);
-            add(p);
+			initPlayer(p, w);
 		}
 		defeated = false;
 	}
+    public void initPlayer(AbstractPlayer p, World w){
+       w.spawnIntoWorld(p);
+       p.doInit();
+       membersRem.add(p);
+       add(p);
+    }
+    
 	public void setEnemy(Team t){
 		enemyTeam = t;
 	}

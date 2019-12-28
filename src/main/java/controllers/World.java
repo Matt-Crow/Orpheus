@@ -20,8 +20,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import windows.world.WorldCanvas;
 import static java.lang.System.out;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.function.Consumer;
 import javax.swing.SwingUtilities;
 import net.ServerMessage;
