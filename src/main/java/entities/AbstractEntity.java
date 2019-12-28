@@ -39,7 +39,6 @@ public abstract class AbstractEntity implements Serializable, Terminable{
 	 */
 	private Team team;
 	private boolean shouldTerminate;
-	private final ActionRegister actReg;
 	
     private final SafeList<TerminateListener> terminateListeners; //you just can't wait for me to die, can you!
     
@@ -54,7 +53,6 @@ public abstract class AbstractEntity implements Serializable, Terminable{
         inWorld = null;
         radius = 50;
         terminateListeners = new SafeList<>();
-        actReg = new ActionRegister(this);
         dir = new Direction(0);
 		nextId++;
 	}
@@ -180,9 +178,7 @@ public abstract class AbstractEntity implements Serializable, Terminable{
 	public final Team getTeam(){
 		return team;
 	}
-	public final ActionRegister getActionRegister(){
-		return actReg;
-	}
+	
 	
     
     public double distanceFrom(int xc, int yc){
@@ -233,7 +229,6 @@ public abstract class AbstractEntity implements Serializable, Terminable{
         
 		moving = false;
 		speedFilter = 1.0;
-		actReg.reset();
 		shouldTerminate = false;
         init();
 	}
@@ -241,7 +236,6 @@ public abstract class AbstractEntity implements Serializable, Terminable{
 	public final void doUpdate(){
 		if(!shouldTerminate){
 			updateMovement();
-			actReg.triggerOnUpdate();
             update();
 		}
 	}

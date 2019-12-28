@@ -139,6 +139,7 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
 	
     @Override
 	public void update(){
+        super.update();
         if(path != null){
             //follow path
             if(path.noneLeft()){

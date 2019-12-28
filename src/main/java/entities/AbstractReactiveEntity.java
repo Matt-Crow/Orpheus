@@ -1,5 +1,6 @@
 package entities;
 
+import actions.ActionRegister;
 import util.Direction;
 
 /**
@@ -23,6 +24,8 @@ public abstract class AbstractReactiveEntity extends AbstractEntity{
     private int knockbackMag;
     private int knockbackDur;
     
+    private final ActionRegister actReg;
+    
     public AbstractReactiveEntity(){
         super();
         focusX = 0;
@@ -32,6 +35,8 @@ public abstract class AbstractReactiveEntity extends AbstractEntity{
         knockbackDir = null;
         knockbackMag = 0;
         knockbackDur = 0;
+        
+        actReg = new ActionRegister(this);
     }
     
     //focus related methods
@@ -68,6 +73,12 @@ public abstract class AbstractReactiveEntity extends AbstractEntity{
     
     
     
+    public final ActionRegister getActionRegister(){
+		return actReg;
+	}
+    
+    
+    
     @Override
     public void updateMovement(){
         if(hasFocus){
@@ -99,5 +110,11 @@ public abstract class AbstractReactiveEntity extends AbstractEntity{
         knockbackDir = null;
         knockbackMag = 0;
         knockbackDur = 0;
+        actReg.reset();
+    }
+    
+    @Override
+    public void update(){
+        actReg.triggerOnUpdate();
     }
 }

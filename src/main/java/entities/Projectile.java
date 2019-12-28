@@ -138,6 +138,7 @@ public class Projectile extends AbstractReactiveEntity{
     
     @Override
 	public void update(){
+        super.update();
         distanceTraveled += getMomentum();
 		
 		// need to change range based on projectile type: attack range for seed, aoe for aoeprojectile
