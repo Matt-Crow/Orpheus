@@ -5,29 +5,46 @@ import entities.AIPlayer;
 import java.io.Serializable;
 import static java.lang.System.out;
 
+/**
+ * A battle is a gamemode where the players are pitted
+ * against an army of AI.
+ * 
+ * As the players defeat each wave of enemies,
+ * this class spawns another wave of fewer enemies, but who are more powerful.
+ * 
+ * This class may later be broken into separate Battle and Minigame classes.
+ * 
+ * @author Matt Crow
+ */
 public class Battle implements Serializable{
 	private final int baseEnemyLevel;
     private final int maxEnemyLevel;
     
-    private final int waveBase;
     private final int numWaves;
     
     private int currentWave;
     private World host;
+    
+    private final int WAVE_BASE = 2;
 	
 	public Battle(int maxEnemyLv, int waves){
+        if(maxEnemyLv < 1){
+            throw new IllegalArgumentException("Enemies must be at least level 1");
+        }
+        if(waves < 1){
+            throw new IllegalArgumentException("Must have at least 1 wave");
+        }
         baseEnemyLevel = 1;
         maxEnemyLevel = maxEnemyLv;
-        waveBase = 2;
         numWaves = waves;
         currentWave = -1;
 		host = null;
 	}
 	
-	public void setHost(World w){
+	public final void setHost(World w){
 		host = w;
 	}
-	public World getHost(){
+	public final World getHost(){
 		return host;
 	}
 	
@@ -35,22 +52,38 @@ public class Battle implements Serializable{
         Team players = host.getPlayerTeam();
         Team ai = host.getAITeam();
         ai.clear();
+        
         players.setEnemy(ai);
 		players.init(host);
         ai.setEnemy(players);
 		ai.init(host);
+        
         currentWave = 0;
         spawnWave();
 	}
     
+    /**
+     * Returns the number of enemies who
+     * should be spawned for a given wave
+     * 
+     * @param waveNum
+     * @return 
+     */
     private int numEnemiesForWave(int waveNum){
         int ret = 0;
         if(waveNum >= 1 && waveNum <= numWaves){
-            ret = (int)Math.pow(waveBase, numWaves - waveNum + 1);
+            ret = (int)Math.pow(WAVE_BASE, numWaves - waveNum + 1);
         }
         return ret;
     }
     
+    /**
+     * Returns the level enemies should be
+     * for the given wave.
+     * 
+     * @param waveNum
+     * @return 
+     */
     private int enemyLvForWave(int waveNum){
         int ret = 0;
         if(waveNum >= 1 && waveNum <= numWaves){
@@ -59,6 +92,10 @@ public class Battle implements Serializable{
         return ret;
     }
     
+    /**
+     * Spawns new enemies into the world,
+     * and heals all players.
+     */
     private void spawnWave(){
         Team ai = host.getAITeam();
         String teamName = ai.getName();
@@ -107,13 +144,13 @@ public class Battle implements Serializable{
     public void displayData(){
         out.println("BATTLE");
         out.println("WAVES:");
-        for(int i = 0; i < numWaves + 1; i++){
+        for(int i = 1; i < numWaves + 1; i++){
             out.printf("-Wave %d: %d enemies lv %d\n", i, numEnemiesForWave(i), enemyLvForWave(i));
         }
     }
     
     public static void main(String[] args){
-        Battle b = new Battle(10, 5);
+        Battle b = new Battle(1, 1);
         b.displayData();
     }
 }
