@@ -56,8 +56,8 @@ public class WaitingRoomBackend {
     
     private Team enemyTeam; //move this to World or Battle later
     
-    private int teamSize;
-    private int enemyLevel;
+    private int numWaves;
+    private int maxEnemyLevel;
     private boolean isHost;
     private boolean gameAboutToStart;
     
@@ -76,8 +76,8 @@ public class WaitingRoomBackend {
         host = page;
         server = Master.SERVER;
         isHost = false;
-        teamSize = 0;
-        enemyLevel = 10;
+        numWaves = 1;
+        maxEnemyLevel = 10;
         gameAboutToStart = false;
         
         teamProto = new HashMap<>();
@@ -175,8 +175,8 @@ public class WaitingRoomBackend {
         
         JsonObjectBuilder build = Json.createObjectBuilder();
         build.add("type", "waiting room init");
-        build.add("team size", teamSize);
-        build.add("enemy level", enemyLevel);
+        build.add("num waves", numWaves);
+        build.add("max enemy level", maxEnemyLevel);
         JsonArrayBuilder t = Json.createArrayBuilder();
         teamProto.values().stream().forEach((User u)->{
             t.add(u.serializeJson());
@@ -201,12 +201,12 @@ public class WaitingRoomBackend {
      */
     private void receiveInit(ServerMessage sm){
         JsonObject obj = JsonUtil.fromString(sm.getBody());
-        JsonUtil.verify(obj, "team size");
-        JsonUtil.verify(obj, "enemy level");
+        JsonUtil.verify(obj, "num waves");
+        JsonUtil.verify(obj, "max enemy level");
         JsonUtil.verify(obj, "team");
 
-        setTeamSize(obj.getInt("team size"));
-        setEnemyLevel(obj.getInt("enemy level"));
+        setNumWaves(obj.getInt("num waves"));
+        setMaxEnemyLevel(obj.getInt("max enemy level"));
         obj.getJsonArray("team").stream().forEach((jv)->{
             if(jv.getValueType().equals(JsonValue.ValueType.OBJECT)){
                 joinPlayerTeam(User.deserializeJson((JsonObject)jv));
@@ -328,7 +328,7 @@ public class WaitingRoomBackend {
         User me = Master.getUser(); //need to set player before calling createCanvas
         me.linkToRemotePlayerInWorld(w);
         w.createCanvas();
-        w.setCurrentMinigame(new Battle());
+        w.setCurrentMinigame(new Battle(maxEnemyLevel, numWaves));
         w.init();
         
         server.removeReceiver(ServerMessageType.WORLD_INIT, receiveWorldInit);
@@ -365,7 +365,7 @@ public class WaitingRoomBackend {
      * @see WSWaitForPlayers#receiveBuildInfo
      */
     private void waitForData(){        
-        enemyTeam = Team.constructRandomTeam("AI", Color.red, teamSize, enemyLevel);
+        enemyTeam = new Team("AI", Color.red);
         
         server.addReceiver(ServerMessageType.PLAYER_DATA, receiveBuildInfo);
         requestBuilds();
@@ -404,7 +404,7 @@ public class WaitingRoomBackend {
             ex.printStackTrace();
         }
         w.createCanvas(); //need to recreate so that togglepause doesn't work
-        Battle b = new Battle();
+        Battle b = new Battle(maxEnemyLevel, numWaves);
         w.setPlayerTeam(playerTeam).setEnemyTeam(enemyTeam).setCurrentMinigame(b);
         b.setHost(w);
         w.init();
@@ -463,17 +463,17 @@ public class WaitingRoomBackend {
         return isHost;
     }
     
-    public void setTeamSize(int s){
-        if(s >= 1){
-            teamSize = s;
+    public void setNumWaves(int n){
+        if(n >= 1){
+            numWaves = n;
         } else {
-            throw new IllegalArgumentException("Teams must have at least 1 member");
+            throw new IllegalArgumentException("Must have at least one wave");
         }
     }
     
-    public void setEnemyLevel(int l){
+    public void setMaxEnemyLevel(int l){
         if(l >= 1){
-            enemyLevel = l;
+            maxEnemyLevel = l;
         } else {
             throw new IllegalArgumentException("Enemies must be at least level 1");
         }
@@ -514,7 +514,8 @@ public class WaitingRoomBackend {
      */
     public final void displayData(){
         System.out.println("WAITING ROOM");
-        System.out.println("Team size: " + teamSize);
+        System.out.println("Num waves: " + numWaves);
+        System.out.println("Max enemy level: " + maxEnemyLevel);
         System.out.println("Players: ");
         teamProto.values().forEach((member)->System.out.println("--" + member.getName()));
         System.out.println("END OF WAITING ROOM");

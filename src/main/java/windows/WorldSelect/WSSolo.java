@@ -20,7 +20,7 @@ public class WSSolo extends AbstractWSNewWorld{
     @Override
     public void start(){
         Team team1 = new Team("Players", Color.green);
-        Team team2 = Team.constructRandomTeam("AI", Color.red, getTeamSize(),  getEnemyLevel());
+        Team team2 = new Team("AI", Color.red);
         
         
         Master.getUser().initPlayer();
@@ -34,7 +34,7 @@ public class WSSolo extends AbstractWSNewWorld{
             .setPlayerTeam(team1)
             .setEnemyTeam(team2);
         
-        Battle b = new Battle();
+        Battle b = new Battle(getMaxEnemyLevel(), getNumWaves());
         battleWorld.setCurrentMinigame(b);
         b.setHost(battleWorld);
         

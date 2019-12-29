@@ -144,7 +144,7 @@ public class WorldCanvas extends Canvas{
         wp.setCanvas(c);
         mw.switchToPage(wp);
         
-        Battle b = new Battle();
+        Battle b = new Battle(10, 5);
         
         t1.addMember(Master.getUser().getPlayer());
         w.setPlayerTeam(t1).setEnemyTeam(t2);
@@ -166,7 +166,7 @@ public class WorldCanvas extends Canvas{
         User me = Master.getUser(); //need to set player before calling createCanvas
         me.setPlayer((TruePlayer)newWorld.getPlayerTeam().getMemberById(me.getRemotePlayerId()));
         newWorld.createCanvas();
-        newWorld.setCurrentMinigame(new Battle());
+        newWorld.setCurrentMinigame(new Battle(10, 5));
         newWorld.init();
         
         wp = new WorldPage();

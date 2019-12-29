@@ -16,8 +16,8 @@ import windows.Page;
  */
 public abstract class AbstractWSNewWorld extends Page{
     private final BuildSelect playerBuild;
-    private final OptionBox<Integer> teamSize;
-    private final OptionBox<Integer> baseEnemyLevel;
+    private final OptionBox<Integer> numWaves;
+    private final OptionBox<Integer> maxEnemyLevel;
     private final JButton start;
     
     public AbstractWSNewWorld(){
@@ -33,19 +33,19 @@ public abstract class AbstractWSNewWorld extends Page{
         start = startButton();
         add(start);
         
-        teamSize = teamSizeSelect();
-        add(teamSize);
+        numWaves = numWaveSelect();
+        add(numWaves);
         
-        baseEnemyLevel = enemyLvSelect();
-        add(baseEnemyLevel);
+        maxEnemyLevel = enemyLvSelect();
+        add(maxEnemyLevel);
         
         Style.applyStyling(this);
     }
     
-    private OptionBox<Integer> teamSizeSelect(){
-        Integer[] nums = new Integer[]{1, 2, 3, 4, 5, 10, 99};
+    private OptionBox<Integer> numWaveSelect(){
+        Integer[] nums = new Integer[]{1, 2, 3, 4, 5, 8};
         
-        OptionBox<Integer> box = new OptionBox<>("Select team sizes", nums);
+        OptionBox<Integer> box = new OptionBox<>("Select number of waves", nums);
         box.addActionListener(new AbstractAction(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -56,9 +56,9 @@ public abstract class AbstractWSNewWorld extends Page{
     }
     
     private OptionBox<Integer> enemyLvSelect(){
-        Integer[] nums = new Integer[]{1, 5, 10, 20, 1000};
+        Integer[] nums = new Integer[]{1, 10, 20};
         
-        OptionBox<Integer> box = new OptionBox<>("Select base enemy level", nums);
+        OptionBox<Integer> box = new OptionBox<>("Select maximum enemy level", nums);
         box.addActionListener(new AbstractAction(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -84,12 +84,11 @@ public abstract class AbstractWSNewWorld extends Page{
         return playerBuild.getSelectedBuild();
     }
     
-    public int getTeamSize(){
-        return teamSize.getSelected();
+    public int getMaxEnemyLevel(){
+        return maxEnemyLevel.getSelected();
     }
-    
-    public int getEnemyLevel(){
-        return baseEnemyLevel.getSelected();
+    public int getNumWaves(){
+        return numWaves.getSelected();
     }
     
     public abstract void start();

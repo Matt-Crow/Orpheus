@@ -15,11 +15,11 @@ public class Battle implements Serializable{
     private int currentWave;
     private World host;
 	
-	public Battle(){
+	public Battle(int maxEnemyLv, int waves){
         baseEnemyLevel = 1;
-        maxEnemyLevel = 10;
+        maxEnemyLevel = maxEnemyLv;
         waveBase = 2;
-        numWaves = 8;
+        numWaves = waves;
         currentWave = -1;
 		host = null;
 	}
@@ -51,6 +51,14 @@ public class Battle implements Serializable{
         return ret;
     }
     
+    private int enemyLvForWave(int waveNum){
+        int ret = 0;
+        if(waveNum >= 1 && waveNum <= numWaves){
+            ret = baseEnemyLevel + (int)(((double)(waveNum) / numWaves) * (maxEnemyLevel - baseEnemyLevel));
+        }
+        return ret;
+    }
+    
     private void spawnWave(){
         Team ai = host.getAITeam();
         String teamName = ai.getName();
@@ -65,7 +73,7 @@ public class Battle implements Serializable{
         AIPlayer p;
         
         for(int i = 0; i < waveSize; i++){
-            p = new AIPlayer(String.format("%s wave %d #%d", teamName, currentWave, i), baseEnemyLevel + currentWave - 1);
+            p = new AIPlayer(String.format("%s wave %d #%d", teamName, currentWave, i), enemyLvForWave(currentWave));
             
             ai.addMember(p);
             p.setWorld(host);
@@ -100,12 +108,12 @@ public class Battle implements Serializable{
         out.println("BATTLE");
         out.println("WAVES:");
         for(int i = 0; i < numWaves + 1; i++){
-            out.printf("-Wave %d: %d enemies\n", i, numEnemiesForWave(i));
+            out.printf("-Wave %d: %d enemies lv %d\n", i, numEnemiesForWave(i), enemyLvForWave(i));
         }
     }
     
     public static void main(String[] args){
-        Battle b = new Battle();
+        Battle b = new Battle(10, 5);
         b.displayData();
     }
 }

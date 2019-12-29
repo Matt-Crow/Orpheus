@@ -173,12 +173,12 @@ public class WSWaitForPlayers extends Page{
         joinTeamButton.setEnabled(b);
     }
     
-    public WSWaitForPlayers setTeamSize(int s){
-        backend.setTeamSize(s);
+    public WSWaitForPlayers setNumWaves(int s){
+        backend.setNumWaves(s);
         return this;
     }
-    public WSWaitForPlayers setEnemyLevel(int l){
-        backend.setEnemyLevel(l);
+    public WSWaitForPlayers setMaxEnemyLevel(int l){
+        backend.setMaxEnemyLevel(l);
         return this;
     }
 }
