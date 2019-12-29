@@ -103,7 +103,7 @@ public class WorldCanvas extends Canvas{
         
 		Master.getUser().getPlayer().drawHUD(g2d, this);
         
-        if(world.getCurrentMinigame() != null && world.getCurrentMinigame().shouldEnd()){
+        if(world.getCurrentMinigame() != null && world.getCurrentMinigame().isDone()){
 			drawMatchResolution(g2d);
         }
         if(paused){
