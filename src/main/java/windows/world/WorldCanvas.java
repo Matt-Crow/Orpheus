@@ -16,7 +16,7 @@ import entities.PlayerControls;
 import java.awt.Graphics2D;
 import java.io.IOException;
 import customizables.AbstractCustomizable;
-import entities.TruePlayer;
+import entities.HumanPlayer;
 import util.SerialUtil;
 import windows.Canvas;
 
@@ -164,7 +164,7 @@ public class WorldCanvas extends Canvas{
         String serial = w.serializeToString();
         World newWorld = World.fromSerializedString(serial);
         User me = Master.getUser(); //need to set player before calling createCanvas
-        me.setPlayer((TruePlayer)newWorld.getPlayerTeam().getMemberById(me.getRemotePlayerId()));
+        me.setPlayer((HumanPlayer)newWorld.getPlayerTeam().getMemberById(me.getRemotePlayerId()));
         newWorld.createCanvas();
         newWorld.setCurrentMinigame(new Battle(10, 5));
         newWorld.init();

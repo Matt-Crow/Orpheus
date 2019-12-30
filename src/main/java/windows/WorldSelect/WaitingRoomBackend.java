@@ -4,7 +4,7 @@ import battle.Battle;
 import battle.Team;
 import controllers.*;
 import customizables.Build;
-import entities.TruePlayer;
+import entities.HumanPlayer;
 import java.awt.Color;
 import java.io.IOException;
 import static java.lang.System.err;
@@ -272,7 +272,7 @@ public class WaitingRoomBackend {
      */
     private void receiveBuildInfo(ServerMessage sm){
         String ip = sm.getIpAddr();
-        TruePlayer tp;
+        HumanPlayer tp;
         Build b;
 
         if(teamProto.containsKey(ip)){

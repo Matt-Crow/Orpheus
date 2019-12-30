@@ -1,6 +1,6 @@
 package controllers;
 
-import entities.TruePlayer;
+import entities.HumanPlayer;
 import javax.json.Json;
 import javax.json.JsonException;
 import javax.json.JsonObject;
@@ -19,7 +19,7 @@ import serialization.JsonUtil;
 public final class User implements JsonSerialable{
     private String userName;
     private final String ipAddr;
-    private TruePlayer player;
+    private HumanPlayer player;
     
     private String remotePlayerId;
     
@@ -65,7 +65,7 @@ public final class User implements JsonSerialable{
      */
     public User linkToRemotePlayerInWorld(World w){
         setPlayer(
-            (TruePlayer)w
+            (HumanPlayer)w
                 .getPlayerTeam()
                 .getMemberById(remotePlayerId)
         );
@@ -78,15 +78,15 @@ public final class User implements JsonSerialable{
      * @return this, for chaining purposes
      */
     public User initPlayer(){
-        player = new TruePlayer(userName);
+        player = new HumanPlayer(userName);
         return this;
     }
     //used for receiving remote player
-    public User setPlayer(TruePlayer p){
+    public User setPlayer(HumanPlayer p){
         player = p;
         return this;
     }
-    public TruePlayer getPlayer(){
+    public HumanPlayer getPlayer(){
         if(player == null){
             initPlayer();
         }
