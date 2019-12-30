@@ -62,7 +62,7 @@ public class Projectile extends AbstractReactiveEntity{
 	public void hit(AbstractPlayer p){
 		hit = p;
         registeredAttack.hit(p);
-		p.setLastHitById(getUseId());
+		p.wasHitBy(this);
 		getActionRegister().triggerOnHit(p);
         
         //can't move this to AbstractActive

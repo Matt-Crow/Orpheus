@@ -38,6 +38,7 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
     private int knockbackDur;
     
     private int lastHitById; //the useId of the last projectile that hit this player
+    private AbstractPlayer lastHitBy;
 	
     private final MeleeActive slash;
 	private final DamageBacklog log;
@@ -67,6 +68,9 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
         log = new DamageBacklog(this, minLifeSpan);
         path = null;
         statuses = new SafeList<>();
+        
+        lastHitById = -1;
+        lastHitBy = null;
         
         setRadius(RADIUS);
 	}
@@ -161,12 +165,15 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
 		}
 	}
 	
+    public final void wasHitBy(Projectile p){
+        lastHitById = p.getUseId();
+        lastHitBy = p.getUser();
+    }
+    
 	public void logDamage(int dmg){
 		log.log(dmg);
 	}
-	public void setLastHitById(int id){
-		lastHitById = id;
-	}
+	
 	public int getLastHitById(){
 		return lastHitById;
 	}
@@ -182,6 +189,7 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
 		
         path = null;
 		lastHitById = -1;
+        lastHitBy = null;
         
         hasFocus = false;
         knockbackDir = null;
@@ -254,6 +262,9 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
     @Override
     public void terminate(){
         super.terminate();
+        if(lastHitBy != null){
+            lastHitBy.getLog().healPerc(5);
+        }
         getTeam().notifyTerminate(this);
     }
 	

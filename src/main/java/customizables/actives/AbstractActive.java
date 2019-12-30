@@ -455,6 +455,22 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
     }
     
     /**
+     * Calculates the damage this should
+     * inflict on the given player upon hitting
+     * them.
+     * 
+     * @param p
+     * @return 
+     */
+    public int calcDmg(AbstractPlayer p){
+        return (int)(
+            getStatValue(ActiveStatName.DAMAGE)
+            * getUser().getStatValue(CharacterStatName.DMG)
+            / p.getStatValue(CharacterStatName.REDUCTION)
+        );
+    }
+    
+    /**
      * Invoked by Projectile upon 
      * colliding with a player
      * @param p the AbstractPlayer who one of this Projectiles hit.
