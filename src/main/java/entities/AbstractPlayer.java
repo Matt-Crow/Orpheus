@@ -165,6 +165,12 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
 		}
 	}
 	
+    /**
+     * Notifies this Player that a projectile
+     * has hit them.
+     * 
+     * @param p 
+     */
     public final void wasHitBy(Projectile p){
         lastHitById = p.getUseId();
         lastHitBy = p.getUser();

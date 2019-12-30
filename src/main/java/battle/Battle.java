@@ -94,7 +94,7 @@ public class Battle implements Serializable{
     
     /**
      * Spawns new enemies into the world,
-     * and heals all players.
+     * and heals all players in addition to clearing their damage backlog.
      */
     private void spawnWave(){
         Team ai = host.getAITeam();
@@ -102,6 +102,7 @@ public class Battle implements Serializable{
         currentWave++;
         host.getPlayerTeam().forEachMember((p)->{
             if(!p.getShouldTerminate()){
+                p.getLog().clearBacklog();
                 p.getLog().healPerc((double)currentWave / numWaves);
             }
         });

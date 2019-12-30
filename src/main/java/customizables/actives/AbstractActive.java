@@ -11,7 +11,6 @@ import entities.*;
 import java.io.File;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
-import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
@@ -23,7 +22,6 @@ import customizables.CustomizableJsonUtil;
 import customizables.CustomizableType;
 import customizables.characterClass.CharacterClass;
 import customizables.characterClass.CharacterStatName;
-import java.math.BigDecimal;
 import javax.json.JsonArray;
 import util.Number;
 
@@ -477,13 +475,7 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
      */
     public void hit(AbstractPlayer p){
         AbstractPlayer user = getUser();
-        p.logDamage(
-            (int)(
-                getStatValue(ActiveStatName.DAMAGE)
-                * user.getStatValue(CharacterStatName.DMG)
-                / p.getStatValue(CharacterStatName.REDUCTION)
-            )
-        );
+        p.logDamage(calcDmg(p));
         if(this instanceof MeleeActive){
             user.getActionRegister().tripOnMeleeHit(p);
             if(user instanceof HumanPlayer){
