@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import javax.json.*;
 import customizables.AbstractCustomizable;
 import customizables.CustomizableJsonUtil;
+import customizables.actives.ActiveJsonUtil;
 
 /**
  *
@@ -142,7 +143,7 @@ public class JsonUtil {
             out.println(aa.getName());
             obj = CustomizableJsonUtil.serializeJson(aa);
             //pprint(obj, 0);
-            u = AbstractActive.deserializeJson(obj);
+            u = ActiveJsonUtil.deserializeJson(obj);
             if(u != null){
                 pprint(obj, 0);
                 out.println(aa.getDescription());

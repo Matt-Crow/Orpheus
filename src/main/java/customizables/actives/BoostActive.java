@@ -1,12 +1,9 @@
 package customizables.actives;
 
-import javax.json.*;
-import serialization.JsonSerialable;
 import statuses.AbstractStatus;
 import statuses.StatusTable;
-import customizables.CustomizableJsonUtil;
 
-public class BoostActive extends AbstractActive implements JsonSerialable{
+public class BoostActive extends AbstractActive{
     public BoostActive(String n, StatusTable t){
         super(ActiveType.BOOST, n, 0, 0, 0, 0, 0);
         setInflict(t);
@@ -18,21 +15,6 @@ public class BoostActive extends AbstractActive implements JsonSerialable{
         }
     }
     
-    @Override
-    public JsonObject serializeJson(){
-        // no new fields are added, so just refer to the superclass' serialization
-        return super.serializeJson();
-    }
-    
-    public static BoostActive deserializeJson(JsonObject obj){
-        BoostActive ret = new BoostActive(
-            CustomizableJsonUtil.getNameFrom(obj),
-            CustomizableJsonUtil.getStatusTableFrom(obj)
-        );
-        getTagsFrom(obj).stream().forEach(t->ret.addTag(t));
-        return ret;
-    }
-	
     @Override
 	public BoostActive copy(){
 		BoostActive ret = new BoostActive(getName(), getInflict().copy());

@@ -4,6 +4,7 @@ import customizables.Build;
 import customizables.CustomizableJsonUtil;
 import customizables.CustomizableType;
 import customizables.actives.AbstractActive;
+import customizables.actives.ActiveJsonUtil;
 import customizables.characterClass.CharacterClass;
 import customizables.passives.AbstractPassive;
 import gui.FileChooserUtil;
@@ -43,7 +44,7 @@ public class CustomizeMain extends Page{
                 File dir = new File(f.getAbsolutePath() + "/" + exportName);
                 dir.mkdir();
                 
-                AbstractActive.saveAllToFile(new File(dir.getAbsolutePath() + "/actives.json"));
+                ActiveJsonUtil.saveAllToFile(new File(dir.getAbsolutePath() + "/actives.json"));
                 AbstractPassive.saveAll(new File(dir.getAbsolutePath() + "/passives.json"));
                 CharacterClass.saveAll(new File(dir.getAbsolutePath() + "/characterClasses.json"));
             }

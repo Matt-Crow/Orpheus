@@ -1,12 +1,8 @@
 package customizables.actives;
 
 import controllers.Master;
-import javax.json.*;
-import serialization.JsonSerialable;
-import customizables.CustomizableJsonUtil;
-import util.StringUtil;
 
-public class ElementalActive extends AbstractActive implements JsonSerialable{
+public class ElementalActive extends AbstractActive{
 	public ElementalActive(String n, int arc, int range, int speed, int aoe, int dmg){
 		super(ActiveType.ELEMENTAL, n, arc, range, speed, aoe, dmg);
 	}
@@ -25,27 +21,6 @@ public class ElementalActive extends AbstractActive implements JsonSerialable{
         copy.setInflict(getInflict());
 		return copy;
 	}
-    
-    @Override
-    public JsonObject serializeJson(){
-        //no new fields, so Active can handle everything
-        return super.serializeJson();
-    }
-    
-    public static ElementalActive deserializeJson(JsonObject obj){
-        ElementalActive ret = new ElementalActive(
-            CustomizableJsonUtil.getNameFrom(obj),
-            CustomizableJsonUtil.getStatBaseFrom(obj, ActiveStatName.ARC),
-            CustomizableJsonUtil.getStatBaseFrom(obj, ActiveStatName.RANGE),
-            CustomizableJsonUtil.getStatBaseFrom(obj, ActiveStatName.SPEED),
-            CustomizableJsonUtil.getStatBaseFrom(obj, ActiveStatName.AOE),
-            CustomizableJsonUtil.getStatBaseFrom(obj, ActiveStatName.DAMAGE)
-        );
-        ret.setInflict(CustomizableJsonUtil.getStatusTableFrom(obj));
-        getTagsFrom(obj).stream().forEach(t->ret.addTag(t));
-        ret.setParticleType(getParticleTypeFrom(obj));
-        return ret;
-    }
 	
     @Override
 	public String getDescription(){

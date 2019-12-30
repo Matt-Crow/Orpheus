@@ -8,28 +8,17 @@ import graphics.CustomColors;
 import controllers.Master;
 import customizables.AbstractCustomizable;
 import entities.*;
-import java.io.File;
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonString;
-import javax.json.JsonValue;
-import serialization.JsonSerialable;
-import serialization.JsonUtil;
 import statuses.*;
-import customizables.CustomizableJsonUtil;
 import customizables.CustomizableType;
 import customizables.characterClass.CharacterClass;
 import customizables.characterClass.CharacterStatName;
-import javax.json.JsonArray;
 import util.Number;
 
 /**
  * The AbstractActive class serves as the base for active abilities possessed by Players
  * @author Matt
  */
-public abstract class AbstractActive extends AbstractCustomizable implements JsonSerialable{
+public abstract class AbstractActive extends AbstractCustomizable{
     private final ActiveType type; // used for serialization
     private ParticleType particleType; // the type of particles this' projectiles emit @see Projectile
     private CustomColors[] colors;
@@ -93,95 +82,6 @@ public abstract class AbstractActive extends AbstractCustomizable implements Jso
     public CustomColors[] getColors(){
         return colors;
     }
-    
-    //########################################
-    // JSON SERIALIZATION
-    //########################################
-    public static void saveAllToFile(File f){
-        JsonObject[] objs = ALL.values().stream().map((AbstractActive a)->{
-            return a.serializeJson();
-        }).toArray(size -> new JsonObject[size]);
-        JsonUtil.writeToFile(objs, f);
-    }
-    
-    @Override
-    public JsonObject serializeJson() {
-        JsonObjectBuilder b = JsonUtil.deconstruct(CustomizableJsonUtil.serializeJson(this));
-        b.add("active type", type.toString());
-        b.add("particle type", particleType.toString());
-        JsonArrayBuilder cols = Json.createArrayBuilder();
-        for(CustomColors c : colors){
-            cols.add(c.toString());
-        }
-        b.add("colors", cols.build());
-        JsonArrayBuilder a = Json.createArrayBuilder();
-        tags.forEach((t) -> {
-            a.add(t.toString());
-        });
-        b.add("tags", a.build());
-        return b.build();
-    }
-    
-    public static ActiveType getActiveTypeFrom(JsonObject obj){
-        JsonUtil.verify(obj, "active type");
-        return ActiveType.fromString(obj.getString("active type"));
-    }
-    public static ParticleType getParticleTypeFrom(JsonObject obj){
-        JsonUtil.verify(obj, "particle type");
-        return ParticleType.fromString(obj.getString("particle type"));
-    }
-    public static CustomColors[] getColorsFrom(JsonObject obj){
-        JsonUtil.verify(obj, "colors");
-        JsonArray a = obj.getJsonArray("colors");
-        int len = a.size();
-        CustomColors[] ret = new CustomColors[len];
-        for(int i = 0; i < len; i++){
-            ret[i] = CustomColors.fromString(a.getString(i));
-        }
-        return ret;
-    }
-    public static ArrayList<ActiveTag> getTagsFrom(JsonObject obj){
-        JsonUtil.verify(obj, "tags");
-        ArrayList<ActiveTag> ret = new ArrayList<>();
-        ActiveTag tag = null;
-        for(JsonValue jv : obj.getJsonArray("tags")){
-            if(jv.getValueType().equals(JsonValue.ValueType.STRING)){
-                tag = ActiveTag.fromString(((JsonString)jv).getString());
-                if(tag == null){
-                    throw new NullPointerException("Unknown tag: " + jv);
-                } else {
-                    ret.add(tag);
-                }
-            }
-        }
-        return ret;
-    }
-    
-    public static AbstractActive deserializeJson(JsonObject obj){
-        AbstractActive ret = null;
-        ActiveType type = getActiveTypeFrom(obj);
-        
-        switch(type){
-            case MELEE:
-                ret = MeleeActive.deserializeJson(obj);
-                break;
-            case BOOST:
-                ret = BoostActive.deserializeJson(obj);
-                break;
-            case ELEMENTAL:
-                ret = ElementalActive.deserializeJson(obj);
-                break;
-            default:
-                System.out.println("Abstract active cannot deserialize " + obj.getString("type"));
-                break;
-        }
-        if(ret != null){
-            ret.setColors(getColorsFrom(obj));
-        }
-        return ret;
-    }
-    
-    
     
     public static void loadAll(){
 		// read from file later?

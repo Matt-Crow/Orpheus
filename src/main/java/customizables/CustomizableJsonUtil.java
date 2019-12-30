@@ -1,7 +1,7 @@
 package customizables;
 
-import customizables.AbstractCustomizable;
 import customizables.actives.AbstractActive;
+import customizables.actives.ActiveJsonUtil;
 import customizables.characterClass.CharacterClass;
 import java.io.File;
 import java.util.function.BiConsumer;
@@ -165,7 +165,7 @@ public class CustomizableJsonUtil {
         AbstractCustomizable ret = null;
         switch(getUpgradableTypeFrom(obj)){
             case ACTIVE:
-                ret = AbstractActive.deserializeJson(obj);
+                ret = ActiveJsonUtil.deserializeJson(obj);
                 break;
             case PASSIVE:
                 ret = AbstractPassive.deserializeJson(obj);
