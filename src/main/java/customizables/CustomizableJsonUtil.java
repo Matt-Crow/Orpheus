@@ -1,5 +1,6 @@
 package customizables;
 
+import controllers.Master;
 import customizables.actives.AbstractActive;
 import customizables.actives.ActiveJsonUtil;
 import customizables.characterClass.CharacterClass;
@@ -45,6 +46,7 @@ public class CustomizableJsonUtil {
      * @param f the file to import
      */
     public static void loadFile(File f){
+        DataSet ds = Master.getDataSet();
         AbstractCustomizable au = null;
         for(JsonObject obj : JsonUtil.readFromFile(f)){
             au = deserializeJson(obj);
@@ -52,7 +54,7 @@ public class CustomizableJsonUtil {
                 if(au instanceof AbstractPassive){
                     AbstractPassive.addPassive((AbstractPassive)au);
                 } else if(au instanceof AbstractActive){
-                    AbstractActive.addActive((AbstractActive)au);
+                    ds.addActive((AbstractActive)au);
                 } else if(au instanceof CharacterClass){
                     CharacterClass.addCharacterClass((CharacterClass)au);
                 } else {

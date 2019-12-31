@@ -1,5 +1,6 @@
 package serialization;
 
+import controllers.Master;
 import customizables.passives.AbstractPassive;
 import customizables.actives.AbstractActive;
 import customizables.Build;
@@ -140,7 +141,7 @@ public class JsonUtil {
         Build.loadAll();
         
         //done
-        for(AbstractActive aa : AbstractActive.getAll()){
+        for(AbstractActive aa : Master.getDataSet().getAllActives()){
             out.println(aa.getName());
             obj = CustomizableJsonUtil.serializeJson(aa);
             //pprint(obj, 0);

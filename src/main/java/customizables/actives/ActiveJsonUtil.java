@@ -1,5 +1,6 @@
 package customizables.actives;
 
+import controllers.Master;
 import customizables.CustomizableJsonUtil;
 import entities.ParticleType;
 import graphics.CustomColors;
@@ -24,7 +25,7 @@ import serialization.JsonUtil;
  */
 public final class ActiveJsonUtil {
     public static void saveAllToFile(File f){
-        JsonObject[] objs = Arrays.stream(AbstractActive.getAll()).map((AbstractActive a)->{
+        JsonObject[] objs = Arrays.stream(Master.getDataSet().getAllActives()).map((AbstractActive a)->{
             return serializeJson(a);
         }).toArray(size -> new JsonObject[size]);
         JsonUtil.writeToFile(objs, f);

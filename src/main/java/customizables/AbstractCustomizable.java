@@ -47,7 +47,6 @@ public abstract class AbstractCustomizable implements Serializable{
     
     public static void loadAll(){
         CharacterClass.loadAll();
-        AbstractActive.loadAll();
         AbstractPassive.loadAll();
     }
     

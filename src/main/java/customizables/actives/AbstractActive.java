@@ -26,17 +26,6 @@ public abstract class AbstractActive extends AbstractCustomizable{
     private final ArrayList<ActiveTag> tags; //tags are used to modify this' behaviour. Only once is currently implemented 
     
     private static int nextUseId = 0; // How many actives have been used thus far. Used to prevent double hitting
-    private static final HashMap<String, AbstractActive> ALL = new HashMap<>();
-    static{
-        addActive(new ElementalActive(
-            "Default",
-            3,
-            3,
-            3,
-            3,
-            3
-        ));
-    }
 
     /**
      * 
@@ -81,120 +70,6 @@ public abstract class AbstractActive extends AbstractCustomizable{
     }
     public CustomColors[] getColors(){
         return colors;
-    }
-    
-    public static void loadAll(){
-		// read from file later?
-		MeleeActive s = new MeleeActive("Slash", 3);
-		
-		ElementalActive bt = new ElementalActive("Boulder Toss", 1, 2, 2, 3, 4);
-		bt.setParticleType(ParticleType.BURST);
-        bt.setColors(CustomColors.earthColors);
-        bt.addTag(ActiveTag.KNOCKSBACK);
-		
-        ElementalActive eq = new ElementalActive("Earthquake", 1, 0, 2, 5, 1);
-		eq.setParticleType(ParticleType.BURST);
-        eq.setColors(CustomColors.earthColors);
-        eq.addStatus(new Stun(3, 1));
-        
-		ElementalActive fof = new ElementalActive("Fields of Fire", 1, 0, 5, 3, 1);
-		fof.setParticleType(ParticleType.SHEAR);
-        fof.setColors(CustomColors.fireColors);
-        fof.addStatus(new Burn(2, 3));
-		
-		ElementalActive fb = new ElementalActive("Fireball", 2, 3, 3, 3, 5);
-		fb.setParticleType(ParticleType.BURST);
-        fb.setColors(CustomColors.fireColors);
-        
-		ElementalActive b = new ElementalActive("Boreus", 1, 5, 5, 0, 1);
-		b.setParticleType(ParticleType.BEAM);
-        b.setColors(CustomColors.airColors);
-        
-        ElementalActive z = new ElementalActive("Zephyrus", 1, 5, 5, 0, 1);
-		z.setParticleType(ParticleType.BEAM);
-		z.setColors(CustomColors.airColors);
-        
-        ElementalActive wb = new ElementalActive("Waterbolt", 1, 3, 3, 1, 2);
-		wb.setParticleType(ParticleType.BEAM);
-        wb.setColors(CustomColors.waterColors);
-        
-        ElementalActive wp = new ElementalActive("Whirlpool", 1, 0, 4, 4, 3);
-        wp.setParticleType(ParticleType.SHEAR);
-        wp.setColors(CustomColors.waterColors);
-        
-		ElementalActive rod = new ElementalActive("RAINBOW OF DOOM", 4, 3, 5, 5, 1);
-		rod.setParticleType(ParticleType.BURST);
-		rod.setColors(CustomColors.rainbow);
-		
-		
-		BoostActive ws = new BoostActive("Warrior's Stance", new AbstractStatus[]{new Strength(1, 2), new Resistance(1, 2)});
-		BoostActive st = new BoostActive("Speed Test", new AbstractStatus[]{new Rush(2, 3)});
-		BoostActive ss = new BoostActive("Shield Stance", new AbstractStatus[]{new Resistance(2, 3)});
-		BoostActive hr = new BoostActive("Healing Rain", new AbstractStatus[]{new Regeneration(2, 3)});
-		BoostActive bs = new BoostActive("Blade Stance", new AbstractStatus[]{new Strength(2, 3)});
-        BoostActive br = new BoostActive("Burning Rage", new AbstractStatus[]{new Strength(3, 3), new Burn(3, 3)});
-		
-		addActives(new AbstractActive[]{
-			s,
-			bt,
-			eq,
-			fof,
-			fb,
-			br,
-			b,
-            z,
-			rod,
-			wb,
-            wp,
-			ws,
-			st,
-			ss,
-			hr,
-			bs
-		});
-	}
-    
-    // static methods
-    public static void addActive(AbstractActive a){
-        ALL.put(a.getName().toUpperCase(), a.copy());
-    }
-    public static void addActives(AbstractActive[] as){
-        for(AbstractActive a : as){
-            addActive(a);
-        }
-    }
-    
-    /**
-     * Finds an active with the given name, ignoring case.
-     * If no active is found, throws a NoSuchElementException
-     * @param n the name of the active to search for
-     * @return the active with that name
-     */
-    public static AbstractActive getActiveByName(String n){
-        if(!ALL.containsKey(n.toUpperCase())){
-            throw new NoSuchElementException(n + " is not in the list of actives. Did you remember to call AbstractActive.addActive(...);?");
-        }
-        return ALL.get(n.toUpperCase()).copy();
-    }
-    public static AbstractActive[] getAll(){
-        AbstractActive[] ret = new AbstractActive[ALL.size()];
-        Collection<AbstractActive> values = ALL.values();
-        int i = 0;
-        for(AbstractActive aa : values){
-            ret[i] = aa;
-            i++;
-        }
-        return ret;
-    }
-    public static String[] getAllNames(){
-        String[] ret = new String[ALL.size()];
-        Set<String> keys = ALL.keySet();
-        int i = 0;
-        for(String key : keys){
-            ret[i] = key;
-            i++;
-        }
-        return ret;
     }
     
     public final ActiveType getActiveType(){

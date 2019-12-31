@@ -1,6 +1,8 @@
 package windows.customize;
 
+import controllers.Master;
 import customizables.Build;
+import customizables.DataSet;
 import customizables.actives.AbstractActive;
 import customizables.characterClass.CharacterClass;
 import customizables.passives.AbstractPassive;
@@ -55,20 +57,23 @@ public class CustomizeBuild extends Page{
             add(pass[i]);
         }
         
+        DataSet ds = Master.getDataSet();
+        
         charClassSel.setOptions(CharacterClass.getAll());
         for(int i = 0; i < 3; i++){
-            acts[i].setOptions(AbstractActive.getAll());
+            acts[i].setOptions(ds.getAllActives());
             pass[i].setOptions(AbstractPassive.getAll());
         }
     }
 
     public void setCustomizing(Build selectedBuild) {
+        DataSet ds = Master.getDataSet();
         name.setText(selectedBuild.getName());
         charClassSel.setSelected(CharacterClass.getCharacterClassByName(selectedBuild.getClassName()));
         String[] actNames = selectedBuild.getActiveNames();
         String[] pasNames = selectedBuild.getPassiveNames();
         for(int i = 0; i < 3; i++){
-            acts[i].setSelected(AbstractActive.getActiveByName(actNames[i]));
+            acts[i].setSelected(ds.getActiveByName(actNames[i]));
             pass[i].setSelected(AbstractPassive.getPassiveByName(pasNames[i]));
         }
     }

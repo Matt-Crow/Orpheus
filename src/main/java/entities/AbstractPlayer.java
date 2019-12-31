@@ -63,7 +63,7 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
         knockbackMag = 0;
         knockbackDur = 0;
         
-        slash = (MeleeActive)AbstractActive.getActiveByName("Slash");
+        slash = (MeleeActive)Master.getDataSet().getActiveByName("Slash");
 		slash.setUser(this);
         log = new DamageBacklog(this, minLifeSpan);
         path = null;

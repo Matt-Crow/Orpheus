@@ -1,5 +1,6 @@
 package gui;
 
+import controllers.Master;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -56,6 +57,6 @@ public class ActiveCustomizer extends Customizer<ActiveStatName>{
 	public void save(){
 		// this is invoked by Customizer
 		super.save();
-		AbstractActive.addActive((AbstractActive)getCustomizing());
+		Master.getDataSet().addActive((AbstractActive)getCustomizing());
 	}
 }

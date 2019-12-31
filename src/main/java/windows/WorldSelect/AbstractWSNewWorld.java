@@ -52,6 +52,7 @@ public abstract class AbstractWSNewWorld extends Page{
                 repaint();
             }
         });
+        box.setSelected(3);
         return box;
     }
     
@@ -65,6 +66,7 @@ public abstract class AbstractWSNewWorld extends Page{
                 repaint();
             }
         });
+        box.setSelected(10);
         return box;
     }
     

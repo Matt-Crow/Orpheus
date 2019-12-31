@@ -1,7 +1,9 @@
 package windows.customize;
 
+import controllers.Master;
 import customizables.AbstractCustomizable;
 import customizables.CustomizableType;
+import customizables.DataSet;
 import customizables.actives.AbstractActive;
 import customizables.characterClass.CharacterClass;
 import customizables.passives.AbstractPassive;
@@ -21,10 +23,11 @@ public class CustomizeChoose extends Page{
         
         setLayout(new BorderLayout());
         
+        DataSet ds = Master.getDataSet();
         AbstractCustomizable[] options = new AbstractCustomizable[]{};
         switch(type){
             case ACTIVE:
-                options = AbstractActive.getAll();
+                options = ds.getAllActives();
                 break;
             case PASSIVE:
                 options = AbstractPassive.getAll();

@@ -1,5 +1,6 @@
 package controllers;
 
+import customizables.DataSet;
 import javax.swing.JOptionPane;
 import net.OrpheusServer;
 
@@ -16,8 +17,11 @@ public class Master {
     
     private static User user;
     
+    private static final DataSet DATA_SET = new DataSet();
+    
     static {
         user = new User();
+        DATA_SET.loadDefaults();
     }
     
     
@@ -33,6 +37,10 @@ public class Master {
             throw new NullPointerException("no user is logged in");
         }
         return user;
+    }
+    
+    public static DataSet getDataSet(){
+        return DATA_SET;
     }
     
 	// seconds to frames

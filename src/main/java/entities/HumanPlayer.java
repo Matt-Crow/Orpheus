@@ -3,6 +3,7 @@ package entities;
 import battle.EnergyLog;
 import controllers.Master;
 import customizables.Build;
+import customizables.DataSet;
 import customizables.actives.AbstractActive;
 import customizables.characterClass.CharacterClass;
 import customizables.characterClass.CharacterStatName;
@@ -58,12 +59,13 @@ public class HumanPlayer extends AbstractPlayer{
 	}
     
     public void setActives(String[] names){
-		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
+		DataSet ds = Master.getDataSet();
+        for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
             try{
-                actives[nameIndex] = AbstractActive.getActiveByName(names[nameIndex]);
+                actives[nameIndex] = ds.getActiveByName(names[nameIndex]);
             } catch(NoSuchElementException ex){
                 ex.printStackTrace();
-                actives[nameIndex] = AbstractActive.getActiveByName("Default");
+                actives[nameIndex] = ds.getDefaultActive();
             }
 			actives[nameIndex].setUser(this);
 		}
