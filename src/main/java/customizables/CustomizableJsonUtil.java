@@ -52,7 +52,7 @@ public class CustomizableJsonUtil {
             au = deserializeJson(obj);
             if(au != null){
                 if(au instanceof AbstractPassive){
-                    AbstractPassive.addPassive((AbstractPassive)au);
+                    ds.addPassive((AbstractPassive)au);
                 } else if(au instanceof AbstractActive){
                     ds.addActive((AbstractActive)au);
                 } else if(au instanceof CharacterClass){

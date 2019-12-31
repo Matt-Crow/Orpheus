@@ -6,6 +6,11 @@ import customizables.actives.BoostActive;
 import customizables.actives.ElementalActive;
 import customizables.actives.MeleeActive;
 import customizables.characterClass.CharacterClass;
+import customizables.passives.AbstractPassive;
+import customizables.passives.OnBeHitPassive;
+import customizables.passives.OnHitPassive;
+import customizables.passives.OnMeleeHitPassive;
+import customizables.passives.ThresholdPassive;
 import entities.ParticleType;
 import graphics.CustomColors;
 import java.util.Collection;
@@ -14,6 +19,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import statuses.AbstractStatus;
 import statuses.Burn;
+import statuses.Charge;
 import statuses.Regeneration;
 import statuses.Resistance;
 import statuses.Rush;
@@ -29,16 +35,22 @@ import statuses.Stun;
 public final class DataSet {
     public final HashMap<String, AbstractActive> allActives;
     public final HashMap<String, CharacterClass> allCharacterClasses;
+    public final HashMap<String, AbstractPassive> allPassives;
     
     private final AbstractActive DEFAULT_ACTIVE = new ElementalActive("Default", 3, 3, 3, 3, 3);
     private final CharacterClass DEFAULT_CHARACTER_CLASS = new CharacterClass("Default", CustomColors.rainbow, 3, 3, 3, 3, 3);
+    private final AbstractPassive DEFAULT_PASSIVE = new ThresholdPassive("Default", 2);
     
     public DataSet(){
         allActives = new HashMap<>();
         allCharacterClasses = new HashMap<>();
+        allPassives = new HashMap<>();
+        
+        DEFAULT_PASSIVE.addStatus(new Resistance(2, 2));
         
         addActive(DEFAULT_ACTIVE);
         addCharacterClass(DEFAULT_CHARACTER_CLASS);
+        addPassive(DEFAULT_PASSIVE);
     }
     
     public void addActive(AbstractActive a){
@@ -58,7 +70,7 @@ public final class DataSet {
      */
     public AbstractActive getActiveByName(String n){
         if(!allActives.containsKey(n.toUpperCase())){
-            throw new NoSuchElementException(n + " is not in the list of actives. Did you remember to call AbstractActive.addActive(...);?");
+            throw new NoSuchElementException(n + " is not in the list of actives. Did you remember to call dataSet.addActive(...);?");
         }
         return allActives.get(n.toUpperCase()).copy();
     }
@@ -99,7 +111,7 @@ public final class DataSet {
     }
     public CharacterClass getCharacterClassByName(String n){
         if(!allCharacterClasses.containsKey(n.toUpperCase())){
-            throw new NoSuchElementException("Character class with name " + n + " not found. Did you remember to call CharacterClass.addCharacterClass(...)?");
+            throw new NoSuchElementException("Character class with name " + n + " not found. Did you remember to call dataSet.addCharacterClass(...)?");
         }
         return allCharacterClasses.get(n.toUpperCase()).copy();
     }
@@ -127,6 +139,48 @@ public final class DataSet {
     public CharacterClass getDefaultCharacterClass(){
         return DEFAULT_CHARACTER_CLASS.copy();
     }
+    
+    
+    
+    public void addPassive(AbstractPassive p){
+		allPassives.put(p.getName().toUpperCase(), p);
+	}
+	public void addPassives(AbstractPassive[] ps){
+		for(AbstractPassive p : ps){
+			addPassive(p);
+		}
+	}
+	public AbstractPassive getPassiveByName(String n){
+        if(!allPassives.containsKey(n.toUpperCase())){
+            throw new NoSuchElementException("Passive with name " + n + " not found. Did you remember to call dataSet.addPassive(...)?");
+        }
+		return allPassives.get(n.toUpperCase()).copy();
+	}
+	public AbstractPassive[] getAllPassives(){
+		AbstractPassive[] ret = new AbstractPassive[allPassives.size()];
+		Collection<AbstractPassive> values = allPassives.values();
+		int i = 0;
+		for(AbstractPassive ap : values){
+			ret[i] = ap;
+			i++;
+		}
+		return ret;
+	}
+	public String[] getAllPassivesNames(){
+		String[] ret = new String[allPassives.size()];
+		Set<String> keys = allPassives.keySet();
+		int i = 0;
+		for(String key : keys){
+			ret[i] = key;
+			i++;
+		}
+		return ret;
+	}
+    
+    public AbstractPassive getDefaultPassive(){
+        return DEFAULT_PASSIVE.copy();
+    }
+    
     
     public void loadDefaultActives(){
         // read from file later?
@@ -215,8 +269,69 @@ public final class DataSet {
         );
     }
     
+    public void loadDefaultPassives(){
+        // on be hit
+		OnBeHitPassive r = new OnBeHitPassive("Recover", true);
+		r.addStatus(new Regeneration(1, 1));
+		OnBeHitPassive t = new OnBeHitPassive("Toughness", true);
+		t.addStatus(new Resistance(1, 1));
+        OnBeHitPassive cu = new OnBeHitPassive("Cursed", false);
+        cu.addStatus(new Stun(3, 3));
+		
+        // on hit
+        OnHitPassive rc = new OnHitPassive("Recharge", true);
+        rc.addStatus(new Charge(1, 1));
+        OnHitPassive ch = new OnHitPassive("Crippling Hits", false);
+        ch.addStatus(new Stun(1, 1));
+        
+        // on melee hit
+        OnMeleeHitPassive lh = new OnMeleeHitPassive("Leechhealer", true);
+		lh.addStatus(new Regeneration(1, 1));
+		OnMeleeHitPassive m = new OnMeleeHitPassive("Momentum", true);
+		m.addStatus(new Rush(1, 1));
+		OnMeleeHitPassive s = new OnMeleeHitPassive("Sharpen", true);
+		s.addStatus(new Strength(1, 1));
+		OnMeleeHitPassive ss = new OnMeleeHitPassive("Sparking Strikes", true);
+		ss.addStatus(new Charge(1, 1));
+        OnMeleeHitPassive cg = new OnMeleeHitPassive("Crushing Grip", false);
+        cg.addStatus(new Stun(2, 1));
+        
+		//threshold
+		ThresholdPassive a = new ThresholdPassive("Adrenaline", 3);
+		a.addStatus(new Charge(2, 1));
+		ThresholdPassive b = new ThresholdPassive("Bracing", 1);
+		b.addStatus(new Resistance(2, 1));
+		ThresholdPassive d = new ThresholdPassive("Determination", 2);
+		d.addStatus(new Strength(1, 1));
+		d.addStatus(new Resistance(1, 1));
+		ThresholdPassive e = new ThresholdPassive("Escapist", 2);
+		e.addStatus(new Rush(2, 1));
+		ThresholdPassive re = new ThresholdPassive("Retaliation", 2);
+		re.addStatus(new Strength(2, 1));
+        
+        
+		addPassives(new AbstractPassive[]{
+				lh,
+				m,
+				s,
+				ss,
+				r,
+				t,
+				a,
+				b,
+				d,
+				e,
+				re,
+                rc,
+                cu,
+                ch,
+                cg
+		});
+    }
+    
     public void loadDefaults(){
         loadDefaultActives();
         loadDefaultCharacterClasses();
+        loadDefaultPassives();
     }
 }

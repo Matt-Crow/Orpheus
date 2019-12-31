@@ -62,7 +62,7 @@ public class CustomizeBuild extends Page{
         charClassSel.setOptions(ds.getAllCharacterClasses());
         for(int i = 0; i < 3; i++){
             acts[i].setOptions(ds.getAllActives());
-            pass[i].setOptions(AbstractPassive.getAll());
+            pass[i].setOptions(ds.getAllPassives());
         }
     }
 
@@ -74,7 +74,7 @@ public class CustomizeBuild extends Page{
         String[] pasNames = selectedBuild.getPassiveNames();
         for(int i = 0; i < 3; i++){
             acts[i].setSelected(ds.getActiveByName(actNames[i]));
-            pass[i].setSelected(AbstractPassive.getPassiveByName(pasNames[i]));
+            pass[i].setSelected(ds.getPassiveByName(pasNames[i]));
         }
     }
     

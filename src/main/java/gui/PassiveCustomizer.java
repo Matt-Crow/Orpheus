@@ -1,5 +1,6 @@
 package gui;
 
+import controllers.Master;
 import customizables.passives.AbstractPassive;
 import customizables.passives.PassiveStatName;
 import customizables.passives.ThresholdPassive;
@@ -35,6 +36,6 @@ public class PassiveCustomizer extends Customizer<PassiveStatName>{
 	}
 	public void save(){
 		super.save();
-		AbstractPassive.addPassive((AbstractPassive)getCustomizing());
+		Master.getDataSet().addPassive((AbstractPassive)getCustomizing());
 	}
 }

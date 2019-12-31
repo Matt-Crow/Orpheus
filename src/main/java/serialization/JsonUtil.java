@@ -137,7 +137,6 @@ public class JsonUtil {
         JsonObject obj = null;
         AbstractCustomizable u = null;
         Build b = null;
-        AbstractCustomizable.loadAll();
         Build.loadAll();
         
         //done
@@ -156,7 +155,7 @@ public class JsonUtil {
         }
         
         //done
-        for(AbstractPassive ap : AbstractPassive.getAll()){
+        for(AbstractPassive ap : Master.getDataSet().getAllPassives()){
             obj = CustomizableJsonUtil.serializeJson(ap);
             pprint(obj, 0);
             u = CustomizableJsonUtil.deserializeJson(obj);

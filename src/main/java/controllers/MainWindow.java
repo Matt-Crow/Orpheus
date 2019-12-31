@@ -56,8 +56,6 @@ public class MainWindow extends JFrame{
         currentPage = null;
         
         switchToPage(new StartMainMenu());
-        
-        AbstractCustomizable.loadAll();
         Build.loadAll();
         
         instance = this;

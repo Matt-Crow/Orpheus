@@ -45,10 +45,6 @@ public abstract class AbstractCustomizable implements Serializable{
 		framesUntilUse = 0;
 	}
     
-    public static void loadAll(){
-        AbstractPassive.loadAll();
-    }
-    
 	// setters and getters
 	public final void setName(String s){
 		name = s;

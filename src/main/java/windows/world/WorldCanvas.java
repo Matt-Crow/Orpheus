@@ -131,7 +131,6 @@ public class WorldCanvas extends Canvas{
     
     
     public static void main(String[] args) throws IOException{
-        AbstractCustomizable.loadAll();
         Build.loadAll();
         Master.getUser().initPlayer().getPlayer().applyBuild(Build.getBuildByName("Default Earth"));
         World w = World.createDefaultBattle();

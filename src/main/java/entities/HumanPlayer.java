@@ -76,12 +76,13 @@ public class HumanPlayer extends AbstractPlayer{
     }
     
     public void setPassives(String[] names){
+        DataSet ds = Master.getDataSet();
 		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
             try{
-                passives[nameIndex] = AbstractPassive.getPassiveByName(names[nameIndex]);
+                passives[nameIndex] = ds.getPassiveByName(names[nameIndex]);
             } catch(NoSuchElementException ex){
                 ex.printStackTrace();
-                passives[nameIndex] = AbstractPassive.getPassiveByName("Default");
+                passives[nameIndex] = ds.getDefaultPassive();
             }
             passives[nameIndex].setUser(this);
 		}

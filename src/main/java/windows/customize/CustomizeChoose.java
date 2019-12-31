@@ -4,8 +4,6 @@ import controllers.Master;
 import customizables.AbstractCustomizable;
 import customizables.CustomizableType;
 import customizables.DataSet;
-import customizables.characterClass.CharacterClass;
-import customizables.passives.AbstractPassive;
 import gui.CustomizableSelector;
 import java.awt.BorderLayout;
 import javax.swing.JButton;
@@ -29,7 +27,7 @@ public class CustomizeChoose extends Page{
                 options = ds.getAllActives();
                 break;
             case PASSIVE:
-                options = AbstractPassive.getAll();
+                options = ds.getAllPassives();
                 break;
             case CHARACTER_CLASS:
                 options = ds.getAllCharacterClasses();

@@ -1,5 +1,6 @@
 package customizables.passives;
 
+import controllers.Master;
 import customizables.CustomizableJsonUtil;
 import java.io.File;
 import java.util.Arrays;
@@ -16,7 +17,7 @@ import serialization.JsonUtil;
  */
 public class PassiveJsonUtil {
     public static void saveAllToFile(File f){
-        JsonObject[] objs = Arrays.stream(AbstractPassive.getAll()).map((AbstractPassive p)->{
+        JsonObject[] objs = Arrays.stream(Master.getDataSet().getAllPassives()).map((AbstractPassive p)->{
             return serializeJson(p);
         }).toArray(size -> new JsonObject[size]);
         JsonUtil.writeToFile(objs, f);

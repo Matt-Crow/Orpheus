@@ -1,9 +1,6 @@
 package customizables;
 
 import controllers.Master;
-import customizables.actives.AbstractActive;
-import customizables.characterClass.CharacterClass;
-import customizables.passives.AbstractPassive;
 import java.io.File;
 import java.util.*;
 import javax.json.*;
@@ -201,7 +198,7 @@ public class Build implements JsonSerialable{
             sb.append(
                 StringUtil.entab(
                     sep + '\n' +
-                    AbstractPassive.getPassiveByName(pn).getDescription()
+                    ds.getPassiveByName(pn).getDescription()
                 )
             ).append("\n");
         }
