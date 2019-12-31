@@ -12,6 +12,7 @@ import javax.json.*;
 import customizables.AbstractCustomizable;
 import customizables.CustomizableJsonUtil;
 import customizables.actives.ActiveJsonUtil;
+import customizables.characterClass.CharacterClassJsonUtil;
 
 /**
  *
@@ -169,7 +170,7 @@ public class JsonUtil {
         for(CharacterClass cc : CharacterClass.getAll()){
             obj = CustomizableJsonUtil.serializeJson(cc);
             pprint(obj, 0);
-            u = CharacterClass.deserializeJson(obj);
+            u = CharacterClassJsonUtil.deserializeJson(obj);
             if(u != null){
                 pprint(obj, 0);
                 out.println(cc.getDescription());

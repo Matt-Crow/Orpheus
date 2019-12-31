@@ -4,7 +4,7 @@ import customizables.Build;
 import customizables.CustomizableJsonUtil;
 import customizables.CustomizableType;
 import customizables.actives.ActiveJsonUtil;
-import customizables.characterClass.CharacterClass;
+import customizables.characterClass.CharacterClassJsonUtil;
 import customizables.passives.PassiveJsonUtil;
 import gui.FileChooserUtil;
 import java.awt.GridLayout;
@@ -45,7 +45,7 @@ public class CustomizeMain extends Page{
                 
                 ActiveJsonUtil.saveAllToFile(new File(dir.getAbsolutePath() + "/actives.json"));
                 PassiveJsonUtil.saveAllToFile(new File(dir.getAbsolutePath() + "/passives.json"));
-                CharacterClass.saveAll(new File(dir.getAbsolutePath() + "/characterClasses.json"));
+                CharacterClassJsonUtil.saveAllToFile(new File(dir.getAbsolutePath() + "/characterClasses.json"));
             }
         });
         addMenuItem(export);
