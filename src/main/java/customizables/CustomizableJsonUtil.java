@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.function.BiConsumer;
 import javax.json.*;
 import customizables.passives.AbstractPassive;
+import customizables.passives.PassiveJsonUtil;
 import serialization.JsonUtil;
 import statuses.AbstractStatus;
 import statuses.StatusName;
@@ -168,7 +169,7 @@ public class CustomizableJsonUtil {
                 ret = ActiveJsonUtil.deserializeJson(obj);
                 break;
             case PASSIVE:
-                ret = AbstractPassive.deserializeJson(obj);
+                ret = PassiveJsonUtil.deserializeJson(obj);
                 break;
             case CHARACTER_CLASS:
                 ret = CharacterClass.deserializeJson(obj);

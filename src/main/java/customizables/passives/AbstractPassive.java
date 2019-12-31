@@ -2,18 +2,13 @@ package customizables.passives;
 
 import java.util.*;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.NoSuchElementException;
-import javax.json.*;
-import serialization.JsonSerialable;
-import serialization.JsonUtil;
 import statuses.*;
 import customizables.AbstractCustomizable;
-import customizables.CustomizableJsonUtil;
 import customizables.CustomizableType;
 
-public abstract class AbstractPassive extends AbstractCustomizable implements JsonSerialable, Serializable{
+public abstract class AbstractPassive extends AbstractCustomizable implements Serializable{
 	/**
 	 * Passives are abilities that have specific triggers, 
 	 * i.e., the user does not directly trigger them:
@@ -34,59 +29,6 @@ public abstract class AbstractPassive extends AbstractCustomizable implements Js
 		type = t;
 		targetsUser = b;
 	}
-    
-    //*******************************************************************
-    // JSON SERIALIZATION METHODS
-    //*******************************************************************
-    public static void saveAll(File f){
-        JsonObject[] objs = ALL.values().stream().map((AbstractPassive p)->{
-            return p.serializeJson();
-        }).toArray(size -> new JsonObject[size]);
-        JsonUtil.writeToFile(objs, f);
-    }
-    
-    @Override
-    public JsonObject serializeJson(){
-        JsonObjectBuilder b = JsonUtil.deconstruct(CustomizableJsonUtil.serializeJson(this));
-        b.add("passive type", type.toString());
-        b.add("targets user", targetsUser);
-        return b.build();
-    }
-    
-    public static PassiveType getPassiveTypeFrom(JsonObject obj){
-        JsonUtil.verify(obj, "passive type");
-        return PassiveType.fromString(obj.getString("passive type"));
-    }
-    public static boolean getTargetsUserFrom(JsonObject obj){
-        JsonUtil.verify(obj, "targets user");
-        return obj.getBoolean("targets user");
-    }
-    
-    public static AbstractPassive deserializeJson(JsonObject obj){
-        AbstractPassive ret = null;
-        PassiveType type = getPassiveTypeFrom(obj);
-        
-        switch(type){
-            case THRESHOLD:
-                ret = ThresholdPassive.deserializeJson(obj);
-                break;
-            case ONMELEEHIT:
-                ret = OnMeleeHitPassive.deserializeJson(obj);
-                break;
-            case ONHIT:
-                ret = OnHitPassive.deserializeJson(obj);
-                break;
-            case ONBEHIT:
-                ret = OnBeHitPassive.deserializeJson(obj);
-                break;
-            default:
-                System.out.println("Abstract passive cannot deserialize " + type);
-                break;
-        }
-        return ret;
-    }
-    
-    
     
     public static void loadAll(){
         // on be hit

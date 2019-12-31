@@ -3,11 +3,8 @@ package customizables.passives;
 import actions.OnHitEvent;
 import actions.OnHitListener;
 import entities.AbstractPlayer;
-import javax.json.JsonObject;
-import serialization.JsonSerialable;
-import customizables.CustomizableJsonUtil;
 
-public class OnMeleeHitPassive extends AbstractPassive implements JsonSerialable, OnHitListener{
+public class OnMeleeHitPassive extends AbstractPassive implements OnHitListener{
 	/*
 	 * Same as onHitPassive, though only triggering off
 	 * of melee hits
@@ -22,19 +19,6 @@ public class OnMeleeHitPassive extends AbstractPassive implements JsonSerialable
 		copyInflictTo(copy);
 		return copy;
 	}
-    
-    @Override
-    public JsonObject serializeJson(){
-        return super.serializeJson();
-    }
-    public static OnMeleeHitPassive deserializeJson(JsonObject obj){
-        OnMeleeHitPassive pass = new OnMeleeHitPassive(
-            CustomizableJsonUtil.getNameFrom(obj),
-            getTargetsUserFrom(obj)
-        );
-        pass.setInflict(CustomizableJsonUtil.getStatusTableFrom(obj));
-        return pass;
-    }
     
     @Override
 	public void init(){

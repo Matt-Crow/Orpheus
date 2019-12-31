@@ -3,10 +3,9 @@ package windows.customize;
 import customizables.Build;
 import customizables.CustomizableJsonUtil;
 import customizables.CustomizableType;
-import customizables.actives.AbstractActive;
 import customizables.actives.ActiveJsonUtil;
 import customizables.characterClass.CharacterClass;
-import customizables.passives.AbstractPassive;
+import customizables.passives.PassiveJsonUtil;
 import gui.FileChooserUtil;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -45,7 +44,7 @@ public class CustomizeMain extends Page{
                 dir.mkdir();
                 
                 ActiveJsonUtil.saveAllToFile(new File(dir.getAbsolutePath() + "/actives.json"));
-                AbstractPassive.saveAll(new File(dir.getAbsolutePath() + "/passives.json"));
+                PassiveJsonUtil.saveAllToFile(new File(dir.getAbsolutePath() + "/passives.json"));
                 CharacterClass.saveAll(new File(dir.getAbsolutePath() + "/characterClasses.json"));
             }
         });
