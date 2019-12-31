@@ -1,5 +1,6 @@
 package gui;
 
+import controllers.Master;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -36,6 +37,6 @@ public class CharacterClassCustomizer extends Customizer<CharacterStatName>{
 	}
 	public void save(){
 		super.save();
-		CharacterClass.addCharacterClass((CharacterClass)getCustomizing());
+		Master.getDataSet().addCharacterClass((CharacterClass)getCustomizing());
 	}
 }

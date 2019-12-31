@@ -1,7 +1,5 @@
 package customizables.characterClass;
 
-import java.util.*;
-
 import customizables.AbstractCustomizable;
 import graphics.CustomColors;
 import customizables.CustomizableType;
@@ -18,12 +16,6 @@ public class CharacterClass extends AbstractCustomizable{
     private CustomColors[] colors;
     public static final int BASE_HP = 2000;
 
-    private static final  HashMap<String, CharacterClass> ALL = new HashMap<>();
-    static{
-        //guaranteed to have at least one character class
-        addCharacterClass(new CharacterClass("Default", CustomColors.rainbow, 3, 3, 3, 3, 3));
-    }
-    
     // initializers
     public CharacterClass(String n, CustomColors[] cs, int HP, int energy, int dmg, int reduction, int speed){
         super(CustomizableType.CHARACTER_CLASS, n);
@@ -36,22 +28,6 @@ public class CharacterClass extends AbstractCustomizable{
         setStat(CharacterStatName.SPEED, speed);
     }
     
-    public static void loadAll(){
-		CharacterClass fire = new CharacterClass("Fire", CustomColors.fireColors, 1, 4, 5, 4, 3);
-		CharacterClass air = new CharacterClass("Air", CustomColors.airColors, 2, 5, 3, 1, 5);
-		CharacterClass earth = new CharacterClass("Earth", CustomColors.earthColors, 4, 1, 4, 4, 1);
-		CharacterClass water = new CharacterClass("Water", CustomColors.waterColors, 5, 4, 1, 3, 3);
-		
-		addCharacterClasses(
-            new CharacterClass[]{
-                fire,
-                air,
-                earth,
-                water
-            }
-        );
-	}
-    
     @Override
     public CharacterClass copy(){
         return new CharacterClass(
@@ -63,42 +39,6 @@ public class CharacterClass extends AbstractCustomizable{
             getBase(CharacterStatName.REDUCTION),
             getBase(CharacterStatName.SPEED)
         );
-    }
-
-    // static methods
-    public static void addCharacterClass(CharacterClass c){
-        ALL.put(c.getName().toUpperCase(), c.copy());
-    }
-    public static void addCharacterClasses(CharacterClass[] c){
-        for(CharacterClass cs : c){
-            addCharacterClass(cs);
-        }
-    }
-    public static CharacterClass getCharacterClassByName(String n){
-        if(!ALL.containsKey(n.toUpperCase())){
-            throw new NoSuchElementException("Character class with name " + n + " not found. Did you remember to call CharacterClass.addCharacterClass(...)?");
-        }
-        return ALL.get(n.toUpperCase()).copy();
-    }
-    public static CharacterClass[] getAll(){
-        CharacterClass[] ret = new CharacterClass[ALL.size()];
-        Collection<CharacterClass> values = ALL.values();
-        int i = 0;
-        for(CharacterClass cc : values){
-            ret[i] = cc;
-            i++;
-        }
-        return ret;
-    }
-    public static String[] getAllNames(){
-        String[] ret = new String[ALL.size()];
-        Set<String> keys = ALL.keySet();
-        int i = 0;
-        for(String key : keys){
-            ret[i] = key;
-            i++;
-        }
-        return ret;
     }
 
     public void setColors(CustomColors[] cs){

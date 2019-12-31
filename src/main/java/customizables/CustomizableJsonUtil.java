@@ -56,7 +56,7 @@ public class CustomizableJsonUtil {
                 } else if(au instanceof AbstractActive){
                     ds.addActive((AbstractActive)au);
                 } else if(au instanceof CharacterClass){
-                    CharacterClass.addCharacterClass((CharacterClass)au);
+                    ds.addCharacterClass((CharacterClass)au);
                 } else {
                     System.out.println("Couldn't deserialize " + au.getClass().getName());
                     JsonUtil.pprint(obj, 0);

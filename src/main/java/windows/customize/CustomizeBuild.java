@@ -59,7 +59,7 @@ public class CustomizeBuild extends Page{
         
         DataSet ds = Master.getDataSet();
         
-        charClassSel.setOptions(CharacterClass.getAll());
+        charClassSel.setOptions(ds.getAllCharacterClasses());
         for(int i = 0; i < 3; i++){
             acts[i].setOptions(ds.getAllActives());
             pass[i].setOptions(AbstractPassive.getAll());
@@ -69,7 +69,7 @@ public class CustomizeBuild extends Page{
     public void setCustomizing(Build selectedBuild) {
         DataSet ds = Master.getDataSet();
         name.setText(selectedBuild.getName());
-        charClassSel.setSelected(CharacterClass.getCharacterClassByName(selectedBuild.getClassName()));
+        charClassSel.setSelected(ds.getCharacterClassByName(selectedBuild.getClassName()));
         String[] actNames = selectedBuild.getActiveNames();
         String[] pasNames = selectedBuild.getPassiveNames();
         for(int i = 0; i < 3; i++){

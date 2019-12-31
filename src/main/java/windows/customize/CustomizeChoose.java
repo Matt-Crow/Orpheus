@@ -4,7 +4,6 @@ import controllers.Master;
 import customizables.AbstractCustomizable;
 import customizables.CustomizableType;
 import customizables.DataSet;
-import customizables.actives.AbstractActive;
 import customizables.characterClass.CharacterClass;
 import customizables.passives.AbstractPassive;
 import gui.CustomizableSelector;
@@ -33,7 +32,7 @@ public class CustomizeChoose extends Page{
                 options = AbstractPassive.getAll();
                 break;
             case CHARACTER_CLASS:
-                options = CharacterClass.getAll();
+                options = ds.getAllCharacterClasses();
                 break;
             default:
                 System.err.println("No options for " + type + " in CustomizeChoose");

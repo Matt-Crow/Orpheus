@@ -168,7 +168,7 @@ public class JsonUtil {
         }
         
         //done
-        for(CharacterClass cc : CharacterClass.getAll()){
+        for(CharacterClass cc : Master.getDataSet().getAllCharacterClasses()){
             obj = CustomizableJsonUtil.serializeJson(cc);
             pprint(obj, 0);
             u = CharacterClassJsonUtil.deserializeJson(obj);

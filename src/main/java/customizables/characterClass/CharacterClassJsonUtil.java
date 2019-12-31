@@ -1,5 +1,6 @@
 package customizables.characterClass;
 
+import controllers.Master;
 import customizables.CustomizableJsonUtil;
 import graphics.CustomColors;
 import java.io.File;
@@ -18,7 +19,7 @@ import serialization.JsonUtil;
  */
 public class CharacterClassJsonUtil {
     public static void saveAllToFile(File f){
-        JsonObject[] objs = Arrays.stream(CharacterClass.getAll()).map((CharacterClass c)->{
+        JsonObject[] objs = Arrays.stream(Master.getDataSet().getAllCharacterClasses()).map((CharacterClass c)->{
             return serializeJson(c);
         }).toArray(size -> new JsonObject[size]);
         JsonUtil.writeToFile(objs, f);

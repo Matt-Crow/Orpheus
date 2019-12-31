@@ -45,14 +45,15 @@ public class HumanPlayer extends AbstractPlayer{
 		setSpeed((int) (c.getStatValue(CharacterStatName.SPEED) * (500 / Master.FPS)));
     }
     public void setClass(String name){
+        DataSet ds = Master.getDataSet();
         try{
-            c = CharacterClass.getCharacterClassByName(name.toUpperCase());
-            setColor(c.getColors()[0]);
-            c.setUser(this);
+            c = ds.getCharacterClassByName(name.toUpperCase());
         } catch(NoSuchElementException ex){
             ex.printStackTrace();
-            c = CharacterClass.getCharacterClassByName("Default");
+            c = ds.getDefaultCharacterClass();
         }
+        setColor(c.getColors()[0]);
+        c.setUser(this);
 	}
     public CharacterClass getCharacterClass(){
 		return c;

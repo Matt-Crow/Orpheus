@@ -177,12 +177,14 @@ public class Build implements JsonSerialable{
 	}
     
     public String getDescription(){
+        DataSet ds = Master.getDataSet();
+        
         StringBuilder sb = new StringBuilder();
         String sep = "~~~~~~~~~~~~~~~~~~~~";
         sb.append("Build ").append(name).append(": \n");
         sb.append("Class: \n").append(
             StringUtil.entab(
-                CharacterClass.getCharacterClassByName(className).getDescription())
+                ds.getCharacterClassByName(className).getDescription())
         )
             .append("\n");
         sb.append("Actives: \n");
@@ -190,7 +192,7 @@ public class Build implements JsonSerialable{
             sb.append(
                 StringUtil.entab(
                     sep + '\n' +
-                    Master.getDataSet().getActiveByName(an).getDescription()
+                    ds.getActiveByName(an).getDescription()
                 )
             ).append("\n");
         }

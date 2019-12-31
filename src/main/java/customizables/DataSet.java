@@ -5,6 +5,7 @@ import customizables.actives.ActiveTag;
 import customizables.actives.BoostActive;
 import customizables.actives.ElementalActive;
 import customizables.actives.MeleeActive;
+import customizables.characterClass.CharacterClass;
 import entities.ParticleType;
 import graphics.CustomColors;
 import java.util.Collection;
@@ -27,11 +28,17 @@ import statuses.Stun;
  */
 public final class DataSet {
     public final HashMap<String, AbstractActive> allActives;
-    private final AbstractActive DEFAULT_ACTIVE = new ElementalActive("Default", 3, 3, 3, 3, 3);
+    public final HashMap<String, CharacterClass> allCharacterClasses;
     
+    private final AbstractActive DEFAULT_ACTIVE = new ElementalActive("Default", 3, 3, 3, 3, 3);
+    private final CharacterClass DEFAULT_CHARACTER_CLASS = new CharacterClass("Default", CustomColors.rainbow, 3, 3, 3, 3, 3);
     
     public DataSet(){
         allActives = new HashMap<>();
+        allCharacterClasses = new HashMap<>();
+        
+        addActive(DEFAULT_ACTIVE);
+        addCharacterClass(DEFAULT_CHARACTER_CLASS);
     }
     
     public void addActive(AbstractActive a){
@@ -78,6 +85,47 @@ public final class DataSet {
     
     public AbstractActive getDefaultActive(){
         return DEFAULT_ACTIVE.copy();
+    }
+    
+    
+    
+    public void addCharacterClass(CharacterClass c){
+        allCharacterClasses.put(c.getName().toUpperCase(), c.copy());
+    }
+    public void addCharacterClasses(CharacterClass[] c){
+        for(CharacterClass cs : c){
+            addCharacterClass(cs);
+        }
+    }
+    public CharacterClass getCharacterClassByName(String n){
+        if(!allCharacterClasses.containsKey(n.toUpperCase())){
+            throw new NoSuchElementException("Character class with name " + n + " not found. Did you remember to call CharacterClass.addCharacterClass(...)?");
+        }
+        return allCharacterClasses.get(n.toUpperCase()).copy();
+    }
+    public CharacterClass[] getAllCharacterClasses(){
+        CharacterClass[] ret = new CharacterClass[allCharacterClasses.size()];
+        Collection<CharacterClass> values = allCharacterClasses.values();
+        int i = 0;
+        for(CharacterClass cc : values){
+            ret[i] = cc;
+            i++;
+        }
+        return ret;
+    }
+    public String[] getAllCharacterClassNames(){
+        String[] ret = new String[allCharacterClasses.size()];
+        Set<String> keys = allCharacterClasses.keySet();
+        int i = 0;
+        for(String key : keys){
+            ret[i] = key;
+            i++;
+        }
+        return ret;
+    }
+    
+    public CharacterClass getDefaultCharacterClass(){
+        return DEFAULT_CHARACTER_CLASS.copy();
     }
     
     public void loadDefaultActives(){
@@ -151,7 +199,24 @@ public final class DataSet {
 		});
     }
     
+    public void loadDefaultCharacterClasses(){
+        CharacterClass fire = new CharacterClass("Fire", CustomColors.fireColors, 1, 4, 5, 4, 3);
+		CharacterClass air = new CharacterClass("Air", CustomColors.airColors, 2, 5, 3, 1, 5);
+		CharacterClass earth = new CharacterClass("Earth", CustomColors.earthColors, 4, 1, 4, 4, 1);
+		CharacterClass water = new CharacterClass("Water", CustomColors.waterColors, 5, 4, 1, 3, 3);
+		
+		addCharacterClasses(
+            new CharacterClass[]{
+                fire,
+                air,
+                earth,
+                water
+            }
+        );
+    }
+    
     public void loadDefaults(){
         loadDefaultActives();
+        loadDefaultCharacterClasses();
     }
 }
