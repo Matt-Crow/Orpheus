@@ -1,6 +1,7 @@
 package windows.customize;
 
 import customizables.Build;
+import customizables.BuildJsonUtil;
 import customizables.CustomizableJsonUtil;
 import customizables.CustomizableType;
 import customizables.actives.ActiveJsonUtil;
@@ -55,7 +56,7 @@ public class CustomizeMain extends Page{
             File[] chosen = FileChooserUtil.chooseFiles();
             if(chosen != null){
                 for(File f : chosen){
-                    Build.loadFile(f);
+                    BuildJsonUtil.loadFile(f);
                 }
             }
         });
@@ -67,7 +68,7 @@ public class CustomizeMain extends Page{
             if(dir != null){
                 String name = JOptionPane.showInputDialog("Enter a name for this export:");
                 File buildFile = new File(dir.getAbsolutePath() + "/" + name);
-                Build.saveAllToFile(buildFile);
+                BuildJsonUtil.saveAllToFile(buildFile);
             }
         });
         addMenuItem(expBuild);

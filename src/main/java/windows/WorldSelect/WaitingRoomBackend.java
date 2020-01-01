@@ -4,6 +4,7 @@ import battle.Battle;
 import battle.Team;
 import controllers.*;
 import customizables.Build;
+import customizables.BuildJsonUtil;
 import entities.HumanPlayer;
 import java.awt.Color;
 import java.io.IOException;
@@ -244,7 +245,7 @@ public class WaitingRoomBackend {
     private synchronized void receiveBuildRequest(ServerMessage sm){
         server.send(
             new ServerMessage(
-                host.getSelectedBuild().serializeJson().toString(),
+                BuildJsonUtil.serializeJson(host.getSelectedBuild()).toString(),
                 ServerMessageType.PLAYER_DATA
             ),
             sm.getIpAddr()
@@ -283,7 +284,7 @@ public class WaitingRoomBackend {
             return;
         }
 
-        b = Build.deserializeJson(JsonUtil.fromString(sm.getBody()));
+        b = BuildJsonUtil.deserializeJson(JsonUtil.fromString(sm.getBody()));
         tp.applyBuild(b);
         playerTeam.addMember(tp);
         

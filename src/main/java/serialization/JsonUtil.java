@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Map.Entry;
 import javax.json.*;
 import customizables.AbstractCustomizable;
+import customizables.BuildJsonUtil;
 import customizables.CustomizableJsonUtil;
 import customizables.actives.ActiveJsonUtil;
 import customizables.characterClass.CharacterClassJsonUtil;
@@ -178,9 +179,9 @@ public class JsonUtil {
         }
         
         for(Build bu : Master.getDataSet().getAllBuilds()){
-            obj = bu.serializeJson();
+            obj = BuildJsonUtil.serializeJson(bu);
             pprint(obj, 0);
-            b = Build.deserializeJson(obj);
+            b = BuildJsonUtil.deserializeJson(obj);
             if(b != null){
                 pprint(obj, 0);
                 out.println(bu.getDescription());
