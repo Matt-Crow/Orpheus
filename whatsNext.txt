@@ -1,13 +1,13 @@
-Well, another programming season has come and gone. While I may still have a couple of weeks before I return to college, I've spent enough time on Orpheus this Summer: it's time to focus on other things.
+It's time to focus on other things.
 In it's current state, the program works, multiplayer is just a little... iffy. Given that I knew next to nothing about socket programming when I began, and all the guides I've found have been rather basic, "iffy" is pretty good.
 Am I happy with where Orpheus is? No. I'll never be happy with it, not until it's perfect, and trying to perfect it is a wormhole I don't want to get sucked into.
-I'll probably work on it a bit more over the Summer (I really can't stop myself), but for now, I'll call it done.
+I'll definitely work on it more (time permitting), but I'd like to make another Java game, one less chaotic and difficult to balance than this.
 
 With that said, their are many changes that I want to make next time I have a chance to work on this:
 * Move to 3-D graphics?
-* Change the game to a many vs users so that balancing isn't as much of a problem.
 * Overall improvement to the actives / passives system so that it's easier to work with.
 * Player controls...
 * OrpheusScript
 * Remove the ability to customize anything except Builds?
-* Add Dataset class which contains all actives / passives / characterClasses / builds, so I don't have to use static methods to get by name
+* Plugin customization system instead of GUI (players create their own Java classes)
+* redo multiplayer backend (how to launch a server?)
