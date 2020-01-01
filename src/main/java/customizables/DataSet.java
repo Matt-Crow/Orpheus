@@ -59,9 +59,14 @@ public final class DataSet {
         addPassive(DEFAULT_PASSIVE);
         addBuild(DEFAULT_BUILD);
     }
+    /*
+    private void addToMap(? extends AbstractCustomizable c, HashMap<String, ? extends AbstractCustomizable> map){
+        map.put(c.getName().toUpperCase(), c.copy());
+    }*/
     
     public void addActive(AbstractActive a){
         allActives.put(a.getName().toUpperCase(), a.copy());
+        //addToMap(a, allActives);
     }
     public void addActives(AbstractActive[] as){
         for(AbstractActive a : as){
