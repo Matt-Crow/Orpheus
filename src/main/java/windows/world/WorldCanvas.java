@@ -11,11 +11,9 @@ import javax.swing.*;
 import battle.Team;
 import controllers.MainWindow;
 import controllers.User;
-import customizables.Build;
 import entities.PlayerControls;
 import java.awt.Graphics2D;
 import java.io.IOException;
-import customizables.AbstractCustomizable;
 import entities.HumanPlayer;
 import util.SerialUtil;
 import windows.Canvas;
@@ -131,8 +129,7 @@ public class WorldCanvas extends Canvas{
     
     
     public static void main(String[] args) throws IOException{
-        Build.loadAll();
-        Master.getUser().initPlayer().getPlayer().applyBuild(Build.getBuildByName("Default Earth"));
+        Master.getUser().initPlayer().getPlayer().applyBuild(Master.getDataSet().getDefaultBuild());
         World w = World.createDefaultBattle();
         Team t1 = new Team("Test", Color.BLUE);
         Team t2 = Team.constructRandomTeam("Rando", Color.yellow, 1, 1);

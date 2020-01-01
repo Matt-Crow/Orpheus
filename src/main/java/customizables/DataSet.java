@@ -30,27 +30,34 @@ import statuses.Stun;
  * The DataSet class is used to store all the Actives, Passives, CharacterClasses, and Builds.
  * Future versions will add the ability to load additional classes at runtime.
  * 
+ * Currently, Master.java contains a static DataSet, which is automatically populated
+ * with all the default customizables when that file first loads: I needn't worry about customizables not being loaded.
+ * 
  * @author Matt Crow
  */
 public final class DataSet {
     public final HashMap<String, AbstractActive> allActives;
     public final HashMap<String, CharacterClass> allCharacterClasses;
     public final HashMap<String, AbstractPassive> allPassives;
+    public final HashMap<String, Build> allBuilds;
     
     private final AbstractActive DEFAULT_ACTIVE = new ElementalActive("Default", 3, 3, 3, 3, 3);
     private final CharacterClass DEFAULT_CHARACTER_CLASS = new CharacterClass("Default", CustomColors.rainbow, 3, 3, 3, 3, 3);
     private final AbstractPassive DEFAULT_PASSIVE = new ThresholdPassive("Default", 2);
+    private final Build DEFAULT_BUILD = new Build("0x138", "Default", "RAINBOW OF DOOM", "Healing Rain", "Speed Test", "Crushing Grip", "Recover", "Cursed");
     
     public DataSet(){
         allActives = new HashMap<>();
         allCharacterClasses = new HashMap<>();
         allPassives = new HashMap<>();
+        allBuilds = new HashMap<>();
         
         DEFAULT_PASSIVE.addStatus(new Resistance(2, 2));
         
         addActive(DEFAULT_ACTIVE);
         addCharacterClass(DEFAULT_CHARACTER_CLASS);
         addPassive(DEFAULT_PASSIVE);
+        addBuild(DEFAULT_BUILD);
     }
     
     public void addActive(AbstractActive a){
@@ -180,6 +187,43 @@ public final class DataSet {
     public AbstractPassive getDefaultPassive(){
         return DEFAULT_PASSIVE.copy();
     }
+    
+    
+    
+    public void addBuild(Build b){
+		if(b == null){
+            throw new NullPointerException();
+        }
+        allBuilds.put(b.getName().toLowerCase(), b);
+	}
+    public void addBuilds(Build[] bs){
+        for(Build b : bs){
+            addBuild(b);
+        }
+    }
+    public Build getBuildByName(String name){
+		if(!allBuilds.containsKey(name.toLowerCase())){
+            throw new NoSuchElementException("No build found with name " + name + ". Did you remember to call Build.addBuild(...)?");
+        }
+        return allBuilds.get(name.toLowerCase()).copy();
+	}
+    public Build[] getAllBuilds(){
+        return allBuilds.values().toArray(new Build[allBuilds.size()]);
+    }
+    public String[] getAllBuildNames(){
+		String[] ret = new String[allBuilds.size()];
+		Set<String> keys = allBuilds.keySet();
+		int i = 0;
+		for(String key : keys){
+			ret[i] = key;
+			i++;
+		}
+		return ret;
+	}
+    public Build getDefaultBuild(){
+        return DEFAULT_BUILD.copy();
+    }
+    
     
     
     public void loadDefaultActives(){
@@ -328,10 +372,19 @@ public final class DataSet {
                 cg
 		});
     }
+    public void loadDefaultBuilds(){
+        addBuilds(new Build[]{
+            new Build("Default Earth", "Earth", "Boulder Toss", "Warrior's Stance", "Earthquake", "Toughness", "Retaliation", "Crippling Hits"),
+            new Build("Default Fire", "Fire", "Fireball", "Fields of Fire", "Burning Rage", "Escapist", "Sparking Strikes", "Bracing"),
+            new Build("Default Water", "Water", "Waterbolt", "Whirlpool", "Healing Rain", "Sharpen", "Bracing", "Recover"),
+            new Build("Default Air", "Air", "Boreus", "Zephyrus", "Speed Test", "Recharge", "Sharpen", "Leechhealer")
+        });
+    }
     
     public void loadDefaults(){
         loadDefaultActives();
         loadDefaultCharacterClasses();
         loadDefaultPassives();
+        loadDefaultBuilds();
     }
 }

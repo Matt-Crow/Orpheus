@@ -16,14 +16,7 @@ import util.StringUtil;
  * which are applied to Players at the beginning of a match
  * @author Matt
  */
-public class Build implements JsonSerialable{
-	private static final HashMap<String, Build> ALL = new HashMap<>();
-	private static final Build DEFAULT_EARTH = new Build("Default Earth", "Earth", "Boulder Toss", "Warrior's Stance", "Earthquake", "Toughness", "Retaliation", "Crippling Hits");
-	private static final Build DEFAULT_FIRE = new Build("Default Fire", "Fire", "Fireball", "Fields of Fire", "Burning Rage", "Escapist", "Sparking Strikes", "Bracing");
-	private static final Build DEFAULT_WATER = new Build("Default Water", "Water", "Waterbolt", "Whirlpool", "Healing Rain", "Sharpen", "Bracing", "Recover");
-	private static final Build DEFAULT_AIR = new Build("Default Air", "Air", "Boreus", "Zephyrus", "Speed Test", "Recharge", "Sharpen", "Leechhealer");
-	private static final Build TEST = new Build("0x138", "Default", "RAINBOW OF DOOM", "Healing Rain", "Speed Test", "Crushing Grip", "Recover", "Cursed");
-    
+public class Build implements JsonSerialable{	
 	private final String name;
 	private final String className;
 	private final String[] activeNames;
@@ -114,7 +107,7 @@ public class Build implements JsonSerialable{
     }
     
     public static void saveAllToFile(File f){
-        JsonObject[] objs = ALL.values().stream().map((Build b)->{
+        JsonObject[] objs = Arrays.stream(Master.getDataSet().getAllBuilds()).map((Build b)->{
             return b.serializeJson();
         }).toArray(size -> new JsonObject[size]);
         JsonUtil.writeToFile(objs, f);  
@@ -125,40 +118,11 @@ public class Build implements JsonSerialable{
         for(JsonObject obj : JsonUtil.readFromFile(f)){
             b = deserializeJson(obj);
             if(b != null){
-                addBuild(b);
+                Master.getDataSet().addBuild(b);
             }
             //System.out.println(b.getDescription());
         }
     }
-    
-    public static final void loadAll(){
-        addBuild(DEFAULT_EARTH);
-        addBuild(DEFAULT_FIRE);
-        addBuild(DEFAULT_WATER);
-        addBuild(DEFAULT_AIR);
-        addBuild(TEST);
-    }
-    
-    
-    
-	public static ArrayList<Build> getAllBuilds(){
-		return new ArrayList<>(ALL.values());
-	}
-    public static Build[] getAll(){
-        return ALL.values().toArray(new Build[ALL.size()]);
-    }
-	public static void addBuild(Build b){
-		if(b == null){
-            throw new NullPointerException();
-        }
-        ALL.put(b.getName().toLowerCase(), b);
-	}
-	public static Build getBuildByName(String name){
-		if(!ALL.containsKey(name.toLowerCase())){
-            throw new NoSuchElementException("No build found with name " + name + ". Did you remember to call Build.addBuild(...)?");
-        }
-        return ALL.get(name.toLowerCase()).copy();
-	}
     
 	public String getName(){
 		return name;

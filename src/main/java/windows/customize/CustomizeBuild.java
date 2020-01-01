@@ -79,7 +79,7 @@ public class CustomizeBuild extends Page{
     }
     
     private void save(){
-        Build.addBuild(new Build(
+        Master.getDataSet().addBuild(new Build(
             name.getText(),
             charClassSel.getSelected().getName(),
             acts[0].getSelected().getName(),

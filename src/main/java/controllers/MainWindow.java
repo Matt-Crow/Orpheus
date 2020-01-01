@@ -1,10 +1,8 @@
 package controllers;
 
-import customizables.Build;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
-import customizables.AbstractCustomizable;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import javax.swing.JPanel;
@@ -56,7 +54,6 @@ public class MainWindow extends JFrame{
         currentPage = null;
         
         switchToPage(new StartMainMenu());
-        Build.loadAll();
         
         instance = this;
     }
