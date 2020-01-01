@@ -13,10 +13,9 @@ import customizables.passives.OnMeleeHitPassive;
 import customizables.passives.ThresholdPassive;
 import entities.ParticleType;
 import graphics.CustomColors;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import statuses.AbstractStatus;
 import statuses.Burn;
 import statuses.Charge;
@@ -59,177 +58,129 @@ public final class DataSet {
         addPassive(DEFAULT_PASSIVE);
         addBuild(DEFAULT_BUILD);
     }
-    /*
-    private void addToMap(? extends AbstractCustomizable c, HashMap<String, ? extends AbstractCustomizable> map){
-        map.put(c.getName().toUpperCase(), c.copy());
-    }*/
     
+    private void addToMap(AbstractCustomizable c, HashMap<String, ? extends AbstractCustomizable> map){
+        if(c == null){
+            throw new NullPointerException("Cannot add null to map");
+        }
+        if(map == null){
+            throw new NullPointerException("Cannot add customizable to null map");
+        }
+        ((HashMap<String, AbstractCustomizable>)map).put(c.getName().toUpperCase(), c.copy());
+    }
     public void addActive(AbstractActive a){
-        allActives.put(a.getName().toUpperCase(), a.copy());
-        //addToMap(a, allActives);
+        addToMap(a, allActives);
     }
-    public void addActives(AbstractActive[] as){
-        for(AbstractActive a : as){
-            addActive(a);
-        }
-    }
-    
-    /**
-     * Finds an active with the given name, ignoring case.
-     * If no active is found, throws a NoSuchElementException
-     * @param n the name of the active to search for
-     * @return the active with that name
-     */
-    public AbstractActive getActiveByName(String n){
-        if(!allActives.containsKey(n.toUpperCase())){
-            throw new NoSuchElementException(n + " is not in the list of actives. Did you remember to call dataSet.addActive(...);?");
-        }
-        return allActives.get(n.toUpperCase()).copy();
-    }
-    public AbstractActive[] getAllActives(){
-        AbstractActive[] ret = new AbstractActive[allActives.size()];
-        Collection<AbstractActive> values = allActives.values();
-        int i = 0;
-        for(AbstractActive aa : values){
-            ret[i] = aa;
-            i++;
-        }
-        return ret;
-    }
-    public String[] getAllActiveNames(){
-        String[] ret = new String[allActives.size()];
-        Set<String> keys = allActives.keySet();
-        int i = 0;
-        for(String key : keys){
-            ret[i] = key;
-            i++;
-        }
-        return ret;
-    }
-    
-    public AbstractActive getDefaultActive(){
-        return DEFAULT_ACTIVE.copy();
-    }
-    
-    
-    
     public void addCharacterClass(CharacterClass c){
-        allCharacterClasses.put(c.getName().toUpperCase(), c.copy());
+        addToMap(c, allCharacterClasses);
     }
-    public void addCharacterClasses(CharacterClass[] c){
-        for(CharacterClass cs : c){
-            addCharacterClass(cs);
-        }
-    }
-    public CharacterClass getCharacterClassByName(String n){
-        if(!allCharacterClasses.containsKey(n.toUpperCase())){
-            throw new NoSuchElementException("Character class with name " + n + " not found. Did you remember to call dataSet.addCharacterClass(...)?");
-        }
-        return allCharacterClasses.get(n.toUpperCase()).copy();
-    }
-    public CharacterClass[] getAllCharacterClasses(){
-        CharacterClass[] ret = new CharacterClass[allCharacterClasses.size()];
-        Collection<CharacterClass> values = allCharacterClasses.values();
-        int i = 0;
-        for(CharacterClass cc : values){
-            ret[i] = cc;
-            i++;
-        }
-        return ret;
-    }
-    public String[] getAllCharacterClassNames(){
-        String[] ret = new String[allCharacterClasses.size()];
-        Set<String> keys = allCharacterClasses.keySet();
-        int i = 0;
-        for(String key : keys){
-            ret[i] = key;
-            i++;
-        }
-        return ret;
-    }
-    
-    public CharacterClass getDefaultCharacterClass(){
-        return DEFAULT_CHARACTER_CLASS.copy();
-    }
-    
-    
-    
     public void addPassive(AbstractPassive p){
-		allPassives.put(p.getName().toUpperCase(), p);
+		addToMap(p, allPassives);
 	}
-	public void addPassives(AbstractPassive[] ps){
-		for(AbstractPassive p : ps){
-			addPassive(p);
-		}
-	}
-	public AbstractPassive getPassiveByName(String n){
-        if(!allPassives.containsKey(n.toUpperCase())){
-            throw new NoSuchElementException("Passive with name " + n + " not found. Did you remember to call dataSet.addPassive(...)?");
-        }
-		return allPassives.get(n.toUpperCase()).copy();
-	}
-	public AbstractPassive[] getAllPassives(){
-		AbstractPassive[] ret = new AbstractPassive[allPassives.size()];
-		Collection<AbstractPassive> values = allPassives.values();
-		int i = 0;
-		for(AbstractPassive ap : values){
-			ret[i] = ap;
-			i++;
-		}
-		return ret;
-	}
-	public String[] getAllPassivesNames(){
-		String[] ret = new String[allPassives.size()];
-		Set<String> keys = allPassives.keySet();
-		int i = 0;
-		for(String key : keys){
-			ret[i] = key;
-			i++;
-		}
-		return ret;
-	}
-    
-    public AbstractPassive getDefaultPassive(){
-        return DEFAULT_PASSIVE.copy();
-    }
-    
-    
-    
+    //Build does not extends AbstractCustomizable, so I cannot use addToMap
     public void addBuild(Build b){
 		if(b == null){
             throw new NullPointerException();
         }
-        allBuilds.put(b.getName().toLowerCase(), b);
+        allBuilds.put(b.getName().toUpperCase(), b);
+	}
+    
+    private void addAllToMap(AbstractCustomizable[] cs, HashMap<String, ? extends AbstractCustomizable> map){
+        if(cs == null){
+            throw new NullPointerException("Cannot add null to map");
+        }
+        if(map == null){
+            throw new NullPointerException("Cannot add customizables to null map");
+        }
+        for(AbstractCustomizable c : cs){
+            addToMap(c, map);
+        }
+    }
+    public void addActives(AbstractActive[] as){
+        addAllToMap(as, allActives);
+    }
+    public void addCharacterClasses(CharacterClass[] cs){
+        addAllToMap(cs, allCharacterClasses);
+    }
+    public void addPassives(AbstractPassive[] ps){
+		addAllToMap(ps, allPassives);
 	}
     public void addBuilds(Build[] bs){
+        if(bs == null){
+            throw new NullPointerException("cannot add null builds");
+        }
         for(Build b : bs){
             addBuild(b);
         }
     }
+    
+    public AbstractCustomizable getByName(String n, HashMap<String, ? extends AbstractCustomizable> map){
+        if(!map.containsKey(n.toUpperCase())){
+            throw new NoSuchElementException("No customizable found with name " + n);
+        }
+        return map.get(n.toUpperCase()).copy();
+    }
+    public AbstractActive getActiveByName(String n){
+        return (AbstractActive)getByName(n, allActives);
+    }
+    public CharacterClass getCharacterClassByName(String n){
+        return (CharacterClass)getByName(n, allCharacterClasses);
+    }
+    public AbstractPassive getPassiveByName(String n){
+        return (AbstractPassive)getByName(n, allPassives);
+	}
     public Build getBuildByName(String name){
-		if(!allBuilds.containsKey(name.toLowerCase())){
+		if(!allBuilds.containsKey(name.toUpperCase())){
             throw new NoSuchElementException("No build found with name " + name + ". Did you remember to call Build.addBuild(...)?");
         }
-        return allBuilds.get(name.toLowerCase()).copy();
+        return allBuilds.get(name.toUpperCase()).copy();
+	}
+    
+    public AbstractCustomizable[] getAll(HashMap<String, ? extends AbstractCustomizable> map){
+        return map.values().toArray(new AbstractCustomizable[map.size()]);
+    }
+    public AbstractActive[] getAllActives(){
+        return Arrays.copyOf(getAll(allActives), allActives.size(), AbstractActive[].class);
+    }
+    public CharacterClass[] getAllCharacterClasses(){
+        return Arrays.copyOf(getAll(allCharacterClasses), allCharacterClasses.size(), CharacterClass[].class);
+    }
+    public AbstractPassive[] getAllPassives(){
+		return Arrays.copyOf(getAll(allPassives), allPassives.size(), AbstractPassive[].class);
 	}
     public Build[] getAllBuilds(){
         return allBuilds.values().toArray(new Build[allBuilds.size()]);
     }
-    public String[] getAllBuildNames(){
-		String[] ret = new String[allBuilds.size()];
-		Set<String> keys = allBuilds.keySet();
-		int i = 0;
-		for(String key : keys){
-			ret[i] = key;
-			i++;
-		}
-		return ret;
+    
+    public String[] getAllNames(HashMap<String, ? extends AbstractCustomizable> map){
+        //key is capitalized, but we want regular casing, so we can't get this from the key set
+        return map.values().stream().map((AbstractCustomizable c)->c.getName()).toArray(String[]::new);
+    }
+    public String[] getAllActiveNames(){
+        return getAllNames(allActives);
+    }
+    public String[] getAllCharacterClassNames(){
+        return getAllNames(allCharacterClasses);
+    }
+    public String[] getAllPassivesNames(){
+		return getAllNames(allPassives);
 	}
+    public String[] getAllBuildNames(){
+		return allBuilds.values().stream().map((b)->b.getName()).toArray(String[]::new);
+	}
+    
+    public AbstractActive getDefaultActive(){
+        return DEFAULT_ACTIVE.copy();
+    }    
+    public CharacterClass getDefaultCharacterClass(){
+        return DEFAULT_CHARACTER_CLASS.copy();
+    }
+    public AbstractPassive getDefaultPassive(){
+        return DEFAULT_PASSIVE.copy();
+    }
     public Build getDefaultBuild(){
         return DEFAULT_BUILD.copy();
     }
-    
-    
     
     public void loadDefaultActives(){
         // read from file later?
