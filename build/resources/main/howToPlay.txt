@@ -1,0 +1,13 @@
+The Orpheus Proposition is a multiplayer arena game where human players must survive multiple waves of enemies.
+Each player has their own character with they can customize.
+The goal of the game is to use your active abilities to fire projectiles which will deplete enemy hit points upon colliding with them.
+Once a player's hit points reach 0, they "match out", and can no longer participate in the game.
+If all players match out, the players lose.
+However, if the players can match out all the enemies, the next wave will be summoned. Once the last wave of enemies is defeated, the players win the game!
+Before the game begins, each player chooses which build they want to use;
+a build is a combination of character class, active abilities, and passive abilities that define how the player functions in-game.
+You can create and customize your own builds in the "customize" menu, or you can use one of the default builds I have created for you:
+(*) Default Earth is a slow, but sturdy tank with good offensive and defensive abilities. (Recommended)
+(*) Default Water is a sturdy wall with weak offensive abilities, but focuses on outlasting its opponents.
+(*) Default Fire is a powerful bomb of damage which attempts to inflict as much damage as possible before matching out due to its weak defenses.
+(*) Default Air is a rapid-fire build which focuses on speed over power or sturdiness. 

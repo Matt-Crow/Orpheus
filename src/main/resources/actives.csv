@@ -1,0 +1,6 @@
+﻿name,arc,range,speed,aoe,damage,particle type,Tags,
+Heavy Stroke,,,,,4,,,how do multiple?
+Slash,,,,,2,,,
+Boulder Toss,1,2,2,3,4,Burst,knocksback,
+cursed daggers,2,5,5,0,0,beam,,
+earthquake,1,0,2,3,2,burst,knocksback,
