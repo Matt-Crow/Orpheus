@@ -10,11 +10,11 @@ public class ElementalActive extends AbstractActive{
 	public ElementalActive copy(){
 		ElementalActive copy = new ElementalActive(
 				getName(), 
-				getBase(ActiveStatName.ARC), 
-				getBase(ActiveStatName.RANGE), 
-				getBase(ActiveStatName.SPEED), 
-				getBase(ActiveStatName.AOE), 
-				getBase(ActiveStatName.DAMAGE));
+				getBaseArcLength(), 
+				getBaseRange(), 
+				getBaseProjectileSpeed(), 
+				getBaseAreaOfEffect(), 
+				getBaseDamage());
 		copy.setParticleType(getParticleType());
 		copyTagsTo(copy);
         copy.setColors(getColors());
@@ -29,15 +29,15 @@ public class ElementalActive extends AbstractActive{
         desc
             .append(getName())
             .append(": \n");
-		if(getStatValue(ActiveStatName.RANGE) == 0){
-            desc.append(String.format("The user generates an explosion with a %d unit radius", (int)(getStatValue(ActiveStatName.AOE) / Master.UNITSIZE)));
+		if(getRange() == 0){
+            desc.append(String.format("The user generates an explosion with a %d unit radius", getAOE() / Master.UNITSIZE));
         } else {
 			desc.append("The user launches ");
-			if(getStatValue(ActiveStatName.ARC) > 0){
+			if(getArcLength() > 0){
 				desc.append(
                     String.format(
                         "projectiles in a %d degree arc, each traveling ", 
-                        (int)getStatValue(ActiveStatName.ARC)
+                        getArcLength()
                     )
                 );
 			} else {
@@ -46,17 +46,17 @@ public class ElementalActive extends AbstractActive{
 			desc.append(
                 String.format(
                     "for %d units, at %d units per second", 
-                    (int)(getStatValue(ActiveStatName.RANGE) / Master.UNITSIZE),
-                    (int)(getStatValue(ActiveStatName.SPEED) * Master.FPS / Master.UNITSIZE)
+                    getRange() / Master.UNITSIZE,
+                    getSpeed() * Master.FPS / Master.UNITSIZE
                 )
             );
 			
-			if(getStatValue(ActiveStatName.AOE) != 0){
-				desc.append(String.format(" before exploding in a %d unit radius", (int)(getStatValue(ActiveStatName.AOE) / Master.UNITSIZE))); 
+			if(getAOE() != 0){
+				desc.append(String.format(" before exploding in a %d unit radius", getAOE() / Master.UNITSIZE)); 
 			}
 		}
         
-		desc.append(String.format(" dealing %d damage to enemies it hits. \n", (int)getStatValue(ActiveStatName.DAMAGE)));
+		desc.append(String.format(" dealing %d damage to enemies it hits. \n", getDamage()));
 		desc.append(String.format("%d energy cost. \n", getCost()));
 		desc.append(getInflict().getStatusString());
 		

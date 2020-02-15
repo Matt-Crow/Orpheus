@@ -10,7 +10,7 @@ public class MeleeActive extends AbstractActive{
     
     @Override
 	public MeleeActive copy(){
-		MeleeActive copy = new MeleeActive(getName(), getBase(ActiveStatName.DAMAGE));
+		MeleeActive copy = new MeleeActive(getName(), getBaseDamage());
         copyTagsTo(copy);
         copy.setColors(getColors());
         copy.setInflict(getInflict());
@@ -21,7 +21,7 @@ public class MeleeActive extends AbstractActive{
 	public String getDescription(){
 		String desc = getName() + ": \n"
 				+ "The user performs a close range attack, \n"
-				+ "dealing " + (int)getStatValue(ActiveStatName.DAMAGE) + " damage \n"
+				+ "dealing " + getDamage() + " damage \n"
 						+ "to whoever it hits. \n";
         desc += getInflict().getStatusString();
 		

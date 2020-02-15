@@ -1,7 +1,6 @@
 package entities;
 
 import customizables.actives.AbstractActive;
-import customizables.actives.ActiveStatName;
 import controllers.Master;
 
 public class SeedProjectile extends Projectile{
@@ -10,7 +9,7 @@ public class SeedProjectile extends Projectile{
 	public SeedProjectile(int id, int x, int y, int degrees, int momentum, AbstractPlayer attackUser, AbstractActive a){
 		super(id, x, y, degrees, momentum, attackUser, a);
 		useId = id;
-		canExplode = getAttack().getStatValue(ActiveStatName.AOE) != 0;
+		canExplode = getAttack().getAOE() != 0;
 	}
 	
 	public void explode(){

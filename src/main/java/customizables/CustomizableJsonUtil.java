@@ -90,6 +90,8 @@ public class CustomizableJsonUtil {
         b.add("name", au.getName());
         b.add("status table", serializeStatusTable(au.getInflict()));
         
+        //subclasses need to implement stats
+        /*
         JsonObjectBuilder statsJson = Json.createObjectBuilder();
         BiConsumer<Enum, Integer> bi = (Enum key, Integer value)->{
             statsJson.add(key.toString(), value);
@@ -98,7 +100,7 @@ public class CustomizableJsonUtil {
             .forEach(
                 bi);
         b.add("stats", statsJson.build());
-        
+        */
         return b.build();
     }
     

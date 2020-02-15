@@ -1,10 +1,8 @@
 package windows.customize;
 
 import controllers.Master;
-import customizables.Build;
 import customizables.BuildJsonUtil;
 import customizables.CustomizableJsonUtil;
-import customizables.CustomizableType;
 import customizables.actives.ActiveJsonUtil;
 import customizables.characterClass.CharacterClassJsonUtil;
 import customizables.passives.PassiveJsonUtil;
@@ -82,23 +80,6 @@ public class CustomizeMain extends Page{
         
         setLayout(new GridLayout(1, 4));
         
-        JButton act = new JButton("Customize Actives");
-        act.addActionListener((e)->{
-            getHost().switchToPage(new CustomizeChoose(CustomizableType.ACTIVE));
-        });
-        add(act);
-        
-        JButton pas = new JButton("Customize Passives");
-        pas.addActionListener((e)->{
-            getHost().switchToPage(new CustomizeChoose(CustomizableType.PASSIVE));
-        });
-        add(pas);
-        
-        JButton cha = new JButton("Customize Character Classes");
-        cha.addActionListener((e)->{
-            getHost().switchToPage(new CustomizeChoose(CustomizableType.CHARACTER_CLASS));
-        });
-        add(cha);
         
         JButton bui = new JButton("Customize Builds");
         bui.addActionListener((e)->{

@@ -42,7 +42,7 @@ public class HumanPlayer extends AbstractPlayer{
 		setClass(b.getClassName());
 		setActives(b.getActiveNames());
 		setPassives(b.getPassiveNames());
-		setSpeed((int) (c.getStatValue(CharacterStatName.SPEED) * (500 / Master.FPS)));
+		setSpeed((int) (c.getSpeed() * (500 / Master.FPS)));
     }
     public void setClass(String name){
         DataSet ds = Master.getDataSet();
@@ -86,11 +86,6 @@ public class HumanPlayer extends AbstractPlayer{
             }
             passives[nameIndex].setUser(this);
 		}
-	}
-    
-    @Override
-    public double getStatValue(CharacterStatName n){
-		return c.getStatValue(n);
 	}
     
     public EnergyLog getEnergyLog(){
@@ -176,4 +171,27 @@ public class HumanPlayer extends AbstractPlayer{
 			i += sw;
 		}
 	}
+
+    @Override
+    public double getStatValue(CharacterStatName n) {
+        double ret = 0.0;
+        switch(n){
+            case HP:
+                ret = c.getMaxHP();
+                break;
+            case ENERGY:
+                ret = c.getMaxEnergy();
+                break;
+            case DMG:
+                ret = c.getOffMult();
+                break;
+            case REDUCTION:
+                ret = c.getDefMult();
+                break;
+            case SPEED:
+                ret = c.getSpeed();
+                break;
+        }
+        return ret;
+    }
 }

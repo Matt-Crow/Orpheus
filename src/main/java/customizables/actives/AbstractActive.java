@@ -8,7 +8,6 @@ import graphics.CustomColors;
 import controllers.Master;
 import customizables.AbstractCustomizable;
 import entities.*;
-import statuses.*;
 import customizables.CustomizableType;
 import customizables.characterClass.CharacterClass;
 import customizables.characterClass.CharacterStatName;
@@ -25,6 +24,18 @@ public abstract class AbstractActive extends AbstractCustomizable{
     private int cost; // the energy cost of the active. Calculated automatically
     private final ArrayList<ActiveTag> tags; //tags are used to modify this' behaviour. Only once is currently implemented 
     
+    private final int arcLength;
+    private final int projectileRange;
+    private final int areaOfEffect;
+    private final int projectileSpeed;
+    private final int damage;
+    
+    private final int baseArcLength;
+    private final int baseProjRange;
+    private final int baseAreaOfEffect;
+    private final int baseProjectileSpeed;
+    private final int baseDamage;
+        
     private static int nextUseId = 0; // How many actives have been used thus far. Used to prevent double hitting
 
     /**
@@ -52,17 +63,60 @@ public abstract class AbstractActive extends AbstractCustomizable{
         super(CustomizableType.ACTIVE, n);
         type = t;
 
-        setStat(ActiveStatName.ARC, arcLength);
-        setStat(ActiveStatName.RANGE, range);
-        setStat(ActiveStatName.SPEED, speed);
-        setStat(ActiveStatName.AOE, aoe);
-        setStat(ActiveStatName.DAMAGE, dmg);
+        baseArcLength = Number.minMax(0, arcLength, 5);
+        baseProjRange = Number.minMax(0, range, 5);
+        baseProjectileSpeed = Number.minMax(1, speed, 5);
+        baseAreaOfEffect = Number.minMax(0, aoe, 5);
+        baseDamage = Number.minMax(0, dmg, 5);
+        
+        this.arcLength = (baseArcLength == 5) ? 360 : baseArcLength * 45;
+        int rng = 0;
+        for(int i = 0; i < baseProjRange; i++){
+            rng += i;
+        }
+        projectileRange = rng;
+        projectileSpeed = 100 * baseProjectileSpeed / Master.FPS;
+        areaOfEffect = baseAreaOfEffect * Master.UNITSIZE;
+        damage = baseDamage * CharacterClass.BASE_HP / 20;
 
         particleType = ParticleType.NONE;
         colors = new CustomColors[]{CustomColors.black};
         setCooldown(1);
 
         tags = new ArrayList<>();
+    }
+    
+    public final int getArcLength(){
+        return arcLength;
+    }
+    public final int getRange(){
+        return projectileRange;
+    }
+    public final int getSpeed(){
+        return projectileSpeed;
+    }
+    public final int getAOE(){
+        return areaOfEffect;
+    }
+    public final int getDamage(){
+        return damage;
+    }
+    
+    
+    public final int getBaseArcLength(){
+        return baseArcLength;
+    }
+    public final int getBaseRange(){
+        return baseProjRange;
+    }
+    public final int getBaseProjectileSpeed(){
+        return baseProjectileSpeed;
+    }
+    public final int getBaseAreaOfEffect(){
+        return areaOfEffect;
+    }
+    public final int getBaseDamage(){
+        return baseDamage;
     }
     
     public void setColors(CustomColors[] cs){
@@ -77,83 +131,6 @@ public abstract class AbstractActive extends AbstractCustomizable{
     }
     public final int getCost(){
         return cost;
-    }
-
-    /**
-     * Uses my 1 to 5 stat system:
-     * 1: weak
-     * 2: subpar
-     * 3: average
-     * 4: above average
-     * 5: strong
-     * 
-     * @param n
-     * @param value 
-     */
-    public void setStat(ActiveStatName n, int value){
-        // 1-5 stat system
-        switch(n){
-        case ARC:
-            // 0 - 360 degrees
-            /*
-             * 1: 45
-             * 2: 90
-             * 3: 135
-             * 4: 180
-             * 5: 360
-             */
-            value = Number.minMax(0, value, 5);
-            int deg = value * 45;
-            if(value == 0){
-                    deg = 1;
-            } else if(value == 5){
-                    deg = 360;
-            }
-            addStat(ActiveStatName.ARC, value, deg);
-            break;
-        case RANGE:
-            // 1-15 units of range. Increases exponentially
-            int units = 0;
-            value = Number.minMax(0, value, 5);
-            for(int i = 0; i <= value; i++){
-                    units += i;
-            }
-            addStat(ActiveStatName.RANGE, value, units * 100);
-            break;
-        case SPEED:
-            // 1-5 units per second
-            value = Number.minMax(1, value, 5);
-            addStat(ActiveStatName.SPEED, value, 100 * value / Master.FPS);
-            break;
-        case AOE:
-            // 1-5 units (or 0)
-            value = Number.minMax(0, value, 5);
-            addStat(ActiveStatName.AOE, value, value * Master.UNITSIZE);
-            break;
-        case DAMAGE:
-            // 5% to 25% of the average character's HP
-            value = Number.minMax(1, value, 5);
-            addStat(ActiveStatName.DAMAGE, value, value * CharacterClass.BASE_HP / 20);
-            break;
-        }
-        calculateCost();
-    }
-    private void calculateCost(){
-        int newCost = 0;
-        if(type != ActiveType.MELEE){
-            int[] bases = getAllBaseValues();
-            for(int i = 0; i < bases.length; i++){
-                newCost += bases[i];
-            }
-            
-            int statusCost = 0;
-            getInflict()
-                .stream()
-                .map((status) -> status.getBaseParam() + status.getIntensityLevel())
-                .reduce(statusCost, Integer::sum);
-            newCost += statusCost;
-        }
-        cost = newCost;
     }
 
     // particle methods
@@ -199,7 +176,7 @@ public abstract class AbstractActive extends AbstractCustomizable{
      * @param facingDegrees the direction the new projectile will travel
      */
     private void spawnProjectile(int facingDegrees){
-        getUser().spawn(new SeedProjectile(nextUseId, getUser().getX(), getUser().getY(), facingDegrees, (int) getStatValue(ActiveStatName.SPEED), getUser(), this));    
+        getUser().spawn(new SeedProjectile(nextUseId, getUser().getX(), getUser().getY(), facingDegrees, projectileSpeed, getUser(), this));    
     }
     
     /**
@@ -224,7 +201,7 @@ public abstract class AbstractActive extends AbstractCustomizable{
     public void use(){
         consumeEnergy();
         if(type != ActiveType.BOOST){
-            spawnArc((int)getStatValue(ActiveStatName.ARC));
+            spawnArc(arcLength);
             nextUseId++;
         }
     }
@@ -239,7 +216,7 @@ public abstract class AbstractActive extends AbstractCustomizable{
      */
     public int calcDmg(AbstractPlayer p){
         return (int)(
-            getStatValue(ActiveStatName.DAMAGE)
+            damage
             * getUser().getStatValue(CharacterStatName.DMG)
             / p.getStatValue(CharacterStatName.REDUCTION)
         );

@@ -31,7 +31,7 @@ public class Projectile extends AbstractReactiveEntity{
 		user = attackUser;
 		setTeam(user.getTeam());
 		registeredAttack = a;
-		range = (int) a.getStatValue(ActiveStatName.RANGE);
+		range = a.getRange();
 		setRadius(25);
 		setMoving(true);
 		hit = null;
