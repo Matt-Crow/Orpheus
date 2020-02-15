@@ -1,5 +1,6 @@
 //package customizables.passives;
 
+import entities.AbstractPlayer;
 import statuses.Regeneration;
 
 
@@ -10,10 +11,20 @@ public class Revitalize extends customizables.passives.ThresholdPassive{
 		super("Revitalize", 25);
 		activated = false;
 	}
-	public void applyEffect(){
+    
+    @Override
+    public void init(){
+        super.init();
+        activated = false;
+    }
+    
+    @Override
+	public void applyEffect(AbstractPlayer p){
+        super.applyEffect(p);
 		if(!activated){
-			getUser().inflict(new Regeneration(3, 5));
+			p.inflict(new Regeneration(3, 5));
 			activated = true;
+            System.out.println("Revitalize activated");
 		}
 	}
 }

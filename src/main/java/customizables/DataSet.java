@@ -13,9 +13,17 @@ import customizables.passives.OnMeleeHitPassive;
 import customizables.passives.ThresholdPassive;
 import entities.ParticleType;
 import graphics.CustomColors;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import statuses.AbstractStatus;
 import statuses.Burn;
 import statuses.Charge;
@@ -342,5 +350,47 @@ public final class DataSet {
         loadDefaultCharacterClasses();
         loadDefaultPassives();
         loadDefaultBuilds();
+    }
+    
+    //https://stackoverflow.com/questions/11016092/how-to-load-classes-at-runtime-from-a-folder-or-jar
+    public void loadFile(File f){
+        try {
+            JarFile jar = new JarFile(f);
+            URLClassLoader loader = URLClassLoader.newInstance(new URL[]{
+                new URL("jar:file:" + f.getAbsolutePath() + "!/")
+            });
+            jar.stream().filter((JarEntry entry)->{
+                return !entry.isDirectory();
+            }).filter((JarEntry entry)->{
+                return entry.getName().endsWith(".class");
+            }).map((JarEntry entry)->{
+                return entry.getName().replace(".class", "").replace("/", ".");
+            }).forEach((String className)->{
+                System.out.println("DataSet.loadFile loading class " + className);
+                try {
+                    Class c = loader.loadClass(className);
+                    Object obj = c.newInstance();
+                    if(obj instanceof AbstractActive){
+                        addActive((AbstractActive)obj);
+                    } else if(obj instanceof AbstractPassive){
+                        addPassive((AbstractPassive)obj);
+                    } else if(obj instanceof CharacterClass){
+                        addCharacterClass((CharacterClass)obj);
+                    } else if(obj instanceof Build){
+                        addBuild((Build)obj);
+                    } else {
+                        System.err.println(c.getName() + " does not extend AbstractCustomizable");
+                    }
+                } catch (ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                } catch (InstantiationException ex) {
+                    ex.printStackTrace();
+                } catch (IllegalAccessException ex) {
+                    ex.printStackTrace();
+                }
+            });
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }

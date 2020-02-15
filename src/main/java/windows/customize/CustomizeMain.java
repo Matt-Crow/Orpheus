@@ -1,5 +1,6 @@
 package windows.customize;
 
+import controllers.Master;
 import customizables.Build;
 import customizables.BuildJsonUtil;
 import customizables.CustomizableJsonUtil;
@@ -30,7 +31,11 @@ public class CustomizeMain extends Page{
             File[] chosen = FileChooserUtil.chooseFiles();
             if(chosen != null){
                 for(File f : chosen){
-                    CustomizableJsonUtil.loadFile(f);
+                    if(f.getName().endsWith(".jar")){
+                        Master.getDataSet().loadFile(f);
+                    } else {
+                        CustomizableJsonUtil.loadFile(f);
+                    }
                 }
             }
         });
