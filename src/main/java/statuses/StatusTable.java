@@ -20,6 +20,11 @@ public class StatusTable implements Serializable{
         statuses.forEach((AbstractStatus s) -> ret.add(s));
 		return ret;
 	}
+    
+    public final void clear(){
+        statuses.clear();
+    }
+    
 	public void add(AbstractStatus s){
 		statuses.add(s.copy());
 	}

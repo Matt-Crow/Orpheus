@@ -1,13 +1,9 @@
 package customizables;
 
-import customizables.actives.AbstractActive;
 import java.util.*;
 import entities.AbstractPlayer;
 import controllers.Master;
-import customizables.characterClass.CharacterClass;
 import java.io.Serializable;
-import customizables.passives.AbstractPassive;
-import entities.HumanPlayer;
 import statuses.*;
 
 /**
@@ -24,19 +20,19 @@ import statuses.*;
  */
 
 public abstract class AbstractCustomizable implements Serializable{
-    public final CustomizableType upgradableType;
-    private String name;
+    private final CustomizableType type;
+    private final String name;
 	private AbstractPlayer user;
 	private final HashMap<Enum, Double> stats;
 	private final HashMap<Enum, Integer> bases;
 	private int cooldownTime;          // frames between uses of this upgradable in battle
 	private int framesUntilUse;        // frames until this upgradable can be used in battle again
 	
-    private StatusTable inflict;       // statuses that this may inflict. Each subclass handles this themself
+    private final StatusTable inflict;       // statuses that this may inflict. Each subclass handles this themself
 	
 	// constructors
 	public AbstractCustomizable(CustomizableType t, String n){
-		upgradableType = t;
+		type = t;
         name = n;
 		stats = new HashMap<>();
 		bases = new HashMap<>();
@@ -45,16 +41,16 @@ public abstract class AbstractCustomizable implements Serializable{
 		framesUntilUse = 0;
 	}
     
-	// setters and getters
-	public final void setName(String s){
-		name = s;
-	}
 	public final String getName(){
 		return name;
 	}
     
+    public final CustomizableType getType(){
+        return type;
+    }
+    
 	@Override
-	public final String toString(){
+	public String toString(){
 		return name;
 	}
     
@@ -146,14 +142,14 @@ public abstract class AbstractCustomizable implements Serializable{
      * Gets how long until this can be used again
      * @return how many frames until this is considered "off cooldown"
      */
-	public int getCooldown(){
+	public final int getCooldown(){
 		return framesUntilUse;
 	}
     
     /**
      * Notify this upgradable that it has been used.
      */
-	public void setToCooldown(){
+	public final void setToCooldown(){
 		framesUntilUse = cooldownTime;
 	}
     
@@ -161,23 +157,27 @@ public abstract class AbstractCustomizable implements Serializable{
      * Gets if this should be usable.
      * @return whether or not this is "on cooldown"
      */
-	public boolean onCooldown(){
+	public final boolean onCooldown(){
 		return framesUntilUse > 0;
 	}
 	
 	// status methods. Will document after I redo StatusTable
-	public void addStatus(AbstractStatus s){
+	public final void addStatus(AbstractStatus s){
 		inflict.add(s);
 	}
-	public void setInflict(StatusTable s){
-		inflict = s.copy();
+	public final void setInflict(StatusTable s){
+		clearInflict();
+        s.forEach((status)->{
+            inflict.add(status.copy());
+        });
 	}
-	public StatusTable getInflict(){
+	public final StatusTable getInflict(){
 		return inflict;
 	}
-	public void clearInflict(){
-		inflict = new StatusTable();
+	public final void clearInflict(){
+		inflict.clear();
 	}
+    
 	public void copyInflictTo(AbstractCustomizable a){
 		/* takes all the statuses from this upgradable's
 		 * status table, and copies them to p's

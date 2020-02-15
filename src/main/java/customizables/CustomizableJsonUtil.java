@@ -86,7 +86,7 @@ public class CustomizableJsonUtil {
     
     public static JsonObject serializeJson(AbstractCustomizable au){
         JsonObjectBuilder b = Json.createObjectBuilder();
-        b.add("upgradable type", au.upgradableType.toString());
+        b.add("upgradable type", au.getType().toString());
         b.add("name", au.getName());
         b.add("status table", serializeStatusTable(au.getInflict()));
         

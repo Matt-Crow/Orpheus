@@ -33,7 +33,7 @@ public class CustomizeCustomize extends Page{
     public void setCustomizing(AbstractCustomizable ac){
         customArea.removeAll();
         newCustom = ac;
-        switch(newCustom.upgradableType){
+        switch(newCustom.getType()){
             case ACTIVE:
                 customArea.add(new ActiveCustomizer((AbstractActive) newCustom));
                 break;
@@ -44,7 +44,7 @@ public class CustomizeCustomize extends Page{
                 customArea.add(new CharacterClassCustomizer((CharacterClass)newCustom));
                 break;
             default:
-                throw new IllegalArgumentException("Need to add option to customize " + newCustom.upgradableType);
+                throw new IllegalArgumentException("Need to add option to customize " + newCustom.getType());
         }
     }
 }

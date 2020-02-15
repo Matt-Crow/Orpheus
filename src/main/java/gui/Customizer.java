@@ -1,6 +1,5 @@
 package gui;
 
-import controllers.Master;
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -12,7 +11,6 @@ import java.util.ArrayList;
 
 import customizables.AbstractCustomizable;
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import statuses.AbstractStatus;
 
 @SuppressWarnings("serial")
@@ -42,7 +40,6 @@ public abstract class Customizer<T> extends JComponent{
         name.setEditable(true);
 		name.addCaretListener(new CaretListener(){
 			public void caretUpdate(CaretEvent e){
-				customizing.setName(name.getText());
 				setCanSave(true);
 			}
 		});
