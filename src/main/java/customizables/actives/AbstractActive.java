@@ -60,7 +60,7 @@ public abstract class AbstractActive extends AbstractCustomizable{
      * (dmg * (5% of average character's HP)) damage.
      */
     public AbstractActive(ActiveType t, String n, int arcLength, int range, int speed, int aoe, int dmg){
-        super(CustomizableType.ACTIVE, n);
+        super(n);
         type = t;
 
         baseArcLength = Number.minMax(0, arcLength, 5);

@@ -30,7 +30,7 @@ public class CharacterClass extends AbstractCustomizable{
     private final int baseSpe;
     // initializers
     public CharacterClass(String n, CustomColors[] cs, int HP, int energy, int dmg, int reduction, int speed){
-        super(CustomizableType.CHARACTER_CLASS, n);
+        super(n);
         colors = cs;
         
         baseHp = Number.minMax(1, HP, 5);

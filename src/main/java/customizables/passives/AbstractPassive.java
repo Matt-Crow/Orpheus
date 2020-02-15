@@ -2,7 +2,6 @@ package customizables.passives;
 
 import java.io.Serializable;
 import customizables.AbstractCustomizable;
-import customizables.CustomizableType;
 
 public abstract class AbstractPassive extends AbstractCustomizable implements Serializable{
 	/**
@@ -14,7 +13,7 @@ public abstract class AbstractPassive extends AbstractCustomizable implements Se
 	private final boolean targetsUser;
 	
 	public AbstractPassive(PassiveType t, String n, boolean b){
-		super(CustomizableType.PASSIVE, n);
+		super(n);
 		type = t;
 		targetsUser = b;
 	}

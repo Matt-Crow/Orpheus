@@ -2,10 +2,6 @@ package windows.customize;
 
 import controllers.Master;
 import customizables.BuildJsonUtil;
-import customizables.CustomizableJsonUtil;
-import customizables.actives.ActiveJsonUtil;
-import customizables.characterClass.CharacterClassJsonUtil;
-import customizables.passives.PassiveJsonUtil;
 import gui.FileChooserUtil;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -24,15 +20,13 @@ public class CustomizeMain extends Page{
         super();
         
         addBackButton(new StartPlay());
-        JButton imp = new JButton("Import all customizables from a file");
+        JButton imp = new JButton("Import all customizables from a JAR file");
         imp.addActionListener((ActionEvent e)->{
             File[] chosen = FileChooserUtil.chooseFiles();
             if(chosen != null){
                 for(File f : chosen){
                     if(f.getName().endsWith(".jar")){
                         Master.getDataSet().loadFile(f);
-                    } else {
-                        CustomizableJsonUtil.loadFile(f);
                     }
                 }
             }
@@ -46,10 +40,7 @@ public class CustomizeMain extends Page{
                 String exportName = JOptionPane.showInputDialog("Enter a name for this export:");
                 File dir = new File(f.getAbsolutePath() + "/" + exportName);
                 dir.mkdir();
-                
-                ActiveJsonUtil.saveAllToFile(new File(dir.getAbsolutePath() + "/actives.json"));
-                PassiveJsonUtil.saveAllToFile(new File(dir.getAbsolutePath() + "/passives.json"));
-                CharacterClassJsonUtil.saveAllToFile(new File(dir.getAbsolutePath() + "/characterClasses.json"));
+                throw new UnsupportedOperationException("Need to save customizables to a JAR file here");
             }
         });
         addMenuItem(export);

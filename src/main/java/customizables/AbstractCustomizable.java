@@ -19,7 +19,6 @@ import statuses.*;
  */
 
 public abstract class AbstractCustomizable implements Serializable{
-    private final CustomizableType type;
     private final String name;
 	private AbstractPlayer user;
 	private int cooldownTime;          // frames between uses of this upgradable in battle
@@ -28,8 +27,7 @@ public abstract class AbstractCustomizable implements Serializable{
     private final StatusTable inflict;       // statuses that this may inflict. Each subclass handles this themself
 	
 	// constructors
-	public AbstractCustomizable(CustomizableType t, String n){
-		type = t;
+	public AbstractCustomizable(String n){
         name = n;
 		inflict = new StatusTable();
 		cooldownTime = 0;
@@ -39,10 +37,6 @@ public abstract class AbstractCustomizable implements Serializable{
 	public final String getName(){
 		return name;
 	}
-    
-    public final CustomizableType getType(){
-        return type;
-    }
     
 	@Override
 	public String toString(){
