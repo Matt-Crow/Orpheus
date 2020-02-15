@@ -42,7 +42,7 @@ public class HumanPlayer extends AbstractPlayer{
 		setClass(b.getClassName());
 		setActives(b.getActiveNames());
 		setPassives(b.getPassiveNames());
-		setSpeed((int) (c.getSpeed() * (500 / Master.FPS)));
+		setSpeed((int) (c.getSpeed() * (500.0 / Master.FPS)));
     }
     public void setClass(String name){
         DataSet ds = Master.getDataSet();
@@ -94,7 +94,7 @@ public class HumanPlayer extends AbstractPlayer{
     
     public void useAttack(int num){
 		if(actives[num].canUse()){
-			actives[num].use();
+			actives[num].trigger();
 		}
 	}
     
@@ -110,12 +110,12 @@ public class HumanPlayer extends AbstractPlayer{
 
     @Override
     public void playerInit() {
-        c.init();
+        c.doInit();
         for(AbstractActive a : actives){
-			a.init();
+			a.doInit();
 		}
         for(AbstractPassive p : passives){
-			p.init();
+			p.doInit();
 		}
         energyLog.init();
     }
@@ -123,10 +123,10 @@ public class HumanPlayer extends AbstractPlayer{
     @Override
     public void playerUpdate() {
         for(AbstractActive a : actives){
-			a.update();
+			a.doUpdate();
 		}
         for(AbstractPassive p : passives){
-			p.update();
+			p.doUpdate();
 		}
         energyLog.update();
     }

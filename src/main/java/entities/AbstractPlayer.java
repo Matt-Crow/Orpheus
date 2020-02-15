@@ -1,6 +1,5 @@
 package entities;
 
-import customizables.actives.AbstractActive;
 import customizables.actives.MeleeActive;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -161,7 +160,7 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
 	
 	public void useMeleeAttack(){
 		if(slash.canUse()){
-			slash.use();
+			slash.trigger();
 		}
 	}
 	
@@ -190,7 +189,7 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
         statuses.clear();
         getActionRegister().reset();
         
-		slash.init();
+		slash.doInit();
 		log.init();
 		
         path = null;
@@ -249,7 +248,7 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
                 }
             }
         }
-		slash.update();
+		slash.doUpdate();
 		
 		
 		getActionRegister().triggerOnUpdate();

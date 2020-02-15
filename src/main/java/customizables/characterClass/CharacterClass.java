@@ -2,7 +2,6 @@ package customizables.characterClass;
 
 import customizables.AbstractCustomizable;
 import graphics.CustomColors;
-import customizables.CustomizableType;
 import java.text.DecimalFormat;
 import java.util.function.BiFunction;
 import util.Number;
@@ -21,7 +20,7 @@ public class CharacterClass extends AbstractCustomizable{
     private final int maxEnergy;
     private final double offenseMultiplier;
     private final double defenseMultiplier;
-    private final int speed;
+    private final double speed;
     
     private final int baseHp;
     private final int baseEne;
@@ -46,7 +45,7 @@ public class CharacterClass extends AbstractCustomizable{
         maxEnergy = mult.apply(CharacterStatName.ENERGY, baseEne).intValue();
         offenseMultiplier = mult.apply(CharacterStatName.DMG, baseDmg);
         defenseMultiplier = mult.apply(CharacterStatName.REDUCTION, baseRed);
-        this.speed = mult.apply(CharacterStatName.SPEED, baseSpe).intValue();
+        this.speed = mult.apply(CharacterStatName.SPEED, baseSpe);
     }
     
     @Override
@@ -74,7 +73,7 @@ public class CharacterClass extends AbstractCustomizable{
     public final double getDefMult(){
         return defenseMultiplier;
     }
-    public final int getSpeed(){
+    public final double getSpeed(){
         return speed;
     }
     
@@ -102,6 +101,21 @@ public class CharacterClass extends AbstractCustomizable{
         return colors;
     }
    
+    @Override
+    public void init(){
+        //dummy init method
+    }
+    
+    @Override
+    public void trigger(){
+        
+    }
+    
+    @Override
+    public void update(){
+        
+    }
+    
     @Override
     public String getDescription(){
         return getName() + ": \n" 

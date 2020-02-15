@@ -42,12 +42,12 @@ public abstract class AbstractActive extends AbstractCustomizable{
      * @param t the type of active ability this is. Used for JSON deserialization
      * @param n the name of this active
      * 
-     * @param arcLength an integer from 1 to 5, denoting how wide of an arc of projectiles this will spawn upon use:
-     * 1: 45
-     * 2: 90
-     * 3: 135
-     * 4: 180
-     * 5: 360
+     * @param arcLength an integer from 1 to 5, denoting how wide of an arc of projectiles this will spawn upon trigger:
+ 1: 45
+ 2: 90
+ 3: 135
+ 4: 180
+ 5: 360
      * 
      * @param range 0 to 5. how far the projectiles will travel before terminating
      * @param speed 1 to 5. how fast the projectile moves
@@ -166,7 +166,7 @@ public abstract class AbstractActive extends AbstractCustomizable{
         } else if(ret && cost <= 0){
             ret = true;
         }
-        // AI can only use if it has no cost
+        // AI can only trigger if it has no cost
         return ret;
     }
 
@@ -197,7 +197,8 @@ public abstract class AbstractActive extends AbstractCustomizable{
         setToCooldown();
     }
     
-    public void use(){
+    @Override
+    public void trigger(){
         consumeEnergy();
         if(type != ActiveType.BOOST){
             spawnArc(arcLength);
@@ -270,6 +271,16 @@ public abstract class AbstractActive extends AbstractCustomizable{
         if(getUser() instanceof HumanPlayer){
             g.drawString("Energy cost: " + ((HumanPlayer)getUser()).getEnergyLog().getEnergy() + "/" + cost, x + 10, y + 33);
         }
+    }
+    
+    @Override
+    public void init(){
+        //dummy init method
+    }
+    
+    @Override
+    public void update(){
+        
     }
     
     @Override

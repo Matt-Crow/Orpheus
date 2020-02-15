@@ -85,7 +85,7 @@ public final class DataSet {
     public void addPassive(AbstractPassive p){
 		addToMap(p, allPassives);
 	}
-    //Build does not extends AbstractCustomizable, so I cannot use addToMap
+    //Build does not extends AbstractCustomizable, so I cannot trigger addToMap
     public void addBuild(Build b){
 		if(b == null){
             throw new NullPointerException();

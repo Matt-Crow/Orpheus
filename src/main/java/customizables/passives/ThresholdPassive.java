@@ -36,7 +36,6 @@ public class ThresholdPassive extends AbstractPassive implements OnUpdateListene
 
     @Override
     public void init(){
-        super.init();
         if(getUser() != null){
             getUser().getActionRegister().addOnUpdate(this);
         }
@@ -46,6 +45,7 @@ public class ThresholdPassive extends AbstractPassive implements OnUpdateListene
     public void trigger(OnUpdateEvent e) {
         if(((AbstractPlayer)e.getUpdated()).getLog().getHPPerc() <= threshold){
             applyEffect((AbstractPlayer)e.getUpdated());
+            trigger();
         }
     }
 }

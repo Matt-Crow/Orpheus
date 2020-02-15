@@ -22,7 +22,6 @@ public class OnBeHitPassive extends AbstractPassive implements OnHitListener{
     
     @Override
     public void init(){
-        super.init();
         if(getUser() != null){
             getUser().getActionRegister().addOnBeHit(this); 
         }
@@ -35,6 +34,7 @@ public class OnBeHitPassive extends AbstractPassive implements OnHitListener{
         } else {
             applyEffect((AbstractPlayer)e.getHitter());
         }
+        trigger();
     }
     @Override
 	public String getDescription(){

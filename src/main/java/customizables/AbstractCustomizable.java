@@ -170,21 +170,47 @@ public abstract class AbstractCustomizable implements Serializable{
     */
     
     /**
-     * Sets this to off cooldown.
-     * Make sure to call super.init() when you override!
+     * Performs any initialization
+     * needed prior to battle.
      */
-	public void init(){
+	public final void doInit(){
 		framesUntilUse = 0;
+        init();
 	}
 	
     /**
-     * Ticks down the cooldown.
-     * Make sure you call super.init() when you override!
+     * Performs any updates
+     * needed at the end of
+     * the frame
      */
-	public void update(){
+	public void doUpdate(){
 		framesUntilUse -= 1;
+        update();
 	}
     
+    /**
+     * This method should return a copy of this,
+     * passing the arguments used to initialize this
+     * to this constructor
+     * @return 
+     */
     public abstract AbstractCustomizable copy();
     public abstract String getDescription();
+    
+    /**
+     * This method is called at
+     * the beginning of battle.
+     */
+    public abstract void init();
+    
+    /**
+     * This method should be invoked
+     * by subclasses
+     */
+    public abstract void trigger();
+    
+    /**
+     * Called at the end of every frame
+     */
+    public abstract void update();
 }

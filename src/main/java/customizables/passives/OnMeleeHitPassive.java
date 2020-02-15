@@ -22,7 +22,6 @@ public class OnMeleeHitPassive extends AbstractPassive implements OnHitListener{
     
     @Override
 	public void init(){
-        super.init();
         if(getUser() != null){
             getUser().getActionRegister().addOnMeleeHit(this);
         }
@@ -39,5 +38,6 @@ public class OnMeleeHitPassive extends AbstractPassive implements OnHitListener{
     @Override
     public void trigger(OnHitEvent e) {
         applyEffect((AbstractPlayer)((getTargetsUser()) ? e.getHitter() : e.getWasHit()));
+        trigger();
     }
 }

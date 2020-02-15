@@ -3,17 +3,24 @@ package customizables.passives;
 import statuses.Regeneration;
 
 
-// find some way to do this
-public class Revitalize extends ThresholdPassive{
+public class Revitalize extends customizables.passives.ThresholdPassive{
 	private boolean activated;
 	public Revitalize(){
 		super("Revitalize", 25);
 		activated = false;
 	}
-	public void applyEffect(){
+    
+    @Override
+    public void init(){
+        activated = false;
+    }
+    
+    @Override
+	public void trigger(){
 		if(!activated){
 			getUser().inflict(new Regeneration(3, 5));
 			activated = true;
+            System.out.println("Revitalize activated");
 		}
 	}
 }

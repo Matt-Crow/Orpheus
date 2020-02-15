@@ -28,4 +28,14 @@ public abstract class AbstractPassive extends AbstractCustomizable implements Se
 	public boolean getTargetsUser(){
 		return targetsUser;
 	}
+    
+    @Override
+    public void trigger(){
+        
+    }
+    
+    @Override
+    public void update(){
+        
+    }
 }

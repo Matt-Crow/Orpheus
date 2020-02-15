@@ -20,8 +20,8 @@ public class BoostActive extends AbstractActive{
         return ret;
 	}
     @Override
-	public void use(){
-		super.use();
+	public void trigger(){
+		super.trigger();
         applyEffect(getUser());
 	}
     @Override
