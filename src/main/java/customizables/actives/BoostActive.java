@@ -5,14 +5,11 @@ import statuses.StatusTable;
 
 public class BoostActive extends AbstractActive{
     public BoostActive(String n, StatusTable t){
-        super(ActiveType.BOOST, n, 0, 0, 0, 0, 0);
-        setInflict(t);
+        this(n, t.getStatuses());
     }
     public BoostActive(String n, AbstractStatus[] st){
         super(ActiveType.BOOST, n, 0, 0, 0, 0, 0);
-        for(AbstractStatus s : st){
-            addStatus(s);
-        }
+        addStatuses(st);
     }
     
     @Override

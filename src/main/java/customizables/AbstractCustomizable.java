@@ -21,18 +21,20 @@ import statuses.*;
 public abstract class AbstractCustomizable implements Serializable{
     private final String name;
 	private AbstractPlayer user;
-	private int cooldownTime;          // frames between uses of this upgradable in battle
+	private final StatusTable inflict; // statuses that this may inflict. Each subclass handles this themself
+    private int cooldownTime;          // frames between uses of this upgradable in battle
 	private int framesUntilUse;        // frames until this upgradable can be used in battle again
-	
-    private final StatusTable inflict;       // statuses that this may inflict. Each subclass handles this themself
-	
-	// constructors
+    
 	public AbstractCustomizable(String n){
         name = n;
 		inflict = new StatusTable();
 		cooldownTime = 0;
 		framesUntilUse = 0;
 	}
+    
+    /*
+    Name related methods
+    */
     
 	public final String getName(){
 		return name;
@@ -42,6 +44,11 @@ public abstract class AbstractCustomizable implements Serializable{
 	public String toString(){
 		return name;
 	}
+    
+    
+    /*
+    User related methods
+    */
     
     /**
      * "Registers" a AbstractPlayer to this upgradable.
@@ -60,12 +67,17 @@ public abstract class AbstractCustomizable implements Serializable{
 		return user;
 	}
 	
+    
+    /*
+    Cooldown related methods
+    */
+    
     /**
      * Sets the maximum frequency of how often this can be used.
      * Each subclass must still deal with this in their own way.
      * @param seconds the minimum number of seconds between each use of this.
      */
-	public final void setCooldown(int seconds){
+	public final void setCooldownTime(int seconds){
 		cooldownTime = Master.seconds(seconds);
 	}
     
@@ -73,7 +85,7 @@ public abstract class AbstractCustomizable implements Serializable{
      * Gets how long until this can be used again
      * @return how many frames until this is considered "off cooldown"
      */
-	public final int getCooldown(){
+	public final int getFramesUntilUse(){
 		return framesUntilUse;
 	}
     
@@ -88,43 +100,75 @@ public abstract class AbstractCustomizable implements Serializable{
      * Gets if this should be usable.
      * @return whether or not this is "on cooldown"
      */
-	public final boolean onCooldown(){
+	public final boolean isOnCooldown(){
 		return framesUntilUse > 0;
 	}
 	
-	// status methods. Will document after I redo StatusTable
+    
+    /*
+    Status related methods
+    */
+    
+	/**
+     * Adds a copy of the given status to this
+     * inflict table.
+     * 
+     * @param s 
+     */
 	public final void addStatus(AbstractStatus s){
 		inflict.add(s);
 	}
-	public final void setInflict(StatusTable s){
-		clearInflict();
-        s.forEach((status)->{
-            inflict.add(status.copy());
-        });
-	}
+    
+    /**
+     * Adds copies of all the given statuses
+     * to this inflict table.
+     * 
+     * @param ss 
+     */
+    public final void addStatuses(AbstractStatus[] ss){
+        for(AbstractStatus s : ss){
+            inflict.add(s);
+        }
+    }
+    
+    /**
+     * Used to get the table of statuses associated
+     * with this Customizable.
+     * 
+     * @return 
+     */
 	public final StatusTable getInflict(){
 		return inflict;
 	}
-	public final void clearInflict(){
-		inflict.clear();
-	}
     
-	public void copyInflictTo(AbstractCustomizable a){
-		/* takes all the statuses from this upgradable's
-		 * status table, and copies them to p's
-		 */
+    /**
+     * takes all the statuses from this upgradable's
+     * status table, and copies them to a's
+     * @param a 
+     */
+	public final void copyInflictTo(AbstractCustomizable a){
         inflict.forEach((status)->{
             a.addStatus(status);
         });
 	}
     
-    // in battle methods. These are applied in the subclasses
-	public void applyEffect(AbstractPlayer p){
+    /**
+     * Inflicts each status in this' status table on
+     * the given AbstractPlayer.
+     * 
+     * @param p 
+     */
+	public final void applyEffect(AbstractPlayer p){
 		inflict.forEach((status)->{
             p.inflict(status.copy());
         });
 	}
 	
+    
+    /*
+    Overridable methods.
+    */
+    
     /**
      * Sets this to off cooldown.
      * Make sure to call super.init() when you override!

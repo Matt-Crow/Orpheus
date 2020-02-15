@@ -13,7 +13,8 @@ public class MeleeActive extends AbstractActive{
 		MeleeActive copy = new MeleeActive(getName(), getBaseDamage());
         copyTagsTo(copy);
         copy.setColors(getColors());
-        copy.setInflict(getInflict());
+        copyInflictTo(copy);
+        
 		return copy;
 	}
 	

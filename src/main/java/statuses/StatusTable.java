@@ -41,6 +41,10 @@ public final class StatusTable implements Serializable{
     public final Stream<AbstractStatus> stream(){
         return statuses.values().stream();
     }
+    
+    public final AbstractStatus[] getStatuses(){
+        return statuses.values().toArray(new AbstractStatus[statuses.size()]);
+    }
 	
 	public final String getStatusString(){
 		String desc = "~~~STATUS DATA~~~\n";

@@ -18,7 +18,8 @@ public class ElementalActive extends AbstractActive{
 		copy.setParticleType(getParticleType());
 		copyTagsTo(copy);
         copy.setColors(getColors());
-        copy.setInflict(getInflict());
+        copyInflictTo(copy);
+        
 		return copy;
 	}
 	

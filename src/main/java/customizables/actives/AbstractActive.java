@@ -8,7 +8,6 @@ import graphics.CustomColors;
 import controllers.Master;
 import customizables.AbstractCustomizable;
 import entities.*;
-import customizables.CustomizableType;
 import customizables.characterClass.CharacterClass;
 import customizables.characterClass.CharacterStatName;
 import util.Number;
@@ -81,7 +80,7 @@ public abstract class AbstractActive extends AbstractCustomizable{
 
         particleType = ParticleType.NONE;
         colors = new CustomColors[]{CustomColors.black};
-        setCooldown(1);
+        setCooldownTime(1);
 
         tags = new ArrayList<>();
     }
@@ -159,7 +158,7 @@ public abstract class AbstractActive extends AbstractCustomizable{
     // in battle methods
     public final boolean canUse(){
         AbstractPlayer user = getUser();
-        boolean ret = !onCooldown();
+        boolean ret = !isOnCooldown();
         if(user == null){
             ret = false;
         } else if(ret && user instanceof HumanPlayer){
@@ -252,7 +251,7 @@ public abstract class AbstractActive extends AbstractCustomizable{
      * @param h 
      */
     public void drawStatusPane(Graphics g, int x, int y, int w, int h){
-        if(!onCooldown()){
+        if(!isOnCooldown()){
             g.setColor(Color.white);
             g.fillRect(x, y, w, h);
             g.setColor(Color.black);
@@ -261,7 +260,7 @@ public abstract class AbstractActive extends AbstractCustomizable{
             g.setColor(Color.black);
             g.fillRect(x, y, w, h);
             g.setColor(Color.red);
-            g.drawString("On cooldown: " + Master.framesToSeconds(getCooldown()), x + 10, y + 20);
+            g.drawString("On cooldown: " + Master.framesToSeconds(getFramesUntilUse()), x + 10, y + 20);
         }
         if(canUse()){
             g.setColor(CustomColors.green);
