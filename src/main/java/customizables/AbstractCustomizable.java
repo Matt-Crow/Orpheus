@@ -182,17 +182,16 @@ public abstract class AbstractCustomizable implements Serializable{
 		/* takes all the statuses from this upgradable's
 		 * status table, and copies them to p's
 		 */
-		for(int i = 0; i < inflict.getSize(); i++){
-			a.addStatus(inflict.getStatusAt(i));
-		}
+        inflict.forEach((status)->{
+            a.addStatus(status);
+        });
 	}
     
     // in battle methods. These are applied in the subclasses
 	public void applyEffect(AbstractPlayer p){
-		StatusTable inf = getInflict();
-		for(int i = 0; i < inf.getSize(); i++){
-			p.inflict(inf.getStatusAt(i));
-		}
+		inflict.forEach((status)->{
+            p.inflict(status.copy());
+        });
 	}
 	
     /**

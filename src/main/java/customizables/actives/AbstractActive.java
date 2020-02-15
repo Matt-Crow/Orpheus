@@ -146,10 +146,12 @@ public abstract class AbstractActive extends AbstractCustomizable{
                 newCost += bases[i];
             }
             
-            StatusTable t = getInflict();
-            for(int i = 0; i < t.getSize(); i++){
-                newCost += t.getStatusAt(i).getBaseParam() + t.getStatusAt(i).getIntensityLevel();
-            }
+            int statusCost = 0;
+            getInflict()
+                .stream()
+                .map((status) -> status.getBaseParam() + status.getIntensityLevel())
+                .reduce(statusCost, Integer::sum);
+            newCost += statusCost;
         }
         cost = newCost;
     }

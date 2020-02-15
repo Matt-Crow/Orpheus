@@ -23,9 +23,7 @@ public class MeleeActive extends AbstractActive{
 				+ "The user performs a close range attack, \n"
 				+ "dealing " + (int)getStatValue(ActiveStatName.DAMAGE) + " damage \n"
 						+ "to whoever it hits. \n";
-		if(getInflict().getSize() > 0){
-			desc += getInflict().getStatusString();
-		}
+        desc += getInflict().getStatusString();
 		
 		return desc;
 	}

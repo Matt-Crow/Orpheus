@@ -58,9 +58,7 @@ public class ElementalActive extends AbstractActive{
         
 		desc.append(String.format(" dealing %d damage to enemies it hits. \n", (int)getStatValue(ActiveStatName.DAMAGE)));
 		desc.append(String.format("%d energy cost. \n", getCost()));
-		if(getInflict().getSize() > 0){
-			desc.append(getInflict().getStatusString());
-		}
+		desc.append(getInflict().getStatusString());
 		
         return desc.toString();
 	}

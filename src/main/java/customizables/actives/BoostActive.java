@@ -25,10 +25,7 @@ public class BoostActive extends AbstractActive{
     @Override
 	public void use(){
 		super.use();
-		StatusTable s = getInflict();
-		for(int i = 0; i < s.getSize(); i++){
-			getUser().inflict(s.getStatusAt(i));
-		}
+        applyEffect(getUser());
 	}
     @Override
 	public String getDescription(){

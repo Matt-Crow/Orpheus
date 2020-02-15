@@ -77,9 +77,9 @@ public class CustomizableJsonUtil {
         JsonObjectBuilder obj = Json.createObjectBuilder();
         obj.add("type", "status table");
         JsonArrayBuilder statusJson = Json.createArrayBuilder();
-        for(int i = 0; i < st.getSize(); i++){
-            statusJson.add(serializeStatus(st.getStatusAt(i)));
-        }
+        st.forEach((status)->{
+            statusJson.add(serializeStatus(status));
+        });
         obj.add("statuses", statusJson.build());
         return obj.build();
     }

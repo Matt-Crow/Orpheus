@@ -123,9 +123,9 @@ public abstract class Customizer<T> extends JComponent{
     }
 	public void addStatusBoxes(){
 		StatusTable s = customizing.getInflict();
-		for(int i = 0; i < s.getSize(); i++){
-			addStatusBox(s.getStatusAt(i));
-		}
+        s.forEach((status)->{
+            addStatusBox(status);
+        });
 	}
 	
 	public void updateField(String name, int val){
