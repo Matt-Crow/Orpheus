@@ -1,7 +1,6 @@
 package statuses;
 
 public enum StatusName {
-	CHARGE("charge"),
 	REGENERATION("regeneration"),
 	RESISTANCE("resistance"),
     BURN("burn"),

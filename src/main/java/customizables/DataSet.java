@@ -22,7 +22,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import statuses.AbstractStatus;
 import statuses.Burn;
-import statuses.Charge;
 import statuses.Regeneration;
 import statuses.Resistance;
 import statuses.Rush;
@@ -45,7 +44,7 @@ public final class DataSet {
     public final HashMap<String, Build> allBuilds;
     
     private final AbstractActive DEFAULT_ACTIVE = new ElementalActive("Default", 3, 3, 3, 3, 3);
-    private final CharacterClass DEFAULT_CHARACTER_CLASS = new CharacterClass("Default", CustomColors.rainbow, 3, 3, 3, 3, 3);
+    private final CharacterClass DEFAULT_CHARACTER_CLASS = new CharacterClass("Default", CustomColors.rainbow, 3, 3, 3, 3);
     private final AbstractPassive DEFAULT_PASSIVE = new ThresholdPassive("Default", 2);
     private final Build DEFAULT_BUILD = new Build("0x138", "Default", "RAINBOW OF DOOM", "Healing Rain", "Speed Test", "Crushing Grip", "Recover", "Cursed");
     
@@ -258,10 +257,10 @@ public final class DataSet {
     }
     
     public void loadDefaultCharacterClasses(){
-        CharacterClass fire = new CharacterClass("Fire", CustomColors.fireColors, 1, 4, 5, 4, 3);
-		CharacterClass air = new CharacterClass("Air", CustomColors.airColors, 2, 5, 3, 1, 5);
-		CharacterClass earth = new CharacterClass("Earth", CustomColors.earthColors, 4, 1, 4, 4, 1);
-		CharacterClass water = new CharacterClass("Water", CustomColors.waterColors, 5, 4, 1, 3, 3);
+        CharacterClass fire = new CharacterClass("Fire", CustomColors.fireColors, 1, 5, 4, 3);
+		CharacterClass air = new CharacterClass("Air", CustomColors.airColors, 2, 3, 1, 5);
+		CharacterClass earth = new CharacterClass("Earth", CustomColors.earthColors, 4, 4, 4, 1);
+		CharacterClass water = new CharacterClass("Water", CustomColors.waterColors, 5, 1, 3, 3);
 		
 		addCharacterClasses(
             new CharacterClass[]{
@@ -283,8 +282,6 @@ public final class DataSet {
         cu.addStatus(new Stun(3, 3));
 		
         // on hit
-        OnHitPassive rc = new OnHitPassive("Recharge", true);
-        rc.addStatus(new Charge(1, 1));
         OnHitPassive ch = new OnHitPassive("Crippling Hits", false);
         ch.addStatus(new Stun(1, 1));
         OnHitPassive lh = new OnHitPassive("Leechhealer", true);
@@ -293,14 +290,10 @@ public final class DataSet {
 		m.addStatus(new Rush(1, 1));
 		OnHitPassive s = new OnHitPassive("Sharpen", true);
 		s.addStatus(new Strength(1, 1));
-		OnHitPassive ss = new OnHitPassive("Sparking Strikes", true);
-		ss.addStatus(new Charge(1, 1));
         OnHitPassive cg = new OnHitPassive("Crushing Grip", false);
         cg.addStatus(new Stun(2, 1));
         
 		//threshold
-		ThresholdPassive a = new ThresholdPassive("Adrenaline", 3);
-		a.addStatus(new Charge(2, 1));
 		ThresholdPassive b = new ThresholdPassive("Bracing", 1);
 		b.addStatus(new Resistance(2, 1));
 		ThresholdPassive d = new ThresholdPassive("Determination", 2);
@@ -316,15 +309,12 @@ public final class DataSet {
 				lh,
 				m,
 				s,
-				ss,
 				r,
 				t,
-				a,
 				b,
 				d,
 				e,
 				re,
-                rc,
                 cu,
                 ch,
                 cg
@@ -333,9 +323,9 @@ public final class DataSet {
     public void loadDefaultBuilds(){
         addBuilds(new Build[]{
             new Build("Default Earth", "Earth", "Boulder Toss", "Warrior's Stance", "Earthquake", "Toughness", "Retaliation", "Crippling Hits"),
-            new Build("Default Fire", "Fire", "Fireball", "Fields of Fire", "Burning Rage", "Escapist", "Sparking Strikes", "Bracing"),
+            new Build("Default Fire", "Fire", "Fireball", "Fields of Fire", "Burning Rage", "Escapist", "Sharpen", "Bracing"),
             new Build("Default Water", "Water", "Waterbolt", "Whirlpool", "Healing Rain", "Sharpen", "Bracing", "Recover"),
-            new Build("Default Air", "Air", "Boreus", "Zephyrus", "Speed Test", "Recharge", "Sharpen", "Leechhealer")
+            new Build("Default Air", "Air", "Boreus", "Zephyrus", "Speed Test", "Momentum", "Sharpen", "Leechhealer")
         });
     }
     

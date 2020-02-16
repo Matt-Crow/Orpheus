@@ -8,7 +8,7 @@ public class BoostActive extends AbstractActive{
         this(n, t.getStatuses());
     }
     public BoostActive(String n, AbstractStatus[] st){
-        super(ActiveType.BOOST, n);
+        super(n);
         addStatuses(st);
     }
     

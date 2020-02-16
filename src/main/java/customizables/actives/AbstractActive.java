@@ -3,41 +3,28 @@ package customizables.actives;
 import java.util.*;
 import java.awt.Color;
 import java.awt.Graphics;
-import graphics.CustomColors;
 
 import controllers.Master;
 import customizables.AbstractCustomizable;
-import entities.*;
 
 /**
  * The AbstractActive class serves as the base for active abilities possessed by Players
  * @author Matt
  */
 public abstract class AbstractActive extends AbstractCustomizable{
-    private final ActiveType type; // used for serialization
-    private int cost; // the energy cost of the active. Calculated automatically
-    private final ArrayList<ActiveTag> tags; //tags are used to modify this' behaviour. Only once is currently implemented 
+    private final ArrayList<ActiveTag> tags; //tags are used to modify this' behaviour. Only one is currently implemented 
     
     /**
      * 
-     * @param t the type of active ability this is. Used for JSON deserialization
      * @param n the name of this active
      */
-    public AbstractActive(ActiveType t, String n){
+    public AbstractActive(String n){
         super(n);
-        type = t;
 
         setCooldownTime(1);
 
         tags = new ArrayList<>();
     }
-    
-    public final ActiveType getActiveType(){
-        return type;
-    }
-    public final int getCost(){
-        return cost;
-    }    
     
     public final void addTag(ActiveTag t){
         tags.add(t);
@@ -55,27 +42,8 @@ public abstract class AbstractActive extends AbstractCustomizable{
     }
 
     // in battle methods
-    public final boolean canUse(){
-        AbstractPlayer user = getUser();
-        boolean ret = !isOnCooldown();
-        if(user == null){
-            ret = false;
-        } else if(ret && user instanceof HumanPlayer){
-            ret = ((HumanPlayer)user).getEnergyLog().getEnergy() >= cost;
-        } else if(ret && cost <= 0){
-            ret = true;
-        }
-        // AI can only trigger if it has no cost
-        return ret;
-    }
-
-    
-    
-    private void consumeEnergy(){
-        if(getUser() instanceof HumanPlayer){
-            ((HumanPlayer)getUser()).getEnergyLog().loseEnergy(cost);
-        }
-        setToCooldown();
+    public boolean canUse(){
+        return getUser() != null && !isOnCooldown();
     }
     
     /**
@@ -87,7 +55,7 @@ public abstract class AbstractActive extends AbstractCustomizable{
      * @param h 
      */
     public void drawStatusPane(Graphics g, int x, int y, int w, int h){
-        if(!isOnCooldown()){
+        if(canUse()){
             g.setColor(Color.white);
             g.fillRect(x, y, w, h);
             g.setColor(Color.black);
@@ -95,16 +63,10 @@ public abstract class AbstractActive extends AbstractCustomizable{
         } else {
             g.setColor(Color.black);
             g.fillRect(x, y, w, h);
-            g.setColor(Color.red);
-            g.drawString("On cooldown: " + Master.framesToSeconds(getFramesUntilUse()), x + 10, y + 20);
-        }
-        if(canUse()){
-            g.setColor(CustomColors.green);
-        } else {
-            g.setColor(CustomColors.red);
-        }
-        if(getUser() instanceof HumanPlayer){
-            g.drawString("Energy cost: " + ((HumanPlayer)getUser()).getEnergyLog().getEnergy() + "/" + cost, x + 10, y + 33);
+            if(isOnCooldown()){
+                g.setColor(Color.red);
+                g.drawString("On cooldown: " + Master.framesToSeconds(getFramesUntilUse()), x + 10, y + 20);
+            }
         }
     }
     

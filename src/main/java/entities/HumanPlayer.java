@@ -1,6 +1,5 @@
 package entities;
 
-import battle.EnergyLog;
 import controllers.Master;
 import customizables.Build;
 import customizables.DataSet;
@@ -22,7 +21,6 @@ public class HumanPlayer extends AbstractPlayer{
     private CharacterClass c;
     private final AbstractActive[] actives;
 	private final AbstractPassive[] passives;
-    private final EnergyLog energyLog;
     private boolean followingMouse;
     public static final int MIN_LIFE_SPAN = 10;
     
@@ -32,7 +30,6 @@ public class HumanPlayer extends AbstractPlayer{
         actives = new AbstractActive[3];
 		passives = new AbstractPassive[3];
         setClass("Default");
-        energyLog = new EnergyLog(this);
         
         followingMouse = false;
     }
@@ -88,10 +85,6 @@ public class HumanPlayer extends AbstractPlayer{
 		}
 	}
     
-    public EnergyLog getEnergyLog(){
-		return energyLog;
-	}
-    
     public void useAttack(int num){
 		if(actives[num].canUse()){
 			actives[num].trigger();
@@ -117,7 +110,6 @@ public class HumanPlayer extends AbstractPlayer{
         for(AbstractPassive p : passives){
 			p.doInit();
 		}
-        energyLog.init();
     }
 
     @Override
@@ -128,7 +120,6 @@ public class HumanPlayer extends AbstractPlayer{
         for(AbstractPassive p : passives){
 			p.doUpdate();
 		}
-        energyLog.update();
     }
     
     public void drawHUD(Graphics g, WorldCanvas wc){
@@ -157,13 +148,6 @@ public class HumanPlayer extends AbstractPlayer{
 		g.setColor(Color.black);
 		g.drawString("HP: " + strHP, (int)(w * 0.1), (int) (h * 0.93));
 		
-		// Energy
-		String strEn = getEnergyLog().getEnergy() + "";
-		g.setColor(Color.yellow);
-		g.fillRect((int)(w * 0.8), guiY, sw, sw);
-		g.setColor(Color.black);
-		g.drawString("Energy: " + strEn, (int)(w * 0.9), (int) (h * 0.93));
-		
 		// Actives
 		int i = sw;
 		for(AbstractActive a : getActives()){
@@ -178,9 +162,6 @@ public class HumanPlayer extends AbstractPlayer{
         switch(n){
             case HP:
                 ret = c.getMaxHP();
-                break;
-            case ENERGY:
-                ret = c.getMaxEnergy();
                 break;
             case DMG:
                 ret = c.getOffMult();

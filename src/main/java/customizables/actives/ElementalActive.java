@@ -45,7 +45,7 @@ public class ElementalActive extends AbstractActive{
      * (dmg * (5% of average character's HP)) damage.
      */
     public ElementalActive(String n, int arc, int range, int speed, int aoe, int dmg){
-		super(ActiveType.ELEMENTAL, n);
+		super(n);
         
         baseArcLength = util.Number.minMax(0, arc, 5);
         baseProjRange = util.Number.minMax(0, range, 5);
@@ -226,7 +226,6 @@ public class ElementalActive extends AbstractActive{
 		}
         
 		desc.append(String.format(" dealing %d damage to enemies it hits. \n", getDamage()));
-		desc.append(String.format("%d energy cost. \n", getCost()));
 		desc.append(getInflict().getStatusString());
 		
         return desc.toString();
