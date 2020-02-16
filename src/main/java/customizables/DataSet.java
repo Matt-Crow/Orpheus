@@ -4,12 +4,10 @@ import customizables.actives.AbstractActive;
 import customizables.actives.ActiveTag;
 import customizables.actives.BoostActive;
 import customizables.actives.ElementalActive;
-import customizables.actives.MeleeActive;
 import customizables.characterClass.CharacterClass;
 import customizables.passives.AbstractPassive;
 import customizables.passives.OnBeHitPassive;
 import customizables.passives.OnHitPassive;
-import customizables.passives.OnMeleeHitPassive;
 import customizables.passives.ThresholdPassive;
 import entities.ParticleType;
 import graphics.CustomColors;
@@ -22,8 +20,6 @@ import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import statuses.AbstractStatus;
 import statuses.Burn;
 import statuses.Charge;
@@ -191,9 +187,9 @@ public final class DataSet {
     }
     
     public void loadDefaultActives(){
-        // read from file later?
-		MeleeActive s = new MeleeActive("Slash", 3);
-		
+		ElementalActive s = new ElementalActive("Slash", 1, 1, 5, 0, 3);
+		s.setParticleType(ParticleType.SHEAR);
+        
 		ElementalActive bt = new ElementalActive("Boulder Toss", 1, 2, 2, 3, 4);
 		bt.setParticleType(ParticleType.BURST);
         bt.setColors(CustomColors.earthColors);
@@ -291,17 +287,15 @@ public final class DataSet {
         rc.addStatus(new Charge(1, 1));
         OnHitPassive ch = new OnHitPassive("Crippling Hits", false);
         ch.addStatus(new Stun(1, 1));
-        
-        // on melee hit
-        OnMeleeHitPassive lh = new OnMeleeHitPassive("Leechhealer", true);
+        OnHitPassive lh = new OnHitPassive("Leechhealer", true);
 		lh.addStatus(new Regeneration(1, 1));
-		OnMeleeHitPassive m = new OnMeleeHitPassive("Momentum", true);
+		OnHitPassive m = new OnHitPassive("Momentum", true);
 		m.addStatus(new Rush(1, 1));
-		OnMeleeHitPassive s = new OnMeleeHitPassive("Sharpen", true);
+		OnHitPassive s = new OnHitPassive("Sharpen", true);
 		s.addStatus(new Strength(1, 1));
-		OnMeleeHitPassive ss = new OnMeleeHitPassive("Sparking Strikes", true);
+		OnHitPassive ss = new OnHitPassive("Sparking Strikes", true);
 		ss.addStatus(new Charge(1, 1));
-        OnMeleeHitPassive cg = new OnMeleeHitPassive("Crushing Grip", false);
+        OnHitPassive cg = new OnHitPassive("Crushing Grip", false);
         cg.addStatus(new Stun(2, 1));
         
 		//threshold

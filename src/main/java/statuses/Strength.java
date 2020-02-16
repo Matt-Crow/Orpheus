@@ -3,8 +3,6 @@ package statuses;
 import actions.*;
 import entities.AbstractPlayer;
 import controllers.Master;
-import java.io.Serializable;
-import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 import util.Direction;
 import util.Number;
@@ -27,12 +25,12 @@ public class Strength extends AbstractStatus implements OnHitListener{
     
     @Override
 	public void inflictOn(AbstractPlayer p){
-		p.getActionRegister().addOnMeleeHit(this);
+		p.getActionRegister().addOnHit(this);
 	}
     
     @Override
 	public String getDesc(){
-		return "Strength, causing the inflicted's next " + getMaxUses() + " melee attacks to deal an extra " + (3.5 * getIntensityLevel()) + "% of the target's maximum HP and knock them back " + (3.5 * getIntensityLevel()) + " units";
+		return "Strength, causing the inflicted's next " + getMaxUses() + " attacks to deal an extra " + (3.5 * getIntensityLevel()) + "% of the target's maximum HP and knock them back " + (3.5 * getIntensityLevel()) + " units";
 	}
 
     @Override

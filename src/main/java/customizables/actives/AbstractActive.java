@@ -42,14 +42,12 @@ public abstract class AbstractActive extends AbstractCustomizable{
      * @param t the type of active ability this is. Used for JSON deserialization
      * @param n the name of this active
      * 
-     * @param arcLength an integer from 1 to 5, denoting how wide of an arc of projectiles this will spawn upon trigger:
- 1: 45
- 2: 90
- 3: 135
- 4: 180
- 5: 360
-     * 
-     * @param range 0 to 5. how far the projectiles will travel before terminating
+     * @param arcLength an integer from 1 to 5, denoting how wide of an arc of
+     * projectiles this will spawn upon trigger: 1: 45 2: 90 3: 135 4: 180 5:
+     * 360
+     *
+     * @param range 0 to 5. how far the projectiles will travel before
+     * terminating
      * @param speed 1 to 5. how fast the projectile moves
      * @param aoe 0 to 5. Upon terminating, if this has an aoe (not 0), 
      * the terminating projectile will explode into other projectiles,
@@ -70,11 +68,11 @@ public abstract class AbstractActive extends AbstractCustomizable{
         
         this.arcLength = (baseArcLength == 5) ? 360 : baseArcLength * 45;
         int rng = 0;
-        for(int i = 0; i < baseProjRange; i++){
+        for(int i = 1; i <= baseProjRange; i++){
             rng += i;
         }
-        projectileRange = rng;
-        projectileSpeed = 100 * baseProjectileSpeed / Master.FPS;
+        projectileRange = rng * Master.UNITSIZE;
+        projectileSpeed = Master.UNITSIZE * baseProjectileSpeed / Master.FPS;
         areaOfEffect = baseAreaOfEffect * Master.UNITSIZE;
         damage = baseDamage * CharacterClass.BASE_HP / 20;
 
@@ -230,16 +228,8 @@ public abstract class AbstractActive extends AbstractCustomizable{
     public void hit(AbstractPlayer p){
         AbstractPlayer user = getUser();
         p.logDamage(calcDmg(p));
-        if(this instanceof MeleeActive){
-            user.getActionRegister().tripOnMeleeHit(p);
-            if(user instanceof HumanPlayer){
-                ((HumanPlayer)user).getEnergyLog().gainEnergyPerc(15.0);
-            }
-            p.getActionRegister().tripOnBeMeleeHit(user);
-        } else {
-            user.getActionRegister().triggerOnHit(p);
-            p.getActionRegister().triggerOnHitReceived(user);
-        }
+        user.getActionRegister().triggerOnHit(p);
+        p.getActionRegister().triggerOnHitReceived(user);
         applyEffect(p);
     }
     
