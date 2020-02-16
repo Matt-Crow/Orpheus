@@ -3,7 +3,6 @@ package entities;
 import java.awt.Graphics;
 
 import graphics.CustomColors;
-import customizables.actives.ActiveTag;
 import controllers.Master;
 import customizables.actives.ElementalActive;
 import util.CombatLog;
@@ -63,11 +62,6 @@ public class Projectile extends AbstractReactiveEntity{
         registeredAttack.hit(p);
 		p.wasHitBy(this);
 		getActionRegister().triggerOnHit(p);
-        
-        //can't move this to AbstractActive
-        if(registeredAttack.containsTag(ActiveTag.KNOCKSBACK)){
-            p.knockBack(range, getDir(), Master.seconds(1));
-        }
         
 		CombatLog.logProjectileData(this);
 		terminate();

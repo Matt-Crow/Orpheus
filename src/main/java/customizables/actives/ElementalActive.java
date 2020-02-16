@@ -77,7 +77,6 @@ public class ElementalActive extends AbstractActive{
 				getBaseAreaOfEffect(), 
 				getBaseDamage());
 		copy.setParticleType(getParticleType());
-		copyTagsTo(copy);
         copy.setColors(getColors());
         copyInflictTo(copy);
         
@@ -138,7 +137,9 @@ public class ElementalActive extends AbstractActive{
      * @param facingDegrees the direction the new projectile will travel
      */
     private void spawnProjectile(int facingDegrees){
-        getUser().spawn(new SeedProjectile(nextUseId, getUser().getX(), getUser().getY(), facingDegrees, projectileSpeed, getUser(), this));    
+        SeedProjectile p = createProjectile();
+        p.setFacing(facingDegrees);
+        getUser().spawn(p);    
     }
     
     /**
@@ -230,4 +231,8 @@ public class ElementalActive extends AbstractActive{
 		
         return desc.toString();
 	}
+    
+    public SeedProjectile createProjectile(){
+        return new SeedProjectile(nextUseId, getUser().getX(), getUser().getY(), 0, projectileSpeed, getUser(), this);
+    }
 }

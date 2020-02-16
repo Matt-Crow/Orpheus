@@ -12,8 +12,6 @@ import customizables.AbstractCustomizable;
  * @author Matt
  */
 public abstract class AbstractActive extends AbstractCustomizable{
-    private final ArrayList<ActiveTag> tags; //tags are used to modify this' behaviour. Only one is currently implemented 
-    
     /**
      * 
      * @param n the name of this active
@@ -22,23 +20,6 @@ public abstract class AbstractActive extends AbstractCustomizable{
         super(n);
 
         setCooldownTime(1);
-
-        tags = new ArrayList<>();
-    }
-    
-    public final void addTag(ActiveTag t){
-        tags.add(t);
-    }
-    public void copyTagsTo(AbstractActive a){
-        tags.forEach((t) -> {
-            a.addTag(t);
-        });
-    }
-    public boolean containsTag(ActiveTag t){
-        return tags.contains(t);
-    }
-    public ActiveTag[] getTags(){
-        return tags.toArray(new ActiveTag[tags.size()]);
     }
 
     // in battle methods
@@ -54,7 +35,7 @@ public abstract class AbstractActive extends AbstractCustomizable{
      * @param w
      * @param h 
      */
-    public void drawStatusPane(Graphics g, int x, int y, int w, int h){
+    public final void drawStatusPane(Graphics g, int x, int y, int w, int h){
         if(canUse()){
             g.setColor(Color.white);
             g.fillRect(x, y, w, h);

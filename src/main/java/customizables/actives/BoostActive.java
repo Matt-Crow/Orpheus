@@ -13,10 +13,8 @@ public class BoostActive extends AbstractActive{
     }
     
     @Override
-	public BoostActive copy(){
-		BoostActive ret = new BoostActive(getName(), getInflict().copy());
-        copyTagsTo(ret);
-        return ret;
+	public BoostActive copy(){        
+        return new BoostActive(getName(), getInflict().copy());
 	}
     @Override
 	public void trigger(){

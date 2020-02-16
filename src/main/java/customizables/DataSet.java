@@ -1,8 +1,8 @@
 package customizables;
 
 import customizables.actives.AbstractActive;
-import customizables.actives.ActiveTag;
 import customizables.actives.BoostActive;
+import customizables.actives.BoulderToss;
 import customizables.actives.ElementalActive;
 import customizables.characterClass.CharacterClass;
 import customizables.passives.AbstractPassive;
@@ -189,10 +189,7 @@ public final class DataSet {
 		ElementalActive s = new ElementalActive("Slash", 1, 1, 5, 0, 3);
 		s.setParticleType(ParticleType.SHEAR);
         
-		ElementalActive bt = new ElementalActive("Boulder Toss", 1, 2, 2, 3, 4);
-		bt.setParticleType(ParticleType.BURST);
-        bt.setColors(CustomColors.earthColors);
-        bt.addTag(ActiveTag.KNOCKSBACK);
+		ElementalActive bt = new BoulderToss();
 		
         ElementalActive eq = new ElementalActive("Earthquake", 1, 0, 2, 5, 1);
 		eq.setParticleType(ParticleType.BURST);
