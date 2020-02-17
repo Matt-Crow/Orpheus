@@ -2,7 +2,9 @@ package serialization;
 
 import gui.FileChooserUtil;
 import java.io.File;
-import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import static java.lang.System.out;
 import java.nio.file.Files;
@@ -39,13 +41,11 @@ public class JARUtility {
                     });
                     break;
                 case 2:
-                    FileChooserUtil.chooseDir("Choose the main folder of your data set", (f)->{
-                        try {
-                            compile(f);
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
-                    });
+                    try {
+                        compile();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                     break;
             }
             in.nextLine();
@@ -70,23 +70,38 @@ public class JARUtility {
         return newDir;
     }
     
-    public static void compile(File root) throws IOException{
-        Path customizablesSrc = Paths.get(root.getAbsolutePath(), "customizables");
-        if(Files.exists(customizablesSrc)){
-            Path bin = Files.createDirectory(Paths.get(root.getAbsolutePath(), "bin"));
-            Path java = Files.createDirectory(Paths.get(bin.toString(), "java"));
-            Path main = Files.createDirectory(Paths.get(java.toString(), "main"));
-            Path custom = Files.createDirectory(Paths.get(main.toString(), "customizables"));
-            
-            JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
-            
-            //character classes
-            Path characters = Files.createDirectory(Paths.get(custom.toString(), "characterClass"));
-            for(File file : Paths.get(customizablesSrc.toString(), "characterClass").toFile().listFiles()){
-                //javac.run
+    public static void compile() throws IOException{
+        FileChooserUtil.chooseDir("Select the directory to compile", (File compileMe)->{
+            FileChooserUtil.chooseDir("Choose directory to send compiled files to", (File outputDir)->{
+                FileChooserUtil.chooseJarFile("Select the Orpheus.jar file you downloaded", (File orpheus)->{
+                    try {
+                        compile(ToolProvider.getSystemJavaCompiler(), compileMe, outputDir, orpheus.getAbsolutePath());
+                    } catch (FileNotFoundException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+            });
+        });
+    }
+    
+    public static void compile(JavaCompiler javac, File compileMe, File outputDir, String orpheusPath) throws FileNotFoundException{
+        if(compileMe.exists()){
+            if(compileMe.isDirectory()){
+                for(File child : compileMe.listFiles()){
+                    compile(javac, child, outputDir, orpheusPath);
+                }
+            } else {
+                String className = compileMe.getName().replace(".java", ".class");
+                Path newPath = Paths.get(outputDir.getAbsolutePath(), className);
+                //javac.run(new FileInputStream(compileMe), new FileOutputStream(newPath.toFile()), System.err, "classpath=" + orpheusPath);
+                javac.run(
+                    System.in, 
+                    System.out, 
+                    System.err, 
+                    new String[]{String.format("\"%s\"", compileMe.getAbsolutePath())}
+                    //String.format(" -d \"%s\" -classpath \"%s\" \"%s\"", outputDir.getAbsolutePath(), orpheusPath, compileMe.getAbsolutePath())
+                );
             }
-        } else {
-            System.err.println("Folder does not contain subfolder 'customizables'");
         }
     }
     

@@ -34,4 +34,8 @@ public class FileChooserUtil {
     public static void chooseJsonFile(String text, Consumer<File> action){
         new FileChooserUtil(text, FileType.JSON, action).chooseFile();
     }
+    
+    public static void chooseJarFile(String text, Consumer<File> action){
+        new FileChooserUtil(text, FileType.JAR, action).chooseFile();
+    }
 }
