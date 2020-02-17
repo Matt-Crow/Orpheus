@@ -21,6 +21,7 @@ public class FileChooserUtil {
         chooser.setVisible(true);
     }
     public void chooseFile(){
+        chooser.requestFocus();
         if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
             action.accept(chooser.getSelectedFile());
         }
