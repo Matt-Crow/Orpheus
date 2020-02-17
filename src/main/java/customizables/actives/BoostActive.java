@@ -17,8 +17,7 @@ public class BoostActive extends AbstractActive{
         return new BoostActive(getName(), getInflict().copy());
 	}
     @Override
-	public void trigger(){
-		super.trigger();
+	public void use(){
         applyEffect(getUser());
 	}
     @Override

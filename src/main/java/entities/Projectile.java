@@ -59,7 +59,7 @@ public class Projectile extends AbstractReactiveEntity{
 	
 	public void hit(AbstractPlayer p){
 		hit = p;
-        registeredAttack.hit(p);
+        registeredAttack.hit(this, p);
 		p.wasHitBy(this);
 		getActionRegister().triggerOnHit(p);
         

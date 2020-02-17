@@ -3,7 +3,7 @@ package customizables.actives;
 import controllers.Master;
 import entities.AbstractPlayer;
 import entities.ParticleType;
-import entities.SeedProjectile;
+import entities.Projectile;
 import graphics.CustomColors;
 
 /**
@@ -18,14 +18,9 @@ public class BoulderToss extends ElementalActive{
     }
     
     @Override
-    public SeedProjectile createProjectile(){
-        SeedProjectile ret = super.createProjectile();
-        ret.getActionRegister().addOnHit((e)->{
-            if(e.getWasHit() instanceof AbstractPlayer){
-                ((AbstractPlayer)e.getWasHit()).knockBack(ret.getAttack().getRange(), ret.getDir(), Master.seconds(1));
-            }
-        });
-        return ret;
+    public void hit(Projectile hittingProjectile, AbstractPlayer p){
+        super.hit(hittingProjectile, p);
+        p.knockBack(getRange(), hittingProjectile.getDir(), Master.seconds(1));
     }
     
     @Override

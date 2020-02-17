@@ -1,6 +1,5 @@
 package customizables.actives;
 
-import java.util.*;
 import java.awt.Color;
 import java.awt.Graphics;
 
@@ -13,7 +12,6 @@ import customizables.AbstractCustomizable;
  */
 public abstract class AbstractActive extends AbstractCustomizable{
     /**
-     * 
      * @param n the name of this active
      */
     public AbstractActive(String n){
@@ -22,11 +20,6 @@ public abstract class AbstractActive extends AbstractCustomizable{
         setCooldownTime(1);
     }
 
-    // in battle methods
-    public boolean canUse(){
-        return getUser() != null && !isOnCooldown();
-    }
-    
     /**
      * Displays information about this active on screen
      * @param g
@@ -51,15 +44,24 @@ public abstract class AbstractActive extends AbstractCustomizable{
         }
     }
     
+    public boolean canUse(){
+        return getUser() != null && !isOnCooldown();
+    }
+    
     @Override
     public void init(){
         //dummy init method
     }
     
     @Override
-    public void trigger(){
-        setToCooldown();
+    public final void trigger(){
+        if(canUse()){
+            setToCooldown();
+            use();
+        }
     }
+    
+    public abstract void use();
     
     @Override
     public void update(){

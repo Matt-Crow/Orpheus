@@ -5,6 +5,7 @@ import customizables.characterClass.CharacterClass;
 import customizables.characterClass.CharacterStatName;
 import entities.AbstractPlayer;
 import entities.ParticleType;
+import entities.Projectile;
 import entities.SeedProjectile;
 import graphics.CustomColors;
 
@@ -173,9 +174,10 @@ public class ElementalActive extends AbstractActive{
     /**
      * Invoked by Projectile upon 
      * colliding with a player
+     * @param hittingProjectile the Projectile which hit p
      * @param p the AbstractPlayer who one of this Projectiles hit.
      */
-    public void hit(AbstractPlayer p){
+    public void hit(Projectile hittingProjectile, AbstractPlayer p){
         AbstractPlayer user = getUser();
         p.logDamage(calcDmg(p));
         user.getActionRegister().triggerOnHit(p);
@@ -184,13 +186,10 @@ public class ElementalActive extends AbstractActive{
     }
     
     @Override
-    public void trigger(){
-        super.trigger();
+    public void use(){
         spawnArc(arcLength);
         nextUseId++;
     }
-    
-    
 	
     @Override
 	public String getDescription(){
