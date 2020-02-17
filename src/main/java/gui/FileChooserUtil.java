@@ -1,6 +1,7 @@
 package gui;
 
 import java.io.File;
+import java.util.function.Consumer;
 import javax.swing.JFileChooser;
 
 /**
@@ -8,24 +9,28 @@ import javax.swing.JFileChooser;
  * @author Matt
  */
 public class FileChooserUtil {
-    public static File[] chooseFiles(){
-        File[] f = null;
-        JFileChooser choose = new JFileChooser();
-        choose.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        choose.setMultiSelectionEnabled(true);
-        if(choose.showOpenDialog(choose) == JFileChooser.APPROVE_OPTION){
-            f = choose.getSelectedFiles();
-        }
-        return f;
+    private final JFileChooser chooser;
+    private final Consumer<File> action;
+    
+    public FileChooserUtil(String text, FileType fileType, Consumer<File> act){
+        chooser = new JFileChooser();
+        chooser.setDialogTitle(text);
+        chooser.setFileSelectionMode((fileType == FileType.DIR) ? JFileChooser.DIRECTORIES_ONLY : JFileChooser.FILES_ONLY);
+        action = act;
+        chooser.setOpaque(true);
+        chooser.setVisible(true);
     }
-    public static File chooseDir(){
-        File f = null;
-        JFileChooser choose = new JFileChooser();
-            choose.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            
-            if(choose.showOpenDialog(choose) == JFileChooser.APPROVE_OPTION){
-                f = choose.getSelectedFile();
-            }
-        return f;
+    public void chooseFile(){
+        if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
+            action.accept(chooser.getSelectedFile());
+        }
+    }
+    
+    public static void chooseDir(String text, Consumer<File> action){
+        new FileChooserUtil(text, FileType.DIR, action).chooseFile();
+    }
+    
+    public static void chooseJsonFile(String text, Consumer<File> action){
+        new FileChooserUtil(text, FileType.JSON, action).chooseFile();
     }
 }

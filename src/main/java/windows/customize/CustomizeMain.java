@@ -22,6 +22,7 @@ public class CustomizeMain extends Page{
         addBackButton(new StartPlay());
         JButton imp = new JButton("Import all customizables from a JAR file");
         imp.addActionListener((ActionEvent e)->{
+            /*
             File[] chosen = FileChooserUtil.chooseFiles();
             if(chosen != null){
                 for(File f : chosen){
@@ -29,41 +30,36 @@ public class CustomizeMain extends Page{
                         Master.getDataSet().loadFile(f);
                     }
                 }
-            }
+            }*/
         });
         addMenuItem(imp);
         
         JButton export = new JButton("Export all customizables to a file");
         export.addActionListener((ActionEvent e)->{
-            File f = FileChooserUtil.chooseDir();
-            if(f != null){
+            FileChooserUtil.chooseDir("Choose a directory to create the export in", (f)->{
                 String exportName = JOptionPane.showInputDialog("Enter a name for this export:");
                 File dir = new File(f.getAbsolutePath() + "/" + exportName);
                 dir.mkdir();
                 throw new UnsupportedOperationException("Need to save customizables to a JAR file here");
-            }
+            });
         });
         addMenuItem(export);
         
         JButton impBuild = new JButton("Import Builds");
         impBuild.addActionListener((e)->{
-            File[] chosen = FileChooserUtil.chooseFiles();
-            if(chosen != null){
-                for(File f : chosen){
-                    BuildJsonUtil.loadFile(f);
-                }
-            }
+            FileChooserUtil.chooseJsonFile("Choose the build file", (f)->{
+                BuildJsonUtil.loadFile(f);
+            });
         });
         addMenuItem(impBuild);
         
         JButton expBuild = new JButton("Export Builds");
         expBuild.addActionListener((e)->{
-            File dir = FileChooserUtil.chooseDir();
-            if(dir != null){
+            FileChooserUtil.chooseDir("Choose a direcory to save builds to", (f)->{
                 String name = JOptionPane.showInputDialog("Enter a name for this export:");
-                File buildFile = new File(dir.getAbsolutePath() + "/" + name);
+                File buildFile = new File(f.getAbsolutePath() + "/" + name);
                 BuildJsonUtil.saveAllToFile(buildFile);
-            }
+            });
         });
         addMenuItem(expBuild);
         
