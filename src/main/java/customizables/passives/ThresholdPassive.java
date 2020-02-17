@@ -14,7 +14,7 @@ public class ThresholdPassive extends AbstractPassive implements OnUpdateListene
     private final int baseThreshold;
     
     public ThresholdPassive(String n, int baseThresh){
-		super(PassiveType.THRESHOLD, n, true);
+		super(n, true);
         baseThreshold = Number.minMax(1, baseThresh, 3);
         threshold = (int) ((1.0 / (6 - baseThreshold)) * 100);
 	}

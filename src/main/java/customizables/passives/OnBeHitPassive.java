@@ -8,9 +8,11 @@ public class OnBeHitPassive extends AbstractPassive implements OnHitListener{
 	/**
 	 * Triggers once the user's hitbox intercepts 
 	 * that of an enemy projectile
+     * @param n the name of this passive
+     * @param targetsUser whether or not statuses will be inflicted on the user or the hitter
 	 */
 	public OnBeHitPassive(String n, boolean targetsUser){
-		super(PassiveType.ONBEHIT, n, targetsUser);
+		super(n, targetsUser);
 	}
 	
     @Override

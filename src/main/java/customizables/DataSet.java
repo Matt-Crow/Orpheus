@@ -46,7 +46,7 @@ public final class DataSet {
     private final AbstractActive DEFAULT_ACTIVE = new ElementalActive("Default", 3, 3, 3, 3, 3);
     private final CharacterClass DEFAULT_CHARACTER_CLASS = new CharacterClass("Default", CustomColors.rainbow, 3, 3, 3, 3);
     private final AbstractPassive DEFAULT_PASSIVE = new ThresholdPassive("Default", 2);
-    private final Build DEFAULT_BUILD = new Build("0x138", "Default", "RAINBOW OF DOOM", "Healing Rain", "Speed Test", "Crushing Grip", "Recover", "Cursed");
+    private final Build DEFAULT_BUILD = new Build("0x138", "Default", "RAINBOW OF DOOM", "Healing Rain", "Speed Test", "Burning Edge", "Escapist", "Cursed");
     
     public DataSet(){
         allActives = new HashMap<>();
@@ -271,14 +271,14 @@ public final class DataSet {
     
     public void loadDefaultPassives(){
         // on be hit
-		OnBeHitPassive r = new OnBeHitPassive("Recover", true);
-		r.addStatus(new Regeneration(1, 1));
 		OnBeHitPassive t = new OnBeHitPassive("Toughness", true);
 		t.addStatus(new Resistance(1, 1));
         OnBeHitPassive cu = new OnBeHitPassive("Cursed", false);
-        cu.addStatus(new Stun(3, 3));
+        cu.addStatus(new Stun(3, 1));
 		
         // on hit
+        OnHitPassive be = new OnHitPassive("Burning Edge", false);
+        be.addStatus(new Burn(1, 1));
         OnHitPassive ch = new OnHitPassive("Crippling Hits", false);
         ch.addStatus(new Stun(1, 1));
         OnHitPassive lh = new OnHitPassive("Leechhealer", true);
@@ -287,8 +287,6 @@ public final class DataSet {
 		m.addStatus(new Rush(1, 1));
 		OnHitPassive s = new OnHitPassive("Sharpen", true);
 		s.addStatus(new Strength(1, 1));
-        OnHitPassive cg = new OnHitPassive("Crushing Grip", false);
-        cg.addStatus(new Stun(2, 1));
         
 		//threshold
 		ThresholdPassive b = new ThresholdPassive("Bracing", 1);
@@ -306,22 +304,21 @@ public final class DataSet {
 				lh,
 				m,
 				s,
-				r,
 				t,
 				b,
 				d,
 				e,
 				re,
                 cu,
-                ch,
-                cg
+                be,
+                ch
 		});
     }
     public void loadDefaultBuilds(){
         addBuilds(new Build[]{
             new Build("Default Earth", "Earth", "Boulder Toss", "Warrior's Stance", "Earthquake", "Toughness", "Retaliation", "Crippling Hits"),
-            new Build("Default Fire", "Fire", "Fireball", "Fields of Fire", "Burning Rage", "Escapist", "Sharpen", "Bracing"),
-            new Build("Default Water", "Water", "Waterbolt", "Whirlpool", "Healing Rain", "Sharpen", "Bracing", "Recover"),
+            new Build("Default Fire", "Fire", "Fireball", "Fields of Fire", "Burning Rage", "Escapist", "Burning Edge", "Bracing"),
+            new Build("Default Water", "Water", "Waterbolt", "Whirlpool", "Healing Rain", "Sharpen", "Bracing", "Leechhealer"),
             new Build("Default Air", "Air", "Boreus", "Zephyrus", "Speed Test", "Momentum", "Sharpen", "Leechhealer")
         });
     }

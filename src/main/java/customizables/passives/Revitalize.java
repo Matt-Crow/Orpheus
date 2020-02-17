@@ -6,7 +6,7 @@ import statuses.Regeneration;
 public class Revitalize extends customizables.passives.ThresholdPassive{
 	private boolean activated;
 	public Revitalize(){
-		super("Revitalize", 25);
+		super("Revitalize", 1);
 		activated = false;
 	}
     
