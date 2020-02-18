@@ -10,35 +10,25 @@ import util.Number;
  * of their maximum HP
  */
 public class ThresholdPassive extends AbstractPassive implements OnUpdateListener{
-	public ThresholdPassive(String n, int baseThresh){
-		super(PassiveType.THRESHOLD, n, true);
-		setStat(PassiveStatName.THRESHOLD, baseThresh);
+	private final int threshold;
+    private final int baseThreshold;
+    
+    public ThresholdPassive(String n, int baseThresh){
+		super(n, true);
+        baseThreshold = Number.minMax(1, baseThresh, 3);
+        threshold = (int) ((1.0 / (6 - baseThreshold)) * 100);
 	}
     @Override
 	public ThresholdPassive copy(){
-		ThresholdPassive copy = new ThresholdPassive(getName(), getBase(PassiveStatName.THRESHOLD));
+		ThresholdPassive copy = new ThresholdPassive(getName(), baseThreshold);
 		copyInflictTo(copy);
 		return copy;
 	}
     
-	public void setStat(PassiveStatName n, int value){
-		switch(n){
-		case THRESHOLD:
-			int base = Number.minMax(1, value, 3);
-			double thresh = (1.0 / (6 - base)) * 100;
-			/*
-			 * 1: 1/5 (20%)
-			 * 2: 1/4 (25%)
-			 * 3: 1/3 (33%)
-			 */
-			addStat(PassiveStatName.THRESHOLD, base, thresh);
-			break;
-		}
-	}
     @Override
 	public String getDescription(){
 		String desc = getName() + ": ";
-		desc += "When the user is at or below " + (int)getStatValue(PassiveStatName.THRESHOLD) + "% ";
+		desc += "When the user is at or below " + (int)threshold + "% ";
 		desc += "of their maximum HP, inflicts them with: \n";
 		desc += getInflict().getStatusString();
 		return desc;
@@ -46,7 +36,6 @@ public class ThresholdPassive extends AbstractPassive implements OnUpdateListene
 
     @Override
     public void init(){
-        super.init();
         if(getUser() != null){
             getUser().getActionRegister().addOnUpdate(this);
         }
@@ -54,8 +43,9 @@ public class ThresholdPassive extends AbstractPassive implements OnUpdateListene
     
     @Override
     public void trigger(OnUpdateEvent e) {
-        if(((AbstractPlayer)e.getUpdated()).getLog().getHPPerc() <= getStatValue(PassiveStatName.THRESHOLD)){
+        if(((AbstractPlayer)e.getUpdated()).getLog().getHPPerc() <= threshold){
             applyEffect((AbstractPlayer)e.getUpdated());
+            trigger();
         }
     }
 }

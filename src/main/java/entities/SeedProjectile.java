@@ -1,16 +1,15 @@
 package entities;
 
-import customizables.actives.AbstractActive;
-import customizables.actives.ActiveStatName;
 import controllers.Master;
+import customizables.actives.ElementalActive;
 
 public class SeedProjectile extends Projectile{
 	private boolean canExplode;
 	private final int useId; // the useId of the attack instance this was spawned from
-	public SeedProjectile(int id, int x, int y, int degrees, int momentum, AbstractPlayer attackUser, AbstractActive a){
+	public SeedProjectile(int id, int x, int y, int degrees, int momentum, AbstractPlayer attackUser, ElementalActive a){
 		super(id, x, y, degrees, momentum, attackUser, a);
 		useId = id;
-		canExplode = getAttack().getStatValue(ActiveStatName.AOE) != 0;
+		canExplode = getAttack().getAOE() != 0;
 	}
 	
 	public void explode(){

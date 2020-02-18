@@ -92,9 +92,6 @@ public abstract class AbstractStatus implements Serializable, Terminable{
     public static AbstractStatus decode(StatusName n, int intensity, int dur){
 		AbstractStatus ret = null;
 		switch(n){
-		case CHARGE:
-			ret = new Charge(intensity, dur);
-			break;
 		case REGENERATION:
 			ret = new Regeneration(intensity, dur);
 			break;

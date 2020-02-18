@@ -1,6 +1,5 @@
 package entities;
 
-import battle.EnergyLog;
 import controllers.Master;
 import customizables.Build;
 import customizables.DataSet;
@@ -22,7 +21,6 @@ public class HumanPlayer extends AbstractPlayer{
     private CharacterClass c;
     private final AbstractActive[] actives;
 	private final AbstractPassive[] passives;
-    private final EnergyLog energyLog;
     private boolean followingMouse;
     public static final int MIN_LIFE_SPAN = 10;
     
@@ -32,7 +30,6 @@ public class HumanPlayer extends AbstractPlayer{
         actives = new AbstractActive[3];
 		passives = new AbstractPassive[3];
         setClass("Default");
-        energyLog = new EnergyLog(this);
         
         followingMouse = false;
     }
@@ -42,7 +39,7 @@ public class HumanPlayer extends AbstractPlayer{
 		setClass(b.getClassName());
 		setActives(b.getActiveNames());
 		setPassives(b.getPassiveNames());
-		setSpeed((int) (c.getStatValue(CharacterStatName.SPEED) * (500 / Master.FPS)));
+		setSpeed((int) (c.getSpeed() * (500.0 / Master.FPS)));
     }
     public void setClass(String name){
         DataSet ds = Master.getDataSet();
@@ -88,18 +85,9 @@ public class HumanPlayer extends AbstractPlayer{
 		}
 	}
     
-    @Override
-    public double getStatValue(CharacterStatName n){
-		return c.getStatValue(n);
-	}
-    
-    public EnergyLog getEnergyLog(){
-		return energyLog;
-	}
-    
     public void useAttack(int num){
 		if(actives[num].canUse()){
-			actives[num].use();
+			actives[num].trigger();
 		}
 	}
     
@@ -115,25 +103,23 @@ public class HumanPlayer extends AbstractPlayer{
 
     @Override
     public void playerInit() {
-        c.init();
+        c.doInit();
         for(AbstractActive a : actives){
-			a.init();
+			a.doInit();
 		}
         for(AbstractPassive p : passives){
-			p.init();
+			p.doInit();
 		}
-        energyLog.init();
     }
 
     @Override
     public void playerUpdate() {
         for(AbstractActive a : actives){
-			a.update();
+			a.doUpdate();
 		}
         for(AbstractPassive p : passives){
-			p.update();
+			p.doUpdate();
 		}
-        energyLog.update();
     }
     
     public void drawHUD(Graphics g, WorldCanvas wc){
@@ -162,13 +148,6 @@ public class HumanPlayer extends AbstractPlayer{
 		g.setColor(Color.black);
 		g.drawString("HP: " + strHP, (int)(w * 0.1), (int) (h * 0.93));
 		
-		// Energy
-		String strEn = getEnergyLog().getEnergy() + "";
-		g.setColor(Color.yellow);
-		g.fillRect((int)(w * 0.8), guiY, sw, sw);
-		g.setColor(Color.black);
-		g.drawString("Energy: " + strEn, (int)(w * 0.9), (int) (h * 0.93));
-		
 		// Actives
 		int i = sw;
 		for(AbstractActive a : getActives()){
@@ -176,4 +155,24 @@ public class HumanPlayer extends AbstractPlayer{
 			i += sw;
 		}
 	}
+
+    @Override
+    public double getStatValue(CharacterStatName n) {
+        double ret = 0.0;
+        switch(n){
+            case HP:
+                ret = c.getMaxHP();
+                break;
+            case DMG:
+                ret = c.getOffMult();
+                break;
+            case REDUCTION:
+                ret = c.getDefMult();
+                break;
+            case SPEED:
+                ret = c.getSpeed();
+                break;
+        }
+        return ret;
+    }
 }

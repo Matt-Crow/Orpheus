@@ -1,24 +1,27 @@
 package customizables;
 
 import customizables.actives.AbstractActive;
-import customizables.actives.ActiveTag;
 import customizables.actives.BoostActive;
+import customizables.actives.BoulderToss;
 import customizables.actives.ElementalActive;
-import customizables.actives.MeleeActive;
 import customizables.characterClass.CharacterClass;
 import customizables.passives.AbstractPassive;
 import customizables.passives.OnBeHitPassive;
 import customizables.passives.OnHitPassive;
-import customizables.passives.OnMeleeHitPassive;
 import customizables.passives.ThresholdPassive;
 import entities.ParticleType;
 import graphics.CustomColors;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import statuses.AbstractStatus;
 import statuses.Burn;
-import statuses.Charge;
 import statuses.Regeneration;
 import statuses.Resistance;
 import statuses.Rush;
@@ -41,9 +44,9 @@ public final class DataSet {
     public final HashMap<String, Build> allBuilds;
     
     private final AbstractActive DEFAULT_ACTIVE = new ElementalActive("Default", 3, 3, 3, 3, 3);
-    private final CharacterClass DEFAULT_CHARACTER_CLASS = new CharacterClass("Default", CustomColors.rainbow, 3, 3, 3, 3, 3);
+    private final CharacterClass DEFAULT_CHARACTER_CLASS = new CharacterClass("Default", CustomColors.rainbow, 3, 3, 3, 3);
     private final AbstractPassive DEFAULT_PASSIVE = new ThresholdPassive("Default", 2);
-    private final Build DEFAULT_BUILD = new Build("0x138", "Default", "RAINBOW OF DOOM", "Healing Rain", "Speed Test", "Crushing Grip", "Recover", "Cursed");
+    private final Build DEFAULT_BUILD = new Build("0x138", "Default", "RAINBOW OF DOOM", "Healing Rain", "Speed Test", "Burning Edge", "Escapist", "Cursed");
     
     public DataSet(){
         allActives = new HashMap<>();
@@ -77,7 +80,7 @@ public final class DataSet {
     public void addPassive(AbstractPassive p){
 		addToMap(p, allPassives);
 	}
-    //Build does not extends AbstractCustomizable, so I cannot use addToMap
+    //Build does not extends AbstractCustomizable, so I cannot trigger addToMap
     public void addBuild(Build b){
 		if(b == null){
             throw new NullPointerException();
@@ -183,13 +186,10 @@ public final class DataSet {
     }
     
     public void loadDefaultActives(){
-        // read from file later?
-		MeleeActive s = new MeleeActive("Slash", 3);
-		
-		ElementalActive bt = new ElementalActive("Boulder Toss", 1, 2, 2, 3, 4);
-		bt.setParticleType(ParticleType.BURST);
-        bt.setColors(CustomColors.earthColors);
-        bt.addTag(ActiveTag.KNOCKSBACK);
+		ElementalActive s = new ElementalActive("Slash", 1, 1, 5, 0, 3);
+		s.setParticleType(ParticleType.SHEAR);
+        
+		ElementalActive bt = new BoulderToss();
 		
         ElementalActive eq = new ElementalActive("Earthquake", 1, 0, 2, 5, 1);
 		eq.setParticleType(ParticleType.BURST);
@@ -254,10 +254,10 @@ public final class DataSet {
     }
     
     public void loadDefaultCharacterClasses(){
-        CharacterClass fire = new CharacterClass("Fire", CustomColors.fireColors, 1, 4, 5, 4, 3);
-		CharacterClass air = new CharacterClass("Air", CustomColors.airColors, 2, 5, 3, 1, 5);
-		CharacterClass earth = new CharacterClass("Earth", CustomColors.earthColors, 4, 1, 4, 4, 1);
-		CharacterClass water = new CharacterClass("Water", CustomColors.waterColors, 5, 4, 1, 3, 3);
+        CharacterClass fire = new CharacterClass("Fire", CustomColors.fireColors, 1, 5, 4, 3);
+		CharacterClass air = new CharacterClass("Air", CustomColors.airColors, 2, 3, 1, 5);
+		CharacterClass earth = new CharacterClass("Earth", CustomColors.earthColors, 4, 4, 4, 1);
+		CharacterClass water = new CharacterClass("Water", CustomColors.waterColors, 5, 1, 3, 3);
 		
 		addCharacterClasses(
             new CharacterClass[]{
@@ -271,34 +271,24 @@ public final class DataSet {
     
     public void loadDefaultPassives(){
         // on be hit
-		OnBeHitPassive r = new OnBeHitPassive("Recover", true);
-		r.addStatus(new Regeneration(1, 1));
 		OnBeHitPassive t = new OnBeHitPassive("Toughness", true);
 		t.addStatus(new Resistance(1, 1));
         OnBeHitPassive cu = new OnBeHitPassive("Cursed", false);
-        cu.addStatus(new Stun(3, 3));
+        cu.addStatus(new Stun(3, 1));
 		
         // on hit
-        OnHitPassive rc = new OnHitPassive("Recharge", true);
-        rc.addStatus(new Charge(1, 1));
+        OnHitPassive be = new OnHitPassive("Burning Edge", false);
+        be.addStatus(new Burn(1, 1));
         OnHitPassive ch = new OnHitPassive("Crippling Hits", false);
         ch.addStatus(new Stun(1, 1));
-        
-        // on melee hit
-        OnMeleeHitPassive lh = new OnMeleeHitPassive("Leechhealer", true);
+        OnHitPassive lh = new OnHitPassive("Leechhealer", true);
 		lh.addStatus(new Regeneration(1, 1));
-		OnMeleeHitPassive m = new OnMeleeHitPassive("Momentum", true);
+		OnHitPassive m = new OnHitPassive("Momentum", true);
 		m.addStatus(new Rush(1, 1));
-		OnMeleeHitPassive s = new OnMeleeHitPassive("Sharpen", true);
+		OnHitPassive s = new OnHitPassive("Sharpen", true);
 		s.addStatus(new Strength(1, 1));
-		OnMeleeHitPassive ss = new OnMeleeHitPassive("Sparking Strikes", true);
-		ss.addStatus(new Charge(1, 1));
-        OnMeleeHitPassive cg = new OnMeleeHitPassive("Crushing Grip", false);
-        cg.addStatus(new Stun(2, 1));
         
 		//threshold
-		ThresholdPassive a = new ThresholdPassive("Adrenaline", 3);
-		a.addStatus(new Charge(2, 1));
 		ThresholdPassive b = new ThresholdPassive("Bracing", 1);
 		b.addStatus(new Resistance(2, 1));
 		ThresholdPassive d = new ThresholdPassive("Determination", 2);
@@ -314,26 +304,22 @@ public final class DataSet {
 				lh,
 				m,
 				s,
-				ss,
-				r,
 				t,
-				a,
 				b,
 				d,
 				e,
 				re,
-                rc,
                 cu,
-                ch,
-                cg
+                be,
+                ch
 		});
     }
     public void loadDefaultBuilds(){
         addBuilds(new Build[]{
             new Build("Default Earth", "Earth", "Boulder Toss", "Warrior's Stance", "Earthquake", "Toughness", "Retaliation", "Crippling Hits"),
-            new Build("Default Fire", "Fire", "Fireball", "Fields of Fire", "Burning Rage", "Escapist", "Sparking Strikes", "Bracing"),
-            new Build("Default Water", "Water", "Waterbolt", "Whirlpool", "Healing Rain", "Sharpen", "Bracing", "Recover"),
-            new Build("Default Air", "Air", "Boreus", "Zephyrus", "Speed Test", "Recharge", "Sharpen", "Leechhealer")
+            new Build("Default Fire", "Fire", "Fireball", "Fields of Fire", "Burning Rage", "Escapist", "Burning Edge", "Bracing"),
+            new Build("Default Water", "Water", "Waterbolt", "Whirlpool", "Healing Rain", "Sharpen", "Bracing", "Leechhealer"),
+            new Build("Default Air", "Air", "Boreus", "Zephyrus", "Speed Test", "Momentum", "Sharpen", "Leechhealer")
         });
     }
     
@@ -342,5 +328,47 @@ public final class DataSet {
         loadDefaultCharacterClasses();
         loadDefaultPassives();
         loadDefaultBuilds();
+    }
+    
+    //https://stackoverflow.com/questions/11016092/how-to-load-classes-at-runtime-from-a-folder-or-jar
+    public void loadFile(File f){
+        try {
+            JarFile jar = new JarFile(f);
+            URLClassLoader loader = URLClassLoader.newInstance(new URL[]{
+                new URL("jar:file:" + f.getAbsolutePath() + "!/")
+            });
+            jar.stream().filter((JarEntry entry)->{
+                return !entry.isDirectory();
+            }).filter((JarEntry entry)->{
+                return entry.getName().endsWith(".class");
+            }).map((JarEntry entry)->{
+                return entry.getName().replace(".class", "").replace("/", ".");
+            }).forEach((String className)->{
+                System.out.println("DataSet.loadFile loading class " + className);
+                try {
+                    Class c = loader.loadClass(className);
+                    Object obj = c.newInstance();
+                    if(obj instanceof AbstractActive){
+                        addActive((AbstractActive)obj);
+                    } else if(obj instanceof AbstractPassive){
+                        addPassive((AbstractPassive)obj);
+                    } else if(obj instanceof CharacterClass){
+                        addCharacterClass((CharacterClass)obj);
+                    } else if(obj instanceof Build){
+                        addBuild((Build)obj);
+                    } else {
+                        System.err.println(c.getName() + " does not extend AbstractCustomizable");
+                    }
+                } catch (ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                } catch (InstantiationException ex) {
+                    ex.printStackTrace();
+                } catch (IllegalAccessException ex) {
+                    ex.printStackTrace();
+                }
+            });
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }

@@ -1,7 +1,5 @@
 package entities;
 
-import customizables.actives.AbstractActive;
-import customizables.actives.MeleeActive;
 import java.awt.Color;
 import java.awt.Graphics;
 import ai.Path;
@@ -10,6 +8,7 @@ import battle.*;
 import statuses.AbstractStatus;
 import controllers.Master;
 import controllers.World;
+import customizables.actives.ElementalActive;
 import customizables.characterClass.CharacterStatName;
 import static java.lang.System.out;
 import java.util.Arrays;
@@ -40,7 +39,7 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
     private int lastHitById; //the useId of the last projectile that hit this player
     private AbstractPlayer lastHitBy;
 	
-    private final MeleeActive slash;
+    private final ElementalActive slash;
 	private final DamageBacklog log;
 	private final SafeList<AbstractStatus> statuses; //change to hashtable
     //both players and AI need to find paths, given the current controls
@@ -63,7 +62,7 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
         knockbackMag = 0;
         knockbackDur = 0;
         
-        slash = (MeleeActive)Master.getDataSet().getActiveByName("Slash");
+        slash = (ElementalActive)Master.getDataSet().getActiveByName("Slash");
 		slash.setUser(this);
         log = new DamageBacklog(this, minLifeSpan);
         path = null;
@@ -161,7 +160,7 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
 	
 	public void useMeleeAttack(){
 		if(slash.canUse()){
-			slash.use();
+			slash.trigger();
 		}
 	}
 	
@@ -190,7 +189,7 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
         statuses.clear();
         getActionRegister().reset();
         
-		slash.init();
+		slash.doInit();
 		log.init();
 		
         path = null;
@@ -249,7 +248,7 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
                 }
             }
         }
-		slash.update();
+		slash.doUpdate();
 		
 		
 		getActionRegister().triggerOnUpdate();

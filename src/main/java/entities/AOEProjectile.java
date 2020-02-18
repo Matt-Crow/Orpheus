@@ -1,7 +1,6 @@
 package entities;
 
-import customizables.actives.AbstractActive;
-import customizables.actives.ActiveStatName;
+import customizables.actives.ElementalActive;
 
 /**
  * The AOEProjectile class is used to represent the
@@ -17,8 +16,8 @@ import customizables.actives.ActiveStatName;
  * @author Matt Crow
  */
 public class AOEProjectile extends Projectile{
-	public AOEProjectile(int id, int x, int y, int degrees, int momentum, AbstractPlayer attackUser, AbstractActive a){
+	public AOEProjectile(int id, int x, int y, int degrees, int momentum, AbstractPlayer attackUser, ElementalActive a){
 		super(id, x, y, degrees, momentum, attackUser, a);
-		setRange((int) a.getStatValue(ActiveStatName.AOE));
+		setRange((int) a.getAOE());
 	}
 }

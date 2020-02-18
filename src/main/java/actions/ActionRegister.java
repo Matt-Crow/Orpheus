@@ -14,8 +14,6 @@ public class ActionRegister implements Serializable{
 	private final AbstractReactiveEntity registeredTo;
 	private final SafeList<OnHitListener> onHitRegister;
 	private final SafeList<OnHitListener> onBeHitRegister;
-	private final SafeList<OnHitListener> onMeleeHitRegister;
-	private final SafeList<OnHitListener> onBeMeleeHitRegister;
 	private final SafeList<OnUpdateListener> onUpdateRegister;
 	
     /**
@@ -26,8 +24,6 @@ public class ActionRegister implements Serializable{
 		registeredTo = e;
 		onHitRegister = new SafeList<>();
 		onBeHitRegister = new SafeList<>();
-		onMeleeHitRegister = new SafeList<>();
-		onBeMeleeHitRegister = new SafeList<>();
 		onUpdateRegister = new SafeList<>();
 	}
     
@@ -47,21 +43,6 @@ public class ActionRegister implements Serializable{
 		onBeHitRegister.add(a);
 	}
     
-    /**
-     * adds a Listener that will fire whenever this AbstractEntity lands an attack on another.
-     * @param a the listener to add.
-     */
-	public void addOnMeleeHit(OnHitListener a){
-		onMeleeHitRegister.add(a);
-	}
-    
-    /**
-     * Adds a 
-     * @param a 
-     */
-	public void addOnBeMeleeHit(OnHitListener a){
-		onBeMeleeHitRegister.add(a);
-	}
 	public void addOnUpdate(OnUpdateListener a){
 		onUpdateRegister.add(a);
 	}
@@ -72,17 +53,7 @@ public class ActionRegister implements Serializable{
 	public void triggerOnHitReceived(AbstractPlayer hitBy){
 		OnHitEvent t = new OnHitEvent(hitBy, registeredTo);
 		onBeHitRegister.forEach((ohl)->ohl.trigger(t));
-	}
-	public void tripOnMeleeHit(AbstractPlayer hit){
-		OnHitEvent t = new OnHitEvent(registeredTo, hit);
-		onMeleeHitRegister.forEach((ohl)->ohl.trigger(t));
-		triggerOnHit(hit);
-	}
-	public void tripOnBeMeleeHit(AbstractPlayer hitBy){
-		OnHitEvent t = new OnHitEvent(hitBy, registeredTo);
-		onBeMeleeHitRegister.forEach((ohl)->ohl.trigger(t));
-		triggerOnHitReceived(hitBy);
-	}
+    }
 	public void triggerOnUpdate(){
         OnUpdateEvent e = new OnUpdateEvent(registeredTo);
 		onUpdateRegister.forEach((oul)->oul.trigger(e));
@@ -90,8 +61,6 @@ public class ActionRegister implements Serializable{
 	public void reset(){
 		onHitRegister.clear();
 		onBeHitRegister.clear();
-		onMeleeHitRegister.clear();
-		onBeMeleeHitRegister.clear();
 		onUpdateRegister.clear();
 	}
     
@@ -99,8 +68,6 @@ public class ActionRegister implements Serializable{
         out.println("ACTION REGISTER");
         out.println("On hit: x" + onHitRegister.length());
         out.println("On be hit: x" + onBeHitRegister.length());
-        out.println("On melee hit: x" + onMeleeHitRegister.length());
-        out.println("On be melee hit: x" + onBeMeleeHitRegister.length());
         out.println("On update: x" + onUpdateRegister.length());
         out.println("END ACTION REGISTER");
     }

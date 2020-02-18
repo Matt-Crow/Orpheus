@@ -5,30 +5,20 @@ import statuses.StatusTable;
 
 public class BoostActive extends AbstractActive{
     public BoostActive(String n, StatusTable t){
-        super(ActiveType.BOOST, n, 0, 0, 0, 0, 0);
-        setInflict(t);
+        this(n, t.getStatuses());
     }
     public BoostActive(String n, AbstractStatus[] st){
-        super(ActiveType.BOOST, n, 0, 0, 0, 0, 0);
-        for(AbstractStatus s : st){
-            addStatus(s);
-        }
+        super(n);
+        addStatuses(st);
     }
     
     @Override
-	public BoostActive copy(){
-		BoostActive ret = new BoostActive(getName(), getInflict().copy());
-        copyTagsTo(ret);
-        ret.setColors(getColors());
-        return ret;
+	public BoostActive copy(){        
+        return new BoostActive(getName(), getInflict().copy());
 	}
     @Override
 	public void use(){
-		super.use();
-		StatusTable s = getInflict();
-		for(int i = 0; i < s.getSize(); i++){
-			getUser().inflict(s.getStatusAt(i));
-		}
+        applyEffect(getUser());
 	}
     @Override
 	public String getDescription(){

@@ -3,23 +3,21 @@ package entities;
 import java.awt.Graphics;
 
 import graphics.CustomColors;
-import customizables.actives.AbstractActive;
-import customizables.actives.ActiveStatName;
-import customizables.actives.ActiveTag;
 import controllers.Master;
+import customizables.actives.ElementalActive;
 import util.CombatLog;
 import util.Random;
 
 public class Projectile extends AbstractReactiveEntity{
 	private final AbstractPlayer user;
-	private final AbstractActive registeredAttack;
+	private final ElementalActive registeredAttack;
 	private int distanceTraveled;
 	private int range;
 	private AbstractPlayer hit;
 	
 	private final int useId; //used to prevent double hitting. May not be unique to a single projectile. See AbstractActive for more info
     
-	public Projectile(int useId, int x, int y, int degrees, int momentum, AbstractPlayer attackUser, AbstractActive a){
+	public Projectile(int useId, int x, int y, int degrees, int momentum, AbstractPlayer attackUser, ElementalActive a){
 		super();
         setSpeed(momentum);
         doInit();
@@ -31,7 +29,7 @@ public class Projectile extends AbstractReactiveEntity{
 		user = attackUser;
 		setTeam(user.getTeam());
 		registeredAttack = a;
-		range = (int) a.getStatValue(ActiveStatName.RANGE);
+		range = a.getRange();
 		setRadius(25);
 		setMoving(true);
 		hit = null;
@@ -55,20 +53,15 @@ public class Projectile extends AbstractReactiveEntity{
 	public int getDistance(){
 		return distanceTraveled;
 	}
-	public AbstractActive getAttack(){
+	public ElementalActive getAttack(){
 		return registeredAttack;
 	}
 	
 	public void hit(AbstractPlayer p){
 		hit = p;
-        registeredAttack.hit(p);
+        registeredAttack.hit(this, p);
 		p.wasHitBy(this);
 		getActionRegister().triggerOnHit(p);
-        
-        //can't move this to AbstractActive
-        if(registeredAttack.containsTag(ActiveTag.KNOCKSBACK)){
-            p.knockBack(range, getDir(), Master.seconds(1));
-        }
         
 		CombatLog.logProjectileData(this);
 		terminate();

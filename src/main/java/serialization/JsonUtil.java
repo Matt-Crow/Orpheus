@@ -1,20 +1,13 @@
 package serialization;
 
 import controllers.Master;
-import customizables.passives.AbstractPassive;
-import customizables.actives.AbstractActive;
 import customizables.Build;
-import customizables.characterClass.CharacterClass;
 import java.io.*;
 import static java.lang.System.out;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 import javax.json.*;
-import customizables.AbstractCustomizable;
 import customizables.BuildJsonUtil;
-import customizables.CustomizableJsonUtil;
-import customizables.actives.ActiveJsonUtil;
-import customizables.characterClass.CharacterClassJsonUtil;
 
 /**
  *
@@ -136,47 +129,7 @@ public class JsonUtil {
     
     public static void main(String[] args) throws Exception{
         JsonObject obj = null;
-        AbstractCustomizable u = null;
         Build b = null;
-        
-        //done
-        for(AbstractActive aa : Master.getDataSet().getAllActives()){
-            out.println(aa.getName());
-            obj = CustomizableJsonUtil.serializeJson(aa);
-            //pprint(obj, 0);
-            u = ActiveJsonUtil.deserializeJson(obj);
-            if(u != null){
-                pprint(obj, 0);
-                out.println(aa.getDescription());
-                out.println(u.getDescription());
-            } else {
-                out.println("NULL");
-            }
-        }
-        
-        //done
-        for(AbstractPassive ap : Master.getDataSet().getAllPassives()){
-            obj = CustomizableJsonUtil.serializeJson(ap);
-            pprint(obj, 0);
-            u = CustomizableJsonUtil.deserializeJson(obj);
-            if(u != null){
-                pprint(obj, 0);
-                out.println(ap.getDescription());
-                out.println(u.getDescription());
-            }
-        }
-        
-        //done
-        for(CharacterClass cc : Master.getDataSet().getAllCharacterClasses()){
-            obj = CustomizableJsonUtil.serializeJson(cc);
-            pprint(obj, 0);
-            u = CharacterClassJsonUtil.deserializeJson(obj);
-            if(u != null){
-                pprint(obj, 0);
-                out.println(cc.getDescription());
-                out.println(u.getDescription());
-            }
-        }
         
         for(Build bu : Master.getDataSet().getAllBuilds()){
             obj = BuildJsonUtil.serializeJson(bu);

@@ -4,7 +4,6 @@ import java.util.NoSuchElementException;
 
 public enum CharacterStatName {
 	HP("hit points", 2000),
-	ENERGY("energy", 50),
 	DMG("damage dealt modifier", 1.0),
 	REDUCTION("damage taken modifier", 1.0),
 	SPEED("speed", 1.0);

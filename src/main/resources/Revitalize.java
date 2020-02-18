@@ -1,4 +1,4 @@
-package customizables.passives;
+//package customizables.passives;
 
 import statuses.Regeneration;
 
@@ -6,7 +6,7 @@ import statuses.Regeneration;
 public class Revitalize extends customizables.passives.ThresholdPassive{
 	private boolean activated;
 	public Revitalize(){
-		super("Revitalize", 1);
+		super("Revitalize", 25);
 		activated = false;
 	}
     

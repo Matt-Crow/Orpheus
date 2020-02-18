@@ -8,10 +8,12 @@ public class OnHitPassive extends AbstractPassive implements OnHitListener{
 	/**
 	 * Triggers upon a projectile registered to the
 	 * user colliding with an enemy player
+     * 
+     * @param n the name of this passive
+     * @param targetsUser whether or not statuses will be inflicted on the user or the hitter
 	 */
-	
 	public OnHitPassive(String n, boolean targetsUser){
-		super(PassiveType.ONHIT, n, targetsUser);
+		super(n, targetsUser);
 	}
 	
     @Override
@@ -23,9 +25,8 @@ public class OnHitPassive extends AbstractPassive implements OnHitListener{
     
     @Override
     public void init(){
-        super.init();
         if(getUser() != null){
-            //for when init is called by Customizers
+            //for when doInit is called by Customizers
             getUser().getActionRegister().addOnHit(this);
         }
     }
@@ -37,6 +38,7 @@ public class OnHitPassive extends AbstractPassive implements OnHitListener{
         } else {
             applyEffect((AbstractPlayer)e.getWasHit());
         }
+        trigger();
     }
 	
     @Override
