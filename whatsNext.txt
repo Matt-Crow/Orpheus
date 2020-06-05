@@ -8,3 +8,11 @@ With that said, their are many changes that I want to make next time I have a ch
 * Player controls...
 * Plugin customization system instead of GUI (players create their own Java classes)
 * redo multiplayer backend (how to launch a server?)
+
+On the other hand, I feel that doing multiplayer is too ambitious for such a project:
+* I don't have a lot of time to program
+* I don't want to spend my time working on video games
+* Multiplayer bloats the complexity of the project
+* The project's complexity is keeping from working on it more
+
+I'll see how I feel about this as time goes on.
