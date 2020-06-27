@@ -189,8 +189,8 @@ public abstract class AbstractWorld implements Serializable{
     
     /**
      * Sets whether or not this AbstractWorld is
- hosting other players, and thus should
- send updates to its clients.
+     * hosting other players, and thus should
+     * send updates to its clients.
      * 
      * @param b whether or not this is a host for other players
      * @return this
@@ -344,7 +344,7 @@ public abstract class AbstractWorld implements Serializable{
      *  </tr>
      * </table>
      */
-    public void update(){
+    public void updateOld(){
         //synchronized(teams){
             if(!isRemotelyHosted){
                 hostUpdate();
@@ -352,11 +352,18 @@ public abstract class AbstractWorld implements Serializable{
             if(!isHosting){
                 clientUpdate();
             }
-            particles.forEach((p)->p.doUpdate()); //both host and client must update their particles
-            if(currentMinigame != null){
-                currentMinigame.update();
-            }
+            updateParticles();
+            updateMinigame();
         //}
+    }
+    
+    public final void updateParticles(){
+        particles.forEach((p)->p.doUpdate());
+    }
+    public final void updateMinigame(){
+        if(currentMinigame != null){
+            currentMinigame.update();
+        }
     }
     
     private void receiveWorldUpdate(ServerMessage sm){
@@ -472,4 +479,8 @@ public abstract class AbstractWorld implements Serializable{
         particles = new SafeList<>();
         createCanvas();
     }
+    
+    
+    
+    public abstract void update();
 }
