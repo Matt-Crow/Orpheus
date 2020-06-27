@@ -37,41 +37,10 @@ public abstract class AbstractWorld implements Serializable{
         
     private volatile WorldContent content;
     
-    public AbstractWorld(int size){
+    public AbstractWorld(WorldContent worldContent){
         particles = new SafeList<>();
         canvas = null;
-        content = new WorldContent(size);
-    }
-    
-    /**
-     * Creates the classic AbstractWorld where battles 
-     * take place: a 20x20 square.
-     * 
-     * Handles most of the initialization for you,
-     * all you need to do is add teams,
-     * then set it's minigame to a Battle, like so:
-     * <pre>{@code 
-  AbstractWorld newWorld = AbstractWorld.createDefaultBattle();
-  newWorld.addTeam(team1);
-  newWorld.addTeam(team2);
-  Battle battle = new Battle();
-  newWorld.setCurrentMinigame(battle);
-  battle.setHost(newWorld);
-  newWorld.init();
-  //can change this to switchToPage once world canvas is a Page
-  JFrame parent = (JFrame)SwingUtilities.getWindowAncestor(this);
-  parent.setContentPane(newWorld.getCanvas());
-  parent.revalidate();
-  newWorld.getCanvas().requestFocus();
- }</pre>
-     * it's that simple!
-     * @return the newly created world.
-     */
-    public static AbstractWorld createDefaultBattle(){
-        AbstractWorld w = new SoloWorld(20); // temporary
-        w.createCanvas();
-        
-        return w;
+        content = worldContent;
     }
     
     public final AbstractWorld setPlayerTeam(Team t){

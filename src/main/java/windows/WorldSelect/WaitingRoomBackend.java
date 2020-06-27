@@ -18,6 +18,7 @@ import net.*;
 import serialization.JsonUtil;
 import windows.world.WorldPage;
 import world.HostWorld;
+import world.WorldContent;
 
 /**
  * This class provides all the server
@@ -295,7 +296,11 @@ public class WaitingRoomBackend {
         // may need some other way of checking if this has received all build data
         if(teamProto.isEmpty()){
             server.removeReceiver(ServerMessageType.PLAYER_DATA, receiveBuildInfo);
-            finallyStart();
+            try {
+                finallyStart();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
     }
     
@@ -389,7 +394,11 @@ public class WaitingRoomBackend {
         // may need some other way of checking if this has received all build data
         if(teamProto.isEmpty()){
             Master.SERVER.removeReceiver(ServerMessageType.PLAYER_DATA, receiveBuildInfo);
-            finallyStart();
+            try {
+                finallyStart();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
     }
     
@@ -401,15 +410,10 @@ public class WaitingRoomBackend {
  
  Might not be completely done
      */
-    private void finallyStart(){
-        // make this create a HostWorld
-        AbstractWorld w = AbstractWorld.createDefaultBattle();
-        try {
-            ((HostWorld)w).initServer();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        w.createCanvas(); //need to recreate so that togglepause doesn't work
+    private void finallyStart() throws IOException{
+        HostWorld w = new HostWorld(WorldContent.createDefaultBattle());
+        w.createCanvas();
+        w.initServer();
         Battle b = new Battle(maxEnemyLevel, numWaves);
         w.setPlayerTeam(playerTeam).setEnemyTeam(enemyTeam).setCurrentMinigame(b);
         b.setHost(w);

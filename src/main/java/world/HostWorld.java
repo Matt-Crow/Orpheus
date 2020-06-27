@@ -21,8 +21,8 @@ import util.SerialUtil;
 public class HostWorld extends AbstractWorld{
     private final Consumer<ServerMessage> receiveControl;
     
-    public HostWorld(int size) {
-        super(size);
+    public HostWorld(WorldContent worldContent) {
+        super(worldContent);
         receiveControl = (Consumer<ServerMessage> & Serializable) (sm)->receiveControl(sm);
     }
     

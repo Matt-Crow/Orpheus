@@ -20,8 +20,8 @@ public class RemoteProxyWorld extends AbstractWorld{
     private String remoteHostIp;
     private final Consumer<ServerMessage> receiveWorldUpdate;
     
-    public RemoteProxyWorld(int size) {
-        super(size);
+    public RemoteProxyWorld(WorldContent worldContent) {
+        super(worldContent);
         remoteHostIp = "";
         receiveWorldUpdate = (Consumer<ServerMessage> & Serializable)(sm)->receiveWorldUpdate(sm);
     }

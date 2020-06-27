@@ -11,8 +11,8 @@ import entities.Projectile;
  */
 public class SoloWorld extends AbstractWorld{
 
-    public SoloWorld(int size) {
-        super(size);
+    public SoloWorld(WorldContent worldContent) {
+        super(worldContent);
     }
     
     private void updateTeam(Team t){

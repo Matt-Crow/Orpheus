@@ -19,7 +19,7 @@ import util.SerialUtil;
 import windows.Canvas;
 import world.HostWorld;
 import world.RemoteProxyWorld;
-import world.SoloWorld;
+import world.WorldContent;
 
 /**
  * P: pause
@@ -61,12 +61,6 @@ public class WorldCanvas extends Canvas{
         registerKey(KeyEvent.VK_Z, true, ()->zoomIn());
         registerKey(KeyEvent.VK_X, true, ()->zoomOut());
         setZoom(0.5);
-    }
-    public WorldCanvas(int i){
-        this(new SoloWorld(i)); //temporary
-    }
-    public WorldCanvas(){
-        this(100);
     }
     
     private void togglePause(){
@@ -133,7 +127,7 @@ public class WorldCanvas extends Canvas{
     
     public static void main(String[] args) throws IOException{
         Master.getUser().initPlayer().getPlayer().applyBuild(Master.getDataSet().getDefaultBuild());
-        AbstractWorld w = AbstractWorld.createDefaultBattle();
+        HostWorld w = new HostWorld(WorldContent.createDefaultBattle());
         Team t1 = new Team("Test", Color.BLUE);
         Team t2 = Team.constructRandomTeam("Rando", Color.yellow, 1, 1);
         WorldCanvas c = new WorldCanvas(w);
