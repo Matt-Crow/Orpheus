@@ -2,13 +2,9 @@ package world;
 
 import battle.Battle;
 import battle.Team;
-import controllers.Master;
 import entities.AbstractEntity;
 import entities.Particle;
 import entities.AbstractPlayer;
-import entities.HumanPlayer;
-import entities.PlayerControls;
-import entities.Projectile;
 import graphics.CustomColors;
 import graphics.Tile;
 import graphics.Map;
@@ -21,10 +17,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import windows.world.WorldCanvas;
 import static java.lang.System.out;
-import java.util.function.Consumer;
-import javax.swing.SwingUtilities;
-import net.ServerMessage;
-import net.ServerMessageType;
 import util.Random;
 import util.SafeList;
 import util.SerialUtil;
@@ -50,21 +42,9 @@ public abstract class AbstractWorld implements Serializable{
     
     // I don't think I need to link this here.
     private transient WorldCanvas canvas; //transient means "don't serialize me!"
+        
+    // Split this into worldcontent class so serialization is easier   
     
-    /*
-    Not sure whether I should encapsulate the 
-    different behaviour in Strategies or subclasses,
-    
-    as Strategies require exposing some functions from this,
-    but I wouldn't be able to cast serialized world from HostWorld to RemoteWorld...
-    ... or would I?
-    */
-    // move these to strategies or subclasses
-    private transient boolean isHosting; //whether or not this is the host of a game, and thus should manage itself for every player
-    private transient boolean isRemotelyHosted; //whether or not another computer is running this AbstractWorld
-    private String remoteHostIp;
-    private Consumer<ServerMessage> receiveWorldUpdate;
-    private Consumer<ServerMessage> receiveControl;
     
     public AbstractWorld(int size){
         playerTeam = new Team("Players", Color.green);
@@ -74,18 +54,11 @@ public abstract class AbstractWorld implements Serializable{
         currentMap = new Map(size, size);
         canvas = null;
         currentMinigame = null;
-        
-        isHosting = false;
-        isRemotelyHosted = false;
-        remoteHostIp = "";
-        
-        receiveWorldUpdate = (Consumer<ServerMessage> & Serializable)(sm)->receiveWorldUpdate(sm);
-        receiveControl = (Consumer<ServerMessage> & Serializable) (sm)->receiveControl(sm);
     }
     
     /**
      * Creates the classic AbstractWorld where battles 
- take place: a 20x20 square.
+     * take place: a 20x20 square.
      * 
      * Handles most of the initialization for you,
      * all you need to do is add teams,
@@ -185,55 +158,7 @@ public abstract class AbstractWorld implements Serializable{
     }
     public Battle getCurrentMinigame(){
         return currentMinigame;
-    }
-    
-    /**
-     * Sets whether or not this AbstractWorld is
-     * hosting other players, and thus should
-     * send updates to its clients.
-     * 
-     * @param b whether or not this is a host for other players
-     * @return this
-     */
-    public AbstractWorld setIsHosting(boolean b) throws IOException{
-        if(b){
-            if(!Master.SERVER.isStarted()){
-                Master.SERVER.start();
-            }
-            Master.SERVER.addReceiver(ServerMessageType.CONTROL_PRESSED, receiveControl);
-            isHosting = true;
-        }
-        return this;
-    }
-    
-    /**
-     * Notifies this AbstractWorld that it is being generated
- by a different computer than this one. 
-     * 
-     * @param ipAddr the IP address to listen to 
- for changes to this AbstractWorld
-     * @return this
-     * @throws java.io.IOException is the server cannot start
-     */
-    public AbstractWorld setRemoteHost(String ipAddr) throws IOException{
-        if(!Master.SERVER.isStarted()){
-            Master.SERVER.start();
-        }
-        
-        isRemotelyHosted = true;
-        remoteHostIp = ipAddr;
-        Master.SERVER.addReceiver(ServerMessageType.WORLD_UPDATE, receiveWorldUpdate);
-        
-        return this;
-    }
-    
-    public boolean isRemotelyHosted(){
-        return isRemotelyHosted;
-    }
-    
-    public String getHostIp(){
-        return remoteHostIp;
-    }
+    }  
     
     public void init(){
         particles.clear();
@@ -279,31 +204,15 @@ public abstract class AbstractWorld implements Serializable{
         }
     }
     
-    private void receiveWorldUpdate(ServerMessage sm){
-        //synchronized(teams){
-        SwingUtilities.invokeLater(()->{
-            Team[] ts = (Team[])SerialUtil.fromSerializedString(sm.getBody());
-            setPlayerTeam(ts[0]);
-            setEnemyTeam(ts[1]);
-
-            Master.getUser().linkToRemotePlayerInWorld(this); //since teams have changed
-        });
-        
-        //}
-    }
     
-    private void receiveControl(ServerMessage sm){
-        HumanPlayer p = sm.getSender().getPlayer();
-        PlayerControls.decode(p, sm.getBody());
-    }
+    
+    
     
     public void draw(Graphics g){
-        //synchronized(teams){
-            currentMap.draw(g);
-            particles.forEach((p)->p.draw(g));
-            playerTeam.draw(g);
-            AITeam.draw(g);
-        //}
+        currentMap.draw(g);
+        particles.forEach((p)->p.draw(g));
+        playerTeam.draw(g);
+        AITeam.draw(g);
     }
     
     public void displayData(){
@@ -371,9 +280,9 @@ public abstract class AbstractWorld implements Serializable{
         oos.writeObject(AITeam);
         oos.writeObject(currentMap);
         oos.writeObject(currentMinigame);
-        oos.writeUTF(remoteHostIp);
-        oos.writeObject(receiveWorldUpdate);
-        oos.writeObject(receiveControl);
+        //oos.writeUTF(remoteHostIp);
+        //oos.writeObject(receiveWorldUpdate);
+        //oos.writeObject(receiveControl);
         //oos.writeBoolean(isHosting);
         //oos.writeBoolean(isRemotelyHosted);
     }
@@ -384,9 +293,9 @@ public abstract class AbstractWorld implements Serializable{
         setMap((Map) ois.readObject());
         setCurrentMinigame((Battle) ois.readObject());
         
-        remoteHostIp = ois.readUTF(); //need to keep this, else readObject will read this
-        receiveWorldUpdate = (Consumer<ServerMessage>) ois.readObject();
-        receiveControl = (Consumer<ServerMessage>) ois.readObject();
+        //remoteHostIp = ois.readUTF(); //need to keep this, else readObject will read this
+        //receiveWorldUpdate = (Consumer<ServerMessage>) ois.readObject();
+        //receiveControl = (Consumer<ServerMessage>) ois.readObject();
         
         /*
         Was having a problem where serializing the world resulted in all users being hosts, as
@@ -394,8 +303,8 @@ public abstract class AbstractWorld implements Serializable{
         
         thus, receivers should set whether or not this is a host or remotely hosted themselves
         */
-        setIsHosting(false);
-        isRemotelyHosted = false;
+        //setIsHosting(false);
+        //isRemotelyHosted = false;
         /*
         setIsHosting(ois.readBoolean());
         isRemotelyHosted = ois.readBoolean();

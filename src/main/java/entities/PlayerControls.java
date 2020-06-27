@@ -9,6 +9,7 @@ import net.ServerMessageType;
 import windows.Canvas;
 import windows.EndOfFrameListener;
 import windows.world.WorldCanvas;
+import world.RemoteProxyWorld;
 
 /**
  * CONTROLS:<br>
@@ -31,7 +32,7 @@ public class PlayerControls implements MouseListener, EndOfFrameListener{
         p = forPlayer;
         isRemote = remote;
         if(isRemote){
-            receiverIpAddr = p.getWorld().getHostIp();
+            receiverIpAddr = ((RemoteProxyWorld)p.getWorld()).getHostIp();
         }else{
             receiverIpAddr = null;
         }

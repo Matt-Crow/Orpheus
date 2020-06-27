@@ -17,6 +17,7 @@ import javax.swing.*;
 import net.*;
 import serialization.JsonUtil;
 import windows.world.WorldPage;
+import world.HostWorld;
 
 /**
  * This class provides all the server
@@ -321,6 +322,8 @@ public class WaitingRoomBackend {
      * @param sm 
      */
     private void receiveWorldInit(ServerMessage sm){
+        throw new UnsupportedOperationException("Multiplayer is disabled for now");
+        /*
         AbstractWorld w = AbstractWorld.fromSerializedString(sm.getBody());
         try {
             w.setRemoteHost(sm.getIpAddr());
@@ -337,7 +340,7 @@ public class WaitingRoomBackend {
         
         WorldPage p = new WorldPage();
         p.setCanvas(w.getCanvas());
-        host.getHost().switchToPage(p);
+        host.getHost().switchToPage(p);*/
     }
     
     /**
@@ -399,9 +402,10 @@ public class WaitingRoomBackend {
  Might not be completely done
      */
     private void finallyStart(){
+        // make this create a HostWorld
         AbstractWorld w = AbstractWorld.createDefaultBattle();
         try {
-            w.setIsHosting(true);
+            ((HostWorld)w).initServer();
         } catch (IOException ex) {
             ex.printStackTrace();
         }

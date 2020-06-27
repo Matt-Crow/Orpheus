@@ -48,7 +48,7 @@ public class WorldCanvas extends Canvas{
         timer.setRepeats(true);
         timer.stop();
         
-        PlayerControls pc = new PlayerControls(Master.getUser().getPlayer(), world.isRemotelyHosted());
+        PlayerControls pc = new PlayerControls(Master.getUser().getPlayer(), world instanceof RemoteProxyWorld);
 		addMouseListener(pc);
         addEndOfFrameListener(pc);
         pc.registerControlsTo(this);
