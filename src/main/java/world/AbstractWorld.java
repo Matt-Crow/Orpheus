@@ -32,9 +32,6 @@ public abstract class AbstractWorld implements Serializable{
     // keep this here for now
     private transient SafeList<Particle> particles;
     
-    
-    private Battle currentMinigame; //in future versions, this will be changed to include other minigames
-    
     // I don't think I need to link this here.
     private transient WorldCanvas canvas; //transient means "don't serialize me!"
         
@@ -42,10 +39,7 @@ public abstract class AbstractWorld implements Serializable{
     
     public AbstractWorld(int size){
         particles = new SafeList<>();
-        
         canvas = null;
-        currentMinigame = null;
-        
         content = new WorldContent(size);
     }
     
@@ -129,22 +123,16 @@ public abstract class AbstractWorld implements Serializable{
     }
     
     public void setCurrentMinigame(Battle b){
-        if(b == null){
-            throw new NullPointerException();
-        }
-        currentMinigame = b;
+        content.setMinigame(b);
         b.setHost(this);
     }
     public Battle getCurrentMinigame(){
-        return currentMinigame;
+        return content.getMinigame();
     }  
     
     public void init(){
         content.init();
         particles.clear();
-        if(currentMinigame != null){
-            currentMinigame.init();
-        }
     }
     
     /**
@@ -163,9 +151,7 @@ public abstract class AbstractWorld implements Serializable{
         particles.forEach((p)->p.doUpdate());
     }
     public final void updateMinigame(){
-        if(currentMinigame != null){
-            currentMinigame.update();
-        }
+        content.update();
     }
     
     
@@ -180,7 +166,7 @@ public abstract class AbstractWorld implements Serializable{
     public void displayData(){
         out.println("WORLD:");
         out.println("Current minigame:");
-        out.println((currentMinigame == null) ? "null" : "battle");
+        out.println((getCurrentMinigame() == null) ? "null" : "battle");
         //currentMinigame.displayData();
         out.println("Current map:");
         //currentMap.displayData();
@@ -241,7 +227,7 @@ public abstract class AbstractWorld implements Serializable{
         //oos.writeObject(playerTeam);
         //oos.writeObject(AITeam);
         //oos.writeObject(currentMap);
-        oos.writeObject(currentMinigame);
+        //oos.writeObject(currentMinigame);
         //oos.writeUTF(remoteHostIp);
         //oos.writeObject(receiveWorldUpdate);
         //oos.writeObject(receiveControl);
@@ -253,7 +239,7 @@ public abstract class AbstractWorld implements Serializable{
         //playerTeam = (Team)ois.readObject();
         //AITeam = (Team)ois.readObject();
         //setMap((Map) ois.readObject());
-        setCurrentMinigame((Battle) ois.readObject());
+        //setCurrentMinigame((Battle) ois.readObject());
         
         //remoteHostIp = ois.readUTF(); //need to keep this, else readObject will read this
         //receiveWorldUpdate = (Consumer<ServerMessage>) ois.readObject();

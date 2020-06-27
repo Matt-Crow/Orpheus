@@ -14,7 +14,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import util.Random;
-import util.SafeList;
 
 /**
  *
@@ -24,12 +23,13 @@ public class WorldContent implements Serializable{
     private volatile Team playerTeam;
     private volatile Team aiTeam;
     private volatile Map currentMap;
+    private volatile Battle currentMinigame; //in future versions, this will be changed to include other minigames
     
     public WorldContent(int size){
         playerTeam = new Team("Players", Color.green);
         aiTeam = new Team("AI", Color.red);
         currentMap = new Map(size, size);
-        
+        currentMinigame = null;
     }
     
     public static WorldContent createDefaultBattle(){
@@ -68,9 +68,28 @@ public class WorldContent implements Serializable{
         return currentMap;
     }
     
+    public final void setMinigame(Battle b){
+        if(b == null){
+            throw new NullPointerException();
+        }
+        currentMinigame = b;
+    }
+    public final Battle getMinigame(){
+        return currentMinigame;
+    }
+    
     public final void init(){
         if(currentMap != null){
             currentMap.init();
+        }
+        if(currentMinigame != null){
+            currentMinigame.init();
+        }
+    }
+    
+    public final void update(){
+        if(currentMinigame != null){
+            currentMinigame.update();
         }
     }
     
@@ -100,7 +119,7 @@ public class WorldContent implements Serializable{
         oos.writeObject(playerTeam);
         oos.writeObject(aiTeam);
         oos.writeObject(currentMap);
-        //oos.writeObject(currentMinigame);
+        oos.writeObject(currentMinigame);
         //oos.writeUTF(remoteHostIp);
         //oos.writeObject(receiveWorldUpdate);
         //oos.writeObject(receiveControl);
@@ -112,7 +131,7 @@ public class WorldContent implements Serializable{
         playerTeam = (Team)ois.readObject();
         aiTeam = (Team)ois.readObject();
         currentMap = (Map)ois.readObject();
-        //setCurrentMinigame((Battle) ois.readObject());
+        currentMinigame = (Battle)ois.readObject();
         
         //remoteHostIp = ois.readUTF(); //need to keep this, else readObject will read this
         //receiveWorldUpdate = (Consumer<ServerMessage>) ois.readObject();
