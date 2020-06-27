@@ -17,6 +17,9 @@ import java.io.IOException;
 import entities.HumanPlayer;
 import util.SerialUtil;
 import windows.Canvas;
+import world.HostWorld;
+import world.RemoteProxyWorld;
+import world.SoloWorld;
 
 /**
  * P: pause
@@ -49,7 +52,7 @@ public class WorldCanvas extends Canvas{
 		addMouseListener(pc);
         addEndOfFrameListener(pc);
         pc.registerControlsTo(this);
-        if(world.isRemotelyHosted() || world.isHosting()){
+        if(world instanceof RemoteProxyWorld || world instanceof HostWorld){
             //resume, but cannot pause
             togglePause();
         }else{
@@ -60,10 +63,10 @@ public class WorldCanvas extends Canvas{
         setZoom(0.5);
     }
     public WorldCanvas(int i){
-        this(new AbstractWorld(i));
+        this(new SoloWorld(i)); //temporary
     }
     public WorldCanvas(){
-        this(new AbstractWorld(100));
+        this(100);
     }
     
     private void togglePause(){

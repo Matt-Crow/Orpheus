@@ -108,7 +108,7 @@ public abstract class AbstractWorld implements Serializable{
      * @return the newly created world.
      */
     public static AbstractWorld createDefaultBattle(){
-        AbstractWorld w = new AbstractWorld(20);
+        AbstractWorld w = new SoloWorld(20); // temporary
         try {
             w.setMap(MapLoader.readCsv(AbstractWorld.class.getResourceAsStream("/testMap.csv")));
         } catch (IOException ex) {
@@ -206,10 +206,6 @@ public abstract class AbstractWorld implements Serializable{
         return this;
     }
     
-    public boolean isHosting(){
-        return isHosting;
-    }
-    
     /**
      * Notifies this AbstractWorld that it is being generated
  by a different computer than this one. 
@@ -274,89 +270,6 @@ public abstract class AbstractWorld implements Serializable{
         e.setWorld(this);
     }
     
-    private void hostUpdateTeam(Team t){
-        t.update();
-        t.forEach((AbstractEntity member)->{
-            currentMap.checkForTileCollisions(member);
-            if(t.getEnemy() != null){
-                t.getEnemy().getMembersRem().forEach((AbstractPlayer enemy)->{
-                    if(member instanceof Projectile){
-                        // I thought that java handled this conversion?
-                        ((Projectile)member).checkForCollisions(enemy);
-                    }
-                    //member.checkForCollisions(enemy);
-                });
-            }
-        });
-    }
-    private void hostUpdate(){
-        hostUpdateTeam(playerTeam);
-        hostUpdateTeam(AITeam);
-        
-        if(isHosting){
-            Master.SERVER.send(new ServerMessage(
-                SerialUtil.serializeToString(new Team[]{playerTeam, AITeam}),
-                ServerMessageType.WORLD_UPDATE
-            ));
-        }
-    }
-        
-    private void clientUpdate(){
-        /*
-        Client update is only called if isHosting is false
-        so it runs for both clients and solo players.
-        But, if this is also not remotely hosted, that makes
-        it a solo player, thus, particles have already been spawned
-        in hostUpdate, so no need to do this
-        */
-        if(isRemotelyHosted){
-            playerTeam.forEach((AbstractEntity member)->{
-                if(member instanceof Projectile){
-                    ((Projectile)member).spawnParticles();
-                }
-            });
-            AITeam.forEach((AbstractEntity member)->{
-                if(member instanceof Projectile){
-                    ((Projectile)member).spawnParticles();
-                }
-            });
-        }
-    }
-    
-    /**
-     * Updates the world, performing functions based on whether or not the
- AbstractWorld is being hosted or is hosting:
- <table>
-     *  <tr>
-     *      <td>Table</td>
-     *      <td>isHosting</td>
-     *      <td>isn't hosting</td>
-     *  </tr>
-     *  <tr>
-     *      <td>isHosted</td>
-     *      <td>Shouldn't exist</td>
-     *      <td>Only update particles and minigame</td>
-     *  </tr>
-     *  <tr>
-     *      <td>isn't hosted</td>
-     *      <td>update everything, send update message</td>
-     *      <td>Is playing solo, so update everything</td>
-     *  </tr>
-     * </table>
-     */
-    public void updateOld(){
-        //synchronized(teams){
-            if(!isRemotelyHosted){
-                hostUpdate();
-            }
-            if(!isHosting){
-                clientUpdate();
-            }
-            updateParticles();
-            updateMinigame();
-        //}
-    }
-    
     public final void updateParticles(){
         particles.forEach((p)->p.doUpdate());
     }
@@ -404,6 +317,20 @@ public abstract class AbstractWorld implements Serializable{
         playerTeam.displayData();
         AITeam.displayData();
     }
+    
+    
+    
+    public abstract void update();
+    
+    
+    
+    
+    
+    
+    
+    /*
+    Need to redo all of this
+    */
     
     /**
      * Serializes this using ObjectOutputStream.writeObject,
@@ -479,8 +406,4 @@ public abstract class AbstractWorld implements Serializable{
         particles = new SafeList<>();
         createCanvas();
     }
-    
-    
-    
-    public abstract void update();
 }

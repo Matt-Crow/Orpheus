@@ -16,6 +16,8 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import windows.Page;
 import windows.WorldSelect.WSMain;
+import world.HostWorld;
+import world.RemoteProxyWorld;
 
 /**
  * The WorldPage is used to render WorldCanvases.
@@ -96,7 +98,7 @@ public class WorldPage extends Page{
                 w.requestFocusInWindow();
             }
         });
-        if(w.getWorld().isHosting() || w.getWorld().isRemotelyHosted()){
+        if(w.getWorld() instanceof RemoteProxyWorld || w.getWorld() instanceof HostWorld){
             chat.openChatServer();
         }
         SwingUtilities.invokeLater(()->w.requestFocusInWindow());
