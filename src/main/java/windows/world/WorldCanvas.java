@@ -139,6 +139,7 @@ public class WorldCanvas extends Canvas{
         wp.setCanvas(canvas);
         mw.switchToPage(wp);
         
+        
         Battle b = new Battle(10, 5);
         
         t1.addMember(Master.getUser().getPlayer());
@@ -163,7 +164,6 @@ public class WorldCanvas extends Canvas{
         wp = new WorldPage();
         wp.setCanvas(world.getCanvas());
         mw.switchToPage(wp);
-        
         
         world.getCanvas().registerKey(KeyEvent.VK_S, true, ()->{
             Team t = world.getPlayerTeam();

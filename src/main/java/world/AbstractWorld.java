@@ -102,6 +102,7 @@ public abstract class AbstractWorld {
         if(game != null){
             game.setHost(this);
         }
+        
     }
     public final WorldContent getContent(){
         return content;
