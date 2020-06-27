@@ -7,14 +7,9 @@ import entities.Particle;
 import entities.AbstractPlayer;
 import graphics.Map;
 import java.awt.Graphics;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import windows.world.WorldCanvas;
 import static java.lang.System.out;
 import util.SafeList;
-import util.SerialUtil;
 
 /**
  * The AbstractWorld class acts as a controller for each game.
@@ -28,12 +23,12 @@ import util.SerialUtil;
  The AbstractWorld handles all the drawing and updating as well.
  * @author Matt Crow
  */
-public abstract class AbstractWorld implements Serializable{
+public abstract class AbstractWorld {
     // keep this here for now
-    private transient SafeList<Particle> particles;
+    private final SafeList<Particle> particles;
     
     // I don't think I need to link this here.
-    private transient WorldCanvas canvas; //transient means "don't serialize me!"
+    private WorldCanvas canvas;
         
     private volatile WorldContent content;
     
@@ -144,92 +139,5 @@ public abstract class AbstractWorld implements Serializable{
         getAITeam().displayData();
     }
     
-    
-    
     public abstract void update();
-    
-    
-    
-    
-    
-    
-    
-    /*
-    Need to redo all of this
-    */
-    
-    /**
-     * Serializes this using ObjectOutputStream.writeObject,
-     * then converts the result to a string so that it can
-     * be used as the body of a ServerMessage
-     * 
-     * This has a problem where if there is too much data
-     * in the world, such as in a 99 vs 99, it cannot be encoded
-     * 
-     * @return the serialized version of this AbstractWorld,
- converted to a string for convenience.
-     * 
-     * @see SerialUtil#serializeToString
-     */
-    public String serializeToString(){
-        return SerialUtil.serializeToString(this);
-    }
-    
-    /**
-     * Converts a String generated from AbstractWorld.serializeToString,
- and de-serializes it into a copy of that original world.
-     * It is important to note that the AbstractWorld's canvas is not serialized,
- so be sure to call either setCanvas, or createCanvas so that the AbstractWorld
- can be rendered
-     * 
-     * @param s a string variant of an object stream serialization of a AbstractWorld
-     * @return a copy of the world which was serialized into a string
-     * 
-     * @see SerialUtil#fromSerializedString(java.lang.String) 
-     */
-    public static AbstractWorld fromSerializedString(String s){
-        return (AbstractWorld)SerialUtil.fromSerializedString(s);
-    }
-
-    
-    private void writeObject(ObjectOutputStream oos) throws IOException{
-        //oos.writeObject(playerTeam);
-        //oos.writeObject(AITeam);
-        //oos.writeObject(currentMap);
-        //oos.writeObject(currentMinigame);
-        //oos.writeUTF(remoteHostIp);
-        //oos.writeObject(receiveWorldUpdate);
-        //oos.writeObject(receiveControl);
-        //oos.writeBoolean(isHosting);
-        //oos.writeBoolean(isRemotelyHosted);
-    }
-    
-    private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException{
-        //playerTeam = (Team)ois.readObject();
-        //AITeam = (Team)ois.readObject();
-        //setMap((Map) ois.readObject());
-        //setCurrentMinigame((Battle) ois.readObject());
-        
-        //remoteHostIp = ois.readUTF(); //need to keep this, else readObject will read this
-        //receiveWorldUpdate = (Consumer<ServerMessage>) ois.readObject();
-        //receiveControl = (Consumer<ServerMessage>) ois.readObject();
-        
-        /*
-        Was having a problem where serializing the world resulted in all users being hosts, as
-        the serialized world was a host: BAD
-        
-        thus, receivers should set whether or not this is a host or remotely hosted themselves
-        */
-        //setIsHosting(false);
-        //isRemotelyHosted = false;
-        /*
-        setIsHosting(ois.readBoolean());
-        isRemotelyHosted = ois.readBoolean();
-        if(isRemotelyHosted){
-            setRemoteHost(remoteHostIp);
-        }*/
-        
-        particles = new SafeList<>();
-        createCanvas();
-    }
 }

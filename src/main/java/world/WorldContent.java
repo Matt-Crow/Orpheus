@@ -14,6 +14,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import util.Random;
+import util.SerialUtil;
 
 /**
  *
@@ -142,16 +143,44 @@ public class WorldContent implements Serializable{
         e.setY(rootY * Tile.TILE_SIZE + Tile.TILE_SIZE / 2);
     }
     
+    /**
+     * Serializes this using ObjectOutputStream.writeObject,
+     * then converts the result to a string so that it can
+     * be used as the body of a ServerMessage
+     * 
+     * This has a problem where if there is too much data
+     * in the world, such as in a 99 vs 99, it cannot be encoded
+     * 
+     * @return the serialized version of this AbstractWorld,
+ converted to a string for convenience.
+     * 
+     * @see SerialUtil#serializeToString
+     */
+    public String serializeToString(){
+        return SerialUtil.serializeToString(this);
+    }
+    
+    /**
+     * Converts a String generated from AbstractWorld.serializeToString,
+ and de-serializes it into a copy of that original world.
+     * It is important to note that the AbstractWorld's canvas is not serialized,
+ so be sure to call either setCanvas, or createCanvas so that the AbstractWorld
+ can be rendered
+     * 
+     * @param s a string variant of an object stream serialization of a AbstractWorld
+     * @return a copy of the world which was serialized into a string
+     * 
+     * @see SerialUtil#fromSerializedString(java.lang.String) 
+     */
+    public static AbstractWorld fromSerializedString(String s){
+        return (AbstractWorld)SerialUtil.fromSerializedString(s);
+    }
+    
     private void writeObject(ObjectOutputStream oos) throws IOException{
         oos.writeObject(playerTeam);
         oos.writeObject(aiTeam);
         oos.writeObject(currentMap);
         oos.writeObject(currentMinigame);
-        //oos.writeUTF(remoteHostIp);
-        //oos.writeObject(receiveWorldUpdate);
-        //oos.writeObject(receiveControl);
-        //oos.writeBoolean(isHosting);
-        //oos.writeBoolean(isRemotelyHosted);
     }
     
     private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException{
@@ -159,27 +188,5 @@ public class WorldContent implements Serializable{
         aiTeam = (Team)ois.readObject();
         currentMap = (Map)ois.readObject();
         currentMinigame = (Battle)ois.readObject();
-        
-        //remoteHostIp = ois.readUTF(); //need to keep this, else readObject will read this
-        //receiveWorldUpdate = (Consumer<ServerMessage>) ois.readObject();
-        //receiveControl = (Consumer<ServerMessage>) ois.readObject();
-        
-        /*
-        Was having a problem where serializing the world resulted in all users being hosts, as
-        the serialized world was a host: BAD
-        
-        thus, receivers should set whether or not this is a host or remotely hosted themselves
-        */
-        //setIsHosting(false);
-        //isRemotelyHosted = false;
-        /*
-        setIsHosting(ois.readBoolean());
-        isRemotelyHosted = ois.readBoolean();
-        if(isRemotelyHosted){
-            setRemoteHost(remoteHostIp);
-        }*/
-        
-        //particles = new SafeList<>();
-        //createCanvas();
     }
 }
