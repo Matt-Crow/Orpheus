@@ -12,15 +12,12 @@ import battle.Team;
 import controllers.MainWindow;
 import controllers.User;
 import controls.AbstractPlayerControls;
-import controls.RemotePlayerControls;
-import controls.SoloPlayerControls;
 import java.awt.Graphics2D;
 import java.io.IOException;
 import entities.HumanPlayer;
 import util.SerialUtil;
 import windows.Canvas;
 import world.HostWorld;
-import world.RemoteProxyWorld;
 import world.WorldContent;
 
 /**
@@ -34,6 +31,7 @@ public class WorldCanvas extends Canvas{
     private AbstractWorld world;
     private final Timer timer;
     private boolean paused;
+    private boolean pauseEnabled;
     
     public WorldCanvas(AbstractWorld w){
         super();
@@ -42,6 +40,7 @@ public class WorldCanvas extends Canvas{
         w.setCanvas(this);
         
         paused = true;
+        pauseEnabled = true;
         timer = new Timer(1000 / Master.FPS, (ActionEvent e) -> {
             world.update();
             endOfFrame();
@@ -50,34 +49,39 @@ public class WorldCanvas extends Canvas{
         timer.setRepeats(true);
         timer.stop();
         
-        AbstractPlayerControls pc;
-        if(world instanceof RemoteProxyWorld){
-            pc = new RemotePlayerControls(Master.getUser().getPlayer(), ((RemoteProxyWorld)world).getHostIp());
-        } else {
-            pc = new SoloPlayerControls(Master.getUser().getPlayer());
-        }
-		addMouseListener(pc);
-        addEndOfFrameListener(pc);
-        pc.registerControlsTo(this);
-        if(world instanceof RemoteProxyWorld || world instanceof HostWorld){
-            //resume, but cannot pause
-            togglePause();
-        }else{
-            registerKey(KeyEvent.VK_P, true, ()->togglePause());
-        }
         registerKey(KeyEvent.VK_Z, true, ()->zoomIn());
         registerKey(KeyEvent.VK_X, true, ()->zoomOut());
+        registerKey(KeyEvent.VK_P, true, ()->togglePause());
         setZoom(0.5);
     }
     
-    private void togglePause(){
-        paused = !paused;
-        if(paused){
-            timer.stop();
-        } else {
+    /**
+     * Remember to use this if you want to control a player!
+     * @param pc 
+     */
+    public final void addPlayerControls(AbstractPlayerControls pc){
+        addMouseListener(pc);
+        addEndOfFrameListener(pc);
+        pc.registerControlsTo(this);
+    }
+    
+    public void setPauseEnabled(boolean canPause){
+        pauseEnabled = canPause;
+        if(!canPause && !timer.isRunning()){
+            paused = false;
             timer.start();
         }
-        repaint();
+    }
+    private void togglePause(){
+        if(pauseEnabled){
+            paused = !paused;
+            if(paused){
+                timer.stop();
+            } else {
+                timer.start();
+            }
+            repaint();
+        }
     }
     
     //need this for when leaving world page

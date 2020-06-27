@@ -35,10 +35,6 @@ public abstract class AbstractPlayerControls extends AbstractControlScheme<Human
         return "move to " + mouseString();
     }
     
-    public abstract void useMeleeKey();
-    public abstract void useAttKey(int i);
-    public abstract void move();
-    
     public void registerControlsTo(Canvas plane){
         plane.registerKey(KeyEvent.VK_Q, true, ()->{
             useMeleeKey();
@@ -118,4 +114,8 @@ public abstract class AbstractPlayerControls extends AbstractControlScheme<Human
 
     @Override
     public void mouseExited(MouseEvent e) {}
+    
+    public abstract void useMeleeKey();
+    public abstract void useAttKey(int i);
+    public abstract void move();
 }

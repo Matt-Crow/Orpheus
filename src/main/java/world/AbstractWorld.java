@@ -132,10 +132,6 @@ public abstract class AbstractWorld {
         content.update();
     }
     
-    
-    
-    
-    
     public void draw(Graphics g){
         content.draw(g);
         particles.forEach((p)->p.draw(g));

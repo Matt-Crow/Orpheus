@@ -3,8 +3,11 @@ package windows.WorldSelect;
 import battle.Battle;
 import battle.Team;
 import controllers.Master;
-import world.AbstractWorld;
+import controllers.User;
+import controls.SoloPlayerControls;
+import entities.HumanPlayer;
 import java.awt.Color;
+import windows.world.WorldCanvas;
 import windows.world.WorldPage;
 import world.SoloWorld;
 import world.WorldContent;
@@ -14,24 +17,26 @@ import world.WorldContent;
  * @author Matt Crow
  */
 public class WSSolo extends AbstractWSNewWorld{
-    
     public WSSolo(){
         super();
     }
     
     @Override
     public void start(){
+        User user = Master.getUser();
+        user.initPlayer();
+        HumanPlayer player = user.getPlayer();
+        
         Team team1 = new Team("Players", Color.green);
         Team team2 = new Team("AI", Color.red);
         
-        
-        Master.getUser().initPlayer();
-        Master.getUser().getPlayer().applyBuild(getSelectedBuild());
-        team1.addMember(Master.getUser().getPlayer());
+        player.applyBuild(getSelectedBuild());
+        team1.addMember(player);
 
         SoloWorld battleWorld = new SoloWorld(WorldContent.createDefaultBattle());
         //it's like a theme park or something
         battleWorld.createCanvas();
+        
         battleWorld
             .setPlayerTeam(team1)
             .setEnemyTeam(team2);
@@ -42,8 +47,11 @@ public class WSSolo extends AbstractWSNewWorld{
         
         battleWorld.init();
         
+        WorldCanvas canv = battleWorld.getCanvas();
+        canv.addPlayerControls(new SoloPlayerControls(player));
+        
         WorldPage wp = new WorldPage();
-        wp.setCanvas(battleWorld.getCanvas());
+        wp.setCanvas(canv);
         getHost().switchToPage(wp);
     }
 }

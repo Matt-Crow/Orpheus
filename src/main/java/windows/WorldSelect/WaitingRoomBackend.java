@@ -4,6 +4,8 @@ import world.AbstractWorld;
 import battle.Battle;
 import battle.Team;
 import controllers.*;
+import controls.RemotePlayerControls;
+import controls.SoloPlayerControls;
 import customizables.Build;
 import customizables.BuildJsonUtil;
 import entities.HumanPlayer;
@@ -16,6 +18,7 @@ import javax.json.*;
 import javax.swing.*;
 import net.*;
 import serialization.JsonUtil;
+import windows.world.WorldCanvas;
 import windows.world.WorldPage;
 import world.HostWorld;
 import world.RemoteProxyWorld;
@@ -346,7 +349,10 @@ public class WaitingRoomBackend {
         server.removeReceiver(ServerMessageType.WORLD_INIT, receiveWorldInit);
         
         WorldPage p = new WorldPage();
-        p.setCanvas(world.getCanvas());
+        WorldCanvas canv = world.getCanvas();
+        canv.addPlayerControls(new RemotePlayerControls(me.getPlayer(), sm.getIpAddr()));
+        canv.setPauseEnabled(false);
+        p.setCanvas(canv);
         host.getHost().switchToPage(p);
     }
     
@@ -424,7 +430,10 @@ public class WaitingRoomBackend {
         sendWorldInit(w.getContent());
         
         WorldPage p = new WorldPage();
-        p.setCanvas(w.getCanvas());
+        WorldCanvas canv = w.getCanvas();
+        canv.addPlayerControls(new SoloPlayerControls(Master.getUser().getPlayer()));
+        canv.setPauseEnabled(false);
+        p.setCanvas(canv);
         host.getHost().switchToPage(p);
     }
     
