@@ -122,6 +122,9 @@ public class WorldContent implements Serializable{
     }
     
     public final void draw(Graphics g){
+        if(currentMap != null){
+            currentMap.draw(g);
+        }
         playerTeam.draw(g);
         aiTeam.draw(g);
     }
