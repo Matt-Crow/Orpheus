@@ -44,18 +44,25 @@ import util.SerialUtil;
 public class World implements Serializable{
     private volatile Team playerTeam;
     private volatile Team AITeam;
-    
-    
     private transient SafeList<Particle> particles;
-    
     private Map currentMap;
-    private transient WorldCanvas canvas; //transient means "don't serialize me!"
     private Battle currentMinigame; //in future versions, this will be changed to include other minigames
     
+    // I don't think I need to link this here.
+    private transient WorldCanvas canvas; //transient means "don't serialize me!"
+    
+    /*
+    Not sure whether I should encapsulate the 
+    different behaviour in Strategies or subclasses,
+    
+    as Strategies require exposing some functions from this,
+    but I wouldn't be able to cast serialized world from HostWorld to RemoteWorld...
+    ... or would I?
+    */
+    // move these to strategies or subclasses
     private transient boolean isHosting; //whether or not this is the host of a game, and thus should manage itself for every player
     private transient boolean isRemotelyHosted; //whether or not another computer is running this World
     private String remoteHostIp;
-    
     private Consumer<ServerMessage> receiveWorldUpdate;
     private Consumer<ServerMessage> receiveControl;
     
