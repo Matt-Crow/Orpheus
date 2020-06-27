@@ -1,4 +1,8 @@
-package entities;
+package controls;
+
+import entities.AbstractPlayer;
+import entities.AbstractPlayerControlCommand;
+import entities.HumanPlayer;
 
 /**
  *

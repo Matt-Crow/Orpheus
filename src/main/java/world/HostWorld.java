@@ -5,7 +5,7 @@ import controllers.Master;
 import entities.AbstractEntity;
 import entities.AbstractPlayer;
 import entities.HumanPlayer;
-import entities.PlayerControls;
+import controls.PlayerControls;
 import entities.Projectile;
 import java.io.IOException;
 import java.io.Serializable;

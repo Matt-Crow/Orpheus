@@ -11,7 +11,7 @@ import javax.swing.*;
 import battle.Team;
 import controllers.MainWindow;
 import controllers.User;
-import entities.PlayerControls;
+import controls.PlayerControls;
 import java.awt.Graphics2D;
 import java.io.IOException;
 import entities.HumanPlayer;
@@ -19,7 +19,6 @@ import util.SerialUtil;
 import windows.Canvas;
 import world.HostWorld;
 import world.RemoteProxyWorld;
-import world.SoloWorld;
 import world.WorldContent;
 
 /**
@@ -31,7 +30,7 @@ import world.WorldContent;
  */
 public class WorldCanvas extends Canvas{
     private AbstractWorld world;
-    private Timer timer;
+    private final Timer timer;
     private boolean paused;
     
     public WorldCanvas(AbstractWorld w){

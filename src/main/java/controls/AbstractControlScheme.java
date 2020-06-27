@@ -1,5 +1,7 @@
-package entities;
+package controls;
 
+import entities.AbstractPlayer;
+import entities.AbstractPlayerControlCommand;
 import java.util.LinkedList;
 import windows.Canvas;
 import windows.EndOfFrameListener;

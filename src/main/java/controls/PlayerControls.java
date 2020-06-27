@@ -1,6 +1,7 @@
-package entities;
+package controls;
 
 import controllers.Master;
+import entities.HumanPlayer;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
