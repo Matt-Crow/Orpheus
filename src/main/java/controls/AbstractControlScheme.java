@@ -5,6 +5,7 @@ import entities.AbstractPlayerControlCommand;
 import java.util.LinkedList;
 import windows.Canvas;
 import windows.EndOfFrameListener;
+import world.AbstractWorld;
 
 /**
  * In the future, this will act as the base class
@@ -16,27 +17,21 @@ import windows.EndOfFrameListener;
  * @author Matt Crow
  * @param <T> the subclass of AbstractPlayer this is controlling
  */
-public class AbstractControlScheme<T extends AbstractPlayer> implements EndOfFrameListener{
+public class AbstractControlScheme<T extends AbstractPlayer> {
     private final T targettedPlayer;
-    private final LinkedList<AbstractPlayerControlCommand> receivedCommands;
+    private final String targettedEntityId;
     
     public AbstractControlScheme(T forPlayer){
         targettedPlayer = forPlayer;
-        receivedCommands = new LinkedList<>();
+        targettedEntityId = forPlayer.id;
     }
     
     public final T getPlayer(){
         return targettedPlayer;
     }
     
-    public final void enqueueCommand(AbstractPlayerControlCommand cmd){
-        receivedCommands.addLast(cmd);
-    }
-
-    @Override
-    public void frameEnded(Canvas c) {
-        while(!receivedCommands.isEmpty()){
-            receivedCommands.poll().execute(targettedPlayer);
-        }
+    // I need to switch to this method so serialization works
+    public final T getPlayerInWorld(AbstractWorld w){
+        return (T)w.getPlayerTeam().getMemberById(targettedEntityId);
     }
 }

@@ -12,6 +12,7 @@ import battle.Team;
 import controllers.MainWindow;
 import controllers.User;
 import controls.AbstractPlayerControls;
+import controls.SoloPlayerControls;
 import java.awt.Graphics2D;
 import java.io.IOException;
 import entities.HumanPlayer;
@@ -144,6 +145,7 @@ public class WorldCanvas extends Canvas{
         Team t2 = Team.constructRandomTeam("Rando", Color.yellow, 1, 1);
         
         WorldCanvas canvas = new WorldCanvas(world);
+        canvas.addPlayerControls(new SoloPlayerControls(Master.getUser().getPlayer()));
         MainWindow mw = MainWindow.getInstance();
         WorldPage wp = new WorldPage();
         wp.setCanvas(canvas);
@@ -165,14 +167,13 @@ public class WorldCanvas extends Canvas{
         
         WorldContent newContent = WorldContent.fromSerializedString(serial);
         world.setContent(newContent);
-        User me = Master.getUser(); //need to set player before calling createCanvas
+        User me = Master.getUser();
         me.setPlayer((HumanPlayer)newContent.getPlayerTeam().getMemberById(me.getRemotePlayerId()));
-        //newWorld.createCanvas();
-        //newWorld.setCurrentMinigame(new Battle(10, 5));
+        
         //newWorld.init();
         
         wp = new WorldPage();
-        wp.setCanvas(world.getCanvas());
+        wp.setCanvas(canvas);
         mw.switchToPage(wp);
         
         world.getCanvas().registerKey(KeyEvent.VK_S, true, ()->{
