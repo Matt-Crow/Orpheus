@@ -1,16 +1,12 @@
 package controls;
 
-import controllers.Master;
 import entities.HumanPlayer;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import net.ServerMessage;
-import net.ServerMessageType;
 import windows.Canvas;
 import windows.EndOfFrameListener;
 import windows.world.WorldCanvas;
-import world.RemoteProxyWorld;
 
 /**
  * CONTROLS:<br>
@@ -24,73 +20,44 @@ import world.RemoteProxyWorld;
  * 
  * @author Matt Crow
  */
-public class PlayerControls implements MouseListener, EndOfFrameListener{
-    private final HumanPlayer p;
-    private boolean isRemote;
-    private String receiverIpAddr;
-    
-    public PlayerControls(HumanPlayer forPlayer, boolean remote){
-        p = forPlayer;
-        isRemote = remote;
-        if(isRemote){
-            receiverIpAddr = ((RemoteProxyWorld)p.getWorld()).getHostIp();
-        }else{
-            receiverIpAddr = null;
-        }
+public abstract class AbstractPlayerControls extends AbstractControlScheme<HumanPlayer> implements MouseListener, EndOfFrameListener{
+    public AbstractPlayerControls(HumanPlayer forPlayer){
+        super(forPlayer);
     }
     
-    public PlayerControls(HumanPlayer forPlayer){
-        this(forPlayer, false);
+    public final String meleeString(){
+        return "turn to " + mouseString() + "\n use melee";
+    }
+    public final String attString(int i){
+        return "turn to " + mouseString() + "\n use " + i;
+    }
+    public final String moveString(){
+        return "move to " + mouseString();
     }
     
-    private void useMelee(){
-        String msg = "turn to " + mouseString() + "\n use melee";
-        if(isRemote){
-            Master.SERVER.send(
-                new ServerMessage(
-                    msg,
-                    ServerMessageType.CONTROL_PRESSED
-                ), 
-                receiverIpAddr
-            );
-        }else{
-            decode(p, msg);
-        }
-    }
-    private void useAtt(int i){
-        String msg = "turn to " + mouseString() + "\n use " + i;
-        if(isRemote){
-            Master.SERVER.send(
-                new ServerMessage(
-                    msg,
-                    ServerMessageType.CONTROL_PRESSED
-                ), 
-                receiverIpAddr
-            );
-        } else {
-            decode(p, msg);
-        }
-    }
+    public abstract void useMeleeKey();
+    public abstract void useAttKey(int i);
+    public abstract void move();
     
     public void registerControlsTo(Canvas plane){
         plane.registerKey(KeyEvent.VK_Q, true, ()->{
-            useMelee();
+            useMeleeKey();
         });
         plane.registerKey(KeyEvent.VK_1, true, ()->{
-            useAtt(0);
+            useAttKey(0);
         });
         plane.registerKey(KeyEvent.VK_2, true, ()->{
-            useAtt(1);
+            useAttKey(1);
         });
         plane.registerKey(KeyEvent.VK_3, true, ()->{
-            useAtt(2);
+            useAttKey(2);
         });
     }
-    private String mouseString(){
-        WorldCanvas c = p.getWorld().getCanvas();
+    public String mouseString(){
+        WorldCanvas c = getPlayer().getWorld().getCanvas();
         return String.format("(%d, %d)", c.getMouseX(), c.getMouseY());
     }
-    private static int[] decodeMouseString(String s){
+    public static int[] decodeMouseString(String s){
         String coords = s.substring(s.indexOf('(') + 1, s.indexOf(')'));
         String[] split = coords.split(",");
         int x = Integer.parseInt(split[0].trim());
@@ -131,29 +98,18 @@ public class PlayerControls implements MouseListener, EndOfFrameListener{
 
     @Override
     public void mousePressed(MouseEvent e) {
-        p.setFollowingMouse(true);
+        getPlayer().setFollowingMouse(true);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        p.setFollowingMouse(false);
+        getPlayer().setFollowingMouse(false);
     }
     
     @Override
     public void frameEnded(Canvas c) {
-        if(p.getFollowingMouse()){
-            String msg = "move to " + mouseString();
-            if(isRemote){
-                Master.SERVER.send(
-                    new ServerMessage(
-                        msg,
-                        ServerMessageType.CONTROL_PRESSED
-                    ), 
-                    receiverIpAddr
-                );
-            } else {
-                decode(p, msg);
-            }
+        if(getPlayer().getFollowingMouse()){
+            move();
         }
     }
     

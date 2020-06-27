@@ -11,7 +11,9 @@ import javax.swing.*;
 import battle.Team;
 import controllers.MainWindow;
 import controllers.User;
-import controls.PlayerControls;
+import controls.AbstractPlayerControls;
+import controls.RemotePlayerControls;
+import controls.SoloPlayerControls;
 import java.awt.Graphics2D;
 import java.io.IOException;
 import entities.HumanPlayer;
@@ -48,7 +50,12 @@ public class WorldCanvas extends Canvas{
         timer.setRepeats(true);
         timer.stop();
         
-        PlayerControls pc = new PlayerControls(Master.getUser().getPlayer(), world instanceof RemoteProxyWorld);
+        AbstractPlayerControls pc;
+        if(world instanceof RemoteProxyWorld){
+            pc = new RemotePlayerControls(Master.getUser().getPlayer(), ((RemoteProxyWorld)world).getHostIp());
+        } else {
+            pc = new SoloPlayerControls(Master.getUser().getPlayer());
+        }
 		addMouseListener(pc);
         addEndOfFrameListener(pc);
         pc.registerControlsTo(this);

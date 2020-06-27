@@ -5,7 +5,7 @@ import controllers.Master;
 import entities.AbstractEntity;
 import entities.AbstractPlayer;
 import entities.HumanPlayer;
-import controls.PlayerControls;
+import controls.AbstractPlayerControls;
 import entities.Projectile;
 import java.io.IOException;
 import java.io.Serializable;
@@ -35,7 +35,7 @@ public class HostWorld extends AbstractWorld{
     
     private void receiveControl(ServerMessage sm){
         HumanPlayer p = sm.getSender().getPlayer();
-        PlayerControls.decode(p, sm.getBody());
+        AbstractPlayerControls.decode(p, sm.getBody());
     }
     
     private void updateTeam(Team t){

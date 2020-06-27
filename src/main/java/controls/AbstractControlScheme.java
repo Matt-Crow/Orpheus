@@ -14,14 +14,19 @@ import windows.EndOfFrameListener;
  * Maybe make this extend into a RemoteControl class
  * that receives server messages instead of key input?
  * @author Matt Crow
+ * @param <T> the subclass of AbstractPlayer this is controlling
  */
-public class AbstractControlScheme implements EndOfFrameListener{
-    private final AbstractPlayer targettedPlayer;
+public class AbstractControlScheme<T extends AbstractPlayer> implements EndOfFrameListener{
+    private final T targettedPlayer;
     private final LinkedList<AbstractPlayerControlCommand> receivedCommands;
     
-    public AbstractControlScheme(AbstractPlayer forPlayer){
+    public AbstractControlScheme(T forPlayer){
         targettedPlayer = forPlayer;
         receivedCommands = new LinkedList<>();
+    }
+    
+    public final T getPlayer(){
+        return targettedPlayer;
     }
     
     public final void enqueueCommand(AbstractPlayerControlCommand cmd){
