@@ -5,11 +5,7 @@ import battle.Team;
 import entities.AbstractEntity;
 import entities.Particle;
 import entities.AbstractPlayer;
-import graphics.CustomColors;
-import graphics.Tile;
 import graphics.Map;
-import graphics.MapLoader;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -17,7 +13,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import windows.world.WorldCanvas;
 import static java.lang.System.out;
-import util.Random;
 import util.SafeList;
 import util.SerialUtil;
 
@@ -34,26 +29,24 @@ import util.SerialUtil;
  * @author Matt Crow
  */
 public abstract class AbstractWorld implements Serializable{
-    private volatile Team playerTeam;
-    private volatile Team AITeam;
+    // keep this here for now
     private transient SafeList<Particle> particles;
-    private Map currentMap;
+    
+    
     private Battle currentMinigame; //in future versions, this will be changed to include other minigames
     
     // I don't think I need to link this here.
     private transient WorldCanvas canvas; //transient means "don't serialize me!"
         
-    // Split this into worldcontent class so serialization is easier   
-    
+    private volatile WorldContent content;
     
     public AbstractWorld(int size){
-        playerTeam = new Team("Players", Color.green);
-        AITeam = new Team("AI", Color.red);
         particles = new SafeList<>();
         
-        currentMap = new Map(size, size);
         canvas = null;
         currentMinigame = null;
+        
+        content = new WorldContent(size);
     }
     
     /**
@@ -82,39 +75,29 @@ public abstract class AbstractWorld implements Serializable{
      */
     public static AbstractWorld createDefaultBattle(){
         AbstractWorld w = new SoloWorld(20); // temporary
-        try {
-            w.setMap(MapLoader.readCsv(AbstractWorld.class.getResourceAsStream("/testMap.csv")));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
         w.createCanvas();
         
-        Tile block = new Tile(0, 0, CustomColors.GRAY);
-        block.setBlocking(true);
-        w.currentMap.addToTileSet(0, new Tile(0, 0, Color.BLUE));
-        w.currentMap.addToTileSet(1, block);
         return w;
     }
     
     public final AbstractWorld setPlayerTeam(Team t){
-        playerTeam = t;
+        content.setPlayerTeam(t);
         t.forEachMember((AbstractPlayer p)->p.setWorld(this));
         t.forEach((AbstractEntity e)->e.setWorld(this));
         return this;
     }
-    
     public final AbstractWorld setEnemyTeam(Team t){
-        AITeam = t;
+        content.setAITeam(t);
         t.forEachMember((AbstractPlayer p)->p.setWorld(this));
         t.forEach((AbstractEntity e)->e.setWorld(this));
         return this;
     }
     
     public Team getPlayerTeam(){
-        return playerTeam;
+        return content.getPlayerTeam();
     }
     public Team getAITeam(){
-        return AITeam;
+        return content.getAITeam();
     }
     
     public AbstractWorld addParticle(Particle p){
@@ -124,15 +107,11 @@ public abstract class AbstractWorld implements Serializable{
     }
     
     public AbstractWorld setMap(Map m){
-        if(m == null){
-            throw new NullPointerException();
-        } else {
-            currentMap = m;
-        }
+        content.setMap(m);
         return this;
     }
     public Map getMap(){
-        return currentMap;
+        return content.getMap();
     }
     
     public void createCanvas(){
@@ -161,10 +140,8 @@ public abstract class AbstractWorld implements Serializable{
     }  
     
     public void init(){
+        content.init();
         particles.clear();
-        if(currentMap != null){
-            currentMap.init();
-        }
         if(currentMinigame != null){
             currentMinigame.init();
         }
@@ -172,26 +149,13 @@ public abstract class AbstractWorld implements Serializable{
     
     /**
      * Sets the coordinates of the given
- AbstractEntity onto a random valid tile
- on this' map.
+     * AbstractEntity onto a random valid tile
+     * on this' map.
      * 
      * @param e 
      */
     public void spawnIntoWorld(AbstractEntity e){
-        int minX = 0;
-        int maxX = currentMap.getWidth() / Tile.TILE_SIZE;
-        int minY = 0;
-        int maxY = currentMap.getHeight() / Tile.TILE_SIZE;
-        int rootX = 0;
-        int rootY = 0;
-        
-        do{
-            rootX = Random.choose(minX, maxX);
-            rootY = Random.choose(minY, maxY);
-        } while(!currentMap.isOpenTile(rootX * Tile.TILE_SIZE, rootY * Tile.TILE_SIZE));
-        
-        e.setX(rootX * Tile.TILE_SIZE + Tile.TILE_SIZE / 2);
-        e.setY(rootY * Tile.TILE_SIZE + Tile.TILE_SIZE / 2);
+        content.spawnIntoWorld(e);
         e.setWorld(this);
     }
     
@@ -209,10 +173,8 @@ public abstract class AbstractWorld implements Serializable{
     
     
     public void draw(Graphics g){
-        currentMap.draw(g);
+        content.draw(g);
         particles.forEach((p)->p.draw(g));
-        playerTeam.draw(g);
-        AITeam.draw(g);
     }
     
     public void displayData(){
@@ -223,8 +185,8 @@ public abstract class AbstractWorld implements Serializable{
         out.println("Current map:");
         //currentMap.displayData();
         out.println("Teams:");
-        playerTeam.displayData();
-        AITeam.displayData();
+        getPlayerTeam().displayData();
+        getAITeam().displayData();
     }
     
     
@@ -276,9 +238,9 @@ public abstract class AbstractWorld implements Serializable{
 
     
     private void writeObject(ObjectOutputStream oos) throws IOException{
-        oos.writeObject(playerTeam);
-        oos.writeObject(AITeam);
-        oos.writeObject(currentMap);
+        //oos.writeObject(playerTeam);
+        //oos.writeObject(AITeam);
+        //oos.writeObject(currentMap);
         oos.writeObject(currentMinigame);
         //oos.writeUTF(remoteHostIp);
         //oos.writeObject(receiveWorldUpdate);
@@ -288,9 +250,9 @@ public abstract class AbstractWorld implements Serializable{
     }
     
     private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException{
-        playerTeam = (Team)ois.readObject();
-        AITeam = (Team)ois.readObject();
-        setMap((Map) ois.readObject());
+        //playerTeam = (Team)ois.readObject();
+        //AITeam = (Team)ois.readObject();
+        //setMap((Map) ois.readObject());
         setCurrentMinigame((Battle) ois.readObject());
         
         //remoteHostIp = ois.readUTF(); //need to keep this, else readObject will read this
