@@ -7,7 +7,7 @@ import ai.PathInfo;
 import battle.*;
 import statuses.AbstractStatus;
 import controllers.Master;
-import controllers.World;
+import world.World;
 import customizables.actives.ElementalActive;
 import customizables.characterClass.CharacterStatName;
 import static java.lang.System.out;

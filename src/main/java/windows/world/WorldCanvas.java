@@ -2,7 +2,7 @@
 package windows.world;
 
 import battle.Battle;
-import controllers.World;
+import world.World;
 import controllers.Master;
 import java.awt.Color;
 import java.awt.Graphics;

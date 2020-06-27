@@ -1,7 +1,8 @@
-package controllers;
+package world;
 
 import battle.Battle;
 import battle.Team;
+import controllers.Master;
 import entities.AbstractEntity;
 import entities.Particle;
 import entities.AbstractPlayer;

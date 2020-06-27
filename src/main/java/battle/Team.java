@@ -1,7 +1,7 @@
 package battle;
 
 import controllers.Master;
-import controllers.World;
+import world.World;
 import java.awt.Color;
 import java.util.ArrayList;
 import entities.AbstractPlayer;

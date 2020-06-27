@@ -1,5 +1,6 @@
 package windows.WorldSelect;
 
+import world.World;
 import battle.Battle;
 import battle.Team;
 import controllers.*;

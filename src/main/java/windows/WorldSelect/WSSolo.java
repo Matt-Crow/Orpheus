@@ -3,7 +3,7 @@ package windows.WorldSelect;
 import battle.Battle;
 import battle.Team;
 import controllers.Master;
-import controllers.World;
+import world.World;
 import java.awt.Color;
 import windows.world.WorldPage;
 

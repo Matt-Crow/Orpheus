@@ -1,6 +1,6 @@
 package battle;
 
-import controllers.World;
+import world.World;
 import entities.AIPlayer;
 import java.io.Serializable;
 import static java.lang.System.out;

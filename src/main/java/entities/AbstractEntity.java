@@ -6,7 +6,7 @@ import battle.Team;
 import actions.Terminable;
 import actions.TerminateListener;
 import controllers.Master;
-import controllers.World;
+import world.World;
 import java.io.Serializable;
 import util.SafeList;
 

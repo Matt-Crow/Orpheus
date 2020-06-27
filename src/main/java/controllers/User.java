@@ -1,5 +1,6 @@
 package controllers;
 
+import world.World;
 import entities.HumanPlayer;
 import javax.json.Json;
 import javax.json.JsonException;
