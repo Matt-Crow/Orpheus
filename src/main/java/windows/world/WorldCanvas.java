@@ -2,7 +2,7 @@
 package windows.world;
 
 import battle.Battle;
-import world.World;
+import world.AbstractWorld;
 import controllers.Master;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -26,11 +26,11 @@ import windows.Canvas;
  * @author Matt Crow
  */
 public class WorldCanvas extends Canvas{
-    private World world;
+    private AbstractWorld world;
     private Timer timer;
     private boolean paused;
     
-    public WorldCanvas(World w){
+    public WorldCanvas(AbstractWorld w){
         super();
         world = w;
         
@@ -60,10 +60,10 @@ public class WorldCanvas extends Canvas{
         setZoom(0.5);
     }
     public WorldCanvas(int i){
-        this(new World(i));
+        this(new AbstractWorld(i));
     }
     public WorldCanvas(){
-        this(new World(100));
+        this(new AbstractWorld(100));
     }
     
     private void togglePause(){
@@ -82,7 +82,7 @@ public class WorldCanvas extends Canvas{
         timer.stop();
     }
     
-    public World getWorld(){
+    public AbstractWorld getWorld(){
         return world;
     }
     
@@ -130,7 +130,7 @@ public class WorldCanvas extends Canvas{
     
     public static void main(String[] args) throws IOException{
         Master.getUser().initPlayer().getPlayer().applyBuild(Master.getDataSet().getDefaultBuild());
-        World w = World.createDefaultBattle();
+        AbstractWorld w = AbstractWorld.createDefaultBattle();
         Team t1 = new Team("Test", Color.BLUE);
         Team t2 = Team.constructRandomTeam("Rando", Color.yellow, 1, 1);
         WorldCanvas c = new WorldCanvas(w);
@@ -158,7 +158,7 @@ public class WorldCanvas extends Canvas{
         
         //now to try serializing it...
         String serial = w.serializeToString();
-        World newWorld = World.fromSerializedString(serial);
+        AbstractWorld newWorld = AbstractWorld.fromSerializedString(serial);
         User me = Master.getUser(); //need to set player before calling createCanvas
         me.setPlayer((HumanPlayer)newWorld.getPlayerTeam().getMemberById(me.getRemotePlayerId()));
         newWorld.createCanvas();

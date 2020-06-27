@@ -3,7 +3,7 @@ package windows.WorldSelect;
 import battle.Battle;
 import battle.Team;
 import controllers.Master;
-import world.World;
+import world.AbstractWorld;
 import java.awt.Color;
 import windows.world.WorldPage;
 
@@ -27,7 +27,7 @@ public class WSSolo extends AbstractWSNewWorld{
         Master.getUser().getPlayer().applyBuild(getSelectedBuild());
         team1.addMember(Master.getUser().getPlayer());
 
-        World battleWorld = World.createDefaultBattle();
+        AbstractWorld battleWorld = AbstractWorld.createDefaultBattle();
         //it's like a theme park or something
         battleWorld.createCanvas();
         battleWorld

@@ -4,6 +4,6 @@ package world;
  *
  * @author Matt
  */
-public class RemoteProxyWorldStrategy {
+public class SoloWorld{
 
 }

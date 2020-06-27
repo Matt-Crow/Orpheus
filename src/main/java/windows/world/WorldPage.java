@@ -23,7 +23,7 @@ import windows.WorldSelect.WSMain;
  use the MainWindow to render the WorldPage,
  which renders the WorldPage,
  which renders the WorldCanvas,
- which renders the World.
+ which renders the AbstractWorld.
  * 
  * @author Matt Crow
  */

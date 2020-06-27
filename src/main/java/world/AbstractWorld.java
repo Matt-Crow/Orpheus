@@ -30,18 +30,18 @@ import util.SafeList;
 import util.SerialUtil;
 
 /**
- * The World class acts as a controller for each game.
+ * The AbstractWorld class acts as a controller for each game.
  * It keeps track of all Entities in the game by keeping track of each Team, 
- * which in turn keeps track of various entities
- * 
- * The world also keeps track of all Particles, as leaving them lumped in
- * with Teams leads to drastic performance issues when serializing and checking
- * for collisions.
- * 
- * The World handles all the drawing and updating as well.
+ which in turn keeps track of various entities
+ 
+ The world also keeps track of all Particles, as leaving them lumped in
+ with Teams leads to drastic performance issues when serializing and checking
+ for collisions.
+ 
+ The AbstractWorld handles all the drawing and updating as well.
  * @author Matt Crow
  */
-public class World implements Serializable{
+public abstract class AbstractWorld implements Serializable{
     private volatile Team playerTeam;
     private volatile Team AITeam;
     private transient SafeList<Particle> particles;
@@ -61,12 +61,12 @@ public class World implements Serializable{
     */
     // move these to strategies or subclasses
     private transient boolean isHosting; //whether or not this is the host of a game, and thus should manage itself for every player
-    private transient boolean isRemotelyHosted; //whether or not another computer is running this World
+    private transient boolean isRemotelyHosted; //whether or not another computer is running this AbstractWorld
     private String remoteHostIp;
     private Consumer<ServerMessage> receiveWorldUpdate;
     private Consumer<ServerMessage> receiveControl;
     
-    public World(int size){
+    public AbstractWorld(int size){
         playerTeam = new Team("Players", Color.green);
         AITeam = new Team("AI", Color.red);
         particles = new SafeList<>();
@@ -84,33 +84,33 @@ public class World implements Serializable{
     }
     
     /**
-     * Creates the classic World where battles 
-     * take place: a 20x20 square.
+     * Creates the classic AbstractWorld where battles 
+ take place: a 20x20 square.
      * 
      * Handles most of the initialization for you,
      * all you need to do is add teams,
      * then set it's minigame to a Battle, like so:
      * <pre>{@code 
-     *  World newWorld = World.createDefaultBattle();
-     *  newWorld.addTeam(team1);
-     *  newWorld.addTeam(team2);
-     *  Battle battle = new Battle();
-     *  newWorld.setCurrentMinigame(battle);
-     *  battle.setHost(newWorld);
-     *  newWorld.init();
-     *  //can change this to switchToPage once world canvas is a Page
-     *  JFrame parent = (JFrame)SwingUtilities.getWindowAncestor(this);
-     *  parent.setContentPane(newWorld.getCanvas());
-     *  parent.revalidate();
-     *  newWorld.getCanvas().requestFocus();
-     * }</pre>
+  AbstractWorld newWorld = AbstractWorld.createDefaultBattle();
+  newWorld.addTeam(team1);
+  newWorld.addTeam(team2);
+  Battle battle = new Battle();
+  newWorld.setCurrentMinigame(battle);
+  battle.setHost(newWorld);
+  newWorld.init();
+  //can change this to switchToPage once world canvas is a Page
+  JFrame parent = (JFrame)SwingUtilities.getWindowAncestor(this);
+  parent.setContentPane(newWorld.getCanvas());
+  parent.revalidate();
+  newWorld.getCanvas().requestFocus();
+ }</pre>
      * it's that simple!
      * @return the newly created world.
      */
-    public static World createDefaultBattle(){
-        World w = new World(20);
+    public static AbstractWorld createDefaultBattle(){
+        AbstractWorld w = new AbstractWorld(20);
         try {
-            w.setMap(MapLoader.readCsv(World.class.getResourceAsStream("/testMap.csv")));
+            w.setMap(MapLoader.readCsv(AbstractWorld.class.getResourceAsStream("/testMap.csv")));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -123,14 +123,14 @@ public class World implements Serializable{
         return w;
     }
     
-    public final World setPlayerTeam(Team t){
+    public final AbstractWorld setPlayerTeam(Team t){
         playerTeam = t;
         t.forEachMember((AbstractPlayer p)->p.setWorld(this));
         t.forEach((AbstractEntity e)->e.setWorld(this));
         return this;
     }
     
-    public final World setEnemyTeam(Team t){
+    public final AbstractWorld setEnemyTeam(Team t){
         AITeam = t;
         t.forEachMember((AbstractPlayer p)->p.setWorld(this));
         t.forEach((AbstractEntity e)->e.setWorld(this));
@@ -144,13 +144,13 @@ public class World implements Serializable{
         return AITeam;
     }
     
-    public World addParticle(Particle p){
+    public AbstractWorld addParticle(Particle p){
         particles.add(p);
         p.setWorld(this);
         return this;
     }
     
-    public World setMap(Map m){
+    public AbstractWorld setMap(Map m){
         if(m == null){
             throw new NullPointerException();
         } else {
@@ -188,14 +188,14 @@ public class World implements Serializable{
     }
     
     /**
-     * Sets whether or not this World is
-     * hosting other players, and thus should
-     * send updates to its clients.
+     * Sets whether or not this AbstractWorld is
+ hosting other players, and thus should
+ send updates to its clients.
      * 
      * @param b whether or not this is a host for other players
      * @return this
      */
-    public World setIsHosting(boolean b) throws IOException{
+    public AbstractWorld setIsHosting(boolean b) throws IOException{
         if(b){
             if(!Master.SERVER.isStarted()){
                 Master.SERVER.start();
@@ -211,15 +211,15 @@ public class World implements Serializable{
     }
     
     /**
-     * Notifies this World that it is being generated
-     * by a different computer than this one. 
+     * Notifies this AbstractWorld that it is being generated
+ by a different computer than this one. 
      * 
      * @param ipAddr the IP address to listen to 
-     * for changes to this World
+ for changes to this AbstractWorld
      * @return this
      * @throws java.io.IOException is the server cannot start
      */
-    public World setRemoteHost(String ipAddr) throws IOException{
+    public AbstractWorld setRemoteHost(String ipAddr) throws IOException{
         if(!Master.SERVER.isStarted()){
             Master.SERVER.start();
         }
@@ -325,8 +325,8 @@ public class World implements Serializable{
     
     /**
      * Updates the world, performing functions based on whether or not the
-     * World is being hosted or is hosting:
-     * <table>
+ AbstractWorld is being hosted or is hosting:
+ <table>
      *  <tr>
      *      <td>Table</td>
      *      <td>isHosting</td>
@@ -406,8 +406,8 @@ public class World implements Serializable{
      * This has a problem where if there is too much data
      * in the world, such as in a 99 vs 99, it cannot be encoded
      * 
-     * @return the serialized version of this World,
-     * converted to a string for convenience.
+     * @return the serialized version of this AbstractWorld,
+ converted to a string for convenience.
      * 
      * @see SerialUtil#serializeToString
      */
@@ -416,19 +416,19 @@ public class World implements Serializable{
     }
     
     /**
-     * Converts a String generated from World.serializeToString,
-     * and de-serializes it into a copy of that original world.
-     * It is important to note that the World's canvas is not serialized,
-     * so be sure to call either setCanvas, or createCanvas so that the World
-     * can be rendered
+     * Converts a String generated from AbstractWorld.serializeToString,
+ and de-serializes it into a copy of that original world.
+     * It is important to note that the AbstractWorld's canvas is not serialized,
+ so be sure to call either setCanvas, or createCanvas so that the AbstractWorld
+ can be rendered
      * 
-     * @param s a string variant of an object stream serialization of a World
+     * @param s a string variant of an object stream serialization of a AbstractWorld
      * @return a copy of the world which was serialized into a string
      * 
      * @see SerialUtil#fromSerializedString(java.lang.String) 
      */
-    public static World fromSerializedString(String s){
-        return (World)SerialUtil.fromSerializedString(s);
+    public static AbstractWorld fromSerializedString(String s){
+        return (AbstractWorld)SerialUtil.fromSerializedString(s);
     }
 
     

@@ -6,7 +6,7 @@ import battle.Team;
 import actions.Terminable;
 import actions.TerminateListener;
 import controllers.Master;
-import world.World;
+import world.AbstractWorld;
 import java.io.Serializable;
 import util.SafeList;
 
@@ -34,7 +34,7 @@ public abstract class AbstractEntity implements Serializable, Terminable{
 	
     private final SafeList<TerminateListener> terminateListeners; //you just can't wait for me to die, can you!
     
-    private World inWorld; //the world this is currently in
+    private AbstractWorld inWorld; //the world this is currently in
     
 	public final String id;
 	private static int nextId = 0;
@@ -63,14 +63,14 @@ public abstract class AbstractEntity implements Serializable, Terminable{
         return "Entity #" + id;
     }
     
-    public void setWorld(World w){
+    public void setWorld(AbstractWorld w){
         if(w != null){
             inWorld = w;
         } else {
             throw new NullPointerException();
         }
     }
-    public World getWorld(){
+    public AbstractWorld getWorld(){
         return inWorld;
     }
     

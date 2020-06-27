@@ -1,6 +1,6 @@
 package windows.WorldSelect;
 
-import world.World;
+import world.AbstractWorld;
 import battle.Battle;
 import battle.Team;
 import controllers.*;
@@ -24,15 +24,15 @@ import windows.world.WorldPage;
  * as that class got a bit out of hand with
  * all the functionality in one file.
  * 
- * This class also handles generating and starting the World
- * where the Battle will take place.
- * 
- * Currently, this uses a peer-to-peer network, but with the 
- * user who opened this waiting room being designated as the "host".
- * The host basically acts as a regular user in the network, but will 
- * be in charge of updating the World. While this does give them the 
- * advantage of not having to deal with latency, I sincerely doubt 
- * Orpheus will become an e-sport any time soon.
+ * This class also handles generating and starting the AbstractWorld
+ where the Battle will take place.
+ 
+ Currently, this uses a peer-to-peer network, but with the 
+ user who opened this waiting room being designated as the "host".
+ The host basically acts as a regular user in the network, but will 
+ be in charge of updating the AbstractWorld. While this does give them the 
+ advantage of not having to deal with latency, I sincerely doubt 
+ Orpheus will become an e-sport any time soon.
  * 
  * @author Matt Crow
  */
@@ -56,7 +56,7 @@ public class WaitingRoomBackend {
     */
     private final Team playerTeam;
     
-    private Team enemyTeam; //move this to World or Battle later
+    private Team enemyTeam; //move this to AbstractWorld or Battle later
     
     private int numWaves;
     private int maxEnemyLevel;
@@ -237,9 +237,9 @@ public class WaitingRoomBackend {
     /**
      * called after the host requests this user's Build data.
      * not applied to the host. Notifies the user that the host 
-     * needs their Build information.
-     * The game is about to start, so shut down most receivers
-     * also, prepare to receive IDs and World info from the host.
+ needs their Build information.
+ The game is about to start, so shut down most receivers
+ also, prepare to receive IDs and AbstractWorld info from the host.
      * 
      * @param sm 
      */
@@ -313,7 +313,7 @@ public class WaitingRoomBackend {
     
     /**
      * allows remote users to receive and de-serialize 
-     * the World created by the host.
+ the AbstractWorld created by the host.
      * 
      * this method is currently having problems, as the enemy team might not serialize,
      * and it takes a couple seconds to load teams into the world
@@ -321,7 +321,7 @@ public class WaitingRoomBackend {
      * @param sm 
      */
     private void receiveWorldInit(ServerMessage sm){
-        World w = World.fromSerializedString(sm.getBody());
+        AbstractWorld w = AbstractWorld.fromSerializedString(sm.getBody());
         try {
             w.setRemoteHost(sm.getIpAddr());
         } catch (IOException ex) {
@@ -392,14 +392,14 @@ public class WaitingRoomBackend {
     
     /**
      * this starts the world (it's about time too!)
-     * sends the serialized version of the newly created
-     * World to all connected users, then switches to 
-     * that new World's canvas
-     * 
-     * Might not be completely done
+ sends the serialized version of the newly created
+ AbstractWorld to all connected users, then switches to 
+ that new AbstractWorld's canvas
+ 
+ Might not be completely done
      */
     private void finallyStart(){
-        World w = World.createDefaultBattle();
+        AbstractWorld w = AbstractWorld.createDefaultBattle();
         try {
             w.setIsHosting(true);
         } catch (IOException ex) {
@@ -447,7 +447,7 @@ public class WaitingRoomBackend {
      * to each connected user, excluding the host
      * @param w the world to send
      */
-    private void sendWorldInit(World w){
+    private void sendWorldInit(AbstractWorld w){
         String serial = w.serializeToString();
         ServerMessage sm = new ServerMessage(
             serial,

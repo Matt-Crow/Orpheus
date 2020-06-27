@@ -1,6 +1,6 @@
 package controllers;
 
-import world.World;
+import world.AbstractWorld;
 import entities.HumanPlayer;
 import javax.json.Json;
 import javax.json.JsonException;
@@ -64,7 +64,7 @@ public final class User implements JsonSerialable{
      * @param w
      * @return 
      */
-    public User linkToRemotePlayerInWorld(World w){
+    public User linkToRemotePlayerInWorld(AbstractWorld w){
         setPlayer(
             (HumanPlayer)w
                 .getPlayerTeam()
