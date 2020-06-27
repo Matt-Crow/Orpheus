@@ -172,8 +172,8 @@ public class WorldContent implements Serializable{
      * 
      * @see SerialUtil#fromSerializedString(java.lang.String) 
      */
-    public static AbstractWorld fromSerializedString(String s){
-        return (AbstractWorld)SerialUtil.fromSerializedString(s);
+    public static WorldContent fromSerializedString(String s){
+        return (WorldContent)SerialUtil.fromSerializedString(s);
     }
     
     private void writeObject(ObjectOutputStream oos) throws IOException{
@@ -188,5 +188,11 @@ public class WorldContent implements Serializable{
         aiTeam = (Team)ois.readObject();
         currentMap = (Map)ois.readObject();
         currentMinigame = (Battle)ois.readObject();
+    }
+    
+    public static void main(String[] args){
+        WorldContent content = WorldContent.createDefaultBattle();
+        String serialized = content.serializeToString();
+        WorldContent newContent = WorldContent.fromSerializedString(serialized);
     }
 }

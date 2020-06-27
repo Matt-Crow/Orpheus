@@ -34,7 +34,7 @@ public abstract class AbstractEntity implements Serializable, Terminable{
 	
     private final SafeList<TerminateListener> terminateListeners; //you just can't wait for me to die, can you!
     
-    private AbstractWorld inWorld; //the world this is currently in
+    private transient AbstractWorld inWorld; //the world this is currently in
     
 	public final String id;
 	private static int nextId = 0;

@@ -18,9 +18,12 @@ import net.*;
 import serialization.JsonUtil;
 import windows.world.WorldPage;
 import world.HostWorld;
+import world.RemoteProxyWorld;
 import world.WorldContent;
 
 /**
+ * TODO: split this into multiple different protocols based on whether someone is a host or client.
+ * 
  * This class provides all the server
  * functionality needed by WSWaitForPlayers,
  * as that class got a bit out of hand with
@@ -327,25 +330,24 @@ public class WaitingRoomBackend {
      * @param sm 
      */
     private void receiveWorldInit(ServerMessage sm){
-        throw new UnsupportedOperationException("Multiplayer is disabled for now");
-        /*
-        AbstractWorld w = AbstractWorld.fromSerializedString(sm.getBody());
+        WorldContent w = WorldContent.fromSerializedString(sm.getBody());
+        RemoteProxyWorld world = new RemoteProxyWorld(w);
         try {
-            w.setRemoteHost(sm.getIpAddr());
+            world.setRemoteHost(sm.getIpAddr());
         } catch (IOException ex) {
             ex.printStackTrace();
         }
         User me = Master.getUser(); //need to set player before calling createCanvas
-        me.linkToRemotePlayerInWorld(w);
-        w.createCanvas();
-        w.setCurrentMinigame(new Battle(maxEnemyLevel, numWaves));
+        me.linkToRemotePlayerInWorld(world);
+        world.createCanvas();
+        world.setCurrentMinigame(new Battle(maxEnemyLevel, numWaves)); // do I really need this?
         w.init();
         
         server.removeReceiver(ServerMessageType.WORLD_INIT, receiveWorldInit);
         
         WorldPage p = new WorldPage();
-        p.setCanvas(w.getCanvas());
-        host.getHost().switchToPage(p);*/
+        p.setCanvas(world.getCanvas());
+        host.getHost().switchToPage(p);
     }
     
     /**
@@ -419,7 +421,7 @@ public class WaitingRoomBackend {
         b.setHost(w);
         w.init();
         
-        sendWorldInit(w);
+        sendWorldInit(w.getContent());
         
         WorldPage p = new WorldPage();
         p.setCanvas(w.getCanvas());
@@ -451,11 +453,11 @@ public class WaitingRoomBackend {
     }
     
     /**
-     * Serializes the world, and sends it
+     * Serializes the worldContent, and sends it
      * to each connected user, excluding the host
      * @param w the world to send
      */
-    private void sendWorldInit(AbstractWorld w){
+    private void sendWorldInit(WorldContent w){
         String serial = w.serializeToString();
         ServerMessage sm = new ServerMessage(
             serial,

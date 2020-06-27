@@ -19,6 +19,7 @@ import util.SerialUtil;
 import windows.Canvas;
 import world.HostWorld;
 import world.RemoteProxyWorld;
+import world.SoloWorld;
 import world.WorldContent;
 
 /**
@@ -127,48 +128,45 @@ public class WorldCanvas extends Canvas{
     
     public static void main(String[] args) throws IOException{
         Master.getUser().initPlayer().getPlayer().applyBuild(Master.getDataSet().getDefaultBuild());
-        HostWorld w = new HostWorld(WorldContent.createDefaultBattle());
+        
+        HostWorld world = new HostWorld(WorldContent.createDefaultBattle());
         Team t1 = new Team("Test", Color.BLUE);
         Team t2 = Team.constructRandomTeam("Rando", Color.yellow, 1, 1);
-        WorldCanvas c = new WorldCanvas(w);
         
+        WorldCanvas canvas = new WorldCanvas(world);
         MainWindow mw = MainWindow.getInstance();
         WorldPage wp = new WorldPage();
-        wp.setCanvas(c);
+        wp.setCanvas(canvas);
         mw.switchToPage(wp);
         
         Battle b = new Battle(10, 5);
         
         t1.addMember(Master.getUser().getPlayer());
-        w.setPlayerTeam(t1).setEnemyTeam(t2);
-        b.setHost(w);
-        w.setCurrentMinigame(b);
-        w.init();
+        world.setPlayerTeam(t1).setEnemyTeam(t2);
+        b.setHost(world);
+        world.setCurrentMinigame(b);
+        world.init();
         
         Master.getUser().setRemotePlayerId(Master.getUser().getPlayer().id);
         
-        w.getCanvas().registerKey(KeyEvent.VK_T, true, ()->{
-            Master.getUser().getPlayer().getActionRegister().displayData();
-            Master.getUser().getPlayer().listStatuses();
-        });
-        
-        
         //now to try serializing it...
-        String serial = w.serializeToString();
-        AbstractWorld newWorld = AbstractWorld.fromSerializedString(serial);
+        String serial = world.getContent().serializeToString();
+        
+        WorldContent newContent = WorldContent.fromSerializedString(serial);
+        world.setContent(newContent);
         User me = Master.getUser(); //need to set player before calling createCanvas
-        me.setPlayer((HumanPlayer)newWorld.getPlayerTeam().getMemberById(me.getRemotePlayerId()));
-        newWorld.createCanvas();
-        newWorld.setCurrentMinigame(new Battle(10, 5));
-        newWorld.init();
+        me.setPlayer((HumanPlayer)newContent.getPlayerTeam().getMemberById(me.getRemotePlayerId()));
+        //newWorld.createCanvas();
+        //newWorld.setCurrentMinigame(new Battle(10, 5));
+        //newWorld.init();
         
         wp = new WorldPage();
-        wp.setCanvas(newWorld.getCanvas());
+        wp.setCanvas(world.getCanvas());
         mw.switchToPage(wp);
         
         
-        newWorld.getCanvas().registerKey(KeyEvent.VK_S, true, ()->{
-            Team t = newWorld.getPlayerTeam();
+        world.getCanvas().registerKey(KeyEvent.VK_S, true, ()->{
+            Team t = world.getPlayerTeam();
             System.out.println("Total entities to serialize: " + t.length());
             String s = SerialUtil.serializeToString(t);
             Team tClone = (Team)SerialUtil.fromSerializedString(s);

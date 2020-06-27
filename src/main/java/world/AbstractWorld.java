@@ -94,6 +94,19 @@ public abstract class AbstractWorld {
         return content.getMinigame();
     }  
     
+    public final void setContent(WorldContent newContent){
+        content = newContent; 
+        content.getPlayerTeam().forEach((e)->e.setWorld(this));
+        content.getAITeam().forEach((e)->e.setWorld(this));
+        Battle game = content.getMinigame();
+        if(game != null){
+            game.setHost(this);
+        }
+    }
+    public final WorldContent getContent(){
+        return content;
+    }
+    
     public void init(){
         content.init();
         particles.clear();
