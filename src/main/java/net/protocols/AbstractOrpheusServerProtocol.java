@@ -10,7 +10,7 @@ import net.ServerMessage;
  * 
  * @author Matt Crow
  */
-public interface AbstractOrpheusServerProtocol {
+public abstract class AbstractOrpheusServerProtocol {
     
     /**
      * An instance of OrpheusServer should pass itself as a parameter to this function

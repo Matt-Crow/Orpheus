@@ -1,7 +1,6 @@
 package net.protocols;
 
 import controllers.User;
-import java.io.IOException;
 import java.util.HashMap;
 import net.OrpheusServer;
 import windows.WorldSelect.AbstractWaitingRoom;
@@ -10,7 +9,7 @@ import windows.WorldSelect.AbstractWaitingRoom;
  *
  * @author Matt
  */
-public abstract class AbstractWaitingRoomProtocol implements AbstractOrpheusServerProtocol{
+public abstract class AbstractWaitingRoomProtocol extends AbstractOrpheusServerProtocol{
     private final AbstractWaitingRoom frontEnd;
     /*
     Keeps track of which Users want to play.
