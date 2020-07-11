@@ -304,6 +304,14 @@ public class OrpheusServer {
     }
     
     /**
+     * Migrating to use this in lieu of adding and removing receivers
+     * @param protocol the new protocol to use. This can be null
+     */
+    public void setProtocol(AbstractOrpheusServerProtocol protocol){
+        currentProtocol = protocol;
+    }
+    
+    /**
      * 
      * @param key the type of ServerMessage this should receive.
      * @param nomNom the function to run upon receiving a ServerMessage of the given type. 

@@ -20,12 +20,10 @@ public class WSNewMulti extends AbstractWSNewWorld{
         Master.getUser().initPlayer();
         Master.getUser().getPlayer().applyBuild(getSelectedBuild());
         try {
-            wait.startServerAsHost();
+            wait.startServerAsHost(getNumWaves(), getMaxEnemyLevel());
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        wait.setNumWaves(getNumWaves());
-        wait.setMaxEnemyLevel(getMaxEnemyLevel());
         wait.joinPlayerTeam(Master.getUser());
     }
 }

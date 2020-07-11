@@ -11,6 +11,8 @@ import java.awt.GridLayout;
 import java.io.IOException;
 import java.util.Arrays;
 import javax.swing.*;
+import net.OrpheusServer;
+import net.protocols.WaitingRoomHostProtocol;
 import windows.Page;
 
 /**
@@ -104,8 +106,16 @@ public class WSWaitForPlayers extends Page{
      * @return this 
      * @throws java.io.IOException if the server does not start
      */
-    public WSWaitForPlayers startServerAsHost() throws IOException{
-        backend.initHostServer();
+    public WSWaitForPlayers startServerAsHost(int waveCount, int enemyLv) throws IOException{
+        OrpheusServer server = Master.SERVER;
+        if(server.isStarted()){
+            server.reset();
+        } else {
+            server.start();
+        }
+        
+        server.setProtocol(new WaitingRoomHostProtocol(this, waveCount, enemyLv));
+        
         chat.openChatServer();
         chat.logLocal("Server started on host address " + Master.SERVER.getIpAddr());
         return this;

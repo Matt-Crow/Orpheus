@@ -117,28 +117,6 @@ public class WaitingRoomBackend {
     }
     
     /**
-     * Initializes the server as a host,
-     * setting up the appropriate receivers.
-     * This should only be called by one 
-     * user in each game
-     * 
-     * @throws java.io.IOException if the server cannot be started
-     */
-    public void initHostServer() throws IOException{
-        if(!server.isStarted()){
-            server.start();
-        } else {
-            server.reset();
-        }
-        
-        clearData();
-        
-        server.addReceiver(ServerMessageType.PLAYER_JOINED, receiveJoin);
-        server.addReceiver(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
-        isHost = true;
-    }
-    
-    /**
      * Initializes the server as a client,
      * that is to say, not the host.
      * Then, sets up the appropriate receivers.
