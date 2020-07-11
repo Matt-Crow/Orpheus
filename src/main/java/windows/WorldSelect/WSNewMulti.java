@@ -15,15 +15,14 @@ public class WSNewMulti extends AbstractWSNewWorld{
     @Override
     public void start(){
         Master.loginWindow();
-        HostWaitingRoom wait = new HostWaitingRoom();
-        getHost().switchToPage(wait);
-        Master.getUser().initPlayer();
-        Master.getUser().getPlayer().applyBuild(getSelectedBuild());
-        try {
-            wait.startServer(getNumWaves(), getMaxEnemyLevel());
+        try{
+            HostWaitingRoom wait = new HostWaitingRoom(getNumWaves(), getMaxEnemyLevel());
+            getHost().switchToPage(wait);
+            Master.getUser().initPlayer();
+            Master.getUser().getPlayer().applyBuild(getSelectedBuild());
+            wait.joinPlayerTeam(Master.getUser());
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        wait.joinPlayerTeam(Master.getUser());
     }
 }

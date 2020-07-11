@@ -30,10 +30,6 @@ public abstract class AbstractWaitingRoom extends Page{
     private final JButton startButton;
     private AbstractWaitingRoomProtocol backend;
     
-    public AbstractWaitingRoom(AbstractWaitingRoomProtocol protocol){
-        this();
-        setBackEnd(protocol);
-    }
     public AbstractWaitingRoom(){
         super();
         
@@ -79,6 +75,11 @@ public abstract class AbstractWaitingRoom extends Page{
         
         revalidate();
         repaint();
+    }
+    
+    public AbstractWaitingRoom(AbstractWaitingRoomProtocol protocol){
+        this();
+        setBackEnd(protocol);
     }
     
     public final Chat getChat(){
