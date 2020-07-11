@@ -110,6 +110,7 @@ public class OrpheusServer {
     public OrpheusServer reset(){
         System.out.println("Server reset");
         receivers.clear();
+        currentProtocol = null;
         initReceivers();
         
         //connections.values().forEach((conn)->conn.close());
