@@ -2,6 +2,7 @@ package windows.WorldSelect;
 
 import controllers.Master;
 import java.io.IOException;
+import net.protocols.WaitingRoomHostProtocol;
 
 /**
  *
@@ -16,11 +17,10 @@ public class WSNewMulti extends AbstractWSNewWorld{
     public void start(){
         Master.loginWindow();
         try{
-            HostWaitingRoom wait = new HostWaitingRoom(getNumWaves(), getMaxEnemyLevel());
+            Master.getUser().initPlayer().getPlayer().applyBuild(getSelectedBuild());
+            HostWaitingRoom wait = new HostWaitingRoom(createBattle());
             getHost().switchToPage(wait);
-            Master.getUser().initPlayer();
-            Master.getUser().getPlayer().applyBuild(getSelectedBuild());
-            wait.joinPlayerTeam(Master.getUser());
+            ((WaitingRoomHostProtocol)wait.getBackEnd()).addUserToTeam(Master.getUser());
         } catch (IOException ex) {
             ex.printStackTrace();
         }

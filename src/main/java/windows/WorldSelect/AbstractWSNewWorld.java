@@ -1,5 +1,6 @@
 package windows.WorldSelect;
 
+import battle.Battle;
 import customizables.Build;
 import gui.BuildSelect;
 import gui.OptionBox;
@@ -86,11 +87,12 @@ public abstract class AbstractWSNewWorld extends Page{
         return playerBuild.getSelectedBuild();
     }
     
-    public int getMaxEnemyLevel(){
-        return maxEnemyLevel.getSelected();
-    }
-    public int getNumWaves(){
-        return numWaves.getSelected();
+    /**
+     * Creates a new game based on the values selected in the GUI
+     * @return a new Battle. Future versions may support other minigames
+     */
+    public Battle createBattle(){
+        return new Battle(maxEnemyLevel.getSelected(), numWaves.getSelected());
     }
     
     public abstract void start();

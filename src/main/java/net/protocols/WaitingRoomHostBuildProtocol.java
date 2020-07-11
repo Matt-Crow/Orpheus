@@ -37,7 +37,7 @@ public class WaitingRoomHostBuildProtocol extends AbstractWaitingRoomProtocol{
     private final Battle game;
     private final HashMap<String, User> awaitingBuilds;
     
-    public WaitingRoomHostBuildProtocol(HostWaitingRoom host, OrpheusServer forServer, User[] users, int waveCount, int maxEnemyLv){
+    public WaitingRoomHostBuildProtocol(HostWaitingRoom host, OrpheusServer forServer, User[] users, Battle minigame){
         super(host, forServer);
         playerTeam = new Team("Players", Color.blue);
         enemyTeam = new Team("AI", Color.red);
@@ -45,7 +45,7 @@ public class WaitingRoomHostBuildProtocol extends AbstractWaitingRoomProtocol{
         for(User user : users){
             awaitingBuilds.put(user.getIpAddress(), user);
         }
-        game = new Battle(maxEnemyLv, waveCount);
+        game = minigame;
     }
     
     /**

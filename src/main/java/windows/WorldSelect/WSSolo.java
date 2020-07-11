@@ -41,7 +41,7 @@ public class WSSolo extends AbstractWSNewWorld{
             .setPlayerTeam(team1)
             .setEnemyTeam(team2);
         
-        Battle b = new Battle(getMaxEnemyLevel(), getNumWaves());
+        Battle b = createBattle();
         battleWorld.setCurrentMinigame(b);
         b.setHost(battleWorld);
         

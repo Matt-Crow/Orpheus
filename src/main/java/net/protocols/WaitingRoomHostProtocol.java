@@ -1,5 +1,6 @@
 package net.protocols;
 
+import battle.Battle;
 import controllers.User;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -14,13 +15,11 @@ import windows.WorldSelect.HostWaitingRoom;
  * @author Matt Crow
  */
 public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{    
-    private final int numWaves;
-    private final int maxEnemyLevel;
+    private final Battle minigame;
     
-    public WaitingRoomHostProtocol(HostWaitingRoom host, OrpheusServer server, int enemyWaveCount, int maxEnemyLv){
+    public WaitingRoomHostProtocol(HostWaitingRoom host, OrpheusServer server, Battle game){
         super(host, server);
-        numWaves = enemyWaveCount;
-        maxEnemyLevel = maxEnemyLv;    
+        minigame = game;   
     }
     
     /**
@@ -35,6 +34,8 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
                 ServerMessageType.WAITING_ROOM_UPDATE
             );
             getServer().send(sm);
+            getFrontEnd().getChat().logLocal(u.getName() + " has joined the team.");
+            getFrontEnd().updateTeamDisplays();
         }
     }
     
@@ -87,8 +88,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
             (HostWaitingRoom)getFrontEnd(),
             getServer(),
             getTeamProto(),
-            numWaves,
-            maxEnemyLevel
+            minigame
         );
         getServer().setProtocol(protocol);
         protocol.start();
