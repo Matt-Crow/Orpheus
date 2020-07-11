@@ -17,8 +17,11 @@ import net.protocols.AbstractWaitingRoomProtocol;
 import windows.Page;
 
 /**
- *
- * @author Matt
+ * AbstractWaitingRoom provides a "waiting room"
+ * where players can stay while waiting for other
+ * players to join.
+ * 
+ * @author Matt Crow
  */
 public abstract class AbstractWaitingRoom extends Page{
     private final JTextArea teamList;
@@ -27,6 +30,10 @@ public abstract class AbstractWaitingRoom extends Page{
     private final JButton startButton;
     private AbstractWaitingRoomProtocol backend;
     
+    public AbstractWaitingRoom(AbstractWaitingRoomProtocol protocol){
+        this();
+        setBackEnd(protocol);
+    }
     public AbstractWaitingRoom(){
         super();
         
@@ -103,6 +110,9 @@ public abstract class AbstractWaitingRoom extends Page{
         playerBuild.setEnabled(b);
     }
     
+    public void setBackEnd(AbstractWaitingRoomProtocol protocol){
+        backend = protocol;
+    }
     public AbstractWaitingRoomProtocol getBackEnd(){
         return backend;
     }

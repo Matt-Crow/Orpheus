@@ -11,11 +11,9 @@ import net.protocols.WaitingRoomHostProtocol;
  * @author Matt
  */
 public class HostWaitingRoom extends AbstractWaitingRoom{
-    private WaitingRoomHostProtocol protocol;
-    
-    
-    public HostWaitingRoom(){
-        protocol = null;
+    public HostWaitingRoom(int waveCount, int enemyLv){
+        super();
+        setBackEnd(new WaitingRoomHostProtocol(this, Master.SERVER, waveCount, enemyLv));
     }
     
     public void startServer(int waveCount, int enemyLv) throws IOException{
