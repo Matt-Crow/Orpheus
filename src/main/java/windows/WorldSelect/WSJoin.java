@@ -96,10 +96,10 @@ public class WSJoin extends Page{
             try {
                 msgs.append("Attempting to connect to " + ipAddr + "...\n");
                 Master.SERVER.connect(ipAddr);
+                ClientWaitingRoom wait = new ClientWaitingRoom(ipAddr);
                 msgs.append("success!\n");
-                WSWaitForPlayers wait = new WSWaitForPlayers();
                 getHost().switchToPage(wait);
-                wait.joinServer(ipAddr);
+                //wait.joinServer(ipAddr);
             } catch (IOException ex) {
                 msgs.append(ex.getMessage() + '\n');
                 msgs.append(Arrays.toString(ex.getStackTrace()) + '\n');

@@ -31,7 +31,7 @@ public class WaitingRoomHostBuildProtocol extends AbstractWaitingRoomProtocol{
     /*
     measured in seconds
     */
-    private static final int WAIT_TIME = 0;
+    public static final int WAIT_TIME = 0;
     private final Team playerTeam;
     private final Team enemyTeam;
     private final Battle game;

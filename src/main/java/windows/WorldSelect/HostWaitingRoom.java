@@ -4,6 +4,7 @@ import controllers.Master;
 import controllers.User;
 import java.io.IOException;
 import net.OrpheusServer;
+import net.protocols.WaitingRoomHostBuildProtocol;
 import net.protocols.WaitingRoomHostProtocol;
 
 /**
@@ -34,6 +35,6 @@ public class HostWaitingRoom extends AbstractWaitingRoom{
     @Override
     public void startButton() {
         ((WaitingRoomHostProtocol)getBackEnd()).prepareToStart();
-        getChat().log("The game will start in " + WaitingRoomBackend.WAIT_TIME + " seconds. Please select your build and team.");
+        getChat().log("The game will start in " + WaitingRoomHostBuildProtocol.WAIT_TIME + " seconds. Please select your build and team.");
     }
 }

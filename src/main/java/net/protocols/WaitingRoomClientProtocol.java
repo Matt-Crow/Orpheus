@@ -1,6 +1,5 @@
 package net.protocols;
 
-import battle.Battle;
 import controllers.Master;
 import controllers.User;
 import controls.RemotePlayerControls;
