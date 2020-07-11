@@ -1,5 +1,6 @@
 package net;
 
+import net.protocols.AbstractOrpheusServerProtocol;
 import controllers.Master;
 import controllers.User;
 import java.io.EOFException;

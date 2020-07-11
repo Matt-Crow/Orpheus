@@ -1,4 +1,7 @@
-package net;
+package net.protocols;
+
+import net.OrpheusServer;
+import net.ServerMessage;
 
 /**
  * This class should be used to clarify exactly
