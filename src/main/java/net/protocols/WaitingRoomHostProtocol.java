@@ -14,13 +14,7 @@ import windows.WorldSelect.WSWaitForPlayers;
  *
  * @author Matt Crow
  */
-public class WaitingRoomHostProtocol implements AbstractOrpheusServerProtocol{
-    
-    /*
-    measured in seconds
-    */
-    private static final int WAIT_TIME = 0;
-    
+public class WaitingRoomHostProtocol implements AbstractOrpheusServerProtocol{    
     private final WSWaitForPlayers frontEnd;
     /*
     Keeps track of which Users want to play.
