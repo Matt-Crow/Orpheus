@@ -86,7 +86,7 @@ public class WSWaitForPlayers extends Page{
         startButton = new JButton("Start the match");
         startButton.addActionListener((e)->{
             if(backend.isHost() && !backend.isAlreadyStarted()){
-                backend.prepareToStart();
+                //backend.prepareToStart();
                 chat.log("The game will start in " + WaitingRoomBackend.WAIT_TIME + " seconds. Please select your build and team.");
             }else{
                 chat.logLocal("only the host can start the world. You'll have to wait for them.");

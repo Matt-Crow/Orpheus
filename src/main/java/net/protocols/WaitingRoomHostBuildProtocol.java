@@ -48,6 +48,11 @@ public class WaitingRoomHostBuildProtocol extends AbstractWaitingRoomProtocol{
         game = new Battle(maxEnemyLv, waveCount);
     }
     
+    /**
+     * After WAIT_TIME seconds,
+     * prepares the server to receive 
+     * player builds.
+     */
     public final void start(){
         ((HostWaitingRoom)getFrontEnd()).setStartButtonEnabled(false);
         playerTeam.clear();
@@ -59,6 +64,10 @@ public class WaitingRoomHostBuildProtocol extends AbstractWaitingRoomProtocol{
         t.start();
     }
     
+    /**
+     * Begins constructing teams, and sends a request for user Build data.
+     * Once all Builds have been obtained, finally starts
+     */
     private void waitForData(){
         getFrontEnd().setInputEnabled(false);
         
@@ -82,16 +91,16 @@ public class WaitingRoomHostBuildProtocol extends AbstractWaitingRoomProtocol{
         ));
     }
     
-    private void checkIfReady(){
-        if(awaitingBuilds.isEmpty()){
-            try {
-                createWorld();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-    
+    /**
+     * called after the host receives a user's Build information.
+     * 
+     * applies the Build to a HumanPlayer which will be controlled
+     * by the message's sender. After constructing the new player,
+     * adds them to the team, then notifies the message's
+     * sender of what their player ID is on this remote computer
+     * 
+     * @param sm a server message containing the sender's Build, serialized as a JSON object string
+     */
     private void receiveBuildInfo(ServerMessage sm){
         String ip = sm.getIpAddr();
         HumanPlayer player;
@@ -113,12 +122,27 @@ public class WaitingRoomHostBuildProtocol extends AbstractWaitingRoomProtocol{
         checkIfReady();
     }
     
+    /**
+     * Called by receiveBuild
+     * @param ipAddr the ip address of the user to send the IDs to.
+     * @param playerId the ID of that user's Player on this computer
+     */
     private void sendRemoteId(String ipAddr, String playerId){
         ServerMessage sm = new ServerMessage(
             playerId,
             ServerMessageType.NOTIFY_IDS
         );
         getServer().send(sm, ipAddr);
+    }
+    
+    private void checkIfReady(){
+        if(awaitingBuilds.isEmpty()){
+            try {
+                createWorld();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
     
     @Override
@@ -135,6 +159,10 @@ public class WaitingRoomHostBuildProtocol extends AbstractWaitingRoomProtocol{
         return received;
     }
     
+    /**
+     * Creates, sends, and switches to a new world
+     * @throws IOException 
+     */
     private void createWorld() throws IOException{
         HostWorld w = new HostWorld(WorldContent.createDefaultBattle());
         w.createCanvas();
@@ -151,8 +179,15 @@ public class WaitingRoomHostBuildProtocol extends AbstractWaitingRoomProtocol{
         canv.setPauseEnabled(false);
         p.setCanvas(canv);
         getFrontEnd().getHost().switchToPage(p);
+        
+        getServer().setProtocol(null);
     }
     
+    /**
+     * Serializes the worldContent, and sends it
+     * to each connected user, excluding the host
+     * @param w the world to send
+     */
     private void sendWorldInit(WorldContent w){
         String serial = w.serializeToString();
         ServerMessage sm = new ServerMessage(

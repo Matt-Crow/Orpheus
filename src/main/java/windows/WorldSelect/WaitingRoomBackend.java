@@ -74,7 +74,6 @@ public class WaitingRoomBackend {
     private final Consumer<ServerMessage> receiveInit;
     private final Consumer<ServerMessage> receiveUpdate;
     private final Consumer<ServerMessage> receiveBuildRequest;
-    private final Consumer<ServerMessage> receiveBuildInfo;
     private final Consumer<ServerMessage> receiveRemoteIds;
     private final Consumer<ServerMessage> receiveWorldInit;
     
@@ -100,9 +99,6 @@ public class WaitingRoomBackend {
         };
         receiveBuildRequest = (sm)->{
             receiveBuildRequest(sm);
-        };
-        receiveBuildInfo = (sm)->{
-            receiveBuildInfo(sm);
         };
         receiveRemoteIds = (sm)->{
             receiveRemoteId(sm);
@@ -138,40 +134,6 @@ public class WaitingRoomBackend {
         teamProto.clear();
         playerTeam.clear();
         gameAboutToStart = false;
-    }
-    
-    /**
-     * applied only to the host. Whenever a user
-     * joins the server, notifies them of the 
-     * current state of the waiting room.
-     * This will then be caught by the client's
-     * receiveInit method.
-     * 
-     * @param sm 
-     */
-    private void receiveJoin(ServerMessage sm){
-        String ipAddr = sm.getIpAddr();
-        
-        
-        //todo: make this automatically make sm's sender join the player team
-        
-        
-        JsonObjectBuilder build = Json.createObjectBuilder();
-        build.add("type", "waiting room init");
-        build.add("num waves", numWaves);
-        build.add("max enemy level", maxEnemyLevel);
-        JsonArrayBuilder t = Json.createArrayBuilder();
-        teamProto.values().stream().forEach((User u)->{
-            t.add(u.serializeJson());
-        });
-        build.add("team", t.build());
-        
-        ServerMessage initMsg = new ServerMessage(
-            build.build().toString(),
-            ServerMessageType.WAITING_ROOM_INIT
-        );
-        
-        server.send(initMsg, ipAddr);
     }
     
     /**
@@ -242,48 +204,6 @@ public class WaitingRoomBackend {
     }
     
     /**
-     * Applies only to the host.
-     * called after the host receives a user's Build
-     * information.
-     * 
-     * applies the Build to a TruePlayer which will be controlled
-     * by the message's sender. After constructing the new player,
-     * adds them to the appropriate team, then notifies the message's
-     * sender of what their team and player IDs are on this remote computer
-     * 
-     * @param sm a server message containing the sender's Build, serialized as a JSON object string
-     */
-    private void receiveBuildInfo(ServerMessage sm){
-        String ip = sm.getIpAddr();
-        HumanPlayer tp;
-        Build b;
-
-        if(teamProto.containsKey(ip)){
-            tp = teamProto.get(ip).initPlayer().getPlayer();
-            teamProto.remove(ip);
-        } else {
-            err.println("Ugh oh, " + sm.getSender().getName() + " isn't on any team!");
-            return;
-        }
-
-        b = BuildJsonUtil.deserializeJson(JsonUtil.fromString(sm.getBody()));
-        tp.applyBuild(b);
-        playerTeam.addMember(tp);
-        
-        sendRemoteId(ip, tp.id);
-        
-        // may need some other way of checking if this has received all build data
-        if(teamProto.isEmpty()){
-            server.removeReceiver(ServerMessageType.PLAYER_DATA, receiveBuildInfo);
-            try {
-                finallyStart();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-    
-    /**
      * Doesn't apply to the host.
      * Since the Player this user is going to be controlling
      * is on another computer, this needs some way of knowing
@@ -327,127 +247,6 @@ public class WaitingRoomBackend {
         canv.setPauseEnabled(false);
         p.setCanvas(canv);
         host.getHost().switchToPage(p);
-    }
-    
-    /**
-     * Begins preparing the server to receive
-     * player build information.
-     * After WAIT_TIME seconds, waits for data before starting the world
-     */
-    public void prepareToStart(){
-        gameAboutToStart = true;
-        
-        host.setStartButtonEnabled(false);
-        
-        server.setAcceptingConn(false);
-        //server.removeReceiver(ServerMessageType.PLAYER_JOINED, receiveJoin);
-        Timer t = new Timer(WAIT_TIME * 1000, (e)->{
-            server.removeReceiver(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
-            waitForData();
-        });
-        t.setRepeats(false);
-        t.start();
-    }
-    
-    /**
-     * Begins constructing teams, and sends a request for user Build data.
-     * Once all Builds have been obtained, finally starts
-     * Note that receiveBuildInfo calls finallyStart, not this method.
-     * 
-     * @see WSWaitForPlayers#receiveBuildInfo
-     */
-    private void waitForData(){        
-        enemyTeam = new Team("AI", Color.red);
-        
-        server.addReceiver(ServerMessageType.PLAYER_DATA, receiveBuildInfo);
-        requestBuilds();
-        
-        host.setInputEnabled(false);
-        
-        //first, put the host on the proper team
-        Master.getUser().initPlayer().getPlayer().applyBuild(host.getSelectedBuild());
-        if(teamProto.containsKey(server.getIpAddr())){
-            playerTeam.addMember(Master.getUser().getPlayer());
-            teamProto.remove(server.getIpAddr());
-        } else {
-            throw new UnsupportedOperationException();
-        }
-        
-        // may need some other way of checking if this has received all build data
-        if(teamProto.isEmpty()){
-            Master.SERVER.removeReceiver(ServerMessageType.PLAYER_DATA, receiveBuildInfo);
-            try {
-                finallyStart();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-    
-    /**
-     * this starts the world (it's about time too!)
- sends the serialized version of the newly created
- AbstractWorld to all connected users, then switches to 
- that new AbstractWorld's canvas
- 
- Might not be completely done
-     */
-    private void finallyStart() throws IOException{
-        HostWorld w = new HostWorld(WorldContent.createDefaultBattle());
-        w.createCanvas();
-        w.initServer();
-        Battle b = new Battle(maxEnemyLevel, numWaves);
-        w.setPlayerTeam(playerTeam).setEnemyTeam(enemyTeam).setCurrentMinigame(b);
-        b.setHost(w);
-        w.init();
-        
-        sendWorldInit(w.getContent());
-        
-        WorldPage p = new WorldPage();
-        WorldCanvas canv = w.getCanvas();
-        canv.addPlayerControls(new SoloPlayerControls(Master.getUser().getPlayer()));
-        canv.setPauseEnabled(false);
-        p.setCanvas(canv);
-        host.getHost().switchToPage(p);
-    }
-    
-    /**
-     * Called by waitForData
-     * @see WaitingRoomBackend#waitForData() 
-     */
-    private void requestBuilds(){
-        Master.SERVER.send(new ServerMessage(
-            "please provide build information",
-            ServerMessageType.REQUEST_PLAYER_DATA
-        ));
-    }
-    
-    /**
-     * Called by receiveBuild
-     * @param ipAddr the ip address of the user to send the IDs to.
-     * @param playerId the ID of that user's Player on this computer
-     */
-    private void sendRemoteId(String ipAddr, String playerId){
-        ServerMessage sm = new ServerMessage(
-            playerId,
-            ServerMessageType.NOTIFY_IDS
-        );
-        Master.SERVER.send(sm, ipAddr);
-    }
-    
-    /**
-     * Serializes the worldContent, and sends it
-     * to each connected user, excluding the host
-     * @param w the world to send
-     */
-    private void sendWorldInit(WorldContent w){
-        String serial = w.serializeToString();
-        ServerMessage sm = new ServerMessage(
-            serial,
-            ServerMessageType.WORLD_INIT
-        );
-        
-        Master.SERVER.send(sm);
     }
     
     public boolean isAlreadyStarted(){
