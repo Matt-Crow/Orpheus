@@ -340,7 +340,7 @@ public class WaitingRoomBackend {
         host.setStartButtonEnabled(false);
         
         server.setAcceptingConn(false);
-        server.removeReceiver(ServerMessageType.PLAYER_JOINED, receiveJoin);
+        //server.removeReceiver(ServerMessageType.PLAYER_JOINED, receiveJoin);
         Timer t = new Timer(WAIT_TIME * 1000, (e)->{
             server.removeReceiver(ServerMessageType.WAITING_ROOM_UPDATE, receiveUpdate);
             waitForData();

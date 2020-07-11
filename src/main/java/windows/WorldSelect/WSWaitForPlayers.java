@@ -100,28 +100,6 @@ public class WSWaitForPlayers extends Page{
     }
     
     /**
-     * starts the backend server (if it isn't
-     * already started) as the host of a game.
-     * 
-     * @return this 
-     * @throws java.io.IOException if the server does not start
-     */
-    public WSWaitForPlayers startServerAsHost(int waveCount, int enemyLv) throws IOException{
-        OrpheusServer server = Master.SERVER;
-        if(server.isStarted()){
-            server.reset();
-        } else {
-            server.start();
-        }
-        
-        server.setProtocol(new WaitingRoomHostProtocol(this, waveCount, enemyLv));
-        
-        chat.openChatServer();
-        chat.logLocal("Server started on host address " + Master.SERVER.getIpAddr());
-        return this;
-    }
-    
-    /**
      * starts the backend server (if it isn't already
      * started) and connects it to the given ipAddress,
      * which should be the host of a game.
@@ -140,35 +118,8 @@ public class WSWaitForPlayers extends Page{
         return this;
     }
     
-    /**
-     * Places a given User on team 1, if it isn't full.
-     * If team 1 is full, but team 2 isn't, places them on team 2.
-     * Note that if there are no open positions on either team,
-     * that user will not be put on either team.
-     * 
-     * @param u the user to place on team 1.
-     * @return this 
-     */
-    public WSWaitForPlayers joinPlayerTeam(User u){
-        backend.joinPlayerTeam(u);
-        chat.logLocal(u.getName() + " has joined the team.");
-        updateTeamDisplays();
-        
-        return this;
-    }
     
-    /**
-     * Updates the text of this' team displays
-     * to match the proto-teams of the backend.
-     */
-    public void updateTeamDisplays(){
-        String newStr = "Player Team: \n";
-        newStr = Arrays
-            .stream(backend.getTeamProto())
-            .map((User use) -> "* " + use.getName() + "\n")
-            .reduce(newStr, String::concat);
-        teamList.setText(newStr);
-    }
+    
     
     public Build getSelectedBuild(){
         return playerBuild.getSelectedBuild();

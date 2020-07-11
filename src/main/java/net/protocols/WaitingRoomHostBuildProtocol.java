@@ -17,7 +17,7 @@ import net.OrpheusServer;
 import net.ServerMessage;
 import net.ServerMessageType;
 import serialization.JsonUtil;
-import windows.WorldSelect.WSWaitForPlayers;
+import windows.WorldSelect.HostWaitingRoom;
 import windows.world.WorldCanvas;
 import windows.world.WorldPage;
 import world.HostWorld;
@@ -32,14 +32,14 @@ public class WaitingRoomHostBuildProtocol implements AbstractOrpheusServerProtoc
     measured in seconds
     */
     private static final int WAIT_TIME = 0;
-    private final WSWaitForPlayers frontEnd;
+    private final HostWaitingRoom frontEnd;
     private final OrpheusServer server;
     private final Team playerTeam;
     private final Team enemyTeam;
     private final Battle game;
     private final HashMap<String, User> awaitingBuilds;
     
-    public WaitingRoomHostBuildProtocol(WSWaitForPlayers host, OrpheusServer forServer, HashMap<String, User> users, int waveCount, int maxEnemyLv){
+    public WaitingRoomHostBuildProtocol(HostWaitingRoom host, OrpheusServer forServer, HashMap<String, User> users, int waveCount, int maxEnemyLv){
         frontEnd = host;
         server = forServer;
         playerTeam = new Team("Players", Color.blue);

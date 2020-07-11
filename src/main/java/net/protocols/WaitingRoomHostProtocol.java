@@ -8,14 +8,14 @@ import javax.json.JsonObjectBuilder;
 import net.OrpheusServer;
 import net.ServerMessage;
 import net.ServerMessageType;
-import windows.WorldSelect.WSWaitForPlayers;
+import windows.WorldSelect.HostWaitingRoom;
 
 /**
  *
  * @author Matt Crow
  */
 public class WaitingRoomHostProtocol implements AbstractOrpheusServerProtocol{    
-    private final WSWaitForPlayers frontEnd;
+    private final HostWaitingRoom frontEnd;
     /*
     Keeps track of which Users want to play.
     The key is their IP address,
@@ -25,7 +25,7 @@ public class WaitingRoomHostProtocol implements AbstractOrpheusServerProtocol{
     private final int numWaves;
     private final int maxEnemyLevel;
     
-    public WaitingRoomHostProtocol(WSWaitForPlayers host, int enemyWaveCount, int maxEnemyLv){
+    public WaitingRoomHostProtocol(HostWaitingRoom host, int enemyWaveCount, int maxEnemyLv){
         frontEnd = host;
         numWaves = enemyWaveCount;
         maxEnemyLevel = maxEnemyLv;
