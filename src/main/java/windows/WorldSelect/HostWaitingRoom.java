@@ -13,6 +13,7 @@ import net.protocols.WaitingRoomHostProtocol;
 public class HostWaitingRoom extends AbstractWaitingRoom{
     private WaitingRoomHostProtocol protocol;
     
+    
     public HostWaitingRoom(){
         protocol = null;
     }
@@ -24,7 +25,7 @@ public class HostWaitingRoom extends AbstractWaitingRoom{
         } else {
             server.start();
         }
-        protocol = new WaitingRoomHostProtocol(this, waveCount, enemyLv);
+        protocol = new WaitingRoomHostProtocol(this, server, waveCount, enemyLv);
         server.setProtocol(protocol);
         
         getChat().openChatServer();
@@ -32,9 +33,15 @@ public class HostWaitingRoom extends AbstractWaitingRoom{
     }
     
     public void joinPlayerTeam(User u){
-        protocol.addUserToTeam(u, Master.SERVER);
+        protocol.addUserToTeam(u);
         getChat().logLocal(u.getName() + " has joined the team.");
         updateTeamDisplays();
+    }
+
+    @Override
+    public void startButton() {
+        ((WaitingRoomHostProtocol)getBackEnd()).prepareToStart();
+        getChat().log("The game will start in " + WaitingRoomBackend.WAIT_TIME + " seconds. Please select your build and team.");
     }
     
 }

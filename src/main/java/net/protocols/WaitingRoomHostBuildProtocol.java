@@ -27,30 +27,29 @@ import world.WorldContent;
  *
  * @author Matt
  */
-public class WaitingRoomHostBuildProtocol implements AbstractOrpheusServerProtocol{
+public class WaitingRoomHostBuildProtocol extends AbstractWaitingRoomProtocol{
     /*
     measured in seconds
     */
     private static final int WAIT_TIME = 0;
-    private final HostWaitingRoom frontEnd;
-    private final OrpheusServer server;
     private final Team playerTeam;
     private final Team enemyTeam;
     private final Battle game;
     private final HashMap<String, User> awaitingBuilds;
     
-    public WaitingRoomHostBuildProtocol(HostWaitingRoom host, OrpheusServer forServer, HashMap<String, User> users, int waveCount, int maxEnemyLv){
-        frontEnd = host;
-        server = forServer;
+    public WaitingRoomHostBuildProtocol(HostWaitingRoom host, OrpheusServer forServer, User[] users, int waveCount, int maxEnemyLv){
+        super(host, forServer);
         playerTeam = new Team("Players", Color.blue);
         enemyTeam = new Team("AI", Color.red);
         awaitingBuilds = new HashMap<>();
-        users.forEach((ip, user)->awaitingBuilds.put(ip, user));
+        for(User user : users){
+            awaitingBuilds.put(user.getIpAddress(), user);
+        }
         game = new Battle(maxEnemyLv, waveCount);
     }
     
     public final void start(){
-        frontEnd.setStartButtonEnabled(false);
+        ((HostWaitingRoom)getFrontEnd()).setStartButtonEnabled(false);
         playerTeam.clear();
         Timer t = new Timer(WAIT_TIME * 1000, (e)->{
             waitForData();
@@ -61,13 +60,13 @@ public class WaitingRoomHostBuildProtocol implements AbstractOrpheusServerProtoc
     }
     
     private void waitForData(){
-        frontEnd.setInputEnabled(false);
+        getFrontEnd().setInputEnabled(false);
         
         // put the host on the user team
-        Master.getUser().initPlayer().getPlayer().applyBuild(frontEnd.getSelectedBuild());
-        if(awaitingBuilds.containsKey(server.getIpAddr())){
+        Master.getUser().initPlayer().getPlayer().applyBuild(getFrontEnd().getSelectedBuild());
+        if(awaitingBuilds.containsKey(getServer().getIpAddr())){
             playerTeam.addMember(Master.getUser().getPlayer());
-            awaitingBuilds.remove(server.getIpAddr());
+            awaitingBuilds.remove(getServer().getIpAddr());
         } else {
             throw new UnsupportedOperationException();
         }
@@ -119,7 +118,7 @@ public class WaitingRoomHostBuildProtocol implements AbstractOrpheusServerProtoc
             playerId,
             ServerMessageType.NOTIFY_IDS
         );
-        server.send(sm, ipAddr);
+        getServer().send(sm, ipAddr);
     }
     
     @Override
@@ -151,7 +150,7 @@ public class WaitingRoomHostBuildProtocol implements AbstractOrpheusServerProtoc
         canv.addPlayerControls(new SoloPlayerControls(Master.getUser().getPlayer()));
         canv.setPauseEnabled(false);
         p.setCanvas(canv);
-        frontEnd.getHost().switchToPage(p);
+        getFrontEnd().getHost().switchToPage(p);
     }
     
     private void sendWorldInit(WorldContent w){
@@ -160,6 +159,6 @@ public class WaitingRoomHostBuildProtocol implements AbstractOrpheusServerProtoc
             serial,
             ServerMessageType.WORLD_INIT
         );
-        server.send(sm);
+        getServer().send(sm);
     }
 }

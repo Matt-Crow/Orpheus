@@ -499,7 +499,7 @@ public class WaitingRoomBackend {
                 );
                 Master.SERVER.send(sm);
             }
-            host.updateTeamDisplays();
+            //host.updateTeamDisplays();
         }
         return this;
     }

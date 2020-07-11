@@ -1,7 +1,6 @@
 package net.protocols;
 
 import controllers.User;
-import java.util.HashMap;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
@@ -14,44 +13,28 @@ import windows.WorldSelect.HostWaitingRoom;
  *
  * @author Matt Crow
  */
-public class WaitingRoomHostProtocol implements AbstractOrpheusServerProtocol{    
-    private final HostWaitingRoom frontEnd;
-    /*
-    Keeps track of which Users want to play.
-    The key is their IP address,
-    while the value is the User
-    */
-    private final HashMap<String, User> teamProto;
+public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{    
     private final int numWaves;
     private final int maxEnemyLevel;
     
-    public WaitingRoomHostProtocol(HostWaitingRoom host, int enemyWaveCount, int maxEnemyLv){
-        frontEnd = host;
+    public WaitingRoomHostProtocol(HostWaitingRoom host, OrpheusServer server, int enemyWaveCount, int maxEnemyLv){
+        super(host, server);
         numWaves = enemyWaveCount;
-        maxEnemyLevel = maxEnemyLv;
-        teamProto = new HashMap<>();    
-    }
-    
-    public final void resetTeamProto(){
-        teamProto.clear();
+        maxEnemyLevel = maxEnemyLv;    
     }
     
     /**
      * Puts the given user on the teamProto,
      * and alerts all connected players
      * @param u 
-     * @param server 
      */
-    public final void addUserToTeam(User u, OrpheusServer server){
-        if(!teamProto.containsKey(u.getIpAddress())){
-            // hasn't joined yet
-            teamProto.put(u.getIpAddress(), u);
+    public final void addUserToTeam(User u){
+        if(addToTeamProto(u)){
             ServerMessage sm = new ServerMessage(
                 "join player team",
                 ServerMessageType.WAITING_ROOM_UPDATE
             );
-            server.send(sm);
-            frontEnd.updateTeamDisplays();
+            getServer().send(sm);
         }
     }
     
@@ -64,9 +47,9 @@ public class WaitingRoomHostProtocol implements AbstractOrpheusServerProtocol{
      * @param sm
      * @param server 
      */
-    private void receiveJoin(ServerMessage sm, OrpheusServer server){
+    private void receiveJoin(ServerMessage sm){
         String joiningIp = sm.getIpAddr();
-        if(teamProto.containsKey(joiningIp)){
+        if(containsIp(joiningIp)){
             return;
         } // ##################### RETURNS HERE IF ALREADY JOINED
         
@@ -76,7 +59,7 @@ public class WaitingRoomHostProtocol implements AbstractOrpheusServerProtocol{
         connected that someone has joined
         */
         User joiningUser = sm.getSender();
-        addUserToTeam(joiningUser, server);
+        addUserToTeam(joiningUser);
         
         /*
         Second, create the init message to bring 
@@ -86,9 +69,9 @@ public class WaitingRoomHostProtocol implements AbstractOrpheusServerProtocol{
         JsonObjectBuilder initMsgBuild = Json.createObjectBuilder();
         initMsgBuild.add("type", "waiting room init");
         JsonArrayBuilder userListBuild = Json.createArrayBuilder();
-        teamProto.values().stream().forEach((User u)->{
+        for(User u : getTeamProto()){
             userListBuild.add(u.serializeJson());
-        });
+        }
         initMsgBuild.add("team", userListBuild.build());
         
         ServerMessage initMsg = new ServerMessage(
@@ -96,18 +79,18 @@ public class WaitingRoomHostProtocol implements AbstractOrpheusServerProtocol{
             ServerMessageType.WAITING_ROOM_INIT
         );
         
-        server.send(initMsg, joiningIp);
+        getServer().send(initMsg, joiningIp);
     }
     
-    public final void prepareToStart(OrpheusServer server){
+    public final void prepareToStart(){
         WaitingRoomHostBuildProtocol protocol = new WaitingRoomHostBuildProtocol(
-            frontEnd,
-            server,
-            teamProto,
+            (HostWaitingRoom)getFrontEnd(),
+            getServer(),
+            getTeamProto(),
             numWaves,
             maxEnemyLevel
         );
-        server.setProtocol(protocol);
+        getServer().setProtocol(protocol);
         protocol.start();
     }
     
@@ -117,7 +100,7 @@ public class WaitingRoomHostProtocol implements AbstractOrpheusServerProtocol{
         
         switch(sm.getType()){
             case PLAYER_JOINED:
-                receiveJoin(sm, forServer);
+                receiveJoin(sm);
                 break;
             default:
                 handled = false;

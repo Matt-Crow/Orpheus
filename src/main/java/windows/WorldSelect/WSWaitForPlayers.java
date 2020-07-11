@@ -60,7 +60,7 @@ public class WSWaitForPlayers extends Page{
         
         joinTeamButton = new JButton("Join team");
         joinTeamButton.addActionListener((e)->{
-            joinPlayerTeam(Master.getUser());
+            //joinPlayerTeam(Master.getUser());
         });
         Style.applyStyling(joinTeamButton);
         add(joinTeamButton, BorderLayout.LINE_START);

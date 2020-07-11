@@ -1,6 +1,7 @@
 package windows.WorldSelect;
 
 import controllers.User;
+import customizables.Build;
 import gui.BuildSelect;
 import gui.Chat;
 import gui.Style;
@@ -9,18 +10,22 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.util.Arrays;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import net.protocols.AbstractWaitingRoomProtocol;
 import windows.Page;
 
 /**
  *
  * @author Matt
  */
-public class AbstractWaitingRoom extends Page{
+public abstract class AbstractWaitingRoom extends Page{
     private final JTextArea teamList;
     private final Chat chat;
     private final BuildSelect playerBuild;
+    private final JButton startButton;
+    private AbstractWaitingRoomProtocol backend;
     
     public AbstractWaitingRoom(){
         super();
@@ -57,6 +62,14 @@ public class AbstractWaitingRoom extends Page{
         
         add(center, BorderLayout.CENTER);
         
+        startButton = new JButton("Start the match");
+        startButton.addActionListener((e)->{
+            startButton();
+        });
+        add(startButton, BorderLayout.PAGE_END);
+        
+        backend = null;
+        
         revalidate();
         repaint();
     }
@@ -77,4 +90,22 @@ public class AbstractWaitingRoom extends Page{
             .reduce(newStr, String::concat);
         teamList.setText(newStr);
     }
+    
+    public Build getSelectedBuild(){
+        return playerBuild.getSelectedBuild();
+    }
+    
+    public void setStartButtonEnabled(boolean b){
+        startButton.setEnabled(b);
+    }
+    
+    public void setInputEnabled(boolean b){
+        playerBuild.setEnabled(b);
+    }
+    
+    public AbstractWaitingRoomProtocol getBackEnd(){
+        return backend;
+    }
+    
+    public abstract void startButton();
 }
