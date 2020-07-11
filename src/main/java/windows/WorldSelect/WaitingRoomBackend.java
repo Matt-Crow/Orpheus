@@ -71,7 +71,6 @@ public class WaitingRoomBackend {
     private boolean gameAboutToStart;
     
     //all of these link to the method with the same name
-    private final Consumer<ServerMessage> receiveJoin;
     private final Consumer<ServerMessage> receiveInit;
     private final Consumer<ServerMessage> receiveUpdate;
     private final Consumer<ServerMessage> receiveBuildRequest;
@@ -93,9 +92,6 @@ public class WaitingRoomBackend {
         playerTeam = new Team("Players", Color.green);
         enemyTeam = null;
         
-        receiveJoin  = (sm)->{
-            receiveJoin(sm);
-        };
         receiveInit = (sm)->{
             receiveInit(sm);
         };
@@ -340,6 +336,7 @@ public class WaitingRoomBackend {
      */
     public void prepareToStart(){
         gameAboutToStart = true;
+        
         host.setStartButtonEnabled(false);
         
         server.setAcceptingConn(false);

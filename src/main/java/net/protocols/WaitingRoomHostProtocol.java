@@ -99,6 +99,18 @@ public class WaitingRoomHostProtocol implements AbstractOrpheusServerProtocol{
         server.send(initMsg, joiningIp);
     }
     
+    public final void prepareToStart(OrpheusServer server){
+        WaitingRoomHostBuildProtocol protocol = new WaitingRoomHostBuildProtocol(
+            frontEnd,
+            server,
+            teamProto,
+            numWaves,
+            maxEnemyLevel
+        );
+        server.setProtocol(protocol);
+        protocol.start();
+    }
+    
     @Override
     public boolean receiveMessage(ServerMessage sm, OrpheusServer forServer) {
         boolean handled = true;
