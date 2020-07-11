@@ -53,6 +53,8 @@ public class OrpheusServer {
     private final HashMap<ServerMessageType, SafeList<Consumer<ServerMessage>>> receivers; //see the receive method
     private final SafeList<ServerMessage> cachedMessages; //messages received before the receiver could be
     
+    private volatile AbstractOrpheusServerProtocol currentProtocol;
+    
     public static final int PORT = 5000;
     
     /**
@@ -75,6 +77,7 @@ public class OrpheusServer {
         }
         ipAddress = ip;
         isStarted = false;
+        currentProtocol = null;
     }
     
     /**
@@ -282,6 +285,17 @@ public class OrpheusServer {
                 out.println("(" + sm.hashCode() + ")");
                 cachedMessages.add(sm);
             }
+            
+            if(currentProtocol == null){
+                out.println("No current protocol :(");
+            } else {
+                if(currentProtocol.receiveMessage(sm, this)){
+                    out.println("Successfully received!");
+                } else {
+                    out.println("Nope, didn't receive properly :(");
+                }
+            }
+            
         } catch (JsonException ex){
             out.println("nope. not server message");
             ex.printStackTrace();
