@@ -124,6 +124,11 @@ public class OrpheusServer {
     /**
      * Clears all receivers and connections from this,
      * then restarts the connection listener.
+     * 
+     * I will likely remove this later,
+     * once I figure out how I want these
+     * protocols to work.
+     * 
      * @return this
      */
     public OrpheusServer reset(){

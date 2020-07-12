@@ -41,8 +41,8 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
     private final Team enemyTeam;
     private final HashMap<String, User> awaitingBuilds;
     
-    public WaitingRoomHostProtocol(HostWaitingRoom host, OrpheusServer server, Battle game){
-        super(host, server);
+    public WaitingRoomHostProtocol(HostWaitingRoom host, Battle game){
+        super(host);
         minigame = game;   
         playerTeam = new Team("Players", Color.blue);
         enemyTeam = new Team("AI", Color.red);
@@ -50,12 +50,12 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
     }
     
     @Override
-    public void doStart(){
+    public void doApplyProtocol(){
         playerTeam.clear();
         enemyTeam.clear();
         awaitingBuilds.clear();
         getFrontEnd().getChat().openChatServer();
-        getFrontEnd().getChat().logLocal("Server started on host address " + getServer().getIpAddr());
+        getFrontEnd().getChat().logLocal("Server started on host address " + OrpheusServer.getInstance().getIpAddr());
     }
     
     /**
@@ -70,7 +70,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
                 "join player team",
                 ServerMessageType.WAITING_ROOM_UPDATE
             );
-            getServer().send(sm);
+            OrpheusServer.getInstance().send(sm);
             getFrontEnd().getChat().logLocal(u.getName() + " has joined the team.");
             getFrontEnd().updateTeamDisplays();
         }
@@ -117,7 +117,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
             ServerMessageType.WAITING_ROOM_INIT
         );
         
-        getServer().send(initMsg, joiningIp);
+        OrpheusServer.getInstance().send(initMsg, joiningIp);
     }
     
     public final void prepareToStart(){
@@ -140,9 +140,9 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
         
         // put the host on the user team
         Master.getUser().initPlayer().getPlayer().applyBuild(getFrontEnd().getSelectedBuild());
-        if(awaitingBuilds.containsKey(getServer().getIpAddr())){
+        if(awaitingBuilds.containsKey(OrpheusServer.getInstance().getIpAddr())){
             playerTeam.addMember(Master.getUser().getPlayer());
-            awaitingBuilds.remove(getServer().getIpAddr());
+            awaitingBuilds.remove(OrpheusServer.getInstance().getIpAddr());
         } else {
             throw new UnsupportedOperationException();
         }
@@ -199,7 +199,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
             playerId,
             ServerMessageType.NOTIFY_IDS
         );
-        getServer().send(sm, ipAddr);
+        OrpheusServer.getInstance().send(sm, ipAddr);
     }
     
     private void checkIfReady(){
@@ -233,7 +233,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
         p.setCanvas(canv);
         getFrontEnd().getHost().switchToPage(p);
         
-        getServer().setProtocol(null);
+        OrpheusServer.getInstance().setProtocol(null);
     }
     
     /**
@@ -247,7 +247,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
             serial,
             ServerMessageType.WORLD_INIT
         );
-        getServer().send(sm);
+        OrpheusServer.getInstance().send(sm);
     }
     
     @Override

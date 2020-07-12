@@ -1,5 +1,6 @@
 package net.protocols;
 
+import java.io.IOException;
 import net.OrpheusServer;
 import net.ServerMessage;
 
@@ -13,6 +14,17 @@ import net.ServerMessage;
 public abstract class AbstractOrpheusServerProtocol {
     
     /**
+     * Restarts the server, and applies this as its protocol
+     * @throws IOException 
+     */
+    public final void applyProtocol() throws IOException{
+        OrpheusServer server = OrpheusServer.getInstance();
+        server.restart();
+        server.setProtocol(this);
+        doApplyProtocol();
+    }
+    
+    /**
      * An instance of OrpheusServer should pass itself as a parameter to this function
      * upon receiving a server message.
      * 
@@ -21,4 +33,10 @@ public abstract class AbstractOrpheusServerProtocol {
      * @return whether or not this method handled the message.
      */
     public abstract boolean receiveMessage(ServerMessage sm, OrpheusServer forServer);
+    
+    /**
+     * Called whenever applyProtocol() is
+     * invoked.
+     */
+    public abstract void doApplyProtocol();
 }

@@ -17,23 +17,11 @@ public abstract class AbstractWaitingRoomProtocol extends AbstractOrpheusServerP
     The key is their IP address,
     while the value is the User
     */
-    private final HashMap<String, User> teamProto; 
-    private final OrpheusServer server;
+    private final HashMap<String, User> teamProto;
     
-    public AbstractWaitingRoomProtocol(AbstractWaitingRoom linkedRoom, OrpheusServer forServer){
+    public AbstractWaitingRoomProtocol(AbstractWaitingRoom linkedRoom){
         frontEnd = linkedRoom;
         teamProto = new HashMap<>();
-        server = forServer;
-    }
-    
-    /**
-     * Restarts the server, and applies this as its protocol
-     * @throws IOException 
-     */
-    public final void start() throws IOException{
-        server.restart();
-        server.setProtocol(this);
-        doStart();
     }
     
     public final void resetTeamProto(){
@@ -63,14 +51,4 @@ public abstract class AbstractWaitingRoomProtocol extends AbstractOrpheusServerP
     public final AbstractWaitingRoom getFrontEnd(){
         return frontEnd;
     }
-    
-    public final OrpheusServer getServer(){
-        return server;
-    }  
-    
-    /**
-     * Called whenever start() is
-     * invoked.
-     */
-    public abstract void doStart();
 }

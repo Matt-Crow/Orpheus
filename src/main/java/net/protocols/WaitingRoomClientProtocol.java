@@ -23,13 +23,13 @@ import world.WorldContent;
  */
 public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
     private final String hostIp;
-    public WaitingRoomClientProtocol(AbstractWaitingRoom linkedRoom, OrpheusServer forServer, String hostIpAddr) {
-        super(linkedRoom, forServer);
+    public WaitingRoomClientProtocol(AbstractWaitingRoom linkedRoom, String hostIpAddr) {
+        super(linkedRoom);
         hostIp = hostIpAddr;
     }
     
     @Override
-    public void doStart() {
+    public void doApplyProtocol() {
         resetTeamProto();
         getFrontEnd().getChat().openChatServer();
         getFrontEnd().getChat().joinChat(hostIp);
@@ -52,7 +52,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
     }
     
     private synchronized void receiveBuildRequest(ServerMessage sm){
-        getServer().send(new ServerMessage(
+        OrpheusServer.getInstance().send(new ServerMessage(
             BuildJsonUtil.serializeJson(getFrontEnd().getSelectedBuild()).toString(),
             ServerMessageType.PLAYER_DATA
         ), sm.getIpAddr());
@@ -91,7 +91,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
         p.setCanvas(canv);
         getFrontEnd().getHost().switchToPage(p);
         
-        getServer().setProtocol(null);
+        OrpheusServer.getInstance().setProtocol(null);
     }
     
     @Override

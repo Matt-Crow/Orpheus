@@ -123,7 +123,7 @@ public abstract class AbstractWaitingRoom extends Page{
         if(backend == null){
             throw new UnsupportedOperationException("protocol not set");
         } else {
-            backend.start();
+            backend.applyProtocol();
         }
     }
     

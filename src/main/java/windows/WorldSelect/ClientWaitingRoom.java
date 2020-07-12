@@ -1,7 +1,5 @@
 package windows.WorldSelect;
 
-import controllers.Master;
-import net.OrpheusServer;
 import net.protocols.WaitingRoomClientProtocol;
 
 /**
@@ -11,7 +9,7 @@ import net.protocols.WaitingRoomClientProtocol;
 public class ClientWaitingRoom extends AbstractWaitingRoom{
     public ClientWaitingRoom(String hostIp) {
         super();
-        setBackEnd(new WaitingRoomClientProtocol(this, OrpheusServer.getInstance(), hostIp));
+        setBackEnd(new WaitingRoomClientProtocol(this, hostIp));
     }
     
     @Override
