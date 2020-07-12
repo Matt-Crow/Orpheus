@@ -48,7 +48,7 @@ public class WSSolo extends AbstractWSNewWorld{
         battleWorld.init();
         
         WorldCanvas canv = battleWorld.getCanvas();
-        canv.addPlayerControls(new SoloPlayerControls(player));
+        canv.addPlayerControls(new SoloPlayerControls(player, battleWorld));
         
         WorldPage wp = new WorldPage();
         wp.setCanvas(canv);

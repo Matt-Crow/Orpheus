@@ -7,6 +7,7 @@ import java.awt.event.MouseListener;
 import windows.Canvas;
 import windows.EndOfFrameListener;
 import windows.world.WorldCanvas;
+import world.AbstractWorld;
 
 /**
  * CONTROLS:<br>
@@ -21,8 +22,8 @@ import windows.world.WorldCanvas;
  * @author Matt Crow
  */
 public abstract class AbstractPlayerControls extends AbstractControlScheme<HumanPlayer> implements MouseListener, EndOfFrameListener{
-    public AbstractPlayerControls(HumanPlayer forPlayer){
-        super(forPlayer);
+    public AbstractPlayerControls(HumanPlayer forPlayer, AbstractWorld inWorld){
+        super(forPlayer, inWorld);
     }
     
     public final String meleeString(){

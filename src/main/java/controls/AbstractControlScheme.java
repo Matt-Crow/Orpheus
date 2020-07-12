@@ -18,16 +18,18 @@ import world.AbstractWorld;
  * @param <T> the subclass of AbstractPlayer this is controlling
  */
 public class AbstractControlScheme<T extends AbstractPlayer> {
+    private final AbstractWorld targettedWorld;
     private final T targettedPlayer;
     private final String targettedEntityId;
     
-    public AbstractControlScheme(T forPlayer){
+    public AbstractControlScheme(T forPlayer, AbstractWorld world){
+        targettedWorld = world;
         targettedPlayer = forPlayer;
         targettedEntityId = forPlayer.id;
     }
     
     public final T getPlayer(){
-        return targettedPlayer;
+        return (T)targettedWorld.getPlayerTeam().getMemberById(targettedEntityId);
     }
     
     // I need to switch to this method so serialization works

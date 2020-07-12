@@ -1,6 +1,7 @@
 package controls;
 
 import entities.HumanPlayer;
+import world.AbstractWorld;
 
 /**
  *
@@ -8,8 +9,8 @@ import entities.HumanPlayer;
  */
 public class SoloPlayerControls extends AbstractPlayerControls{
 
-    public SoloPlayerControls(HumanPlayer forPlayer) {
-        super(forPlayer);
+    public SoloPlayerControls(HumanPlayer forPlayer, AbstractWorld inWorld) {
+        super(forPlayer, inWorld);
     }
 
     @Override

@@ -138,14 +138,17 @@ public class WorldCanvas extends Canvas{
     
     
     public static void main(String[] args) throws IOException{
-        Master.getUser().initPlayer().getPlayer().applyBuild(Master.getDataSet().getDefaultBuild());
+        User user = Master.getUser();
+        HumanPlayer player = user.initPlayer().getPlayer();
+        
+        player.applyBuild(Master.getDataSet().getDefaultBuild());
         
         HostWorld world = new HostWorld(WorldContent.createDefaultBattle());
         Team t1 = new Team("Test", Color.BLUE);
         Team t2 = Team.constructRandomTeam("Rando", Color.yellow, 1, 1);
         
         WorldCanvas canvas = new WorldCanvas(world);
-        canvas.addPlayerControls(new SoloPlayerControls(Master.getUser().getPlayer()));
+        canvas.addPlayerControls(new SoloPlayerControls(player, world));
         MainWindow mw = MainWindow.getInstance();
         WorldPage wp = new WorldPage();
         wp.setCanvas(canvas);
@@ -154,21 +157,22 @@ public class WorldCanvas extends Canvas{
         
         Battle b = new Battle(10, 5);
         
-        t1.addMember(Master.getUser().getPlayer());
+        t1.addMember(player);
         world.setPlayerTeam(t1).setEnemyTeam(t2);
         b.setHost(world);
         world.setCurrentMinigame(b);
         world.init();
         
-        Master.getUser().setRemotePlayerId(Master.getUser().getPlayer().id);
+        user.setRemotePlayerId(player.id);
+        
         
         //now to try serializing it...
         String serial = world.getContent().serializeToString();
         
         WorldContent newContent = WorldContent.fromSerializedString(serial);
         world.setContent(newContent);
-        User me = Master.getUser();
-        me.setPlayer((HumanPlayer)newContent.getPlayerTeam().getMemberById(me.getRemotePlayerId()));
+        
+        //user.setPlayer((HumanPlayer)newContent.getPlayerTeam().getMemberById(user.getRemotePlayerId()));
         
         //newWorld.init();
         

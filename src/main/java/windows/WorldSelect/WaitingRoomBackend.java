@@ -243,7 +243,7 @@ public class WaitingRoomBackend {
         
         WorldPage p = new WorldPage();
         WorldCanvas canv = world.getCanvas();
-        canv.addPlayerControls(new RemotePlayerControls(me.getPlayer(), sm.getIpAddr()));
+        canv.addPlayerControls(new RemotePlayerControls(me.getPlayer(), world, sm.getIpAddr()));
         canv.setPauseEnabled(false);
         p.setCanvas(canv);
         host.getHost().switchToPage(p);

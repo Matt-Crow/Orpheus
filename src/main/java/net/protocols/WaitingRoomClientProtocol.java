@@ -86,7 +86,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
         
         WorldPage p = new WorldPage();
         WorldCanvas canv = world.getCanvas();
-        canv.addPlayerControls(new RemotePlayerControls(me.getPlayer(), sm.getIpAddr()));
+        canv.addPlayerControls(new RemotePlayerControls(me.getPlayer(), world, sm.getIpAddr()));
         canv.setPauseEnabled(false);
         p.setCanvas(canv);
         getFrontEnd().getHost().switchToPage(p);
