@@ -19,12 +19,10 @@ import world.AbstractWorld;
  */
 public class AbstractControlScheme<T extends AbstractPlayer> {
     private final AbstractWorld targettedWorld;
-    private final T targettedPlayer;
     private final String targettedEntityId;
     
     public AbstractControlScheme(T forPlayer, AbstractWorld world){
         targettedWorld = world;
-        targettedPlayer = forPlayer;
         targettedEntityId = forPlayer.id;
     }
     
