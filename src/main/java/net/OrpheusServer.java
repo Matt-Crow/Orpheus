@@ -160,7 +160,7 @@ public class OrpheusServer {
         return isStarted;
     }
     
-    //where do I need to send user data?
+    // delete this later once I am done with protocols
     private void initReceivers(){
         addReceiver(ServerMessageType.PLAYER_JOINED, (ServerMessage sm)->{
             String ip = sm.getIpAddr();
