@@ -1,9 +1,7 @@
 package net.protocols;
 
 import controllers.User;
-import java.io.IOException;
 import java.util.HashMap;
-import net.OrpheusServer;
 import windows.WorldSelect.AbstractWaitingRoom;
 
 /**

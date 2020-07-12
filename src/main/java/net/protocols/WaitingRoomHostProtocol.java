@@ -27,20 +27,36 @@ import world.HostWorld;
 import world.WorldContent;
 
 /**
- *
+ * The WaitingRoomHostProtocol is used to prepare a multiplayer game.
+ * The process of this protocol is as follows:
+ * 1. Whenever someone connects to the server, adds them to the player team.
+ * 2. Once the host clicks the start button, users are notified that the game will start soon.
+ * 3. Once the time has elapsed, sends requests for the Builds of each connected User.
+ * 4. After each Build has been received, creates a new World, applies each User's Build to a HumanPlayer in that World, 
+ * and sends them information needed to remotely control that HumanPlayer. Serializes and sends the world as well.
  * @author Matt Crow
  */
 public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{    
     /*
     measured in seconds
      */
-    public static final int WAIT_TIME = 0;
+    public static final int WAIT_TIME = 3;
     
     private final Battle minigame;
     private final Team playerTeam;
     private final Team enemyTeam;
+    
+    /*
+    The Users who have joined the waiting room, but have
+    not yet sent their Builds to the server
+    */
     private final HashMap<String, User> awaitingBuilds;
     
+    /**
+     * Creates the protocol.
+     * @param host the HostWaitingRoom to act as this protocol's front end
+     * @param game the game which players will play once this protocol is done.
+     */
     public WaitingRoomHostProtocol(HostWaitingRoom host, Battle game){
         super(host);
         minigame = game;   
@@ -49,6 +65,9 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
         awaitingBuilds = new HashMap<>();
     }
     
+    /**
+     * Prepares the waiting room to receive players.
+     */
     @Override
     public void doApplyProtocol(){
         playerTeam.clear();
@@ -61,7 +80,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
     /**
      * Puts the given user on the teamProto,
      * and alerts all connected players
-     * @param u 
+     * @param u the User who wants to play
      */
     public final void addUserToTeam(User u){
         if(addToTeamProto(u)){
@@ -71,7 +90,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
                 ServerMessageType.WAITING_ROOM_UPDATE
             );
             OrpheusServer.getInstance().send(sm);
-            getFrontEnd().getChat().logLocal(u.getName() + " has joined the team.");
+            getFrontEnd().getChat().logLocal(u.getName() + " has joined the team!");
             getFrontEnd().updateTeamDisplays();
         }
     }
@@ -83,7 +102,6 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
      * and sends the new player the current waiting room status.
      * 
      * @param sm
-     * @param server 
      */
     private void receiveJoin(ServerMessage sm){
         String joiningIp = sm.getIpAddr();

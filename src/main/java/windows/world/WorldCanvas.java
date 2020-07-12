@@ -175,7 +175,7 @@ public class WorldCanvas extends Canvas{
         wp = new WorldPage();
         wp.setCanvas(canvas);
         mw.switchToPage(wp);
-        
+        canvas.setPauseEnabled(true);
         world.getCanvas().registerKey(KeyEvent.VK_S, true, ()->{
             Team t = world.getPlayerTeam();
             System.out.println("Total entities to serialize: " + t.length());

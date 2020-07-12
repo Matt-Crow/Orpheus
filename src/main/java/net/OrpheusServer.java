@@ -362,7 +362,7 @@ public class OrpheusServer {
             throw new NullPointerException();
         }
         if(!receivers.containsKey(key)){
-            receivers.put(key, new SafeList<Consumer<ServerMessage>>());
+            receivers.put(key, new SafeList<>());
         }
         receivers.get(key).add(nomNom);
         
