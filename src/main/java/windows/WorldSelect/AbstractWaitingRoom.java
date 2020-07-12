@@ -9,6 +9,7 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.io.IOException;
 import java.util.Arrays;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -116,6 +117,14 @@ public abstract class AbstractWaitingRoom extends Page{
     }
     public AbstractWaitingRoomProtocol getBackEnd(){
         return backend;
+    }
+    
+    public void startProtocol() throws IOException{
+        if(backend == null){
+            throw new UnsupportedOperationException("protocol not set");
+        } else {
+            backend.start();
+        }
     }
     
     public abstract void startButton();

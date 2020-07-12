@@ -19,6 +19,7 @@ public class WSNewMulti extends AbstractWSNewWorld{
         try{
             Master.getUser().initPlayer().getPlayer().applyBuild(getSelectedBuild());
             HostWaitingRoom wait = new HostWaitingRoom(createBattle());
+            wait.startProtocol();
             getHost().switchToPage(wait);
             ((WaitingRoomHostProtocol)wait.getBackEnd()).addUserToTeam(Master.getUser());
         } catch (IOException ex) {

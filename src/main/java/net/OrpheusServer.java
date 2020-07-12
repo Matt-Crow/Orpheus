@@ -122,6 +122,21 @@ public class OrpheusServer {
         return this;
     }
     
+    /**
+     * If the server is not started, starts it.
+     * If the server is already started, resets it.
+     * @return this, for chaining purposes.
+     * @throws IOException if an error occurs while starting the server
+     */
+    public OrpheusServer restart() throws IOException{
+        if(isStarted){
+            reset();
+        } else {
+            start();
+        }
+        return this;
+    }
+    
     public boolean isStarted(){
         return isStarted;
     }

@@ -81,29 +81,17 @@ public class WSJoin extends Page{
     }
     
     private void join(String ipAddr){
-        if(!Master.SERVER.isStarted()){
-            try {
-                Master.SERVER.start();
-            } catch (IOException ex) {
-                msgs.append("Failed to start local server\n");
-                msgs.append(ex.getMessage() + '\n');
-                msgs.append(Arrays.toString(ex.getStackTrace()) + '\n');
-                return;
-            }
-        }
-        if(Master.SERVER.isStarted()){
-            Master.loginWindow();
-            try {
-                msgs.append("Attempting to connect to " + ipAddr + "...\n");
-                Master.SERVER.connect(ipAddr);
-                ClientWaitingRoom wait = new ClientWaitingRoom(ipAddr);
-                msgs.append("success!\n");
-                getHost().switchToPage(wait);
-                //wait.joinServer(ipAddr);
-            } catch (IOException ex) {
-                msgs.append(ex.getMessage() + '\n');
-                msgs.append(Arrays.toString(ex.getStackTrace()) + '\n');
-            }
+        try {
+            Master.loginWindow(); // set username
+            msgs.append("Attempting to connect to " + ipAddr + "...\n");
+            ClientWaitingRoom wait = new ClientWaitingRoom(ipAddr);
+            wait.startProtocol();
+            msgs.append("success!\n");
+            getHost().switchToPage(wait);
+            //wait.joinServer(ipAddr);
+        } catch (IOException ex) {
+            msgs.append(ex.getMessage() + '\n');
+            msgs.append(Arrays.toString(ex.getStackTrace()) + '\n');
         }
     }
     

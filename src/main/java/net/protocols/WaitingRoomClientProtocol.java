@@ -22,20 +22,17 @@ import world.WorldContent;
  * @author Matt
  */
 public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
-
-    public WaitingRoomClientProtocol(AbstractWaitingRoom linkedRoom, OrpheusServer forServer) {
+    private final String hostIp;
+    public WaitingRoomClientProtocol(AbstractWaitingRoom linkedRoom, OrpheusServer forServer, String hostIpAddr) {
         super(linkedRoom, forServer);
+        hostIp = hostIpAddr;
     }
     
-    public void initServer() throws IOException {
+    @Override
+    public void doStart() {
         resetTeamProto();
-        OrpheusServer server = getServer();
-        if(server.isStarted()){
-            server.reset();
-        } else {
-            server.start();
-        }
-        server.setProtocol(this);
+        getFrontEnd().getChat().joinChat(hostIp);
+        getFrontEnd().getChat().logLocal("Connected to host " + hostIp);
     }
     
     private void receiveInit(ServerMessage sm){

@@ -1,6 +1,7 @@
 package net.protocols;
 
 import controllers.User;
+import java.io.IOException;
 import java.util.HashMap;
 import net.OrpheusServer;
 import windows.WorldSelect.AbstractWaitingRoom;
@@ -23,6 +24,16 @@ public abstract class AbstractWaitingRoomProtocol extends AbstractOrpheusServerP
         frontEnd = linkedRoom;
         teamProto = new HashMap<>();
         server = forServer;
+    }
+    
+    /**
+     * Restarts the server, and applies this as its protocol
+     * @throws IOException 
+     */
+    public final void start() throws IOException{
+        server.restart();
+        server.setProtocol(this);
+        doStart();
     }
     
     public final void resetTeamProto(){
@@ -55,5 +66,11 @@ public abstract class AbstractWaitingRoomProtocol extends AbstractOrpheusServerP
     
     public final OrpheusServer getServer(){
         return server;
-    }
+    }  
+    
+    /**
+     * Called whenever start() is
+     * invoked.
+     */
+    public abstract void doStart();
 }
