@@ -2,6 +2,7 @@ package controls;
 
 import controllers.Master;
 import entities.HumanPlayer;
+import net.OrpheusServer;
 import net.ServerMessage;
 import net.ServerMessageType;
 
@@ -19,7 +20,7 @@ public class RemotePlayerControls extends AbstractPlayerControls{
     
     @Override
     public final void useMeleeKey(){
-        Master.SERVER.send(
+        OrpheusServer.getInstance().send(
             new ServerMessage(
                 meleeString(),
                 ServerMessageType.CONTROL_PRESSED
@@ -30,7 +31,7 @@ public class RemotePlayerControls extends AbstractPlayerControls{
 
     @Override
     public void useAttKey(int i) {
-        Master.SERVER.send(
+        OrpheusServer.getInstance().send(
             new ServerMessage(
                 attString(i),
                 ServerMessageType.CONTROL_PRESSED
@@ -41,7 +42,7 @@ public class RemotePlayerControls extends AbstractPlayerControls{
 
     @Override
     public void move() {
-        Master.SERVER.send(
+        OrpheusServer.getInstance().send(
             new ServerMessage(
                 moveString(),
                 ServerMessageType.CONTROL_PRESSED

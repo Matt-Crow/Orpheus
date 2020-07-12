@@ -111,7 +111,7 @@ public class WSWaitForPlayers extends Page{
     public WSWaitForPlayers joinServer(String ipAddr) throws IOException{
         backend.initClientServer();
         
-        Master.SERVER.connect(ipAddr);
+        OrpheusServer.getInstance().connect(ipAddr);
         chat.joinChat(ipAddr);
         chat.logLocal("Connected to host " + ipAddr);
         

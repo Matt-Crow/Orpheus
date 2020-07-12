@@ -6,6 +6,7 @@ import javax.json.Json;
 import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import net.OrpheusServer;
 import serialization.JsonSerialable;
 import serialization.JsonUtil;
 
@@ -35,7 +36,7 @@ public final class User implements JsonSerialable{
     }
     
     public User(String name){
-        this(name, Master.SERVER.getIpAddr());
+        this(name, OrpheusServer.getInstance().getIpAddr());
     }
     
     public User(){

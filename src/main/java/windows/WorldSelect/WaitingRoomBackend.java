@@ -81,7 +81,7 @@ public class WaitingRoomBackend {
     
     public WaitingRoomBackend(WSWaitForPlayers page){
         host = page;
-        server = Master.SERVER;
+        server = OrpheusServer.getInstance();
         isHost = false;
         numWaves = 1;
         maxEnemyLevel = 10;
@@ -296,7 +296,7 @@ public class WaitingRoomBackend {
                     "join player team",
                     ServerMessageType.WAITING_ROOM_UPDATE
                 );
-                Master.SERVER.send(sm);
+                OrpheusServer.getInstance().send(sm);
             }
             //host.updateTeamDisplays();
         }

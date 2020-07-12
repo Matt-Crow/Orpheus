@@ -13,7 +13,6 @@ import java.util.function.Consumer;
 import static java.lang.System.out;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import javax.json.JsonException;
 import serialization.JsonUtil;
 import util.SafeList;
@@ -34,14 +33,19 @@ import util.SafeList;
  * Upon receiving input into its socket, the server will attempt to de-serialize it.
  * If the de-serialization is successful, it takes the type of that message,
  * and calls the corresponding Consumers in the 'receivers' HashMap.
+ * 
+ * I am in the process of removing this consumer strategy,
+ * replacing it with easier to understand AbstractOrpheusServerProtocols
+ * 
  * @see OrpheusServer#receive() 
+ * @see net.protocols.AbstractOrpheusServerProtocol
  * 
  * @author Matt Crow
  */
 public class OrpheusServer {
     private boolean isStarted;
     private ServerSocket server;
-    private final String ipAddress;
+    private String ipAddress;
     
     /*
     The users connected to this server, where the key is their
@@ -57,28 +61,42 @@ public class OrpheusServer {
     private volatile AbstractOrpheusServerProtocol currentProtocol;
     
     public static final int PORT = 5000;
+    private static OrpheusServer instance = null;
     
     /**
      * Creates an OrpheusServer.
      * Note that this does not actually start the server,
      * you need to call start() for that.
      */
-    public OrpheusServer(){
+    private OrpheusServer(){
+        if(instance != null){
+            throw new ExceptionInInitializerError("OrpheusServer is a singleton class: Use OrpheusServer.getInstance()");
+        }
+        ipAddress = "127.0.0.1"; // Loopback address. This is just a default value
         receivers = new HashMap<>();
         connections = new HashMap<>();
         cachedMessages = new SafeList<>();
-        listenForConn = false;
-        
-        String ip;
-        try {
-            ip = InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException ex) {
-            ip = "";
-            ex.printStackTrace();
-        }
-        ipAddress = ip;
+        listenForConn = false;   
         isStarted = false;
         currentProtocol = null;
+    }
+    
+    /**
+     * Use this method to interact with the OrpheusServer.
+     * This method create the instance of OrpheusServer if it is not yet initialized.
+     * 
+     * I'm not sure if I want to add a different method which creates the server,
+     * so it can disable multiplayer if it fails.
+     * 
+     * Note that you must still call .start() on the server
+     * 
+     * @return the instance of OrpheusServer
+     */
+    public static final OrpheusServer getInstance() {
+        if(instance == null){
+            instance = new OrpheusServer();
+        }
+        return instance;
     }
     
     /**
@@ -93,6 +111,7 @@ public class OrpheusServer {
             return this;
         }
         
+        ipAddress = InetAddress.getLocalHost().getHostAddress();
         server = new ServerSocket(PORT);
         
         reset();

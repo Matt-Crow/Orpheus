@@ -1,6 +1,5 @@
 package windows.world;
 
-import controllers.Master;
 import gui.Chat;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -37,9 +36,6 @@ public class WorldPage extends Page{
     public WorldPage(){
         super();
         addBackButton(new WSMain(), ()->{
-            if(Master.SERVER.isStarted()){
-                Master.SERVER.shutDown();
-            }
             if(canvas != null){
                 canvas.stop();
             }

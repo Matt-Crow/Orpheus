@@ -10,6 +10,7 @@ import entities.Projectile;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.function.Consumer;
+import net.OrpheusServer;
 import net.ServerMessage;
 import net.ServerMessageType;
 import util.SerialUtil;
@@ -27,10 +28,11 @@ public class HostWorld extends AbstractWorld{
     }
     
     public final void initServer() throws IOException{
-        if(!Master.SERVER.isStarted()){
-            Master.SERVER.start();
+        OrpheusServer server = OrpheusServer.getInstance();
+        if(!server.isStarted()){
+            server.start();
         }
-        Master.SERVER.addReceiver(ServerMessageType.CONTROL_PRESSED, receiveControl);
+        server.addReceiver(ServerMessageType.CONTROL_PRESSED, receiveControl);
     }
     
     private void receiveControl(ServerMessage sm){
@@ -58,7 +60,7 @@ public class HostWorld extends AbstractWorld{
     public void update() {
         updateTeam(getPlayerTeam());
         updateTeam(getAITeam());
-        Master.SERVER.send(new ServerMessage(
+        OrpheusServer.getInstance().send(new ServerMessage(
             SerialUtil.serializeToString(new Team[]{getPlayerTeam(), getAITeam()}),
             ServerMessageType.WORLD_UPDATE
         ));

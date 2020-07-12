@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.function.Consumer;
 import javax.swing.SwingUtilities;
+import net.OrpheusServer;
 import net.ServerMessage;
 import net.ServerMessageType;
 import util.SerialUtil;
@@ -27,12 +28,13 @@ public class RemoteProxyWorld extends AbstractWorld{
     }
     
     public final void setRemoteHost(String ipAddr) throws IOException{
-        if(!Master.SERVER.isStarted()){
-            Master.SERVER.start();
+        OrpheusServer server = OrpheusServer.getInstance();
+        if(!server.isStarted()){
+            server.start();
         }
         
         remoteHostIp = ipAddr;
-        Master.SERVER.addReceiver(ServerMessageType.WORLD_UPDATE, receiveWorldUpdate);
+        server.addReceiver(ServerMessageType.WORLD_UPDATE, receiveWorldUpdate);
     }
     
     public final String getHostIp(){

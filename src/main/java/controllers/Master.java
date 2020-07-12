@@ -2,7 +2,6 @@ package controllers;
 
 import customizables.DataSet;
 import javax.swing.JOptionPane;
-import net.OrpheusServer;
 
 public class Master {
 	public static final int DETECTIONRANGE = 500;
@@ -13,7 +12,6 @@ public class Master {
 	public static final boolean DISABLEPARTICLES = false; // causes lag
 	public static final int FPS = 30;
 	public static final int UNITSIZE = 100;
-    public static final OrpheusServer SERVER = new OrpheusServer();
     
     private static User user;
     

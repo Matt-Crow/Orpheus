@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.function.Consumer;
 import javax.swing.*;
+import net.OrpheusServer;
 import net.ServerMessage;
 import net.ServerMessageType;
 
@@ -18,6 +19,7 @@ public class Chat extends JComponent implements ActionListener{
     private final JTextField newMsg;
     private final HashMap<String, Consumer<String[]>> CMDS = new HashMap<>();
     private Consumer<ServerMessage> receiver;
+    private boolean chatServerOpened;
     
     public Chat(){
         super();
@@ -55,6 +57,8 @@ public class Chat extends JComponent implements ActionListener{
         initCmds();
         
         logLocal("enter '/?' to list commands");
+        
+        chatServerOpened = false;
         
         revalidate();
         repaint();
@@ -98,17 +102,18 @@ public class Chat extends JComponent implements ActionListener{
     }
     public void log(String msg){
         logLocal("You: " + msg);
-        if(Master.SERVER.isStarted()){
+        if(OrpheusServer.getInstance().isStarted()){
             ServerMessage sm = new ServerMessage(msg, ServerMessageType.CHAT);
-            Master.SERVER.send(sm);
+            OrpheusServer.getInstance().send(sm);
         }
 	}
     
     
     public void openChatServer(){
-        if(!Master.SERVER.isStarted()){
+        OrpheusServer server = OrpheusServer.getInstance();
+        if(!server.isStarted()){
             try {
-                Master.SERVER.start();
+                server.start();
             } catch (IOException ex) {
                 logLocal("Failed to start chat server");
                 ex.printStackTrace();
@@ -116,21 +121,25 @@ public class Chat extends JComponent implements ActionListener{
         }
         
         //started successfully
-        if(Master.SERVER.isStarted()){
-            Master.SERVER.addReceiver(ServerMessageType.CHAT, receiver);
-            logLocal("Initialized chat server on " + Master.SERVER.getIpAddr());
-            logLocal("Have other people use the \'/connect " + Master.SERVER.getIpAddr() + "\' command (without the quote marks) to connect.");
+        if(OrpheusServer.getInstance().isStarted()){
+            server.addReceiver(ServerMessageType.CHAT, receiver);
+            logLocal("Initialized chat server on " + server.getIpAddr());
+            logLocal("Have other people use the \'/connect " + server.getIpAddr() + "\' command (without the quote marks) to connect.");
         }
+        
+        chatServerOpened = true;
     }
     
     public void joinChat(String ipAddr){
-        openChatServer();
-        
-        if(Master.SERVER.isStarted()){
+        if(!chatServerOpened){
+            openChatServer();
+        }
+        OrpheusServer server = OrpheusServer.getInstance();
+        if(server.isStarted()){
             try {
-                Master.SERVER.connect(ipAddr);
+                server.connect(ipAddr);
                 logLocal("Joined chat with " + ipAddr);
-                Master.SERVER.send(new ServerMessage(
+                server.send(new ServerMessage(
                     Master.getUser().getName() + " has joined the chat.",
                     ServerMessageType.CHAT
                 ));

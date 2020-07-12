@@ -8,6 +8,7 @@ import actions.TerminateListener;
 import controllers.Master;
 import world.AbstractWorld;
 import java.io.Serializable;
+import net.OrpheusServer;
 import util.SafeList;
 
 /**
@@ -40,7 +41,7 @@ public abstract class AbstractEntity implements Serializable, Terminable{
 	private static int nextId = 0;
     
 	public AbstractEntity(){
-		id = Master.SERVER.getIpAddr() + "#" + nextId;
+		id = OrpheusServer.getInstance().getIpAddr() + "#" + nextId;
         inWorld = null;
         radius = 50;
         terminateListeners = new SafeList<>();

@@ -152,7 +152,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
     }
     
     private void requestBuilds(){
-        Master.SERVER.send(new ServerMessage(
+        OrpheusServer.getInstance().send(new ServerMessage(
             "please provide build information",
             ServerMessageType.REQUEST_PLAYER_DATA
         ));

@@ -1,8 +1,8 @@
 package windows.WorldSelect;
 
 import battle.Battle;
-import controllers.Master;
 import java.io.IOException;
+import net.OrpheusServer;
 import net.protocols.WaitingRoomHostProtocol;
 
 /**
@@ -12,7 +12,7 @@ import net.protocols.WaitingRoomHostProtocol;
 public class HostWaitingRoom extends AbstractWaitingRoom{
     public HostWaitingRoom(Battle game) throws IOException{
         super();
-        WaitingRoomHostProtocol protocol = new WaitingRoomHostProtocol(this, Master.SERVER, game);
+        WaitingRoomHostProtocol protocol = new WaitingRoomHostProtocol(this, OrpheusServer.getInstance(), game);
         setBackEnd(protocol);
     }
 

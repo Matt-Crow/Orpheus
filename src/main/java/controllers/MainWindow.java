@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import javax.swing.JPanel;
+import net.OrpheusServer;
 import util.CombatLog;
 import windows.Page;
 import windows.PageSwitchListener;
@@ -47,7 +48,7 @@ public class MainWindow extends JFrame{
             @Override
             public void windowClosing(WindowEvent e) {
                 //CombatLog.displayLog();
-                Master.SERVER.shutDown();
+                OrpheusServer.getInstance().shutDown();
             }
         });
         
