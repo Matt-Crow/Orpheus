@@ -9,7 +9,6 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
-import java.util.function.Consumer;
 import static java.lang.System.out;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
@@ -56,7 +55,6 @@ public class OrpheusServer {
     private Thread connListener; //the thread that listens for attemts to connect to this server
     private volatile boolean listenForConn; //whether or not the connListener thread is active
     
-    private final HashMap<ServerMessageType, SafeList<Consumer<ServerMessage>>> receivers; //see the receive method
     private final SafeList<ServerMessage> cachedMessages; //messages received before the receiver could be
     
     private volatile AbstractOrpheusServerNonChatProtocol currentProtocol;
@@ -75,7 +73,6 @@ public class OrpheusServer {
             throw new ExceptionInInitializerError("OrpheusServer is a singleton class: Use OrpheusServer.getInstance()");
         }
         ipAddress = "127.0.0.1"; // Loopback address. This is just a default value
-        receivers = new HashMap<>();
         connections = new HashMap<>();
         cachedMessages = new SafeList<>();
         listenForConn = false;   
@@ -136,11 +133,10 @@ public class OrpheusServer {
      */
     public OrpheusServer reset(){
         System.out.println("Server reset");
-        receivers.clear();
+        
         // these mess stuff up.
         //currentProtocol = null; 
         //currentChatProtocol = null;
-        initReceivers();
         
         //connections.values().forEach((conn)->conn.close());
         //connections.clear();
@@ -169,39 +165,7 @@ public class OrpheusServer {
     public boolean isStarted(){
         return isStarted;
     }
-    
-    // delete this later once I am done with protocols
-    private void initReceivers(){
-        addReceiver(ServerMessageType.PLAYER_JOINED, (ServerMessage sm)->{
-            String ip = sm.getIpAddr();
-            if(connections.containsKey(ip) && connections.get(ip).getUser() != null){
-                out.println("already connected");
-            } else if(connections.containsKey(ip)){
-                //connected to IP, but no user data
-                connections.get(ip).setUser(User.deserializeJson(JsonUtil.fromString(sm.getBody())));
-                logConnections();
-            } else {
-                //not connected, no user data
-                try {
-                    connect(ip);
-                    connections.get(ip).setUser(User.deserializeJson(JsonUtil.fromString(sm.getBody())));
-                    logConnections();
-                } catch (IOException ex){
-                    ex.printStackTrace();
-                }
-            }
-        });
-        addReceiver(ServerMessageType.PLAYER_LEFT, (ServerMessage sm)->{
-            String ip = sm.getSender().getIpAddress();
-            if(connections.containsKey(ip)){
-                out.println(ip + " left");
-                disconnect(sm.getIpAddr());
-            }else{
-                out.println(ip + " is not connected, so I cannot disconnect from them");
-            }
-        });
-    }
-    
+        
     private void startConnListener(){
         if(connListener == null){
             connListener = new Thread(){
@@ -315,6 +279,36 @@ public class OrpheusServer {
         return success;
     }
     
+    private void receiveJoin(ServerMessage sm){
+        String ip = sm.getIpAddr();
+        if(connections.containsKey(ip) && connections.get(ip).getUser() != null){
+            out.println("already connected");
+        } else if(connections.containsKey(ip)){
+            //connected to IP, but no user data
+            connections.get(ip).setUser(User.deserializeJson(JsonUtil.fromString(sm.getBody())));
+            logConnections();
+        } else {
+            //not connected, no user data
+            try {
+                connect(ip);
+                connections.get(ip).setUser(User.deserializeJson(JsonUtil.fromString(sm.getBody())));
+                logConnections();
+            } catch (IOException ex){
+                ex.printStackTrace();
+            }
+        }
+    }
+    
+    private void receiveDisconnect(ServerMessage sm){
+        String ip = sm.getSender().getIpAddress();
+        if(connections.containsKey(ip)){
+            out.println(ip + " left");
+            disconnect(sm.getIpAddr());
+        }else{
+            out.println(ip + " is not connected, so I cannot disconnect from them");
+        }
+    }
+    
     public void receive(String msg){
         try{
             ServerMessage sm = ServerMessage.deserializeJson(msg);
@@ -324,12 +318,11 @@ public class OrpheusServer {
                 out.println("I don't recognize " + sm.getIpAddr());
             }
             
-            if(receivers.containsKey(sm.getType())){
-                receivers.get(sm.getType()).forEach((c)->c.accept(sm));
-            } else {
-                out.println("I don't have a receiver for this, so I'll cache it: " + msg);
-                out.println("(" + sm.hashCode() + ")");
-                cachedMessages.add(sm);
+            // handle joining / leaving
+            if(sm.getType() == ServerMessageType.PLAYER_JOINED){
+                receiveJoin(sm);
+            } else if (sm.getType() == ServerMessageType.PLAYER_LEFT){
+                receiveDisconnect(sm);
             }
             
             boolean handled = false;
@@ -346,7 +339,10 @@ public class OrpheusServer {
             if(handled){
                 out.println("Successfully received!");
             } else {
-                out.println("Nope, didn't receive properly :(");
+                out.println("Nope, didn't receive properly, so I'll cache it: " + msg);
+                out.println("(" + sm.hashCode() + ")");
+                cachedMessages.add(sm);
+                
             }
             
         } catch (JsonException ex){
@@ -361,6 +357,12 @@ public class OrpheusServer {
      */
     public void setProtocol(AbstractOrpheusServerNonChatProtocol protocol){
         currentProtocol = protocol;
+        cachedMessages.forEach((ServerMessage sm)->{
+            if(protocol.receiveMessage(sm, this)){
+                cachedMessages.remove(sm);
+                out.println("uncached message " + sm.hashCode());
+            }
+        });
     }
     
     /**
@@ -377,38 +379,12 @@ public class OrpheusServer {
      */
     public void setChatProtocol(ChatProtocol chat){
         currentChatProtocol = chat;
-    }
-    
-    /**
-     * 
-     * @param key the type of ServerMessage this should receive.
-     * @param nomNom the function to run upon receiving a ServerMessage of the given type. 
-     * @see ServerMessage
-     */
-    public void addReceiver(ServerMessageType key, Consumer<ServerMessage> nomNom){
-        if(nomNom == null){
-            throw new NullPointerException();
-        }
-        if(!receivers.containsKey(key)){
-            receivers.put(key, new SafeList<>());
-        }
-        receivers.get(key).add(nomNom);
-        
         cachedMessages.forEach((ServerMessage sm)->{
-            if(sm.getType().equals(key)){
-                nomNom.accept(sm);
+            if(chat.receiveMessage(sm, this)){
                 cachedMessages.remove(sm);
                 out.println("uncached message " + sm.hashCode());
             }
         });
-    }
-    
-    public boolean removeReceiver(ServerMessageType type, Consumer<ServerMessage> nonNom){
-        boolean wasRemoved = false;
-        if(receivers.containsKey(type)){
-            wasRemoved = receivers.get(type).remove(nonNom);
-        }
-        return wasRemoved;
     }
     
     public final void setAcceptingConn(boolean b){
@@ -442,22 +418,11 @@ public class OrpheusServer {
         out.println("END OF CONNECTIONS");
     }
     
-    public synchronized void logReceivers(){
-        out.println("RECEIVERS:");
-        receivers.forEach((smt, sl)->{
-            out.println(smt.toString() + ": X" + sl.length());
-        });
-        out.println("END OF RECEIVERS");
-    }
-    
     public static void main(String[] args){
         try {
             OrpheusServer os = new OrpheusServer();
             os.logConnections();
-            os.logReceivers();
             os.start();
-            os.logConnections();
-            os.logReceivers();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
