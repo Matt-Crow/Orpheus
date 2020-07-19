@@ -73,8 +73,12 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
         playerTeam.clear();
         enemyTeam.clear();
         awaitingBuilds.clear();
-        getFrontEnd().getChat().openChatServer();
-        getFrontEnd().getChat().logLocal("Server started on host address " + OrpheusServer.getInstance().getIpAddr());
+        try {
+            getFrontEnd().getChat().openChatServer();
+        } catch (IOException ex) {
+            getFrontEnd().getChat().logLocal("Failed to open chat server");
+            ex.printStackTrace();
+        }
     }
     
     /**

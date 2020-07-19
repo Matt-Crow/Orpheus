@@ -8,7 +8,7 @@ import windows.WorldSelect.AbstractWaitingRoom;
  *
  * @author Matt
  */
-public abstract class AbstractWaitingRoomProtocol extends AbstractOrpheusServerProtocol{
+public abstract class AbstractWaitingRoomProtocol extends AbstractOrpheusServerNonChatProtocol{
     private final AbstractWaitingRoom frontEnd;
     /*
     Keeps track of which Users want to play.

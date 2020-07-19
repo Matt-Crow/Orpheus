@@ -31,9 +31,12 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
     @Override
     public void doApplyProtocol() {
         resetTeamProto();
-        getFrontEnd().getChat().openChatServer();
-        getFrontEnd().getChat().joinChat(hostIp);
-        getFrontEnd().getChat().logLocal("Connected to host " + hostIp);
+        try {
+            getFrontEnd().getChat().joinChat(hostIp);
+        } catch (IOException ex) {
+            getFrontEnd().getChat().logLocal("Failed to connect to " + hostIp);
+            ex.printStackTrace();
+        }
     }
     
     private void receiveInit(ServerMessage sm){

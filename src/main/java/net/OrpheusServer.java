@@ -1,6 +1,6 @@
 package net;
 
-import net.protocols.AbstractOrpheusServerProtocol;
+import net.protocols.AbstractOrpheusServerNonChatProtocol;
 import controllers.Master;
 import controllers.User;
 import java.io.EOFException;
@@ -38,7 +38,7 @@ import util.SafeList;
  * replacing it with easier to understand AbstractOrpheusServerProtocols
  * 
  * @see OrpheusServer#receive() 
- * @see net.protocols.AbstractOrpheusServerProtocol
+ * @see net.protocols.AbstractOrpheusServerNonChatProtocol
  * 
  * @author Matt Crow
  */
@@ -58,7 +58,7 @@ public class OrpheusServer {
     private final HashMap<ServerMessageType, SafeList<Consumer<ServerMessage>>> receivers; //see the receive method
     private final SafeList<ServerMessage> cachedMessages; //messages received before the receiver could be
     
-    private volatile AbstractOrpheusServerProtocol currentProtocol;
+    private volatile AbstractOrpheusServerNonChatProtocol currentProtocol;
     
     public static final int PORT = 5000;
     private static OrpheusServer instance = null;
@@ -347,7 +347,7 @@ public class OrpheusServer {
      * Migrating to use this in lieu of adding and removing receivers
      * @param protocol the new protocol to use. This can be null
      */
-    public void setProtocol(AbstractOrpheusServerProtocol protocol){
+    public void setProtocol(AbstractOrpheusServerNonChatProtocol protocol){
         currentProtocol = protocol;
     }
     

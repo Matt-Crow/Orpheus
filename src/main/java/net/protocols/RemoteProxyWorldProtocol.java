@@ -12,7 +12,7 @@ import world.WorldContent;
  * 
  * @author Matt Crow
  */
-public class RemoteProxyWorldProtocol extends AbstractOrpheusServerProtocol{
+public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtocol{
     private final RemoteProxyWorld proxy;
     
     /** 

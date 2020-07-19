@@ -8,7 +8,7 @@ import net.ServerMessage;
  * need to override apply protocol so this doesn't apply over other protocols
  * @author Matt
  */
-public class ChatProtocol extends AbstractOrpheusServerProtocol{
+public class ChatProtocol extends AbstractOrpheusServerNonChatProtocol{
     private final Chat widget; // he he he. Widgit is fun to say
     
     public ChatProtocol(Chat chat){

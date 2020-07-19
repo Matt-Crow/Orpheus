@@ -11,7 +11,7 @@ import net.ServerMessage;
  * 
  * @author Matt Crow
  */
-public abstract class AbstractOrpheusServerProtocol {
+public abstract class AbstractOrpheusServerNonChatProtocol {
     
     /**
      * Restarts the server, and applies this as its protocol
