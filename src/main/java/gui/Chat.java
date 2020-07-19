@@ -12,13 +12,13 @@ import javax.swing.*;
 import net.OrpheusServer;
 import net.ServerMessage;
 import net.ServerMessageType;
+import net.protocols.ChatProtocol;
 
 public class Chat extends JComponent implements ActionListener{
     private final JTextArea msgs;
     private final JScrollPane box;
     private final JTextField newMsg;
     private final HashMap<String, Consumer<String[]>> CMDS = new HashMap<>();
-    private Consumer<ServerMessage> receiver;
     private boolean chatServerOpened;
     
     public Chat(){
@@ -46,14 +46,6 @@ public class Chat extends JComponent implements ActionListener{
         gbc.fill = GridBagConstraints.BOTH;
         add(newMsg, gbc.clone());
         
-        receiver = (sm)->{
-            logLocal(String.format("(%s): %s", sm.getSender().getName(), sm.getBody()));
-            SwingUtilities.invokeLater(()->{
-                box.getVerticalScrollBar().setValue(box.getVerticalScrollBar().getMaximum());
-                box.repaint();
-            });
-        };
-        
         initCmds();
         
         logLocal("enter '/?' to list commands");
@@ -66,7 +58,13 @@ public class Chat extends JComponent implements ActionListener{
     
     private void initCmds(){
         addCmd("?", (String[] ss)->listCmds());
-        addCmd("connect", (ss)->joinChat(ss[0]));
+        addCmd("connect", (ss)->{
+            try {
+                joinChat(ss[0]);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
     }
     public void addCmd(String cmd, Consumer<String[]> function){
         CMDS.put(cmd.toUpperCase(), function);
@@ -99,6 +97,10 @@ public class Chat extends JComponent implements ActionListener{
     
     public void logLocal(String msg){
         msgs.setText(msgs.getText() + '\n' + msg);
+        SwingUtilities.invokeLater(()->{
+            box.getVerticalScrollBar().setValue(box.getVerticalScrollBar().getMaximum());
+            box.repaint();
+        });
     }
     public void log(String msg){
         logLocal("You: " + msg);
@@ -109,28 +111,15 @@ public class Chat extends JComponent implements ActionListener{
 	}
     
     
-    public void openChatServer(){
-        OrpheusServer server = OrpheusServer.getInstance();
-        if(!server.isStarted()){
-            try {
-                server.start();
-            } catch (IOException ex) {
-                logLocal("Failed to start chat server");
-                ex.printStackTrace();
-            }
+    // maybe move this stuff
+    public void openChatServer() throws IOException{
+        if(!chatServerOpened){
+            new ChatProtocol(this).applyProtocol();
+            chatServerOpened = true;
         }
-        
-        //started successfully
-        if(OrpheusServer.getInstance().isStarted()){
-            server.addReceiver(ServerMessageType.CHAT, receiver);
-            logLocal("Initialized chat server on " + server.getIpAddr());
-            logLocal("Have other people use the \'/connect " + server.getIpAddr() + "\' command (without the quote marks) to connect.");
-        }
-        
-        chatServerOpened = true;
     }
     
-    public void joinChat(String ipAddr){
+    public void joinChat(String ipAddr) throws IOException{
         if(!chatServerOpened){
             openChatServer();
         }
@@ -163,7 +152,11 @@ public class Chat extends JComponent implements ActionListener{
         
         Chat c = new Chat();
         p.add(c);
-        c.openChatServer();
+        try {
+            c.openChatServer();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
         f.revalidate();
         f.repaint();
     }
