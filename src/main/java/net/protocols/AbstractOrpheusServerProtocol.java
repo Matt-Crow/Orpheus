@@ -36,7 +36,8 @@ public abstract class AbstractOrpheusServerProtocol {
     
     /**
      * Called whenever applyProtocol() is
-     * invoked.
+     * invoked. This should reset the protocol,
+     * preparing it.
      */
     public abstract void doApplyProtocol();
 }
