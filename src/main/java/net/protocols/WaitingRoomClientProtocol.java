@@ -88,7 +88,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
         getFrontEnd().getHost().switchToPage(p);
         
         try {
-            new RemoteProxyProtocol(world).applyProtocol();
+            new RemoteProxyWorldProtocol(world).applyProtocol();
         } catch (IOException ex) {
             System.err.println("Failed to apply RemoteProxyProtocol");
             ex.printStackTrace();

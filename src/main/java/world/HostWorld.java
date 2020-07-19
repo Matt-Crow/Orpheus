@@ -1,43 +1,25 @@
 package world;
 
 import battle.Team;
-import controllers.Master;
 import entities.AbstractEntity;
 import entities.AbstractPlayer;
-import entities.HumanPlayer;
-import controls.AbstractPlayerControls;
 import entities.Projectile;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.function.Consumer;
 import net.OrpheusServer;
 import net.ServerMessage;
 import net.ServerMessageType;
 import util.SerialUtil;
 
 /**
- *
+ * The HostWorld is used in conjunction with
+ * HostWorldProtocol to 
+ * 1. Update local world contents, 
+ * 2. serialize and send those contents to all clients so they can update their proxies,
+ * 3. while the protocol handles receiving controls from remote players.
  * @author Matt
  */
 public class HostWorld extends AbstractWorld{
-    private final Consumer<ServerMessage> receiveControl;
-    
     public HostWorld(WorldContent worldContent) {
         super(worldContent);
-        receiveControl = (Consumer<ServerMessage> & Serializable) (sm)->receiveControl(sm);
-    }
-    
-    public final void initServer() throws IOException{
-        OrpheusServer server = OrpheusServer.getInstance();
-        if(!server.isStarted()){
-            server.start();
-        }
-        server.addReceiver(ServerMessageType.CONTROL_PRESSED, receiveControl);
-    }
-    
-    private void receiveControl(ServerMessage sm){
-        HumanPlayer p = sm.getSender().getPlayer();
-        AbstractPlayerControls.decode(p, sm.getBody());
     }
     
     private void updateTeam(Team t){
@@ -56,16 +38,22 @@ public class HostWorld extends AbstractWorld{
         });
     }
     
+    /**
+     * Updates the local world,
+     * serializes it, and sends 
+     * it to all connected clients
+     * so they can update their proxies.
+     */
     @Override
     public void update() {
         updateTeam(getPlayerTeam());
         updateTeam(getAITeam());
-        OrpheusServer.getInstance().send(new ServerMessage(
-            SerialUtil.serializeToString(new Team[]{getPlayerTeam(), getAITeam()}),
-            ServerMessageType.WORLD_UPDATE
-        ));
         updateParticles();
         updateMinigame();
+        OrpheusServer.getInstance().send(new ServerMessage(
+            SerialUtil.serializeToString(getContent()),
+            ServerMessageType.WORLD_UPDATE
+        ));
     }
 
 }

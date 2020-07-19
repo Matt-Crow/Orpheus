@@ -12,7 +12,7 @@ import world.WorldContent;
  * 
  * @author Matt Crow
  */
-public class RemoteProxyProtocol extends AbstractOrpheusServerProtocol{
+public class RemoteProxyWorldProtocol extends AbstractOrpheusServerProtocol{
     private final RemoteProxyWorld proxy;
     
     /** 
@@ -20,7 +20,7 @@ public class RemoteProxyProtocol extends AbstractOrpheusServerProtocol{
      * computer. World updates received by this protocol will be applied to
      * that proxy.
      */
-    public RemoteProxyProtocol(RemoteProxyWorld localProxy){
+    public RemoteProxyWorldProtocol(RemoteProxyWorld localProxy){
         proxy = localProxy;
     }
     

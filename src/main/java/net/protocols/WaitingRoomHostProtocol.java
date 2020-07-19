@@ -237,11 +237,11 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
     private void createWorld() throws IOException{
         HostWorld w = new HostWorld(WorldContent.createDefaultBattle());
         w.createCanvas();
-        w.initServer();
         w.setPlayerTeam(playerTeam).setEnemyTeam(enemyTeam).setCurrentMinigame(minigame);
         minigame.setHost(w);
         w.init();
         
+        new HostWorldProtocol(w).applyProtocol();
         sendWorldInit(w.getContent());
         
         WorldPage p = new WorldPage();
@@ -250,8 +250,6 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
         canv.setPauseEnabled(false);
         p.setCanvas(canv);
         getFrontEnd().getHost().switchToPage(p);
-        
-        OrpheusServer.getInstance().setProtocol(null);
     }
     
     /**
