@@ -1,6 +1,7 @@
 package net.protocols;
 
 import gui.Chat;
+import java.io.IOException;
 import net.OrpheusServer;
 import net.ServerMessage;
 
@@ -8,13 +9,21 @@ import net.ServerMessage;
  * need to override apply protocol so this doesn't apply over other protocols
  * @author Matt
  */
-public class ChatProtocol extends AbstractOrpheusServerNonChatProtocol{
+public class ChatProtocol extends AbstractOrpheusServerProtocol{
     private final Chat widget; // he he he. Widgit is fun to say
     
     public ChatProtocol(Chat chat){
         widget = chat;
     }
     
+    @Override
+    public void applyProtocol() throws IOException {
+        OrpheusServer server = OrpheusServer.getInstance();
+        server.restart();
+        server.setChatProtocol(this);
+        doApplyProtocol();
+    }
+
     @Override
     public void doApplyProtocol() {
         String ip = OrpheusServer.getInstance().getIpAddr();
@@ -39,7 +48,4 @@ public class ChatProtocol extends AbstractOrpheusServerNonChatProtocol{
         }
         return handled;
     }
-
-    
-
 }

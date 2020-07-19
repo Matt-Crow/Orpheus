@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -95,7 +96,12 @@ public class WorldPage extends Page{
             }
         });
         if(w.getWorld() instanceof RemoteProxyWorld || w.getWorld() instanceof HostWorld){
-            chat.openChatServer();
+            try {
+                chat.openChatServer();
+            } catch (IOException ex) {
+                chat.logLocal("Failed to start chat server");
+                ex.printStackTrace();
+            }
         }
         SwingUtilities.invokeLater(()->w.requestFocusInWindow());
         chat.logLocal("Currently rendering World " + w.getWorld().hashCode());

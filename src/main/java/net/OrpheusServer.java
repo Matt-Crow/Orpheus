@@ -14,6 +14,7 @@ import static java.lang.System.out;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import javax.json.JsonException;
+import net.protocols.ChatProtocol;
 import serialization.JsonUtil;
 import util.SafeList;
 
@@ -59,6 +60,7 @@ public class OrpheusServer {
     private final SafeList<ServerMessage> cachedMessages; //messages received before the receiver could be
     
     private volatile AbstractOrpheusServerNonChatProtocol currentProtocol;
+    private volatile ChatProtocol currentChatProtocol;
     
     public static final int PORT = 5000;
     private static OrpheusServer instance = null;
@@ -79,6 +81,7 @@ public class OrpheusServer {
         listenForConn = false;   
         isStarted = false;
         currentProtocol = null;
+        currentChatProtocol = null;
     }
     
     /**
@@ -134,7 +137,9 @@ public class OrpheusServer {
     public OrpheusServer reset(){
         System.out.println("Server reset");
         receivers.clear();
-        currentProtocol = null;
+        // these mess stuff up.
+        //currentProtocol = null; 
+        //currentChatProtocol = null;
         initReceivers();
         
         //connections.values().forEach((conn)->conn.close());
@@ -327,14 +332,21 @@ public class OrpheusServer {
                 cachedMessages.add(sm);
             }
             
+            boolean handled = false;
             if(currentProtocol == null){
                 out.println("No current protocol :(");
             } else {
-                if(currentProtocol.receiveMessage(sm, this)){
-                    out.println("Successfully received!");
-                } else {
-                    out.println("Nope, didn't receive properly :(");
-                }
+                handled = currentProtocol.receiveMessage(sm, this);
+            }
+            
+            if(!handled && currentChatProtocol != null){
+                handled = currentChatProtocol.receiveMessage(sm, this);
+            }
+            
+            if(handled){
+                out.println("Successfully received!");
+            } else {
+                out.println("Nope, didn't receive properly :(");
             }
             
         } catch (JsonException ex){
@@ -349,6 +361,22 @@ public class OrpheusServer {
      */
     public void setProtocol(AbstractOrpheusServerNonChatProtocol protocol){
         currentProtocol = protocol;
+    }
+    
+    /**
+     * Sets the separate protocol to receive chat 
+     * messages. This way, I can't have multiple
+     * regular protocols, but chat also can't interfere
+     * with the other protocol!
+     * 
+     * ... or I could just have the other protocols
+     * forward to their chat...
+     * 
+     * @param chat the ChatProtocol to handle messages
+     * received by this server.
+     */
+    public void setChatProtocol(ChatProtocol chat){
+        currentChatProtocol = chat;
     }
     
     /**
