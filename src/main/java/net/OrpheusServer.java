@@ -34,10 +34,10 @@ import util.SafeList;
  * If the de-serialization is successful, it takes the type of that message,
  * and calls the corresponding Consumers in the 'receivers' HashMap.
  * 
- * I am in the process of removing this consumer strategy,
- * replacing it with easier to understand AbstractOrpheusServerProtocols
  * 
- * @see OrpheusServer#receive() 
+ * 
+ * Still have some cleanup I want to do: Lotta nested stuff
+ * 
  * @see net.protocols.AbstractOrpheusServerNonChatProtocol
  * 
  * @author Matt Crow

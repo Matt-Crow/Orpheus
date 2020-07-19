@@ -1,6 +1,7 @@
 package net.protocols;
 
 import controls.AbstractPlayerControls;
+import entities.AbstractPlayer;
 import entities.HumanPlayer;
 import net.OrpheusServer;
 import net.ServerMessage;
@@ -30,14 +31,14 @@ public class HostWorldProtocol extends AbstractOrpheusServerNonChatProtocol{
     public void doApplyProtocol() {}
     
     private void receiveControl(ServerMessage sm){
-        throw new RuntimeException("Need to redo how controls work!");
         // extract HumanPlayer ID from sm
+        String id = sm.getSender().getRemotePlayerId(); // is this set on the host's side?
         // find their player in the WorldContent (if they are alive)
+        AbstractPlayer player = hostWorld.getPlayerTeam().getMemberById(id);
         // apply the control to that player
-        
-        
-        //HumanPlayer p = sm.getSender().getPlayer();
-        //AbstractPlayerControls.decode(p, sm.getBody());
+        if(player != null && player instanceof HumanPlayer){
+            AbstractPlayerControls.decode((HumanPlayer) player, sm.getBody());
+        }
     }
     
     @Override

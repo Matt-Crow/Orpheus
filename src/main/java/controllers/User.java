@@ -16,23 +16,24 @@ import serialization.JsonUtil;
  * The class represents a real person- not just a AbstractPlayer entity
  controlled by AI.
  * 
+ * 
+ * Replace this with Singleton LocalUser and non-singleton RemoteUser
+ * 
  * @author Matt Crow
  */
 public final class User implements JsonSerialable{
     private String userName;
-    private final String ipAddr;
+    private String ipAddr;
     private HumanPlayer player;
     
     private String remotePlayerId;
     
-    private boolean isAdmin;
     public static final String DEFAULT_NAME = "name not set";
     
     public User(String name, String ip){
         userName = name;
         ipAddr = ip;
         player = null;
-        isAdmin = false;
     }
     
     public User(String name){
@@ -59,9 +60,20 @@ public final class User implements JsonSerialable{
         return remotePlayerId;
     }
     
+    public User setIpAddress(String ip){
+        ipAddr = ip;
+        return this;
+    }
+    public String getIpAddress(){
+        return ipAddr;
+    }
+    
     /**
      * Used to re-associate this User with a AbstractPlayer
- received from a serialized world
+     * received from a serialized world
+     * 
+     * I can only get rid of this by removing getPlayer from this
+     * 
      * @param w
      * @return 
      */
@@ -93,12 +105,7 @@ public final class User implements JsonSerialable{
             initPlayer();
         }
         return player;
-    }
-    
-    public String getIpAddress(){
-        return ipAddr;
-    }
-    
+    }    
     
     @Override
     public boolean equals(Object o){

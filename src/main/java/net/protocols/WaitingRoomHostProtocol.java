@@ -73,6 +73,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
         playerTeam.clear();
         enemyTeam.clear();
         awaitingBuilds.clear();
+        //addUserToTeam(Master.getUser());
         try {
             getFrontEnd().getChat().openChatServer();
         } catch (IOException ex) {
@@ -162,9 +163,15 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
         
         // put the host on the user team
         Master.getUser().initPlayer().getPlayer().applyBuild(getFrontEnd().getSelectedBuild());
-        if(awaitingBuilds.containsKey(OrpheusServer.getInstance().getIpAddr())){
+        if(awaitingBuilds.containsKey(Master.getUser().getIpAddress())){
+            /*
+            Note: Master.getUser by default has the loopback address 
+            as their IP, as they are initialized BEFORE the server gets
+            its IP address. Therefore, User.getIpAddress() != OrpheusServer.getInstance().getIpAddress().
+            Just something to keep in mind.
+            */
             playerTeam.addMember(Master.getUser().getPlayer());
-            awaitingBuilds.remove(OrpheusServer.getInstance().getIpAddr());
+            awaitingBuilds.remove(Master.getUser().getIpAddress());
         } else {
             throw new UnsupportedOperationException();
         }
