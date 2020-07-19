@@ -73,12 +73,8 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
      */
     private void receiveWorldInit(ServerMessage sm){
         WorldContent w = WorldContent.fromSerializedString(sm.getBody());
-        RemoteProxyWorld world = new RemoteProxyWorld(w);
-        try {
-            world.setRemoteHost(sm.getIpAddr());
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        RemoteProxyWorld world = new RemoteProxyWorld(sm.getIpAddr(), w);
+        
         User me = Master.getUser();
         me.linkToRemotePlayerInWorld(world);
         world.createCanvas();
@@ -91,7 +87,12 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
         p.setCanvas(canv);
         getFrontEnd().getHost().switchToPage(p);
         
-        OrpheusServer.getInstance().setProtocol(null);
+        try {
+            new RemoteProxyProtocol(world).applyProtocol();
+        } catch (IOException ex) {
+            System.err.println("Failed to apply RemoteProxyProtocol");
+            ex.printStackTrace();
+        }
     }
     
     @Override
