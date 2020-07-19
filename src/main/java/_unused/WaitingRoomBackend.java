@@ -1,5 +1,6 @@
-package windows.WorldSelect;
+package _unused;
 
+/*
 import battle.Battle;
 import battle.Team;
 import controllers.*;
@@ -22,6 +23,7 @@ import windows.world.WorldPage;
 import world.HostWorld;
 import world.RemoteProxyWorld;
 import world.WorldContent;
+*/
 
 /**
  * TODO: split this into multiple different protocols based on whether someone is a host or client.
@@ -44,10 +46,12 @@ import world.WorldContent;
  * @author Matt Crow
  */
 public class WaitingRoomBackend {
+    /*
     public static final int WAIT_TIME = 0; //in seconds
     
     private final WSWaitForPlayers host;
     private final OrpheusServer server;
+    */
     
     /*
     these prototype teams allow this to keep track of
@@ -55,12 +59,13 @@ public class WaitingRoomBackend {
     The key is the user's IP address, while the value
     is a local copy of that user's remote User object.
     */
-    private final HashMap<String, User> teamProto;
+    //private final HashMap<String, User> teamProto;
     
     /*
     this is the real team, constucted once the host
     sends the request for Build data
     */
+    /*
     private final Team playerTeam;
     
     private Team enemyTeam; //move this to AbstractWorld or Battle later
@@ -107,6 +112,7 @@ public class WaitingRoomBackend {
             receiveWorldInit(sm);
         };
     }
+    */
     
     /**
      * Initializes the server as a client,
@@ -115,6 +121,7 @@ public class WaitingRoomBackend {
      * 
      * @throws java.io.IOException
      */
+    /*
     public void initClientServer() throws IOException{
         if(!server.isStarted()){
             server.start();
@@ -135,6 +142,7 @@ public class WaitingRoomBackend {
         playerTeam.clear();
         gameAboutToStart = false;
     }
+    */
     
     /**
      * Not applied to the host. Allows clients to
@@ -144,6 +152,7 @@ public class WaitingRoomBackend {
      * state of the waiting room at the time they joined.
      * @param sm 
      */
+    /*
     private void receiveInit(ServerMessage sm){
         JsonObject obj = JsonUtil.fromString(sm.getBody());
         JsonUtil.verify(obj, "num waves");
@@ -160,6 +169,7 @@ public class WaitingRoomBackend {
         
         server.removeReceiver(ServerMessageType.WAITING_ROOM_INIT, receiveInit);
     }
+    */
     
     /**
      * Notifies that a user has joined the team.
@@ -167,6 +177,7 @@ public class WaitingRoomBackend {
      * @see WaitingRoomBackend#joinPlayerTeam(controllers.User) 
      * @param sm 
      */
+    /*
     private void receiveUpdate(ServerMessage sm){
         //update message is now just 'join team'
         if(sm.getBody().equals("join player team")){
@@ -176,6 +187,7 @@ public class WaitingRoomBackend {
             sm.displayData();
         }
     }
+    */
     
     /**
      * called after the host requests this user's Build data.
@@ -186,6 +198,7 @@ public class WaitingRoomBackend {
      * 
      * @param sm 
      */
+    /*
     private synchronized void receiveBuildRequest(ServerMessage sm){
         server.send(
             new ServerMessage(
@@ -202,6 +215,7 @@ public class WaitingRoomBackend {
         server.addReceiver(ServerMessageType.NOTIFY_IDS, receiveRemoteIds);
         server.addReceiver(ServerMessageType.WORLD_INIT, receiveWorldInit);
     }
+    */
     
     /**
      * Doesn't apply to the host.
@@ -210,12 +224,13 @@ public class WaitingRoomBackend {
      * the IDs of the team and player this user is controlling
      * on that computer.
     */
+    /*
     private void receiveRemoteId(ServerMessage sm){
         Master.getUser().setRemotePlayerId(sm.getBody());
         
         server.removeReceiver(ServerMessageType.NOTIFY_IDS, receiveRemoteIds);
     }
-    
+    */
     /**
      * allows remote users to receive and de-serialize 
  the AbstractWorld created by the host.
@@ -225,6 +240,7 @@ public class WaitingRoomBackend {
      * 
      * @param sm 
      */
+    /*
     private void receiveWorldInit(ServerMessage sm){
         WorldContent w = WorldContent.fromSerializedString(sm.getBody());
         RemoteProxyWorld world = new RemoteProxyWorld(w);
@@ -276,7 +292,7 @@ public class WaitingRoomBackend {
     public User[] getTeamProto(){
         return teamProto.values().stream().toArray(size -> new User[size]);
     }
-    
+    */
     /**
      * Puts the given user on the prototype player team,
      * if they are not already there. Will change this to
@@ -285,6 +301,7 @@ public class WaitingRoomBackend {
      * @param u
      * @return 
      */
+    /*
     public final WaitingRoomBackend joinPlayerTeam(User u){
         if(!teamProto.containsKey(u.getIpAddress())){
             //hasn't joined yet
@@ -302,10 +319,11 @@ public class WaitingRoomBackend {
         }
         return this;
     }
-    
+    */
     /**
      * Sends information about the waiting room to standard output
      */
+    /*
     public final void displayData(){
         System.out.println("WAITING ROOM");
         System.out.println("Num waves: " + numWaves);
@@ -314,4 +332,5 @@ public class WaitingRoomBackend {
         teamProto.values().forEach((member)->System.out.println("--" + member.getName()));
         System.out.println("END OF WAITING ROOM");
     }
+    */
 }

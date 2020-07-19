@@ -1,5 +1,7 @@
-package windows.WorldSelect;
+package _unused;
 
+/*
+import _unused.WaitingRoomBackend;
 import controllers.Master;
 import controllers.User;
 import customizables.Build;
@@ -14,6 +16,8 @@ import javax.swing.*;
 import net.OrpheusServer;
 import net.protocols.WaitingRoomHostProtocol;
 import windows.Page;
+import windows.WorldSelect.WSMain;
+*/
 
 /**
  * WSWaitForPlayers is used to provide a "waiting room"
@@ -22,13 +26,13 @@ import windows.Page;
  * 
  * @author Matt Crow
  */
-public class WSWaitForPlayers extends Page{
+public class WSWaitForPlayers {//extends Page{
     /*
     For now, I'm using IP address as the key, and the User as the value.
     I'm not sure if this will work, I think IP addresses are unique to each computer,
     but I'm not quite sure
     */
-    
+    /*
     private final JTextArea teamList;
     private final Chat chat;
     private final BuildSelect playerBuild;
@@ -98,7 +102,7 @@ public class WSWaitForPlayers extends Page{
         revalidate();
         repaint();
     }
-    
+    */
     /**
      * starts the backend server (if it isn't already
      * started) and connects it to the given ipAddress,
@@ -108,6 +112,7 @@ public class WSWaitForPlayers extends Page{
      * @return this
      * @throws java.io.IOException if it cannot connect to the IP address
      */
+    /*
     public WSWaitForPlayers joinServer(String ipAddr) throws IOException{
         backend.initClientServer();
         
@@ -142,4 +147,5 @@ public class WSWaitForPlayers extends Page{
         backend.setMaxEnemyLevel(l);
         return this;
     }
+    */
 }
