@@ -1,7 +1,7 @@
 package statuses;
 
 import actions.*;
-import controllers.Master;
+import controllers.Settings;
 import entities.AbstractPlayer;
 import java.util.function.UnaryOperator;
 import util.Number;
@@ -14,7 +14,7 @@ import util.Number;
  * @see battle.DamageBacklog
  */
 public class Resistance extends AbstractStatus implements OnUpdateListener{
-    private static final UnaryOperator<Integer> CALC = (i)->{return Master.seconds(Number.minMax(1, i, 3) * 2 + 1);};
+    private static final UnaryOperator<Integer> CALC = (i)->{return Settings.seconds(Number.minMax(1, i, 3) * 2 + 1);};
     /**
      * 
      * @param lv 1-3. Slows damage by 25% per level.

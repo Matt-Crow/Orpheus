@@ -1,6 +1,6 @@
 package customizables.actives;
 
-import controllers.Master;
+import controllers.Settings;
 import customizables.characterClass.CharacterClass;
 import customizables.characterClass.CharacterStatName;
 import entities.AbstractPlayer;
@@ -8,6 +8,7 @@ import entities.ParticleType;
 import entities.Projectile;
 import entities.SeedProjectile;
 import graphics.CustomColors;
+import graphics.Tile;
 
 public class ElementalActive extends AbstractActive{
 	private final int arcLength;
@@ -59,9 +60,9 @@ public class ElementalActive extends AbstractActive{
         for(int i = 1; i <= baseProjRange; i++){
             rng += i;
         }
-        projectileRange = rng * Master.UNITSIZE;
-        projectileSpeed = Master.UNITSIZE * baseProjectileSpeed / Master.FPS;
-        areaOfEffect = baseAreaOfEffect * Master.UNITSIZE;
+        projectileRange = rng * Tile.TILE_SIZE;
+        projectileSpeed = Tile.TILE_SIZE * baseProjectileSpeed / Settings.FPS;
+        areaOfEffect = baseAreaOfEffect * Tile.TILE_SIZE;
         damage = baseDamage * CharacterClass.BASE_HP / 20;
         
         particleType = ParticleType.NONE;
@@ -199,7 +200,7 @@ public class ElementalActive extends AbstractActive{
             .append(getName())
             .append(": \n");
 		if(getRange() == 0){
-            desc.append(String.format("The user generates an explosion with a %d unit radius", getAOE() / Master.UNITSIZE));
+            desc.append(String.format("The user generates an explosion with a %d unit radius", getAOE() / Tile.TILE_SIZE));
         } else {
 			desc.append("The user launches ");
 			if(getArcLength() > 0){
@@ -212,16 +213,14 @@ public class ElementalActive extends AbstractActive{
 			} else {
 				desc.append("a projectile, which travels ");
 			}
-			desc.append(
-                String.format(
-                    "for %d units, at %d units per second", 
-                    getRange() / Master.UNITSIZE,
-                    getSpeed() * Master.FPS / Master.UNITSIZE
+			desc.append(String.format("for %d units, at %d units per second", 
+                    getRange() / Tile.TILE_SIZE,
+                    getSpeed() * Settings.FPS / Tile.TILE_SIZE
                 )
             );
 			
 			if(getAOE() != 0){
-				desc.append(String.format(" before exploding in a %d unit radius", getAOE() / Master.UNITSIZE)); 
+				desc.append(String.format(" before exploding in a %d unit radius", getAOE() / Tile.TILE_SIZE)); 
 			}
 		}
         

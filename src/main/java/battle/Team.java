@@ -1,6 +1,6 @@
 package battle;
 
-import controllers.Master;
+import controllers.Settings;
 import controllers.User;
 import world.AbstractWorld;
 import java.awt.Color;

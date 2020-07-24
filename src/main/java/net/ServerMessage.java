@@ -1,6 +1,6 @@
 package net;
 
-import controllers.Master;
+import controllers.Settings;
 import controllers.User;
 import java.io.StringReader;
 import javax.json.Json;

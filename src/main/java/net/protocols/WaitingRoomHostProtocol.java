@@ -2,7 +2,7 @@ package net.protocols;
 
 import battle.Battle;
 import battle.Team;
-import controllers.Master;
+import controllers.Settings;
 import controllers.User;
 import controls.SoloPlayerControls;
 import customizables.Build;
@@ -73,7 +73,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
         playerTeam.clear();
         enemyTeam.clear();
         awaitingBuilds.clear();
-        //addUserToTeam(Master.getUser());
+        //addUserToTeam(Settings.getUser());
         try {
             getFrontEnd().getChat().openChatServer();
         } catch (IOException ex) {
@@ -166,7 +166,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
         me.initPlayer().getPlayer().applyBuild(getFrontEnd().getSelectedBuild());
         if(awaitingBuilds.containsKey(me.getIpAddress())){
             /*
-            Note: Master.getUser by default has the loopback address 
+            Note: Settings.getUser by default has the loopback address 
             as their IP, as they are initialized BEFORE the server gets
             its IP address. Therefore, User.getIpAddress() != OrpheusServer.getInstance().getIpAddress().
             Just something to keep in mind.

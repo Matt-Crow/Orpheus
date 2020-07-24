@@ -3,7 +3,7 @@ package entities;
 import java.awt.Graphics;
 
 import graphics.CustomColors;
-import controllers.Master;
+import controllers.Settings;
 import customizables.actives.ElementalActive;
 import util.CombatLog;
 import util.Random;
@@ -94,12 +94,12 @@ public class Projectile extends AbstractReactiveEntity{
     public void spawnParticles(){
         CustomColors[] cs = registeredAttack.getColors();
 		
-		if(!Master.DISABLEPARTICLES && !getShouldTerminate()){
+		if(!Settings.DISABLEPARTICLES && !getShouldTerminate()){
 			switch(registeredAttack.getParticleType()){
 			case BURST:
-				for(int i = 0; i < Master.TICKSTOROTATE; i++){
+				for(int i = 0; i < Settings.TICKSTOROTATE; i++){
 					CustomColors rbu = cs[Random.choose(0, cs.length - 1)];
-					spawnParticle(360 * i / Master.TICKSTOROTATE, 5, rbu);
+					spawnParticle(360 * i / Settings.TICKSTOROTATE, 5, rbu);
 				}
 				break;
 			case SHEAR:
@@ -143,7 +143,7 @@ public class Projectile extends AbstractReactiveEntity{
     
     @Override
 	public void draw(Graphics g){
-		if(registeredAttack.getParticleType() == ParticleType.NONE || Master.DISABLEPARTICLES){
+		if(registeredAttack.getParticleType() == ParticleType.NONE || Settings.DISABLEPARTICLES){
             int r = getRadius();
 			g.setColor(user.getTeam().getColor());
 			g.fillOval(getX() - r, getY() - r, 2 * r, 2 * r);

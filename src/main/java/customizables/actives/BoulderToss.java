@@ -1,6 +1,6 @@
 package customizables.actives;
 
-import controllers.Master;
+import controllers.Settings;
 import entities.AbstractPlayer;
 import entities.ParticleType;
 import entities.Projectile;
@@ -20,7 +20,7 @@ public class BoulderToss extends ElementalActive{
     @Override
     public void hit(Projectile hittingProjectile, AbstractPlayer p){
         super.hit(hittingProjectile, p);
-        p.knockBack(getRange(), hittingProjectile.getDir(), Master.seconds(1));
+        p.knockBack(getRange(), hittingProjectile.getDir(), Settings.seconds(1));
     }
     
     @Override

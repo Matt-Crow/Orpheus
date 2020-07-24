@@ -2,7 +2,8 @@ package statuses;
 
 import actions.*;
 import entities.AbstractPlayer;
-import controllers.Master;
+import controllers.Settings;
+import graphics.Tile;
 import java.util.function.UnaryOperator;
 import util.Direction;
 import util.Number;
@@ -45,8 +46,8 @@ public class Strength extends AbstractStatus implements OnHitListener{
         target.getLog().logPercentageDamage(3.5 * getIntensityLevel());
 
         Direction angleBetween = Direction.getDegreeByLengths(user.getX(), user.getY(), target.getX(), target.getY());
-        int magnitude = Master.UNITSIZE * getIntensityLevel();
-        target.knockBack(magnitude, angleBetween, Master.seconds(1));
+        int magnitude = Tile.TILE_SIZE * getIntensityLevel();
+        target.knockBack(magnitude, angleBetween, Settings.seconds(1));
         
         use();
     }

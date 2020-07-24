@@ -1,6 +1,6 @@
 package serialization;
 
-import controllers.Master;
+import controllers.Settings;
 import customizables.Build;
 import java.io.*;
 import static java.lang.System.out;
@@ -131,7 +131,7 @@ public class JsonUtil {
         JsonObject obj = null;
         Build b = null;
         
-        for(Build bu : Master.getDataSet().getAllBuilds()){
+        for(Build bu : Settings.getDataSet().getAllBuilds()){
             obj = BuildJsonUtil.serializeJson(bu);
             pprint(obj, 0);
             b = BuildJsonUtil.deserializeJson(obj);

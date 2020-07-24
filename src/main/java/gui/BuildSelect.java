@@ -1,6 +1,6 @@
 package gui;
 
-import controllers.Master;
+import controllers.Settings;
 import customizables.Build;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -57,7 +57,7 @@ public class BuildSelect extends JComponent{
     
     public void refreshOptions(){
         box.removeAllItems();
-        for(Build b : Master.getDataSet().getAllBuilds()){
+        for(Build b : Settings.getDataSet().getAllBuilds()){
             box.addItem(b.getName());
         }
     }
@@ -66,7 +66,7 @@ public class BuildSelect extends JComponent{
         String name = (String)box.getSelectedItem();
         Build ret = null;
         if(name != null){
-            ret = Master.getDataSet().getBuildByName(name);
+            ret = Settings.getDataSet().getBuildByName(name);
         }
         return ret;
     }

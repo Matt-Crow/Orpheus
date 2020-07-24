@@ -1,6 +1,6 @@
 package customizables;
 
-import controllers.Master;
+import controllers.Settings;
 import util.StringUtil;
 
 
@@ -52,7 +52,7 @@ public class Build{
 	}
     
     public String getDescription(){
-        DataSet ds = Master.getDataSet();
+        DataSet ds = Settings.getDataSet();
         
         StringBuilder sb = new StringBuilder();
         String sep = "~~~~~~~~~~~~~~~~~~~~";

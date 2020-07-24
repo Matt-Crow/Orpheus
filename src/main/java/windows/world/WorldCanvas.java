@@ -3,7 +3,7 @@ package windows.world;
 
 import battle.Battle;
 import world.AbstractWorld;
-import controllers.Master;
+import controllers.Settings;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.*;
@@ -45,7 +45,7 @@ public class WorldCanvas extends Canvas{
         
         paused = true;
         pauseEnabled = true;
-        timer = new Timer(1000 / Master.FPS, (ActionEvent e) -> {
+        timer = new Timer(1000 / Settings.FPS, (ActionEvent e) -> {
             world.update();
             endOfFrame();
             repaint();
@@ -154,7 +154,7 @@ public class WorldCanvas extends Canvas{
         User user = User.getUser();
         HumanPlayer player = user.initPlayer().getPlayer();
         
-        player.applyBuild(Master.getDataSet().getDefaultBuild());
+        player.applyBuild(Settings.getDataSet().getDefaultBuild());
         
         HostWorld world = new HostWorld(WorldContent.createDefaultBattle());
         Team t1 = new Team("Test", Color.BLUE);

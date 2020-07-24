@@ -1,6 +1,6 @@
 package windows.customize;
 
-import controllers.Master;
+import controllers.Settings;
 import customizables.Build;
 import customizables.DataSet;
 import customizables.actives.AbstractActive;
@@ -57,7 +57,7 @@ public class CustomizeBuild extends Page{
             add(pass[i]);
         }
         
-        DataSet ds = Master.getDataSet();
+        DataSet ds = Settings.getDataSet();
         
         charClassSel.setOptions(ds.getAllCharacterClasses());
         for(int i = 0; i < 3; i++){
@@ -67,7 +67,7 @@ public class CustomizeBuild extends Page{
     }
 
     public void setCustomizing(Build selectedBuild) {
-        DataSet ds = Master.getDataSet();
+        DataSet ds = Settings.getDataSet();
         name.setText(selectedBuild.getName());
         charClassSel.setSelected(ds.getCharacterClassByName(selectedBuild.getClassName()));
         String[] actNames = selectedBuild.getActiveNames();
@@ -79,7 +79,7 @@ public class CustomizeBuild extends Page{
     }
     
     private void save(){
-        Master.getDataSet().addBuild(new Build(
+        Settings.getDataSet().addBuild(new Build(
             name.getText(),
             charClassSel.getSelected().getName(),
             acts[0].getSelected().getName(),

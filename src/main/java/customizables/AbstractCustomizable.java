@@ -1,7 +1,7 @@
 package customizables;
 
 import entities.AbstractPlayer;
-import controllers.Master;
+import controllers.Settings;
 import java.io.Serializable;
 import statuses.*;
 
@@ -78,7 +78,7 @@ public abstract class AbstractCustomizable implements Serializable{
      * @param seconds the minimum number of seconds between each use of this.
      */
 	public final void setCooldownTime(int seconds){
-		cooldownTime = Master.seconds(seconds);
+		cooldownTime = Settings.seconds(seconds);
 	}
     
     /**

@@ -3,14 +3,14 @@ package statuses;
 import actions.*;
 import entities.AbstractPlayer;
 import util.Number;
-import controllers.Master;
+import controllers.Settings;
 import java.util.function.UnaryOperator;
 
 /**
  * The Rush status increases an AbstractEntity's movement speed
  */
 public class Rush extends AbstractStatus implements OnUpdateListener{
-	private static final UnaryOperator<Integer> CALC = (i)->{return Master.seconds(Number.minMax(1, i, 3) + 2);};
+	private static final UnaryOperator<Integer> CALC = (i)->{return Settings.seconds(Number.minMax(1, i, 3) + 2);};
     /**
      * Creates the Rush status.
      * @param lv 1-3. The afflicted AbstractEntity will receive a 20% increase in speed per level.
@@ -28,7 +28,7 @@ public class Rush extends AbstractStatus implements OnUpdateListener{
     
     @Override
 	public String getDesc(){
-		return "Rush, increasing the inflicted's movement speed by " + (20 * getIntensityLevel()) + "% for the next " + Master.framesToSeconds(getMaxUses()) + " seconds";
+		return "Rush, increasing the inflicted's movement speed by " + (20 * getIntensityLevel()) + "% for the next " + Settings.framesToSeconds(getMaxUses()) + " seconds";
 	}
 
     @Override

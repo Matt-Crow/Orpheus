@@ -2,15 +2,13 @@ package controllers;
 
 import customizables.DataSet;
 
-public class Master {
-	public static final int DETECTIONRANGE = 500;
+public class Settings {
 	public static final boolean DISABLEHEALING = false;
 	public static final boolean DISABLEALLAI = false;
 	// number of angles a player can have
 	public static final int TICKSTOROTATE = 36;
 	public static final boolean DISABLEPARTICLES = false; // causes lag
 	public static final int FPS = 30;
-	public static final int UNITSIZE = 100;
     
     private static final DataSet DATA_SET = new DataSet();
     

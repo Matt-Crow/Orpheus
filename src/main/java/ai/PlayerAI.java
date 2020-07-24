@@ -2,7 +2,7 @@ package ai;
 
 import entities.AbstractPlayer;
 import actions.*;
-import controllers.Master;
+import controllers.Settings;
 import graphics.Tile;
 import java.io.Serializable;
 import util.Coordinates;
@@ -22,6 +22,8 @@ public class PlayerAI implements Serializable{
 	private final AbstractPlayer appliedTo;
     private AiMode mode;
     private AbstractPlayer latched;
+    
+    private static final int DETECTIONRANGE = Tile.TILE_SIZE * 5;
 	
 	public PlayerAI(AbstractPlayer p){
 		appliedTo = p;
@@ -32,7 +34,7 @@ public class PlayerAI implements Serializable{
     public void init(){
         mode = AiMode.NONE;
         latched = null;
-        if(!Master.DISABLEALLAI){
+        if(!Settings.DISABLEALLAI){
             setToWander();
             appliedTo.getActionRegister().addOnBeHit((OnHitEvent e) -> {
                 latch((AbstractPlayer)e.getHitter());
@@ -118,7 +120,7 @@ public class PlayerAI implements Serializable{
 		//don't update if AI is disabled,
         //or the enemy team is defeated
         if(
-            Master.DISABLEALLAI 
+            Settings.DISABLEALLAI 
             || appliedTo.getTeam().getEnemy().isDefeated()
         ){
             return;
@@ -148,7 +150,7 @@ public class PlayerAI implements Serializable{
     //move these to world
     public boolean checkIfPlayerInSightRange(){
 		AbstractPlayer nearest = nearestEnemy();
-		return Coordinates.distanceBetween(appliedTo, nearest) <= Master.DETECTIONRANGE;
+		return Coordinates.distanceBetween(appliedTo, nearest) <= DETECTIONRANGE;
 	}
 	
 	public AbstractPlayer nearestEnemy(){

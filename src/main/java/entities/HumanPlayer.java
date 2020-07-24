@@ -1,6 +1,6 @@
 package entities;
 
-import controllers.Master;
+import controllers.Settings;
 import customizables.Build;
 import customizables.DataSet;
 import customizables.actives.AbstractActive;
@@ -39,10 +39,10 @@ public class HumanPlayer extends AbstractPlayer{
 		setClass(b.getClassName());
 		setActives(b.getActiveNames());
 		setPassives(b.getPassiveNames());
-		setSpeed((int) (c.getSpeed() * (500.0 / Master.FPS)));
+		setSpeed((int) (c.getSpeed() * (500.0 / Settings.FPS)));
     }
     public void setClass(String name){
-        DataSet ds = Master.getDataSet();
+        DataSet ds = Settings.getDataSet();
         try{
             c = ds.getCharacterClassByName(name.toUpperCase());
         } catch(NoSuchElementException ex){
@@ -57,7 +57,7 @@ public class HumanPlayer extends AbstractPlayer{
 	}
     
     public void setActives(String[] names){
-		DataSet ds = Master.getDataSet();
+		DataSet ds = Settings.getDataSet();
         for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
             try{
                 actives[nameIndex] = ds.getActiveByName(names[nameIndex]);
@@ -73,7 +73,7 @@ public class HumanPlayer extends AbstractPlayer{
     }
     
     public void setPassives(String[] names){
-        DataSet ds = Master.getDataSet();
+        DataSet ds = Settings.getDataSet();
 		for(int nameIndex = 0; nameIndex < 3; nameIndex ++){
             try{
                 passives[nameIndex] = ds.getPassiveByName(names[nameIndex]);

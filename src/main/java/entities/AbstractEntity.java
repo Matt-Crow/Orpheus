@@ -5,7 +5,7 @@ import util.Direction;
 import battle.Team;
 import actions.Terminable;
 import actions.TerminateListener;
-import controllers.Master;
+import controllers.Settings;
 import world.AbstractWorld;
 import java.io.Serializable;
 import net.OrpheusServer;

@@ -6,10 +6,11 @@ import ai.Path;
 import ai.PathInfo;
 import battle.*;
 import statuses.AbstractStatus;
-import controllers.Master;
+import controllers.Settings;
 import world.AbstractWorld;
 import customizables.actives.ElementalActive;
 import customizables.characterClass.CharacterStatName;
+import graphics.Tile;
 import static java.lang.System.out;
 import java.util.Arrays;
 import util.Direction;
@@ -50,7 +51,7 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
 	
 	public AbstractPlayer(String n, int minLifeSpan){
 		super();
-        setSpeed(Master.UNITSIZE * 5 / Master.FPS);
+        setSpeed(Tile.TILE_SIZE * 5 / Settings.FPS);
 		name = n;
         color = Color.black;
         
@@ -62,7 +63,7 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
         knockbackMag = 0;
         knockbackDur = 0;
         
-        slash = (ElementalActive)Master.getDataSet().getActiveByName("Slash");
+        slash = (ElementalActive)Settings.getDataSet().getActiveByName("Slash");
 		slash.setUser(this);
         log = new DamageBacklog(this, minLifeSpan);
         path = null;

@@ -1,6 +1,6 @@
 package windows.customize;
 
-import controllers.Master;
+import controllers.Settings;
 import customizables.BuildJsonUtil;
 import gui.FileChooserUtil;
 import java.awt.GridLayout;
@@ -27,7 +27,7 @@ public class CustomizeMain extends Page{
             if(chosen != null){
                 for(File f : chosen){
                     if(f.getName().endsWith(".jar")){
-                        Master.getDataSet().loadFile(f);
+                        Settings.getDataSet().loadFile(f);
                     }
                 }
             }*/
