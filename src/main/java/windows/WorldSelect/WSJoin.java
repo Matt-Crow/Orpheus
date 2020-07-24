@@ -1,6 +1,6 @@
 package windows.WorldSelect;
 
-import controllers.Master;
+import controllers.User;
 import java.awt.GridLayout;
 import java.io.IOException;
 import java.util.Arrays;
@@ -82,7 +82,7 @@ public class WSJoin extends Page{
     
     private void join(String ipAddr){
         try {
-            Master.loginWindow(); // set username
+            User.loginWindow(); // set username
             msgs.append("Attempting to connect to " + ipAddr + "...\n");
             ClientWaitingRoom wait = new ClientWaitingRoom(ipAddr);
             wait.startProtocol();

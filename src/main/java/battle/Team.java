@@ -1,6 +1,7 @@
 package battle;
 
 import controllers.Master;
+import controllers.User;
 import world.AbstractWorld;
 import java.awt.Color;
 import java.util.ArrayList;
@@ -198,7 +199,7 @@ public class Team extends SafeList<AbstractEntity> implements Serializable{
         out.println("TEAM: " + name + "(ID: " + id + ")");
         out.println("Roster: ");
         roster.values().stream().forEach((AbstractPlayer p)->{
-            if(p.equals(Master.getUser().getPlayer())){
+            if(p.equals(User.getUser().getPlayer())){
                 out.print("*");
             }
             out.println(p.getName() + "(ID: " + p.id + ")");

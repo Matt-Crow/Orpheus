@@ -1,6 +1,6 @@
 package gui;
 
-import controllers.Master;
+import controllers.User;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -129,7 +129,7 @@ public class Chat extends JComponent implements ActionListener{
                 server.connect(ipAddr);
                 logLocal("Joined chat with " + ipAddr);
                 server.send(new ServerMessage(
-                    Master.getUser().getName() + " has joined the chat.",
+                    User.getUser().getName() + " has joined the chat.",
                     ServerMessageType.CHAT
                 ));
             } catch (IOException ex) {

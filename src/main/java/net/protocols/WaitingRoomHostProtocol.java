@@ -162,16 +162,17 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
         getFrontEnd().setInputEnabled(false);
         
         // put the host on the user team
-        Master.getUser().initPlayer().getPlayer().applyBuild(getFrontEnd().getSelectedBuild());
-        if(awaitingBuilds.containsKey(Master.getUser().getIpAddress())){
+        User me = User.getUser();
+        me.initPlayer().getPlayer().applyBuild(getFrontEnd().getSelectedBuild());
+        if(awaitingBuilds.containsKey(me.getIpAddress())){
             /*
             Note: Master.getUser by default has the loopback address 
             as their IP, as they are initialized BEFORE the server gets
             its IP address. Therefore, User.getIpAddress() != OrpheusServer.getInstance().getIpAddress().
             Just something to keep in mind.
             */
-            playerTeam.addMember(Master.getUser().getPlayer());
-            awaitingBuilds.remove(Master.getUser().getIpAddress());
+            playerTeam.addMember(me.getPlayer());
+            awaitingBuilds.remove(me.getIpAddress());
         } else {
             throw new UnsupportedOperationException();
         }
@@ -257,7 +258,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
         
         WorldPage p = new WorldPage();
         WorldCanvas canv = w.getCanvas();
-        canv.addPlayerControls(new SoloPlayerControls(Master.getUser().getPlayer(), w));
+        canv.addPlayerControls(new SoloPlayerControls(User.getUser().getPlayer(), w));
         canv.setPauseEnabled(false);
         p.setCanvas(canv);
         getFrontEnd().getHost().switchToPage(p);

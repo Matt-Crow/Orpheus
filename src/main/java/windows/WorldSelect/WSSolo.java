@@ -2,7 +2,6 @@ package windows.WorldSelect;
 
 import battle.Battle;
 import battle.Team;
-import controllers.Master;
 import controllers.User;
 import controls.SoloPlayerControls;
 import entities.HumanPlayer;
@@ -23,7 +22,7 @@ public class WSSolo extends AbstractWSNewWorld{
     
     @Override
     public void start(){
-        User user = Master.getUser();
+        User user = User.getUser();
         user.initPlayer();
         HumanPlayer player = user.getPlayer();
         

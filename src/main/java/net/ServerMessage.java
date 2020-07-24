@@ -38,11 +38,11 @@ public class ServerMessage implements JsonSerialable{
     
     public ServerMessage(String bodyText, ServerMessageType messageType){
         this(
-            Master.getUser().getIpAddress(),
+            User.getUser().getIpAddress(),
             bodyText,
             messageType
         );
-        setSender(Master.getUser());
+        setSender(User.getUser());
     }
     
     /**

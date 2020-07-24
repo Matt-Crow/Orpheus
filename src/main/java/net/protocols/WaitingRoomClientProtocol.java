@@ -1,6 +1,5 @@
 package net.protocols;
 
-import controllers.Master;
 import controllers.User;
 import controls.RemotePlayerControls;
 import customizables.BuildJsonUtil;
@@ -63,7 +62,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
     }
     
     private void receiveRemoteId(ServerMessage sm){
-        Master.getUser().setRemotePlayerId(sm.getBody());
+        User.getUser().setRemotePlayerId(sm.getBody());
     }
     
     /**
@@ -78,7 +77,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
         WorldContent w = WorldContent.fromSerializedString(sm.getBody());
         RemoteProxyWorld world = new RemoteProxyWorld(sm.getIpAddr(), w);
         
-        User me = Master.getUser();
+        User me = User.getUser();
         me.linkToRemotePlayerInWorld(world);
         world.createCanvas();
         w.init(); // do I need this?

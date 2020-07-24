@@ -1,7 +1,6 @@
 package net;
 
 import net.protocols.AbstractOrpheusServerNonChatProtocol;
-import controllers.Master;
 import controllers.User;
 import java.io.EOFException;
 import java.io.IOException;
@@ -245,7 +244,7 @@ public class OrpheusServer {
 
         //includes the User data so the other computer has access to username
         conn.writeToClient(new ServerMessage(
-            Master.getUser().serializeJson().toString(),
+            User.getUser().serializeJson().toString(),
             ServerMessageType.PLAYER_JOINED
         ).toJsonString());
         logConnections();

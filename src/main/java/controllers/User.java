@@ -6,6 +6,7 @@ import javax.json.Json;
 import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.swing.JOptionPane;
 import net.OrpheusServer;
 import serialization.JsonSerialable;
 import serialization.JsonUtil;
@@ -28,6 +29,8 @@ public final class User implements JsonSerialable{
     
     private String remotePlayerId;
     
+    private static final User user = new User();
+    
     public static final String DEFAULT_NAME = "name not set";
     
     public User(String name, String ip){
@@ -42,6 +45,19 @@ public final class User implements JsonSerialable{
     
     public User(){
         this(DEFAULT_NAME);
+    }
+    
+    public static void loginWindow(){
+        if(user.getName().equals(User.DEFAULT_NAME)){
+            user.setName(JOptionPane.showInputDialog("Enter a name: "));
+        }
+    }
+    
+    public static User getUser(){
+        if(user == null){
+            throw new NullPointerException("no user is logged in");
+        }
+        return user;
     }
     
     public User setName(String s){

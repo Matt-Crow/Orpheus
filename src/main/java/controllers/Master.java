@@ -1,7 +1,6 @@
 package controllers;
 
 import customizables.DataSet;
-import javax.swing.JOptionPane;
 
 public class Master {
 	public static final int DETECTIONRANGE = 500;
@@ -13,28 +12,10 @@ public class Master {
 	public static final int FPS = 30;
 	public static final int UNITSIZE = 100;
     
-    private static User user;
-    
     private static final DataSet DATA_SET = new DataSet();
     
     static {
-        user = new User();
         DATA_SET.loadDefaults();
-    }
-    
-    
-    public static void loginWindow(){
-        if(user.getName().equals(User.DEFAULT_NAME)){
-            user.setName(JOptionPane.showInputDialog("Enter a name: "));
-        }
-    }
-    //todo: login credentials
-    
-    public static User getUser(){
-        if(user == null){
-            throw new NullPointerException("no user is logged in");
-        }
-        return user;
     }
     
     public static DataSet getDataSet(){

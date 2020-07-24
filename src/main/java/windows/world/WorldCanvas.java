@@ -13,6 +13,7 @@ import controllers.MainWindow;
 import controllers.User;
 import controls.AbstractPlayerControls;
 import controls.SoloPlayerControls;
+import entities.AbstractPlayer;
 import java.awt.Graphics2D;
 import java.io.IOException;
 import entities.HumanPlayer;
@@ -34,6 +35,8 @@ public class WorldCanvas extends Canvas{
     private boolean paused;
     private boolean pauseEnabled;
     
+    private String focusedEntityId;
+    
     public WorldCanvas(AbstractWorld w){
         super();
         world = w;
@@ -54,6 +57,8 @@ public class WorldCanvas extends Canvas{
         registerKey(KeyEvent.VK_X, true, ()->zoomOut());
         registerKey(KeyEvent.VK_P, true, ()->togglePause());
         setZoom(0.5);
+        
+        focusedEntityId = null;
     }
     
     /**
@@ -64,6 +69,7 @@ public class WorldCanvas extends Canvas{
         addMouseListener(pc);
         addEndOfFrameListener(pc);
         pc.registerControlsTo(this);
+        focusedEntityId = pc.getPlayer().id;
     }
     
     public void setPauseEnabled(boolean canPause){
@@ -98,17 +104,24 @@ public class WorldCanvas extends Canvas{
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-        centerOn(
-            Master.getUser().getPlayer().getX(), 
-            Master.getUser().getPlayer().getY()
-        );
+        if(focusedEntityId == null){
+            centerOn(0, 0);
+        } else {
+            AbstractPlayer focus = world.getPlayerTeam().getMemberById(focusedEntityId);
+            centerOn(
+                focus.getX(),
+                focus.getY()
+            );
+        }
 		Graphics2D g2d = applyTransforms(g);
 		
 		world.draw(g2d);
         
 		reset();
         
-		Master.getUser().getPlayer().drawHUD(g2d, this);
+		if(focusedEntityId != null){
+            ((HumanPlayer)world.getPlayerTeam().getMemberById(focusedEntityId)).drawHUD(g2d, this);
+        }
         
         if(world.getCurrentMinigame() != null && world.getCurrentMinigame().isDone()){
 			drawMatchResolution(g2d);
@@ -138,7 +151,7 @@ public class WorldCanvas extends Canvas{
     
     
     public static void main(String[] args) throws IOException{
-        User user = Master.getUser();
+        User user = User.getUser();
         HumanPlayer player = user.initPlayer().getPlayer();
         
         player.applyBuild(Master.getDataSet().getDefaultBuild());
@@ -146,6 +159,13 @@ public class WorldCanvas extends Canvas{
         HostWorld world = new HostWorld(WorldContent.createDefaultBattle());
         Team t1 = new Team("Test", Color.BLUE);
         Team t2 = Team.constructRandomTeam("Rando", Color.yellow, 1, 1);
+        t1.addMember(player);
+        world.setPlayerTeam(t1).setEnemyTeam(t2);
+        
+        Battle b = new Battle(10, 5);
+        b.setHost(world);
+        world.setCurrentMinigame(b);
+        world.init();
         
         WorldCanvas canvas = new WorldCanvas(world);
         canvas.addPlayerControls(new SoloPlayerControls(player, world));
@@ -153,15 +173,6 @@ public class WorldCanvas extends Canvas{
         WorldPage wp = new WorldPage();
         wp.setCanvas(canvas);
         mw.switchToPage(wp);
-        
-        
-        Battle b = new Battle(10, 5);
-        
-        t1.addMember(player);
-        world.setPlayerTeam(t1).setEnemyTeam(t2);
-        b.setHost(world);
-        world.setCurrentMinigame(b);
-        world.init();
         
         user.setRemotePlayerId(player.id);
         
