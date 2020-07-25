@@ -19,7 +19,9 @@ public class Connection {
     public Connection(Socket s) throws IOException{
         clientSocket = s;
         objOut = new ObjectOutputStream(s.getOutputStream());
+        // https://stackoverflow.com/questions/8186135/java-sockets-program-stops-at-socket-getinputstream-w-o-error
         objIn = new ObjectInputStream(s.getInputStream());
+        System.out.println();
     }
     
     public synchronized boolean writeToClient(String s){

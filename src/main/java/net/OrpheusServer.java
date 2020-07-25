@@ -210,7 +210,7 @@ public class OrpheusServer {
             return;
         }
 
-        Connection conn = new Connection(otherComputer);
+        Connection conn = new Connection(otherComputer); // crashing here
         connections.put(otherComputer.getInetAddress().getHostAddress(), conn);
 
         //do I need to store this somewhere?
