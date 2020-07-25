@@ -1,7 +1,5 @@
 package battle;
 
-import controllers.Settings;
-import controllers.User;
 import world.AbstractWorld;
 import java.awt.Color;
 import java.util.ArrayList;
@@ -15,6 +13,7 @@ import java.util.function.Consumer;
 import static java.lang.System.out;
 import java.util.HashMap;
 import net.OrpheusServer;
+import users.LocalUser;
 import util.SafeList;
 
 /**
@@ -199,7 +198,7 @@ public class Team extends SafeList<AbstractEntity> implements Serializable{
         out.println("TEAM: " + name + "(ID: " + id + ")");
         out.println("Roster: ");
         roster.values().stream().forEach((AbstractPlayer p)->{
-            if(p.equals(User.getUser().getPlayer())){
+            if(p.id.equals(LocalUser.getInstance().getRemotePlayerId())){
                 out.print("*");
             }
             out.println(p.getName() + "(ID: " + p.id + ")");

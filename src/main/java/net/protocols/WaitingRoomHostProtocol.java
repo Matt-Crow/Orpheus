@@ -20,6 +20,7 @@ import net.OrpheusServer;
 import net.ServerMessage;
 import net.ServerMessageType;
 import serialization.JsonUtil;
+import users.LocalUser;
 import windows.WorldSelect.HostWaitingRoom;
 import windows.world.WorldCanvas;
 import windows.world.WorldPage;
@@ -162,7 +163,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
         getFrontEnd().setInputEnabled(false);
         
         // put the host on the user team
-        User me = User.getUser();
+        LocalUser me = LocalUser.getInstance();
         me.initPlayer().getPlayer().applyBuild(getFrontEnd().getSelectedBuild());
         if(awaitingBuilds.containsKey(me.getIpAddress())){
             /*

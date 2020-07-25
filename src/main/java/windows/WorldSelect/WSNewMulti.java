@@ -3,6 +3,7 @@ package windows.WorldSelect;
 import controllers.User;
 import java.io.IOException;
 import net.protocols.WaitingRoomHostProtocol;
+import users.LocalUser;
 
 /**
  *
@@ -21,7 +22,7 @@ public class WSNewMulti extends AbstractWSNewWorld{
             HostWaitingRoom wait = new HostWaitingRoom(createBattle());
             wait.startProtocol();
             getHost().switchToPage(wait);
-            ((WaitingRoomHostProtocol)wait.getBackEnd()).addUserToTeam(User.getUser());
+            ((WaitingRoomHostProtocol)wait.getBackEnd()).addUserToTeam(LocalUser.getInstance());
         } catch (IOException ex) {
             ex.printStackTrace();
         }

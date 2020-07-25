@@ -14,6 +14,7 @@ import java.net.SocketException;
 import javax.json.JsonException;
 import net.protocols.ChatProtocol;
 import serialization.JsonUtil;
+import users.LocalUser;
 import util.SafeList;
 
 /**
@@ -244,7 +245,7 @@ public class OrpheusServer {
 
         //includes the User data so the other computer has access to username
         conn.writeToClient(new ServerMessage(
-            User.getUser().serializeJson().toString(),
+            LocalUser.getInstance().serializeJson().toString(),
             ServerMessageType.PLAYER_JOINED
         ).toJsonString());
         logConnections();

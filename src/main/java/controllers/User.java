@@ -53,13 +53,6 @@ public final class User implements JsonSerialable{
         }
     }
     
-    public static User getUser(){
-        if(user == null){
-            throw new NullPointerException("no user is logged in");
-        }
-        return user;
-    }
-    
     public User setName(String s){
         userName = s;
         return this;

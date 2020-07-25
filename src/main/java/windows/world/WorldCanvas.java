@@ -17,6 +17,7 @@ import entities.AbstractPlayer;
 import java.awt.Graphics2D;
 import java.io.IOException;
 import entities.HumanPlayer;
+import users.LocalUser;
 import util.SerialUtil;
 import windows.Canvas;
 import world.HostWorld;
@@ -151,7 +152,7 @@ public class WorldCanvas extends Canvas{
     
     
     public static void main(String[] args) throws IOException{
-        User user = User.getUser();
+        LocalUser user = LocalUser.getInstance();
         HumanPlayer player = user.initPlayer().getPlayer();
         
         player.applyBuild(Settings.getDataSet().getDefaultBuild());

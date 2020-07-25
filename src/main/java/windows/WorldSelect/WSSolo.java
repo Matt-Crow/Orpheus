@@ -6,6 +6,7 @@ import controllers.User;
 import controls.SoloPlayerControls;
 import entities.HumanPlayer;
 import java.awt.Color;
+import users.LocalUser;
 import windows.world.WorldCanvas;
 import windows.world.WorldPage;
 import world.SoloWorld;
@@ -22,7 +23,7 @@ public class WSSolo extends AbstractWSNewWorld{
     
     @Override
     public void start(){
-        User user = User.getUser();
+        LocalUser user = LocalUser.getInstance();
         user.initPlayer();
         HumanPlayer player = user.getPlayer();
         

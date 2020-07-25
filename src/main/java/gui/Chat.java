@@ -1,6 +1,5 @@
 package gui;
 
-import controllers.User;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +12,7 @@ import net.OrpheusServer;
 import net.ServerMessage;
 import net.ServerMessageType;
 import net.protocols.ChatProtocol;
+import users.LocalUser;
 
 public class Chat extends JComponent implements ActionListener{
     private final JTextArea msgs;
@@ -129,7 +129,7 @@ public class Chat extends JComponent implements ActionListener{
                 server.connect(ipAddr);
                 logLocal("Joined chat with " + ipAddr);
                 server.send(new ServerMessage(
-                    User.getUser().getName() + " has joined the chat.",
+                    LocalUser.getInstance().getName() + " has joined the chat.",
                     ServerMessageType.CHAT
                 ));
             } catch (IOException ex) {

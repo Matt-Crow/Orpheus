@@ -1,6 +1,5 @@
 package net;
 
-import controllers.Settings;
 import controllers.User;
 import java.io.StringReader;
 import javax.json.Json;
@@ -9,6 +8,7 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import serialization.JsonSerialable;
 import serialization.JsonUtil;
+import users.LocalUser;
 
 /**
  * The ServerMessage class is used to send information back
@@ -38,11 +38,11 @@ public class ServerMessage implements JsonSerialable{
     
     public ServerMessage(String bodyText, ServerMessageType messageType){
         this(
-            User.getUser().getIpAddress(),
+            LocalUser.getInstance().getIpAddress(),
             bodyText,
             messageType
         );
-        setSender(User.getUser());
+        setSender(LocalUser.getInstance());
     }
     
     /**

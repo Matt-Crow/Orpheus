@@ -10,6 +10,7 @@ import net.OrpheusServer;
 import net.ServerMessage;
 import net.ServerMessageType;
 import serialization.JsonUtil;
+import users.LocalUser;
 import windows.WorldSelect.AbstractWaitingRoom;
 import windows.world.WorldCanvas;
 import windows.world.WorldPage;
@@ -62,7 +63,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
     }
     
     private void receiveRemoteId(ServerMessage sm){
-        User.getUser().setRemotePlayerId(sm.getBody());
+        LocalUser.getInstance().setRemotePlayerId(sm.getBody());
     }
     
     /**
@@ -77,8 +78,8 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
         WorldContent w = WorldContent.fromSerializedString(sm.getBody());
         RemoteProxyWorld world = new RemoteProxyWorld(sm.getIpAddr(), w);
         
-        User me = User.getUser();
-        me.linkToRemotePlayerInWorld(world);
+        LocalUser me = LocalUser.getInstance();
+        //me.linkToRemotePlayerInWorld(world);
         world.createCanvas();
         w.init(); // do I need this?
         
