@@ -176,6 +176,7 @@ public class OrpheusServer {
                     while(listenForConn){
                         try {
                             connect(server.accept());
+                            System.out.println();
                         } catch(SocketException ex){
                             ex.printStackTrace();
                             break;
@@ -423,6 +424,8 @@ public class OrpheusServer {
             OrpheusServer os = new OrpheusServer();
             os.logConnections();
             os.start();
+            //os.connect("192.168.1.19");
+            new Socket("192.168.1.19", PORT);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
