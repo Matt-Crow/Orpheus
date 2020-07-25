@@ -1,6 +1,5 @@
 package windows.WorldSelect;
 
-import controllers.User;
 import customizables.Build;
 import gui.BuildSelect;
 import gui.Chat;
@@ -15,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import net.protocols.AbstractWaitingRoomProtocol;
+import users.AbstractUser;
 import windows.Page;
 
 /**
@@ -95,7 +95,7 @@ public abstract class AbstractWaitingRoom extends Page{
         String newStr = "Player Team: \n";
         newStr = Arrays
             .stream(backend.getTeamProto())
-            .map((User use) -> "* " + use.getName() + "\n")
+            .map((AbstractUser use) -> "* " + use.getName() + "\n")
             .reduce(newStr, String::concat);
         teamList.setText(newStr);
     }

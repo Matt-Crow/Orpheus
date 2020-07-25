@@ -1,6 +1,5 @@
 package windows.WorldSelect;
 
-import controllers.User;
 import java.awt.GridLayout;
 import java.io.IOException;
 import java.util.Arrays;
@@ -11,6 +10,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import users.LocalUser;
 import windows.Page;
 
 /**
@@ -82,7 +82,7 @@ public class WSJoin extends Page{
     
     private void join(String ipAddr){
         try {
-            User.loginWindow(); // set username
+            LocalUser.getInstance().loginWindow(); // set username
             msgs.append("Attempting to connect to " + ipAddr + "...\n");
             ClientWaitingRoom wait = new ClientWaitingRoom(ipAddr);
             wait.startProtocol();

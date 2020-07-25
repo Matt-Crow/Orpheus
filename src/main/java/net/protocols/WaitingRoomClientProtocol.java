@@ -1,8 +1,8 @@
 package net.protocols;
 
-import controllers.User;
 import controls.RemotePlayerControls;
 import customizables.BuildJsonUtil;
+import entities.HumanPlayer;
 import java.io.IOException;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
@@ -10,6 +10,7 @@ import net.OrpheusServer;
 import net.ServerMessage;
 import net.ServerMessageType;
 import serialization.JsonUtil;
+import users.AbstractUser;
 import users.LocalUser;
 import windows.WorldSelect.AbstractWaitingRoom;
 import windows.world.WorldCanvas;
@@ -45,7 +46,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
         JsonUtil.verify(obj, "team");
         obj.getJsonArray("team").stream().forEach((jv)->{
             if(jv.getValueType().equals(JsonValue.ValueType.OBJECT)){
-                addToTeamProto(User.deserializeJson((JsonObject)jv));
+                addToTeamProto(AbstractUser.deserializeJson((JsonObject)jv));
             }
         });
     }
@@ -85,7 +86,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
         
         WorldPage p = new WorldPage();
         WorldCanvas canv = world.getCanvas();
-        canv.addPlayerControls(new RemotePlayerControls(me.getPlayer(), world, sm.getIpAddr()));
+        canv.addPlayerControls(new RemotePlayerControls((HumanPlayer)world.getPlayerTeam().getMemberById(me.getRemotePlayerId()), world, sm.getIpAddr()));
         canv.setPauseEnabled(false);
         p.setCanvas(canv);
         getFrontEnd().getHost().switchToPage(p);

@@ -1,7 +1,6 @@
 package net;
 
 import net.protocols.AbstractOrpheusServerNonChatProtocol;
-import controllers.User;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -14,6 +13,7 @@ import java.net.SocketException;
 import javax.json.JsonException;
 import net.protocols.ChatProtocol;
 import serialization.JsonUtil;
+import users.AbstractUser;
 import users.LocalUser;
 import util.SafeList;
 
@@ -285,13 +285,13 @@ public class OrpheusServer {
             out.println("already connected");
         } else if(connections.containsKey(ip)){
             //connected to IP, but no user data
-            connections.get(ip).setUser(User.deserializeJson(JsonUtil.fromString(sm.getBody())));
+            connections.get(ip).setUser(AbstractUser.deserializeJson(JsonUtil.fromString(sm.getBody())));
             logConnections();
         } else {
             //not connected, no user data
             try {
                 connect(ip);
-                connections.get(ip).setUser(User.deserializeJson(JsonUtil.fromString(sm.getBody())));
+                connections.get(ip).setUser(AbstractUser.deserializeJson(JsonUtil.fromString(sm.getBody())));
                 logConnections();
             } catch (IOException ex){
                 ex.printStackTrace();

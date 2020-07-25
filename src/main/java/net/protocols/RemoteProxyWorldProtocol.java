@@ -1,6 +1,5 @@
 package net.protocols;
 
-import controllers.User;
 import net.OrpheusServer;
 import net.ServerMessage;
 import util.SerialUtil;

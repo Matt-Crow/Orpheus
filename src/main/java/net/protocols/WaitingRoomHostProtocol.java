@@ -2,8 +2,6 @@ package net.protocols;
 
 import battle.Battle;
 import battle.Team;
-import controllers.Settings;
-import controllers.User;
 import controls.SoloPlayerControls;
 import customizables.Build;
 import customizables.BuildJsonUtil;
@@ -20,6 +18,7 @@ import net.OrpheusServer;
 import net.ServerMessage;
 import net.ServerMessageType;
 import serialization.JsonUtil;
+import users.AbstractUser;
 import users.LocalUser;
 import windows.WorldSelect.HostWaitingRoom;
 import windows.world.WorldCanvas;
@@ -46,12 +45,13 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
     private final Battle minigame;
     private final Team playerTeam;
     private final Team enemyTeam;
+    private HumanPlayer myPlayer;
     
     /*
     The Users who have joined the waiting room, but have
     not yet sent their Builds to the server
     */
-    private final HashMap<String, User> awaitingBuilds;
+    private final HashMap<String, AbstractUser> awaitingBuilds;
     
     /**
      * Creates the protocol.
@@ -74,7 +74,8 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
         playerTeam.clear();
         enemyTeam.clear();
         awaitingBuilds.clear();
-        //addUserToTeam(Settings.getUser());
+        myPlayer = null;
+        
         try {
             getFrontEnd().getChat().openChatServer();
         } catch (IOException ex) {
@@ -88,7 +89,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
      * and alerts all connected players
      * @param u the User who wants to play
      */
-    public final void addUserToTeam(User u){
+    public final void addUserToTeam(AbstractUser u){
         if(addToTeamProto(u)){
             awaitingBuilds.put(u.getIpAddress(), u);
             ServerMessage sm = new ServerMessage(
@@ -120,7 +121,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
         addUserToTeam automatically notifies everone 
         connected that someone has joined
         */
-        User joiningUser = sm.getSender();
+        AbstractUser joiningUser = sm.getSender();
         addUserToTeam(joiningUser);
         
         /*
@@ -131,7 +132,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
         JsonObjectBuilder initMsgBuild = Json.createObjectBuilder();
         initMsgBuild.add("type", "waiting room init");
         JsonArrayBuilder userListBuild = Json.createArrayBuilder();
-        for(User u : getTeamProto()){
+        for(AbstractUser u : getTeamProto()){
             userListBuild.add(u.serializeJson());
         }
         initMsgBuild.add("team", userListBuild.build());
@@ -164,15 +165,10 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
         
         // put the host on the user team
         LocalUser me = LocalUser.getInstance();
-        me.initPlayer().getPlayer().applyBuild(getFrontEnd().getSelectedBuild());
         if(awaitingBuilds.containsKey(me.getIpAddress())){
-            /*
-            Note: Settings.getUser by default has the loopback address 
-            as their IP, as they are initialized BEFORE the server gets
-            its IP address. Therefore, User.getIpAddress() != OrpheusServer.getInstance().getIpAddress().
-            Just something to keep in mind.
-            */
-            playerTeam.addMember(me.getPlayer());
+            myPlayer = new HumanPlayer(me.getName());
+            myPlayer.applyBuild(getFrontEnd().getSelectedBuild());
+            playerTeam.addMember(myPlayer);
             awaitingBuilds.remove(me.getIpAddress());
         } else {
             throw new UnsupportedOperationException();
@@ -201,11 +197,11 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
      */
     private void receiveBuildInfo(ServerMessage sm){
         String ip = sm.getIpAddr();
-        HumanPlayer player;
+        HumanPlayer player = null;
         Build b;
         
         if(awaitingBuilds.containsKey(ip)){
-            player = awaitingBuilds.get(ip).initPlayer().getPlayer();
+            player = new HumanPlayer(sm.getSender().getName());
             awaitingBuilds.remove(ip);
         } else {
             err.println("Ugh oh, " + sm.getSender().getName() + " isn't on any team!");
@@ -259,7 +255,8 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
         
         WorldPage p = new WorldPage();
         WorldCanvas canv = w.getCanvas();
-        canv.addPlayerControls(new SoloPlayerControls(User.getUser().getPlayer(), w));
+        
+        canv.addPlayerControls(new SoloPlayerControls(myPlayer, w));
         canv.setPauseEnabled(false);
         p.setCanvas(canv);
         getFrontEnd().getHost().switchToPage(p);

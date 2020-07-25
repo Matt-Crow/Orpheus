@@ -10,7 +10,6 @@ import java.awt.event.*;
 import javax.swing.*;
 import battle.Team;
 import controllers.MainWindow;
-import controllers.User;
 import controls.AbstractPlayerControls;
 import controls.SoloPlayerControls;
 import entities.AbstractPlayer;
@@ -153,7 +152,7 @@ public class WorldCanvas extends Canvas{
     
     public static void main(String[] args) throws IOException{
         LocalUser user = LocalUser.getInstance();
-        HumanPlayer player = user.initPlayer().getPlayer();
+        HumanPlayer player = new HumanPlayer(user.getName());
         
         player.applyBuild(Settings.getDataSet().getDefaultBuild());
         

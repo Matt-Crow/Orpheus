@@ -1,17 +1,17 @@
 package net;
 
-import controllers.User;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import users.AbstractUser;
 
 /**
  *
  * @author Matt
  */
 public class Connection {
-    private User user; //the user playing Orpheus on the machine this connects to
+    private AbstractUser user; //the user playing Orpheus on the machine this connects to
     private final Socket clientSocket;
     private final ObjectOutputStream objOut;
     private final ObjectInputStream objIn;
@@ -72,10 +72,10 @@ public class Connection {
         }
     }
     
-    public void setUser(User u){
+    public void setUser(AbstractUser u){
         user = u;
     }
-    public User getUser(){
+    public AbstractUser getUser(){
         return user;
     }
     

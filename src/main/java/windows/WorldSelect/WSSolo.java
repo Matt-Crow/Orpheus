@@ -2,7 +2,6 @@ package windows.WorldSelect;
 
 import battle.Battle;
 import battle.Team;
-import controllers.User;
 import controls.SoloPlayerControls;
 import entities.HumanPlayer;
 import java.awt.Color;
@@ -24,8 +23,7 @@ public class WSSolo extends AbstractWSNewWorld{
     @Override
     public void start(){
         LocalUser user = LocalUser.getInstance();
-        user.initPlayer();
-        HumanPlayer player = user.getPlayer();
+        HumanPlayer player = new HumanPlayer(user.getName());
         
         Team team1 = new Team("Players", Color.green);
         Team team2 = new Team("AI", Color.red);

@@ -21,7 +21,7 @@ public abstract class AbstractUser implements JsonSerialable {
         userName = name;
     }
     public AbstractUser(){
-        userName = DEFAULT_NAME;
+        this(DEFAULT_NAME);
     }
     
     public void setName(String newName){

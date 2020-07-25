@@ -1,5 +1,6 @@
 package users;
 
+import javax.swing.JOptionPane;
 import net.OrpheusServer;
 
 /**
@@ -27,6 +28,12 @@ public class LocalUser extends AbstractUser {
             instance = new LocalUser();
         }
         return instance;
+    }
+    
+    public final void loginWindow(){
+        if(getName().equals(AbstractUser.DEFAULT_NAME)){
+            setName(JOptionPane.showInputDialog("Enter a username:"));
+        }
     }
     
     public final void setRemotePlayerId(String id){

@@ -1,6 +1,5 @@
 package net;
 
-import controllers.User;
 import java.io.StringReader;
 import javax.json.Json;
 import javax.json.JsonException;
@@ -8,6 +7,7 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import serialization.JsonSerialable;
 import serialization.JsonUtil;
+import users.AbstractUser;
 import users.LocalUser;
 
 /**
@@ -17,7 +17,7 @@ import users.LocalUser;
  */
 public class ServerMessage implements JsonSerialable{
     private final String ipAddr;
-    private User fromUser;
+    private AbstractUser fromUser;
     private final String body;
     private final ServerMessageType type;
     
@@ -51,10 +51,10 @@ public class ServerMessage implements JsonSerialable{
      * @param u the user to associate this 
      * message with
      */
-    public final void setSender(User u){
+    public final void setSender(AbstractUser u){
         fromUser = u;
     }
-    public final User getSender(){
+    public final AbstractUser getSender(){
         return fromUser;
     }
     
