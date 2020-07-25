@@ -169,6 +169,7 @@ public class WorldCanvas extends Canvas{
         
         WorldCanvas canvas = new WorldCanvas(world);
         canvas.addPlayerControls(new SoloPlayerControls(world, player.id));
+        canvas.setPauseEnabled(true);
         MainWindow mw = MainWindow.getInstance();
         WorldPage wp = new WorldPage();
         wp.setCanvas(canvas);
