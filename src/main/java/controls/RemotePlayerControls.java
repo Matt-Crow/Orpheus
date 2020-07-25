@@ -1,6 +1,5 @@
 package controls;
 
-import entities.HumanPlayer;
 import net.OrpheusServer;
 import net.ServerMessage;
 import net.ServerMessageType;
@@ -13,8 +12,8 @@ import world.AbstractWorld;
 public class RemotePlayerControls extends AbstractPlayerControls{
     private final String receiverIpAddr;
     
-    public RemotePlayerControls(HumanPlayer forPlayer, AbstractWorld inWorld, String receiverIp){
-        super(forPlayer, inWorld);
+    public RemotePlayerControls(AbstractWorld inWorld, String playerId, String receiverIp){
+        super(inWorld, playerId);
         receiverIpAddr = receiverIp;
     }
     

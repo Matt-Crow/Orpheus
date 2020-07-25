@@ -256,7 +256,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
         WorldPage p = new WorldPage();
         WorldCanvas canv = w.getCanvas();
         
-        canv.addPlayerControls(new SoloPlayerControls(myPlayer, w));
+        canv.addPlayerControls(new SoloPlayerControls(w, myPlayer.id));
         canv.setPauseEnabled(false);
         p.setCanvas(canv);
         getFrontEnd().getHost().switchToPage(p);

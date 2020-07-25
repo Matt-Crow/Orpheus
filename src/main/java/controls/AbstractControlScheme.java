@@ -8,18 +8,17 @@ import world.AbstractWorld;
  * for AbstractPlayerControls,
  * 
  * @author Matt Crow
- * @param <T> the subclass of AbstractPlayer this is controlling
  */
-public class AbstractControlScheme<T extends AbstractPlayer> {
+public class AbstractControlScheme {
     private final AbstractWorld targettedWorld;
     private final String targettedEntityId;
     
-    public AbstractControlScheme(T forPlayer, AbstractWorld world){
+    public AbstractControlScheme(AbstractWorld world, String playerId){
         targettedWorld = world;
-        targettedEntityId = forPlayer.id;
+        targettedEntityId = playerId;
     }
     
-    public final T getPlayer(){
-        return (T)targettedWorld.getPlayerTeam().getMemberById(targettedEntityId);
+    public final AbstractPlayer getPlayer(){
+        return targettedWorld.getPlayerTeam().getMemberById(targettedEntityId);
     }
 }

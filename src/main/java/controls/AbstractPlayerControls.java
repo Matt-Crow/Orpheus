@@ -1,5 +1,6 @@
 package controls;
 
+import entities.AbstractPlayer;
 import entities.HumanPlayer;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -21,9 +22,9 @@ import world.AbstractWorld;
  * 
  * @author Matt Crow
  */
-public abstract class AbstractPlayerControls extends AbstractControlScheme<HumanPlayer> implements MouseListener, EndOfFrameListener{
-    public AbstractPlayerControls(HumanPlayer forPlayer, AbstractWorld inWorld){
-        super(forPlayer, inWorld);
+public abstract class AbstractPlayerControls extends AbstractControlScheme implements MouseListener, EndOfFrameListener{
+    public AbstractPlayerControls(AbstractWorld inWorld, String playerId){
+        super(inWorld, playerId);
     }
     
     public final String meleeString(){
@@ -89,23 +90,43 @@ public abstract class AbstractPlayerControls extends AbstractControlScheme<Human
             }
         }
     }
+    
+    public static void decode(AbstractWorld world, String s){
+        for(String str : s.split("\n")){
+            if(str.contains("#")){
+                // contains player id
+                int startIndex = str.indexOf("#") + 1;
+                int endIndex = str.indexOf(" ", startIndex);
+                String playerId = str.substring(startIndex, endIndex);
+                decode((HumanPlayer)world.getPlayerTeam().getMemberById(playerId), s);
+            } else {
+                throw new UnsupportedOperationException("cannot decode string with no player id");
+            }
+        }
+    }
 
     @Override
     public void mouseClicked(MouseEvent e) {}
 
     @Override
     public void mousePressed(MouseEvent e) {
-        getPlayer().setFollowingMouse(true);
+        AbstractPlayer player = getPlayer();
+        if(player instanceof HumanPlayer){
+            ((HumanPlayer)getPlayer()).setFollowingMouse(true);
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        getPlayer().setFollowingMouse(false);
+        AbstractPlayer player = getPlayer();
+        if(player instanceof HumanPlayer){
+            ((HumanPlayer)getPlayer()).setFollowingMouse(false);
+        }
     }
     
     @Override
     public void frameEnded(Canvas c) {
-        if(getPlayer().getFollowingMouse()){
+        if(getPlayer() instanceof HumanPlayer && ((HumanPlayer)getPlayer()).getFollowingMouse()){
             move();
         }
     }

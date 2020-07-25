@@ -9,23 +9,23 @@ import world.AbstractWorld;
  */
 public class SoloPlayerControls extends AbstractPlayerControls{
 
-    public SoloPlayerControls(HumanPlayer forPlayer, AbstractWorld inWorld) {
-        super(forPlayer, inWorld);
+    public SoloPlayerControls(AbstractWorld inWorld, String playerId) {
+        super(inWorld, playerId);
     }
 
     @Override
     public void useMeleeKey() {
-        AbstractPlayerControls.decode(getPlayer(), meleeString());
+        AbstractPlayerControls.decode((HumanPlayer)getPlayer(), meleeString());
     }
 
     @Override
     public void useAttKey(int i) {
-        AbstractPlayerControls.decode(getPlayer(), attString(i));
+        AbstractPlayerControls.decode((HumanPlayer)getPlayer(), attString(i));
     }
 
     @Override
     public void move() {
-        AbstractPlayerControls.decode(getPlayer(), moveString());
+        AbstractPlayerControls.decode((HumanPlayer)getPlayer(), moveString());
     }
 
 }
