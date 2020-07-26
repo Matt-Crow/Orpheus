@@ -7,7 +7,6 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
-import java.net.InetSocketAddress;
 import java.net.SocketException;
 import javax.json.JsonException;
 import net.protocols.ChatProtocol;
@@ -117,7 +116,8 @@ public class OrpheusServer {
         log(String.format("Server initialized on %s:%d", ipAddress, PORT));
         log("InetAddress.getLocalHost().getHostAddress(): " + InetAddress.getLocalHost().getHostAddress());
         log("server.getInetAddress().getHostName(): " + server.getInetAddress().getHostName());
-        log("server.toString(): " + server.toString());;
+        log("server.getInetAddress().getHostAddress(): " + server.getInetAddress().getHostAddress());
+        log("server.toString(): " + server.toString());
         reset();
         
         isStarted = true;
@@ -170,6 +170,10 @@ public class OrpheusServer {
     public boolean isStarted(){
         return isStarted;
     }
+    
+    public ServerSocket getServerSocket(){
+        return server;
+    }
         
     private void startConnListener(){
         log("Initialize connection listener thread...");
@@ -196,6 +200,7 @@ public class OrpheusServer {
                 }
             };
             connListener.start();
+            // need some way of setting it to null once it's done
         } else {
             log("thread is already initialized");
         }
@@ -217,7 +222,7 @@ public class OrpheusServer {
             connect(sock);
         }
     }
-    private synchronized void connect(Socket otherComputer) throws IOException{
+    public synchronized void connect(Socket otherComputer) throws IOException{
         logConnections();
         if(connections.containsKey(otherComputer.getInetAddress().getHostAddress())){
             log("Already connected to " + otherComputer.getInetAddress().getHostAddress());
@@ -439,11 +444,11 @@ public class OrpheusServer {
     }
     
     // make this save to a file later
-    private void log(String msg){
+    public final void log(String msg){
         System.out.println("OrpheusServer: " + msg);
     }
     
-    private void log(Object obj){
+    public final void log(Object obj){
         log(obj.toString());
     }
     

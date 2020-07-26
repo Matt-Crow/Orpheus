@@ -126,7 +126,7 @@ public class Chat extends JComponent implements ActionListener{
         OrpheusServer server = OrpheusServer.getInstance();
         if(server.isStarted()){
             try {
-                server.connect(ipAddr); // crashes here
+                server.connect(ipAddr);
                 logLocal("Joined chat with " + ipAddr);
                 server.send(new ServerMessage(
                     LocalUser.getInstance().getName() + " has joined the chat.",
