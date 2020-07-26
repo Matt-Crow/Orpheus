@@ -38,7 +38,7 @@ public class ServerMessage implements JsonSerialable{
     
     public ServerMessage(String bodyText, ServerMessageType messageType){
         this(
-            LocalUser.getInstance().getIpAddress(),
+            OrpheusServer.getInstance().getIpAddr(),
             bodyText,
             messageType
         );

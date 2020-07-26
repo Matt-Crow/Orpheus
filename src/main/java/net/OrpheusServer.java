@@ -212,8 +212,8 @@ public class OrpheusServer {
         if(ipAddr.equals(this.ipAddress)){
             log("Do not connect to self. Exiting.");
         } else {
-            Socket sock = new Socket();
-            sock.connect(new InetSocketAddress(ipAddr, PORT), 3000);
+            Socket sock = new Socket(ipAddr, PORT);
+            //sock.connect(new InetSocketAddress(ipAddr, PORT), 3000);
             connect(sock);
         }
     }
