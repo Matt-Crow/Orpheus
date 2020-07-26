@@ -1,9 +1,9 @@
 package battle;
 
-import world.AbstractWorldShell;
 import entities.AIPlayer;
 import java.io.Serializable;
 import static java.lang.System.out;
+import world.WorldContent;
 
 /**
  * A battle is a gamemode where the players are pitted
@@ -23,7 +23,7 @@ public class Battle implements Serializable{
     private final int numWaves;
     
     private int currentWave;
-    private AbstractWorldShell host; // change
+    private WorldContent host;
     
     private final int WAVE_BASE = 2;
 	
@@ -41,10 +41,10 @@ public class Battle implements Serializable{
 		host = null;
 	}
 	
-	public final void setHost(AbstractWorldShell w){
+	public final void setHost(WorldContent w){
 		host = w;
 	}
-	public final AbstractWorldShell getHost(){
+	public final WorldContent getHost(){
 		return host;
 	}
 	

@@ -7,7 +7,7 @@ import ai.PathInfo;
 import battle.*;
 import statuses.AbstractStatus;
 import controllers.Settings;
-import world.AbstractWorldShell;
+import world.WorldContent;
 import customizables.actives.ElementalActive;
 import customizables.characterClass.CharacterStatName;
 import graphics.Tile;
@@ -106,7 +106,7 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
 	}
     
     public void setPath(int x, int y){
-        AbstractWorldShell w = getWorld();
+        WorldContent w = getWorld();
         setPath(w.getMap().findPath(getX(), getY(), x, y));
     }
     public void setPath(Path p){
@@ -276,8 +276,8 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
 	
     @Override
 	public void draw(Graphics g){
-        int w = getWorld().getCanvas().getWidth();
-		int h = getWorld().getCanvas().getHeight();
+        int w = getWorld().getShell().getCanvas().getWidth();
+		int h = getWorld().getShell().getCanvas().getHeight();
 		int r = getRadius();
         
         if(path != null){

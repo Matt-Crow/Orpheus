@@ -78,6 +78,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
     private void receiveWorldInit(ServerMessage sm){
         WorldContent w = WorldContent.fromSerializedString(sm.getBody());
         RemoteProxyWorld world = new RemoteProxyWorld(sm.getIpAddr(), w);
+        w.setShell(world);
         
         LocalUser me = LocalUser.getInstance();
         //me.linkToRemotePlayerInWorld(world);

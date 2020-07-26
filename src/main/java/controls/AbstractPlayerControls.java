@@ -52,7 +52,7 @@ public abstract class AbstractPlayerControls extends AbstractControlScheme imple
         });
     }
     public String mouseString(){
-        WorldCanvas c = getPlayer().getWorld().getCanvas();
+        WorldCanvas c = getPlayer().getWorld().getShell().getCanvas();
         return String.format("(%d, %d)", c.getMouseX(), c.getMouseY());
     }
     public static int[] decodeMouseString(String s){

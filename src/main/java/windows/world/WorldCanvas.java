@@ -1,4 +1,3 @@
-
 package windows.world;
 
 import battle.Battle;
@@ -163,7 +162,7 @@ public class WorldCanvas extends Canvas{
         world.setPlayerTeam(t1).setEnemyTeam(t2);
         
         Battle b = new Battle(10, 5);
-        b.setHost(world);
+        b.setHost(world.getContent());
         world.setCurrentMinigame(b);
         world.init();
         
@@ -183,6 +182,7 @@ public class WorldCanvas extends Canvas{
         
         WorldContent newContent = WorldContent.fromSerializedString(serial);
         world.setContent(newContent);
+        newContent.setShell(world);
         
         //user.setPlayer((HumanPlayer)newContent.getPlayerTeam().getMemberById(user.getRemotePlayerId()));
         

@@ -26,11 +26,14 @@ public class WorldContent implements Serializable{
     private volatile Map currentMap;
     private volatile Battle currentMinigame; //in future versions, this will be changed to include other minigames
     
+    private transient AbstractWorldShell shell; 
+    
     public WorldContent(int size){
         playerTeam = new Team("Players", Color.green);
         aiTeam = new Team("AI", Color.red);
         currentMap = new Map(size, size);
         currentMinigame = null;
+        shell = null;
     }
     
     /**
@@ -63,7 +66,7 @@ public class WorldContent implements Serializable{
     public static WorldContent createDefaultBattle(){
         WorldContent content = new WorldContent(20);
         try {
-            content.setMap(MapLoader.readCsv(AbstractWorldShell.class.getResourceAsStream("/testMap.csv")));
+            content.setMap(MapLoader.readCsv(WorldContent.class.getResourceAsStream("/testMap.csv")));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -147,6 +150,29 @@ public class WorldContent implements Serializable{
     }
     
     /**
+     * Notifies this that it is being contained in the given
+     * shell. Clients must invoke this method upon receiving
+     * the serialized form of WorldContent, as shell is transient.
+     * 
+     * @param newShell the client's shell which is being used
+     * to contain this WorldContent
+     */
+    public final void setShell(AbstractWorldShell newShell){
+        shell = newShell;
+    }
+    
+    /**
+     * 
+     * @return the shell containing this WorldContent
+     */
+    public final AbstractWorldShell getShell(){
+        if(shell == null){
+            throw new NullPointerException("Oops! Looks like someone forgot to call setShell()!");
+        }
+        return shell;
+    }
+    
+    /**
      * Serializes this using ObjectOutputStream.writeObject,
      * then converts the result to a string so that it can
      * be used as the body of a ServerMessage
@@ -195,7 +221,9 @@ public class WorldContent implements Serializable{
     
     public static void main(String[] args){
         WorldContent content = WorldContent.createDefaultBattle();
+        System.out.println(content);
         String serialized = content.serializeToString();
         WorldContent newContent = WorldContent.fromSerializedString(serialized);
+        System.out.println(newContent);
     }
 }

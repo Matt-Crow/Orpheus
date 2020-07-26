@@ -33,6 +33,7 @@ public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtoc
     private void receiveWorldUpdate(ServerMessage sm){
         WorldContent content = (WorldContent)SerialUtil.fromSerializedString(sm.getBody());
         proxy.setContent(content);
+        content.setShell(proxy);
         //User.getUser().linkToRemotePlayerInWorld(proxy);
         /*
         Old receiveWorldUpdate, not sure if I need any of this
