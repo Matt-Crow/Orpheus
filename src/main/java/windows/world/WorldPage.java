@@ -25,7 +25,7 @@ import world.RemoteProxyWorld;
  use the MainWindow to render the WorldPage,
  which renders the WorldPage,
  which renders the WorldCanvas,
- which renders the AbstractWorld.
+ which renders the AbstractWorldShell.
  * 
  * @author Matt Crow
  */

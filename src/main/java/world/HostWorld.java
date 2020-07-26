@@ -17,7 +17,7 @@ import util.SerialUtil;
  * 3. while the protocol handles receiving controls from remote players.
  * @author Matt
  */
-public class HostWorld extends AbstractWorld{
+public class HostWorld extends AbstractWorldShell{
     public HostWorld(WorldContent worldContent) {
         super(worldContent);
     }

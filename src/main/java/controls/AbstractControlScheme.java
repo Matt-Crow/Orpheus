@@ -1,7 +1,7 @@
 package controls;
 
 import entities.AbstractPlayer;
-import world.AbstractWorld;
+import world.AbstractWorldShell;
 
 /**
  * This acts as the base class
@@ -10,15 +10,15 @@ import world.AbstractWorld;
  * @author Matt Crow
  */
 public class AbstractControlScheme {
-    private final AbstractWorld targettedWorld;
+    private final AbstractWorldShell targettedWorld;
     private final String targettedEntityId;
     
-    public AbstractControlScheme(AbstractWorld world, String playerId){
+    public AbstractControlScheme(AbstractWorldShell world, String playerId){
         targettedWorld = world;
         targettedEntityId = playerId;
     }
     
-    public final AbstractWorld getWorld(){
+    public final AbstractWorldShell getWorld(){
         return targettedWorld;
     }
     public final String getPlayerId(){

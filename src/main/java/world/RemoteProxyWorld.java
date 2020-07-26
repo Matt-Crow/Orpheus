@@ -15,7 +15,7 @@ import entities.Projectile;
  * @see net.protocols.RemoteProxyProtocol
  * @see controls.RemotePlayerControls
  */
-public class RemoteProxyWorld extends AbstractWorld{
+public class RemoteProxyWorld extends AbstractWorldShell{
     private final String remoteHostIp;
     
     /**

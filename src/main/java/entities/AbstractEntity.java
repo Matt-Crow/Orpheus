@@ -6,7 +6,7 @@ import battle.Team;
 import actions.Terminable;
 import actions.TerminateListener;
 import controllers.Settings;
-import world.AbstractWorld;
+import world.AbstractWorldShell;
 import java.io.Serializable;
 import net.OrpheusServer;
 import util.SafeList;
@@ -35,7 +35,7 @@ public abstract class AbstractEntity implements Serializable, Terminable{
 	
     private final SafeList<TerminateListener> terminateListeners; //you just can't wait for me to die, can you!
     
-    private transient AbstractWorld inWorld; //the world this is currently in
+    private transient AbstractWorldShell inWorld; //the world this is currently in
     
 	public final String id;
 	private static int nextId = 0;
@@ -64,14 +64,14 @@ public abstract class AbstractEntity implements Serializable, Terminable{
         return "Entity #" + id;
     }
     
-    public void setWorld(AbstractWorld w){
+    public void setWorld(AbstractWorldShell w){
         if(w != null){
             inWorld = w;
         } else {
             throw new NullPointerException();
         }
     }
-    public AbstractWorld getWorld(){
+    public AbstractWorldShell getWorld(){
         return inWorld;
     }
     

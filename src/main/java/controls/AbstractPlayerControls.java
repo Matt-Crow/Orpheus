@@ -8,7 +8,7 @@ import java.awt.event.MouseListener;
 import windows.Canvas;
 import windows.EndOfFrameListener;
 import windows.world.WorldCanvas;
-import world.AbstractWorld;
+import world.AbstractWorldShell;
 
 /**
  * CONTROLS:<br>
@@ -23,7 +23,7 @@ import world.AbstractWorld;
  * @author Matt Crow
  */
 public abstract class AbstractPlayerControls extends AbstractControlScheme implements MouseListener, EndOfFrameListener{
-    public AbstractPlayerControls(AbstractWorld inWorld, String playerId){
+    public AbstractPlayerControls(AbstractWorldShell inWorld, String playerId){
         super(inWorld, playerId);
     }
     
@@ -63,7 +63,7 @@ public abstract class AbstractPlayerControls extends AbstractControlScheme imple
         return new int[]{x, y};
     }
     
-    public static void decode(AbstractWorld world, String s){
+    public static void decode(AbstractWorldShell world, String s){
         int[] coords;
         HumanPlayer p = null;
         if(s.contains("#")){

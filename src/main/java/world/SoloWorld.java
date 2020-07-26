@@ -9,7 +9,7 @@ import entities.Projectile;
  *
  * @author Matt
  */
-public class SoloWorld extends AbstractWorld{
+public class SoloWorld extends AbstractWorldShell{
 
     public SoloWorld(WorldContent worldContent) {
         super(worldContent);

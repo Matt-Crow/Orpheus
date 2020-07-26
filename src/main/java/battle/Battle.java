@@ -1,6 +1,6 @@
 package battle;
 
-import world.AbstractWorld;
+import world.AbstractWorldShell;
 import entities.AIPlayer;
 import java.io.Serializable;
 import static java.lang.System.out;
@@ -23,7 +23,7 @@ public class Battle implements Serializable{
     private final int numWaves;
     
     private int currentWave;
-    private AbstractWorld host; // change
+    private AbstractWorldShell host; // change
     
     private final int WAVE_BASE = 2;
 	
@@ -41,10 +41,10 @@ public class Battle implements Serializable{
 		host = null;
 	}
 	
-	public final void setHost(AbstractWorld w){
+	public final void setHost(AbstractWorldShell w){
 		host = w;
 	}
-	public final AbstractWorld getHost(){
+	public final AbstractWorldShell getHost(){
 		return host;
 	}
 	

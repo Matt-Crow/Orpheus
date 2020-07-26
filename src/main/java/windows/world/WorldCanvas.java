@@ -2,7 +2,7 @@
 package windows.world;
 
 import battle.Battle;
-import world.AbstractWorld;
+import world.AbstractWorldShell;
 import controllers.Settings;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -30,14 +30,14 @@ import world.WorldContent;
  * @author Matt Crow
  */
 public class WorldCanvas extends Canvas{
-    private AbstractWorld world;
+    private AbstractWorldShell world;
     private final Timer timer;
     private boolean paused;
     private boolean pauseEnabled;
     
     private String focusedEntityId;
     
-    public WorldCanvas(AbstractWorld w){
+    public WorldCanvas(AbstractWorldShell w){
         super();
         world = w;
         
@@ -97,7 +97,7 @@ public class WorldCanvas extends Canvas{
         timer.stop();
     }
     
-    public AbstractWorld getWorld(){
+    public AbstractWorldShell getWorld(){
         return world;
     }
     

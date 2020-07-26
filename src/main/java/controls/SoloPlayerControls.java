@@ -1,6 +1,6 @@
 package controls;
 
-import world.AbstractWorld;
+import world.AbstractWorldShell;
 
 /**
  *
@@ -8,7 +8,7 @@ import world.AbstractWorld;
  */
 public class SoloPlayerControls extends AbstractPlayerControls{
 
-    public SoloPlayerControls(AbstractWorld inWorld, String playerId) {
+    public SoloPlayerControls(AbstractWorldShell inWorld, String playerId) {
         super(inWorld, playerId);
     }
 

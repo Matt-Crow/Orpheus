@@ -34,8 +34,8 @@ public class WorldContent implements Serializable{
     }
     
     /**
-     * Creates the classic AbstractWorld where battles 
-     * take place: a 20x20 square.
+     * Creates the classic AbstractWorldShell where battles 
+ take place: a 20x20 square.
      * 
      * Handles most of the initialization for you,
      * all you need to do is add teams,
@@ -44,7 +44,7 @@ public class WorldContent implements Serializable{
      * UPDATE THIS
      * 
      * <pre>{@code 
-  AbstractWorld newWorld = AbstractWorld.createDefaultBattle();
+  AbstractWorldShell newWorld = AbstractWorldShell.createDefaultBattle();
   newWorld.addTeam(team1);
   newWorld.addTeam(team2);
   Battle battle = new Battle();
@@ -63,7 +63,7 @@ public class WorldContent implements Serializable{
     public static WorldContent createDefaultBattle(){
         WorldContent content = new WorldContent(20);
         try {
-            content.setMap(MapLoader.readCsv(AbstractWorld.class.getResourceAsStream("/testMap.csv")));
+            content.setMap(MapLoader.readCsv(AbstractWorldShell.class.getResourceAsStream("/testMap.csv")));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -154,7 +154,7 @@ public class WorldContent implements Serializable{
      * This has a problem where if there is too much data
      * in the world, such as in a 99 vs 99, it cannot be encoded
      * 
-     * @return the serialized version of this AbstractWorld,
+     * @return the serialized version of this AbstractWorldShell,
  converted to a string for convenience.
      * 
      * @see SerialUtil#serializeToString
@@ -164,13 +164,13 @@ public class WorldContent implements Serializable{
     }
     
     /**
-     * Converts a String generated from AbstractWorld.serializeToString,
+     * Converts a String generated from AbstractWorldShell.serializeToString,
  and de-serializes it into a copy of that original world.
-     * It is important to note that the AbstractWorld's canvas is not serialized,
- so be sure to call either setCanvas, or createCanvas so that the AbstractWorld
+     * It is important to note that the AbstractWorldShell's canvas is not serialized,
+ so be sure to call either setCanvas, or createCanvas so that the AbstractWorldShell
  can be rendered
      * 
-     * @param s a string variant of an object stream serialization of a AbstractWorld
+     * @param s a string variant of an object stream serialization of a AbstractWorldShell
      * @return a copy of the world which was serialized into a string
      * 
      * @see SerialUtil#fromSerializedString(java.lang.String) 

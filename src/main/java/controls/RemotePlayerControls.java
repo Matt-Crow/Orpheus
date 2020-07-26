@@ -3,7 +3,7 @@ package controls;
 import net.OrpheusServer;
 import net.ServerMessage;
 import net.ServerMessageType;
-import world.AbstractWorld;
+import world.AbstractWorldShell;
 
 /**
  *
@@ -12,7 +12,7 @@ import world.AbstractWorld;
 public class RemotePlayerControls extends AbstractPlayerControls{
     private final String receiverIpAddr;
     
-    public RemotePlayerControls(AbstractWorld inWorld, String playerId, String receiverIp){
+    public RemotePlayerControls(AbstractWorldShell inWorld, String playerId, String receiverIp){
         super(inWorld, playerId);
         receiverIpAddr = receiverIp;
     }

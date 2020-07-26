@@ -12,19 +12,22 @@ import static java.lang.System.out;
 import util.SafeList;
 
 /**
- * The AbstractWorld class acts as a controller for each game.
- * It keeps track of all Entities in the game by keeping track of each Team, 
- which in turn keeps track of various entities
- 
- The world also keeps track of all Particles, as leaving them lumped in
- with Teams leads to drastic performance issues when serializing and checking
- for collisions.
- 
- The AbstractWorld handles all the drawing and updating as well.
+ * The AbstractWorldShell class acts as a shell
+ * for WorldContent. Essentially, it allows SoloWorlds,
+ * HostWorlds, and RemoteProxyWorlds to have different
+ * behaviors for interacting with the underlying WorldContent.
+ * The world also keeps track of all Particles, as leaving them lumped in
+ * with Teams leads to drastic performance issues when serializing and checking
+ * for collisions.
+ * 
+ * Essentially, the AbstractWorldShell provides
+ * a stable, non-serialized interface with 
+ * the volatile, serialized WorldContent.
+ * 
+ * The AbstractWorldShell handles all the drawing and updating as well.
  * @author Matt Crow
  */
-public abstract class AbstractWorld {
-    // keep this here for now
+public abstract class AbstractWorldShell {
     private final SafeList<Particle> particles;
     
     // I don't think I need to link this here.
@@ -32,19 +35,19 @@ public abstract class AbstractWorld {
         
     private volatile WorldContent content;
     
-    public AbstractWorld(WorldContent worldContent){
+    public AbstractWorldShell(WorldContent worldContent){
         particles = new SafeList<>();
         canvas = null;
         content = worldContent;
     }
     
-    public final AbstractWorld setPlayerTeam(Team t){
+    public final AbstractWorldShell setPlayerTeam(Team t){
         content.setPlayerTeam(t);
         t.forEachMember((AbstractPlayer p)->p.setWorld(this));
         t.forEach((AbstractEntity e)->e.setWorld(this));
         return this;
     }
-    public final AbstractWorld setEnemyTeam(Team t){
+    public final AbstractWorldShell setEnemyTeam(Team t){
         content.setAITeam(t);
         t.forEachMember((AbstractPlayer p)->p.setWorld(this));
         t.forEach((AbstractEntity e)->e.setWorld(this));
@@ -58,13 +61,13 @@ public abstract class AbstractWorld {
         return content.getAITeam();
     }
     
-    public AbstractWorld addParticle(Particle p){
+    public AbstractWorldShell addParticle(Particle p){
         particles.add(p);
         p.setWorld(this);
         return this;
     }
     
-    public AbstractWorld setMap(Map m){
+    public AbstractWorldShell setMap(Map m){
         content.setMap(m);
         return this;
     }
