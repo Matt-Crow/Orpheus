@@ -308,14 +308,18 @@ public class OrpheusServer {
         if(connections.containsKey(ip) && connections.get(ip).getUser() != null){
             log("already connected");
         } else if(connections.containsKey(ip)){
-            //connected to IP, but no user data
-            connections.get(ip).setUser(AbstractUser.deserializeJson(JsonUtil.fromString(sm.getBody())));
+            //connected to IP, but no user data set yet
+            AbstractUser sender = AbstractUser.deserializeJson(JsonUtil.fromString(sm.getBody()));
+            sm.setSender(sender);
+            connections.get(ip).setUser(sender);
             logConnections();
         } else {
             //not connected, no user data
             try {
                 connect(ip);
-                connections.get(ip).setUser(AbstractUser.deserializeJson(JsonUtil.fromString(sm.getBody())));
+                AbstractUser sender = AbstractUser.deserializeJson(JsonUtil.fromString(sm.getBody()));
+                sm.setSender(sender);
+                connections.get(ip).setUser(sender);
                 logConnections();
             } catch (IOException ex){
                 ex.printStackTrace();
@@ -345,6 +349,7 @@ public class OrpheusServer {
             // handle joining / leaving
             if(sm.getType() == ServerMessageType.PLAYER_JOINED){
                 receiveJoin(sm);
+                
             } else if (sm.getType() == ServerMessageType.PLAYER_LEFT){
                 receiveDisconnect(sm);
             }
