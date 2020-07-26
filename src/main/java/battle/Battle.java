@@ -23,7 +23,7 @@ public class Battle implements Serializable{
     private final int numWaves;
     
     private int currentWave;
-    private transient AbstractWorld host;
+    private AbstractWorld host;
     
     private final int WAVE_BASE = 2;
 	
