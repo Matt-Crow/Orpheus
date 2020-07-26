@@ -1,6 +1,5 @@
 package controls;
 
-import entities.HumanPlayer;
 import world.AbstractWorld;
 
 /**
@@ -15,17 +14,17 @@ public class SoloPlayerControls extends AbstractPlayerControls{
 
     @Override
     public void useMeleeKey() {
-        AbstractPlayerControls.decode((HumanPlayer)getPlayer(), meleeString());
+        AbstractPlayerControls.decode(getWorld(), meleeString());
     }
 
     @Override
     public void useAttKey(int i) {
-        AbstractPlayerControls.decode((HumanPlayer)getPlayer(), attString(i));
+        AbstractPlayerControls.decode(getWorld(), attString(i));
     }
 
     @Override
     public void move() {
-        AbstractPlayerControls.decode((HumanPlayer)getPlayer(), moveString());
+        AbstractPlayerControls.decode(getWorld(), moveString());
     }
 
 }

@@ -18,6 +18,13 @@ public class AbstractControlScheme {
         targettedEntityId = playerId;
     }
     
+    public final AbstractWorld getWorld(){
+        return targettedWorld;
+    }
+    public final String getPlayerId(){
+        return targettedEntityId;
+    }
+    
     public final AbstractPlayer getPlayer(){
         return targettedWorld.getPlayerTeam().getMemberById(targettedEntityId);
     }

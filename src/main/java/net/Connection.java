@@ -18,6 +18,7 @@ public class Connection {
     private final ObjectInputStream objIn;
     
     public Connection(Socket s) throws IOException{
+        System.out.println(String.format("(Connection constructor) Creating Connection(Socket(%s)) in Thread %s", s.getInetAddress().getHostAddress(), Thread.currentThread().toString()));
         clientSocket = s;
         /*
         Note: Must always flush output stream before opening

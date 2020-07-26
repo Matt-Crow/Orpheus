@@ -28,13 +28,13 @@ public abstract class AbstractPlayerControls extends AbstractControlScheme imple
     }
     
     public final String meleeString(){
-        return "turn to " + mouseString() + "\n use melee";
+        return "#" + getPlayerId() + " turn to " + mouseString() + "\n use melee";
     }
     public final String attString(int i){
-        return "turn to " + mouseString() + "\n use " + i;
+        return "#" + getPlayerId() + " turn to " + mouseString() + "\n use " + i;
     }
     public final String moveString(){
-        return "move to " + mouseString();
+        return "#" + getPlayerId() + " move to " + mouseString();
     }
     
     public void registerControlsTo(Canvas plane){
@@ -63,16 +63,18 @@ public abstract class AbstractPlayerControls extends AbstractControlScheme imple
         return new int[]{x, y};
     }
     
-    /**
-     * Decodes the body of a server message sent by
-     * this class, and applies the changes contained
-     * in it to the given player
-     * 
-     * @param p
-     * @param s 
-     */
-    public static void decode(HumanPlayer p, String s){
+    public static void decode(AbstractWorld world, String s){
         int[] coords;
+        HumanPlayer p = null;
+        if(s.contains("#")){
+            // contains player id
+            int startIndex = s.indexOf("#") + 1;
+            int endIndex = s.indexOf(" ", startIndex);
+            String playerId = s.substring(startIndex, endIndex);
+            p = (HumanPlayer)world.getPlayerTeam().getMemberById(playerId);
+        } else {
+            throw new UnsupportedOperationException("cannot decode string with no player id");
+        }
         for(String str : s.split("\n")){
             if(str.contains("turn to")){
                 coords = decodeMouseString(str);
@@ -87,20 +89,6 @@ public abstract class AbstractPlayerControls extends AbstractControlScheme imple
             } else if(str.contains("use")){
                 int num = Integer.parseInt(str.substring(str.indexOf("use") + 3).trim());
                 p.useAttack(num);
-            }
-        }
-    }
-    
-    public static void decode(AbstractWorld world, String s){
-        for(String str : s.split("\n")){
-            if(str.contains("#")){
-                // contains player id
-                int startIndex = str.indexOf("#") + 1;
-                int endIndex = str.indexOf(" ", startIndex);
-                String playerId = str.substring(startIndex, endIndex);
-                decode((HumanPlayer)world.getPlayerTeam().getMemberById(playerId), s);
-            } else {
-                throw new UnsupportedOperationException("cannot decode string with no player id");
             }
         }
     }
