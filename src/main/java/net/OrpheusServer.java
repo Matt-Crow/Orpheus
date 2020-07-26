@@ -354,6 +354,7 @@ public class OrpheusServer {
                 at net.ServerMessage.deserializeJson(ServerMessage.java:108)
                 at net.OrpheusServer.receive(OrpheusServer.java:342)
                 at net.OrpheusServer$2.run(OrpheusServer.java:250)
+            
             */
             if(connections.containsKey(sm.getIpAddr())){
                sm.setSender(connections.get(sm.getIpAddr()).getUser()); 
