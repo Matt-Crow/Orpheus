@@ -41,7 +41,7 @@ public class WSSolo extends AbstractWSNewWorld{
         
         Battle b = createBattle();
         battleWorld.setCurrentMinigame(b);
-        b.setHost(battleWorld);
+        b.setHost(battleWorld.getContent());
         
         battleWorld.init();
         

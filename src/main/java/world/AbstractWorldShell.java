@@ -43,14 +43,14 @@ public abstract class AbstractWorldShell {
     
     public final AbstractWorldShell setPlayerTeam(Team t){
         content.setPlayerTeam(t);
-        t.forEachMember((AbstractPlayer p)->p.setWorld(this));
-        t.forEach((AbstractEntity e)->e.setWorld(this));
+        //t.forEachMember((AbstractPlayer p)->p.setWorld(this));
+        //t.forEach((AbstractEntity e)->e.setWorld(this));
         return this;
     }
     public final AbstractWorldShell setEnemyTeam(Team t){
         content.setAITeam(t);
-        t.forEachMember((AbstractPlayer p)->p.setWorld(this));
-        t.forEach((AbstractEntity e)->e.setWorld(this));
+        //t.forEachMember((AbstractPlayer p)->p.setWorld(this));
+        //t.forEach((AbstractEntity e)->e.setWorld(this));
         return this;
     }
     
@@ -63,7 +63,7 @@ public abstract class AbstractWorldShell {
     
     public AbstractWorldShell addParticle(Particle p){
         particles.add(p);
-        p.setWorld(this);
+        p.setWorld(content); // do I need this?
         return this;
     }
     
@@ -91,7 +91,7 @@ public abstract class AbstractWorldShell {
     
     public void setCurrentMinigame(Battle b){
         content.setMinigame(b);
-        b.setHost(this);
+        b.setHost(content);
     }
     public Battle getCurrentMinigame(){
         return content.getMinigame();
@@ -99,11 +99,12 @@ public abstract class AbstractWorldShell {
     
     public final void setContent(WorldContent newContent){
         content = newContent; 
-        content.getPlayerTeam().forEach((e)->e.setWorld(this));
-        content.getAITeam().forEach((e)->e.setWorld(this));
+        content.setShell(this);
+        //content.getPlayerTeam().forEach((e)->e.setWorld(this));
+        //content.getAITeam().forEach((e)->e.setWorld(this));
         Battle game = content.getMinigame();
         if(game != null){
-            game.setHost(this);
+            //game.setHost(this);
         }
         
     }
@@ -125,7 +126,7 @@ public abstract class AbstractWorldShell {
      */
     public void spawnIntoWorld(AbstractEntity e){
         content.spawnIntoWorld(e);
-        e.setWorld(this);
+        e.setWorld(content);
     }
     
     public final void updateParticles(){

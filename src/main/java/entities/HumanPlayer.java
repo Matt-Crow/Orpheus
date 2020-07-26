@@ -98,7 +98,7 @@ public class HumanPlayer extends AbstractPlayer{
         return followingMouse;
     }
     public void moveToMouse(){
-        setPath(getWorld().getCanvas().getMouseX(), getWorld().getCanvas().getMouseY());
+        setPath(getWorld().getShell().getCanvas().getMouseX(), getWorld().getShell().getCanvas().getMouseY());
     }
 
     @Override

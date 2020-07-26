@@ -95,7 +95,7 @@ public class WorldPage extends Page{
                 w.requestFocusInWindow();
             }
         });
-        if(w.getWorld() instanceof RemoteProxyWorld || w.getWorld() instanceof HostWorld){
+        if(w.getWorldShell() instanceof RemoteProxyWorld || w.getWorldShell() instanceof HostWorld){
             try {
                 chat.openChatServer();
             } catch (IOException ex) {
@@ -104,7 +104,7 @@ public class WorldPage extends Page{
             }
         }
         SwingUtilities.invokeLater(()->w.requestFocusInWindow());
-        chat.logLocal("Currently rendering World " + w.getWorld().hashCode());
+        chat.logLocal("Currently rendering World " + w.getWorldShell().hashCode());
         chat.logLocal("Rendered on WorldCanvas " + w.hashCode());
         revalidate();
         repaint();

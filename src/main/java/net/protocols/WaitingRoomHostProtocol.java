@@ -247,7 +247,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
         HostWorld w = new HostWorld(WorldContent.createDefaultBattle());
         w.createCanvas();
         w.setPlayerTeam(playerTeam).setEnemyTeam(enemyTeam).setCurrentMinigame(minigame);
-        minigame.setHost(w);
+        minigame.setHost(w.getContent());
         w.init();
         
         new HostWorldProtocol(w).applyProtocol();

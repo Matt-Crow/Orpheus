@@ -96,7 +96,7 @@ public class WorldCanvas extends Canvas{
         timer.stop();
     }
     
-    public AbstractWorldShell getWorld(){
+    public AbstractWorldShell getWorldShell(){
         return world;
     }
     

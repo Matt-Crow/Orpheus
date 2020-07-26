@@ -276,8 +276,14 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
 	
     @Override
 	public void draw(Graphics g){
-        int w = getWorld().getShell().getCanvas().getWidth();
-		int h = getWorld().getShell().getCanvas().getHeight();
+        int w = getWorld()
+            .getShell()
+            .getCanvas()
+            .getWidth();
+		int h = getWorld()
+            .getShell()
+            .getCanvas()
+            .getHeight();
 		int r = getRadius();
         
         if(path != null){
