@@ -39,18 +39,15 @@ public abstract class AbstractWorldShell {
         particles = new SafeList<>();
         canvas = null;
         content = worldContent;
+        worldContent.setShell(this);
     }
     
     public final AbstractWorldShell setPlayerTeam(Team t){
         content.setPlayerTeam(t);
-        //t.forEachMember((AbstractPlayer p)->p.setWorld(this));
-        //t.forEach((AbstractEntity e)->e.setWorld(this));
         return this;
     }
     public final AbstractWorldShell setEnemyTeam(Team t){
         content.setAITeam(t);
-        //t.forEachMember((AbstractPlayer p)->p.setWorld(this));
-        //t.forEach((AbstractEntity e)->e.setWorld(this));
         return this;
     }
     

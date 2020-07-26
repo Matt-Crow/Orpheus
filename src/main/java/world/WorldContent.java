@@ -80,6 +80,8 @@ public class WorldContent implements Serializable{
     
     public final void setPlayerTeam(Team t){
         playerTeam = t;
+        t.forEach((e)->e.setWorld(this));
+        t.forEachMember((p)->p.setWorld(this));
     }
     public final Team getPlayerTeam(){
         return playerTeam;
@@ -87,6 +89,8 @@ public class WorldContent implements Serializable{
     
     public final void setAITeam(Team t){
         aiTeam = t;
+        t.forEachMember((p)->p.setWorld(this));
+        t.forEach((e)->e.setWorld(this));
     }
     public final Team getAITeam(){
         return aiTeam;

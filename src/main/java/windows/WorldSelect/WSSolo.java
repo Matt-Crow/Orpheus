@@ -32,6 +32,7 @@ public class WSSolo extends AbstractWSNewWorld{
         team1.addMember(player);
 
         SoloWorld battleWorld = new SoloWorld(WorldContent.createDefaultBattle());
+        
         //it's like a theme park or something
         battleWorld.createCanvas();
         
