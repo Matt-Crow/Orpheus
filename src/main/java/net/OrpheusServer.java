@@ -218,7 +218,6 @@ public class OrpheusServer {
             log("Do not connect to self. Exiting.");
         } else {
             Socket sock = new Socket(ipAddr, PORT);
-            //sock.connect(new InetSocketAddress(ipAddr, PORT), 3000);
             connect(sock);
         }
     }
@@ -339,7 +338,23 @@ public class OrpheusServer {
     
     public void receive(String msg){
         try{
-            ServerMessage sm = ServerMessage.deserializeJson(msg);
+            ServerMessage sm = ServerMessage.deserializeJson(msg); // running out of memory here
+            /*
+            Exception in thread "Thread-3" java.lang.OutOfMemoryError: Java heap space
+                at java.util.Arrays.copyOf(Unknown Source)
+                at org.glassfish.json.JsonTokenizer.fillBuf(JsonTokenizer.java:501)
+                at org.glassfish.json.JsonTokenizer.read(JsonTokenizer.java:480)
+                at org.glassfish.json.JsonTokenizer.readString(JsonTokenizer.java:173)
+                at org.glassfish.json.JsonTokenizer.nextToken(JsonTokenizer.java:379)
+                at org.glassfish.json.JsonParserImpl$ObjectContext.getNextEvent(JsonParserImpl.java:459)
+                at org.glassfish.json.JsonParserImpl.next(JsonParserImpl.java:363)
+                at org.glassfish.json.JsonParserImpl.getObject(JsonParserImpl.java:338)
+                at org.glassfish.json.JsonParserImpl.getObject(JsonParserImpl.java:173)
+                at org.glassfish.json.JsonReaderImpl.readObject(JsonReaderImpl.java:112)
+                at net.ServerMessage.deserializeJson(ServerMessage.java:108)
+                at net.OrpheusServer.receive(OrpheusServer.java:342)
+                at net.OrpheusServer$2.run(OrpheusServer.java:250)
+            */
             if(connections.containsKey(sm.getIpAddr())){
                sm.setSender(connections.get(sm.getIpAddr()).getUser()); 
             } else {
