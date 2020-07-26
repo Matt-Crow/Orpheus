@@ -1,6 +1,7 @@
 package net;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -18,10 +19,18 @@ public class Connection {
     
     public Connection(Socket s) throws IOException{
         clientSocket = s;
+        /*
+        Note: Must always flush output stream before opening
+        input stream.
+        Note: new ObjectInputStream(...) will hang if
+        the connecting computer has not opened a Connection
+        to this one
+        */
         objOut = new ObjectOutputStream(s.getOutputStream());
+        objOut.flush();
         // https://stackoverflow.com/questions/8186135/java-sockets-program-stops-at-socket-getinputstream-w-o-error
+        // https://stackoverflow.com/questions/22515654/objectinputstream-hanging
         objIn = new ObjectInputStream(s.getInputStream());
-        System.out.println();
     }
     
     public synchronized boolean writeToClient(String s){

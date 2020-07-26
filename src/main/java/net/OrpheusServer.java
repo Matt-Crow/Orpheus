@@ -176,7 +176,6 @@ public class OrpheusServer {
                     while(listenForConn){
                         try {
                             connect(server.accept());
-                            System.out.println();
                         } catch(SocketException ex){
                             ex.printStackTrace();
                             break;
@@ -211,7 +210,7 @@ public class OrpheusServer {
             return;
         }
 
-        Connection conn = new Connection(otherComputer); // crashing here
+        Connection conn = new Connection(otherComputer);
         connections.put(otherComputer.getInetAddress().getHostAddress(), conn);
 
         //do I need to store this somewhere?
@@ -353,7 +352,6 @@ public class OrpheusServer {
     }
     
     /**
-     * Migrating to use this in lieu of adding and removing receivers
      * @param protocol the new protocol to use. This can be null
      */
     public void setProtocol(AbstractOrpheusServerNonChatProtocol protocol){
@@ -419,13 +417,23 @@ public class OrpheusServer {
         out.println("END OF CONNECTIONS");
     }
     
+    // yay! this works!
     public static void main(String[] args){
         try {
             OrpheusServer os = new OrpheusServer();
             os.logConnections();
             os.start();
-            //os.connect("192.168.1.19");
-            new Socket("192.168.1.19", PORT);
+            new Thread(){
+                @Override
+                public void run(){
+                    try {
+                        new Connection(new Socket(os.getIpAddr(), PORT));
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }.start();
+            System.out.println();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
