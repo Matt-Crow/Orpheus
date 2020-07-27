@@ -382,7 +382,7 @@ public class OrpheusServer {
             }
             
             if(handled){
-                log("Successfully received!");
+                //log("Successfully received!");
             } else {
                 log("Nope, didn't receive properly, so I'll cache it: " + msg);
                 log("(" + sm.hashCode() + ")");

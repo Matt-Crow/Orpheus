@@ -39,6 +39,15 @@ public class Connection {
         try{
             objOut.writeObject(s);
             objOut.flush();
+            
+            // https://stackoverflow.com/questions/7495155/java-out-of-heap-space-during-serialization
+            /*
+            So, apparently, ObjectOutputStreams cache EVERYTHING they write out, leading to an eventual
+            OutOfMemoryError. To prevent this from happening, I must user the reset() method to force the
+            stream to un-cache all of these objects it's sent, allowing garbage collection to eat them.
+            */
+            objOut.reset();
+            
             success = true;
         } catch(IOException ex){
             ex.printStackTrace();

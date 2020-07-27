@@ -15,6 +15,8 @@ import entities.AbstractPlayer;
 import java.awt.Graphics2D;
 import java.io.IOException;
 import entities.HumanPlayer;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import users.LocalUser;
 import util.SerialUtil;
 import windows.Canvas;
@@ -199,5 +201,21 @@ public class WorldCanvas extends Canvas{
             Team tClone = (Team)SerialUtil.fromSerializedString(s);
             System.out.println("Total entities deserialized: " + tClone.length());
         });
+        
+        
+        
+        ObjectOutputStream out = new ObjectOutputStream(System.out);
+        String ser = null;
+        for(int i = 0; i < 1000000; i++){
+            world.getContent().serializeToString();
+            out.writeObject(ser);
+            //out.reset();
+            //WorldContent deser = WorldContent.fromSerializedString(ser);
+            //world.setContent(deser);
+            if(i % 10000 == 0){
+                System.out.println(i);
+            }
+        }
+        out.close();
     }
 }
