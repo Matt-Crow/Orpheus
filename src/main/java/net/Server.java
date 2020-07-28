@@ -64,6 +64,7 @@ public class Server {
                 public void run(){
                     String ip = "";
                     while(ip != null && !"done".equals(ip)){
+                        /*
                         try{
                             ip = conn.readFromClient();
                             System.out.println(ip);
@@ -71,7 +72,7 @@ public class Server {
                             ex.printStackTrace();
                         } catch (ClassNotFoundException ex) {
                             ex.printStackTrace();
-                        }
+                        }*/
                     }
                     conn.close();
                 }
@@ -85,7 +86,7 @@ public class Server {
     
     public void send(String msg){
         clientConnections.stream().forEach((Connection c)->{
-            c.writeToClient(msg);
+            //c.writeToClient(msg);
         });
     }
     
@@ -96,7 +97,7 @@ public class Server {
     
     public final void shutDown(){
         clientConnections.stream().forEach((Connection c)->{
-            c.writeToClient(SHUTDOWN_MESSAGE);
+            //c.writeToClient(SHUTDOWN_MESSAGE);
         });
         try {
             server.close();

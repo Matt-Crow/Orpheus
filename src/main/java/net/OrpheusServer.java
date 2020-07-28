@@ -239,14 +239,23 @@ public class OrpheusServer {
             @Override
             public void run(){
                 String ip = "";
+                ServerMessage fromClient = null;
                 while(true){
                     try{
+                        /*
                         ip = conn.readFromClient();
                         if(ip == null || ip.toUpperCase().contains(ServerMessageType.SERVER_SHUTDOWN.toString().toUpperCase())){
                             log("breaking");
                             break;
                         }
                         receive(ip);
+                        */
+                        fromClient = conn.readServerMessage();
+                        if(fromClient.getType() == ServerMessageType.SERVER_SHUTDOWN){
+                            log("breaking");
+                            break;
+                        }
+                        receiveMessage(fromClient);
 
                     } catch (EOFException ex){
                         ex.printStackTrace();
@@ -254,9 +263,9 @@ public class OrpheusServer {
                         break;
                     } catch (IOException ex) {
                         ex.printStackTrace();
-                    } catch (ClassNotFoundException ex) {
+                    } /*catch (ClassNotFoundException ex) {
                         ex.printStackTrace();
-                    }
+                    }*/
                 }
                 log("disconnecting...");
                 disconnect(otherComputer.getInetAddress().getHostAddress());
@@ -266,10 +275,19 @@ public class OrpheusServer {
         //out.println("connected to " + otherComputer.getInetAddress().getHostAddress());
 
         //includes the User data so the other computer has access to username
+        
+        conn.writeServerMessage(new ServerMessage(
+            LocalUser.getInstance().serializeJson().toString(),
+            ServerMessageType.PLAYER_JOINED
+        ));
+        /*
         conn.writeToClient(new ServerMessage(
             LocalUser.getInstance().serializeJson().toString(),
             ServerMessageType.PLAYER_JOINED
         ).toJsonString());
+        */
+        
+        
         log("Wrote user information to client");
         logConnections();
     }
@@ -285,18 +303,22 @@ public class OrpheusServer {
     
     public void send(String msg){
         connections.values().stream().forEach((Connection c)->{
-            c.writeToClient(msg);
+            //c.writeToClient(msg);
         });
     }
     
     public void send(ServerMessage sm){
-        send(sm.toJsonString());
+        connections.values().stream().forEach((Connection c)->{
+            c.writeServerMessage(sm);
+        });
+        //send(sm.toJsonString());
     }
     
     public boolean send(ServerMessage sm, String ipAddr){
         boolean success = false;
         if(connections.containsKey(ipAddr)){
-            connections.get(ipAddr).writeToClient(sm.toJsonString());
+            //connections.get(ipAddr).writeToClient(sm.toJsonString());
+            connections.get(ipAddr).writeServerMessage(sm);
             success = true;
         }
         return success;
@@ -336,6 +358,42 @@ public class OrpheusServer {
         }
     }
     
+    public final void receiveMessage(ServerMessage sm){
+        if(connections.containsKey(sm.getIpAddr())){
+           sm.setSender(connections.get(sm.getIpAddr()).getUser()); 
+        } else {
+           log("I don't recognize " + sm.getIpAddr());
+        }
+
+        // handle joining / leaving
+        if(sm.getType() == ServerMessageType.PLAYER_JOINED){
+            receiveJoin(sm);
+
+        } else if (sm.getType() == ServerMessageType.PLAYER_LEFT){
+            receiveDisconnect(sm);
+        }
+
+        boolean handled = false;
+        if(currentProtocol == null){
+            log("No current protocol :(");
+        } else {
+            handled = currentProtocol.receiveMessage(sm, this);
+        }
+
+        if(!handled && currentChatProtocol != null){
+            handled = currentChatProtocol.receiveMessage(sm, this);
+        }
+
+        if(handled){
+            //log("Successfully received!");
+        } else {
+            log("Nope, didn't receive properly, so I'll cache it: " + sm.getBody());
+            log("(" + sm.hashCode() + ")");
+            cachedMessages.add(sm);
+
+        }
+    }
+    
     public void receive(String msg){
         try{
             ServerMessage sm = ServerMessage.deserializeJson(msg); // running out of memory here
@@ -354,8 +412,11 @@ public class OrpheusServer {
                 at net.ServerMessage.deserializeJson(ServerMessage.java:108)
                 at net.OrpheusServer.receive(OrpheusServer.java:342)
                 at net.OrpheusServer$2.run(OrpheusServer.java:250)
-            
             */
+            
+            receiveMessage(sm);
+            
+            /*
             if(connections.containsKey(sm.getIpAddr())){
                sm.setSender(connections.get(sm.getIpAddr()).getUser()); 
             } else {
@@ -389,7 +450,7 @@ public class OrpheusServer {
                 cachedMessages.add(sm);
                 
             }
-            
+            */
         } catch (JsonException ex){
             log("nope. not server message: " + msg);
             ex.printStackTrace();
