@@ -10,7 +10,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.net.SocketException;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
 import javax.json.JsonException;
@@ -209,8 +208,6 @@ public class OrpheusServer {
         }
     }
     
-    
-    
     public String getIpAddr(){
         return ipAddress;
     }
@@ -241,34 +238,22 @@ public class OrpheusServer {
         new Thread(){
             @Override
             public void run(){
-                String ip = "";
                 ServerMessage fromClient = null;
                 while(true){
                     try{
-                        /*
-                        ip = conn.readFromClient();
-                        if(ip == null || ip.toUpperCase().contains(ServerMessageType.SERVER_SHUTDOWN.toString().toUpperCase())){
-                            log("breaking");
-                            break;
-                        }
-                        receive(ip);
-                        */
                         fromClient = conn.readServerMessage();
                         if(fromClient.getType() == ServerMessageType.SERVER_SHUTDOWN){
                             log("breaking");
                             break;
                         }
                         receiveMessage(fromClient);
-
                     } catch (EOFException ex){
                         ex.printStackTrace();
                         log("connection terminated");
                         break;
                     } catch (IOException ex) {
                         ex.printStackTrace();
-                    } /*catch (ClassNotFoundException ex) {
-                        ex.printStackTrace();
-                    }*/
+                    }
                 }
                 log("disconnecting...");
                 disconnect(otherComputer.getInetAddress().getHostAddress());
@@ -282,14 +267,7 @@ public class OrpheusServer {
         conn.writeServerMessage(new ServerMessage(
             LocalUser.getInstance().serializeJson().toString(),
             ServerMessageType.PLAYER_JOINED
-        ));
-        /*
-        conn.writeToClient(new ServerMessage(
-            LocalUser.getInstance().serializeJson().toString(),
-            ServerMessageType.PLAYER_JOINED
-        ).toJsonString());
-        */
-        
+        ));        
         
         log("Wrote user information to client");
         logConnections();
@@ -304,23 +282,15 @@ public class OrpheusServer {
         }
     }
     
-    public void send(String msg){
-        connections.values().stream().forEach((Connection c)->{
-            //c.writeToClient(msg);
-        });
-    }
-    
     public void send(ServerMessage sm){
         connections.values().stream().forEach((Connection c)->{
             c.writeServerMessage(sm);
         });
-        //send(sm.toJsonString());
     }
     
     public boolean send(ServerMessage sm, String ipAddr){
         boolean success = false;
         if(connections.containsKey(ipAddr)){
-            //connections.get(ipAddr).writeToClient(sm.toJsonString());
             connections.get(ipAddr).writeServerMessage(sm);
             success = true;
         }
@@ -399,61 +369,8 @@ public class OrpheusServer {
     
     public void receive(String msg){
         try{
-            ServerMessage sm = ServerMessage.deserializeJson(msg); // running out of memory here
-            /*
-            Exception in thread "Thread-3" java.lang.OutOfMemoryError: Java heap space
-                at java.util.Arrays.copyOf(Unknown Source)
-                at org.glassfish.json.JsonTokenizer.fillBuf(JsonTokenizer.java:501)
-                at org.glassfish.json.JsonTokenizer.read(JsonTokenizer.java:480)
-                at org.glassfish.json.JsonTokenizer.readString(JsonTokenizer.java:173)
-                at org.glassfish.json.JsonTokenizer.nextToken(JsonTokenizer.java:379)
-                at org.glassfish.json.JsonParserImpl$ObjectContext.getNextEvent(JsonParserImpl.java:459)
-                at org.glassfish.json.JsonParserImpl.next(JsonParserImpl.java:363)
-                at org.glassfish.json.JsonParserImpl.getObject(JsonParserImpl.java:338)
-                at org.glassfish.json.JsonParserImpl.getObject(JsonParserImpl.java:173)
-                at org.glassfish.json.JsonReaderImpl.readObject(JsonReaderImpl.java:112)
-                at net.ServerMessage.deserializeJson(ServerMessage.java:108)
-                at net.OrpheusServer.receive(OrpheusServer.java:342)
-                at net.OrpheusServer$2.run(OrpheusServer.java:250)
-            */
-            
+            ServerMessage sm = ServerMessage.deserializeJson(msg);
             receiveMessage(sm);
-            
-            /*
-            if(connections.containsKey(sm.getIpAddr())){
-               sm.setSender(connections.get(sm.getIpAddr()).getUser()); 
-            } else {
-               log("I don't recognize " + sm.getIpAddr());
-            }
-            
-            // handle joining / leaving
-            if(sm.getType() == ServerMessageType.PLAYER_JOINED){
-                receiveJoin(sm);
-                
-            } else if (sm.getType() == ServerMessageType.PLAYER_LEFT){
-                receiveDisconnect(sm);
-            }
-            
-            boolean handled = false;
-            if(currentProtocol == null){
-                log("No current protocol :(");
-            } else {
-                handled = currentProtocol.receiveMessage(sm, this);
-            }
-            
-            if(!handled && currentChatProtocol != null){
-                handled = currentChatProtocol.receiveMessage(sm, this);
-            }
-            
-            if(handled){
-                //log("Successfully received!");
-            } else {
-                log("Nope, didn't receive properly, so I'll cache it: " + msg);
-                log("(" + sm.hashCode() + ")");
-                cachedMessages.add(sm);
-                
-            }
-            */
         } catch (JsonException ex){
             log("nope. not server message: " + msg);
             ex.printStackTrace();
@@ -565,7 +482,6 @@ public class OrpheusServer {
     
     // yay! this works!
     public static void main(String[] args) throws SocketException{
-        
         try {
             OrpheusServer os = new OrpheusServer();
             os.logConnections();
