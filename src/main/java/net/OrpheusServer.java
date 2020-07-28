@@ -4,10 +4,14 @@ import net.protocols.AbstractOrpheusServerNonChatProtocol;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashSet;
 import javax.json.JsonException;
 import net.protocols.ChatProtocol;
 import serialization.JsonUtil;
@@ -111,7 +115,12 @@ public class OrpheusServer {
             return this;
         }
         
-        ipAddress = InetAddress.getLocalHost().getHostAddress(); // not working on big computer or newest Mac laptop
+        HashSet<String> validIps = getValidIps();
+        log("Valid IP addresses include:");
+        validIps.forEach(this::log);
+        ipAddress = (String)validIps.toArray()[0];
+        
+        //ipAddress = InetAddress.getLocalHost().getHostAddress(); // not working on big computer or newest Mac laptop
         server = new ServerSocket(PORT);
         log(String.format("Server initialized on %s:%d", ipAddress, PORT));
         log("InetAddress.getLocalHost().getHostAddress(): " + InetAddress.getLocalHost().getHostAddress());
@@ -534,8 +543,33 @@ public class OrpheusServer {
         log(obj.toString());
     }
     
+    private static HashSet<String> getValidIps() throws SocketException{
+        HashSet<String> ips = new HashSet<>();
+        
+        // get network interfaces
+        Enumeration<NetworkInterface> eni = NetworkInterface.getNetworkInterfaces();
+        NetworkInterface ni = null;
+        Enumeration<InetAddress> addrs = null;
+        InetAddress ia = null;
+        
+        while(eni.hasMoreElements()){
+            ni = eni.nextElement();
+            if(!ni.isLoopback() && ni.isUp()){
+                //System.out.println(ni);
+                addrs = ni.getInetAddresses();
+                while(addrs.hasMoreElements()){
+                    ia = addrs.nextElement();
+                    //System.out.println(ia.getHostAddress());
+                    ips.add(ia.getHostAddress());
+                }
+            }
+        }
+        return ips;
+    }
+    
     // yay! this works!
-    public static void main(String[] args){
+    public static void main(String[] args) throws SocketException{
+        
         try {
             OrpheusServer os = new OrpheusServer();
             os.logConnections();
@@ -550,7 +584,7 @@ public class OrpheusServer {
                     }
                 }
             }.start();
-            os.shutDown();
+            //os.shutDown();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
