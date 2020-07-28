@@ -111,7 +111,7 @@ public class OrpheusServer {
             return this;
         }
         
-        ipAddress = InetAddress.getLocalHost().getHostAddress();
+        ipAddress = InetAddress.getLocalHost().getHostAddress(); // not working on big computer or newest Mac laptop
         server = new ServerSocket(PORT);
         log(String.format("Server initialized on %s:%d", ipAddress, PORT));
         log("InetAddress.getLocalHost().getHostAddress(): " + InetAddress.getLocalHost().getHostAddress());
