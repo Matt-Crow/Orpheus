@@ -3,6 +3,7 @@ package net;
 import net.protocols.AbstractOrpheusServerNonChatProtocol;
 import java.io.EOFException;
 import java.io.IOException;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.ServerSocket;
@@ -559,8 +560,10 @@ public class OrpheusServer {
                 addrs = ni.getInetAddresses();
                 while(addrs.hasMoreElements()){
                     ia = addrs.nextElement();
-                    //System.out.println(ia.getHostAddress());
-                    ips.add(ia.getHostAddress());
+                    if(ia instanceof Inet4Address){
+                        //System.out.println(ia.getHostAddress());
+                        ips.add(ia.getHostAddress());
+                    }
                 }
             }
         }
