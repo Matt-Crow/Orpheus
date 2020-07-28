@@ -117,17 +117,11 @@ public class OrpheusServer {
         }
         
         HashSet<String> validIps = getValidIps();
-        log("Valid IP addresses include:");
+        log("Valid IPv4 addresses include:");
         validIps.forEach(this::log);
         ipAddress = (String)validIps.toArray()[0];
-        
-        //ipAddress = InetAddress.getLocalHost().getHostAddress(); // not working on big computer or newest Mac laptop
         server = new ServerSocket(PORT);
         log(String.format("Server initialized on %s:%d", ipAddress, PORT));
-        log("InetAddress.getLocalHost().getHostAddress(): " + InetAddress.getLocalHost().getHostAddress());
-        log("server.getInetAddress().getHostName(): " + server.getInetAddress().getHostName());
-        log("server.getInetAddress().getHostAddress(): " + server.getInetAddress().getHostAddress());
-        log("server.toString(): " + server.toString());
         reset();
         
         isStarted = true;
@@ -210,7 +204,6 @@ public class OrpheusServer {
                 }
             };
             connListener.start();
-            // need some way of setting it to null once it's done
         } else {
             log("thread is already initialized");
         }
