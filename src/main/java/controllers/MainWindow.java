@@ -8,9 +8,9 @@ import java.awt.Toolkit;
 import javax.swing.JPanel;
 import net.OrpheusServer;
 import util.CombatLog;
-import windows.Page;
-import windows.PageSwitchListener;
-import windows.start.StartMainMenu;
+import gui.windows.Page;
+import gui.windows.PageSwitchListener;
+import gui.windows.start.StartMainMenu;
 
 /**
  * MainWindow acts as the main frame for the game,

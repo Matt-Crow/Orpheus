@@ -10,7 +10,7 @@ import controllers.Settings;
 import world.WorldContent;
 import customizables.actives.ElementalActive;
 import customizables.characterClass.CharacterStatName;
-import graphics.Tile;
+import gui.graphics.Tile;
 import static java.lang.System.out;
 import java.util.Arrays;
 import util.Direction;

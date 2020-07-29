@@ -1,9 +1,9 @@
 package ai;
 
+import events.OnHitEvent;
 import entities.AbstractPlayer;
-import actions.*;
 import controllers.Settings;
-import graphics.Tile;
+import gui.graphics.Tile;
 import java.io.Serializable;
 import util.Coordinates;
 import util.Random;

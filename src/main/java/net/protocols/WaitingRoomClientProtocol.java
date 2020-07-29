@@ -12,9 +12,9 @@ import net.ServerMessageType;
 import serialization.JsonUtil;
 import users.AbstractUser;
 import users.LocalUser;
-import windows.WorldSelect.AbstractWaitingRoom;
-import windows.world.WorldCanvas;
-import windows.world.WorldPage;
+import gui.windows.WorldSelect.AbstractWaitingRoom;
+import gui.windows.world.WorldCanvas;
+import gui.windows.world.WorldPage;
 import world.RemoteProxyWorld;
 import world.WorldContent;
 

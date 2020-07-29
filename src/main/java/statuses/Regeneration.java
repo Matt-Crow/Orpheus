@@ -1,6 +1,7 @@
 package statuses;
 
-import actions.*;
+import events.OnUpdateEvent;
+import events.OnUpdateListener;
 import entities.AbstractPlayer;
 import util.Number;
 import controllers.Settings;

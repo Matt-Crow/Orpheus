@@ -4,7 +4,7 @@ import controllers.Settings;
 import entities.AbstractPlayer;
 import entities.ParticleType;
 import entities.Projectile;
-import graphics.CustomColors;
+import gui.graphics.CustomColors;
 
 /**
  *

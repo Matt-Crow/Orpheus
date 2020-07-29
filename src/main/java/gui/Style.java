@@ -4,7 +4,7 @@ import java.awt.Component;
 import javax.swing.*;
 import javax.swing.border.*;
 
-import graphics.CustomColors;
+import gui.graphics.CustomColors;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.text.JTextComponent;

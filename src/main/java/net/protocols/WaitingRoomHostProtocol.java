@@ -20,9 +20,9 @@ import net.ServerMessageType;
 import serialization.JsonUtil;
 import users.AbstractUser;
 import users.LocalUser;
-import windows.WorldSelect.HostWaitingRoom;
-import windows.world.WorldCanvas;
-import windows.world.WorldPage;
+import gui.windows.WorldSelect.HostWaitingRoom;
+import gui.windows.world.WorldCanvas;
+import gui.windows.world.WorldPage;
 import world.HostWorld;
 import world.WorldContent;
 

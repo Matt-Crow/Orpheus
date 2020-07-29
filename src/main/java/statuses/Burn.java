@@ -1,7 +1,7 @@
 package statuses;
 
-import actions.OnUpdateEvent;
-import actions.OnUpdateListener;
+import events.OnUpdateEvent;
+import events.OnUpdateListener;
 import controllers.Settings;
 import entities.AbstractPlayer;
 import java.util.function.UnaryOperator;

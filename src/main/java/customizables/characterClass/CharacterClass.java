@@ -1,7 +1,7 @@
 package customizables.characterClass;
 
 import customizables.AbstractCustomizable;
-import graphics.CustomColors;
+import gui.graphics.CustomColors;
 import java.text.DecimalFormat;
 import java.util.function.BiFunction;
 import util.Number;

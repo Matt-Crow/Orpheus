@@ -1,7 +1,7 @@
 package customizables.passives;
 
-import actions.OnHitEvent;
-import actions.OnHitListener;
+import events.OnHitEvent;
+import events.OnHitListener;
 import entities.AbstractPlayer;
 
 public class OnHitPassive extends AbstractPassive implements OnHitListener{

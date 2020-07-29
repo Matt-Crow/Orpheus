@@ -5,9 +5,9 @@ import battle.Team;
 import entities.AbstractEntity;
 import entities.Particle;
 import entities.AbstractPlayer;
-import graphics.Map;
+import gui.graphics.Map;
 import java.awt.Graphics;
-import windows.world.WorldCanvas;
+import gui.windows.world.WorldCanvas;
 import static java.lang.System.out;
 import util.SafeList;
 

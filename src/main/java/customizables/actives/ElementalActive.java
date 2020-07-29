@@ -7,8 +7,8 @@ import entities.AbstractPlayer;
 import entities.ParticleType;
 import entities.Projectile;
 import entities.SeedProjectile;
-import graphics.CustomColors;
-import graphics.Tile;
+import gui.graphics.CustomColors;
+import gui.graphics.Tile;
 
 public class ElementalActive extends AbstractActive{
 	private final int arcLength;

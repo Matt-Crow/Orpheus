@@ -7,11 +7,11 @@ import customizables.actives.AbstractActive;
 import customizables.characterClass.CharacterClass;
 import customizables.characterClass.CharacterStatName;
 import customizables.passives.AbstractPassive;
-import graphics.CustomColors;
+import gui.graphics.CustomColors;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.NoSuchElementException;
-import windows.world.WorldCanvas;
+import gui.windows.world.WorldCanvas;
 
 /**
  *
