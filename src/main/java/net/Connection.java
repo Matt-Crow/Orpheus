@@ -14,12 +14,14 @@ import users.AbstractUser;
  */
 public class Connection {
     private AbstractUser user; //the user playing Orpheus on the machine this connects to
+    private final String receivingIp;
     private final Socket clientSocket;    
     private final BufferedReader fromClient;
     private final BufferedWriter toClient;
     
     public Connection(Socket s) throws IOException{
         System.out.println(String.format("(Connection constructor) Creating Connection(Socket(%s)) in Thread %s", s.getInetAddress().getHostAddress(), Thread.currentThread().toString()));
+        receivingIp = s.getInetAddress().getHostAddress();
         clientSocket = s;
         toClient = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
         fromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -43,7 +45,9 @@ public class Connection {
     
     // blocks until the client writes something
     public final ServerMessage readServerMessage() throws IOException{
-        return ServerMessage.deserializeJson(fromClient.readLine());
+        ServerMessage deser = ServerMessage.deserializeJson(fromClient.readLine());
+        deser.setSendingIp(receivingIp);
+        return deser;
     }
     
     public void close(){

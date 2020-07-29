@@ -16,7 +16,7 @@ import users.LocalUser;
  * @author Matt Crow
  */
 public class ServerMessage implements JsonSerialable{
-    private final String ipAddr;
+    private String ipAddr;
     private AbstractUser fromUser;
     private final String body;
     private final ServerMessageType type;
@@ -56,6 +56,13 @@ public class ServerMessage implements JsonSerialable{
     }
     public final AbstractUser getSender(){
         return fromUser;
+    }
+    
+    public final void setSendingIp(String ip){
+        ipAddr = ip;
+    }
+    public final String getSendingIp(){
+        return ipAddr;
     }
     
     
