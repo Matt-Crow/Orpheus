@@ -1,6 +1,6 @@
 package net.protocols;
 
-import gui.Chat;
+import gui.components.Chat;
 import java.io.IOException;
 import net.OrpheusServer;
 import net.ServerMessage;

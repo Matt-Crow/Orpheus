@@ -11,7 +11,7 @@ import gui.graphics.CustomColors;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.NoSuchElementException;
-import gui.windows.world.WorldCanvas;
+import gui.pages.worldPlay.WorldCanvas;
 
 /**
  *

@@ -6,9 +6,9 @@ import entities.HumanPlayer;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import gui.windows.Canvas;
-import gui.windows.EndOfFrameListener;
-import gui.windows.world.WorldCanvas;
+import gui.pages.Canvas;
+import gui.pages.EndOfFrameListener;
+import gui.pages.worldPlay.WorldCanvas;
 import world.AbstractWorldShell;
 
 /**

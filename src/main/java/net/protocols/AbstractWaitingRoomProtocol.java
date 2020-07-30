@@ -2,7 +2,7 @@ package net.protocols;
 
 import java.util.HashMap;
 import users.AbstractUser;
-import gui.windows.WorldSelect.AbstractWaitingRoom;
+import gui.pages.worldSelect.AbstractWaitingRoom;
 
 /**
  *

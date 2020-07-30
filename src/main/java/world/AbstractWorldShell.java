@@ -7,7 +7,7 @@ import entities.Particle;
 import entities.AbstractPlayer;
 import gui.graphics.Map;
 import java.awt.Graphics;
-import gui.windows.world.WorldCanvas;
+import gui.pages.worldPlay.WorldCanvas;
 import static java.lang.System.out;
 import util.SafeList;
 
