@@ -1,7 +1,7 @@
 
 package gui.windows;
 
-import controllers.MainWindow;
+import gui.MainWindow;
 import gui.graphics.CustomColors;
 import gui.Style;
 import java.awt.BorderLayout;

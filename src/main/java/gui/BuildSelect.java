@@ -1,6 +1,6 @@
 package gui;
 
-import controllers.Settings;
+import util.Settings;
 import customizables.Build;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;

@@ -1,6 +1,6 @@
 package customizables.actives;
 
-import controllers.Settings;
+import util.Settings;
 import entities.AbstractPlayer;
 import entities.ParticleType;
 import entities.Projectile;

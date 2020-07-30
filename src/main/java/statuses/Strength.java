@@ -3,7 +3,7 @@ package statuses;
 import events.OnHitListener;
 import events.OnHitEvent;
 import entities.AbstractPlayer;
-import controllers.Settings;
+import util.Settings;
 import gui.graphics.Tile;
 import java.util.function.UnaryOperator;
 import util.Direction;

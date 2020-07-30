@@ -1,6 +1,6 @@
 package customizables.actives;
 
-import controllers.Settings;
+import util.Settings;
 import customizables.characterClass.CharacterClass;
 import customizables.characterClass.CharacterStatName;
 import entities.AbstractPlayer;

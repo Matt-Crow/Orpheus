@@ -1,6 +1,6 @@
 package entities;
 
-import controllers.Settings;
+import util.Settings;
 import java.awt.Color;
 import java.awt.Graphics;
 

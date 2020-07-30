@@ -1,6 +1,6 @@
 package customizables;
 
-import controllers.Settings;
+import util.Settings;
 import java.io.File;
 import java.util.Arrays;
 import javax.json.Json;

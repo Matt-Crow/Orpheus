@@ -4,7 +4,7 @@ import events.OnUpdateEvent;
 import events.OnUpdateListener;
 import entities.AbstractPlayer;
 import util.Number;
-import controllers.Settings;
+import util.Settings;
 import java.util.function.UnaryOperator;
 
 /**

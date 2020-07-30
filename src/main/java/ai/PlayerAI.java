@@ -2,7 +2,7 @@ package ai;
 
 import events.OnHitEvent;
 import entities.AbstractPlayer;
-import controllers.Settings;
+import util.Settings;
 import gui.graphics.Tile;
 import java.io.Serializable;
 import util.Coordinates;

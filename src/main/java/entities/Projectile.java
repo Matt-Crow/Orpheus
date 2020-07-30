@@ -3,7 +3,7 @@ package entities;
 import java.awt.Graphics;
 
 import gui.graphics.CustomColors;
-import controllers.Settings;
+import util.Settings;
 import customizables.actives.ElementalActive;
 import util.CombatLog;
 import util.Random;

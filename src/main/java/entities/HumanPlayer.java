@@ -1,6 +1,6 @@
 package entities;
 
-import controllers.Settings;
+import util.Settings;
 import customizables.Build;
 import customizables.DataSet;
 import customizables.actives.AbstractActive;

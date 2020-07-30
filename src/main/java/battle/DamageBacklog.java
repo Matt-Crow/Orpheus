@@ -2,7 +2,7 @@ package battle;
 
 import customizables.characterClass.CharacterStatName;
 import entities.AbstractPlayer;
-import controllers.Settings;
+import util.Settings;
 import java.io.Serializable;
 
 /**

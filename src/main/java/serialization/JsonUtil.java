@@ -1,6 +1,6 @@
 package serialization;
 
-import controllers.Settings;
+import util.Settings;
 import customizables.Build;
 import java.io.*;
 import static java.lang.System.out;

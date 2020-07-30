@@ -1,6 +1,6 @@
 package gui.windows.customize;
 
-import controllers.Settings;
+import util.Settings;
 import customizables.BuildJsonUtil;
 import gui.FileChooserUtil;
 import java.awt.GridLayout;

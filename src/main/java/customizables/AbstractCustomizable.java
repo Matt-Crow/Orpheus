@@ -1,7 +1,7 @@
 package customizables;
 
 import entities.AbstractPlayer;
-import controllers.Settings;
+import util.Settings;
 import java.io.Serializable;
 import statuses.*;
 

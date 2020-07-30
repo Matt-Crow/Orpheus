@@ -2,13 +2,13 @@ package gui.windows.world;
 
 import battle.Battle;
 import world.AbstractWorldShell;
-import controllers.Settings;
+import util.Settings;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.*;
 import javax.swing.*;
 import battle.Team;
-import controllers.MainWindow;
+import gui.MainWindow;
 import controls.AbstractPlayerControls;
 import controls.SoloPlayerControls;
 import entities.AbstractPlayer;

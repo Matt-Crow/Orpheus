@@ -1,6 +1,6 @@
 package customizables;
 
-import controllers.Settings;
+import util.Settings;
 import util.StringUtil;
 
 

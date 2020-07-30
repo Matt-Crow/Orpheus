@@ -1,6 +1,6 @@
 package entities;
 
-import controllers.Settings;
+import util.Settings;
 import customizables.actives.ElementalActive;
 
 public class SeedProjectile extends Projectile{

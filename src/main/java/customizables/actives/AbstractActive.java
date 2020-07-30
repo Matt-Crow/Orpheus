@@ -3,7 +3,7 @@ package customizables.actives;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import controllers.Settings;
+import util.Settings;
 import customizables.AbstractCustomizable;
 
 /**

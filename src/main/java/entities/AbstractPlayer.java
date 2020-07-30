@@ -6,7 +6,7 @@ import ai.Path;
 import ai.PathInfo;
 import battle.*;
 import statuses.AbstractStatus;
-import controllers.Settings;
+import util.Settings;
 import world.WorldContent;
 import customizables.actives.ElementalActive;
 import customizables.characterClass.CharacterStatName;
