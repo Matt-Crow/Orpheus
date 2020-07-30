@@ -37,6 +37,8 @@ public abstract class AbstractUser implements JsonSerialable {
      * Serializes this user into JSON. Note that both LocalUsers
      * and RemoteUsers are serialized the same way
      * 
+     * This does not serialize the user's IP address, as that is
+     * set by the server when it receives a socket.
      * @return the User, serialized into JSON 
      */
     @Override
@@ -44,15 +46,11 @@ public abstract class AbstractUser implements JsonSerialable {
         JsonObjectBuilder objBuild = Json.createObjectBuilder();
         objBuild.add("type", "user");
         objBuild.add("name", userName);
-        objBuild.add("ip address", getIpAddress());
         return objBuild.build();
     }
     
     /**
-     * de-serializes a JsonObject of a user.
-     * If the ip address contained therein is the same as this
-     * computer's OrpheusServer, returns the LocalUser instance.
-     * Otherwise, returns a new RemoteUser.
+     * de-serializes a JsonObject of a RemoteUser.
      * 
      * Note that this means a LocalUser serialized on one computer
      * will be de-serialized as a RemoteUser on another.
@@ -63,19 +61,10 @@ public abstract class AbstractUser implements JsonSerialable {
     public static AbstractUser deserializeJson(JsonObject obj){
         JsonUtil.verify(obj, "type");
         JsonUtil.verify(obj, "name");
-        JsonUtil.verify(obj, "ip address");
         if(!obj.getString("type").equals("user")){
             throw new JsonException("not a user");
         }
         
-        AbstractUser ret = null;
-        if(obj.getString("ip address").equals(OrpheusServer.getInstance().getIpAddr())){
-            // is this user
-            ret = LocalUser.getInstance();
-        } else {
-            ret = new RemoteUser(obj.getString("name"), obj.getString("ip address"));
-        }
-        
-        return ret;
+        return new RemoteUser(obj.getString("name"));
     }
 }

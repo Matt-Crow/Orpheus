@@ -17,6 +17,7 @@ import net.protocols.ChatProtocol;
 import serialization.JsonUtil;
 import users.AbstractUser;
 import users.LocalUser;
+import users.RemoteUser;
 import util.SafeList;
 
 /**
@@ -304,6 +305,10 @@ public class OrpheusServer {
         } else if(connections.containsKey(ip)){
             //connected to IP, but no user data set yet
             AbstractUser sender = AbstractUser.deserializeJson(JsonUtil.fromString(sm.getBody()));
+            if(sender instanceof RemoteUser){
+                ((RemoteUser)sender).setIpAddress(sm.getIpAddr());
+            }
+            
             sm.setSender(sender);
             connections.get(ip).setUser(sender);
             logConnections();
@@ -312,6 +317,9 @@ public class OrpheusServer {
             try {
                 connect(ip);
                 AbstractUser sender = AbstractUser.deserializeJson(JsonUtil.fromString(sm.getBody()));
+                if(sender instanceof RemoteUser){
+                    ((RemoteUser)sender).setIpAddress(sm.getIpAddr());
+                }
                 sm.setSender(sender);
                 connections.get(ip).setUser(sender);
                 logConnections();
@@ -341,7 +349,6 @@ public class OrpheusServer {
         // handle joining / leaving
         if(sm.getType() == ServerMessageType.PLAYER_JOINED){
             receiveJoin(sm);
-
         } else if (sm.getType() == ServerMessageType.PLAYER_LEFT){
             receiveDisconnect(sm);
         }

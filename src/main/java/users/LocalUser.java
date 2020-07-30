@@ -44,7 +44,7 @@ public class LocalUser extends AbstractUser {
         return remotePlayerId;
     }
 
-    @Override
+    @Override // not sure if I like this
     public String getIpAddress() {
         return OrpheusServer.getInstance().getIpAddr();
     }
