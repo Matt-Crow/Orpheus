@@ -2,7 +2,7 @@ package gui.windows.WorldSelect;
 
 import battle.Battle;
 import battle.Team;
-import controls.SoloPlayerControls;
+import controls.userControls.SoloPlayerControls;
 import entities.HumanPlayer;
 import java.awt.Color;
 import users.LocalUser;

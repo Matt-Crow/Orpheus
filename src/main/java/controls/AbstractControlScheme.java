@@ -5,7 +5,9 @@ import world.AbstractWorldShell;
 
 /**
  * This acts as the base class
- * for AbstractPlayerControls,
+ * for AbstractPlayerControls.
+ * 
+ * In the future, this may also be used in AI
  * 
  * @author Matt Crow
  */

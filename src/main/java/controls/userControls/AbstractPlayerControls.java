@@ -1,5 +1,6 @@
-package controls;
+package controls.userControls;
 
+import controls.AbstractControlScheme;
 import entities.AbstractPlayer;
 import entities.HumanPlayer;
 import java.awt.event.KeyEvent;

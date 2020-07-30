@@ -1,8 +1,8 @@
 package gui.graphics;
 
-import ai.Path;
-import ai.PathInfo;
-import ai.PathMinHeap;
+import controls.ai.Path;
+import controls.ai.PathInfo;
+import controls.ai.PathMinHeap;
 import entities.AbstractEntity;
 import java.awt.Graphics;
 import java.awt.Color;

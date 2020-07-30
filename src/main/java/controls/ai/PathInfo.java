@@ -1,4 +1,4 @@
-package ai;
+package controls.ai;
 
 import java.io.Serializable;
 

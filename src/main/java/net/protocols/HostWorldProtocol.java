@@ -1,6 +1,6 @@
 package net.protocols;
 
-import controls.AbstractPlayerControls;
+import controls.userControls.AbstractPlayerControls;
 import net.OrpheusServer;
 import net.ServerMessage;
 import world.HostWorld;

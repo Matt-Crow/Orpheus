@@ -1,6 +1,6 @@
 package net.protocols;
 
-import controls.RemotePlayerControls;
+import controls.userControls.RemotePlayerControls;
 import customizables.BuildJsonUtil;
 import entities.HumanPlayer;
 import java.io.IOException;

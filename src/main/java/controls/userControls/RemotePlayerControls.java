@@ -1,5 +1,6 @@
-package controls;
+package controls.userControls;
 
+import controls.userControls.AbstractPlayerControls;
 import net.OrpheusServer;
 import net.ServerMessage;
 import net.ServerMessageType;

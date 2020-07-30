@@ -1,4 +1,4 @@
-package ai;
+package controls.ai;
 
 import events.OnHitEvent;
 import entities.AbstractPlayer;

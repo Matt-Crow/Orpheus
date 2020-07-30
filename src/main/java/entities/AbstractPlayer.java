@@ -2,8 +2,8 @@ package entities;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import ai.Path;
-import ai.PathInfo;
+import controls.ai.Path;
+import controls.ai.PathInfo;
 import battle.*;
 import statuses.AbstractStatus;
 import util.Settings;

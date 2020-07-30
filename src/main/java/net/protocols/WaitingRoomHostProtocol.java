@@ -2,7 +2,7 @@ package net.protocols;
 
 import battle.Battle;
 import battle.Team;
-import controls.SoloPlayerControls;
+import controls.userControls.SoloPlayerControls;
 import customizables.Build;
 import customizables.BuildJsonUtil;
 import entities.HumanPlayer;
