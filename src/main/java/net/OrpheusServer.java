@@ -46,7 +46,7 @@ import util.SafeList;
  * @author Matt Crow
  */
 public class OrpheusServer {
-    private boolean isStarted;
+    private volatile boolean isStarted;
     private ServerSocket server;
     private String ipAddress;
     
@@ -82,6 +82,7 @@ public class OrpheusServer {
         isStarted = false;
         currentProtocol = null;
         currentChatProtocol = null;
+        connListener = null;
     }
     
     /**
@@ -101,7 +102,7 @@ public class OrpheusServer {
         }
         return instance;
     }
-    
+        
     /**
      * 
      * @return this
@@ -187,13 +188,19 @@ public class OrpheusServer {
                 public void run(){
                     log("Server started, waiting for client...");
                     Socket remoteComputer = null;
-                    while(listenForConn){
+                    while(true){
                         try {
                             remoteComputer = server.accept();
                             log(String.format("server accepted socket %s", remoteComputer.getInetAddress().getHostAddress()));
-                            connect(remoteComputer);
+                            if(listenForConn){
+                                connect(remoteComputer);
+                            } else {
+                                log("Not listening for connections, so I will disconnect them");
+                                remoteComputer.close();
+                            }
                         } catch(SocketException ex){
-                            ex.printStackTrace();
+                            System.out.println("Server shut down");
+                            //ex.printStackTrace();
                             break;
                         } catch (IOException ex) {
                             ex.printStackTrace();
