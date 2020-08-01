@@ -2,12 +2,11 @@ package net.protocols;
 
 import controls.userControls.RemotePlayerControls;
 import customizables.BuildJsonUtil;
-import entities.HumanPlayer;
 import java.io.IOException;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 import net.OrpheusServer;
-import net.ServerMessage;
+import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import serialization.JsonUtil;
 import users.AbstractUser;
@@ -15,7 +14,7 @@ import users.LocalUser;
 import gui.pages.worldSelect.AbstractWaitingRoom;
 import gui.pages.worldPlay.WorldCanvas;
 import gui.pages.worldPlay.WorldPage;
-import java.net.UnknownHostException;
+import net.messages.ServerMessage;
 import world.RemoteProxyWorld;
 import world.WorldContent;
 
@@ -41,7 +40,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
         }
     }
     
-    private void receiveInit(ServerMessage sm){
+    private void receiveInit(ServerMessagePacket sm){
         resetTeamProto();
         JsonObject obj = JsonUtil.fromString(sm.getBody());
         JsonUtil.verify(obj, "team");
@@ -52,23 +51,19 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
         });
     }
     
-    private void receiveUpdate(ServerMessage sm){
+    private void receiveUpdate(ServerMessagePacket sm){
         addToTeamProto(sm.getSender());
     }
     
-    private synchronized void receiveBuildRequest(ServerMessage sm){
-        try {
-            OrpheusServer.getInstance().send(new ServerMessage(
-                BuildJsonUtil.serializeJson(getFrontEnd().getSelectedBuild()).toString(),
-                ServerMessageType.PLAYER_DATA
-            ), sm.getSendingIp());
-            getFrontEnd().setInputEnabled(false);
-        } catch (UnknownHostException ex) {
-            ex.printStackTrace();
-        }
+    private synchronized void receiveBuildRequest(ServerMessagePacket sm){
+        OrpheusServer.getInstance().send(new ServerMessage(
+            BuildJsonUtil.serializeJson(getFrontEnd().getSelectedBuild()).toString(),
+            ServerMessageType.PLAYER_DATA
+        ), sm.getSendingIp());
+        getFrontEnd().setInputEnabled(false);
     }
     
-    private void receiveRemoteId(ServerMessage sm){
+    private void receiveRemoteId(ServerMessagePacket sm){
         LocalUser.getInstance().setRemotePlayerId(sm.getBody());
     }
     
@@ -80,7 +75,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
      * 
      * @param sm 
      */
-    private void receiveWorldInit(ServerMessage sm){
+    private void receiveWorldInit(ServerMessagePacket sm){
         WorldContent w = WorldContent.fromSerializedString(sm.getBody());
         RemoteProxyWorld world = new RemoteProxyWorld(sm.getSendingIp(), w);
         w.setShell(world);
@@ -106,7 +101,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
     }
     
     @Override
-    public boolean receiveMessage(ServerMessage sm, OrpheusServer forServer) {
+    public boolean receiveMessage(ServerMessagePacket sm, OrpheusServer forServer) {
         boolean received = true;
         switch(sm.getType()){
             case WAITING_ROOM_INIT:

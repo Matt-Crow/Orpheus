@@ -1,4 +1,4 @@
-package net;
+package _unused;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.Connection;
 
 /**
  * A Server is used to open certain features of Orpheus to other computers.

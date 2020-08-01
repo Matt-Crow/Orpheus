@@ -2,7 +2,7 @@ package net.protocols;
 
 import java.io.IOException;
 import net.OrpheusServer;
-import net.ServerMessage;
+import net.messages.ServerMessagePacket;
 
 /**
  *
@@ -19,7 +19,7 @@ public abstract class AbstractOrpheusServerProtocol {
      * @param forServer the server which received this message
      * @return whether or not this method handled the message.
      */
-    public abstract boolean receiveMessage(ServerMessage sm, OrpheusServer forServer);
+    public abstract boolean receiveMessage(ServerMessagePacket sm, OrpheusServer forServer);
     
     /**
      * Called whenever applyProtocol() is

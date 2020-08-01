@@ -10,7 +10,8 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 import javax.swing.*;
 import net.OrpheusServer;
-import net.ServerMessage;
+import net.messages.ServerMessage;
+import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import net.protocols.ChatProtocol;
 import users.LocalUser;
@@ -106,12 +107,8 @@ public class Chat extends JComponent implements ActionListener{
     public void log(String msg){
         logLocal("You: " + msg);
         if(OrpheusServer.getInstance().isStarted()){
-            try {
-                ServerMessage sm = new ServerMessage(msg, ServerMessageType.CHAT);
-                OrpheusServer.getInstance().send(sm);
-            } catch (UnknownHostException ex) {
-                ex.printStackTrace();
-            }
+            ServerMessage sm = new ServerMessage(msg, ServerMessageType.CHAT);
+            OrpheusServer.getInstance().send(sm);
         }
 	}
     

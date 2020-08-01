@@ -2,7 +2,7 @@ package net.protocols;
 
 import controls.userControls.AbstractPlayerControls;
 import net.OrpheusServer;
-import net.ServerMessage;
+import net.messages.ServerMessagePacket;
 import world.HostWorld;
 
 /**
@@ -28,7 +28,7 @@ public class HostWorldProtocol extends AbstractOrpheusServerNonChatProtocol{
     @Override
     public void doApplyProtocol() {}
     
-    private void receiveControl(ServerMessage sm){
+    private void receiveControl(ServerMessagePacket sm){
         // extract HumanPlayer ID from sm
         //String id = sm.getSender().getRemotePlayerId(); // is this set on the host's side?
         // find their player in the WorldContent (if they are alive)
@@ -41,7 +41,7 @@ public class HostWorldProtocol extends AbstractOrpheusServerNonChatProtocol{
     }
     
     @Override
-    public boolean receiveMessage(ServerMessage sm, OrpheusServer forServer) {
+    public boolean receiveMessage(ServerMessagePacket sm, OrpheusServer forServer) {
         boolean handled = true;
         switch(sm.getType()){
             case CONTROL_PRESSED:

@@ -4,7 +4,7 @@ import gui.components.Chat;
 import java.io.IOException;
 import java.util.List;
 import net.OrpheusServer;
-import net.ServerMessage;
+import net.messages.ServerMessagePacket;
 
 /**
  * need to override apply protocol so this doesn't apply over other protocols
@@ -34,12 +34,12 @@ public class ChatProtocol extends AbstractOrpheusServerProtocol{
         widget.logLocal("Have other people use the /connect command with one of these addresses to connect.");
     }
     
-    private void receiveChatMsg(ServerMessage sm){
+    private void receiveChatMsg(ServerMessagePacket sm){
         widget.logLocal(String.format("(%s): %s", sm.getSender().getName(), sm.getBody()));
     }
     
     @Override
-    public boolean receiveMessage(ServerMessage sm, OrpheusServer forServer) {
+    public boolean receiveMessage(ServerMessagePacket sm, OrpheusServer forServer) {
         boolean handled = true;
         switch(sm.getType()){
             case CHAT:

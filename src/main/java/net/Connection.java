@@ -1,5 +1,6 @@
 package net;
 
+import net.messages.ServerMessagePacket;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -7,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import net.messages.ServerMessage;
 import users.AbstractUser;
 
 /**
@@ -45,9 +47,9 @@ public class Connection {
     }
     
     // blocks until the client writes something
-    public final ServerMessage readServerMessage() throws IOException{
-        ServerMessage deser = ServerMessage.deserializeJson(fromClient.readLine());
-        deser.setSendingIp(receivingIp);
+    public final ServerMessagePacket readServerMessage() throws IOException{
+        ServerMessagePacket deser = ServerMessagePacket.deserializeJson(receivingIp, fromClient.readLine());
+        //deser.setSendingIp(receivingIp);
         return deser;
     }
     

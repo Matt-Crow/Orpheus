@@ -1,7 +1,7 @@
 package net.protocols;
 
 import net.OrpheusServer;
-import net.ServerMessage;
+import net.messages.ServerMessagePacket;
 import util.SerialUtil;
 import world.RemoteProxyWorld;
 import world.WorldContent;
@@ -30,7 +30,7 @@ public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtoc
      * 
      * @param sm 
      */
-    private void receiveWorldUpdate(ServerMessage sm){
+    private void receiveWorldUpdate(ServerMessagePacket sm){
         WorldContent content = (WorldContent)SerialUtil.fromSerializedString(sm.getBody());
         proxy.setContent(content);
         content.setShell(proxy);
@@ -55,7 +55,7 @@ public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtoc
     public void doApplyProtocol() {}
     
     @Override
-    public boolean receiveMessage(ServerMessage sm, OrpheusServer forServer) {
+    public boolean receiveMessage(ServerMessagePacket sm, OrpheusServer forServer) {
         boolean handled = true;
         switch(sm.getType()){
             case WORLD_UPDATE:

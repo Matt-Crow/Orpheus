@@ -1,5 +1,6 @@
 package net;
 
+import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import net.protocols.AbstractOrpheusServerNonChatProtocol;
 import java.io.EOFException;
@@ -16,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.json.JsonException;
+import net.messages.ServerMessage;
 import net.protocols.ChatProtocol;
 import serialization.JsonUtil;
 import users.AbstractUser;
@@ -61,7 +63,7 @@ public class OrpheusServer {
     private Thread connListener; //the thread that listens for attemts to connect to this server
     private volatile boolean listenForConn; //whether or not the connListener thread is active
     
-    private final SafeList<ServerMessage> cachedMessages; //messages received before the receiver could be
+    private final SafeList<ServerMessagePacket> cachedMessages; //messages received before the receiver could be
     
     private volatile AbstractOrpheusServerNonChatProtocol currentProtocol;
     private volatile ChatProtocol currentChatProtocol;
@@ -294,7 +296,7 @@ public class OrpheusServer {
         new Thread(){
             @Override
             public void run(){
-                ServerMessage fromClient = null;
+                ServerMessagePacket fromClient = null;
                 while(true){
                     try{
                         fromClient = conn.readServerMessage();
@@ -353,7 +355,7 @@ public class OrpheusServer {
         return success;
     }
     
-    private void receiveJoin(ServerMessage sm){
+    private void receiveJoin(ServerMessagePacket sm){
         InetAddress ip = sm.getSendingIp();
         if(connections.containsKey(ip) && connections.get(ip).getUser() != null){
             log("already connected");
@@ -384,7 +386,7 @@ public class OrpheusServer {
         }
     }
     
-    private void receiveDisconnect(ServerMessage sm){
+    private void receiveDisconnect(ServerMessagePacket sm){
         InetAddress ip = sm.getSendingIp();
         if(connections.containsKey(ip)){
             log(ip + " left");
@@ -394,7 +396,7 @@ public class OrpheusServer {
         }
     }
     
-    public final void receiveMessage(ServerMessage sm){
+    public final void receiveMessage(ServerMessagePacket sm){
         if(connections.containsKey(sm.getSendingIp())){
            sm.setSender(connections.get(sm.getSendingIp()).getUser()); 
         } else {
@@ -429,23 +431,13 @@ public class OrpheusServer {
         }
     }
     
-    public void receive(String msg){
-        try{
-            ServerMessage sm = ServerMessage.deserializeJson(msg);
-            receiveMessage(sm);
-        } catch (JsonException ex){
-            log("nope. not server message: " + msg);
-            ex.printStackTrace();
-        }
-    }
-    
     /**
      * @param protocol the new protocol to use. This can be null
      */
     public void setProtocol(AbstractOrpheusServerNonChatProtocol protocol){
         log(String.format("Set protocol to %s", protocol.toString()));
         currentProtocol = protocol;
-        cachedMessages.forEach((ServerMessage sm)->{
+        cachedMessages.forEach((ServerMessagePacket sm)->{
             if(protocol.receiveMessage(sm, this)){
                 cachedMessages.remove(sm);
                 log("uncached message " + sm.hashCode());
@@ -468,7 +460,7 @@ public class OrpheusServer {
     public void setChatProtocol(ChatProtocol chat){
         log(String.format("Set chat protocol to %s", chat.toString()));
         currentChatProtocol = chat;
-        cachedMessages.forEach((ServerMessage sm)->{
+        cachedMessages.forEach((ServerMessagePacket sm)->{
             if(chat.receiveMessage(sm, this)){
                 cachedMessages.remove(sm);
                 log("uncached message " + sm.hashCode());
@@ -487,14 +479,10 @@ public class OrpheusServer {
         if(!isStarted){
             return;
         }
-        try {
-            send(new ServerMessage(
-                "server shutting down",
-                ServerMessageType.SERVER_SHUTDOWN
-            ));
-        } catch (UnknownHostException ex) {
-            ex.printStackTrace();
-        }
+        send(new ServerMessage(
+            "server shutting down",
+            ServerMessageType.SERVER_SHUTDOWN
+        ));
         
         try {
             server.close();
