@@ -231,7 +231,7 @@ public class OrpheusServer {
     }
     
     public synchronized void connect(String ipAddr) throws UnknownHostException, IOException{
-        connect(InetAddress.getByAddress(ipAddr.getBytes()));
+        connect(InetAddress.getByName(ipAddr));
     }
     public synchronized void connect(InetAddress ipAddr) throws IOException{
         log(String.format("Connecting to %s...", ipAddr));

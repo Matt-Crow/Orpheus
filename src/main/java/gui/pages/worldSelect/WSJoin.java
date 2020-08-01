@@ -62,11 +62,11 @@ public class WSJoin extends Page{
         //right side
         ip = new JTextField("enter host address here");
         ip.addActionListener((e)->{
-            if(isIpAddr(ip.getText())){
+            //if(isIpAddr(ip.getText())){
                 join(ip.getText());
-            } else {
-                msgs.append('"' + ip.getText() + "\" doesn't look like an IP address to me. \n");
-            }
+            //} else {
+            //    msgs.append('"' + ip.getText() + "\" doesn't look like an IP address to me. \n");
+            //}
         });
         
         JPanel right = new JPanel();
