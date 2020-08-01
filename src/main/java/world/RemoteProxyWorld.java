@@ -3,6 +3,7 @@ package world;
 import battle.Team;
 import entities.AbstractEntity;
 import entities.Projectile;
+import java.net.InetAddress;
 
 /**
  * The RemoteProxyWorld is used by clients to represent
@@ -16,7 +17,7 @@ import entities.Projectile;
  * @see controls.RemotePlayerControls
  */
 public class RemoteProxyWorld extends AbstractWorldShell{
-    private final String remoteHostIp;
+    private final InetAddress remoteHostIp;
     
     /**
      * 
@@ -24,7 +25,7 @@ public class RemoteProxyWorld extends AbstractWorldShell{
      * is proxying is hosted.
      * @param worldContent the default contents of this world.
      */
-    public RemoteProxyWorld(String hostIp, WorldContent worldContent) {
+    public RemoteProxyWorld(InetAddress hostIp, WorldContent worldContent) {
         super(worldContent);
         remoteHostIp = hostIp;
     }    
@@ -35,7 +36,7 @@ public class RemoteProxyWorld extends AbstractWorldShell{
      * machine hosting the world
      * this is serving as a proxy for.
      */
-    public final String getHostIp(){
+    public final InetAddress getHostIp(){
         return remoteHostIp;
     }
     

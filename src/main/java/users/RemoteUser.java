@@ -1,12 +1,14 @@
 package users;
 
+import java.net.InetAddress;
+
 
 /**
  *
  * @author Matt
  */
 public class RemoteUser extends AbstractUser {
-    private String ipAddress;
+    private InetAddress ipAddress;
     
     public RemoteUser(String name){
         super(name);
@@ -19,12 +21,12 @@ public class RemoteUser extends AbstractUser {
      * @param ipAddr the IP address of the Socket
      * which provided this user's data
      */
-    public void setIpAddress(String ipAddr){
+    public void setIpAddress(InetAddress ipAddr){
         ipAddress = ipAddr;
     }
     
     @Override
-    public String getIpAddress() {
+    public InetAddress getIpAddress() {
         if(ipAddress == null){
             throw new NullPointerException("OrpheusServer didn't invoke setIpAddress for this!");
         }

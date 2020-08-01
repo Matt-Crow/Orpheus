@@ -1,10 +1,10 @@
 package users;
 
+import java.net.InetAddress;
 import javax.json.Json;
 import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import net.OrpheusServer;
 import serialization.JsonSerialable;
 import serialization.JsonUtil;
 
@@ -31,7 +31,7 @@ public abstract class AbstractUser implements JsonSerialable {
         return userName;
     }
     
-    public abstract String getIpAddress();
+    public abstract InetAddress getIpAddress();
     
     /**
      * Serializes this user into JSON. Note that both LocalUsers

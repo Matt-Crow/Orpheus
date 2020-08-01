@@ -15,6 +15,7 @@ import users.LocalUser;
 import gui.pages.worldSelect.AbstractWaitingRoom;
 import gui.pages.worldPlay.WorldCanvas;
 import gui.pages.worldPlay.WorldPage;
+import java.net.UnknownHostException;
 import world.RemoteProxyWorld;
 import world.WorldContent;
 
@@ -56,11 +57,15 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
     }
     
     private synchronized void receiveBuildRequest(ServerMessage sm){
-        OrpheusServer.getInstance().send(new ServerMessage(
-            BuildJsonUtil.serializeJson(getFrontEnd().getSelectedBuild()).toString(),
-            ServerMessageType.PLAYER_DATA
-        ), sm.getIpAddr());
-        getFrontEnd().setInputEnabled(false);
+        try {
+            OrpheusServer.getInstance().send(new ServerMessage(
+                BuildJsonUtil.serializeJson(getFrontEnd().getSelectedBuild()).toString(),
+                ServerMessageType.PLAYER_DATA
+            ), sm.getSendingIp());
+            getFrontEnd().setInputEnabled(false);
+        } catch (UnknownHostException ex) {
+            ex.printStackTrace();
+        }
     }
     
     private void receiveRemoteId(ServerMessage sm){
@@ -77,7 +82,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
      */
     private void receiveWorldInit(ServerMessage sm){
         WorldContent w = WorldContent.fromSerializedString(sm.getBody());
-        RemoteProxyWorld world = new RemoteProxyWorld(sm.getIpAddr(), w);
+        RemoteProxyWorld world = new RemoteProxyWorld(sm.getSendingIp(), w);
         w.setShell(world);
         
         LocalUser me = LocalUser.getInstance();
@@ -87,7 +92,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
         
         WorldPage p = new WorldPage();
         WorldCanvas canv = world.getCanvas();
-        canv.addPlayerControls(new RemotePlayerControls(world, me.getRemotePlayerId(), sm.getIpAddr()));
+        canv.addPlayerControls(new RemotePlayerControls(world, me.getRemotePlayerId(), sm.getSendingIp()));
         canv.setPauseEnabled(false);
         p.setCanvas(canv);
         getFrontEnd().getHost().switchToPage(p);

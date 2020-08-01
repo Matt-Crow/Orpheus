@@ -12,7 +12,6 @@ import java.io.Serializable;
 import java.util.function.Consumer;
 import static java.lang.System.out;
 import java.util.HashMap;
-import net.OrpheusServer;
 import users.LocalUser;
 import util.SafeList;
 
@@ -38,7 +37,7 @@ public class Team extends SafeList<AbstractEntity> implements Serializable{
 		super();
         name = n;
 		color = c;
-		id = OrpheusServer.getInstance().getIpAddr() + ": " + nextId;
+		id = "#" + nextId;
 		nextId++;
         roster = new HashMap<>();
         membersRem = new ArrayList<>();

@@ -23,6 +23,8 @@ import users.LocalUser;
 import gui.pages.worldSelect.HostWaitingRoom;
 import gui.pages.worldPlay.WorldCanvas;
 import gui.pages.worldPlay.WorldPage;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import world.HostWorld;
 import world.WorldContent;
 
@@ -51,7 +53,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
     The Users who have joined the waiting room, but have
     not yet sent their Builds to the server
     */
-    private final HashMap<String, AbstractUser> awaitingBuilds;
+    private final HashMap<InetAddress, AbstractUser> awaitingBuilds;
     
     /**
      * Creates the protocol.
@@ -91,14 +93,18 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
      */
     public final void addUserToTeam(AbstractUser u){
         if(addToTeamProto(u)){
-            awaitingBuilds.put(u.getIpAddress(), u);
-            ServerMessage sm = new ServerMessage(
-                "join player team",
-                ServerMessageType.WAITING_ROOM_UPDATE
-            );
-            OrpheusServer.getInstance().send(sm);
-            getFrontEnd().getChat().logLocal(u.getName() + " has joined the team!");
-            getFrontEnd().updateTeamDisplays();
+            try {
+                awaitingBuilds.put(u.getIpAddress(), u);
+                ServerMessage sm = new ServerMessage(
+                    "join player team",
+                    ServerMessageType.WAITING_ROOM_UPDATE
+                );
+                OrpheusServer.getInstance().send(sm);
+                getFrontEnd().getChat().logLocal(u.getName() + " has joined the team!");
+                getFrontEnd().updateTeamDisplays();
+            } catch (UnknownHostException ex) {
+                ex.printStackTrace();
+            }
         }
     }
     
@@ -111,7 +117,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
      * @param sm
      */
     private void receiveJoin(ServerMessage sm){
-        String joiningIp = sm.getIpAddr();
+        InetAddress joiningIp = sm.getSendingIp();
         if(containsIp(joiningIp)){
             return;
         } // ##################### RETURNS HERE IF ALREADY JOINED
@@ -137,12 +143,16 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
         }
         initMsgBuild.add("team", userListBuild.build());
         
-        ServerMessage initMsg = new ServerMessage(
-            initMsgBuild.build().toString(),
-            ServerMessageType.WAITING_ROOM_INIT
-        );
-        
-        OrpheusServer.getInstance().send(initMsg, joiningIp);
+        try{
+            ServerMessage initMsg = new ServerMessage(
+                initMsgBuild.build().toString(),
+                ServerMessageType.WAITING_ROOM_INIT
+            );
+
+            OrpheusServer.getInstance().send(initMsg, joiningIp);
+        } catch (UnknownHostException ex) {
+            ex.printStackTrace();
+        }
     }
     
     public final void prepareToStart(){
@@ -179,10 +189,14 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
     }
     
     private void requestBuilds(){
-        OrpheusServer.getInstance().send(new ServerMessage(
-            "please provide build information",
-            ServerMessageType.REQUEST_PLAYER_DATA
-        ));
+        try {
+            OrpheusServer.getInstance().send(new ServerMessage(
+                "please provide build information",
+                ServerMessageType.REQUEST_PLAYER_DATA
+            ));
+        } catch (UnknownHostException ex) {
+            ex.printStackTrace();
+        }
     }
     
     /**
@@ -196,7 +210,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
      * @param sm a server message containing the sender's Build, serialized as a JSON object string
      */
     private void receiveBuildInfo(ServerMessage sm){
-        String ip = sm.getIpAddr();
+        InetAddress ip = sm.getSendingIp();
         HumanPlayer player = null;
         Build b;
         
@@ -221,12 +235,16 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
      * @param ipAddr the ip address of the user to send the IDs to.
      * @param playerId the ID of that user's Player on this computer
      */
-    private void sendRemoteId(String ipAddr, String playerId){
-        ServerMessage sm = new ServerMessage(
-            playerId,
-            ServerMessageType.NOTIFY_IDS
-        );
-        OrpheusServer.getInstance().send(sm, ipAddr);
+    private void sendRemoteId(InetAddress ipAddr, String playerId){
+        try {
+            ServerMessage sm = new ServerMessage(
+                playerId,
+                ServerMessageType.NOTIFY_IDS
+            );
+            OrpheusServer.getInstance().send(sm, ipAddr);
+        } catch (UnknownHostException ex) {
+            ex.printStackTrace();
+        }
     }
     
     private void checkIfReady(){
@@ -268,12 +286,16 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
      * @param w the world to send
      */
     private void sendWorldInit(WorldContent w){
-        String serial = w.serializeToString();
-        ServerMessage sm = new ServerMessage(
-            serial,
-            ServerMessageType.WORLD_INIT
-        );
-        OrpheusServer.getInstance().send(sm);
+        try {
+            String serial = w.serializeToString();
+            ServerMessage sm = new ServerMessage(
+                serial,
+                ServerMessageType.WORLD_INIT
+            );
+            OrpheusServer.getInstance().send(sm);
+        } catch (UnknownHostException ex) {
+            ex.printStackTrace();
+        }
     }
     
     @Override

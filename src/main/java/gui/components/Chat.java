@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.function.Consumer;
@@ -105,8 +106,12 @@ public class Chat extends JComponent implements ActionListener{
     public void log(String msg){
         logLocal("You: " + msg);
         if(OrpheusServer.getInstance().isStarted()){
-            ServerMessage sm = new ServerMessage(msg, ServerMessageType.CHAT);
-            OrpheusServer.getInstance().send(sm);
+            try {
+                ServerMessage sm = new ServerMessage(msg, ServerMessageType.CHAT);
+                OrpheusServer.getInstance().send(sm);
+            } catch (UnknownHostException ex) {
+                ex.printStackTrace();
+            }
         }
 	}
     

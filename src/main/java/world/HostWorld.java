@@ -4,6 +4,7 @@ import battle.Team;
 import entities.AbstractEntity;
 import entities.AbstractPlayer;
 import entities.Projectile;
+import java.net.UnknownHostException;
 import net.OrpheusServer;
 import net.ServerMessage;
 import net.ServerMessageType;
@@ -50,10 +51,14 @@ public class HostWorld extends AbstractWorldShell{
         updateTeam(getAITeam());
         updateParticles();
         updateMinigame();
-        OrpheusServer.getInstance().send(new ServerMessage(
-            SerialUtil.serializeToString(getContent()),
-            ServerMessageType.WORLD_UPDATE
-        ));
+        try {
+            OrpheusServer.getInstance().send(new ServerMessage(
+                SerialUtil.serializeToString(getContent()),
+                ServerMessageType.WORLD_UPDATE
+            ));
+        } catch (UnknownHostException ex) {
+            ex.printStackTrace();
+        }
     }
 
 }

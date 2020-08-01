@@ -1,5 +1,7 @@
 package users;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import javax.swing.JOptionPane;
 import net.OrpheusServer;
 
@@ -45,7 +47,13 @@ public class LocalUser extends AbstractUser {
     }
 
     @Override // not sure if I like this
-    public String getIpAddress() {
-        return OrpheusServer.getInstance().getIpAddr();
+    public InetAddress getIpAddress() {
+        InetAddress ret = null;
+        try {
+            ret = InetAddress.getLocalHost();
+        } catch (UnknownHostException ex) {
+            ex.printStackTrace();
+        }
+        return ret;
     }
 }

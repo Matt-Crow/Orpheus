@@ -18,6 +18,7 @@ public abstract class AbstractOrpheusServerNonChatProtocol extends AbstractOrphe
      */
     @Override
     public final void applyProtocol() throws IOException{
+        OrpheusServer.validateServer();
         OrpheusServer server = OrpheusServer.getInstance();
         server.restart();
         server.setProtocol(this);

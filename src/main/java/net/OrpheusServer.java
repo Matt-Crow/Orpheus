@@ -3,15 +3,17 @@ package net;
 import net.protocols.AbstractOrpheusServerNonChatProtocol;
 import java.io.EOFException;
 import java.io.IOException;
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.json.JsonException;
 import net.protocols.ChatProtocol;
 import serialization.JsonUtil;
@@ -47,14 +49,14 @@ import util.SafeList;
  */
 public class OrpheusServer {
     private volatile boolean isStarted;
-    private ServerSocket server;
-    private String ipAddress;
+    private final ServerSocket server;
+    private final HashSet<InetAddress> validIpAddresses;
     
     /*
     The users connected to this server, where the key is their
     IP address.
     */
-    private final HashMap<String, Connection> connections;
+    private final HashMap<InetAddress, Connection> connections;
     private Thread connListener; //the thread that listens for attemts to connect to this server
     private volatile boolean listenForConn; //whether or not the connListener thread is active
     
@@ -71,18 +73,33 @@ public class OrpheusServer {
      * Note that this does not actually start the server,
      * you need to call start() for that.
      */
-    private OrpheusServer(){
+    private OrpheusServer() throws IOException{
         if(instance != null){
             throw new ExceptionInInitializerError("OrpheusServer is a singleton class: Use OrpheusServer.getInstance()");
         }
-        ipAddress = "127.0.0.1"; // Loopback address. This is just a default value
+        server = new ServerSocket(PORT);
+        validIpAddresses = getValidInetAddresses();
+        
         connections = new HashMap<>();
         cachedMessages = new SafeList<>();
         listenForConn = false;   
-        isStarted = false;
+        
         currentProtocol = null;
         currentChatProtocol = null;
         connListener = null;
+        
+        isStarted = false;
+    }
+    
+    public final List<String> getValidIps(){
+        return validIpAddresses.stream().map((i)->i.getHostAddress()).collect(Collectors.toList());
+    }
+    
+    
+    public static final void validateServer() throws IOException{
+        if(instance == null){
+            instance = new OrpheusServer();
+        }
     }
     
     /**
@@ -98,7 +115,7 @@ public class OrpheusServer {
      */
     public static final OrpheusServer getInstance() {
         if(instance == null){
-            instance = new OrpheusServer();
+            throw new NullPointerException("Looks like you forgot to call OrpheusServer.validateServer() before OrpheusServer.getInstance()");
         }
         return instance;
     }
@@ -117,12 +134,9 @@ public class OrpheusServer {
             return this;
         }
         
-        HashSet<String> validIps = getValidIps();
-        log("Valid IPv4 addresses include:");
-        validIps.forEach(this::log);
-        ipAddress = (String)validIps.toArray()[0];
-        server = new ServerSocket(PORT);
-        log(String.format("Server initialized on %s:%d", ipAddress, PORT));
+        log("Valid IP addresses include:");
+        validIpAddresses.forEach(this::log);
+        log(String.format("Server initialized on port %d", PORT));
         reset();
         
         isStarted = true;
@@ -216,30 +230,29 @@ public class OrpheusServer {
         }
     }
     
-    public String getIpAddr(){
-        return ipAddress;
+    public synchronized void connect(String ipAddr) throws UnknownHostException, IOException{
+        connect(InetAddress.getByAddress(ipAddr.getBytes()));
     }
-    
-    public synchronized void connect(String ipAddr) throws IOException{
+    public synchronized void connect(InetAddress ipAddr) throws IOException{
         log(String.format("Connecting to %s...", ipAddr));
-        if(ipAddr.equals(this.ipAddress)){
-            log("Do not connect to self. Exiting.");
-        } else {
+        //if(ipAddr.equals(this.ipAddress)){
+            //log("Do not connect to self. Exiting.");
+        //} else {
             Socket sock = new Socket(ipAddr, PORT);
             connect(sock);
-        }
+        //}
     }
     public synchronized void connect(Socket otherComputer) throws IOException{
         logConnections();
-        if(connections.containsKey(otherComputer.getInetAddress().getHostAddress())){
-            log("Already connected to " + otherComputer.getInetAddress().getHostAddress());
+        if(connections.containsKey(otherComputer.getInetAddress())){
+            log("Already connected to " + otherComputer.getInetAddress());
             return;
         }
 
         log(String.format("Initializing connection to %s...", otherComputer.getInetAddress().getHostAddress()));
         Connection conn = new Connection(otherComputer);
         log("Connection successful");
-        connections.put(otherComputer.getInetAddress().getHostAddress(), conn);
+        connections.put(otherComputer.getInetAddress(), conn);
 
         //do I need to store this somewhere?
         log("Opening message listener thread...");
@@ -264,7 +277,7 @@ public class OrpheusServer {
                     }
                 }
                 log("disconnecting...");
-                disconnect(otherComputer.getInetAddress().getHostAddress());
+                disconnect(otherComputer.getInetAddress());
             }
         }.start();
         log("Listener thread started successfully");
@@ -281,7 +294,7 @@ public class OrpheusServer {
         logConnections();
     }
     
-    private synchronized void disconnect(String ipAddr){
+    private synchronized void disconnect(InetAddress ipAddr){
         if(connections.containsKey(ipAddr)){
             connections.get(ipAddr).close();
             connections.remove(ipAddr);
@@ -296,7 +309,7 @@ public class OrpheusServer {
         });
     }
     
-    public boolean send(ServerMessage sm, String ipAddr){
+    public boolean send(ServerMessage sm, InetAddress ipAddr){
         boolean success = false;
         if(connections.containsKey(ipAddr)){
             connections.get(ipAddr).writeServerMessage(sm);
@@ -306,14 +319,14 @@ public class OrpheusServer {
     }
     
     private void receiveJoin(ServerMessage sm){
-        String ip = sm.getIpAddr();
+        InetAddress ip = sm.getSendingIp();
         if(connections.containsKey(ip) && connections.get(ip).getUser() != null){
             log("already connected");
         } else if(connections.containsKey(ip)){
             //connected to IP, but no user data set yet
             AbstractUser sender = AbstractUser.deserializeJson(JsonUtil.fromString(sm.getBody()));
             if(sender instanceof RemoteUser){
-                ((RemoteUser)sender).setIpAddress(sm.getIpAddr());
+                ((RemoteUser)sender).setIpAddress(sm.getSendingIp());
             }
             
             sm.setSender(sender);
@@ -325,7 +338,7 @@ public class OrpheusServer {
                 connect(ip);
                 AbstractUser sender = AbstractUser.deserializeJson(JsonUtil.fromString(sm.getBody()));
                 if(sender instanceof RemoteUser){
-                    ((RemoteUser)sender).setIpAddress(sm.getIpAddr());
+                    ((RemoteUser)sender).setIpAddress(sm.getSendingIp());
                 }
                 sm.setSender(sender);
                 connections.get(ip).setUser(sender);
@@ -337,20 +350,20 @@ public class OrpheusServer {
     }
     
     private void receiveDisconnect(ServerMessage sm){
-        String ip = sm.getSender().getIpAddress();
+        InetAddress ip = sm.getSendingIp();
         if(connections.containsKey(ip)){
             log(ip + " left");
-            disconnect(sm.getIpAddr());
+            disconnect(sm.getSendingIp());
         }else{
             log(ip + " is not connected, so I cannot disconnect from them");
         }
     }
     
     public final void receiveMessage(ServerMessage sm){
-        if(connections.containsKey(sm.getIpAddr())){
-           sm.setSender(connections.get(sm.getIpAddr()).getUser()); 
+        if(connections.containsKey(sm.getSendingIp())){
+           sm.setSender(connections.get(sm.getSendingIp()).getUser()); 
         } else {
-           log("I don't recognize " + sm.getIpAddr());
+           log("I don't recognize " + sm.getSendingIp());
         }
 
         // handle joining / leaving
@@ -439,10 +452,14 @@ public class OrpheusServer {
         if(!isStarted){
             return;
         }
-        send(new ServerMessage(
-            "server shutting down",
-            ServerMessageType.SERVER_SHUTDOWN
-        ));
+        try {
+            send(new ServerMessage(
+                "server shutting down",
+                ServerMessageType.SERVER_SHUTDOWN
+            ));
+        } catch (UnknownHostException ex) {
+            ex.printStackTrace();
+        }
         
         try {
             server.close();
@@ -468,8 +485,13 @@ public class OrpheusServer {
         log(obj.toString());
     }
     
-    private static HashSet<String> getValidIps() throws SocketException{
-        HashSet<String> ips = new HashSet<>();
+    /**
+     * 
+     * @return
+     * @throws SocketException if this cannot access any network interfaces 
+     */
+    private HashSet<InetAddress> getValidInetAddresses() throws SocketException {
+        HashSet<InetAddress> ips = new HashSet<>();
         
         // get network interfaces
         Enumeration<NetworkInterface> eni = NetworkInterface.getNetworkInterfaces();
@@ -478,17 +500,20 @@ public class OrpheusServer {
         InetAddress ia = null;
         
         while(eni.hasMoreElements()){
-            ni = eni.nextElement();
-            if(!ni.isLoopback() && ni.isUp()){
-                //System.out.println(ni);
-                addrs = ni.getInetAddresses();
-                while(addrs.hasMoreElements()){
-                    ia = addrs.nextElement();
-                    if(ia instanceof Inet4Address){
+            try {
+                ni = eni.nextElement();
+                if(!ni.isLoopback() && ni.isUp()){
+                    //System.out.println(ni);
+                    addrs = ni.getInetAddresses();
+                    while(addrs.hasMoreElements()){
+                        ia = addrs.nextElement();
                         //System.out.println(ia.getHostAddress());
-                        ips.add(ia.getHostAddress());
+                        ips.add(ia);
                     }
                 }
+            } catch (SocketException ex) {
+                // catch here so one broken socket doesn't cause the whole method to crash
+                ex.printStackTrace();
             }
         }
         return ips;
@@ -504,7 +529,7 @@ public class OrpheusServer {
                 @Override
                 public void run(){
                     try {
-                        new Connection(new Socket(os.getIpAddr(), PORT));
+                        new Connection(new Socket(InetAddress.getLoopbackAddress(), PORT));
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }

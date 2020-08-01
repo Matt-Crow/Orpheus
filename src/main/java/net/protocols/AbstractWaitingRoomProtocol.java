@@ -3,6 +3,7 @@ package net.protocols;
 import java.util.HashMap;
 import users.AbstractUser;
 import gui.pages.worldSelect.AbstractWaitingRoom;
+import java.net.InetAddress;
 
 /**
  *
@@ -15,7 +16,7 @@ public abstract class AbstractWaitingRoomProtocol extends AbstractOrpheusServerN
     The key is their IP address,
     while the value is the User
     */
-    private final HashMap<String, AbstractUser> teamProto;
+    private final HashMap<InetAddress, AbstractUser> teamProto;
     
     public AbstractWaitingRoomProtocol(AbstractWaitingRoom linkedRoom){
         frontEnd = linkedRoom;
@@ -26,7 +27,7 @@ public abstract class AbstractWaitingRoomProtocol extends AbstractOrpheusServerN
         teamProto.clear();
     }
     
-    public final boolean containsIp(String ipAddr){
+    public final boolean containsIp(InetAddress ipAddr){
         return teamProto.containsKey(ipAddr);
     }
     public final boolean containsUser(AbstractUser u){
