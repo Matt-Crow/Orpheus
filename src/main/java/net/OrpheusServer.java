@@ -1,5 +1,6 @@
 package net;
 
+import net.messages.ServerMessageType;
 import net.protocols.AbstractOrpheusServerNonChatProtocol;
 import java.io.EOFException;
 import java.io.IOException;
@@ -89,6 +90,40 @@ public class OrpheusServer {
         connListener = null;
         
         isStarted = false;
+    }
+    
+    /**
+     * 
+     * @return
+     * @throws SocketException if this cannot access any network interfaces 
+     */
+    private HashSet<InetAddress> getValidInetAddresses() throws SocketException {
+        HashSet<InetAddress> ips = new HashSet<>();
+        
+        // get network interfaces
+        Enumeration<NetworkInterface> eni = NetworkInterface.getNetworkInterfaces();
+        NetworkInterface ni = null;
+        Enumeration<InetAddress> addrs = null;
+        InetAddress ia = null;
+        
+        while(eni.hasMoreElements()){
+            try {
+                ni = eni.nextElement();
+                if(!ni.isLoopback() && ni.isUp()){
+                    //System.out.println(ni);
+                    addrs = ni.getInetAddresses();
+                    while(addrs.hasMoreElements()){
+                        ia = addrs.nextElement();
+                        //System.out.println(ia.getHostAddress());
+                        ips.add(ia);
+                    }
+                }
+            } catch (SocketException ex) {
+                // catch here so one broken socket doesn't cause the whole method to crash
+                ex.printStackTrace();
+            }
+        }
+        return ips;
     }
     
     public final List<String> getValidIps(){
@@ -485,40 +520,6 @@ public class OrpheusServer {
         log(obj.toString());
     }
     
-    /**
-     * 
-     * @return
-     * @throws SocketException if this cannot access any network interfaces 
-     */
-    private HashSet<InetAddress> getValidInetAddresses() throws SocketException {
-        HashSet<InetAddress> ips = new HashSet<>();
-        
-        // get network interfaces
-        Enumeration<NetworkInterface> eni = NetworkInterface.getNetworkInterfaces();
-        NetworkInterface ni = null;
-        Enumeration<InetAddress> addrs = null;
-        InetAddress ia = null;
-        
-        while(eni.hasMoreElements()){
-            try {
-                ni = eni.nextElement();
-                if(!ni.isLoopback() && ni.isUp()){
-                    //System.out.println(ni);
-                    addrs = ni.getInetAddresses();
-                    while(addrs.hasMoreElements()){
-                        ia = addrs.nextElement();
-                        //System.out.println(ia.getHostAddress());
-                        ips.add(ia);
-                    }
-                }
-            } catch (SocketException ex) {
-                // catch here so one broken socket doesn't cause the whole method to crash
-                ex.printStackTrace();
-            }
-        }
-        return ips;
-    }
-    
     // yay! this works!
     public static void main(String[] args) throws SocketException{
         try {
@@ -530,6 +531,7 @@ public class OrpheusServer {
                 public void run(){
                     try {
                         new Connection(new Socket(InetAddress.getLoopbackAddress(), PORT));
+                        //new Socket("0.0.0.0", PORT);
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }

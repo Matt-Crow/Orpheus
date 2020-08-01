@@ -14,6 +14,9 @@ import users.LocalUser;
 import gui.pages.Page;
 
 /**
+ * Checking for IPv4 is currently disabled, as
+ * I need to allow for IPv6 connections.
+ * 
  * @author Matt
  */
 public class WSJoin extends Page{

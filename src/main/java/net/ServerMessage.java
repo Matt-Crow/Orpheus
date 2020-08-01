@@ -1,5 +1,6 @@
 package net;
 
+import net.messages.ServerMessageType;
 import java.io.StringReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;

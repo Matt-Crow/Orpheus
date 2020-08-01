@@ -8,7 +8,7 @@ import javax.json.JsonObject;
 import javax.json.JsonValue;
 import net.OrpheusServer;
 import net.ServerMessage;
-import net.ServerMessageType;
+import net.messages.ServerMessageType;
 import serialization.JsonUtil;
 import users.AbstractUser;
 import users.LocalUser;

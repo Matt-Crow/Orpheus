@@ -4,7 +4,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import net.OrpheusServer;
 import net.ServerMessage;
-import net.ServerMessageType;
+import net.messages.ServerMessageType;
 import world.AbstractWorldShell;
 
 /**

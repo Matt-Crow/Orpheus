@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 import javax.swing.*;
 import net.OrpheusServer;
 import net.ServerMessage;
-import net.ServerMessageType;
+import net.messages.ServerMessageType;
 import net.protocols.ChatProtocol;
 import users.LocalUser;
 

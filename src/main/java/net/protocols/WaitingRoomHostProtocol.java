@@ -16,7 +16,7 @@ import javax.json.JsonObjectBuilder;
 import javax.swing.Timer;
 import net.OrpheusServer;
 import net.ServerMessage;
-import net.ServerMessageType;
+import net.messages.ServerMessageType;
 import serialization.JsonUtil;
 import users.AbstractUser;
 import users.LocalUser;

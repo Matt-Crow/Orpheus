@@ -1,4 +1,4 @@
-package net;
+package net.messages;
 
 import java.util.Arrays;
 

@@ -7,7 +7,7 @@ import entities.Projectile;
 import java.net.UnknownHostException;
 import net.OrpheusServer;
 import net.ServerMessage;
-import net.ServerMessageType;
+import net.messages.ServerMessageType;
 import util.SerialUtil;
 
 /**
