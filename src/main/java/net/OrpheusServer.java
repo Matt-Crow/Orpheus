@@ -300,7 +300,7 @@ public class OrpheusServer {
                 while(true){
                     try{
                         fromClient = conn.readServerMessage();
-                        if(fromClient.getType() == ServerMessageType.SERVER_SHUTDOWN){
+                        if(fromClient.getMessage().getType() == ServerMessageType.SERVER_SHUTDOWN){
                             log("breaking");
                             break;
                         }
@@ -361,7 +361,7 @@ public class OrpheusServer {
             log("already connected");
         } else if(connections.containsKey(ip)){
             //connected to IP, but no user data set yet
-            AbstractUser sender = AbstractUser.deserializeJson(JsonUtil.fromString(sm.getBody()));
+            AbstractUser sender = AbstractUser.deserializeJson(JsonUtil.fromString(sm.getMessage().getBody()));
             if(sender instanceof RemoteUser){
                 ((RemoteUser)sender).setIpAddress(sm.getSendingIp());
             }
@@ -373,7 +373,7 @@ public class OrpheusServer {
             //not connected, no user data
             try {
                 connect(ip);
-                AbstractUser sender = AbstractUser.deserializeJson(JsonUtil.fromString(sm.getBody()));
+                AbstractUser sender = AbstractUser.deserializeJson(JsonUtil.fromString(sm.getMessage().getBody()));
                 if(sender instanceof RemoteUser){
                     ((RemoteUser)sender).setIpAddress(sm.getSendingIp());
                 }
@@ -404,9 +404,9 @@ public class OrpheusServer {
         }
 
         // handle joining / leaving
-        if(sm.getType() == ServerMessageType.PLAYER_JOINED){
+        if(sm.getMessage().getType() == ServerMessageType.PLAYER_JOINED){
             receiveJoin(sm);
-        } else if (sm.getType() == ServerMessageType.PLAYER_LEFT){
+        } else if (sm.getMessage().getType() == ServerMessageType.PLAYER_LEFT){
             receiveDisconnect(sm);
         }
 
@@ -424,7 +424,7 @@ public class OrpheusServer {
         if(handled){
             //log("Successfully received!");
         } else {
-            log("Nope, didn't receive properly, so I'll cache it: " + sm.getBody());
+            log("Nope, didn't receive properly, so I'll cache it: " + sm.getMessage().getBody());
             log("(" + sm.hashCode() + ")");
             cachedMessages.add(sm);
 

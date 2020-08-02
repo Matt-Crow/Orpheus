@@ -24,7 +24,6 @@ import gui.pages.worldSelect.HostWaitingRoom;
 import gui.pages.worldPlay.WorldCanvas;
 import gui.pages.worldPlay.WorldPage;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import net.messages.ServerMessage;
 import world.HostWorld;
 import world.WorldContent;
@@ -210,7 +209,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
             return;
         }
 
-        b = BuildJsonUtil.deserializeJson(JsonUtil.fromString(sm.getBody()));
+        b = BuildJsonUtil.deserializeJson(JsonUtil.fromString(sm.getMessage().getBody()));
         player.applyBuild(b);
         playerTeam.addMember(player);
         
@@ -282,7 +281,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
     public boolean receiveMessage(ServerMessagePacket sm, OrpheusServer forServer) {
         boolean handled = true;
         
-        switch(sm.getType()){
+        switch(sm.getMessage().getType()){
             case PLAYER_JOINED:
                 receiveJoin(sm);
                 break;

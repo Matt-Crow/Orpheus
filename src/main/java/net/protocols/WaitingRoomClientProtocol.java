@@ -42,7 +42,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
     
     private void receiveInit(ServerMessagePacket sm){
         resetTeamProto();
-        JsonObject obj = JsonUtil.fromString(sm.getBody());
+        JsonObject obj = JsonUtil.fromString(sm.getMessage().getBody());
         JsonUtil.verify(obj, "team");
         obj.getJsonArray("team").stream().forEach((jv)->{
             if(jv.getValueType().equals(JsonValue.ValueType.OBJECT)){
@@ -64,7 +64,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
     }
     
     private void receiveRemoteId(ServerMessagePacket sm){
-        LocalUser.getInstance().setRemotePlayerId(sm.getBody());
+        LocalUser.getInstance().setRemotePlayerId(sm.getMessage().getBody());
     }
     
     /**
@@ -76,7 +76,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
      * @param sm 
      */
     private void receiveWorldInit(ServerMessagePacket sm){
-        WorldContent w = WorldContent.fromSerializedString(sm.getBody());
+        WorldContent w = WorldContent.fromSerializedString(sm.getMessage().getBody());
         RemoteProxyWorld world = new RemoteProxyWorld(sm.getSendingIp(), w);
         w.setShell(world);
         
@@ -103,7 +103,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
     @Override
     public boolean receiveMessage(ServerMessagePacket sm, OrpheusServer forServer) {
         boolean received = true;
-        switch(sm.getType()){
+        switch(sm.getMessage().getType()){
             case WAITING_ROOM_INIT:
                 receiveInit(sm);
                 break;

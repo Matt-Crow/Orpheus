@@ -1,5 +1,6 @@
 package net.messages;
 
+import java.io.StringReader;
 import javax.json.Json;
 import javax.json.JsonException;
 import javax.json.JsonObject;
@@ -8,8 +9,14 @@ import serialization.JsonSerialable;
 import serialization.JsonUtil;
 
 /**
+ * The ServerMessage class is used to store data sent
+ * between computers. Servers send these to their clients
+ * as JSON, which gets deserialized as a ServerMessagePacket
+ * when received by a Connection.
  * 
- * @author Matt
+ * Basically, send as a ServerMessage, receive as a ServerMessagePacket
+ * 
+ * @author Matt Crow
  */
 public class ServerMessage implements JsonSerialable {
     private final String body;
@@ -28,14 +35,32 @@ public class ServerMessage implements JsonSerialable {
         type = messageType;
     }
     
+    /**
+     * 
+     * @return the body text of
+     * this message.
+     */
     public final String getBody(){
         return body;
     }
     
+    /**
+     * 
+     * @return the type of message this is.
+     * Used to control how the current protocol
+     * handles this message.
+     */
     public final ServerMessageType getType(){
         return type;
     }
     
+    /**
+     * Serializes this to a JsonObject so
+     * it can be turned into a JSON string,
+     * then sent to a client.
+     * 
+     * @return a JSON representation of this. 
+     */
     @Override
     public JsonObject serializeJson() {
         JsonObjectBuilder ret = Json.createObjectBuilder();
@@ -44,7 +69,8 @@ public class ServerMessage implements JsonSerialable {
         return ret.build();
     }
     
-    public String toJsonString(){
+    
+    public final String toJsonString(){
         return serializeJson().toString();
     }
     
@@ -66,5 +92,10 @@ public class ServerMessage implements JsonSerialable {
             obj.getString("body"),
             ServerMessageType.fromString(obj.getString("type"))
         );
+    }
+    
+    public static ServerMessage deserializeJson(String s){
+        JsonObject obj = Json.createReader(new StringReader(s)).readObject();
+        return deserializeJson(obj);
     }
 }

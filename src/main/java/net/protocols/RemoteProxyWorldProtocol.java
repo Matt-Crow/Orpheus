@@ -31,7 +31,7 @@ public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtoc
      * @param sm 
      */
     private void receiveWorldUpdate(ServerMessagePacket sm){
-        WorldContent content = (WorldContent)SerialUtil.fromSerializedString(sm.getBody());
+        WorldContent content = (WorldContent)SerialUtil.fromSerializedString(sm.getMessage().getBody());
         proxy.setContent(content);
         content.setShell(proxy);
         //User.getUser().linkToRemotePlayerInWorld(proxy);
@@ -57,7 +57,7 @@ public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtoc
     @Override
     public boolean receiveMessage(ServerMessagePacket sm, OrpheusServer forServer) {
         boolean handled = true;
-        switch(sm.getType()){
+        switch(sm.getMessage().getType()){
             case WORLD_UPDATE:
                 receiveWorldUpdate(sm);
                 break;

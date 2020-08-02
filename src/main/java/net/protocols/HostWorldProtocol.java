@@ -37,13 +37,13 @@ public class HostWorldProtocol extends AbstractOrpheusServerNonChatProtocol{
         //if(player != null && player instanceof HumanPlayer){
             //AbstractPlayerControls.decode((HumanPlayer) player, sm.getBody());
         //}
-        AbstractPlayerControls.decode(hostWorld, sm.getBody());
+        AbstractPlayerControls.decode(hostWorld, sm.getMessage().getBody());
     }
     
     @Override
     public boolean receiveMessage(ServerMessagePacket sm, OrpheusServer forServer) {
         boolean handled = true;
-        switch(sm.getType()){
+        switch(sm.getMessage().getType()){
             case CONTROL_PRESSED:
                 receiveControl(sm);
                 break;

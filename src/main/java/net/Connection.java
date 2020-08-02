@@ -48,9 +48,9 @@ public class Connection {
     
     // blocks until the client writes something
     public final ServerMessagePacket readServerMessage() throws IOException{
-        ServerMessagePacket deser = ServerMessagePacket.deserializeJson(receivingIp, fromClient.readLine());
-        //deser.setSendingIp(receivingIp);
-        return deser;
+        ServerMessage deser = ServerMessage.deserializeJson(fromClient.readLine());
+        
+        return new ServerMessagePacket(receivingIp, deser);
     }
     
     public void close(){

@@ -35,13 +35,13 @@ public class ChatProtocol extends AbstractOrpheusServerProtocol{
     }
     
     private void receiveChatMsg(ServerMessagePacket sm){
-        widget.logLocal(String.format("(%s): %s", sm.getSender().getName(), sm.getBody()));
+        widget.logLocal(String.format("(%s): %s", sm.getSender().getName(), sm.getMessage().getBody()));
     }
     
     @Override
     public boolean receiveMessage(ServerMessagePacket sm, OrpheusServer forServer) {
         boolean handled = true;
-        switch(sm.getType()){
+        switch(sm.getMessage().getType()){
             case CHAT:
                 receiveChatMsg(sm);
                 break;
