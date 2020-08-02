@@ -74,6 +74,7 @@ public class Canvas extends JPanel{
      */
     public int getMouseX(){
         Point p = getMousePosition(); //returns mouse position on this, or null if it isn't on this
+        // note: when debugging, getMousePosition() will almost always return null
         return (int) (((p == null) ? 0 : (p.x - translateX) / zoom));
     }
     
@@ -88,6 +89,7 @@ public class Canvas extends JPanel{
      */
     public int getMouseY(){
         Point p = getMousePosition();
+        // note: when debugging, getMousePosition() will almost always return null
         return (int)(((p == null) ? 0 : (p.y - translateY)) / zoom);
     }
     

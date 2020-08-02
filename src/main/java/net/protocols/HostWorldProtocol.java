@@ -29,19 +29,18 @@ public class HostWorldProtocol extends AbstractOrpheusServerNonChatProtocol{
     public void doApplyProtocol() {}
     
     private void receiveControl(ServerMessagePacket sm){
-        // extract HumanPlayer ID from sm
-        //String id = sm.getSender().getRemotePlayerId(); // is this set on the host's side?
-        // find their player in the WorldContent (if they are alive)
-        //AbstractPlayer player = hostWorld.getPlayerTeam().getMemberById(id);
-        // apply the control to that player
-        //if(player != null && player instanceof HumanPlayer){
-            //AbstractPlayerControls.decode((HumanPlayer) player, sm.getBody());
-        //}
         AbstractPlayerControls.decode(hostWorld, sm.getMessage().getBody());
     }
     
     @Override
     public boolean receiveMessage(ServerMessagePacket sm, OrpheusServer forServer) {
+        /*
+        For some reason I cannot fathom, this often fails to receive messages containing
+        remote user's clicking to move. I've checked, and the remote user is sending the
+        messages, and this always handles the clicks when this receives the message, but
+        the server doesn't always receive those messages. Odd how that only happens with
+        movement.
+        */
         boolean handled = true;
         switch(sm.getMessage().getType()){
             case CONTROL_PRESSED:

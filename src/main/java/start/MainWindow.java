@@ -48,7 +48,11 @@ public class MainWindow extends JFrame{
             @Override
             public void windowClosing(WindowEvent e) {
                 //CombatLog.displayLog();
-                OrpheusServer.getInstance().shutDown();
+                try{
+                    OrpheusServer.getInstance().shutDown();
+                } catch(Exception ex){
+                    ex.printStackTrace();
+                }
             }
         });
         
