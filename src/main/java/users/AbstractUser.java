@@ -1,6 +1,8 @@
 package users;
 
+import java.math.BigDecimal;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import javax.json.Json;
 import javax.json.JsonException;
 import javax.json.JsonObject;
@@ -37,8 +39,12 @@ public abstract class AbstractUser implements JsonSerialable {
      * Serializes this user into JSON. Note that both LocalUsers
      * and RemoteUsers are serialized the same way
      * 
-     * This does not serialize the user's IP address, as that is
-     * set by the server when it receives a socket.
+     * This may serialize the IP address of this
+     * user, iff the IP address has been set. I
+     * need this for the WaitingRoomClientProtocol
+     * so it can receive the IP address when deserializing
+     * the World Init message.
+     * 
      * @return the User, serialized into JSON 
      */
     @Override
@@ -46,6 +52,11 @@ public abstract class AbstractUser implements JsonSerialable {
         JsonObjectBuilder objBuild = Json.createObjectBuilder();
         objBuild.add("type", "user");
         objBuild.add("name", userName);
+        try{
+            objBuild.add("ip address", getIpAddress().getHostAddress());
+        } catch (NullPointerException ex){
+            
+        }
         return objBuild.build();
     }
     
@@ -65,6 +76,15 @@ public abstract class AbstractUser implements JsonSerialable {
             throw new JsonException("not a user");
         }
         
-        return new RemoteUser(obj.getString("name"));
+        RemoteUser u = new RemoteUser(obj.getString("name"));
+        if(obj.containsKey("ip address")){
+            try {
+                u.setIpAddress(InetAddress.getByName(obj.getString("ip address")));
+            } catch (UnknownHostException ex) {
+                ex.printStackTrace();
+            }
+        }
+        
+        return u;
     }
 }

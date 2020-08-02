@@ -16,7 +16,6 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.json.JsonException;
 import net.messages.ServerMessage;
 import net.protocols.ChatProtocol;
 import serialization.JsonUtil;

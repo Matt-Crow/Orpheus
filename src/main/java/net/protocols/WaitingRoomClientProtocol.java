@@ -15,6 +15,7 @@ import gui.pages.worldSelect.AbstractWaitingRoom;
 import gui.pages.worldPlay.WorldCanvas;
 import gui.pages.worldPlay.WorldPage;
 import net.messages.ServerMessage;
+import users.RemoteUser;
 import world.RemoteProxyWorld;
 import world.WorldContent;
 
@@ -46,9 +47,17 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
         JsonUtil.verify(obj, "team");
         obj.getJsonArray("team").stream().forEach((jv)->{
             if(jv.getValueType().equals(JsonValue.ValueType.OBJECT)){
-                addToTeamProto(AbstractUser.deserializeJson((JsonObject)jv));
+                AbstractUser u = AbstractUser.deserializeJson((JsonObject)jv);
+                try{
+                    u.getIpAddress();
+                } catch (NullPointerException ex){
+                    // I think the only user without their IP address set is the host, who sends this message, so...
+                    ((RemoteUser)u).setIpAddress(sm.getSendingIp());
+                }
+                addToTeamProto(u);
             }
         });
+        addToTeamProto(LocalUser.getInstance()); // sm doesn't contain this user, so I need to manually add myself to the displays
     }
     
     private void receiveUpdate(ServerMessagePacket sm){
