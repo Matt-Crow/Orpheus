@@ -8,7 +8,9 @@ A video game designed to give me practice with Java.
 * Because this is an open source project, 
 USERS MAY MODIFY THEIR VERSION OF THE GAME, since multiplayer requires the host send their game contents to clients via an ObjectOutputStream,
 HOSTS MAY SEND POTENTIALLY DANGEROUS CODE TO CLIENTS, WHICH WILL BE RUN ON THEIR OWN MACHINES. As such, users should
-ONLY CONNECT TO PEOPLE THEY TRUST.
+ONLY CONNECT TO PEOPLE THEY TRUST. Maybe. I don't know enough about serialization to know for sure.
+https://stackoverflow.com/questions/37387703/how-to-ensure-safety-when-reading-objects-from-objectinputstream
+
 
 ## What I Learned
 
