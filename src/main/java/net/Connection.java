@@ -16,7 +16,7 @@ import users.AbstractUser;
  * @author Matt
  */
 public class Connection {
-    private AbstractUser user; //the user playing Orpheus on the machine this connects to
+    private AbstractUser remoteUser; //the remoteUser playing Orpheus on the machine this connects to
     private final InetAddress receivingIp;
     private final Socket clientSocket;    
     private final BufferedReader fromClient;
@@ -34,7 +34,7 @@ public class Connection {
         boolean success = false;
         
         try {
-            // need to make sure the JsonString contains no newlines
+            // do I need to make sure the JsonString contains no newlines?
             toClient.write(sm.toJsonString());
             toClient.write('\n');
             toClient.flush();
@@ -48,6 +48,7 @@ public class Connection {
     
     // blocks until the client writes something
     public final ServerMessagePacket readServerMessage() throws IOException{
+        // This works, so I guess toJsonString excapes newlines or something?
         ServerMessage deser = ServerMessage.deserializeJson(fromClient.readLine());
         
         return new ServerMessagePacket(receivingIp, deser);
@@ -74,15 +75,15 @@ public class Connection {
         }
     }
     
-    public void setUser(AbstractUser u){
-        user = u;
+    public void setRemoteUser(AbstractUser u){
+        remoteUser = u;
     }
-    public AbstractUser getUser(){
-        return user;
+    public AbstractUser getRemoteUser(){
+        return remoteUser;
     }
     
     public void displayData(){
         System.out.print(clientSocket.getInetAddress().getHostAddress() + ": ");
-        System.out.println((user == null) ? "---" : user.getName());
+        System.out.println((remoteUser == null) ? "---" : remoteUser.getName());
     }
 }

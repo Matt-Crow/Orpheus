@@ -13,7 +13,7 @@ import users.AbstractUser;
  * @author Matt Crow
  */
 public class ServerMessagePacket {
-    private final InetAddress ipAddr;
+    private final InetAddress sendingIpAddress;
     private AbstractUser fromUser;
     private final ServerMessage containedMessage;
     /**
@@ -23,7 +23,7 @@ public class ServerMessagePacket {
      * @param packetContents the message contained herein
      */
     public ServerMessagePacket(InetAddress ipAddress, ServerMessage packetContents){
-        ipAddr = ipAddress;
+        sendingIpAddress = ipAddress;
         containedMessage = packetContents;
     }
     
@@ -32,7 +32,7 @@ public class ServerMessagePacket {
     }
     
     public final InetAddress getSendingIp(){
-        return ipAddr;
+        return sendingIpAddress;
     }
     
     /**
@@ -50,6 +50,6 @@ public class ServerMessagePacket {
     
     @Override
     public String toString(){
-        return String.format("ServerMessagePacket from %s (%s):\n%s\nEND OF MESSAGE", ipAddr.toString(), (fromUser == null) ? "Unknown User" : fromUser.getName(), containedMessage.toString());
+        return String.format("ServerMessagePacket from %s (%s):\n%s\nEND OF MESSAGE", sendingIpAddress.toString(), (fromUser == null) ? "Unknown User" : fromUser.getName(), containedMessage.toString());
     }
 }

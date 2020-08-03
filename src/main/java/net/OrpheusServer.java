@@ -127,7 +127,7 @@ public class OrpheusServer {
         return ips;
     }
     
-    public final List<String> getValidIps(){
+    public final List<String> getIpList(){
         return validIpAddresses.stream().map((i)->i.getHostAddress()).collect(Collectors.toList());
     }
     
@@ -224,10 +224,6 @@ public class OrpheusServer {
     
     public boolean isStarted(){
         return isStarted;
-    }
-    
-    public ServerSocket getServerSocket(){
-        return server;
     }
         
     private void startConnListener(){
@@ -356,7 +352,7 @@ public class OrpheusServer {
     
     private void receiveJoin(ServerMessagePacket sm){
         InetAddress ip = sm.getSendingIp();
-        if(connections.containsKey(ip) && connections.get(ip).getUser() != null){
+        if(connections.containsKey(ip) && connections.get(ip).getRemoteUser() != null){
             log("already connected");
         } else if(connections.containsKey(ip)){
             //connected to IP, but no user data set yet
@@ -366,7 +362,7 @@ public class OrpheusServer {
             }
             
             sm.setSender(sender);
-            connections.get(ip).setUser(sender);
+            connections.get(ip).setRemoteUser(sender);
             logConnections();
         } else {
             //not connected, no user data
@@ -377,7 +373,7 @@ public class OrpheusServer {
                     ((RemoteUser)sender).setIpAddress(sm.getSendingIp());
                 }
                 sm.setSender(sender);
-                connections.get(ip).setUser(sender);
+                connections.get(ip).setRemoteUser(sender);
                 logConnections();
             } catch (IOException ex){
                 ex.printStackTrace();
@@ -397,7 +393,7 @@ public class OrpheusServer {
     
     public final void receiveMessage(ServerMessagePacket sm){
         if(connections.containsKey(sm.getSendingIp())){
-           sm.setSender(connections.get(sm.getSendingIp()).getUser()); 
+           sm.setSender(connections.get(sm.getSendingIp()).getRemoteUser()); 
         } else {
            log("I don't recognize " + sm.getSendingIp());
         }

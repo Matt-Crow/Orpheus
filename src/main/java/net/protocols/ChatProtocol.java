@@ -28,7 +28,7 @@ public class ChatProtocol extends AbstractOrpheusServerProtocol{
 
     @Override
     public void doApplyProtocol() {
-        List<String> ips = OrpheusServer.getInstance().getValidIps();
+        List<String> ips = OrpheusServer.getInstance().getIpList();
         widget.logLocal("Initialized chat server on the following addresses:");
         ips.forEach((i)->widget.logLocal("* " + i));
         widget.logLocal("Have other people use the /connect command with one of these addresses to connect.");
