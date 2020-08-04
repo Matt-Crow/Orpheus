@@ -1,7 +1,7 @@
 package statuses;
 
-import actions.Terminable;
-import actions.TerminateListener;
+import events.Terminable;
+import events.TerminateListener;
 import entities.AbstractPlayer;
 import java.io.Serializable;
 import util.Number;

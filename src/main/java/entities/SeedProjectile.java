@@ -1,6 +1,6 @@
 package entities;
 
-import controllers.Master;
+import util.Settings;
 import customizables.actives.ElementalActive;
 
 public class SeedProjectile extends Projectile{
@@ -13,8 +13,8 @@ public class SeedProjectile extends Projectile{
 	}
 	
 	public void explode(){
-		for(int i = 0; i < Master.TICKSTOROTATE; i++){
-			getAttack().getUser().spawn(new AOEProjectile(useId, getX(), getY(), 360 * i / Master.TICKSTOROTATE, 5, getUser(), getAttack()));
+		for(int i = 0; i < Settings.TICKSTOROTATE; i++){
+			getAttack().getUser().spawn(new AOEProjectile(useId, getX(), getY(), 360 * i / Settings.TICKSTOROTATE, 5, getUser(), getAttack()));
         }
 		canExplode = false;
 	}

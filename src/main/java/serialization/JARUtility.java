@@ -1,6 +1,6 @@
 package serialization;
 
-import gui.FileChooserUtil;
+import gui.components.FileChooserUtil;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;

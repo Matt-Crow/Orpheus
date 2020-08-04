@@ -1,6 +1,6 @@
 package entities;
 
-import controllers.Master;
+import util.Settings;
 import java.awt.Color;
 import java.awt.Graphics;
 
@@ -25,7 +25,7 @@ public class Particle extends AbstractEntity{
     
     @Override
 	public void draw(Graphics g){
-        if(!Master.DISABLEPARTICLES){
+        if(!Settings.DISABLEPARTICLES){
             int r = getRadius();
             g.setColor(color);
             g.fillRect(getX() - r, getY() - r, r * 2, r * 2);

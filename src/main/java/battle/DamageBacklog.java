@@ -2,7 +2,7 @@ package battle;
 
 import customizables.characterClass.CharacterStatName;
 import entities.AbstractPlayer;
-import controllers.Master;
+import util.Settings;
 import java.io.Serializable;
 
 /**
@@ -37,7 +37,7 @@ public final class DamageBacklog implements Serializable{
      */
 	public DamageBacklog(AbstractPlayer register, int minLifespan){
 		registeredTo = register;
-		baseFilter = 1.0 / Master.seconds(minLifespan);
+		baseFilter = 1.0 / Settings.seconds(minLifespan);
 	}
     
     public final void init(){
@@ -115,7 +115,7 @@ public final class DamageBacklog implements Serializable{
 		}
 	}
 	public void heal(int amount){
-		if(!((Master.DISABLEHEALING) || (remHP == maxHP))){
+		if(!((Settings.DISABLEHEALING) || (remHP == maxHP))){
 			remHP += amount;
 			if(remHP > maxHP){
 				remHP = maxHP;
@@ -144,7 +144,7 @@ public final class DamageBacklog implements Serializable{
 		secondaryFilter = 1.0;
 		
 		timeSinceLastHeal += 1;
-		if(timeSinceLastHeal >= Master.seconds(1)){
+		if(timeSinceLastHeal >= Settings.seconds(1)){
 			timeSinceLastHeal = 0;
 			healPerc(3);
 		}

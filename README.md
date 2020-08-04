@@ -2,6 +2,16 @@
 
 A video game designed to give me practice with Java.
 
+## Multiplayer WARNINGS
+* Multiplayer only seems to work within a single network, so the program doesn't seem able to connect to users outside of its own LAN (this is likely because of routers hiding IP addresses).
+* Some computers have issues starting or joining a game. I've had limited success with Apple computers running this project: some just can't receive clients, and some just can't join games. Once again, I don't know enough about networks to know why this happens.
+* Because this is an open source project, 
+USERS MAY MODIFY THEIR VERSION OF THE GAME, since multiplayer requires the host send their game contents to clients via an ObjectOutputStream,
+HOSTS MAY SEND POTENTIALLY DANGEROUS CODE TO CLIENTS, WHICH WILL BE RUN ON THEIR OWN MACHINES. As such, users should
+ONLY CONNECT TO PEOPLE THEY TRUST. Maybe. I don't know enough about serialization to know for sure.
+https://stackoverflow.com/questions/37387703/how-to-ensure-safety-when-reading-objects-from-objectinputstream
+
+
 ## What I Learned
 
 I've learned so much from doing this project, far more than what I would have just from watching tutorials:

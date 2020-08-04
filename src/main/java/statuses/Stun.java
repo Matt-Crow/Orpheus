@@ -1,16 +1,17 @@
 package statuses;
 
-import actions.*;
+import events.OnUpdateEvent;
+import events.OnUpdateListener;
 import util.Number;
 import entities.AbstractPlayer;
-import controllers.Master;
+import util.Settings;
 import java.util.function.UnaryOperator;
 
 /**
  * The Stun status decreases an AbstractEntity's movement speed
  */
 public class Stun extends AbstractStatus implements OnUpdateListener{
-    private static final UnaryOperator<Integer> CALC = (i)->{return Master.seconds(Number.minMax(1, i, 3));};
+    private static final UnaryOperator<Integer> CALC = (i)->{return Settings.seconds(Number.minMax(1, i, 3));};
     /**
      * The Stun status will decrease an AbstractEntity's movement speed
      * @param lv 1-3, decreasing the AbstractEntity's movement speed by 25% per level.
@@ -28,7 +29,7 @@ public class Stun extends AbstractStatus implements OnUpdateListener{
     
     @Override
 	public String getDesc(){
-		return "Stun, lowering the inflicted's movement speed by " + (25 * getIntensityLevel()) + "% for " + Master.framesToSeconds(getMaxUses()) + " seconds";
+		return "Stun, lowering the inflicted's movement speed by " + (25 * getIntensityLevel()) + "% for " + Settings.framesToSeconds(getMaxUses()) + " seconds";
 	}
 
     @Override

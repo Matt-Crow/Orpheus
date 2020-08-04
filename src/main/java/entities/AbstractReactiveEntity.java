@@ -1,6 +1,6 @@
 package entities;
 
-import actions.ActionRegister;
+import events.ActionRegister;
 
 /**
  * The AbstractReactiveEntity acts as a bridge between

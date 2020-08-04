@@ -1,8 +1,8 @@
 package statuses;
 
-import actions.OnUpdateEvent;
-import actions.OnUpdateListener;
-import controllers.Master;
+import events.OnUpdateEvent;
+import events.OnUpdateListener;
+import util.Settings;
 import entities.AbstractPlayer;
 import java.util.function.UnaryOperator;
 
@@ -11,7 +11,7 @@ import java.util.function.UnaryOperator;
  * @author Matt
  */
 public class Burn  extends AbstractStatus implements OnUpdateListener{
-    private static final UnaryOperator<Integer> CALC = (i)->{return Master.seconds(util.Number.minMax(1, i, 3) * 2 + 1);};
+    private static final UnaryOperator<Integer> CALC = (i)->{return Settings.seconds(util.Number.minMax(1, i, 3) * 2 + 1);};
     
     public Burn(int lv, int uses){
         super(StatusName.BURN, lv, uses, CALC);

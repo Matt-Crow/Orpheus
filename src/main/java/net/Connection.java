@@ -1,65 +1,68 @@
 package net;
 
-import controllers.User;
+import net.messages.ServerMessagePacket;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.InetAddress;
 import java.net.Socket;
+import net.messages.ServerMessage;
+import users.AbstractUser;
 
 /**
  *
  * @author Matt
  */
 public class Connection {
-    private User user; //the user playing Orpheus on the machine this connects to
-    private final Socket clientSocket;
-    private final ObjectOutputStream objOut;
-    private final ObjectInputStream objIn;
+    private AbstractUser remoteUser; //the remoteUser playing Orpheus on the machine this connects to
+    private final InetAddress receivingIp;
+    private final Socket clientSocket;    
+    private final BufferedReader fromClient;
+    private final BufferedWriter toClient;
     
     public Connection(Socket s) throws IOException{
+        System.out.println(String.format("(Connection constructor) Creating Connection(Socket(%s)) in Thread %s", s.getInetAddress().getHostAddress(), Thread.currentThread().toString()));
+        receivingIp = s.getInetAddress();
         clientSocket = s;
-        objOut = new ObjectOutputStream(s.getOutputStream());
-        objIn = new ObjectInputStream(s.getInputStream());
+        toClient = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+        fromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
     }
     
-    public synchronized boolean writeToClient(String s){
+    public final boolean writeServerMessage(ServerMessage sm){
         boolean success = false;
-        try{
-            objOut.writeObject(s);
-            objOut.flush();
+        
+        try {
+            // do I need to make sure the JsonString contains no newlines?
+            toClient.write(sm.toJsonString());
+            toClient.write('\n');
+            toClient.flush();
             success = true;
-        } catch(IOException ex){
+        } catch (IOException ex) {
             ex.printStackTrace();
-            System.err.println("Failed to write this to client: ");
-            System.err.println(s);
-        } catch(ArrayIndexOutOfBoundsException ex){
-            ex.printStackTrace();
-            System.err.println("Too big?");
-            System.err.println(s);
         }
-        if(!success){
-            try {
-                objOut.reset();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
+        
         return success;
     }
     
-    public String readFromClient() throws IOException, ClassNotFoundException{
-        return (String)objIn.readObject();
+    // blocks until the client writes something
+    public final ServerMessagePacket readServerMessage() throws IOException{
+        // This works, so I guess toJsonString excapes newlines or something?
+        ServerMessage deser = ServerMessage.deserializeJson(fromClient.readLine());
+        
+        return new ServerMessagePacket(receivingIp, deser);
     }
     
     public void close(){
         try {
-            objOut.close();
+            toClient.close();
         } catch (IOException ex) {
             System.err.println("couldn't close output");
             ex.printStackTrace();
         }
         try {
-            objIn.close();
+            fromClient.close();
         } catch (IOException ex) {
             System.err.println("couldn't close input");
             ex.printStackTrace();
@@ -72,15 +75,15 @@ public class Connection {
         }
     }
     
-    public void setUser(User u){
-        user = u;
+    public void setRemoteUser(AbstractUser u){
+        remoteUser = u;
     }
-    public User getUser(){
-        return user;
+    public AbstractUser getRemoteUser(){
+        return remoteUser;
     }
     
     public void displayData(){
         System.out.print(clientSocket.getInetAddress().getHostAddress() + ": ");
-        System.out.println((user == null) ? "---" : user.getName());
+        System.out.println((remoteUser == null) ? "---" : remoteUser.getName());
     }
 }

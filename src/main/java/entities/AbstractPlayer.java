@@ -2,14 +2,15 @@ package entities;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import ai.Path;
-import ai.PathInfo;
+import controls.ai.Path;
+import controls.ai.PathInfo;
 import battle.*;
 import statuses.AbstractStatus;
-import controllers.Master;
-import controllers.World;
+import util.Settings;
+import world.WorldContent;
 import customizables.actives.ElementalActive;
 import customizables.characterClass.CharacterStatName;
+import gui.graphics.Tile;
 import static java.lang.System.out;
 import java.util.Arrays;
 import util.Direction;
@@ -50,7 +51,7 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
 	
 	public AbstractPlayer(String n, int minLifeSpan){
 		super();
-        setSpeed(Master.UNITSIZE * 5 / Master.FPS);
+        setSpeed(Tile.TILE_SIZE * 5 / Settings.FPS);
 		name = n;
         color = Color.black;
         
@@ -62,7 +63,7 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
         knockbackMag = 0;
         knockbackDur = 0;
         
-        slash = (ElementalActive)Master.getDataSet().getActiveByName("Slash");
+        slash = (ElementalActive)Settings.getDataSet().getActiveByName("Slash");
 		slash.setUser(this);
         log = new DamageBacklog(this, minLifeSpan);
         path = null;
@@ -105,7 +106,7 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
 	}
     
     public void setPath(int x, int y){
-        World w = getWorld();
+        WorldContent w = getWorld();
         setPath(w.getMap().findPath(getX(), getY(), x, y));
     }
     public void setPath(Path p){
@@ -275,8 +276,14 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
 	
     @Override
 	public void draw(Graphics g){
-        int w = getWorld().getCanvas().getWidth();
-		int h = getWorld().getCanvas().getHeight();
+        int w = getWorld()
+            .getShell()
+            .getCanvas()
+            .getWidth();
+		int h = getWorld()
+            .getShell()
+            .getCanvas()
+            .getHeight();
 		int r = getRadius();
         
         if(path != null){

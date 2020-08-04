@@ -10,7 +10,7 @@ import customizables.passives.OnBeHitPassive;
 import customizables.passives.OnHitPassive;
 import customizables.passives.ThresholdPassive;
 import entities.ParticleType;
-import graphics.CustomColors;
+import gui.graphics.CustomColors;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;

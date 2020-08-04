@@ -3,10 +3,9 @@ package entities;
 import java.awt.Graphics;
 import util.Direction;
 import battle.Team;
-import actions.Terminable;
-import actions.TerminateListener;
-import controllers.Master;
-import controllers.World;
+import events.Terminable;
+import events.TerminateListener;
+import world.WorldContent;
 import java.io.Serializable;
 import util.SafeList;
 
@@ -34,13 +33,13 @@ public abstract class AbstractEntity implements Serializable, Terminable{
 	
     private final SafeList<TerminateListener> terminateListeners; //you just can't wait for me to die, can you!
     
-    private World inWorld; //the world this is currently in
+    private WorldContent inWorld; //the world this is currently in
     
 	public final String id;
 	private static int nextId = 0;
     
 	public AbstractEntity(){
-		id = Master.SERVER.getIpAddr() + "#" + nextId;
+		id = "#" + nextId;
         inWorld = null;
         radius = 50;
         terminateListeners = new SafeList<>();
@@ -63,14 +62,14 @@ public abstract class AbstractEntity implements Serializable, Terminable{
         return "Entity #" + id;
     }
     
-    public void setWorld(World w){
-        if(w != null){
-            inWorld = w;
-        } else {
+    public void setWorld(WorldContent w){
+        if(w == null){
             throw new NullPointerException();
+        } else {
+            inWorld = w;
         }
     }
-    public World getWorld(){
+    public WorldContent getWorld(){
         return inWorld;
     }
     

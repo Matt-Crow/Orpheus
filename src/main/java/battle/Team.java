@@ -1,7 +1,6 @@
 package battle;
 
-import controllers.Master;
-import controllers.World;
+import world.WorldContent;
 import java.awt.Color;
 import java.util.ArrayList;
 import entities.AbstractPlayer;
@@ -13,6 +12,7 @@ import java.io.Serializable;
 import java.util.function.Consumer;
 import static java.lang.System.out;
 import java.util.HashMap;
+import users.LocalUser;
 import util.SafeList;
 
 /**
@@ -37,7 +37,7 @@ public class Team extends SafeList<AbstractEntity> implements Serializable{
 		super();
         name = n;
 		color = c;
-		id = Master.SERVER.getIpAddr() + ": " + nextId;
+		id = "#" + nextId;
 		nextId++;
         roster = new HashMap<>();
         membersRem = new ArrayList<>();
@@ -90,7 +90,7 @@ public class Team extends SafeList<AbstractEntity> implements Serializable{
 		return t;
 	}
     
-	public void init(World w){
+	public void init(WorldContent w){
         membersRem.clear();
         clear();
         roster.values().forEach((p) -> {
@@ -107,7 +107,7 @@ public class Team extends SafeList<AbstractEntity> implements Serializable{
      * @param p
      * @param w 
      */
-    public void initPlayer(AbstractPlayer p, World w){
+    public void initPlayer(AbstractPlayer p, WorldContent w){
        w.spawnIntoWorld(p);
        p.doInit();
        membersRem.add(p);
@@ -197,7 +197,7 @@ public class Team extends SafeList<AbstractEntity> implements Serializable{
         out.println("TEAM: " + name + "(ID: " + id + ")");
         out.println("Roster: ");
         roster.values().stream().forEach((AbstractPlayer p)->{
-            if(p.equals(Master.getUser().getPlayer())){
+            if(p.id.equals(LocalUser.getInstance().getRemotePlayerId())){
                 out.print("*");
             }
             out.println(p.getName() + "(ID: " + p.id + ")");

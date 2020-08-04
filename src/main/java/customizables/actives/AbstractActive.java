@@ -3,7 +3,7 @@ package customizables.actives;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import controllers.Master;
+import util.Settings;
 import customizables.AbstractCustomizable;
 
 /**
@@ -39,7 +39,7 @@ public abstract class AbstractActive extends AbstractCustomizable{
             g.fillRect(x, y, w, h);
             if(isOnCooldown()){
                 g.setColor(Color.red);
-                g.drawString("On cooldown: " + Master.framesToSeconds(getFramesUntilUse()), x + 10, y + 20);
+                g.drawString("On cooldown: " + Settings.framesToSeconds(getFramesUntilUse()), x + 10, y + 20);
             }
         }
     }

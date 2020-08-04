@@ -1,7 +1,7 @@
 package util;
 
-import actions.Terminable;
-import actions.TerminateListener;
+import events.Terminable;
+import events.TerminateListener;
 import java.io.Serializable;
 
 /**
@@ -16,7 +16,7 @@ import java.io.Serializable;
  * @param <T> the type of element this Node will contain
  */
 public class Node<T> implements Serializable, TerminateListener{
-    private transient final SafeList<T> container; 
+    private final SafeList<T> container; 
     private transient volatile Node<T> prev;
     private transient volatile Node<T> next;
     private final T val;

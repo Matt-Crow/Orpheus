@@ -1,7 +1,7 @@
 package customizables.passives;
 
-import actions.OnUpdateEvent;
-import actions.OnUpdateListener;
+import events.OnUpdateEvent;
+import events.OnUpdateListener;
 import entities.AbstractPlayer;
 import util.Number;
 

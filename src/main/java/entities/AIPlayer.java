@@ -1,6 +1,6 @@
 package entities;
 
-import ai.PlayerAI;
+import controls.ai.PlayerAI;
 import customizables.characterClass.CharacterStatName;
 
 /**
