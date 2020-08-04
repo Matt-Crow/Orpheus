@@ -3,6 +3,8 @@ In it's current state, the program works, multiplayer is just a little... iffy. 
 Am I happy with where Orpheus is? No. I'll never be happy with it, not until it's perfect, and trying to perfect it is a wormhole I don't want to get sucked into.
 I'll definitely work on it more (time permitting), but I'd like to make another Java game, one less chaotic and difficult to balance than this.
 
+I like multiplayer enough, so I'll keep it around. Maybe someday, I'll have enough experience with socket programming to make it work better.
+
 With that said, their are many changes that I want to make next time I have a chance to work on this:
 * Move to 3-D graphics?
 * Player controls...
