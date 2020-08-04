@@ -9,3 +9,7 @@ With that said, their are many changes that I want to make next time I have a ch
 * Plugin customization system (players create their own Java classes)
 * I'll keep multiplayer for now. Yes, it is held together with duck tape, yes, it is horrendously buggy, but at least it's mine.
 * Standard application folder stuff and logging, like what I used in ARCDHWebAutomator
+* Change player and team IDs to ints or long longs
+* General cleanup and reorganization
+* Redo GUI
+* Security manager for multiplayer
