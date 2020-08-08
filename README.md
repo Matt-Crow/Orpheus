@@ -5,6 +5,7 @@ A video game designed to give me practice with Java.
 ## Multiplayer WARNINGS
 * Multiplayer only seems to work within a single network, so the program doesn't seem able to connect to users outside of its own LAN (this is likely because of routers hiding IP addresses).
 * Some computers have issues starting or joining a game. I've had limited success with Apple computers running this project: some just can't receive clients, and some just can't join games. Once again, I don't know enough about networks to know why this happens.
+* Don't share your IP address with strangers! Since this project seems to not work across networks, you should only need your private IP address for communicating within your network.
 * Because this is an open source project, 
 USERS MAY MODIFY THEIR VERSION OF THE GAME, since multiplayer requires the host send their game contents to clients via an ObjectOutputStream,
 HOSTS MAY SEND POTENTIALLY DANGEROUS CODE TO CLIENTS, WHICH WILL BE RUN ON THEIR OWN MACHINES. As such, users should
