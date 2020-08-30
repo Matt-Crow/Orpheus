@@ -10,6 +10,14 @@ import entities.SeedProjectile;
 import gui.graphics.CustomColors;
 import gui.graphics.Tile;
 
+/**
+ * When extending this class, you will want to overide the following methods:
+ * <ul>
+ * <li>copy</li>
+ * <li>doUse</li>
+ * </ul>
+ * @author Matt Crow
+ */
 public class ElementalActive extends AbstractActive{
 	private final int arcLength;
     private final int projectileRange;
@@ -69,6 +77,12 @@ public class ElementalActive extends AbstractActive{
         colors = new CustomColors[]{CustomColors.black};
 	}
     
+    /**
+     * Returns a copy of this. Note that subclasses
+     * should override this method.
+     * 
+     * @return a deep copy of this. 
+     */
     @Override
 	public ElementalActive copy(){
 		ElementalActive copy = new ElementalActive(
@@ -138,7 +152,7 @@ public class ElementalActive extends AbstractActive{
      * Creates a projectile at this' user's coordinates
      * @param facingDegrees the direction the new projectile will travel
      */
-    private void spawnProjectile(int facingDegrees){
+    protected void spawnProjectile(int facingDegrees){
         SeedProjectile p = createProjectile();
         p.setFacing(facingDegrees);
         getUser().spawn(p);    
@@ -148,7 +162,7 @@ public class ElementalActive extends AbstractActive{
      * Generates an arc of projectiles from this' user
      * @param arcDegrees the number of degrees in the arc
      */
-    private void spawnArc(int arcDegrees){
+    protected void spawnArc(int arcDegrees){
         int start = getUser().getDir().getDegrees() - arcDegrees / 2;
         // spawn projectiles every 15 degrees
         for(int angleOffset = 0; angleOffset < arcDegrees; angleOffset += 15){
@@ -186,9 +200,19 @@ public class ElementalActive extends AbstractActive{
         applyEffect(p);
     }
     
-    @Override
-    public void use(){
+    /**
+     * Performs the active ability.
+     * Subclasses may want to override
+     * this if they want any 
+     * special custom effects.
+     */
+    protected void doUse(){
         spawnArc(arcLength);
+    }
+    
+    @Override
+    public final void use(){
+        doUse();
         nextUseId++;
     }
 	

@@ -50,6 +50,9 @@ public class MainWindow extends JFrame{
                 //CombatLog.displayLog();
                 try{
                     OrpheusServer.getInstance().shutDown();
+                } catch(NullPointerException ex){
+                    // server wasn't started in the first place
+                    System.out.println("Got this error, likely because the server wasn't started, which isn't a problem: " + ex.getMessage());
                 } catch(Exception ex){
                     ex.printStackTrace();
                 }

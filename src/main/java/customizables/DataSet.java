@@ -4,6 +4,7 @@ import customizables.actives.AbstractActive;
 import customizables.actives.BoostActive;
 import customizables.actives.BoulderToss;
 import customizables.actives.ElementalActive;
+import customizables.actives.FlameCharge;
 import customizables.characterClass.CharacterClass;
 import customizables.passives.AbstractPassive;
 import customizables.passives.OnBeHitPassive;
@@ -190,6 +191,7 @@ public final class DataSet {
 		s.setParticleType(ParticleType.SHEAR);
         
 		ElementalActive bt = new BoulderToss();
+        ElementalActive fc = new FlameCharge();
 		
         ElementalActive eq = new ElementalActive("Earthquake", 1, 0, 2, 5, 1);
 		eq.setParticleType(ParticleType.BURST);
@@ -236,6 +238,7 @@ public final class DataSet {
 		addActives(new AbstractActive[]{
 			s,
 			bt,
+            fc,
 			eq,
 			fof,
 			fb,
@@ -319,7 +322,8 @@ public final class DataSet {
             new Build("Default Earth", "Earth", "Boulder Toss", "Warrior's Stance", "Earthquake", "Toughness", "Retaliation", "Crippling Hits"),
             new Build("Default Fire", "Fire", "Fireball", "Fields of Fire", "Burning Rage", "Escapist", "Burning Edge", "Bracing"),
             new Build("Default Water", "Water", "Waterbolt", "Whirlpool", "Healing Rain", "Sharpen", "Bracing", "Leechhealer"),
-            new Build("Default Air", "Air", "Boreus", "Zephyrus", "Speed Test", "Momentum", "Sharpen", "Leechhealer")
+            new Build("Default Air", "Air", "Boreus", "Zephyrus", "Speed Test", "Momentum", "Sharpen", "Leechhealer"),
+            new Build("Flame Charge Fire", "Fire", "Flame Charge", "Earthquake", "Burning Rage", "Cursed", "Burning Edge", "Crippling Hits"),
         });
     }
     
