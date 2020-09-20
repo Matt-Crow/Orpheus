@@ -12,6 +12,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.NoSuchElementException;
 import gui.pages.worldPlay.WorldCanvas;
+import java.util.HashMap;
+import util.CardinalDirection;
 
 /**
  *
@@ -22,6 +24,8 @@ public class HumanPlayer extends AbstractPlayer{
     private final AbstractActive[] actives;
 	private final AbstractPassive[] passives;
     private boolean followingMouse;
+    private final HashMap<CardinalDirection, Boolean> movingInCardinalDir; // used for key controls 
+    
     public static final int MIN_LIFE_SPAN = 10;
     
     public HumanPlayer(String n) {
@@ -30,7 +34,14 @@ public class HumanPlayer extends AbstractPlayer{
         actives = new AbstractActive[3];
 		passives = new AbstractPassive[3];
         setClass("Default");
-        
+        movingInCardinalDir = new HashMap<>();
+        clearMovement();
+    }
+    
+    private void clearMovement(){
+        for(CardinalDirection dir : CardinalDirection.values()){
+            movingInCardinalDir.put(dir, false);
+        }
         followingMouse = false;
     }
     
@@ -97,6 +108,11 @@ public class HumanPlayer extends AbstractPlayer{
     public final boolean getFollowingMouse(){
         return followingMouse;
     }
+    
+    public final void setMovingInDir(CardinalDirection dir, boolean isMoving){
+        movingInCardinalDir.put(dir, isMoving);
+    }
+    
     public void moveToMouse(){
         setPath(getWorld().getShell().getCanvas().getMouseX(), getWorld().getShell().getCanvas().getMouseY());
     }
@@ -110,6 +126,7 @@ public class HumanPlayer extends AbstractPlayer{
         for(AbstractPassive p : passives){
 			p.doInit();
 		}
+        clearMovement();
     }
 
     @Override
@@ -120,6 +137,14 @@ public class HumanPlayer extends AbstractPlayer{
         for(AbstractPassive p : passives){
 			p.doUpdate();
 		}
+        
+        if(this.getPath() == null){ //prevent double movement
+            movingInCardinalDir.forEach((dir, isMoving)->{
+                if(isMoving){
+                    move(dir);
+                }
+            });
+        }
     }
     
     public void drawHUD(Graphics g, WorldCanvas wc){

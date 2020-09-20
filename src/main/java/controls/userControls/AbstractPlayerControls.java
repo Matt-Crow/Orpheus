@@ -42,8 +42,11 @@ public abstract class AbstractPlayerControls extends AbstractControlScheme imple
     public final String moveString(){
         return playerString() + " move to " + mouseString();
     }
-    public final String directionString(CardinalDirection dir){
-        return playerString() + " move direction " + dir.toString();
+    public final String directionStartString(CardinalDirection dir){
+        return playerString() + " start move direction " + dir.toString();
+    }
+    public final String directionStopString(CardinalDirection dir){
+        return playerString() + " stop move direction " + dir.toString();
     }
     
     public void registerControlsTo(Canvas plane){
@@ -70,6 +73,19 @@ public abstract class AbstractPlayerControls extends AbstractControlScheme imple
         });
         plane.registerKey(KeyEvent.VK_D, true, ()->{
             useDirKey(CardinalDirection.RIGHT);
+        });
+        
+        plane.registerKey(KeyEvent.VK_W, false, ()->{
+            stopUseDirKey(CardinalDirection.UP);
+        });
+        plane.registerKey(KeyEvent.VK_A, false, ()->{
+            stopUseDirKey(CardinalDirection.LEFT);
+        });
+        plane.registerKey(KeyEvent.VK_S, false, ()->{
+            stopUseDirKey(CardinalDirection.DOWN);
+        });
+        plane.registerKey(KeyEvent.VK_D, false, ()->{
+            stopUseDirKey(CardinalDirection.RIGHT);
         });
     }
     public String mouseString(){
@@ -111,10 +127,15 @@ public abstract class AbstractPlayerControls extends AbstractControlScheme imple
                 int num = Integer.parseInt(str.substring(str.indexOf("use") + 3).trim());
                 p.useAttack(num);
             }
-            if(str.contains("move direction")){
-                int idx = str.indexOf("move direction") + "move direction".length() + 1;
+            if(str.contains("start move direction")){
+                int idx = str.indexOf("start move direction") + "start move direction".length() + 1;
                 String dirName = str.substring(idx);
-                p.move(CardinalDirection.fromString(dirName));
+                p.setMovingInDir(CardinalDirection.fromString(dirName), true);
+            }
+            if(str.contains("stop move direction")){
+                int idx = str.indexOf("stop move direction") + "stop move direction".length() + 1;
+                String dirName = str.substring(idx);
+                p.setMovingInDir(CardinalDirection.fromString(dirName), false);
             }
         }
     }
@@ -151,8 +172,27 @@ public abstract class AbstractPlayerControls extends AbstractControlScheme imple
     @Override
     public void mouseExited(MouseEvent e) {}
     
-    public abstract void useMeleeKey();
-    public abstract void useAttKey(int i);
-    public abstract void move();
-    public abstract void useDirKey(CardinalDirection d);
+    private void useMeleeKey(){
+        consumeCommand(meleeString());
+    }
+    private void useAttKey(int i){
+        consumeCommand(attString(i));
+    }
+    private void move(){
+        consumeCommand(moveString());
+    }
+    private void useDirKey(CardinalDirection d){
+        consumeCommand(directionStartString(d));
+    }
+    private void stopUseDirKey(CardinalDirection d){
+        consumeCommand(directionStopString(d));
+    }
+    
+    /**
+     * Reacts to a command string produced when the user
+     * uses a control.
+     * 
+     * @param command 
+     */
+    public abstract void consumeCommand(String command);
 }

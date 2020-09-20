@@ -7,6 +7,7 @@ import world.events.Terminable;
 import world.events.TerminateListener;
 import world.WorldContent;
 import java.io.Serializable;
+import java.util.HashMap;
 import util.CardinalDirection;
 import util.SafeList;
 
@@ -21,9 +22,11 @@ public abstract class AbstractEntity implements Serializable, Terminable{
 	private int x;
 	private int y;
     private int radius; //used for collisions
-	private Direction dir; // the direction the entity is facing, ranging from 0-359 degrees, with 0 being the positive x axis, turning counterclockwise
-	private int maxSpeed;
-	private boolean moving;
+	
+    private Direction dir; // the direction the entity is facing, ranging from 0-359 degrees, with 0 being the positive x axis, turning counterclockwise
+	private boolean moving; // moving in the given direction
+    
+    private int maxSpeed;
 	private double speedFilter; // amount the entity's speed is multiplied by when moving. May depreciate later
 	
 	/*
@@ -91,8 +94,8 @@ public abstract class AbstractEntity implements Serializable, Terminable{
     }
     
     public final void move(CardinalDirection dir){
-        x += dir.getXMod() * maxSpeed;
-        y += dir.getYMod() * maxSpeed;
+        x += dir.getXMod() * getMomentum();
+        y += dir.getYMod() * getMomentum();
     }
     
     public final void setFacing(int degrees){

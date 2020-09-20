@@ -4,7 +4,6 @@ import java.net.InetAddress;
 import net.OrpheusServer;
 import net.messages.ServerMessage;
 import net.messages.ServerMessageType;
-import util.CardinalDirection;
 import world.AbstractWorldShell;
 
 /**
@@ -18,43 +17,14 @@ public class RemotePlayerControls extends AbstractPlayerControls{
         super(inWorld, playerId);
         receiverIpAddr = receiverIp;
     }
-    
+
     @Override
-    public final void useMeleeKey(){
+    public void consumeCommand(String command) {
         OrpheusServer.getInstance().send(new ServerMessage(
-            meleeString(),
+            command,
             ServerMessageType.CONTROL_PRESSED
         ),
             receiverIpAddr
         );
     }
-
-    @Override
-    public void useAttKey(int i) {
-        OrpheusServer.getInstance().send(new ServerMessage(
-            attString(i),
-            ServerMessageType.CONTROL_PRESSED
-        ),
-            receiverIpAddr
-        );
-    }
-
-    @Override
-    public void move() {
-        OrpheusServer.getInstance().send(new ServerMessage(
-            moveString(),
-            ServerMessageType.CONTROL_PRESSED
-        ),
-            receiverIpAddr
-        );
-    }
-
-    @Override
-    public void useDirKey(CardinalDirection d) {
-        OrpheusServer.getInstance().send(new ServerMessage(
-            directionString(d),
-            ServerMessageType.CONTROL_PRESSED
-        ),
-            receiverIpAddr
-        );}
 }

@@ -1,7 +1,5 @@
 package controls.userControls;
 
-import controls.userControls.AbstractPlayerControls;
-import util.CardinalDirection;
 import world.AbstractWorldShell;
 
 /**
@@ -15,23 +13,7 @@ public class SoloPlayerControls extends AbstractPlayerControls{
     }
 
     @Override
-    public void useMeleeKey() {
-        AbstractPlayerControls.decode(getWorld(), meleeString());
+    public void consumeCommand(String command) {
+        AbstractPlayerControls.decode(getWorld(), command);
     }
-
-    @Override
-    public void useAttKey(int i) {
-        AbstractPlayerControls.decode(getWorld(), attString(i));
-    }
-
-    @Override
-    public void move() {
-        AbstractPlayerControls.decode(getWorld(), moveString());
-    }
-
-    @Override
-    public void useDirKey(CardinalDirection d) {
-        AbstractPlayerControls.decode(getWorld(), directionString(d));
-    }
-
 }
