@@ -1,5 +1,6 @@
 package gui.pages.worldPlay;
 
+import controls.userControls.AbstractPlayerControls;
 import gui.components.Chat;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -63,14 +64,7 @@ public class WorldPage extends Page{
         otherArea.add(chat, c2.clone());
         
         JTextArea controls = new JTextArea(
-            "#CONTROLS#\n"+
-                "Click on a tile to move there\n"+
-                "Hold down the mouse to 'follow' the mouse\n"+
-                "(Q): use your melee attack\n"+
-                "(1-3): use your attacks 1, 2, or 3\n"+
-                "(P): pause / resume (singleplayer only)\n"+
-                "(Z): zoom in\n"+
-                "(X): zoom out\n"
+            AbstractPlayerControls.getPlayerControlScheme()
         );
         controls.setEditable(false);
         controls.setWrapStyleWord(true);

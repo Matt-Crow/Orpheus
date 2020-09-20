@@ -9,6 +9,7 @@ import java.awt.event.MouseListener;
 import gui.pages.Canvas;
 import gui.pages.EndOfFrameListener;
 import gui.pages.worldPlay.WorldCanvas;
+import java.util.Scanner;
 import util.CardinalDirection;
 import world.AbstractWorldShell;
 
@@ -28,7 +29,6 @@ public abstract class AbstractPlayerControls extends AbstractControlScheme imple
     public AbstractPlayerControls(AbstractWorldShell inWorld, String playerId){
         super(inWorld, playerId);
     }
-    
     
     private String playerString(){
         return "#" + getPlayerId();
@@ -101,8 +101,12 @@ public abstract class AbstractPlayerControls extends AbstractControlScheme imple
     }
     
     public static void decode(AbstractWorldShell world, String s){
+        //Scanner tokenizer = new Scanner(s);
         int[] coords;
         HumanPlayer p = null;
+        
+        //String st = tokenizer.findInLine("#.*\b");
+        
         if(s.contains("#")){
             // contains player id
             int startIndex = s.indexOf("#") + 1;
@@ -112,6 +116,8 @@ public abstract class AbstractPlayerControls extends AbstractControlScheme imple
         } else {
             throw new UnsupportedOperationException("cannot decode string with no player id");
         }
+        
+        
         for(String str : s.split("\n")){
             if(str.contains("turn to")){
                 coords = decodeMouseString(str);
@@ -195,4 +201,22 @@ public abstract class AbstractPlayerControls extends AbstractControlScheme imple
      * @param command 
      */
     public abstract void consumeCommand(String command);
+    
+    public static String getPlayerControlScheme(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("#CONTROLS#\n");
+        sb.append("Click on a tile to move there\n");
+        sb.append("Hold down the mouse to 'follow' the mouse\n");
+        sb.append("Or hold the W, A, S, or D keys to move\n");
+        sb.append("(Q): use your melee attack\n");
+        sb.append("(1-3): use your attacks 1, 2, or 3\n");
+        sb.append("(P): pause / resume (singleplayer only)\n");
+        sb.append("(Z): zoom in\n");
+        sb.append("(X): zoom out\n");
+        return sb.toString();
+    }
+    
+    public static void main(String[] args){
+        AbstractPlayerControls.decode(null, "#no you");
+    }
 }
