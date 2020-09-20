@@ -9,6 +9,7 @@ import java.awt.event.MouseListener;
 import gui.pages.Canvas;
 import gui.pages.EndOfFrameListener;
 import gui.pages.worldPlay.WorldCanvas;
+import util.CardinalDirection;
 import world.AbstractWorldShell;
 
 /**
@@ -28,14 +29,21 @@ public abstract class AbstractPlayerControls extends AbstractControlScheme imple
         super(inWorld, playerId);
     }
     
+    
+    private String playerString(){
+        return "#" + getPlayerId();
+    }
     public final String meleeString(){
-        return "#" + getPlayerId() + " turn to " + mouseString() + "\n use melee";
+        return playerString() + " turn to " + mouseString() + "\n use melee";
     }
     public final String attString(int i){
-        return "#" + getPlayerId() + " turn to " + mouseString() + "\n use " + i;
+        return playerString() + " turn to " + mouseString() + "\n use " + i;
     }
     public final String moveString(){
-        return "#" + getPlayerId() + " move to " + mouseString();
+        return playerString() + " move to " + mouseString();
+    }
+    public final String directionString(CardinalDirection dir){
+        return playerString() + " move direction " + dir.toString();
     }
     
     public void registerControlsTo(Canvas plane){
@@ -50,6 +58,18 @@ public abstract class AbstractPlayerControls extends AbstractControlScheme imple
         });
         plane.registerKey(KeyEvent.VK_3, true, ()->{
             useAttKey(2);
+        });
+        plane.registerKey(KeyEvent.VK_W, true, ()->{
+            useDirKey(CardinalDirection.UP);
+        });
+        plane.registerKey(KeyEvent.VK_A, true, ()->{
+            useDirKey(CardinalDirection.LEFT);
+        });
+        plane.registerKey(KeyEvent.VK_S, true, ()->{
+            useDirKey(CardinalDirection.DOWN);
+        });
+        plane.registerKey(KeyEvent.VK_D, true, ()->{
+            useDirKey(CardinalDirection.RIGHT);
         });
     }
     public String mouseString(){
@@ -91,6 +111,11 @@ public abstract class AbstractPlayerControls extends AbstractControlScheme imple
                 int num = Integer.parseInt(str.substring(str.indexOf("use") + 3).trim());
                 p.useAttack(num);
             }
+            if(str.contains("move direction")){
+                int idx = str.indexOf("move direction") + "move direction".length() + 1;
+                String dirName = str.substring(idx);
+                p.move(CardinalDirection.fromString(dirName));
+            }
         }
     }
 
@@ -129,4 +154,5 @@ public abstract class AbstractPlayerControls extends AbstractControlScheme imple
     public abstract void useMeleeKey();
     public abstract void useAttKey(int i);
     public abstract void move();
+    public abstract void useDirKey(CardinalDirection d);
 }

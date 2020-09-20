@@ -1,6 +1,7 @@
 package controls.userControls;
 
 import controls.userControls.AbstractPlayerControls;
+import util.CardinalDirection;
 import world.AbstractWorldShell;
 
 /**
@@ -26,6 +27,11 @@ public class SoloPlayerControls extends AbstractPlayerControls{
     @Override
     public void move() {
         AbstractPlayerControls.decode(getWorld(), moveString());
+    }
+
+    @Override
+    public void useDirKey(CardinalDirection d) {
+        AbstractPlayerControls.decode(getWorld(), directionString(d));
     }
 
 }

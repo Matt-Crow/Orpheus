@@ -7,6 +7,7 @@ import world.events.Terminable;
 import world.events.TerminateListener;
 import world.WorldContent;
 import java.io.Serializable;
+import util.CardinalDirection;
 import util.SafeList;
 
 /**
@@ -88,6 +89,12 @@ public abstract class AbstractEntity implements Serializable, Terminable{
     public final void setY(int yc){
         y = yc;
     }
+    
+    public final void move(CardinalDirection dir){
+        x += dir.getXMod() * maxSpeed;
+        y += dir.getYMod() * maxSpeed;
+    }
+    
     public final void setFacing(int degrees){
         dir.setDegrees(degrees);
     }
