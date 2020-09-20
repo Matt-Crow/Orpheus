@@ -1,7 +1,7 @@
 package util;
 
 import java.lang.Math;
-import entities.AbstractEntity;
+import world.entities.AbstractEntity;
 
 public class Coordinates {
 	/**

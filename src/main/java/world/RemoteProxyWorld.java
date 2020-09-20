@@ -1,8 +1,8 @@
 package world;
 
-import battle.Team;
-import entities.AbstractEntity;
-import entities.Projectile;
+import world.battle.Team;
+import world.entities.AbstractEntity;
+import world.entities.Projectile;
 import java.net.InetAddress;
 
 /**

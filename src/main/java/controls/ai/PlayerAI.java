@@ -1,7 +1,7 @@
 package controls.ai;
 
-import events.OnHitEvent;
-import entities.AbstractPlayer;
+import world.events.OnHitEvent;
+import world.entities.AbstractPlayer;
 import util.Settings;
 import gui.graphics.Tile;
 import java.io.Serializable;

@@ -1,9 +1,9 @@
 package world;
 
-import battle.Team;
-import entities.AbstractEntity;
-import entities.AbstractPlayer;
-import entities.Projectile;
+import world.battle.Team;
+import world.entities.AbstractEntity;
+import world.entities.AbstractPlayer;
+import world.entities.Projectile;
 import net.OrpheusServer;
 import net.messages.ServerMessage;
 import net.messages.ServerMessageType;

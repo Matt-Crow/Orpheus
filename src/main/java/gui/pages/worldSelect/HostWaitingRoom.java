@@ -1,6 +1,6 @@
 package gui.pages.worldSelect;
 
-import battle.Battle;
+import world.battle.Battle;
 import net.protocols.WaitingRoomHostProtocol;
 
 /**

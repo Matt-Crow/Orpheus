@@ -1,11 +1,11 @@
 package gui.pages.customize;
 
 import util.Settings;
-import customizables.Build;
-import customizables.DataSet;
-import customizables.actives.AbstractActive;
-import customizables.characterClass.CharacterClass;
-import customizables.passives.AbstractPassive;
+import world.customizables.Build;
+import world.customizables.DataSet;
+import world.customizables.actives.AbstractActive;
+import world.customizables.characterClass.CharacterClass;
+import world.customizables.passives.AbstractPassive;
 import gui.components.CustomizableSelector;
 import java.awt.GridLayout;
 import javax.swing.JButton;

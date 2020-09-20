@@ -1,6 +1,6 @@
 package gui.graphics;
 
-import entities.AbstractEntity;
+import world.entities.AbstractEntity;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.io.Serializable;

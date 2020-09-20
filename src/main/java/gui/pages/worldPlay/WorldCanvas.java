@@ -1,20 +1,20 @@
 package gui.pages.worldPlay;
 
-import battle.Battle;
+import world.battle.Battle;
 import world.AbstractWorldShell;
 import util.Settings;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.*;
 import javax.swing.*;
-import battle.Team;
+import world.battle.Team;
 import start.MainWindow;
 import controls.userControls.AbstractPlayerControls;
 import controls.userControls.SoloPlayerControls;
-import entities.AbstractPlayer;
+import world.entities.AbstractPlayer;
 import java.awt.Graphics2D;
 import java.io.IOException;
-import entities.HumanPlayer;
+import world.entities.HumanPlayer;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import users.LocalUser;

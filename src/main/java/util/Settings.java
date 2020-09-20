@@ -1,6 +1,6 @@
 package util;
 
-import customizables.DataSet;
+import world.customizables.DataSet;
 
 public class Settings {
 	public static final boolean DISABLEHEALING = false;

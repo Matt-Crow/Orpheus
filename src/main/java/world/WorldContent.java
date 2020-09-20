@@ -1,8 +1,8 @@
 package world;
 
-import battle.Battle;
-import battle.Team;
-import entities.AbstractEntity;
+import world.battle.Battle;
+import world.battle.Team;
+import world.entities.AbstractEntity;
 import gui.graphics.CustomColors;
 import gui.graphics.Map;
 import gui.graphics.MapLoader;

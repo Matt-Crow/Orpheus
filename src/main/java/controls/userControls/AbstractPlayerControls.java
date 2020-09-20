@@ -1,8 +1,8 @@
 package controls.userControls;
 
 import controls.AbstractControlScheme;
-import entities.AbstractPlayer;
-import entities.HumanPlayer;
+import world.entities.AbstractPlayer;
+import world.entities.HumanPlayer;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;

@@ -1,7 +1,7 @@
 package util;
 
-import events.Terminable;
-import events.TerminateListener;
+import world.events.Terminable;
+import world.events.TerminateListener;
 import java.io.Serializable;
 
 /**

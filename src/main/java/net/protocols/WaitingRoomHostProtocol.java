@@ -1,11 +1,11 @@
 package net.protocols;
 
-import battle.Battle;
-import battle.Team;
+import world.battle.Battle;
+import world.battle.Team;
 import controls.userControls.SoloPlayerControls;
-import customizables.Build;
-import customizables.BuildJsonUtil;
-import entities.HumanPlayer;
+import world.customizables.Build;
+import world.customizables.BuildJsonUtil;
+import world.entities.HumanPlayer;
 import java.awt.Color;
 import java.io.IOException;
 import static java.lang.System.err;

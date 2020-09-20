@@ -1,9 +1,9 @@
 package util;
 
-import entities.AbstractPlayer;
+import world.entities.AbstractPlayer;
 import static java.lang.System.out;
 import java.util.ArrayList;
-import entities.Projectile;
+import world.entities.Projectile;
 
 // extending Op did not work due to static stuff
 public class CombatLog{

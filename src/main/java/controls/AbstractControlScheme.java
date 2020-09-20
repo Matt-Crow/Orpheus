@@ -1,6 +1,6 @@
 package controls;
 
-import entities.AbstractPlayer;
+import world.entities.AbstractPlayer;
 import world.AbstractWorldShell;
 
 /**

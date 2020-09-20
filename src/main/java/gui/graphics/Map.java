@@ -3,7 +3,7 @@ package gui.graphics;
 import controls.ai.Path;
 import controls.ai.PathInfo;
 import controls.ai.PathMinHeap;
-import entities.AbstractEntity;
+import world.entities.AbstractEntity;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.io.ByteArrayInputStream;

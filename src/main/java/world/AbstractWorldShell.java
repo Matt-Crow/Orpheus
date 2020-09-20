@@ -1,10 +1,10 @@
 package world;
 
-import battle.Battle;
-import battle.Team;
-import entities.AbstractEntity;
-import entities.Particle;
-import entities.AbstractPlayer;
+import world.battle.Battle;
+import world.battle.Team;
+import world.entities.AbstractEntity;
+import world.entities.Particle;
+import world.entities.AbstractPlayer;
 import gui.graphics.Map;
 import java.awt.Graphics;
 import gui.pages.worldPlay.WorldCanvas;

@@ -1,9 +1,9 @@
 package gui.pages.worldSelect;
 
-import battle.Battle;
-import battle.Team;
+import world.battle.Battle;
+import world.battle.Team;
 import controls.userControls.SoloPlayerControls;
-import entities.HumanPlayer;
+import world.entities.HumanPlayer;
 import java.awt.Color;
 import users.LocalUser;
 import gui.pages.worldPlay.WorldCanvas;
