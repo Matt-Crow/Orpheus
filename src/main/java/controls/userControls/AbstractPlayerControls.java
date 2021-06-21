@@ -9,7 +9,6 @@ import java.awt.event.MouseListener;
 import gui.pages.Canvas;
 import gui.pages.EndOfFrameListener;
 import gui.pages.worldPlay.WorldCanvas;
-import java.util.Scanner;
 import util.CardinalDirection;
 import world.AbstractWorldShell;
 

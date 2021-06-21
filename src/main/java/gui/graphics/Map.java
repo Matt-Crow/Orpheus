@@ -390,6 +390,10 @@ public class Map implements Serializable, JsonSerialable{
         return ret;
     }
     
+    public final Path findPath(AbstractEntity from, AbstractEntity to){
+        return findPath(from.getX(), from.getY(), to.getX(), to.getY());
+    }
+    
     
     public void draw(Graphics g){
         g.setColor(Color.BLACK);
