@@ -1,4 +1,4 @@
-package net;
+package net.connections;
 
 import net.messages.ServerMessagePacket;
 import java.io.BufferedReader;

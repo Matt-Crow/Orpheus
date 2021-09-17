@@ -1,11 +1,10 @@
-package net;
+package net.connections;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.HashMap;
 
 /**
  * This class handles multiple connections to a server, creating and deleting
@@ -16,17 +15,18 @@ import java.util.HashMap;
  */
 public class ConnectionManager {
     private final ServerSocket requestListener;
+    private final Connections connections;
     private volatile boolean listenForConnections;
     private final Thread connectionListenerThread;
-    private final HashMap<Socket, Connection> connections;
     
     private static final int CONNECTION_TIME_OUT = 3000; // 3 seconds
     
-    protected ConnectionManager(ServerSocket requestListener){
+    protected ConnectionManager(ServerSocket requestListener, Connections connections){
         super();
         this.requestListener = requestListener;
+        this.connections = connections;
         listenForConnections = false;
-        connections = new HashMap<>();
+        // will need separate connection and disconnection listeners
         
         connectionListenerThread = createListenerThread();
     }
@@ -60,8 +60,7 @@ public class ConnectionManager {
             Socket client;
             while(true){ // runs until accept times out
                 client = requestListener.accept();
-                connections.put(client, new Connection(client));
-                System.out.println(connections.get(client));
+                connections.connectTo(client);
             }
         } catch (SocketTimeoutException ex) {
             // this is not an error, it just means no client has attempted to connect
@@ -74,23 +73,23 @@ public class ConnectionManager {
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
-        sb.append("Server Connection Manager");
-        connections.forEach((sock, conn)->{
-            sb.append(String.format("\n* %s", conn.toString()));
-        });
+        sb.append("Server Connection Manager:\n");
+        sb.append(connections.toString());
         return sb.toString();
     }
     
     public static void main(String[] args) throws IOException, InterruptedException{
         ServerSocket server = new ServerSocket(5000);
         server.setSoTimeout(CONNECTION_TIME_OUT);
-        ConnectionManager manager = new ConnectionManager(server);
+        ConnectionManager manager = new ConnectionManager(server, new Connections());
         manager.start();
         new Socket(InetAddress.getLoopbackAddress(), 5000);
         new Socket(InetAddress.getLoopbackAddress(), 5000);
         new Socket(InetAddress.getLoopbackAddress(), 5000);
+        System.out.println(manager);
         Thread.sleep(3000);
         manager.shutDown();
+        manager.connections.closeAll();
         System.out.println("end of program");
     }
 }

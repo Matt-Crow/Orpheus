@@ -1,5 +1,6 @@
 package net;
 
+import net.connections.Connection;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import net.protocols.AbstractOrpheusServerNonChatProtocol;
