@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
 
@@ -15,38 +14,42 @@ import java.util.HashMap;
  * 
  * @author Matt Crow
  */
-public class ConnectionManager extends Thread {
+public class ConnectionManager {
     private final ServerSocket requestListener;
     private volatile boolean listenForConnections;
+    private final Thread connectionListenerThread;
     private final HashMap<Socket, Connection> connections;
     
     private static final int CONNECTION_TIME_OUT = 3000; // 3 seconds
     
     protected ConnectionManager(ServerSocket requestListener){
         super();
-        setName("Orpheus server connection manager");
         this.requestListener = requestListener;
-        try {
-            requestListener.setSoTimeout(CONNECTION_TIME_OUT);
-        } catch (SocketException ex) {
-            ex.printStackTrace();
-        }
         listenForConnections = false;
         connections = new HashMap<>();
+        
+        connectionListenerThread = createListenerThread();
+    }
+    
+    private Thread createListenerThread(){
+        return new Thread("Orpheus server connection manager"){
+            @Override
+            public void run(){
+                continueListening();
+            }
+        };
     }
     
     public final void shutDown(){
         listenForConnections = false;
     }
     
-    @Override
     public final void start(){
         listenForConnections = true;
-        super.start();
+        this.connectionListenerThread.start();
     }
     
-    @Override
-    public final void run(){
+    private void continueListening(){
         while(listenForConnections){
             waitForConnection();
         }
@@ -68,8 +71,19 @@ public class ConnectionManager extends Thread {
         }
     }
     
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("Server Connection Manager");
+        connections.forEach((sock, conn)->{
+            sb.append(String.format("\n* %s", conn.toString()));
+        });
+        return sb.toString();
+    }
+    
     public static void main(String[] args) throws IOException, InterruptedException{
         ServerSocket server = new ServerSocket(5000);
+        server.setSoTimeout(CONNECTION_TIME_OUT);
         ConnectionManager manager = new ConnectionManager(server);
         manager.start();
         new Socket(InetAddress.getLoopbackAddress(), 5000);

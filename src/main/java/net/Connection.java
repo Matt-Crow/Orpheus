@@ -86,4 +86,14 @@ public class Connection {
         System.out.print(clientSocket.getInetAddress().getHostAddress() + ": ");
         System.out.println((remoteUser == null) ? "---" : remoteUser.getName());
     }
+    
+    @Override
+    public String toString(){
+        String userName = (remoteUser == null) ? "---" : remoteUser.getName();
+        return String.format("Connection to %s:%d %s", 
+            clientSocket.getInetAddress().getHostAddress(),
+            clientSocket.getPort(),
+            userName
+        );
+    }
 }
