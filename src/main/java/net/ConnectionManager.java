@@ -1,6 +1,7 @@
 package net;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -9,7 +10,8 @@ import java.util.HashMap;
 
 /**
  * This class handles multiple connections to a server, creating and deleting
- * connections, as well as sending and receiving messages.
+ * connections, as well as sending and receiving messages. Should probably not
+ * inherit from Thread
  * 
  * @author Matt Crow
  */
@@ -38,9 +40,13 @@ public class ConnectionManager extends Thread {
     }
     
     @Override
-    public final void run(){
+    public final void start(){
         listenForConnections = true;
-        
+        super.start();
+    }
+    
+    @Override
+    public final void run(){
         while(listenForConnections){
             waitForConnection();
         }
@@ -58,13 +64,19 @@ public class ConnectionManager extends Thread {
             // this is not an error, it just means no client has attempted to connect
         } catch (IOException ex) {
             ex.printStackTrace();
+            System.exit(0);
         }
     }
     
-    public static void main(String[] args) throws IOException{
-        ServerSocket server = new ServerSocket();
+    public static void main(String[] args) throws IOException, InterruptedException{
+        ServerSocket server = new ServerSocket(5000);
         ConnectionManager manager = new ConnectionManager(server);
         manager.start();
-        // test connecting
+        new Socket(InetAddress.getLoopbackAddress(), 5000);
+        new Socket(InetAddress.getLoopbackAddress(), 5000);
+        new Socket(InetAddress.getLoopbackAddress(), 5000);
+        Thread.sleep(3000);
+        manager.shutDown();
+        System.out.println("end of program");
     }
 }
