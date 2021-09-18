@@ -14,4 +14,4 @@ With that said, their are many changes that I want to make next time I have a ch
 * General cleanup and reorganization
 * Redo GUI
 * Security manager for multiplayer
-* use IP Address and port as a composite key
+* use Socket to identify users, not IP address

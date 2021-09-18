@@ -1,6 +1,6 @@
 package net.messages;
 
-import java.net.InetAddress;
+import java.net.Socket;
 import users.AbstractUser;
 
 /**
@@ -13,17 +13,17 @@ import users.AbstractUser;
  * @author Matt Crow
  */
 public class ServerMessagePacket {
-    private final InetAddress sendingIpAddress;
+    private final Socket sendingSocket;
     private AbstractUser fromUser;
     private final ServerMessage containedMessage;
     /**
      * 
      * 
-     * @param ipAddress the IP address this was sent from
+     * @param sendingSocket the Socket this message was received from
      * @param packetContents the message contained herein
      */
-    public ServerMessagePacket(InetAddress ipAddress, ServerMessage packetContents){
-        sendingIpAddress = ipAddress;
+    public ServerMessagePacket(Socket sendingSocket, ServerMessage packetContents){
+        this.sendingSocket = sendingSocket;
         containedMessage = packetContents;
     }
     
@@ -31,8 +31,8 @@ public class ServerMessagePacket {
         return containedMessage;
     }
     
-    public final InetAddress getSendingIp(){
-        return sendingIpAddress;
+    public final Socket getSendingSocket(){
+        return sendingSocket;
     }
     
     /**
@@ -50,6 +50,12 @@ public class ServerMessagePacket {
     
     @Override
     public String toString(){
-        return String.format("ServerMessagePacket from %s (%s):\n%s\nEND OF MESSAGE", sendingIpAddress.toString(), (fromUser == null) ? "Unknown User" : fromUser.getName(), containedMessage.toString());
+        return String.format(
+            "ServerMessagePacket from %s:%d (%s):\n%s\nEND OF MESSAGE", 
+            sendingSocket.getInetAddress().toString(), 
+            sendingSocket.getPort(), 
+            (fromUser == null) ? "Unknown User" : fromUser.getName(), 
+            containedMessage.toString()
+        );
     }
 }

@@ -1,6 +1,6 @@
 package users;
 
-import java.net.InetAddress;
+import java.net.Socket;
 
 
 /**
@@ -8,7 +8,7 @@ import java.net.InetAddress;
  * @author Matt
  */
 public class RemoteUser extends AbstractUser {
-    private InetAddress ipAddress;
+    private Socket socket;
     
     public RemoteUser(String name){
         super(name);
@@ -18,18 +18,17 @@ public class RemoteUser extends AbstractUser {
      * The server handles invoking this method
      * once it receives user information
      * 
-     * @param ipAddr the IP address of the Socket
-     * which provided this user's data
+     * @param socket the Socket which provided this user's data
      */
-    public void setIpAddress(InetAddress ipAddr){
-        ipAddress = ipAddr;
+    public void setSocket(Socket socket){
+        this.socket = socket;
     }
     
     @Override
-    public InetAddress getIpAddress() {
-        if(ipAddress == null){
+    public Socket getSocket() {
+        if(socket == null){
             throw new NullPointerException("OrpheusServer didn't invoke setIpAddress for this!");
         }
-        return ipAddress;
+        return socket;
     }
 }

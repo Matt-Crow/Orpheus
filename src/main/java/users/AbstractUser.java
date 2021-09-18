@@ -1,8 +1,6 @@
 package users;
 
-import java.math.BigDecimal;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.Socket;
 import javax.json.Json;
 import javax.json.JsonException;
 import javax.json.JsonObject;
@@ -33,7 +31,7 @@ public abstract class AbstractUser implements JsonSerialable {
         return userName;
     }
     
-    public abstract InetAddress getIpAddress();
+    public abstract Socket getSocket();
     
     /**
      * Serializes this user into JSON. Note that both LocalUsers
@@ -53,7 +51,8 @@ public abstract class AbstractUser implements JsonSerialable {
         objBuild.add("type", "user");
         objBuild.add("name", userName);
         try{
-            objBuild.add("ip address", getIpAddress().getHostAddress());
+            objBuild.add("ip address", getSocket().getInetAddress().getHostAddress());
+            objBuild.add("port", getSocket().getPort());
         } catch (NullPointerException ex){
             
         }
@@ -77,13 +76,6 @@ public abstract class AbstractUser implements JsonSerialable {
         }
         
         RemoteUser u = new RemoteUser(obj.getString("name"));
-        if(obj.containsKey("ip address")){
-            try {
-                u.setIpAddress(InetAddress.getByName(obj.getString("ip address")));
-            } catch (UnknownHostException ex) {
-                ex.printStackTrace();
-            }
-        }
         
         return u;
     }

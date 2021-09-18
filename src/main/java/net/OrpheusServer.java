@@ -10,13 +10,13 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
+import net.connections.Connections;
 import net.messages.ServerMessage;
 import net.protocols.ChatProtocol;
 import serialization.JsonUtil;
@@ -55,11 +55,7 @@ public class OrpheusServer {
     private final ServerSocket server;
     private final HashSet<InetAddress> validIpAddresses;
     
-    /*
-    The users connected to this server, where the key is their
-    IP address.
-    */
-    private final HashMap<InetAddress, Connection> connections;
+    private final Connections clients;
     private Thread connListener; //the thread that listens for attemts to connect to this server
     private volatile boolean listenForConn; //whether or not the connListener thread is active
     
@@ -83,7 +79,7 @@ public class OrpheusServer {
         server = new ServerSocket(PORT);
         validIpAddresses = getValidInetAddresses();
         
-        connections = new HashMap<>();
+        clients = new Connections();
         cachedMessages = new SafeList<>();
         listenForConn = false;   
         
@@ -276,16 +272,17 @@ public class OrpheusServer {
         //}
     }
     public synchronized void connect(Socket otherComputer) throws IOException{
-        logConnections();
-        if(connections.containsKey(otherComputer.getInetAddress())){
-            log("Already connected to " + otherComputer.getInetAddress());
+        log(clients);
+        
+        if(clients.isConnectedTo(otherComputer)){
+            log(String.format("Already connected to %s:%d", otherComputer.getInetAddress(), otherComputer.getPort()));
             return;
         }
 
         log(String.format("Initializing connection to %s...", otherComputer.getInetAddress().getHostAddress()));
-        Connection conn = new Connection(otherComputer);
+        clients.connectTo(otherComputer);
         log("Connection successful");
-        connections.put(otherComputer.getInetAddress(), conn);
+        Connection conn = clients.getConnectionTo(otherComputer);
 
         //do I need to store this somewhere?
         log("Opening message listener thread...");
@@ -310,7 +307,7 @@ public class OrpheusServer {
                     }
                 }
                 log("disconnecting...");
-                disconnect(otherComputer.getInetAddress());
+                clients.disconnectFrom(otherComputer);
             }
         }.start();
         log("Listener thread started successfully");
@@ -324,86 +321,66 @@ public class OrpheusServer {
         ));        
         
         log("Wrote user information to client");
-        logConnections();
-    }
-    
-    private synchronized void disconnect(InetAddress ipAddr){
-        if(connections.containsKey(ipAddr)){
-            connections.get(ipAddr).close();
-            connections.remove(ipAddr);
-        }else{
-            log("not contains key " + ipAddr);
-        }
+        log(clients);
     }
     
     public void send(ServerMessage sm){
-        connections.values().stream().forEach((Connection c)->{
-            c.writeServerMessage(sm);
-        });
+        clients.broadcast(sm);
     }
     
-    public boolean send(ServerMessage sm, InetAddress ipAddr){
+    public boolean send(ServerMessage sm, Socket ipAddr){
         boolean success = false;
-        if(connections.containsKey(ipAddr)){
-            connections.get(ipAddr).writeServerMessage(sm);
+        if(clients.isConnectedTo(ipAddr)){
+            clients.getConnectionTo(ipAddr).writeServerMessage(sm);
             success = true;
         }
         return success;
     }
     
     private void receiveJoin(ServerMessagePacket sm){
-        InetAddress ip = sm.getSendingIp();
-        if(connections.containsKey(ip) && connections.get(ip).getRemoteUser() != null){
+        Socket ip = sm.getSendingSocket();
+        boolean isConnected = clients.isConnectedTo(ip);
+        if(isConnected && clients.getConnectionTo(ip).getRemoteUser() != null){
             log("already connected");
-        } else if(connections.containsKey(ip)){
+        } else if(isConnected){
             //connected to IP, but no user data set yet
             AbstractUser sender = AbstractUser.deserializeJson(JsonUtil.fromString(sm.getMessage().getBody()));
             if(sender instanceof RemoteUser){
-                ((RemoteUser)sender).setIpAddress(sm.getSendingIp());
+                ((RemoteUser)sender).setSocket(ip);
             }
             
             sm.setSender(sender);
-            connections.get(ip).setRemoteUser(sender);
-            logConnections();
+            clients.getConnectionTo(ip).setRemoteUser(sender);
+            log(clients);
         } else {
             //not connected, no user data
             try {
                 connect(ip);
                 AbstractUser sender = AbstractUser.deserializeJson(JsonUtil.fromString(sm.getMessage().getBody()));
                 if(sender instanceof RemoteUser){
-                    ((RemoteUser)sender).setIpAddress(sm.getSendingIp());
+                    ((RemoteUser)sender).setSocket(sm.getSendingSocket());
                 }
                 sm.setSender(sender);
-                connections.get(ip).setRemoteUser(sender);
-                logConnections();
+                clients.getConnectionTo(ip).setRemoteUser(sender);
+                log(clients);
             } catch (IOException ex){
                 ex.printStackTrace();
             }
         }
     }
     
-    private void receiveDisconnect(ServerMessagePacket sm){
-        InetAddress ip = sm.getSendingIp();
-        if(connections.containsKey(ip)){
-            log(ip + " left");
-            disconnect(sm.getSendingIp());
-        }else{
-            log(ip + " is not connected, so I cannot disconnect from them");
-        }
-    }
-    
     public final void receiveMessage(ServerMessagePacket sm){
-        if(connections.containsKey(sm.getSendingIp())){
-           sm.setSender(connections.get(sm.getSendingIp()).getRemoteUser()); 
+        if(clients.isConnectedTo(sm.getSendingSocket())){
+           sm.setSender(clients.getConnectionTo(sm.getSendingSocket()).getRemoteUser()); 
         } else {
-           log("I don't recognize " + sm.getSendingIp());
+           log("I don't recognize " + sm.getSendingSocket());
         }
 
         // handle joining / leaving
         if(sm.getMessage().getType() == ServerMessageType.PLAYER_JOINED){
             receiveJoin(sm);
         } else if (sm.getMessage().getType() == ServerMessageType.PLAYER_LEFT){
-            receiveDisconnect(sm);
+            clients.disconnectFrom(sm.getSendingSocket());
         }
 
         boolean handled = false;
@@ -489,12 +466,6 @@ public class OrpheusServer {
         isStarted = false;
     }
     
-    public synchronized void logConnections(){
-        log("CONNECTIONS:");
-        connections.values().stream().forEach((Connection c)->c.displayData());
-        log("END OF CONNECTIONS");
-    }
-    
     // make this save to a file later
     public final void log(String msg){
         System.out.println("OrpheusServer: " + msg);
@@ -508,7 +479,7 @@ public class OrpheusServer {
     public static void main(String[] args) throws SocketException{
         try {
             OrpheusServer os = new OrpheusServer();
-            os.logConnections();
+            System.out.println(os.clients);
             os.start();
             new Thread(){
                 @Override

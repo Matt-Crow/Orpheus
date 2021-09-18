@@ -17,14 +17,12 @@ import users.AbstractUser;
  */
 public class Connection {
     private AbstractUser remoteUser; //the remoteUser playing Orpheus on the machine this connects to
-    private final InetAddress receivingIp;
     private final Socket clientSocket;    
     private final BufferedReader fromClient;
     private final BufferedWriter toClient;
     
     public Connection(Socket s) throws IOException{
         System.out.println(String.format("(Connection constructor) Creating Connection(Socket(%s)) in Thread %s", s.getInetAddress().getHostAddress(), Thread.currentThread().toString()));
-        receivingIp = s.getInetAddress();
         clientSocket = s;
         toClient = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
         fromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -51,7 +49,7 @@ public class Connection {
         // This works, so I guess toJsonString excapes newlines or something?
         ServerMessage deser = ServerMessage.deserializeJson(fromClient.readLine());
         
-        return new ServerMessagePacket(receivingIp, deser);
+        return new ServerMessagePacket(clientSocket, deser);
     }
     
     public void close(){

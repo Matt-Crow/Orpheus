@@ -23,7 +23,7 @@ import users.LocalUser;
 import gui.pages.worldSelect.HostWaitingRoom;
 import gui.pages.worldPlay.WorldCanvas;
 import gui.pages.worldPlay.WorldPage;
-import java.net.InetAddress;
+import java.net.Socket;
 import net.messages.ServerMessage;
 import world.HostWorld;
 import world.WorldContent;
@@ -53,7 +53,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
     The Users who have joined the waiting room, but have
     not yet sent their Builds to the server
     */
-    private final HashMap<InetAddress, AbstractUser> awaitingBuilds;
+    private final HashMap<Socket, AbstractUser> awaitingBuilds;
     
     /**
      * Creates the protocol.
@@ -93,7 +93,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
      */
     public final void addUserToTeam(AbstractUser u){
         if(addToTeamProto(u)){
-            awaitingBuilds.put(u.getIpAddress(), u);
+            awaitingBuilds.put(u.getSocket(), u);
             ServerMessage sm = new ServerMessage(
                 "join player team",
                 ServerMessageType.WAITING_ROOM_UPDATE
@@ -113,7 +113,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
      * @param sm
      */
     private void receiveJoin(ServerMessagePacket sm){
-        InetAddress joiningIp = sm.getSendingIp();
+        Socket joiningIp = sm.getSendingSocket();
         if(containsIp(joiningIp)){
             return;
         } // ##################### RETURNS HERE IF ALREADY JOINED
@@ -166,11 +166,11 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
         
         // put the host on the user team
         LocalUser me = LocalUser.getInstance();
-        if(awaitingBuilds.containsKey(me.getIpAddress())){
+        if(awaitingBuilds.containsKey(me.getSocket())){
             myPlayer = new HumanPlayer(me.getName());
             myPlayer.applyBuild(getFrontEnd().getSelectedBuild());
             playerTeam.addMember(myPlayer);
-            awaitingBuilds.remove(me.getIpAddress());
+            awaitingBuilds.remove(me.getSocket());
         } else {
             throw new UnsupportedOperationException();
         }
@@ -197,7 +197,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
      * @param sm a server message containing the sender's Build, serialized as a JSON object string
      */
     private void receiveBuildInfo(ServerMessagePacket sm){
-        InetAddress ip = sm.getSendingIp();
+        Socket ip = sm.getSendingSocket();
         HumanPlayer player = null;
         Build b;
         
@@ -222,7 +222,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
      * @param ipAddr the ip address of the user to send the IDs to.
      * @param playerId the ID of that user's Player on this computer
      */
-    private void sendRemoteId(InetAddress ipAddr, String playerId){
+    private void sendRemoteId(Socket ipAddr, String playerId){
         ServerMessage sm = new ServerMessage(
             playerId,
             ServerMessageType.NOTIFY_IDS

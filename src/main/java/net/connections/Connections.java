@@ -1,8 +1,10 @@
 package net.connections;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.HashMap;
+import net.messages.ServerMessage;
 
 /**
  * Connections is simply a collection of Connection objects.
@@ -16,8 +18,12 @@ public class Connections {
         connections = new HashMap<>();
     }
     
+    public final boolean isConnectedTo(Socket client){
+        return connections.containsKey(client);
+    }
+    
     public final void connectTo(Socket client) throws IOException{
-        if(connections.containsKey(client)){
+        if(isConnectedTo(client)){
             connections.get(client).close();
         }
         connections.put(client, new Connection(client));
@@ -37,6 +43,14 @@ public class Connections {
         for(Socket s : all){
             disconnectFrom(s);
         }
+    }
+    
+    public final Connection getConnectionTo(Socket client){
+        return connections.get(client);
+    }
+    
+    public final void broadcast(ServerMessage sm){
+        connections.values().forEach((conn)->conn.writeServerMessage(sm));
     }
     
     @Override

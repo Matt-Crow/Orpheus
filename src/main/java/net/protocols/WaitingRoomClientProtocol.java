@@ -49,10 +49,10 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
             if(jv.getValueType().equals(JsonValue.ValueType.OBJECT)){
                 AbstractUser u = AbstractUser.deserializeJson((JsonObject)jv);
                 try{
-                    u.getIpAddress();
+                    u.getSocket();
                 } catch (NullPointerException ex){
                     // I think the only user without their IP address set is the host, who sends this message, so...
-                    ((RemoteUser)u).setIpAddress(sm.getSendingIp());
+                    ((RemoteUser)u).setSocket(sm.getSendingSocket());
                 }
                 addToTeamProto(u);
             }
@@ -68,7 +68,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
         OrpheusServer.getInstance().send(new ServerMessage(
             BuildJsonUtil.serializeJson(getFrontEnd().getSelectedBuild()).toString(),
             ServerMessageType.PLAYER_DATA
-        ), sm.getSendingIp());
+        ), sm.getSendingSocket());
         getFrontEnd().setInputEnabled(false);
     }
     
@@ -86,7 +86,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
      */
     private void receiveWorldInit(ServerMessagePacket sm){
         WorldContent w = WorldContent.fromSerializedString(sm.getMessage().getBody());
-        RemoteProxyWorld world = new RemoteProxyWorld(sm.getSendingIp(), w);
+        RemoteProxyWorld world = new RemoteProxyWorld(sm.getSendingSocket().getInetAddress(), w);
         w.setShell(world);
         
         LocalUser me = LocalUser.getInstance();
@@ -96,7 +96,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
         
         WorldPage p = new WorldPage();
         WorldCanvas canv = world.getCanvas();
-        canv.addPlayerControls(new RemotePlayerControls(world, me.getRemotePlayerId(), sm.getSendingIp()));
+        canv.addPlayerControls(new RemotePlayerControls(world, me.getRemotePlayerId(), sm.getSendingSocket()));
         canv.setPauseEnabled(false);
         p.setCanvas(canv);
         getFrontEnd().getHost().switchToPage(p);
