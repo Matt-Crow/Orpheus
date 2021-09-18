@@ -52,7 +52,8 @@ public class MessageListener {
     
     private void read() throws IOException {
         ServerMessagePacket fromClient = listeningTo.readServerMessage();
-        if(fromClient.getMessage().getType() == ServerMessageType.SERVER_SHUTDOWN){
+        ServerMessageType type = fromClient.getMessage().getType();
+        if(type == ServerMessageType.SERVER_SHUTDOWN || type == ServerMessageType.PLAYER_LEFT){
             isListening = false;
         } else {
             messageConsumer.accept(fromClient);
