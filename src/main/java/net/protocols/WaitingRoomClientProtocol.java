@@ -25,8 +25,8 @@ import world.WorldContent;
 public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
     private final String hostIp;
     private final int hostPort;
-    public WaitingRoomClientProtocol(AbstractWaitingRoom linkedRoom, String hostIpAddr, int hostPort) {
-        super(linkedRoom);
+    public WaitingRoomClientProtocol(OrpheusServer runningServer, AbstractWaitingRoom linkedRoom, String hostIpAddr, int hostPort) {
+        super(runningServer, linkedRoom);
         hostIp = hostIpAddr;
         this.hostPort = hostPort;
     }
@@ -60,7 +60,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
     }
     
     private synchronized void receiveBuildRequest(ServerMessagePacket sm){
-        OrpheusServer.getInstance().send(new ServerMessage(
+        getServer().send(new ServerMessage(
             BuildJsonUtil.serializeJson(getFrontEnd().getSelectedBuild()).toString(),
             ServerMessageType.PLAYER_DATA
         ), sm.getSender());
@@ -91,13 +91,13 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
         
         WorldPage p = new WorldPage();
         WorldCanvas canv = world.getCanvas();
-        canv.addPlayerControls(new RemotePlayerControls(world, me.getRemotePlayerId(), sm.getSender()));
+        canv.addPlayerControls(new RemotePlayerControls(getServer(), world, me.getRemotePlayerId(), sm.getSender()));
         canv.setPauseEnabled(false);
         p.setCanvas(canv);
         getFrontEnd().getHost().switchToPage(p);
         
         try {
-            new RemoteProxyWorldProtocol(world).applyProtocol();
+            new RemoteProxyWorldProtocol(getServer(), world).applyProtocol();
         } catch (IOException ex) {
             System.err.println("Failed to apply RemoteProxyProtocol");
             ex.printStackTrace();

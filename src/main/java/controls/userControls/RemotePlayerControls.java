@@ -12,15 +12,17 @@ import world.AbstractWorldShell;
  */
 public class RemotePlayerControls extends AbstractPlayerControls{
     private final AbstractUser host;
+    private final OrpheusServer server;
     
-    public RemotePlayerControls(AbstractWorldShell inWorld, String playerId, AbstractUser host){
+    public RemotePlayerControls(OrpheusServer server, AbstractWorldShell inWorld, String playerId, AbstractUser host){
         super(inWorld, playerId);
         this.host = host;
+        this.server = server;
     }
 
     @Override
     public void consumeCommand(String command) {
-        OrpheusServer.getInstance().send(new ServerMessage(
+        server.send(new ServerMessage(
             command,
             ServerMessageType.CONTROL_PRESSED
         ),

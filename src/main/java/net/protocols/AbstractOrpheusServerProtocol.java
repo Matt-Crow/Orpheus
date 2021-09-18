@@ -9,6 +9,16 @@ import net.messages.ServerMessagePacket;
  * @author Matt
  */
 public abstract class AbstractOrpheusServerProtocol {
+    private final OrpheusServer runningServer;
+    
+    protected AbstractOrpheusServerProtocol(OrpheusServer runningServer){
+        this.runningServer = runningServer;
+    }
+    
+    public final OrpheusServer getServer(){
+        return runningServer;
+    }
+    
     public abstract void applyProtocol() throws IOException;
     
     /**

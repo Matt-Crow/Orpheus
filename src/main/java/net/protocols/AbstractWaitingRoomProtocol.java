@@ -3,6 +3,7 @@ package net.protocols;
 import users.AbstractUser;
 import gui.pages.worldSelect.AbstractWaitingRoom;
 import java.util.HashSet;
+import net.OrpheusServer;
 
 /**
  *
@@ -17,7 +18,8 @@ public abstract class AbstractWaitingRoomProtocol extends AbstractOrpheusServerN
     */
     private final HashSet<AbstractUser> teamProto;
     
-    public AbstractWaitingRoomProtocol(AbstractWaitingRoom linkedRoom){
+    public AbstractWaitingRoomProtocol(OrpheusServer runningServer, AbstractWaitingRoom linkedRoom){
+        super(runningServer);
         frontEnd = linkedRoom;
         teamProto = new HashSet<>();
     }

@@ -61,7 +61,7 @@ public abstract class AbstractWaitingRoom extends Page{
         center.add(playerBuild, gbc.clone());
         
         gbc.anchor = GridBagConstraints.LINE_END;
-        chat = new Chat();
+        chat = new Chat(null);
         center.add(chat, gbc.clone());
         
         add(center, BorderLayout.CENTER);

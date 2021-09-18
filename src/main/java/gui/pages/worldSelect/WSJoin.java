@@ -16,6 +16,8 @@ import java.text.NumberFormat;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
+import net.OrpheusServer;
+import net.ServerProvider;
 
 /**
  * Checking for IPv4 is currently disabled, as
@@ -101,7 +103,8 @@ public class WSJoin extends Page{
         try {
             LocalUser.getInstance().loginWindow(); // set username
             msgs.append("Attempting to connect to " + ipAddr + "...\n");
-            ClientWaitingRoom wait = new ClientWaitingRoom(ipAddr, port);
+            OrpheusServer connection = new ServerProvider().createClient(ipAddr, port);
+            ClientWaitingRoom wait = new ClientWaitingRoom(connection, ipAddr, port);
             wait.startProtocol();
             msgs.append("success!\n");
             getHost().switchToPage(wait);

@@ -23,3 +23,5 @@ With that said, their are many changes that I want to make next time I have a ch
     5. host sends back response
     6. update accordingly
     Non-multiplayer just skips the step of sending to a remote server
+* will need some way of reliably shutting down servers once the program is done 
+  with them

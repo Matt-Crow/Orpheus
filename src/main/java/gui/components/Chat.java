@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 import javax.swing.*;
 import net.OrpheusServer;
+import net.ServerProvider;
 import net.messages.ServerMessage;
 import net.messages.ServerMessageType;
 import net.protocols.ChatProtocol;
@@ -19,9 +20,10 @@ public class Chat extends JComponent implements ActionListener{
     private final JScrollPane box;
     private final JTextField newMsg;
     private final HashMap<String, Consumer<String[]>> CMDS = new HashMap<>();
+    private final OrpheusServer chatServer;
     private boolean chatServerOpened;
     
-    public Chat(){
+    public Chat(OrpheusServer chatServer){
         super();
         
         setLayout(new GridBagLayout());
@@ -50,6 +52,7 @@ public class Chat extends JComponent implements ActionListener{
         
         logLocal("enter '/?' to list commands");
         
+        this.chatServer = chatServer;
         chatServerOpened = false;
         
         revalidate();
@@ -106,9 +109,9 @@ public class Chat extends JComponent implements ActionListener{
     }
     public void log(String msg){
         logLocal("You: " + msg);
-        if(OrpheusServer.getInstance().isStarted()){
+        if(chatServer != null && chatServer.isStarted()){
             ServerMessage sm = new ServerMessage(msg, ServerMessageType.CHAT);
-            OrpheusServer.getInstance().send(sm);
+            chatServer.send(sm);
         }
 	}
     
@@ -116,7 +119,7 @@ public class Chat extends JComponent implements ActionListener{
     // maybe move this stuff
     public void openChatServer() throws IOException{
         if(!chatServerOpened){
-            new ChatProtocol(this).applyProtocol();
+            new ChatProtocol(chatServer, this).applyProtocol();
             chatServerOpened = true;
         }
     }
@@ -125,23 +128,16 @@ public class Chat extends JComponent implements ActionListener{
         if(!chatServerOpened){
             openChatServer();
         }
-        OrpheusServer server = OrpheusServer.getInstance();
-        if(server.isStarted()){
-            try {
-                server.connect(ipAddr, port);
-                logLocal("Joined chat with " + ipAddr);
-                server.send(new ServerMessage(
-                    LocalUser.getInstance().getName() + " has joined the chat.",
-                    ServerMessageType.CHAT
-                ));
-            } catch (IOException ex) {
-                logLocal(ex.getMessage());
-            }
-            
+        if(this.chatServer.isStarted()){
+            logLocal("Joined chat with " + ipAddr);
+            chatServer.send(new ServerMessage(
+                LocalUser.getInstance().getName() + " has joined the chat.",
+                ServerMessageType.CHAT
+            ));
         }
     }
     
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException{
         JFrame f = new JFrame();
         f.setSize(500, 500);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -152,7 +148,7 @@ public class Chat extends JComponent implements ActionListener{
         f.setContentPane(p);
         p.setBackground(Color.red);
         
-        Chat c = new Chat();
+        Chat c = new Chat(new ServerProvider().createHost());
         p.add(c);
         try {
             c.openChatServer();

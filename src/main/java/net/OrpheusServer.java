@@ -56,9 +56,6 @@ public class OrpheusServer {
     */
     private static final int CONNECTION_TIME_OUT = 3000; // 3 seconds
     
-    // I want to move away from using this as a singleton
-    private static OrpheusServer instance = null;
-    
     /**
      * Creates an OrpheusServer.
      * Note that this does not actually start the server,
@@ -78,27 +75,6 @@ public class OrpheusServer {
         currentChatProtocol = null;
         
         isStarted = false;
-    }
-    
-    public static final void validateServer() throws IOException{
-        if(instance == null){
-            instance = new OrpheusServer();
-        }
-    }
-    
-    /**
-     * Use this method to interact with the OrpheusServer.
-     * This method create the instance of OrpheusServer if it is not yet initialized.
-     * 
-     * Note that you must still call .start() on the server
-     * 
-     * @return the instance of OrpheusServer
-     */
-    public static final OrpheusServer getInstance() {
-        if(instance == null){
-            throw new NullPointerException("Looks like you forgot to call OrpheusServer.validateServer() before OrpheusServer.getInstance()");
-        }
-        return instance;
     }
         
     /**

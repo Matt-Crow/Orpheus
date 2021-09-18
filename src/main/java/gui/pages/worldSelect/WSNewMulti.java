@@ -1,6 +1,8 @@
 package gui.pages.worldSelect;
 
 import java.io.IOException;
+import net.OrpheusServer;
+import net.ServerProvider;
 import net.protocols.WaitingRoomHostProtocol;
 import users.LocalUser;
 
@@ -17,8 +19,8 @@ public class WSNewMulti extends AbstractWSNewWorld{
     public void start(){
         LocalUser.getInstance().loginWindow();
         try{
-            //User.getUser().initPlayer().getPlayer().applyBuild(getSelectedBuild());
-            HostWaitingRoom wait = new HostWaitingRoom(createBattle());
+            OrpheusServer server = new ServerProvider().createHost();
+            HostWaitingRoom wait = new HostWaitingRoom(server, createBattle());
             wait.startProtocol();
             getHost().switchToPage(wait);
             ((WaitingRoomHostProtocol)wait.getBackEnd()).addUserToTeam(LocalUser.getInstance());

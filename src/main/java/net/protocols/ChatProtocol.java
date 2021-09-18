@@ -12,14 +12,14 @@ import net.messages.ServerMessagePacket;
 public class ChatProtocol extends AbstractOrpheusServerProtocol{
     private final Chat widget; // he he he. Widgit is fun to say
     
-    public ChatProtocol(Chat chat){
+    public ChatProtocol(OrpheusServer runningServer, Chat chat){
+        super(runningServer);
         widget = chat;
     }
     
     @Override
     public void applyProtocol() throws IOException {
-        OrpheusServer.validateServer();
-        OrpheusServer server = OrpheusServer.getInstance();
+        OrpheusServer server = getServer();
         server.restart();
         server.setChatProtocol(this);
         doApplyProtocol();
@@ -27,7 +27,7 @@ public class ChatProtocol extends AbstractOrpheusServerProtocol{
 
     @Override
     public void doApplyProtocol() {
-        String conn = OrpheusServer.getInstance().getConnectionString();
+        String conn = getServer().getConnectionString();
         widget.logLocal(String.format("Have other people use the /connect %s command to connect.", conn));
     }
     

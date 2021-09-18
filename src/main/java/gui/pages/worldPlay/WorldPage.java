@@ -9,7 +9,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -56,7 +55,7 @@ public class WorldPage extends Page{
         JPanel otherArea = new JPanel();
         otherArea.setLayout(new GridBagLayout());
         GridBagConstraints c2 = new GridBagConstraints();
-        chat = new Chat();
+        chat = new Chat(null);
         c2.fill = GridBagConstraints.VERTICAL;
         c2.anchor = GridBagConstraints.FIRST_LINE_START;
         c2.weightx = 1.0;
@@ -91,8 +90,8 @@ public class WorldPage extends Page{
         });
         if(w.getWorldShell() instanceof RemoteProxyWorld || w.getWorldShell() instanceof HostWorld){
             try {
-                chat.openChatServer();
-            } catch (IOException ex) {
+                throw new RuntimeException("will need some way of starting the chat server");
+            } catch (RuntimeException ex) {
                 chat.logLocal("Failed to start chat server");
                 ex.printStackTrace();
             }

@@ -15,11 +15,11 @@ import world.entities.AbstractPlayer;
 import java.awt.Graphics2D;
 import java.io.IOException;
 import world.entities.HumanPlayer;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import users.LocalUser;
 import util.SerialUtil;
 import gui.pages.Canvas;
+import net.ServerProvider;
 import world.HostWorld;
 import world.WorldContent;
 
@@ -157,7 +157,7 @@ public class WorldCanvas extends Canvas{
         
         player.applyBuild(Settings.getDataSet().getDefaultBuild());
         
-        HostWorld world = new HostWorld(WorldContent.createDefaultBattle());
+        HostWorld world = new HostWorld(new ServerProvider().createHost(), WorldContent.createDefaultBattle());
         Team t1 = new Team("Test", Color.BLUE);
         Team t2 = Team.constructRandomTeam("Rando", Color.yellow, 1, 1);
         t1.addMember(player);

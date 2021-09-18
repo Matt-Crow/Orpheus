@@ -1,5 +1,6 @@
 package gui.pages.worldSelect;
 
+import net.OrpheusServer;
 import world.battle.Battle;
 import net.protocols.WaitingRoomHostProtocol;
 
@@ -8,9 +9,9 @@ import net.protocols.WaitingRoomHostProtocol;
  * @author Matt
  */
 public class HostWaitingRoom extends AbstractWaitingRoom{
-    public HostWaitingRoom(Battle game){
+    public HostWaitingRoom(OrpheusServer runningServer, Battle game){
         super();
-        setBackEnd(new WaitingRoomHostProtocol(this, game));
+        setBackEnd(new WaitingRoomHostProtocol(runningServer, this, game));
     }
 
     @Override

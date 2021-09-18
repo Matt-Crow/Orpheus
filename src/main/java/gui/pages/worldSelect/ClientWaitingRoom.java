@@ -1,5 +1,6 @@
 package gui.pages.worldSelect;
 
+import net.OrpheusServer;
 import net.protocols.WaitingRoomClientProtocol;
 
 /**
@@ -7,9 +8,9 @@ import net.protocols.WaitingRoomClientProtocol;
  * @author Matt
  */
 public class ClientWaitingRoom extends AbstractWaitingRoom{
-    public ClientWaitingRoom(String hostIp, int hostPort) {
+    public ClientWaitingRoom(OrpheusServer runningServer, String hostIp, int hostPort) {
         super();
-        setBackEnd(new WaitingRoomClientProtocol(this, hostIp, hostPort));
+        setBackEnd(new WaitingRoomClientProtocol(runningServer, this, hostIp, hostPort));
     }
     
     @Override

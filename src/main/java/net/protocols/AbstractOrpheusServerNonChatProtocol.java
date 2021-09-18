@@ -11,6 +11,10 @@ import net.OrpheusServer;
  * @author Matt Crow
  */
 public abstract class AbstractOrpheusServerNonChatProtocol extends AbstractOrpheusServerProtocol{
+
+    public AbstractOrpheusServerNonChatProtocol(OrpheusServer runningServer) {
+        super(runningServer);
+    }
     
     /**
      * Restarts the server, and applies this as its protocol
@@ -18,10 +22,8 @@ public abstract class AbstractOrpheusServerNonChatProtocol extends AbstractOrphe
      */
     @Override
     public final void applyProtocol() throws IOException{
-        OrpheusServer.validateServer();
-        OrpheusServer server = OrpheusServer.getInstance();
-        server.restart();
-        server.setProtocol(this);
+        getServer().restart();
+        getServer().setProtocol(this);
         doApplyProtocol();
     }
 }

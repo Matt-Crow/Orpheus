@@ -56,11 +56,12 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
     
     /**
      * Creates the protocol.
+     * @param runningServer
      * @param host the HostWaitingRoom to act as this protocol's front end
      * @param game the game which players will play once this protocol is done.
      */
-    public WaitingRoomHostProtocol(HostWaitingRoom host, Battle game){
-        super(host);
+    public WaitingRoomHostProtocol(OrpheusServer runningServer, HostWaitingRoom host, Battle game){
+        super(runningServer, host);
         minigame = game;   
         playerTeam = new Team("Players", Color.blue);
         enemyTeam = new Team("AI", Color.red);
@@ -97,7 +98,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
                 "join player team",
                 ServerMessageType.WAITING_ROOM_UPDATE
             );
-            OrpheusServer.getInstance().send(sm);
+            getServer().send(sm);
             getFrontEnd().getChat().logLocal(u.getName() + " has joined the team!");
             getFrontEnd().updateTeamDisplays();
         }
@@ -141,7 +142,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
             initMsgBuild.build().toString(),
             ServerMessageType.WAITING_ROOM_INIT
         );
-        OrpheusServer.getInstance().send(initMsg, sm.getSender());
+        getServer().send(initMsg, sm.getSender());
     }
     
     public final void prepareToStart(){
@@ -178,7 +179,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
     }
     
     private void requestBuilds(){
-        OrpheusServer.getInstance().send(new ServerMessage(
+        getServer().send(new ServerMessage(
             "please provide build information",
             ServerMessageType.REQUEST_PLAYER_DATA
         ));
@@ -224,7 +225,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
             playerId,
             ServerMessageType.NOTIFY_IDS
         );
-        OrpheusServer.getInstance().send(sm, user);
+        getServer().send(sm, user);
     }
     
     private void checkIfReady(){
@@ -242,13 +243,13 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
      * @throws IOException 
      */
     private void createWorld() throws IOException{
-        HostWorld w = new HostWorld(WorldContent.createDefaultBattle());
+        HostWorld w = new HostWorld(getServer(), WorldContent.createDefaultBattle());
         w.createCanvas();
         w.setPlayerTeam(playerTeam).setEnemyTeam(enemyTeam).setCurrentMinigame(minigame);
         minigame.setHost(w.getContent());
         w.init();
         
-        new HostWorldProtocol(w).applyProtocol();
+        new HostWorldProtocol(getServer(), w).applyProtocol();
         sendWorldInit(w.getContent());
         
         WorldPage p = new WorldPage();
@@ -271,7 +272,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
             serial,
             ServerMessageType.WORLD_INIT
         );
-        OrpheusServer.getInstance().send(sm);
+        getServer().send(sm);
     }
     
     @Override

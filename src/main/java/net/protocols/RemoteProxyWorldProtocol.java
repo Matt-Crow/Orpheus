@@ -15,12 +15,14 @@ import world.WorldContent;
 public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtocol{
     private final RemoteProxyWorld proxy;
     
-    /** 
+    /**
+     * @param runningServer
      * @param localProxy the RemoteProxyWorld shell created on the clients
      * computer. World updates received by this protocol will be applied to
      * that proxy.
      */
-    public RemoteProxyWorldProtocol(RemoteProxyWorld localProxy){
+    public RemoteProxyWorldProtocol(OrpheusServer runningServer, RemoteProxyWorld localProxy){
+        super(runningServer);
         proxy = localProxy;
     }
     

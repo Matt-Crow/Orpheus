@@ -18,8 +18,11 @@ import util.SerialUtil;
  * @author Matt
  */
 public class HostWorld extends AbstractWorldShell{
-    public HostWorld(WorldContent worldContent) {
+    private final OrpheusServer hostingServer;
+    
+    public HostWorld(OrpheusServer hostingServer, WorldContent worldContent) {
         super(worldContent);
+        this.hostingServer = hostingServer;
     }
     
     private void updateTeam(Team t){
@@ -50,7 +53,7 @@ public class HostWorld extends AbstractWorldShell{
         updateTeam(getAITeam());
         updateParticles();
         updateMinigame();
-        OrpheusServer.getInstance().send(new ServerMessage(
+        hostingServer.send(new ServerMessage(
             SerialUtil.serializeToString(getContent()),
             ServerMessageType.WORLD_UPDATE
         ));
