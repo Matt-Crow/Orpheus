@@ -15,3 +15,11 @@ With that said, their are many changes that I want to make next time I have a ch
 * Redo GUI
 * Security manager for multiplayer
 * use Socket to identify users, not IP address
+* Idea: standard Orpheus workflow:
+    1. receive input
+    2. send message to server
+    3. transmit message to host
+    4. host processes message
+    5. host sends back response
+    6. update accordingly
+    Non-multiplayer just skips the step of sending to a remote server

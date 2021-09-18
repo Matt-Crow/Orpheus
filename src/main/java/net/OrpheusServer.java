@@ -1,15 +1,14 @@
 package net;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.UnknownHostException;
 import net.connections.Connection;
 import net.connections.ConnectionListener;
 import net.connections.Connections;
+import net.messages.MessageListener;
 import net.messages.ServerMessage;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
@@ -35,11 +34,7 @@ import util.SafeList;
  * encoded into JSON format, then converted into a String.
  * Upon receiving input into its socket, the server will attempt to de-serialize it.
  * If the de-serialization is successful, it takes the type of that message,
- * and calls the corresponding Consumers in the 'receivers' HashMap.
- * 
- * 
- * 
- * Still have some cleanup I want to do: Lotta nested stuff
+ * and gives it to the current protocols
  * 
  * @see net.protocols.AbstractOrpheusServerNonChatProtocol
  * 
@@ -50,9 +45,7 @@ public class OrpheusServer {
     private final ServerSocket server;
     
     private final Connections clients;
-    private final ConnectionListener connectionHandler;
-    private volatile boolean listenForConn; //whether or not the connListener thread is active
-    
+    private final ConnectionListener connectionHandler;    
     private final SafeList<ServerMessagePacket> cachedMessages; //messages received before the receiver could be
     
     private volatile AbstractOrpheusServerNonChatProtocol currentProtocol;
@@ -82,7 +75,6 @@ public class OrpheusServer {
         clients = new Connections();
         connectionHandler = new ConnectionListener(server, clients, this::setUpMessageListener);
         cachedMessages = new SafeList<>();
-        listenForConn = false;   
         
         currentProtocol = null;
         currentChatProtocol = null;
@@ -171,7 +163,6 @@ public class OrpheusServer {
         //currentChatProtocol = null;
         
         connectionHandler.startOrContinue();
-        listenForConn = true;
         
         return this;
     }
@@ -212,33 +203,8 @@ public class OrpheusServer {
     }
     
     private void setUpMessageListener(Connection conn){
-        //do I need to store this somewhere?
         log("Opening message listener thread...");
-        new Thread(){
-            @Override
-            public void run(){
-                ServerMessagePacket fromClient = null;
-                while(true){
-                    try{
-                        fromClient = conn.readServerMessage();
-                        if(fromClient.getMessage().getType() == ServerMessageType.SERVER_SHUTDOWN){
-                            log("breaking");
-                            break;
-                        }
-                        receiveMessage(fromClient);
-                    } catch (EOFException ex){
-                        ex.printStackTrace();
-                        log("connection terminated");
-                        break;
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-                log("disconnecting...");
-                clients.disconnectFrom(conn.getClientSocket());
-            }
-        }.start();
-        log("Listener thread started successfully");
+        new MessageListener(conn, this::receiveMessage).startListening();
         
         //includes the User data so the other computer has access to username
         
@@ -361,13 +327,6 @@ public class OrpheusServer {
                 log("uncached message " + sm.hashCode());
             }
         });
-    }
-    
-    public final void setAcceptingConn(boolean b){
-        listenForConn = b;
-        if(b){
-            connectionHandler.startOrContinue();
-        }
     }
     
     public final void shutDown(){
