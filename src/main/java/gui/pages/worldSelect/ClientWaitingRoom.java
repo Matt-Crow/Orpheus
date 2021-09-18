@@ -7,9 +7,9 @@ import net.protocols.WaitingRoomClientProtocol;
  * @author Matt
  */
 public class ClientWaitingRoom extends AbstractWaitingRoom{
-    public ClientWaitingRoom(String hostIp) {
+    public ClientWaitingRoom(String hostIp, int hostPort) {
         super();
-        setBackEnd(new WaitingRoomClientProtocol(this, hostIp));
+        setBackEnd(new WaitingRoomClientProtocol(this, hostIp, hostPort));
     }
     
     @Override

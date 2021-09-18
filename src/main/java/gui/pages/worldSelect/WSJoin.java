@@ -12,6 +12,10 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import users.LocalUser;
 import gui.pages.Page;
+import java.text.NumberFormat;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 
 /**
  * Checking for IPv4 is currently disabled, as
@@ -43,6 +47,7 @@ public class WSJoin extends Page{
     
     private final JTextArea msgs;
     private final JTextField ip;
+    private final JFormattedTextField port;
     
     public WSJoin() {
         super();
@@ -64,16 +69,26 @@ public class WSJoin extends Page{
         
         //right side
         ip = new JTextField("enter host address here");
-        ip.addActionListener((e)->{
-            //if(isIpAddr(ip.getText())){
-                join(ip.getText());
-            //} else {
-            //    msgs.append('"' + ip.getText() + "\" doesn't look like an IP address to me. \n");
-            //}
-        });
         
         JPanel right = new JPanel();
+        right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
         right.add(ip);
+        
+        port = new JFormattedTextField(NumberFormat.getIntegerInstance());
+        right.add(port);
+        
+        JButton join = new JButton("Join");
+        join.addActionListener((e)->{
+            if(!isIpAddr(ip.getText())){
+                msgs.append('"' + ip.getText() + "\" doesn't look like an IP address to me. \n");
+            } else if(port.getValue() == null || !(port.getValue() instanceof Number)){
+                msgs.append("please specify a port");
+            } else {
+                int p = ((Number)port.getValue()).intValue();
+                join(ip.getText(), p);
+            }
+        });
+        right.add(join);
         
         add(right);
     }
@@ -82,11 +97,11 @@ public class WSJoin extends Page{
         return REGEX.matcher(s).find();
     }
     
-    private void join(String ipAddr){
+    private void join(String ipAddr, int port){
         try {
             LocalUser.getInstance().loginWindow(); // set username
             msgs.append("Attempting to connect to " + ipAddr + "...\n");
-            ClientWaitingRoom wait = new ClientWaitingRoom(ipAddr);
+            ClientWaitingRoom wait = new ClientWaitingRoom(ipAddr, port);
             wait.startProtocol();
             msgs.append("success!\n");
             getHost().switchToPage(wait);

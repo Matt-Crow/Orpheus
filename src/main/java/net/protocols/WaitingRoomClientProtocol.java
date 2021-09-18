@@ -15,7 +15,6 @@ import gui.pages.worldSelect.AbstractWaitingRoom;
 import gui.pages.worldPlay.WorldCanvas;
 import gui.pages.worldPlay.WorldPage;
 import net.messages.ServerMessage;
-import users.RemoteUser;
 import world.RemoteProxyWorld;
 import world.WorldContent;
 
@@ -25,16 +24,18 @@ import world.WorldContent;
  */
 public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
     private final String hostIp;
-    public WaitingRoomClientProtocol(AbstractWaitingRoom linkedRoom, String hostIpAddr) {
+    private final int hostPort;
+    public WaitingRoomClientProtocol(AbstractWaitingRoom linkedRoom, String hostIpAddr, int hostPort) {
         super(linkedRoom);
         hostIp = hostIpAddr;
+        this.hostPort = hostPort;
     }
     
     @Override
     public void doApplyProtocol() {
         resetTeamProto();
         try {
-            getFrontEnd().getChat().joinChat(hostIp);
+            getFrontEnd().getChat().joinChat(hostIp, hostPort);
         } catch (IOException ex) {
             getFrontEnd().getChat().logLocal("Failed to connect to " + hostIp);
             ex.printStackTrace();

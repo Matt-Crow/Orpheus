@@ -52,7 +52,6 @@ import util.SafeList;
 public class OrpheusServer {
     private volatile boolean isStarted;
     private final ServerSocket server;
-    private final HashSet<InetAddress> validIpAddresses;
     
     private final Connections clients;
     private Thread connListener; //the thread that listens for attemts to connect to this server
@@ -63,7 +62,6 @@ public class OrpheusServer {
     private volatile AbstractOrpheusServerNonChatProtocol currentProtocol;
     private volatile ChatProtocol currentChatProtocol;
     
-    public static final int PORT = 5000;
     private static OrpheusServer instance = null;
     
     /**
@@ -75,8 +73,9 @@ public class OrpheusServer {
         if(instance != null){
             throw new ExceptionInInitializerError("OrpheusServer is a singleton class: Use OrpheusServer.getInstance()");
         }
-        server = new ServerSocket(PORT);
-        validIpAddresses = getValidInetAddresses();
+        
+        // setting the port to 0 means "use any available port"
+        server = new ServerSocket(0);
         
         clients = new Connections();
         cachedMessages = new SafeList<>();
@@ -88,45 +87,6 @@ public class OrpheusServer {
         
         isStarted = false;
     }
-    
-    /**
-     * 
-     * @return
-     * @throws SocketException if this cannot access any network interfaces 
-     */
-    private HashSet<InetAddress> getValidInetAddresses() throws SocketException {
-        HashSet<InetAddress> ips = new HashSet<>();
-        
-        // get network interfaces
-        Enumeration<NetworkInterface> eni = NetworkInterface.getNetworkInterfaces();
-        NetworkInterface ni = null;
-        Enumeration<InetAddress> addrs = null;
-        InetAddress ia = null;
-        
-        while(eni.hasMoreElements()){
-            try {
-                ni = eni.nextElement();
-                if(!ni.isLoopback() && ni.isUp()){
-                    //System.out.println(ni);
-                    addrs = ni.getInetAddresses();
-                    while(addrs.hasMoreElements()){
-                        ia = addrs.nextElement();
-                        //System.out.println(ia.getHostAddress());
-                        ips.add(ia);
-                    }
-                }
-            } catch (SocketException ex) {
-                // catch here so one broken socket doesn't cause the whole method to crash
-                ex.printStackTrace();
-            }
-        }
-        return ips;
-    }
-    
-    public final List<String> getIpList(){
-        return validIpAddresses.stream().map((i)->i.getHostAddress()).collect(Collectors.toList());
-    }
-    
     
     public static final void validateServer() throws IOException{
         if(instance == null){
@@ -166,14 +126,28 @@ public class OrpheusServer {
             return this;
         }
         
-        log("Valid IP addresses include:");
-        validIpAddresses.forEach(this::log);
-        log(String.format("Server initialized on port %d", PORT));
+        log(String.format("Server initialized on %s", getConnectionString()));
         reset();
         
         isStarted = true;
         
         return this;
+    }
+    
+    /**
+     * 
+     * @return the address of the server in the form IP:PORT 
+     */
+    public final String getConnectionString(){
+        return String.format("%s:%d", server.getInetAddress().getHostAddress(), getPort());
+    }
+    
+    public final String getIpAddress(){
+        return server.getInetAddress().getHostAddress();
+    }
+    
+    public final int getPort(){
+        return server.getLocalPort();
     }
     
     /**
@@ -258,17 +232,13 @@ public class OrpheusServer {
         }
     }
     
-    public synchronized void connect(String ipAddr) throws UnknownHostException, IOException{
-        connect(InetAddress.getByName(ipAddr));
+    public synchronized void connect(String ipAddr, int port) throws UnknownHostException, IOException{
+        connect(InetAddress.getByName(ipAddr), port);
     }
-    public synchronized void connect(InetAddress ipAddr) throws IOException{
-        log(String.format("Connecting to %s...", ipAddr));
-        //if(ipAddr.equals(this.ipAddress)){
-            //log("Do not connect to self. Exiting.");
-        //} else {
-            Socket sock = new Socket(ipAddr, PORT);
-            connect(sock);
-        //}
+    public synchronized void connect(InetAddress ipAddr, int port) throws IOException{
+        log(String.format("Connecting to %s:%d...", ipAddr, port));
+        Socket sock = new Socket(ipAddr, port);
+        connect(sock);
     }
     public synchronized void connect(Socket otherComputer) throws IOException{
         log(clients);
@@ -474,12 +444,12 @@ public class OrpheusServer {
         OrpheusServer os = new OrpheusServer();
         System.out.println(os.clients);
         os.start();
+        
         new Thread(){
             @Override
             public void run(){
                 try {
-                    new Connection(new Socket(InetAddress.getLoopbackAddress(), PORT));
-                    //new Socket("0.0.0.0", PORT);
+                    new Connection(new Socket(os.getIpAddress(), os.getPort()));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }

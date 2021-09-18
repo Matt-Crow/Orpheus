@@ -2,7 +2,6 @@ package net.protocols;
 
 import gui.components.Chat;
 import java.io.IOException;
-import java.util.List;
 import net.OrpheusServer;
 import net.messages.ServerMessagePacket;
 
@@ -28,10 +27,8 @@ public class ChatProtocol extends AbstractOrpheusServerProtocol{
 
     @Override
     public void doApplyProtocol() {
-        List<String> ips = OrpheusServer.getInstance().getIpList();
-        widget.logLocal("Initialized chat server on the following addresses:");
-        ips.forEach((i)->widget.logLocal("* " + i));
-        widget.logLocal("Have other people use the /connect command with one of these addresses to connect.");
+        String conn = OrpheusServer.getInstance().getConnectionString();
+        widget.logLocal(String.format("Have other people use the /connect %s command to connect.", conn));
     }
     
     private void receiveChatMsg(ServerMessagePacket sm){

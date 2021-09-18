@@ -60,7 +60,9 @@ public class Chat extends JComponent implements ActionListener{
         addCmd("?", (String[] ss)->listCmds());
         addCmd("connect", (ss)->{
             try {
-                joinChat(ss[0]);
+                String ip = ss[0].split(":")[0];
+                int port = Integer.parseInt(ss[0].split(":")[1], 10);
+                joinChat(ip, port);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -119,14 +121,14 @@ public class Chat extends JComponent implements ActionListener{
         }
     }
     
-    public void joinChat(String ipAddr) throws IOException{
+    public void joinChat(String ipAddr, int port) throws IOException{
         if(!chatServerOpened){
             openChatServer();
         }
         OrpheusServer server = OrpheusServer.getInstance();
         if(server.isStarted()){
             try {
-                server.connect(ipAddr);
+                server.connect(ipAddr, port);
                 logLocal("Joined chat with " + ipAddr);
                 server.send(new ServerMessage(
                     LocalUser.getInstance().getName() + " has joined the chat.",
