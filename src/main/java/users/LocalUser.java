@@ -1,6 +1,5 @@
 package users;
 
-import java.net.Socket;
 import javax.swing.JOptionPane;
 
 /**
@@ -42,10 +41,5 @@ public class LocalUser extends AbstractUser {
     
     public final String getRemotePlayerId(){
         return remotePlayerId;
-    }
-
-    @Override // not sure if I like this
-    public Socket getSocket() {
-        return null;
     }
 }

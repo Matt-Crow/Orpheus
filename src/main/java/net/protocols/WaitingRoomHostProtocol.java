@@ -9,7 +9,6 @@ import world.entities.HumanPlayer;
 import java.awt.Color;
 import java.io.IOException;
 import static java.lang.System.err;
-import java.util.HashMap;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
@@ -23,7 +22,7 @@ import users.LocalUser;
 import gui.pages.worldSelect.HostWaitingRoom;
 import gui.pages.worldPlay.WorldCanvas;
 import gui.pages.worldPlay.WorldPage;
-import java.net.Socket;
+import java.util.HashSet;
 import net.messages.ServerMessage;
 import world.HostWorld;
 import world.WorldContent;
@@ -53,7 +52,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
     The Users who have joined the waiting room, but have
     not yet sent their Builds to the server
     */
-    private final HashMap<Socket, AbstractUser> awaitingBuilds;
+    private final HashSet<AbstractUser> awaitingBuilds;
     
     /**
      * Creates the protocol.
@@ -65,7 +64,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
         minigame = game;   
         playerTeam = new Team("Players", Color.blue);
         enemyTeam = new Team("AI", Color.red);
-        awaitingBuilds = new HashMap<>();
+        awaitingBuilds = new HashSet<>();
     }
     
     /**
@@ -93,7 +92,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
      */
     public final void addUserToTeam(AbstractUser u){
         if(addToTeamProto(u)){
-            awaitingBuilds.put(u.getSocket(), u);
+            awaitingBuilds.add(u);
             ServerMessage sm = new ServerMessage(
                 "join player team",
                 ServerMessageType.WAITING_ROOM_UPDATE
@@ -113,8 +112,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
      * @param sm
      */
     private void receiveJoin(ServerMessagePacket sm){
-        Socket joiningIp = sm.getSendingSocket();
-        if(containsIp(joiningIp)){
+        if(containsUser(sm.getSender())){
             return;
         } // ##################### RETURNS HERE IF ALREADY JOINED
         
@@ -143,7 +141,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
             initMsgBuild.build().toString(),
             ServerMessageType.WAITING_ROOM_INIT
         );
-        OrpheusServer.getInstance().send(initMsg, joiningIp);
+        OrpheusServer.getInstance().send(initMsg, sm.getSender());
     }
     
     public final void prepareToStart(){
@@ -166,11 +164,11 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
         
         // put the host on the user team
         LocalUser me = LocalUser.getInstance();
-        if(awaitingBuilds.containsKey(me.getSocket())){
+        if(awaitingBuilds.contains(me)){
             myPlayer = new HumanPlayer(me.getName());
             myPlayer.applyBuild(getFrontEnd().getSelectedBuild());
             playerTeam.addMember(myPlayer);
-            awaitingBuilds.remove(me.getSocket());
+            awaitingBuilds.remove(me);
         } else {
             throw new UnsupportedOperationException();
         }
@@ -197,37 +195,36 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
      * @param sm a server message containing the sender's Build, serialized as a JSON object string
      */
     private void receiveBuildInfo(ServerMessagePacket sm){
-        Socket ip = sm.getSendingSocket();
         HumanPlayer player = null;
-        Build b;
+        AbstractUser sender = sm.getSender();
         
-        if(awaitingBuilds.containsKey(ip)){
-            player = new HumanPlayer(sm.getSender().getName());
-            awaitingBuilds.remove(ip);
+        if(awaitingBuilds.contains(sender)){
+            player = new HumanPlayer(sender.getName());
+            awaitingBuilds.remove(sender);
         } else {
-            err.println("Ugh oh, " + sm.getSender().getName() + " isn't on any team!");
+            err.println("Ugh oh, " + sender.getName() + " isn't on any team!");
             return;
         }
 
-        b = BuildJsonUtil.deserializeJson(JsonUtil.fromString(sm.getMessage().getBody()));
+        Build b = BuildJsonUtil.deserializeJson(JsonUtil.fromString(sm.getMessage().getBody()));
         player.applyBuild(b);
         playerTeam.addMember(player);
         
-        sendRemoteId(ip, player.id);
+        sendRemoteId(sender, player.id);
         checkIfReady();
     }
     
     /**
      * Called by receiveBuild
-     * @param ipAddr the ip address of the user to send the IDs to.
+     * @param ipAddr the user to send the IDs to.
      * @param playerId the ID of that user's Player on this computer
      */
-    private void sendRemoteId(Socket ipAddr, String playerId){
+    private void sendRemoteId(AbstractUser user, String playerId){
         ServerMessage sm = new ServerMessage(
             playerId,
             ServerMessageType.NOTIFY_IDS
         );
-        OrpheusServer.getInstance().send(sm, ipAddr);
+        OrpheusServer.getInstance().send(sm, user);
     }
     
     private void checkIfReady(){

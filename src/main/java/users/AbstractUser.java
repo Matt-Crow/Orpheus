@@ -1,6 +1,5 @@
 package users;
 
-import java.net.Socket;
 import javax.json.Json;
 import javax.json.JsonException;
 import javax.json.JsonObject;
@@ -31,8 +30,6 @@ public abstract class AbstractUser implements JsonSerialable {
         return userName;
     }
     
-    public abstract Socket getSocket();
-    
     /**
      * Serializes this user into JSON. Note that both LocalUsers
      * and RemoteUsers are serialized the same way
@@ -50,12 +47,6 @@ public abstract class AbstractUser implements JsonSerialable {
         JsonObjectBuilder objBuild = Json.createObjectBuilder();
         objBuild.add("type", "user");
         objBuild.add("name", userName);
-        try{
-            objBuild.add("ip address", getSocket().getInetAddress().getHostAddress());
-            objBuild.add("port", getSocket().getPort());
-        } catch (NullPointerException ex){
-            
-        }
         return objBuild.build();
     }
     

@@ -1,9 +1,5 @@
 package net;
 
-import net.connections.Connection;
-import net.messages.ServerMessagePacket;
-import net.messages.ServerMessageType;
-import net.protocols.AbstractOrpheusServerNonChatProtocol;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -16,13 +12,16 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
+import net.connections.Connection;
 import net.connections.Connections;
 import net.messages.ServerMessage;
+import net.messages.ServerMessagePacket;
+import net.messages.ServerMessageType;
+import net.protocols.AbstractOrpheusServerNonChatProtocol;
 import net.protocols.ChatProtocol;
 import serialization.JsonUtil;
 import users.AbstractUser;
 import users.LocalUser;
-import users.RemoteUser;
 import util.SafeList;
 
 /**
@@ -328,11 +327,13 @@ public class OrpheusServer {
         clients.broadcast(sm);
     }
     
-    public boolean send(ServerMessage sm, Socket ipAddr){
+    public boolean send(ServerMessage sm, AbstractUser recipient){
         boolean success = false;
-        if(clients.isConnectedTo(ipAddr)){
-            clients.getConnectionTo(ipAddr).writeServerMessage(sm);
+        if(clients.isConnectedTo(recipient)){
+            clients.getConnectionTo(recipient).writeServerMessage(sm);
             success = true;
+        } else {
+            System.err.printf("Not connected to %s. Here are my connections:\n%s\n", recipient, clients);
         }
         return success;
     }
@@ -344,11 +345,7 @@ public class OrpheusServer {
             log("already connected");
         } else if(isConnected){
             //connected to IP, but no user data set yet
-            AbstractUser sender = AbstractUser.deserializeJson(JsonUtil.fromString(sm.getMessage().getBody()));
-            if(sender instanceof RemoteUser){
-                ((RemoteUser)sender).setSocket(ip);
-            }
-            
+            AbstractUser sender = AbstractUser.deserializeJson(JsonUtil.fromString(sm.getMessage().getBody()));      
             sm.setSender(sender);
             clients.getConnectionTo(ip).setRemoteUser(sender);
             log(clients);
@@ -357,9 +354,6 @@ public class OrpheusServer {
             try {
                 connect(ip);
                 AbstractUser sender = AbstractUser.deserializeJson(JsonUtil.fromString(sm.getMessage().getBody()));
-                if(sender instanceof RemoteUser){
-                    ((RemoteUser)sender).setSocket(sm.getSendingSocket());
-                }
                 sm.setSender(sender);
                 clients.getConnectionTo(ip).setRemoteUser(sender);
                 log(clients);
@@ -476,25 +470,23 @@ public class OrpheusServer {
     }
     
     // yay! this works!
-    public static void main(String[] args) throws SocketException{
-        try {
-            OrpheusServer os = new OrpheusServer();
-            System.out.println(os.clients);
-            os.start();
-            new Thread(){
-                @Override
-                public void run(){
-                    try {
-                        new Connection(new Socket(InetAddress.getLoopbackAddress(), PORT));
-                        //new Socket("0.0.0.0", PORT);
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
+    public static void main(String[] args) throws Exception{
+        OrpheusServer os = new OrpheusServer();
+        System.out.println(os.clients);
+        os.start();
+        new Thread(){
+            @Override
+            public void run(){
+                try {
+                    new Connection(new Socket(InetAddress.getLoopbackAddress(), PORT));
+                    //new Socket("0.0.0.0", PORT);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
-            }.start();
-            //os.shutDown();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+            }
+        }.start();
+        Thread.sleep(3000);
+        os.shutDown();
+        
     }
 }

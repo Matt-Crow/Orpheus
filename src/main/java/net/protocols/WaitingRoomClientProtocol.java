@@ -48,12 +48,6 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
         obj.getJsonArray("team").stream().forEach((jv)->{
             if(jv.getValueType().equals(JsonValue.ValueType.OBJECT)){
                 AbstractUser u = AbstractUser.deserializeJson((JsonObject)jv);
-                try{
-                    u.getSocket();
-                } catch (NullPointerException ex){
-                    // I think the only user without their IP address set is the host, who sends this message, so...
-                    ((RemoteUser)u).setSocket(sm.getSendingSocket());
-                }
                 addToTeamProto(u);
             }
         });
@@ -68,7 +62,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
         OrpheusServer.getInstance().send(new ServerMessage(
             BuildJsonUtil.serializeJson(getFrontEnd().getSelectedBuild()).toString(),
             ServerMessageType.PLAYER_DATA
-        ), sm.getSendingSocket());
+        ), sm.getSender());
         getFrontEnd().setInputEnabled(false);
     }
     
@@ -96,7 +90,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
         
         WorldPage p = new WorldPage();
         WorldCanvas canv = world.getCanvas();
-        canv.addPlayerControls(new RemotePlayerControls(world, me.getRemotePlayerId(), sm.getSendingSocket()));
+        canv.addPlayerControls(new RemotePlayerControls(world, me.getRemotePlayerId(), sm.getSender()));
         canv.setPauseEnabled(false);
         p.setCanvas(canv);
         getFrontEnd().getHost().switchToPage(p);

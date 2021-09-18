@@ -1,9 +1,9 @@
 package controls.userControls;
 
-import java.net.Socket;
 import net.OrpheusServer;
 import net.messages.ServerMessage;
 import net.messages.ServerMessageType;
+import users.AbstractUser;
 import world.AbstractWorldShell;
 
 /**
@@ -11,11 +11,11 @@ import world.AbstractWorldShell;
  * @author Matt
  */
 public class RemotePlayerControls extends AbstractPlayerControls{
-    private final Socket receiverIpAddr;
+    private final AbstractUser host;
     
-    public RemotePlayerControls(AbstractWorldShell inWorld, String playerId, Socket receiverIp){
+    public RemotePlayerControls(AbstractWorldShell inWorld, String playerId, AbstractUser host){
         super(inWorld, playerId);
-        receiverIpAddr = receiverIp;
+        this.host = host;
     }
 
     @Override
@@ -24,7 +24,7 @@ public class RemotePlayerControls extends AbstractPlayerControls{
             command,
             ServerMessageType.CONTROL_PRESSED
         ),
-            receiverIpAddr
+            host
         );
     }
 }
