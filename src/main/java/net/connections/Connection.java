@@ -79,6 +79,10 @@ public class Connection {
         return remoteUser;
     }
     
+    public final Socket getClientSocket(){
+        return clientSocket;
+    }
+    
     public void displayData(){
         System.out.print(clientSocket.getInetAddress().getHostAddress() + ": ");
         System.out.println((remoteUser == null) ? "---" : remoteUser.getName());

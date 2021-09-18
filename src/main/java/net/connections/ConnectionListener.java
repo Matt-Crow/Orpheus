@@ -5,30 +5,34 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.function.Consumer;
 
 /**
- * This class handles multiple connections to a server, creating and deleting
- * connections, as well as sending and receiving messages. Should probably not
- * inherit from Thread
+ * This class listens for requests to connect with the server, and adds 
+ * Connections to the given connections object. 
  * 
  * @author Matt Crow
  */
-public class ConnectionManager {
-    private final ServerSocket requestListener;
+public class ConnectionListener {
+    private final ServerSocket server;
     private final Connections connections;
     private volatile boolean listenForConnections;
-    private final Thread connectionListenerThread;
+    private Thread listenerThread;
+    private final Consumer<Connection> onConnect;
     
-    private static final int CONNECTION_TIME_OUT = 3000; // 3 seconds
-    
-    protected ConnectionManager(ServerSocket requestListener, Connections connections){
-        super();
-        this.requestListener = requestListener;
+    public ConnectionListener(ServerSocket requestListener, Connections connections, Consumer<Connection> onConnect){
+        this.server = requestListener;
         this.connections = connections;
         listenForConnections = false;
-        // will need separate connection and disconnection listeners
-        
-        connectionListenerThread = createListenerThread();
+        this.onConnect = onConnect;
+    }
+    
+    public final void startOrContinue(){
+        if(!listenForConnections){
+            listenForConnections = true;
+            listenerThread = createListenerThread();
+            listenerThread.start();
+        }
     }
     
     private Thread createListenerThread(){
@@ -36,17 +40,9 @@ public class ConnectionManager {
             @Override
             public void run(){
                 continueListening();
+                System.out.println("Done listening for connections");
             }
         };
-    }
-    
-    public final void shutDown(){
-        listenForConnections = false;
-    }
-    
-    public final void start(){
-        listenForConnections = true;
-        this.connectionListenerThread.start();
     }
     
     private void continueListening(){
@@ -59,8 +55,10 @@ public class ConnectionManager {
         try {
             Socket client;
             while(true){ // runs until accept times out
-                client = requestListener.accept();
+                client = server.accept();
+                System.out.printf("Connecting to %s:%d%n", client.getInetAddress().getHostAddress(), client.getPort());
                 connections.connectTo(client);
+                onConnect.accept(connections.getConnectionTo(client));
             }
         } catch (SocketTimeoutException ex) {
             // this is not an error, it just means no client has attempted to connect
@@ -70,25 +68,37 @@ public class ConnectionManager {
         }
     }
     
+    public final void stop(){
+        listenForConnections = false;
+        // the associated Thread can now exit
+    }
+    
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
-        sb.append("Server Connection Manager:\n");
+        String status = (listenForConnections) ? "listening" : "inactive";
+        sb.append(String.format("Server Connection Listener (%s):%n", status));
         sb.append(connections.toString());
         return sb.toString();
     }
     
     public static void main(String[] args) throws IOException, InterruptedException{
         ServerSocket server = new ServerSocket(5000);
-        server.setSoTimeout(CONNECTION_TIME_OUT);
-        ConnectionManager manager = new ConnectionManager(server, new Connections());
-        manager.start();
+        server.setSoTimeout(3000);
+        ConnectionListener manager = new ConnectionListener(server, new Connections(), System.out::println);
+        manager.startOrContinue();
         new Socket(InetAddress.getLoopbackAddress(), 5000);
         new Socket(InetAddress.getLoopbackAddress(), 5000);
         new Socket(InetAddress.getLoopbackAddress(), 5000);
         System.out.println(manager);
         Thread.sleep(3000);
-        manager.shutDown();
+        manager.stop();
+        manager.connections.closeAll();
+        manager.startOrContinue();
+        manager.startOrContinue();
+        new Socket(InetAddress.getLoopbackAddress(), 5000);
+        Thread.sleep(3000);
+        manager.stop();
         manager.connections.closeAll();
         System.out.println("end of program");
     }

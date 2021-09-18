@@ -3,16 +3,12 @@ package net;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.List;
-import java.util.stream.Collectors;
 import net.connections.Connection;
+import net.connections.ConnectionListener;
 import net.connections.Connections;
 import net.messages.ServerMessage;
 import net.messages.ServerMessagePacket;
@@ -54,7 +50,7 @@ public class OrpheusServer {
     private final ServerSocket server;
     
     private final Connections clients;
-    private Thread connListener; //the thread that listens for attemts to connect to this server
+    private final ConnectionListener connectionHandler;
     private volatile boolean listenForConn; //whether or not the connListener thread is active
     
     private final SafeList<ServerMessagePacket> cachedMessages; //messages received before the receiver could be
@@ -63,6 +59,11 @@ public class OrpheusServer {
     private volatile ChatProtocol currentChatProtocol;
     
     private static OrpheusServer instance = null;
+    
+    /*
+    The amount of time a call to server.accept() will block for
+    */
+    private static final int CONNECTION_TIME_OUT = 3000; // 3 seconds
     
     /**
      * Creates an OrpheusServer.
@@ -76,14 +77,15 @@ public class OrpheusServer {
         
         // setting the port to 0 means "use any available port"
         server = new ServerSocket(0);
+        server.setSoTimeout(CONNECTION_TIME_OUT);
         
         clients = new Connections();
+        connectionHandler = new ConnectionListener(server, clients, this::setUpMessageListener);
         cachedMessages = new SafeList<>();
         listenForConn = false;   
         
         currentProtocol = null;
         currentChatProtocol = null;
-        connListener = null;
         
         isStarted = false;
     }
@@ -162,15 +164,13 @@ public class OrpheusServer {
      */
     public OrpheusServer reset(){
         log("Server reset");
+        clients.closeAll();
         
         // these mess stuff up.
         //currentProtocol = null; 
         //currentChatProtocol = null;
         
-        //connections.values().forEach((conn)->conn.close());
-        //connections.clear();
-        
-        startConnListener();
+        connectionHandler.startOrContinue();
         listenForConn = true;
         
         return this;
@@ -195,42 +195,6 @@ public class OrpheusServer {
     public boolean isStarted(){
         return isStarted;
     }
-        
-    private void startConnListener(){
-        log("Initialize connection listener thread...");
-        if(connListener == null){
-            connListener = new Thread(){
-                @Override
-                public void run(){
-                    log("Server started, waiting for client...");
-                    Socket remoteComputer = null;
-                    while(true){
-                        try {
-                            remoteComputer = server.accept();
-                            log(String.format("server accepted socket %s", remoteComputer.getInetAddress().getHostAddress()));
-                            if(listenForConn){
-                                connect(remoteComputer);
-                            } else {
-                                log("Not listening for connections, so I will disconnect them");
-                                remoteComputer.close();
-                            }
-                        } catch(SocketException ex){
-                            System.out.println("Server shut down");
-                            //ex.printStackTrace();
-                            break;
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                    log("done acception connections.");
-                    connListener = null;
-                }
-            };
-            connListener.start();
-        } else {
-            log("thread is already initialized");
-        }
-    }
     
     public synchronized void connect(String ipAddr, int port) throws UnknownHostException, IOException{
         connect(InetAddress.getByName(ipAddr), port);
@@ -240,19 +204,14 @@ public class OrpheusServer {
         Socket sock = new Socket(ipAddr, port);
         connect(sock);
     }
-    public synchronized void connect(Socket otherComputer) throws IOException{
-        log(clients);
-        
-        if(clients.isConnectedTo(otherComputer)){
-            log(String.format("Already connected to %s:%d", otherComputer.getInetAddress(), otherComputer.getPort()));
-            return;
+    
+    public synchronized void connect(Socket sock) throws IOException{
+        if(!clients.isConnectedTo(sock)){
+            clients.connectTo(sock);
         }
-
-        log(String.format("Initializing connection to %s...", otherComputer.getInetAddress().getHostAddress()));
-        clients.connectTo(otherComputer);
-        log("Connection successful");
-        Connection conn = clients.getConnectionTo(otherComputer);
-
+    }
+    
+    private void setUpMessageListener(Connection conn){
         //do I need to store this somewhere?
         log("Opening message listener thread...");
         new Thread(){
@@ -276,12 +235,11 @@ public class OrpheusServer {
                     }
                 }
                 log("disconnecting...");
-                clients.disconnectFrom(otherComputer);
+                clients.disconnectFrom(conn.getClientSocket());
             }
         }.start();
         log("Listener thread started successfully");
-        //out.println("connected to " + otherComputer.getInetAddress().getHostAddress());
-
+        
         //includes the User data so the other computer has access to username
         
         conn.writeServerMessage(new ServerMessage(
@@ -322,7 +280,7 @@ public class OrpheusServer {
         } else {
             //not connected, no user data
             try {
-                connect(ip);
+                connect(sm.getSendingSocket());
                 AbstractUser sender = AbstractUser.deserializeJson(JsonUtil.fromString(sm.getMessage().getBody()));
                 sm.setSender(sender);
                 clients.getConnectionTo(ip).setRemoteUser(sender);
@@ -408,7 +366,7 @@ public class OrpheusServer {
     public final void setAcceptingConn(boolean b){
         listenForConn = b;
         if(b){
-            startConnListener();
+            connectionHandler.startOrContinue();
         }
     }
     
@@ -449,14 +407,17 @@ public class OrpheusServer {
             @Override
             public void run(){
                 try {
-                    new Connection(new Socket(os.getIpAddress(), os.getPort()));
+                    Connection conn = new Connection(new Socket(os.getIpAddress(), os.getPort()));
+                    Thread.sleep(1000);
+                    conn.close();
                 } catch (IOException ex) {
+                    ex.printStackTrace();
+                } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
             }
         }.start();
         Thread.sleep(3000);
         os.shutDown();
-        
     }
 }
