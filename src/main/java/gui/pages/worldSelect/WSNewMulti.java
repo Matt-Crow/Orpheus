@@ -20,10 +20,22 @@ public class WSNewMulti extends AbstractWSNewWorld{
         LocalUser.getInstance().loginWindow();
         try{
             OrpheusServer server = new ServerProvider().createHost();
-            HostWaitingRoom wait = new HostWaitingRoom(server, createBattle());
-            wait.startProtocol();
-            getHost().switchToPage(wait);
-            ((WaitingRoomHostProtocol)wait.getBackEnd()).addUserToTeam(LocalUser.getInstance());
+            WaitingRoomHostProtocol hostProtocol = new WaitingRoomHostProtocol(
+                server, 
+                new HostWaitingRoom(server, createBattle()), 
+                createBattle()
+            );
+            server.setProtocol(hostProtocol);            
+            
+            OrpheusServer client = new OrpheusServer();
+            ClientWaitingRoom room = new ClientWaitingRoom(client);
+            client.setProtocol(room.getBackEnd());
+            client.connect(server.getIpAddress(), server.getPort());
+            room.getChat().logLocal(String.format(
+                "Have other people use the /connect %s command to connect.", 
+                server.getConnectionString()
+            ));
+            getHost().switchToPage(room);
         } catch (IOException ex) {
             ex.printStackTrace();
         }

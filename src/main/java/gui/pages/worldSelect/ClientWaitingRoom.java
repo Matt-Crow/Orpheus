@@ -8,9 +8,9 @@ import net.protocols.WaitingRoomClientProtocol;
  * @author Matt
  */
 public class ClientWaitingRoom extends AbstractWaitingRoom{
-    public ClientWaitingRoom(OrpheusServer runningServer, String hostIp, int hostPort) {
+    public ClientWaitingRoom(OrpheusServer runningServer) {
         super();
-        setBackEnd(new WaitingRoomClientProtocol(runningServer, this, hostIp, hostPort));
+        setBackEnd(new WaitingRoomClientProtocol(runningServer, this));
     }
     
     @Override

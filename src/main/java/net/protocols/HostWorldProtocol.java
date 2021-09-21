@@ -22,9 +22,6 @@ public class HostWorldProtocol extends AbstractOrpheusServerNonChatProtocol{
         hostWorld = forWorld;
     }
     
-    @Override
-    public void doApplyProtocol() {}
-    
     private void receiveControl(ServerMessagePacket sm){
         AbstractPlayerControls.decode(hostWorld, sm.getMessage().getBody());
     }

@@ -54,9 +54,6 @@ public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtoc
     }
     
     @Override
-    public void doApplyProtocol() {}
-    
-    @Override
     public boolean receiveMessage(ServerMessagePacket sm, OrpheusServer forServer) {
         boolean handled = true;
         switch(sm.getMessage().getType()){

@@ -119,13 +119,5 @@ public abstract class AbstractWaitingRoom extends Page{
         return backend;
     }
     
-    public void startProtocol() throws IOException{
-        if(backend == null){
-            throw new UnsupportedOperationException("protocol not set");
-        } else {
-            backend.applyProtocol();
-        }
-    }
-    
     public abstract void startButton();
 }

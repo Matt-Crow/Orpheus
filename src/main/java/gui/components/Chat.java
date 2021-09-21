@@ -115,12 +115,9 @@ public class Chat extends JComponent implements ActionListener{
         }
 	}
     
-    
-    // maybe move this stuff
-    public void openChatServer() throws IOException{
-        if(!chatServerOpened){
-            new ChatProtocol(chatServer, this).applyProtocol();
-            chatServerOpened = true;
+    public void openChatServer() {
+        if(chatServer != null){
+            chatServer.setChatProtocol(new ChatProtocol(chatServer, this));
         }
     }
     
@@ -150,11 +147,7 @@ public class Chat extends JComponent implements ActionListener{
         
         Chat c = new Chat(new ServerProvider().createHost());
         p.add(c);
-        try {
-            c.openChatServer();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        c.openChatServer();
         f.revalidate();
         f.repaint();
     }

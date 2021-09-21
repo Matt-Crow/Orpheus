@@ -1,6 +1,5 @@
 package net.protocols;
 
-import java.io.IOException;
 import net.OrpheusServer;
 
 /**
@@ -14,16 +13,5 @@ public abstract class AbstractOrpheusServerNonChatProtocol extends AbstractOrphe
 
     public AbstractOrpheusServerNonChatProtocol(OrpheusServer runningServer) {
         super(runningServer);
-    }
-    
-    /**
-     * Restarts the server, and applies this as its protocol
-     * @throws IOException 
-     */
-    @Override
-    public final void applyProtocol() throws IOException{
-        getServer().restart();
-        getServer().setProtocol(this);
-        doApplyProtocol();
     }
 }

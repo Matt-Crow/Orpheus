@@ -23,23 +23,9 @@ import world.WorldContent;
  * @author Matt
  */
 public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
-    private final String hostIp;
-    private final int hostPort;
-    public WaitingRoomClientProtocol(OrpheusServer runningServer, AbstractWaitingRoom linkedRoom, String hostIpAddr, int hostPort) {
+    public WaitingRoomClientProtocol(OrpheusServer runningServer, AbstractWaitingRoom linkedRoom) {
         super(runningServer, linkedRoom);
-        hostIp = hostIpAddr;
-        this.hostPort = hostPort;
-    }
-    
-    @Override
-    public void doApplyProtocol() {
         resetTeamProto();
-        try {
-            getFrontEnd().getChat().joinChat(hostIp, hostPort);
-        } catch (IOException ex) {
-            getFrontEnd().getChat().logLocal("Failed to connect to " + hostIp);
-            ex.printStackTrace();
-        }
     }
     
     private void receiveInit(ServerMessagePacket sm){
@@ -96,12 +82,8 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
         p.setCanvas(canv);
         getFrontEnd().getHost().switchToPage(p);
         
-        try {
-            new RemoteProxyWorldProtocol(getServer(), world).applyProtocol();
-        } catch (IOException ex) {
-            System.err.println("Failed to apply RemoteProxyProtocol");
-            ex.printStackTrace();
-        }
+        RemoteProxyWorldProtocol protocol = new RemoteProxyWorldProtocol(getServer(), world);
+        getServer().setProtocol(protocol);
     }
     
     @Override
@@ -129,7 +111,4 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
         }
         return received;
     }
-
-    
-
 }

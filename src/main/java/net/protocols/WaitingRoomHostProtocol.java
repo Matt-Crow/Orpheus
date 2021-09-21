@@ -69,24 +69,6 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
     }
     
     /**
-     * Prepares the waiting room to receive players.
-     */
-    @Override
-    public void doApplyProtocol(){
-        playerTeam.clear();
-        enemyTeam.clear();
-        awaitingBuilds.clear();
-        myPlayer = null;
-        
-        try {
-            getFrontEnd().getChat().openChatServer();
-        } catch (IOException ex) {
-            getFrontEnd().getChat().logLocal("Failed to open chat server");
-            ex.printStackTrace();
-        }
-    }
-    
-    /**
      * Puts the given user on the teamProto,
      * and alerts all connected players
      * @param u the User who wants to play
@@ -249,7 +231,8 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
         minigame.setHost(w.getContent());
         w.init();
         
-        new HostWorldProtocol(getServer(), w).applyProtocol();
+        HostWorldProtocol protocol = new HostWorldProtocol(getServer(), w);
+        getServer().setProtocol(protocol);
         sendWorldInit(w.getContent());
         
         WorldPage p = new WorldPage();
