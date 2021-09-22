@@ -3,6 +3,7 @@ package gui.pages.worldSelect;
 import java.io.IOException;
 import net.OrpheusServer;
 import net.ServerProvider;
+import net.protocols.WaitingRoomClientProtocol;
 import net.protocols.WaitingRoomHostProtocol;
 import users.LocalUser;
 
@@ -21,15 +22,15 @@ public class WSNewMulti extends AbstractWSNewWorld{
         try{
             OrpheusServer server = new ServerProvider().createHost();
             WaitingRoomHostProtocol hostProtocol = new WaitingRoomHostProtocol(
-                server, 
-                new HostWaitingRoom(server, createBattle()), 
+                server,
                 createBattle()
             );
             server.setProtocol(hostProtocol);            
             
             OrpheusServer client = new OrpheusServer();
-            ClientWaitingRoom room = new ClientWaitingRoom(client);
-            client.setProtocol(room.getBackEnd());
+            WaitingRoom room = new WaitingRoom();
+            WaitingRoomClientProtocol clientProtocol = new WaitingRoomClientProtocol(client, room);
+            client.setProtocol(clientProtocol);
             client.connect(server.getIpAddress(), server.getPort());
             room.getChat().logLocal(String.format(
                 "Have other people use the /connect %s command to connect.", 

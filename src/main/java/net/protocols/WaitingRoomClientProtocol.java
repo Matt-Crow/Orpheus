@@ -2,7 +2,6 @@ package net.protocols;
 
 import controls.userControls.RemotePlayerControls;
 import world.customizables.BuildJsonUtil;
-import java.io.IOException;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 import net.OrpheusServer;
@@ -11,9 +10,9 @@ import net.messages.ServerMessageType;
 import serialization.JsonUtil;
 import users.AbstractUser;
 import users.LocalUser;
-import gui.pages.worldSelect.AbstractWaitingRoom;
 import gui.pages.worldPlay.WorldCanvas;
 import gui.pages.worldPlay.WorldPage;
+import gui.pages.worldSelect.WaitingRoom;
 import net.messages.ServerMessage;
 import world.RemoteProxyWorld;
 import world.WorldContent;
@@ -23,13 +22,13 @@ import world.WorldContent;
  * @author Matt
  */
 public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
-    public WaitingRoomClientProtocol(OrpheusServer runningServer, AbstractWaitingRoom linkedRoom) {
-        super(runningServer, linkedRoom);
-        resetTeamProto();
+    private final WaitingRoom room;
+    public WaitingRoomClientProtocol(OrpheusServer runningServer, WaitingRoom linkedRoom) {
+        super(runningServer);
+        this.room = linkedRoom;
     }
     
     private void receiveInit(ServerMessagePacket sm){
-        resetTeamProto();
         JsonObject obj = JsonUtil.fromString(sm.getMessage().getBody());
         JsonUtil.verify(obj, "team");
         obj.getJsonArray("team").stream().forEach((jv)->{
@@ -39,18 +38,20 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
             }
         });
         addToTeamProto(LocalUser.getInstance()); // sm doesn't contain this user, so I need to manually add myself to the displays
+        room.updateTeamDisplays();
     }
     
     private void receiveUpdate(ServerMessagePacket sm){
         addToTeamProto(sm.getSender());
+        room.updateTeamDisplays();
     }
     
     private synchronized void receiveBuildRequest(ServerMessagePacket sm){
         getServer().send(new ServerMessage(
-            BuildJsonUtil.serializeJson(getFrontEnd().getSelectedBuild()).toString(),
+            BuildJsonUtil.serializeJson(room.getSelectedBuild()).toString(),
             ServerMessageType.PLAYER_DATA
         ), sm.getSender());
-        getFrontEnd().setInputEnabled(false);
+        room.setInputEnabled(false);
     }
     
     private void receiveRemoteId(ServerMessagePacket sm){
@@ -80,7 +81,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
         canv.addPlayerControls(new RemotePlayerControls(getServer(), world, me.getRemotePlayerId(), sm.getSender()));
         canv.setPauseEnabled(false);
         p.setCanvas(canv);
-        getFrontEnd().getHost().switchToPage(p);
+        room.getHost().switchToPage(p);
         
         RemoteProxyWorldProtocol protocol = new RemoteProxyWorldProtocol(getServer(), world);
         getServer().setProtocol(protocol);

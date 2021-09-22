@@ -2,7 +2,6 @@ package net.protocols;
 
 import world.battle.Battle;
 import world.battle.Team;
-import controls.userControls.SoloPlayerControls;
 import world.customizables.Build;
 import world.customizables.BuildJsonUtil;
 import world.entities.HumanPlayer;
@@ -18,10 +17,6 @@ import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import serialization.JsonUtil;
 import users.AbstractUser;
-import users.LocalUser;
-import gui.pages.worldSelect.HostWaitingRoom;
-import gui.pages.worldPlay.WorldCanvas;
-import gui.pages.worldPlay.WorldPage;
 import java.util.HashSet;
 import net.messages.ServerMessage;
 import world.HostWorld;
@@ -46,7 +41,6 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
     private final Battle minigame;
     private final Team playerTeam;
     private final Team enemyTeam;
-    private HumanPlayer myPlayer;
     
     /*
     The Users who have joined the waiting room, but have
@@ -57,11 +51,10 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
     /**
      * Creates the protocol.
      * @param runningServer
-     * @param host the HostWaitingRoom to act as this protocol's front end
      * @param game the game which players will play once this protocol is done.
      */
-    public WaitingRoomHostProtocol(OrpheusServer runningServer, HostWaitingRoom host, Battle game){
-        super(runningServer, host);
+    public WaitingRoomHostProtocol(OrpheusServer runningServer, Battle game){
+        super(runningServer);
         minigame = game;   
         playerTeam = new Team("Players", Color.blue);
         enemyTeam = new Team("AI", Color.red);
@@ -81,8 +74,6 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
                 ServerMessageType.WAITING_ROOM_UPDATE
             );
             getServer().send(sm);
-            getFrontEnd().getChat().logLocal(u.getName() + " has joined the team!");
-            getFrontEnd().updateTeamDisplays();
         }
     }
     
@@ -128,7 +119,6 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
     }
     
     public final void prepareToStart(){
-        ((HostWaitingRoom)getFrontEnd()).setStartButtonEnabled(false);
         playerTeam.clear();
         Timer t = new Timer(WaitingRoomHostProtocol.WAIT_TIME * 1000, (e)->{
             waitForData();
@@ -143,20 +133,6 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
      * Once all Builds have been obtained, finally starts
      */
     private void waitForData(){
-        getFrontEnd().setInputEnabled(false);
-        
-        // put the host on the user team
-        LocalUser me = LocalUser.getInstance();
-        if(awaitingBuilds.contains(me)){
-            myPlayer = new HumanPlayer(me.getName());
-            myPlayer.applyBuild(getFrontEnd().getSelectedBuild());
-            playerTeam.addMember(myPlayer);
-            awaitingBuilds.remove(me);
-        } else {
-            throw new UnsupportedOperationException();
-        }
-        
-        // check if they were the only player
         checkIfReady();
     }
     
@@ -234,14 +210,6 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{
         HostWorldProtocol protocol = new HostWorldProtocol(getServer(), w);
         getServer().setProtocol(protocol);
         sendWorldInit(w.getContent());
-        
-        WorldPage p = new WorldPage();
-        WorldCanvas canv = w.getCanvas();
-        
-        canv.addPlayerControls(new SoloPlayerControls(w, myPlayer.id));
-        canv.setPauseEnabled(false);
-        p.setCanvas(canv);
-        getFrontEnd().getHost().switchToPage(p);
     }
     
     /**

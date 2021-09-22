@@ -18,20 +18,20 @@ import users.AbstractUser;
 import gui.pages.Page;
 
 /**
- * AbstractWaitingRoom provides a "waiting room"
+ * WaitingRoom provides a "waiting room"
  * where players can stay while waiting for other
  * players to join.
  * 
  * @author Matt Crow
  */
-public abstract class AbstractWaitingRoom extends Page{
+public class WaitingRoom extends Page{
     private final JTextArea teamList;
     private final Chat chat;
     private final BuildSelect playerBuild;
     private final JButton startButton;
     private AbstractWaitingRoomProtocol backend;
     
-    public AbstractWaitingRoom(){
+    public WaitingRoom(){
         super();
         
         addBackButton(new WSMain());
@@ -78,7 +78,7 @@ public abstract class AbstractWaitingRoom extends Page{
         repaint();
     }
     
-    public AbstractWaitingRoom(AbstractWaitingRoomProtocol protocol){
+    public WaitingRoom(AbstractWaitingRoomProtocol protocol){
         this();
         setBackEnd(protocol);
     }
@@ -119,5 +119,8 @@ public abstract class AbstractWaitingRoom extends Page{
         return backend;
     }
     
-    public abstract void startButton();
+    public final void startButton(){
+        getChat().logLocal("todo: send request to start the world");
+        getChat().log("Are we waiting on anyone?");
+    }
 }
