@@ -21,7 +21,7 @@ import world.WorldContent;
  *
  * @author Matt
  */
-public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol{
+public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<OrpheusServer>{
     private final WaitingRoom room;
     public WaitingRoomClientProtocol(OrpheusServer runningServer, WaitingRoom linkedRoom) {
         super(runningServer);

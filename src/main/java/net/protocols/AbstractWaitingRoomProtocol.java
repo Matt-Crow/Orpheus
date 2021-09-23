@@ -3,19 +3,20 @@ package net.protocols;
 import users.AbstractUser;
 import gui.pages.worldSelect.WaitingRoom;
 import java.util.HashSet;
+import net.AbstractNetworkClient;
 import net.OrpheusServer;
 
 /**
  *
  * @author Matt
  */
-public abstract class AbstractWaitingRoomProtocol extends AbstractOrpheusServerNonChatProtocol{
+public abstract class AbstractWaitingRoomProtocol<T extends AbstractNetworkClient> extends AbstractOrpheusServerNonChatProtocol<T>{
     /*
     Keeps track of which Users want to play.
     */
     private final HashSet<AbstractUser> teamProto;
     
-    public AbstractWaitingRoomProtocol(OrpheusServer runningServer){
+    public AbstractWaitingRoomProtocol(T runningServer){
         super(runningServer);
         teamProto = new HashSet<>();
     }

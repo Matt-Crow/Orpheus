@@ -40,16 +40,11 @@ import util.SafeList;
  * 
  * @author Matt Crow
  */
-public class OrpheusServer {
-    private volatile boolean isStarted;
+public class OrpheusServer extends AbstractNetworkClient {
     private final ServerSocket server;
     
     private final Connections clients;
     private final ConnectionListener connectionHandler;    
-    private final SafeList<ServerMessagePacket> cachedMessages; //messages received before the receiver could be
-    
-    private volatile AbstractOrpheusServerNonChatProtocol currentProtocol;
-    private volatile ChatProtocol currentChatProtocol;
     
     /*
     The amount of time a call to server.accept() will block for
@@ -63,91 +58,38 @@ public class OrpheusServer {
      * @throws java.io.IOException
      */
     public OrpheusServer() throws IOException{
+        super();
         // setting the port to 0 means "use any available port"
         server = new ServerSocket(0);
         server.setSoTimeout(CONNECTION_TIME_OUT);
         
         clients = new Connections();
         connectionHandler = new ConnectionListener(server, clients, this::setUpMessageListener);
-        cachedMessages = new SafeList<>();
-        
-        currentProtocol = null;
-        currentChatProtocol = null;
-        
-        isStarted = false;
     }
         
-    /**
-     * 
-     * @return this
-     * @throws java.io.IOException
-     *  
-     */
-    public OrpheusServer start() throws IOException{
-        log("Starting OrpheusServer");
-        
-        if(isStarted){
-            //don't start if this is already started
-            log("server is already started. Ignoring invokation.");
-        } else {
-            log(String.format("Server initialized on %s", getConnectionString()));
-            reset();
-            isStarted = true;
-        }
-        
-        return this;
-    }
-    
     /**
      * Clears all receivers and connections from this,
      * then restarts the connection listener.
      * 
-     * @return this
+     * @throws java.io.IOException
      */
-    public OrpheusServer reset(){
-        log("Server reset, closing all connections. This is bad.");
+    @Override
+    protected final void doStart() throws IOException{
+        log(String.format("Server initialized on %s", getConnectionString()));
         clients.closeAll();
-        
-        currentProtocol = null; 
-        currentChatProtocol = null;
+        clearProtocols();
         
         connectionHandler.startOrContinue();
-        
-        return this;
     }
     
-    /**
-     * If the server is not started, starts it.
-     * If the server is already started, resets it.
-     * @return this, for chaining purposes.
-     * @throws IOException if an error occurs while starting the server
-     */
-    public OrpheusServer restart() throws IOException{
-        log("Method restart invoked");
-        if(isStarted){
-            reset();
-        } else {
-            start();
-        }
-        return this;
-    }
-    
-    public final void shutDown(){
-        if(!isStarted){
-            return;
-        }
+    @Override
+    protected final void doStop() throws IOException {
         send(new ServerMessage(
             "server shutting down",
             ServerMessageType.SERVER_SHUTDOWN
         ));
         
-        try {
-            server.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        
-        isStarted = false;
+        server.close();
     }
     
     /**
@@ -163,47 +105,6 @@ public class OrpheusServer {
     
     public final int getPort(){
         return server.getLocalPort();
-    }
-    
-    public boolean isStarted(){
-        return isStarted;
-    }
-    
-    /**
-     * @param protocol the new protocol to use. This can be null
-     */
-    public void setProtocol(AbstractOrpheusServerNonChatProtocol protocol){
-        log(String.format("Set protocol to %s", protocol.toString()));
-        currentProtocol = protocol;
-        cachedMessages.forEach((ServerMessagePacket sm)->{
-            if(protocol.receiveMessage(sm, this)){
-                cachedMessages.remove(sm);
-                log("uncached message " + sm.hashCode());
-            }
-        });
-    }
-    
-    /**
-     * Sets the separate protocol to receive chat 
-     * messages. This way, I can't have multiple
-     * regular protocols, but chat also can't interfere
-     * with the other protocol!
-     * 
-     * ... or I could just have the other protocols
-     * forward to their chat...
-     * 
-     * @param chat the ChatProtocol to handle messages
-     * received by this server.
-     */
-    public void setChatProtocol(ChatProtocol chat){
-        log(String.format("Set chat protocol to %s", chat.toString()));
-        currentChatProtocol = chat;
-        cachedMessages.forEach((ServerMessagePacket sm)->{
-            if(chat.receiveMessage(sm, this)){
-                cachedMessages.remove(sm);
-                log("uncached message " + sm.hashCode());
-            }
-        });
     }
     
     public synchronized void connect(String ipAddr, int port) throws UnknownHostException, IOException{
@@ -252,7 +153,8 @@ public class OrpheusServer {
         return success;
     }
     
-    public final void receiveMessage(ServerMessagePacket sm){
+    @Override
+    protected final void doReceiveMessage(ServerMessagePacket sm){
         if(clients.isConnectedTo(sm.getSendingSocket())){
            sm.setSender(clients.getConnectionTo(sm.getSendingSocket()).getRemoteUser()); 
         } else {
@@ -264,26 +166,6 @@ public class OrpheusServer {
             receiveJoin(sm);
         } else if (sm.getMessage().getType() == ServerMessageType.PLAYER_LEFT){
             clients.disconnectFrom(sm.getSendingSocket());
-        }
-
-        boolean handled = false;
-        if(currentProtocol == null){
-            log("No current protocol :(");
-        } else {
-            handled = currentProtocol.receiveMessage(sm, this);
-        }
-
-        if(!handled && currentChatProtocol != null){
-            handled = currentChatProtocol.receiveMessage(sm, this);
-        }
-
-        if(handled){
-            //log("Successfully received!");
-        } else {
-            log("Nope, didn't receive properly, so I'll cache it: " + sm.getMessage().getBody());
-            log("(" + sm.hashCode() + ")");
-            cachedMessages.add(sm);
-
         }
     }
     
@@ -344,6 +226,6 @@ public class OrpheusServer {
         }.start();
         Thread.sleep(5000);
         System.out.println(os.clients);
-        os.shutDown();
+        os.stop();
     }
 }

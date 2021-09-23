@@ -14,7 +14,7 @@ import world.HostWorld;
  * 
  * @author Matt Crow
  */
-public class HostWorldProtocol extends AbstractOrpheusServerNonChatProtocol{
+public class HostWorldProtocol extends AbstractOrpheusServerNonChatProtocol<OrpheusServer>{
     private final HostWorld hostWorld;
     
     public HostWorldProtocol(OrpheusServer runningServer, HostWorld forWorld){

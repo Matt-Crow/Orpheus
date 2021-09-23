@@ -1,20 +1,21 @@
 package net.protocols;
 
-import net.OrpheusServer;
+import net.AbstractNetworkClient;
 import net.messages.ServerMessagePacket;
 
 /**
  *
  * @author Matt
+ * @param <T> the type of network client that will use this protocol
  */
-public abstract class AbstractOrpheusServerProtocol {
-    private final OrpheusServer runningServer;
+public abstract class AbstractOrpheusServerProtocol<T extends AbstractNetworkClient> {
+    private final T runningServer;
     
-    protected AbstractOrpheusServerProtocol(OrpheusServer runningServer){
+    protected AbstractOrpheusServerProtocol(T runningServer){
         this.runningServer = runningServer;
     }
     
-    public final OrpheusServer getServer(){
+    public final T getServer(){
         return runningServer;
     }
     
@@ -26,5 +27,5 @@ public abstract class AbstractOrpheusServerProtocol {
      * @param forServer the server which received this message
      * @return whether or not this method handled the message.
      */
-    public abstract boolean receiveMessage(ServerMessagePacket sm, OrpheusServer forServer);
+    public abstract boolean receiveMessage(ServerMessagePacket sm, T forServer);
 }

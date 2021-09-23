@@ -1,6 +1,6 @@
 package net.protocols;
 
-import net.OrpheusServer;
+import net.AbstractNetworkClient;
 
 /**
  * This class should be used to clarify exactly
@@ -8,10 +8,11 @@ import net.OrpheusServer;
  * at any given time.
  * 
  * @author Matt Crow
+ * @param <T> the type of client that will run this
  */
-public abstract class AbstractOrpheusServerNonChatProtocol extends AbstractOrpheusServerProtocol{
+public abstract class AbstractOrpheusServerNonChatProtocol<T extends AbstractNetworkClient> extends AbstractOrpheusServerProtocol<T>{
 
-    public AbstractOrpheusServerNonChatProtocol(OrpheusServer runningServer) {
+    public AbstractOrpheusServerNonChatProtocol(T runningServer) {
         super(runningServer);
     }
 }

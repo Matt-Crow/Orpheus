@@ -32,7 +32,7 @@ import world.WorldContent;
  * and sends them information needed to remotely control that HumanPlayer. Serializes and sends the world as well.
  * @author Matt Crow
  */
-public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol{    
+public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<OrpheusServer>{    
     /*
     measured in seconds
      */
