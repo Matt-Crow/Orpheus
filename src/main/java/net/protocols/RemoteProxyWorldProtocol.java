@@ -1,6 +1,6 @@
 package net.protocols;
 
-import net.OrpheusServer;
+import net.OrpheusClient;
 import net.messages.ServerMessagePacket;
 import util.SerialUtil;
 import world.RemoteProxyWorld;
@@ -12,7 +12,7 @@ import world.WorldContent;
  * 
  * @author Matt Crow
  */
-public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtocol<OrpheusServer>{
+public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtocol<OrpheusClient>{
     private final RemoteProxyWorld proxy;
     
     /**
@@ -21,7 +21,7 @@ public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtoc
      * computer. World updates received by this protocol will be applied to
      * that proxy.
      */
-    public RemoteProxyWorldProtocol(OrpheusServer runningServer, RemoteProxyWorld localProxy){
+    public RemoteProxyWorldProtocol(OrpheusClient runningServer, RemoteProxyWorld localProxy){
         super(runningServer);
         proxy = localProxy;
     }
@@ -54,7 +54,7 @@ public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtoc
     }
     
     @Override
-    public boolean receiveMessage(ServerMessagePacket sm, OrpheusServer forServer) {
+    public boolean receiveMessage(ServerMessagePacket sm, OrpheusClient forServer) {
         boolean handled = true;
         switch(sm.getMessage().getType()){
             case WORLD_UPDATE:

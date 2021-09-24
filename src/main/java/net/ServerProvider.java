@@ -1,7 +1,6 @@
 package net;
 
 import java.io.IOException;
-import java.net.Socket;
 
 /**
  *
@@ -14,10 +13,9 @@ public class ServerProvider {
         return server;
     }
     
-    public final OrpheusServer createClient(String hostIp, int hostPort) throws IOException {
-        OrpheusServer server = createHost();
-        Socket host = new Socket(hostIp, hostPort);
-        server.connect(host);
-        return server;
+    public final OrpheusClient createClient(String hostIp, int hostPort) throws IOException {
+        OrpheusClient client = new OrpheusClient(hostIp, hostPort);
+        client.start();
+        return client;
     }
 }

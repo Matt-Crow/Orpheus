@@ -1,9 +1,8 @@
 package controls.userControls;
 
-import net.OrpheusServer;
+import net.OrpheusClient;
 import net.messages.ServerMessage;
 import net.messages.ServerMessageType;
-import users.AbstractUser;
 import world.AbstractWorldShell;
 
 /**
@@ -11,12 +10,10 @@ import world.AbstractWorldShell;
  * @author Matt
  */
 public class RemotePlayerControls extends AbstractPlayerControls{
-    private final AbstractUser host;
-    private final OrpheusServer server;
+    private final OrpheusClient server;
     
-    public RemotePlayerControls(OrpheusServer server, AbstractWorldShell inWorld, String playerId, AbstractUser host){
+    public RemotePlayerControls(OrpheusClient server, AbstractWorldShell inWorld, String playerId){
         super(inWorld, playerId);
-        this.host = host;
         this.server = server;
     }
 
@@ -25,8 +22,6 @@ public class RemotePlayerControls extends AbstractPlayerControls{
         server.send(new ServerMessage(
             command,
             ServerMessageType.CONTROL_PRESSED
-        ),
-            host
-        );
+        ));
     }
 }

@@ -1,6 +1,7 @@
 package net;
 
 import java.io.IOException;
+import net.messages.ServerMessage;
 import net.messages.ServerMessagePacket;
 import net.protocols.AbstractOrpheusServerNonChatProtocol;
 import net.protocols.ChatProtocol;
@@ -111,4 +112,5 @@ public abstract class AbstractNetworkClient {
     protected abstract void doStart() throws IOException;
     protected abstract void doStop() throws IOException;
     protected abstract void doReceiveMessage(ServerMessagePacket sm);
+    protected abstract void send(ServerMessage sm);
 }

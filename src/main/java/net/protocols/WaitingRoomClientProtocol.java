@@ -4,7 +4,6 @@ import controls.userControls.RemotePlayerControls;
 import world.customizables.BuildJsonUtil;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
-import net.OrpheusServer;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import serialization.JsonUtil;
@@ -13,6 +12,8 @@ import users.LocalUser;
 import gui.pages.worldPlay.WorldCanvas;
 import gui.pages.worldPlay.WorldPage;
 import gui.pages.worldSelect.WaitingRoom;
+import java.io.IOException;
+import net.OrpheusClient;
 import net.messages.ServerMessage;
 import world.RemoteProxyWorld;
 import world.WorldContent;
@@ -21,9 +22,9 @@ import world.WorldContent;
  *
  * @author Matt
  */
-public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<OrpheusServer>{
+public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<OrpheusClient>{
     private final WaitingRoom room;
-    public WaitingRoomClientProtocol(OrpheusServer runningServer, WaitingRoom linkedRoom) {
+    public WaitingRoomClientProtocol(OrpheusClient runningServer, WaitingRoom linkedRoom) {
         super(runningServer);
         this.room = linkedRoom;
     }
@@ -46,11 +47,11 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<Orphe
         room.updateTeamDisplays();
     }
     
-    private synchronized void receiveBuildRequest(ServerMessagePacket sm){
+    private synchronized void receiveBuildRequest(ServerMessagePacket sm) throws IOException{
         getServer().send(new ServerMessage(
             BuildJsonUtil.serializeJson(room.getSelectedBuild()).toString(),
             ServerMessageType.PLAYER_DATA
-        ), sm.getSender());
+        ));
         room.setInputEnabled(false);
     }
     
@@ -78,7 +79,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<Orphe
         
         WorldPage p = new WorldPage();
         WorldCanvas canv = world.getCanvas();
-        canv.addPlayerControls(new RemotePlayerControls(getServer(), world, me.getRemotePlayerId(), sm.getSender()));
+        canv.addPlayerControls(new RemotePlayerControls(getServer(), world, me.getRemotePlayerId()));
         canv.setPauseEnabled(false);
         p.setCanvas(canv);
         room.getHost().switchToPage(p);
@@ -88,7 +89,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<Orphe
     }
     
     @Override
-    public boolean receiveMessage(ServerMessagePacket sm, OrpheusServer forServer) {
+    public boolean receiveMessage(ServerMessagePacket sm, OrpheusClient forServer){
         boolean received = true;
         switch(sm.getMessage().getType()){
             case WAITING_ROOM_INIT:
@@ -98,7 +99,13 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<Orphe
                 receiveUpdate(sm);
                 break;
             case REQUEST_PLAYER_DATA:
+        {
+            try {
                 receiveBuildRequest(sm);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
                 break;
             case NOTIFY_IDS:
                 receiveRemoteId(sm);

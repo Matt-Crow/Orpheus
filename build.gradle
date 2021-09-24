@@ -21,6 +21,10 @@ repositories {
     //   http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:repositories
 }
 
+tasks.withType(JavaCompile){
+    options.compilerArgs << "-Xlint:unchecked"
+}
+
 jar {
     //need to manually set main class, otherwise, it just compiles the JAR as a library
     manifest {

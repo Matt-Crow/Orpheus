@@ -1,10 +1,8 @@
 package net;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import net.connections.Connection;
 import net.connections.ConnectionListener;
 import net.connections.Connections;
@@ -12,12 +10,9 @@ import net.messages.MessageListener;
 import net.messages.ServerMessage;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
-import net.protocols.AbstractOrpheusServerNonChatProtocol;
-import net.protocols.ChatProtocol;
 import serialization.JsonUtil;
 import users.AbstractUser;
 import users.LocalUser;
-import util.SafeList;
 
 /**
  * OrpheusServer is a somewhat deceptive title, as this is
@@ -42,7 +37,6 @@ import util.SafeList;
  */
 public class OrpheusServer extends AbstractNetworkClient {
     private final ServerSocket server;
-    
     private final Connections clients;
     private final ConnectionListener connectionHandler;    
     
@@ -107,22 +101,6 @@ public class OrpheusServer extends AbstractNetworkClient {
         return server.getLocalPort();
     }
     
-    public synchronized void connect(String ipAddr, int port) throws UnknownHostException, IOException{
-        connect(InetAddress.getByName(ipAddr), port);
-    }
-    
-    public synchronized void connect(InetAddress ipAddr, int port) throws IOException{
-        log(String.format("Connecting to %s:%d...", ipAddr, port));
-        Socket sock = new Socket(ipAddr, port);
-        connect(sock);
-    }
-    
-    public synchronized void connect(Socket sock) throws IOException{
-        if(!clients.isConnectedTo(sock)){
-            clients.connectTo(sock);
-        }
-    }
-    
     private void setUpMessageListener(Connection conn){
         log("Opening message listener thread...");
         new MessageListener(conn, this::receiveMessage).startListening();
@@ -138,6 +116,7 @@ public class OrpheusServer extends AbstractNetworkClient {
         log(clients);
     }
     
+    @Override
     public final void send(ServerMessage sm){
         clients.broadcast(sm);
     }
@@ -191,6 +170,12 @@ public class OrpheusServer extends AbstractNetworkClient {
             }
         }
         log(clients);
+    }
+    
+    private synchronized void connect(Socket sock) throws IOException{
+        if(!clients.isConnectedTo(sock)){
+            clients.connectTo(sock);
+        }
     }
     
     // make this save to a file later

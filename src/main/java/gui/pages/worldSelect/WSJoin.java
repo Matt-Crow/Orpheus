@@ -16,7 +16,7 @@ import java.text.NumberFormat;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
-import net.OrpheusServer;
+import net.OrpheusClient;
 import net.protocols.WaitingRoomClientProtocol;
 
 /**
@@ -103,12 +103,12 @@ public class WSJoin extends Page{
         try {
             LocalUser.getInstance().loginWindow(); // set username
             msgs.append("Attempting to connect to " + ipAddr + "...\n");
-            OrpheusServer connection = new OrpheusServer();
+            OrpheusClient connection = new OrpheusClient(ipAddr, port);
             WaitingRoom wait = new WaitingRoom();
             WaitingRoomClientProtocol protocol = new WaitingRoomClientProtocol(connection, wait);
             wait.setBackEnd(protocol);
             connection.setProtocol(protocol);
-            connection.connect(ipAddr, port);
+            connection.start();
             msgs.append("success!\n");
             getHost().switchToPage(wait);
             //wait.joinServer(ipAddr);
