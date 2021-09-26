@@ -8,12 +8,11 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.io.IOException;
 import java.util.Arrays;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import net.protocols.AbstractWaitingRoomProtocol;
+import net.protocols.WaitingRoomClientProtocol;
 import users.AbstractUser;
 import gui.pages.Page;
 
@@ -29,7 +28,7 @@ public class WaitingRoom extends Page{
     private final Chat chat;
     private final BuildSelect playerBuild;
     private final JButton startButton;
-    private AbstractWaitingRoomProtocol backend;
+    private WaitingRoomClientProtocol backend;
     
     public WaitingRoom(){
         super();
@@ -78,7 +77,7 @@ public class WaitingRoom extends Page{
         repaint();
     }
     
-    public WaitingRoom(AbstractWaitingRoomProtocol protocol){
+    public WaitingRoom(WaitingRoomClientProtocol protocol){
         this();
         setBackEnd(protocol);
     }
@@ -112,15 +111,15 @@ public class WaitingRoom extends Page{
         playerBuild.setEnabled(b);
     }
     
-    public void setBackEnd(AbstractWaitingRoomProtocol protocol){
+    public void setBackEnd(WaitingRoomClientProtocol protocol){
         backend = protocol;
     }
-    public AbstractWaitingRoomProtocol getBackEnd(){
+    public WaitingRoomClientProtocol getBackEnd(){
         return backend;
     }
     
     public final void startButton(){
-        getChat().logLocal("todo: send request to start the world");
+        backend.requestStart();
         getChat().log("Are we waiting on anyone?");
     }
 }

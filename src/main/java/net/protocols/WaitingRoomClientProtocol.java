@@ -26,9 +26,42 @@ import world.WorldContent;
  */
 public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<OrpheusClient>{
     private final WaitingRoom room;
+    
     public WaitingRoomClientProtocol(OrpheusClient runningServer, WaitingRoom linkedRoom) {
         super(runningServer);
         this.room = linkedRoom;
+    }
+        
+    @Override
+    public boolean receiveMessage(ServerMessagePacket sm, OrpheusClient forServer){
+        boolean received = true;
+        switch(sm.getMessage().getType()){
+            case WAITING_ROOM_INIT:
+                receiveInit(sm);
+                break;
+            case WAITING_ROOM_UPDATE:
+                receiveUpdate(sm);
+                break;
+            case REQUEST_PLAYER_DATA:
+        {
+            try {
+                receiveBuildRequest(sm);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+                break;
+            case NOTIFY_IDS:
+                receiveRemoteId(sm);
+                break;
+            case WORLD_INIT:
+                receiveWorldInit(sm);
+                break;
+            default:
+                received = false;
+                break;
+        }
+        return received;
     }
     
     private void receiveInit(ServerMessagePacket sm){
@@ -51,6 +84,10 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<Orphe
         ).readObject();
         addToTeamProto(AbstractUser.deserializeJson(json));
         room.updateTeamDisplays();
+    }
+    
+    public final void requestStart(){
+        getServer().send(new ServerMessage("start", ServerMessageType.START_WORLD));
     }
     
     private synchronized void receiveBuildRequest(ServerMessagePacket sm) throws IOException{
@@ -92,37 +129,5 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<Orphe
         
         RemoteProxyWorldProtocol protocol = new RemoteProxyWorldProtocol(getServer(), world);
         getServer().setProtocol(protocol);
-    }
-    
-    @Override
-    public boolean receiveMessage(ServerMessagePacket sm, OrpheusClient forServer){
-        boolean received = true;
-        switch(sm.getMessage().getType()){
-            case WAITING_ROOM_INIT:
-                receiveInit(sm);
-                break;
-            case WAITING_ROOM_UPDATE:
-                receiveUpdate(sm);
-                break;
-            case REQUEST_PLAYER_DATA:
-        {
-            try {
-                receiveBuildRequest(sm);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-                break;
-            case NOTIFY_IDS:
-                receiveRemoteId(sm);
-                break;
-            case WORLD_INIT:
-                receiveWorldInit(sm);
-                break;
-            default:
-                received = false;
-                break;
-        }
-        return received;
     }
 }

@@ -18,6 +18,7 @@ public enum ServerMessageType {
     WORLD_INIT("world init"),
     WORLD_UPDATE("world update"),
     CONTROL_PRESSED("control pressed"),
+    START_WORLD("start"),
     SERVER_SHUTDOWN("END OF LINE"),
     OTHER("other");
     

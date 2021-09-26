@@ -1,8 +1,11 @@
 package net.protocols;
 
 import controls.userControls.AbstractPlayerControls;
+import java.awt.event.ActionEvent;
+import javax.swing.Timer;
 import net.OrpheusServer;
 import net.messages.ServerMessagePacket;
+import util.Settings;
 import world.HostWorld;
 
 /**
@@ -20,6 +23,11 @@ public class HostWorldProtocol extends AbstractOrpheusServerNonChatProtocol<Orph
     public HostWorldProtocol(OrpheusServer runningServer, HostWorld forWorld){
         super(runningServer);
         hostWorld = forWorld;
+        Timer timer = new Timer(1000 / Settings.FPS, (ActionEvent e)->{
+            hostWorld.update();
+        });
+        timer.setRepeats(true);
+        timer.start();
     }
     
     private void receiveControl(ServerMessagePacket sm){

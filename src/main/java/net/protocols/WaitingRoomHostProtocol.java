@@ -236,6 +236,9 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
             case PLAYER_DATA:
                 receiveBuildInfo(sm);
                 break;
+            case START_WORLD:
+                prepareToStart();
+                break;
             default:
                 handled = false;
                 break;
