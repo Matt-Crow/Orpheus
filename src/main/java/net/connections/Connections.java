@@ -76,8 +76,10 @@ public class Connections {
         return connections.get(userToSocket.get(user));
     }
     
-    public final void broadcast(ServerMessage sm){
-        connections.values().forEach((conn)->conn.writeServerMessage(sm));
+    public final void broadcast(ServerMessage sm) throws IOException{
+        for(Connection conn : connections.values()){
+            conn.writeServerMessage(sm);
+        }
     }
     
     @Override
@@ -88,5 +90,10 @@ public class Connections {
             sb.append(String.format("\n* %s", conn.toString()));
         });
         return sb.toString();
+    }
+
+    public void setUser(AbstractUser sender, Socket sendingSocket) {
+        userToSocket.put(sender, sendingSocket);
+        getConnectionTo(sendingSocket).setRemoteUser(sender);
     }
 }

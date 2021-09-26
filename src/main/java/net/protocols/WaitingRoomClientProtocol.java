@@ -13,6 +13,8 @@ import gui.pages.worldPlay.WorldCanvas;
 import gui.pages.worldPlay.WorldPage;
 import gui.pages.worldSelect.WaitingRoom;
 import java.io.IOException;
+import java.io.StringReader;
+import javax.json.Json;
 import net.OrpheusClient;
 import net.messages.ServerMessage;
 import world.RemoteProxyWorld;
@@ -38,12 +40,16 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<Orphe
                 addToTeamProto(u);
             }
         });
-        addToTeamProto(LocalUser.getInstance()); // sm doesn't contain this user, so I need to manually add myself to the displays
         room.updateTeamDisplays();
     }
     
     private void receiveUpdate(ServerMessagePacket sm){
-        addToTeamProto(sm.getSender());
+        JsonObject json = Json.createReader(
+            new StringReader(
+                sm.getMessage().getBody()
+            )
+        ).readObject();
+        addToTeamProto(AbstractUser.deserializeJson(json));
         room.updateTeamDisplays();
     }
     

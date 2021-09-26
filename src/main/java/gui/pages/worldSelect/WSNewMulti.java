@@ -26,13 +26,15 @@ public class WSNewMulti extends AbstractWSNewWorld{
                 server,
                 createBattle()
             );
-            server.setProtocol(hostProtocol);            
+            server.setProtocol(hostProtocol);   
+            server.start();
             
             OrpheusClient client = new OrpheusClient(server.getIpAddress(), server.getPort());
             WaitingRoom room = new WaitingRoom();
             WaitingRoomClientProtocol clientProtocol = new WaitingRoomClientProtocol(client, room);
             client.setProtocol(clientProtocol);
             client.start();
+            room.setBackEnd(clientProtocol);
             room.getChat().logLocal(String.format(
                 "Have other people use the /connect %s command to connect.", 
                 server.getConnectionString()

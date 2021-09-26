@@ -3,9 +3,11 @@ package net;
 import java.io.IOException;
 import java.net.Socket;
 import net.connections.Connection;
+import net.messages.MessageListener;
 import net.messages.ServerMessage;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
+import users.LocalUser;
 
 /**
  *
@@ -25,9 +27,14 @@ public class OrpheusClient extends AbstractNetworkClient {
     
     @Override
     protected void doStart() throws IOException {
-        System.out.printf("Connecting to %s:%d...%n", hostIp, hostPort);
         Socket client = new Socket(hostIp, hostPort);
         toServer = new Connection(client);
+        MessageListener listener = new MessageListener(toServer, this::receiveMessage);
+        listener.startListening();
+        send(new ServerMessage(
+            LocalUser.getInstance().serializeJson().toString(), 
+            ServerMessageType.PLAYER_JOINED
+        ));
     }
 
     @Override
@@ -48,6 +55,10 @@ public class OrpheusClient extends AbstractNetworkClient {
 
     @Override
     public final void send(ServerMessage sm) {
-        toServer.writeServerMessage(sm);
+        try {
+            toServer.writeServerMessage(sm);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }

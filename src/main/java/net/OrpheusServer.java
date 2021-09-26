@@ -104,27 +104,26 @@ public class OrpheusServer extends AbstractNetworkClient {
     private void setUpMessageListener(Connection conn){
         log("Opening message listener thread...");
         new MessageListener(conn, this::receiveMessage).startListening();
-        
-        //includes the User data so the other computer has access to username
-        
-        conn.writeServerMessage(new ServerMessage(
-            LocalUser.getInstance().serializeJson().toString(),
-            ServerMessageType.PLAYER_JOINED
-        ));        
-        
-        log("Wrote user information to client");
         log(clients);
     }
     
     @Override
     public final void send(ServerMessage sm){
-        clients.broadcast(sm);
+        try {
+            clients.broadcast(sm);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
     
     public final boolean send(ServerMessage sm, AbstractUser recipient){
         boolean success = false;
         if(clients.isConnectedTo(recipient)){
-            clients.getConnectionTo(recipient).writeServerMessage(sm);
+            try {
+                clients.getConnectionTo(recipient).writeServerMessage(sm);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
             success = true;
         } else {
             System.err.printf("Not connected to %s. Here are my connections:\n%s\n", recipient, clients);
@@ -157,7 +156,7 @@ public class OrpheusServer extends AbstractNetworkClient {
             //connected to IP, but no user data set yet
             AbstractUser sender = AbstractUser.deserializeJson(JsonUtil.fromString(sm.getMessage().getBody()));      
             sm.setSender(sender);
-            clients.getConnectionTo(ip).setRemoteUser(sender);
+            clients.setUser(sender, sm.getSendingSocket());
         } else {
             //not connected, no user data
             try {

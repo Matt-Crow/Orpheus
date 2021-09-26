@@ -1,14 +1,13 @@
 package net.protocols;
 
 import users.AbstractUser;
-import gui.pages.worldSelect.WaitingRoom;
 import java.util.HashSet;
 import net.AbstractNetworkClient;
-import net.OrpheusServer;
 
 /**
  *
  * @author Matt
+ * @param <T>
  */
 public abstract class AbstractWaitingRoomProtocol<T extends AbstractNetworkClient> extends AbstractOrpheusServerNonChatProtocol<T>{
     /*

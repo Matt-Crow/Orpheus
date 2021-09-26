@@ -1,5 +1,6 @@
 package users;
 
+import java.util.Objects;
 import javax.json.Json;
 import javax.json.JsonException;
 import javax.json.JsonObject;
@@ -28,6 +29,34 @@ public abstract class AbstractUser implements JsonSerialable {
     }
     public String getName(){
         return userName;
+    }
+    
+    @Override
+    public int hashCode(){
+        return userName.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final AbstractUser other = (AbstractUser) obj;
+        if (!Objects.equals(this.userName, other.userName)) {
+            return false;
+        }
+        return true;
+    }
+    
+    @Override
+    public String toString(){
+        return String.format("User: %s", userName);
     }
     
     /**

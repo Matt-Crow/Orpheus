@@ -21,26 +21,16 @@ public class Connection {
     private final BufferedWriter toClient;
     
     public Connection(Socket s) throws IOException{
-        System.out.println(String.format("(Connection constructor) Creating Connection(Socket(%s)) in Thread %s", s.getInetAddress().getHostAddress(), Thread.currentThread().toString()));
         clientSocket = s;
         toClient = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
         fromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
     }
     
-    public final boolean writeServerMessage(ServerMessage sm){
-        boolean success = false;
-        
-        try {
-            // do I need to make sure the JsonString contains no newlines?
-            toClient.write(sm.toJsonString());
-            toClient.write('\n');
-            toClient.flush();
-            success = true;
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        
-        return success;
+    public final void writeServerMessage(ServerMessage sm) throws IOException{        
+        // do I need to make sure the JsonString contains no newlines?
+        toClient.write(sm.toJsonString());
+        toClient.write('\n');
+        toClient.flush();
     }
     
     // blocks until the client writes something

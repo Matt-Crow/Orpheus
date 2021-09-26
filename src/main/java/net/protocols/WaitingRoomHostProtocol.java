@@ -40,7 +40,6 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
     
     private final Battle minigame;
     private final Team playerTeam;
-    private final Team enemyTeam;
     
     /*
     The Users who have joined the waiting room, but have
@@ -57,7 +56,6 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
         super(runningServer);
         minigame = game;   
         playerTeam = new Team("Players", Color.blue);
-        enemyTeam = new Team("AI", Color.red);
         awaitingBuilds = new HashSet<>();
     }
     
@@ -70,7 +68,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
         if(addToTeamProto(u)){
             awaitingBuilds.add(u);
             ServerMessage sm = new ServerMessage(
-                "join player team",
+                u.serializeJson().toString(),
                 ServerMessageType.WAITING_ROOM_UPDATE
             );
             getServer().send(sm);
@@ -203,6 +201,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
     private void createWorld() throws IOException{
         HostWorld w = new HostWorld(getServer(), WorldContent.createDefaultBattle());
         w.createCanvas();
+        Team enemyTeam = new Team("AI", Color.red);
         w.setPlayerTeam(playerTeam).setEnemyTeam(enemyTeam).setCurrentMinigame(minigame);
         minigame.setHost(w.getContent());
         w.init();

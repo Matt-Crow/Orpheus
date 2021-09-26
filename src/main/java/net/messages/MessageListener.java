@@ -24,6 +24,7 @@ public class MessageListener {
     
     public final void startListening(){
         //do I need to store this somewhere?
+        isListening = true;
         Thread t = new Thread(){
             @Override
             public void run(){
