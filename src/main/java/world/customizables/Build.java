@@ -1,7 +1,8 @@
 package world.customizables;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import util.Settings;
-import util.StringUtil;
 
 
 /**
@@ -58,14 +59,14 @@ public class Build{
         String sep = "~~~~~~~~~~~~~~~~~~~~";
         sb.append("Build ").append(name).append(": \n");
         sb.append("Class: \n").append(
-            StringUtil.entab(
+            entab(
                 ds.getCharacterClassByName(className).getDescription())
         )
             .append("\n");
         sb.append("Actives: \n");
         for(String an : activeNames){
             sb.append(
-                StringUtil.entab(
+                entab(
                     sep + '\n' +
                     ds.getActiveByName(an).getDescription()
                 )
@@ -74,12 +75,16 @@ public class Build{
         sb.append("Passives: \n");
         for(String pn : passiveNames){
             sb.append(
-                StringUtil.entab(
+                entab(
                     sep + '\n' +
                     ds.getPassiveByName(pn).getDescription()
                 )
             ).append("\n");
         }
         return sb.toString();
+    }
+    
+    public static String entab(String s){
+        return Arrays.stream(s.split("\n")).collect(Collectors.joining("\n\t", "\t", ""));
     }
 }

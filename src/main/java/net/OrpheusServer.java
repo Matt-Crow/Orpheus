@@ -12,7 +12,6 @@ import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import serialization.JsonUtil;
 import users.AbstractUser;
-import users.LocalUser;
 
 /**
  * OrpheusServer is a somewhat deceptive title, as this is

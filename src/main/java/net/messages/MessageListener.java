@@ -2,6 +2,7 @@ package net.messages;
 
 import java.io.EOFException;
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.function.Consumer;
 import net.connections.Connection;
 
@@ -45,6 +46,8 @@ public class MessageListener {
         try {
             read();
         } catch(EOFException connectionDone){
+            isListening = false;
+        } catch (SocketException sock){
             isListening = false;
         } catch (IOException ex) {
             ex.printStackTrace();

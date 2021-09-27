@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import gui.graphics.CustomColors;
 import util.Settings;
 import world.customizables.actives.ElementalActive;
-import util.CombatLog;
 import util.Random;
 
 public class Projectile extends AbstractReactiveEntity{
@@ -62,8 +61,6 @@ public class Projectile extends AbstractReactiveEntity{
         registeredAttack.hit(this, p);
 		p.wasHitBy(this);
 		getActionRegister().triggerOnHit(p);
-        
-		CombatLog.logProjectileData(this);
 		terminate();
 	}
     
