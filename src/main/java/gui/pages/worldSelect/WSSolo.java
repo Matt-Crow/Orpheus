@@ -8,6 +8,7 @@ import java.awt.Color;
 import users.LocalUser;
 import gui.pages.worldPlay.WorldCanvas;
 import gui.pages.worldPlay.WorldPage;
+import start.SoloOrpheusClient;
 import world.SoloWorld;
 import world.WorldContent;
 
@@ -49,7 +50,7 @@ public class WSSolo extends AbstractWSNewWorld{
         WorldCanvas canv = battleWorld.getCanvas();
         canv.addPlayerControls(new SoloPlayerControls(battleWorld, player.id));
         
-        WorldPage wp = new WorldPage();
+        WorldPage wp = new WorldPage(new SoloOrpheusClient(user));
         wp.setCanvas(canv);
         getHost().switchToPage(wp);
     }

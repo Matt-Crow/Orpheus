@@ -17,6 +17,7 @@ import java.io.StringReader;
 import javax.json.Json;
 import net.OrpheusClient;
 import net.messages.ServerMessage;
+import start.RemoteOrpheusClient;
 import world.RemoteProxyWorld;
 import world.WorldContent;
 
@@ -120,7 +121,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<Orphe
         world.createCanvas();
         w.init(); // do I need this?
         
-        WorldPage p = new WorldPage();
+        WorldPage p = new WorldPage(new RemoteOrpheusClient(me, getServer()));
         WorldCanvas canv = world.getCanvas();
         canv.addPlayerControls(new RemotePlayerControls(getServer(), world, me.getRemotePlayerId()));
         canv.setPauseEnabled(false);

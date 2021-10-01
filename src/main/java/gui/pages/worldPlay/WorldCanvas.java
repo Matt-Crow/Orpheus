@@ -20,6 +20,7 @@ import users.LocalUser;
 import util.SerialUtil;
 import gui.pages.Canvas;
 import net.ServerProvider;
+import start.SoloOrpheusClient;
 import world.HostWorld;
 import world.WorldContent;
 
@@ -172,7 +173,7 @@ public class WorldCanvas extends Canvas{
         canvas.addPlayerControls(new SoloPlayerControls(world, player.id));
         canvas.setPauseEnabled(true);
         MainWindow mw = MainWindow.getInstance();
-        WorldPage wp = new WorldPage();
+        WorldPage wp = new WorldPage(new SoloOrpheusClient(user));
         wp.setCanvas(canvas);
         mw.switchToPage(wp);
         
@@ -190,7 +191,7 @@ public class WorldCanvas extends Canvas{
         
         //newWorld.init();
         
-        wp = new WorldPage();
+        wp = new WorldPage(new SoloOrpheusClient(user));
         wp.setCanvas(canvas);
         mw.switchToPage(wp);
         canvas.setPauseEnabled(true);

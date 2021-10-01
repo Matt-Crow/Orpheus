@@ -1,8 +1,7 @@
 package start;
 
-import net.messages.ServerMessage;
-import net.messages.ServerMessagePacket;
 import users.AbstractUser;
+import commands.OrpheusCommand;
 
 /**
  * The AbstractOrpheusClient provides a layer of abstraction to how the program
@@ -22,16 +21,14 @@ public abstract class AbstractOrpheusClient {
         return user;
     }
     
-    public final void sendMessage(ServerMessage sm){
-        ServerMessagePacket packet = new ServerMessagePacket(null, sm);
-        packet.setSender(user);
-        doSendMessage(packet);
+    public final void execute(OrpheusCommand cmd){
+        doSendMessage(cmd);
     }
     
-    public final void receiveMessage(ServerMessagePacket packet){
+    public final void receiveMessage(OrpheusCommand packet){
         doReceiveMessage(packet);
     }
     
-    public abstract void doSendMessage(ServerMessagePacket packet);
-    public abstract void doReceiveMessage(ServerMessagePacket packet);
+    public abstract void doSendMessage(OrpheusCommand packet);
+    public abstract void doReceiveMessage(OrpheusCommand packet);
 }

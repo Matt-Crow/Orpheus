@@ -1,7 +1,7 @@
 package start;
 
-import net.messages.ServerMessagePacket;
 import users.AbstractUser;
+import commands.OrpheusCommand;
 
 /**
  *
@@ -13,12 +13,12 @@ public class SoloOrpheusClient extends AbstractOrpheusClient {
     }
 
     @Override
-    public void doSendMessage(ServerMessagePacket packet) {
+    public void doSendMessage(OrpheusCommand packet) {
         doReceiveMessage(packet);
     }
 
     @Override
-    public void doReceiveMessage(ServerMessagePacket packet) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void doReceiveMessage(OrpheusCommand packet) {
+        packet.execute();
     }
 }

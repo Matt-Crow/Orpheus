@@ -1,6 +1,8 @@
 package gui.pages.worldPlay;
 
+import commands.ControlPressed;
 import controls.userControls.AbstractPlayerControls;
+import controls.userControls.SoloPlayerControls;
 import gui.components.Chat;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -16,6 +18,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import gui.pages.Page;
 import gui.pages.worldSelect.WSMain;
+import start.AbstractOrpheusClient;
 import world.HostWorld;
 import world.RemoteProxyWorld;
 
@@ -30,17 +33,19 @@ import world.RemoteProxyWorld;
  * @author Matt Crow
  */
 public class WorldPage extends Page{
+    private final AbstractOrpheusClient commandExecutor;
     private final JPanel canvasArea;
     private WorldCanvas canvas;
     private final Chat chat;
     
-    public WorldPage(){
+    public WorldPage(AbstractOrpheusClient commandExecutor){
         super();
+        this.commandExecutor = commandExecutor;
         addBackButton(new WSMain(), ()->{
             if(canvas != null){
                 canvas.stop();
             }
-        });
+        });        
         
         setLayout(new BorderLayout());
         
