@@ -1,5 +1,6 @@
 package net.protocols;
 
+import controls.userControls.PlayerControls;
 import controls.userControls.RemotePlayerControls;
 import world.customizables.BuildJsonUtil;
 import javax.json.JsonObject;
@@ -121,9 +122,10 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<Orphe
         world.createCanvas();
         w.init(); // do I need this?
         
-        WorldPage p = new WorldPage(new RemoteOrpheusClient(me, getServer()));
+        RemoteOrpheusClient orpheus = new RemoteOrpheusClient(me, getServer());
+        WorldPage p = new WorldPage(orpheus);
         WorldCanvas canv = world.getCanvas();
-        canv.addPlayerControls(new RemotePlayerControls(getServer(), world, me.getRemotePlayerId()));
+        canv.addPlayerControls(new PlayerControls(world, me.getRemotePlayerId(), orpheus));
         canv.setPauseEnabled(false);
         p.setCanvas(canv);
         room.getHost().switchToPage(p);

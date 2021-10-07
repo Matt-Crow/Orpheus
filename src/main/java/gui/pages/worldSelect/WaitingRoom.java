@@ -120,6 +120,5 @@ public class WaitingRoom extends Page{
     
     public final void startButton(){
         backend.requestStart();
-        getChat().log("Are we waiting on anyone?");
     }
 }
