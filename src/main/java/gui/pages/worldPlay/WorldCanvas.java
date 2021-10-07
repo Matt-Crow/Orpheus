@@ -1,28 +1,16 @@
 package gui.pages.worldPlay;
 
-import world.battle.Battle;
 import world.AbstractWorldShell;
 import util.Settings;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.*;
 import javax.swing.*;
-import world.battle.Team;
-import start.MainWindow;
 import controls.userControls.AbstractPlayerControls;
-import controls.userControls.SoloPlayerControls;
 import world.entities.AbstractPlayer;
 import java.awt.Graphics2D;
-import java.io.IOException;
 import world.entities.HumanPlayer;
-import java.io.ObjectOutputStream;
-import users.LocalUser;
-import util.SerialUtil;
 import gui.pages.Canvas;
-import net.ServerProvider;
-import start.SoloOrpheusClient;
-import world.HostWorld;
-import world.WorldContent;
 
 /**
  * P: pause
@@ -149,74 +137,4 @@ public class WorldCanvas extends Canvas{
 		g.drawString(world.getCurrentMinigame().getWinner().getName(), (int) (getWidth() * 0.5), (int) (getHeight() * 0.5));
 		g.drawString("is victorious!", (int) (getWidth() * 0.7), (int) (getHeight() * 0.7));
 	}
-    
-    
-    
-    public static void main(String[] args) throws IOException{
-        LocalUser user = LocalUser.getInstance();
-        HumanPlayer player = new HumanPlayer(user.getName());
-        
-        player.applyBuild(Settings.getDataSet().getDefaultBuild());
-        
-        HostWorld world = new HostWorld(new ServerProvider().createHost(), WorldContent.createDefaultBattle());
-        Team t1 = new Team("Test", Color.BLUE);
-        Team t2 = Team.constructRandomTeam("Rando", Color.yellow, 1, 1);
-        t1.addMember(player);
-        world.setPlayerTeam(t1).setEnemyTeam(t2);
-        
-        Battle b = new Battle(10, 5);
-        b.setHost(world.getContent());
-        world.setCurrentMinigame(b);
-        world.init();
-        
-        WorldCanvas canvas = new WorldCanvas(world);
-        canvas.addPlayerControls(new SoloPlayerControls(world, player.id));
-        canvas.setPauseEnabled(true);
-        MainWindow mw = MainWindow.getInstance();
-        WorldPage wp = new WorldPage(new SoloOrpheusClient(user));
-        wp.setCanvas(canvas);
-        mw.switchToPage(wp);
-        
-        user.setRemotePlayerId(player.id);
-        
-        
-        //now to try serializing it...
-        String serial = world.getContent().serializeToString();
-        
-        WorldContent newContent = WorldContent.fromSerializedString(serial);
-        world.setContent(newContent);
-        newContent.setShell(world);
-        
-        //user.setPlayer((HumanPlayer)newContent.getPlayerTeam().getMemberById(user.getRemotePlayerId()));
-        
-        //newWorld.init();
-        
-        wp = new WorldPage(new SoloOrpheusClient(user));
-        wp.setCanvas(canvas);
-        mw.switchToPage(wp);
-        canvas.setPauseEnabled(true);
-        world.getCanvas().registerKey(KeyEvent.VK_S, true, ()->{
-            Team t = world.getPlayerTeam();
-            System.out.println("Total entities to serialize: " + t.length());
-            String s = SerialUtil.serializeToString(t);
-            Team tClone = (Team)SerialUtil.fromSerializedString(s);
-            System.out.println("Total entities deserialized: " + tClone.length());
-        });
-        
-        
-        
-        ObjectOutputStream out = new ObjectOutputStream(System.out);
-        String ser = null;
-        for(int i = 0; i < 1000000; i++){
-            world.getContent().serializeToString();
-            out.writeObject(ser);
-            //out.reset();
-            //WorldContent deser = WorldContent.fromSerializedString(ser);
-            //world.setContent(deser);
-            if(i % 10000 == 0){
-                System.out.println(i);
-            }
-        }
-        out.close();
-    }
 }

@@ -9,7 +9,7 @@ import net.OrpheusClient;
  *
  * @author Matt Crow
  */
-public class RemoteOrpheusClient extends AbstractOrpheusClient {
+public class RemoteOrpheusClient extends AbstractOrpheusCommandInterpreter {
     private final OrpheusClient client;
     
     public RemoteOrpheusClient(AbstractUser user, OrpheusClient client) {

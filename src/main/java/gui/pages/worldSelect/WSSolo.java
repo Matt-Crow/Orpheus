@@ -1,14 +1,15 @@
 package gui.pages.worldSelect;
 
+import controls.userControls.PlayerControls;
 import world.battle.Battle;
 import world.battle.Team;
-import controls.userControls.SoloPlayerControls;
 import world.entities.HumanPlayer;
 import java.awt.Color;
 import users.LocalUser;
 import gui.pages.worldPlay.WorldCanvas;
 import gui.pages.worldPlay.WorldPage;
-import start.SoloOrpheusClient;
+import start.AbstractOrpheusCommandInterpreter;
+import start.SoloOrpheusCommandInterpreter;
 import world.SoloWorld;
 import world.WorldContent;
 
@@ -24,6 +25,7 @@ public class WSSolo extends AbstractWSNewWorld{
     @Override
     public void start(){
         LocalUser user = LocalUser.getInstance();
+        AbstractOrpheusCommandInterpreter orpheus = new SoloOrpheusCommandInterpreter(user);
         HumanPlayer player = new HumanPlayer(user.getName());
         
         Team team1 = new Team("Players", Color.green);
@@ -48,9 +50,10 @@ public class WSSolo extends AbstractWSNewWorld{
         battleWorld.init();
         
         WorldCanvas canv = battleWorld.getCanvas();
-        canv.addPlayerControls(new SoloPlayerControls(battleWorld, player.id));
+        canv.addPlayerControls(new PlayerControls(battleWorld, player.id, orpheus));
+        //canv.addPlayerControls(new SoloPlayerControls(battleWorld, player.id));
         
-        WorldPage wp = new WorldPage(new SoloOrpheusClient(user));
+        WorldPage wp = new WorldPage(new SoloOrpheusCommandInterpreter(user));
         wp.setCanvas(canv);
         getHost().switchToPage(wp);
     }

@@ -7,8 +7,8 @@ import commands.OrpheusCommand;
  *
  * @author Matt Crow
  */
-public class SoloOrpheusClient extends AbstractOrpheusClient {
-    public SoloOrpheusClient(AbstractUser user){
+public class SoloOrpheusCommandInterpreter extends AbstractOrpheusCommandInterpreter {
+    public SoloOrpheusCommandInterpreter(AbstractUser user){
         super(user);
     }
 

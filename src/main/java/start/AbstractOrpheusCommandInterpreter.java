@@ -10,10 +10,10 @@ import commands.OrpheusCommand;
  * 
  * @author Matt Crow
  */
-public abstract class AbstractOrpheusClient {
+public abstract class AbstractOrpheusCommandInterpreter {
     private final AbstractUser user;
     
-    protected AbstractOrpheusClient(AbstractUser user){
+    protected AbstractOrpheusCommandInterpreter(AbstractUser user){
         this.user = user;
     }
     
