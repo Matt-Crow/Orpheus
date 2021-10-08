@@ -1,7 +1,6 @@
 package net.protocols;
 
-import controls.userControls.PlayerControls;
-import controls.userControls.RemotePlayerControls;
+import controls.PlayerControls;
 import world.customizables.BuildJsonUtil;
 import javax.json.JsonObject;
 import javax.json.JsonValue;

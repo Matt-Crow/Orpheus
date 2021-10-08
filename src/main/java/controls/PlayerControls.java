@@ -1,16 +1,18 @@
-package controls.userControls;
+package controls;
 
+import commands.ControlPressed;
 import controls.AbstractControlScheme;
-import world.entities.AbstractPlayer;
-import world.entities.HumanPlayer;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import gui.pages.Canvas;
 import gui.pages.EndOfFrameListener;
 import gui.pages.worldPlay.WorldCanvas;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import start.AbstractOrpheusCommandInterpreter;
 import util.CardinalDirection;
 import world.AbstractWorldShell;
+import world.entities.AbstractPlayer;
+import world.entities.HumanPlayer;
 
 /**
  * CONTROLS:<br>
@@ -24,9 +26,12 @@ import world.AbstractWorldShell;
  * 
  * @author Matt Crow
  */
-public abstract class AbstractPlayerControls extends AbstractControlScheme implements MouseListener, EndOfFrameListener{
-    public AbstractPlayerControls(AbstractWorldShell inWorld, String playerId){
+public class PlayerControls extends AbstractControlScheme implements MouseListener, EndOfFrameListener{
+    private final AbstractOrpheusCommandInterpreter interpreter;
+    
+    public PlayerControls(AbstractWorldShell inWorld, String playerId, AbstractOrpheusCommandInterpreter interpreter) {
         super(inWorld, playerId);
+        this.interpreter = interpreter;
     }
     
     private String playerString(){
@@ -193,14 +198,6 @@ public abstract class AbstractPlayerControls extends AbstractControlScheme imple
         consumeCommand(directionStopString(d));
     }
     
-    /**
-     * Reacts to a command string produced when the user
-     * uses a control.
-     * 
-     * @param command 
-     */
-    public abstract void consumeCommand(String command);
-    
     public static String getPlayerControlScheme(){
         StringBuilder sb = new StringBuilder();
         sb.append("#CONTROLS#\n");
@@ -214,8 +211,8 @@ public abstract class AbstractPlayerControls extends AbstractControlScheme imple
         sb.append("(X): zoom out\n");
         return sb.toString();
     }
-    
-    public static void main(String[] args){
-        AbstractPlayerControls.decode(null, "#no you");
+
+    public void consumeCommand(String command) {
+        interpreter.doSendMessage(new ControlPressed(this.getWorld(), command));
     }
 }

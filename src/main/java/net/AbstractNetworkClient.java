@@ -103,7 +103,7 @@ public abstract class AbstractNetworkClient {
         }
         
         if(!handled){
-            System.err.printf("Couldn't handle %d\n", sm.hashCode());
+            System.err.printf("Couldn't handle %s\n", sm.getMessage().getType().toString());
             cachedMessages.add(sm);
         }
     }

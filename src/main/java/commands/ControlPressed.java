@@ -1,6 +1,6 @@
 package commands;
 
-import controls.userControls.AbstractPlayerControls;
+import controls.PlayerControls;
 import net.messages.ServerMessage;
 import net.messages.ServerMessageType;
 import world.AbstractWorldShell;
@@ -26,6 +26,6 @@ public class ControlPressed implements SerializeableOrpheusCommand {
 
     @Override
     public void execute() {
-        AbstractPlayerControls.decode(world, controlString);
+        PlayerControls.decode(world, controlString);
     }
 }

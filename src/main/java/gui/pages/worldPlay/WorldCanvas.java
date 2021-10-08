@@ -6,7 +6,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.*;
 import javax.swing.*;
-import controls.userControls.AbstractPlayerControls;
+import controls.PlayerControls;
 import world.entities.AbstractPlayer;
 import java.awt.Graphics2D;
 import world.entities.HumanPlayer;
@@ -55,7 +55,7 @@ public class WorldCanvas extends Canvas{
      * Remember to use this if you want to control a player!
      * @param pc 
      */
-    public final void addPlayerControls(AbstractPlayerControls pc){
+    public final void addPlayerControls(PlayerControls pc){
         addMouseListener(pc);
         addEndOfFrameListener(pc);
         pc.registerControlsTo(this);

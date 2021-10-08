@@ -1,6 +1,6 @@
 package gui.pages.worldSelect;
 
-import controls.userControls.PlayerControls;
+import controls.PlayerControls;
 import world.battle.Battle;
 import world.battle.Team;
 import world.entities.HumanPlayer;

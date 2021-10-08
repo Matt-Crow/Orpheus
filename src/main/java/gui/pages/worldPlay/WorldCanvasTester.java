@@ -1,6 +1,6 @@
 package gui.pages.worldPlay;
 
-import controls.userControls.PlayerControls;
+import controls.PlayerControls;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.io.IOException;

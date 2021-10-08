@@ -1,6 +1,6 @@
 package gui.pages.worldPlay;
 
-import controls.userControls.AbstractPlayerControls;
+import controls.PlayerControls;
 import gui.components.Chat;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -66,7 +66,7 @@ public class WorldPage extends Page{
         otherArea.add(chat, c2.clone());
         
         JTextArea controls = new JTextArea(
-            AbstractPlayerControls.getPlayerControlScheme()
+            PlayerControls.getPlayerControlScheme()
         );
         controls.setEditable(false);
         controls.setWrapStyleWord(true);

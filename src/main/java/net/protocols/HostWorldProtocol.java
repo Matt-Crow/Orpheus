@@ -1,6 +1,6 @@
 package net.protocols;
 
-import controls.userControls.AbstractPlayerControls;
+import controls.PlayerControls;
 import java.awt.event.ActionEvent;
 import javax.swing.Timer;
 import net.OrpheusServer;
@@ -31,7 +31,7 @@ public class HostWorldProtocol extends AbstractOrpheusServerNonChatProtocol<Orph
     }
     
     private void receiveControl(ServerMessagePacket sm){
-        AbstractPlayerControls.decode(hostWorld, sm.getMessage().getBody());
+        PlayerControls.decode(hostWorld, sm.getMessage().getBody());
     }
     
     @Override

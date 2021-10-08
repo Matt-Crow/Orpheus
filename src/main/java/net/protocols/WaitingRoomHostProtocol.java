@@ -59,20 +59,26 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
         awaitingBuilds = new HashSet<>();
     }
     
-    /**
-     * Puts the given user on the teamProto,
-     * and alerts all connected players
-     * @param u the User who wants to play
-     */
-    public final void addUserToTeam(AbstractUser u){
-        if(addToTeamProto(u)){
-            awaitingBuilds.add(u);
-            ServerMessage sm = new ServerMessage(
-                u.serializeJson().toString(),
-                ServerMessageType.WAITING_ROOM_UPDATE
-            );
-            getServer().send(sm);
+    @Override
+    public boolean receiveMessage(ServerMessagePacket sm, OrpheusServer forServer) {
+        boolean handled = true;
+        
+        switch(sm.getMessage().getType()){
+            case PLAYER_JOINED:
+                receiveJoin(sm);
+                break;
+            case START_WORLD:
+                prepareToStart();
+                break;
+            case PLAYER_DATA:
+                receiveBuildInfo(sm);
+                break;
+            default:
+                handled = false;
+                break;
         }
+        
+        return handled;
     }
     
     /**
@@ -116,22 +122,26 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
         getServer().send(initMsg, sm.getSender());
     }
     
-    public final void prepareToStart(){
-        playerTeam.clear();
-        Timer t = new Timer(WaitingRoomHostProtocol.WAIT_TIME * 1000, (e)->{
-            waitForData();
-            requestBuilds();
-        });
-        t.setRepeats(false);
-        t.start();
+    /**
+     * Puts the given user on the teamProto,
+     * and alerts all connected players
+     * @param u the User who wants to play
+     */
+    public final void addUserToTeam(AbstractUser u){
+        if(addToTeamProto(u)){
+            awaitingBuilds.add(u);
+            ServerMessage sm = new ServerMessage(
+                u.serializeJson().toString(),
+                ServerMessageType.WAITING_ROOM_UPDATE
+            );
+            getServer().send(sm);
+        }
     }
     
-    /**
-     * Begins constructing teams, and sends a request for user Build data.
-     * Once all Builds have been obtained, finally starts
-     */
-    private void waitForData(){
-        checkIfReady();
+    
+    public final void prepareToStart(){
+        playerTeam.clear();
+        requestBuilds();
     }
     
     private void requestBuilds(){
@@ -184,6 +194,10 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
         getServer().send(sm, user);
     }
     
+    
+    /**
+     * Once all Builds have been obtained, finally starts
+     */    
     private void checkIfReady(){
         if(awaitingBuilds.isEmpty()){
             try {
@@ -224,27 +238,4 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
         );
         getServer().send(sm);
     }
-    
-    @Override
-    public boolean receiveMessage(ServerMessagePacket sm, OrpheusServer forServer) {
-        boolean handled = true;
-        
-        switch(sm.getMessage().getType()){
-            case PLAYER_JOINED:
-                receiveJoin(sm);
-                break;
-            case PLAYER_DATA:
-                receiveBuildInfo(sm);
-                break;
-            case START_WORLD:
-                prepareToStart();
-                break;
-            default:
-                handled = false;
-                break;
-        }
-        
-        return handled;
-    }
-
 }
