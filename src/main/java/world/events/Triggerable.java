@@ -105,13 +105,13 @@ public class Triggerable<T> implements Terminable, Serializable {
     
     public static void main(String[] args){
         SafeList<Triggerable<Integer>> sti = new SafeList<>();
-        sti.add(new Triggerable(3, (i)->{
+        sti.add(new Triggerable<>(3, (i)->{
             System.out.println("I should only run 3 times!");
         }));
-        sti.add(new Triggerable((i)->{
+        sti.add(new Triggerable<>((i)->{
             System.out.println("But pie is forever.");
         }));
-        sti.add(new Triggerable(1, (i)->{
+        sti.add(new Triggerable<>(1, (i)->{
             System.out.println("urk!");
         }));
         for(int i = 0; i < 10; i++){

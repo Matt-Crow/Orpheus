@@ -30,11 +30,14 @@ import world.statuses.Strength;
 import world.statuses.Stun;
 
 /**
- * The DataSet class is used to store all the Actives, Passives, CharacterClasses, and Builds.
+ * The DataSet class is used to store all the Actives, Passives, 
+ * CharacterClasses, and Builds.
  * Future versions will add the ability to load additional classes at runtime.
  * 
- * Currently, Master.java contains a static DataSet, which is automatically populated
- * with all the default customizables when that file first loads: I needn't worry about customizables not being loaded.
+ * Currently, Master.java contains a static DataSet, which is automatically 
+ * populated
+ * with all the default customizables when that file first loads: I needn't 
+ * worry about customizables not being loaded.
  * 
  * @author Matt Crow
  */
@@ -63,14 +66,20 @@ public final class DataSet {
         addBuild(DEFAULT_BUILD);
     }
     
-    private void addToMap(AbstractCustomizable c, HashMap<String, ? extends AbstractCustomizable> map){
+    @SuppressWarnings("unchecked")
+    private <T extends AbstractCustomizable> void addToMap(T c, HashMap<String, T> map){
         if(c == null){
             throw new NullPointerException("Cannot add null to map");
         }
         if(map == null){
             throw new NullPointerException("Cannot add customizable to null map");
         }
-        ((HashMap<String, AbstractCustomizable>)map).put(c.getName().toUpperCase(), c.copy());
+        
+        /*
+        unchecked cast to type T, but the copy method of AbstractCustomizable
+        should return the same type as the object it operates on
+        */
+        map.put(c.getName().toUpperCase(), (T)c.copy());
     }
     public void addActive(AbstractActive a){
         addToMap(a, allActives);
@@ -89,14 +98,14 @@ public final class DataSet {
         allBuilds.put(b.getName().toUpperCase(), b);
 	}
     
-    private void addAllToMap(AbstractCustomizable[] cs, HashMap<String, ? extends AbstractCustomizable> map){
+    private <T extends AbstractCustomizable> void addAllToMap(T[] cs, HashMap<String, T> map){
         if(cs == null){
             throw new NullPointerException("Cannot add null to map");
         }
         if(map == null){
             throw new NullPointerException("Cannot add customizables to null map");
         }
-        for(AbstractCustomizable c : cs){
+        for(T c : cs){
             addToMap(c, map);
         }
     }

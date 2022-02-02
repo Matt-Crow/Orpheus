@@ -67,7 +67,7 @@ goto fail
 :execute
 @rem Setup the command line
 
-set CLASSPATH=%APP_HOME%\lib\Orpheus.jar;%APP_HOME%\lib\javax.json-1.1.jar
+set CLASSPATH=%APP_HOME%\lib\Orpheus.jar;%APP_HOME%\lib\javax.json-api-1.1.4.jar;%APP_HOME%\lib\javax.json-1.1.jar
 
 
 @rem Execute Orpheus

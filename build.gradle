@@ -5,10 +5,14 @@ plugins {
 sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
+
+
 application {
+    // Netbeans cannot do "run file" option if I include this line
     mainClass = 'start.MainWindow'
 }
 
+// allows Netbeans to set main class for "run file", also sets default
 if (!hasProperty('mainClass')) {
     ext.mainClass = 'start.MainWindow'
 }
@@ -19,8 +23,17 @@ repositories {
 
 dependencies {
     // https://mvnrepository.com/artifact/javax.json/javax.json-api
-    //implementation 'javax.json:javax.json-api:1.1.4'
+    implementation 'javax.json:javax.json-api:1.1.4'
     implementation 'org.glassfish:javax.json:1.1'
+}
+
+jar {
+    manifest {
+        attributes(
+            'Class-Path' : configurations.runtimeClasspath.collect{it.getName()}.join(' '),
+            'Main-Class' : 'start.MainWindow'
+        )
+    }
 }
 
 tasks.withType(JavaCompile){
@@ -28,7 +41,7 @@ tasks.withType(JavaCompile){
 }
 
 tasks.register('fatJar', Jar){
-    archiveClassifier = '-complete'
+    archiveClassifier = 'complete'
     
     //include dependencies in JAR file
     from sourceSets.main.output
