@@ -1,7 +1,6 @@
 package controls;
 
 import commands.ControlPressed;
-import controls.AbstractControlScheme;
 import gui.pages.Canvas;
 import gui.pages.EndOfFrameListener;
 import gui.pages.worldPlay.WorldCanvas;

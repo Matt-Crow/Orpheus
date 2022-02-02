@@ -1,4 +1,5 @@
 .gradle
 *.class
+build/tmp/
 .nb-gradle/private
 .nb-gradle/profiles/private
