@@ -1,3 +1,19 @@
+/*
+ * After A LOT of research, I have finally figured out what is going wrong with
+ * my JAR files:
+ * 1. by default, Gradle DOES NOT bundle dependencies in the Jar task. This is
+ *    meant to avoid duplication if the client has the dependencies already
+ *    installed
+ * 2. by default, Gradle DOES NOT set the main class in the Jar task. That way,
+ *    clients can specify which class they wish to use as the main class. This
+ *    doesn't make a whole lot of sense to me, as I would assume the entire 
+ *    point of an application is to have a well defined main class
+ * 3. it looks like the main class is set by some other function / script when
+ *    they call the Jar file. This does not make sense to me, as I have always 
+ *    assumed the Jar file is supposed to be the sole distribution of the system, 
+ *    and thus should be self-contained, but perhaps my assumption is wrong
+*/
+
 plugins {
     id 'application'
 }
@@ -27,10 +43,10 @@ dependencies {
     implementation 'org.glassfish:javax.json:1.1'
 }
 
+
 jar {
     manifest {
         attributes(
-            'Class-Path' : configurations.runtimeClasspath.collect{it.getName()}.join(' '),
             'Main-Class' : 'start.MainWindow'
         )
     }
@@ -42,6 +58,7 @@ tasks.withType(JavaCompile){
 
 tasks.register('fatJar', Jar){
     archiveClassifier = 'complete'
+    duplicatesStrategy = 'include'
     
     //include dependencies in JAR file
     from sourceSets.main.output
@@ -49,5 +66,10 @@ tasks.register('fatJar', Jar){
     dependsOn configurations.runtimeClasspath
     from {
         configurations.runtimeClasspath.findAll { it.name.endsWith(".jar") }.collect {zipTree(it)}
+    }
+    manifest {
+        attributes(
+            'Main-Class' : 'start.MainWindow'
+        )
     }
 }
