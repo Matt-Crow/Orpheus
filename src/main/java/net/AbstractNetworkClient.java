@@ -14,6 +14,9 @@ import util.SafeList;
  */
 public abstract class AbstractNetworkClient {
     private volatile boolean isStarted;
+    
+    // this should be AbstractOrpheusServerNonChatProtocol<this.class>,
+    // but that is not allowed
     private volatile AbstractOrpheusServerNonChatProtocol protocol;
     private volatile ChatProtocol<? super AbstractNetworkClient> chatProtocol;
     
@@ -111,5 +114,5 @@ public abstract class AbstractNetworkClient {
     protected abstract void doStart() throws IOException;
     protected abstract void doStop() throws IOException;
     protected abstract void doReceiveMessage(ServerMessagePacket sm);
-    protected abstract void send(ServerMessage sm);
+    public abstract void send(ServerMessage sm);
 }
