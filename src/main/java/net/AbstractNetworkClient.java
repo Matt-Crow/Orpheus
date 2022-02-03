@@ -15,7 +15,7 @@ import util.SafeList;
 public abstract class AbstractNetworkClient {
     private volatile boolean isStarted;
     private volatile AbstractOrpheusServerNonChatProtocol protocol;
-    private volatile ChatProtocol chatProtocol;
+    private volatile ChatProtocol<? super AbstractNetworkClient> chatProtocol;
     
     //messages are cached if this does not yet have a way of handling them
     private final SafeList<ServerMessagePacket> cachedMessages;
@@ -57,12 +57,11 @@ public abstract class AbstractNetworkClient {
      * @param chatProtocol the ChatProtocol to handle messages
      * received by this server.
      */
-    public final void setChatProtocol(ChatProtocol chatProtocol){
+    public final void setChatProtocol(ChatProtocol<? super AbstractNetworkClient> chatProtocol){
         this.chatProtocol = chatProtocol;
         cachedMessages.forEach((ServerMessagePacket sm)->{
             if(chatProtocol.receiveMessage(sm, this)){
                 cachedMessages.remove(sm);
-                System.out.println("uncached message " + sm.hashCode());
             }
         });
     }

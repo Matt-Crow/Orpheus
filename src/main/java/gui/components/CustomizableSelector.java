@@ -6,9 +6,9 @@ import world.customizables.AbstractCustomizable;
 import java.awt.BorderLayout;
 import java.util.HashMap;
 
-public class CustomizableSelector extends JComponent{
+public class CustomizableSelector extends JComponent {
     private final JTextArea desc;
-    private final JComboBox chooser;
+    private final JComboBox<String> chooser;
     private final HashMap<String, AbstractCustomizable> options;
 	
 	public CustomizableSelector(String title, AbstractCustomizable[] a){
@@ -63,14 +63,19 @@ public class CustomizableSelector extends JComponent{
         }
     }
     public void setSelected(AbstractCustomizable ac){
-        /*
         if(!options.containsValue(ac)){
             throw new IllegalArgumentException(ac.getName() + " is not a valid option");
-        }*/
+        }
         chooser.setSelectedItem(ac.getName());
     }
+    
+    @SuppressWarnings("unchecked")
     public AbstractCustomizable getSelected(){
         AbstractCustomizable ret = null;
+        /*
+        JComboBox::getSelectedItem returns Object, but this method should throw
+        an exception if the selected item is not a String for some reason
+        */
         if(options.containsKey((String)chooser.getSelectedItem())){
             ret = options.get((String)chooser.getSelectedItem());
         }

@@ -11,7 +11,6 @@ import static java.lang.System.err;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
-import javax.swing.Timer;
 import net.OrpheusServer;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
