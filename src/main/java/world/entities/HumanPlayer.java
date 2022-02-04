@@ -119,12 +119,12 @@ public class HumanPlayer extends AbstractPlayer{
 
     @Override
     public void playerInit() {
-        c.doInit();
+        c.init();
         for(AbstractActive a : actives){
-			a.doInit();
+			a.init();
 		}
         for(AbstractPassive p : passives){
-			p.doInit();
+			p.init();
 		}
         clearMovement();
     }
@@ -132,10 +132,10 @@ public class HumanPlayer extends AbstractPlayer{
     @Override
     public void playerUpdate() {
         for(AbstractActive a : actives){
-			a.doUpdate();
+			a.update();
 		}
         for(AbstractPassive p : passives){
-			p.doUpdate();
+			p.update();
 		}
         
         if(this.getPath() == null){ //prevent double movement

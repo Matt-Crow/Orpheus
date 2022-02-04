@@ -67,7 +67,7 @@ public final class DataSet {
     }
     
     @SuppressWarnings("unchecked")
-    private <T extends AbstractCustomizable> void addToMap(T c, HashMap<String, T> map){
+    private <T extends AbstractBuildAttribute> void addToMap(T c, HashMap<String, T> map){
         if(c == null){
             throw new NullPointerException("Cannot add null to map");
         }
@@ -76,7 +76,7 @@ public final class DataSet {
         }
         
         /*
-        unchecked cast to type T, but the copy method of AbstractCustomizable
+        unchecked cast to type T, but the copy method of AbstractBuildAttribute
         should return the same type as the object it operates on
         */
         map.put(c.getName().toUpperCase(), (T)c.copy());
@@ -90,7 +90,7 @@ public final class DataSet {
     public void addPassive(AbstractPassive p){
 		addToMap(p, allPassives);
 	}
-    //Build does not extends AbstractCustomizable, so I cannot trigger addToMap
+    //Build does not extends AbstractBuildAttribute, so I cannot trigger addToMap
     public void addBuild(Build b){
 		if(b == null){
             throw new NullPointerException();
@@ -98,7 +98,7 @@ public final class DataSet {
         allBuilds.put(b.getName().toUpperCase(), b);
 	}
     
-    private <T extends AbstractCustomizable> void addAllToMap(T[] cs, HashMap<String, T> map){
+    private <T extends AbstractBuildAttribute> void addAllToMap(T[] cs, HashMap<String, T> map){
         if(cs == null){
             throw new NullPointerException("Cannot add null to map");
         }
@@ -127,7 +127,7 @@ public final class DataSet {
         }
     }
     
-    public AbstractCustomizable getByName(String n, HashMap<String, ? extends AbstractCustomizable> map){
+    public AbstractBuildAttribute getByName(String n, HashMap<String, ? extends AbstractBuildAttribute> map){
         if(!map.containsKey(n.toUpperCase())){
             throw new NoSuchElementException("No customizable found with name " + n);
         }
@@ -149,8 +149,8 @@ public final class DataSet {
         return allBuilds.get(name.toUpperCase()).copy();
 	}
     
-    public AbstractCustomizable[] getAll(HashMap<String, ? extends AbstractCustomizable> map){
-        return map.values().toArray(new AbstractCustomizable[map.size()]);
+    public AbstractBuildAttribute[] getAll(HashMap<String, ? extends AbstractBuildAttribute> map){
+        return map.values().toArray(new AbstractBuildAttribute[map.size()]);
     }
     public AbstractActive[] getAllActives(){
         return Arrays.copyOf(getAll(allActives), allActives.size(), AbstractActive[].class);
@@ -165,9 +165,9 @@ public final class DataSet {
         return allBuilds.values().toArray(new Build[allBuilds.size()]);
     }
     
-    public String[] getAllNames(HashMap<String, ? extends AbstractCustomizable> map){
+    public String[] getAllNames(HashMap<String, ? extends AbstractBuildAttribute> map){
         //key is capitalized, but we want regular casing, so we can't get this from the key set
-        return map.values().stream().map((AbstractCustomizable c)->c.getName()).toArray(String[]::new);
+        return map.values().stream().map((AbstractBuildAttribute c)->c.getName()).toArray(String[]::new);
     }
     public String[] getAllActiveNames(){
         return getAllNames(allActives);

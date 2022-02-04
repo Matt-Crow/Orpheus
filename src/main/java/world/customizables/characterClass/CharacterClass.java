@@ -1,8 +1,7 @@
 package world.customizables.characterClass;
 
-import world.customizables.AbstractCustomizable;
+import world.customizables.AbstractBuildAttribute;
 import gui.graphics.CustomColors;
-import java.text.DecimalFormat;
 import java.util.function.BiFunction;
 import util.Number;
 
@@ -12,7 +11,7 @@ import util.Number;
  * Each character class has its own set of stats and projectile colors.
  * @author Matt
  */
-public class CharacterClass extends AbstractCustomizable{
+public class CharacterClass extends AbstractBuildAttribute{
     private CustomColors[] colors;
     public static final int BASE_HP = 2000;
 
@@ -93,11 +92,6 @@ public class CharacterClass extends AbstractCustomizable{
     @Override
     public void init(){
         //dummy init method
-    }
-    
-    @Override
-    public void trigger(){
-        
     }
     
     @Override

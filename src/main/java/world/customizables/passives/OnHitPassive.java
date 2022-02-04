@@ -26,7 +26,7 @@ public class OnHitPassive extends AbstractPassive implements OnHitListener{
     @Override
     public void init(){
         if(getUser() != null){
-            //for when doInit is called by Customizers
+            //for when init is called by Customizers
             getUser().getActionRegister().addOnHit(this);
         }
     }

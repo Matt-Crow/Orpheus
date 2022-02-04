@@ -4,13 +4,13 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import util.Settings;
-import world.customizables.AbstractCustomizable;
+import world.customizables.AbstractTriggerableAttribute;
 
 /**
  * The AbstractActive class serves as the base for active abilities possessed by Players
  * @author Matt
  */
-public abstract class AbstractActive extends AbstractCustomizable{
+public abstract class AbstractActive extends AbstractTriggerableAttribute{
     /**
      * @param n the name of this active
      */
@@ -65,7 +65,7 @@ public abstract class AbstractActive extends AbstractCustomizable{
     
     @Override
     public void update(){
-        
+        super.update();
     }
     
     @Override

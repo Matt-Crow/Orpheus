@@ -109,7 +109,7 @@ public class Team extends SafeList<AbstractEntity> implements Serializable{
      */
     public void initPlayer(AbstractPlayer p, WorldContent w){
        w.spawnIntoWorld(p);
-       p.doInit();
+       p.init();
        membersRem.add(p);
        add(p);
     }

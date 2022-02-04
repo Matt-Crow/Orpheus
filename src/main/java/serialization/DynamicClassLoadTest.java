@@ -1,6 +1,6 @@
 package serialization;
 
-import world.customizables.AbstractCustomizable;
+import world.customizables.AbstractBuildAttribute;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -44,8 +44,8 @@ public class DynamicClassLoadTest {
                 c = loader.loadClass(className);
                 try {
                     obj = c.newInstance();
-                    if(obj instanceof AbstractCustomizable){
-                        System.out.println(((AbstractCustomizable)obj).getDescription());
+                    if(obj instanceof AbstractBuildAttribute){
+                        System.out.println(((AbstractBuildAttribute)obj).getDescription());
                     }
                 } catch (InstantiationException ex) {
                     ex.printStackTrace();

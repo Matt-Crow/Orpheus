@@ -2,16 +2,16 @@ package gui.components;
 
 import javax.swing.JComponent;
 import javax.swing.*;
-import world.customizables.AbstractCustomizable;
+import world.customizables.AbstractBuildAttribute;
 import java.awt.BorderLayout;
 import java.util.HashMap;
 
 public class CustomizableSelector extends JComponent {
     private final JTextArea desc;
     private final JComboBox<String> chooser;
-    private final HashMap<String, AbstractCustomizable> options;
+    private final HashMap<String, AbstractBuildAttribute> options;
 	
-	public CustomizableSelector(String title, AbstractCustomizable[] a){
+	public CustomizableSelector(String title, AbstractBuildAttribute[] a){
 		super();
         options = new HashMap<>();
         
@@ -48,21 +48,21 @@ public class CustomizableSelector extends JComponent {
         
         setOptions(a);
 	}
-    public void addOption(AbstractCustomizable ac){
+    public void addOption(AbstractBuildAttribute ac){
         if(options.containsKey(ac.getName())){
             throw new IllegalArgumentException(ac.getName() + " is already an option.");
         }
         options.put(ac.getName(), ac);
         chooser.addItem(ac.getName());
     }
-    public void setOptions(AbstractCustomizable[] acs){
+    public void setOptions(AbstractBuildAttribute[] acs){
         chooser.removeAllItems();
         options.clear();
-        for(AbstractCustomizable ac : acs){
+        for(AbstractBuildAttribute ac : acs){
             addOption(ac);
         }
     }
-    public void setSelected(AbstractCustomizable ac){
+    public void setSelected(AbstractBuildAttribute ac){
         if(!options.containsValue(ac)){
             throw new IllegalArgumentException(ac.getName() + " is not a valid option");
         }
@@ -70,8 +70,8 @@ public class CustomizableSelector extends JComponent {
     }
     
     @SuppressWarnings("unchecked")
-    public AbstractCustomizable getSelected(){
-        AbstractCustomizable ret = null;
+    public AbstractBuildAttribute getSelected(){
+        AbstractBuildAttribute ret = null;
         /*
         JComboBox::getSelectedItem returns Object, but this method should throw
         an exception if the selected item is not a String for some reason

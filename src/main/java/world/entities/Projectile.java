@@ -19,7 +19,7 @@ public class Projectile extends AbstractReactiveEntity{
 	public Projectile(int useId, int x, int y, int degrees, int momentum, AbstractPlayer attackUser, ElementalActive a){
 		super();
         setSpeed(momentum);
-        doInit();
+        init();
         setX(x);
         setY(y);
         setFacing(degrees);
@@ -75,7 +75,7 @@ public class Projectile extends AbstractReactiveEntity{
 	
 	public void spawnParticle(int degrees, int m, CustomColors c){
 		Particle p = new Particle(m, c);
-        p.doInit();
+        p.init();
 		p.setX(getX());
         p.setY(getY());
         p.setFacing(degrees);
@@ -122,8 +122,8 @@ public class Projectile extends AbstractReactiveEntity{
     }
     
 	@Override
-    public void init() {
-        super.init();
+    public void doInit() {
+        super.doInit();
     }
     
     @Override

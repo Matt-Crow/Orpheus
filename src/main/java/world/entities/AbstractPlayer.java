@@ -185,12 +185,12 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
 	}
     
     @Override
-	public void init(){
-        super.init();
+	public void doInit(){
+        super.doInit();
         statuses.clear();
         getActionRegister().reset();
         
-		slash.doInit();
+		slash.init();
 		log.init();
 		
         path = null;
@@ -249,7 +249,7 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
                 }
             }
         }
-		slash.doUpdate();
+		slash.update();
 		
 		
 		getActionRegister().triggerOnUpdate();

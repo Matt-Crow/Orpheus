@@ -18,7 +18,7 @@ public class Particle extends AbstractEntity{
 	}
     
     @Override
-    public void init() {
+    public void doInit() {
         setMoving(true);
 		age = 0;
     }

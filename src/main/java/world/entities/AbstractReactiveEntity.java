@@ -24,7 +24,7 @@ public abstract class AbstractReactiveEntity extends AbstractEntity{
 	}
     
     @Override
-    public void init(){
+    public void doInit(){
         actReg.reset();
     }
     

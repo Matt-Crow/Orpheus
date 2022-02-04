@@ -1,9 +1,8 @@
 package world.customizables.passives;
 
-import java.io.Serializable;
-import world.customizables.AbstractCustomizable;
+import world.customizables.AbstractTriggerableAttribute;
 
-public abstract class AbstractPassive extends AbstractCustomizable implements Serializable{
+public abstract class AbstractPassive extends AbstractTriggerableAttribute{
 	/**
 	 * Passives are abilities that have specific triggers, 
 	 * i.e., the user does not directly trigger them:
@@ -23,6 +22,9 @@ public abstract class AbstractPassive extends AbstractCustomizable implements Se
 		return targetsUser;
 	}
     
+    
+	
+    
     @Override
     public void trigger(){
         
@@ -30,6 +32,6 @@ public abstract class AbstractPassive extends AbstractCustomizable implements Se
     
     @Override
     public void update(){
-        
+        super.update();
     }
 }

@@ -212,14 +212,14 @@ public abstract class AbstractEntity implements Serializable, Terminable{
 		return shouldTerminate;
 	}
     
-    public final void doInit(){
+    public final void init(){
 		// called by battle
         terminateListeners.clear();
         
 		moving = false;
 		speedFilter = 1.0;
 		shouldTerminate = false;
-        init();
+        doInit();
 	}
     
 	public final void doUpdate(){
@@ -244,7 +244,7 @@ public abstract class AbstractEntity implements Serializable, Terminable{
         team.add(e);
     }
     
-    public abstract void init();
+    public abstract void doInit();
     public abstract void update();
 	public abstract void draw(Graphics g);
 
