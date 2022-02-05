@@ -1,7 +1,7 @@
 package world.entities;
 
 import util.Settings;
-import world.customizables.actives.ElementalActive;
+import world.build.actives.ElementalActive;
 
 public class SeedProjectile extends Projectile{
 	private boolean canExplode;

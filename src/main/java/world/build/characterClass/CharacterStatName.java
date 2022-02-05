@@ -1,4 +1,4 @@
-package world.customizables.characterClass;
+package world.build.characterClass;
 
 import java.util.NoSuchElementException;
 

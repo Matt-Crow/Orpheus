@@ -1,7 +1,7 @@
 package gui.components;
 
 import util.Settings;
-import world.customizables.Build;
+import world.build.Build;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import javax.swing.*;

@@ -1,7 +1,7 @@
 package net.protocols;
 
 import controls.PlayerControls;
-import world.customizables.BuildJsonUtil;
+import world.build.BuildJsonUtil;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 import net.messages.ServerMessagePacket;

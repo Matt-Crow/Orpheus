@@ -126,10 +126,10 @@ public abstract class AbstractEntity implements Serializable, Terminable{
 		facing = Direction.getDegreeByLengths(x, y, xCoord, yCoord);
 	}
     
-    public double distanceFrom(AbstractEntity e){
+    public final double distanceFrom(AbstractEntity e){
         return distanceFrom(e.getX(), e.getY());
     }
-    public double distanceFrom(int xc, int yc){
+    public final double distanceFrom(int xc, int yc){
         return Math.sqrt(Math.pow(xc - x, 2) + Math.pow(yc - y, 2));
     }
     

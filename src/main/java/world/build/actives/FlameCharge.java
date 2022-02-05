@@ -1,4 +1,4 @@
-package world.customizables.actives;
+package world.build.actives;
 
 import world.entities.ParticleType;
 import world.events.OnUpdateEvent;

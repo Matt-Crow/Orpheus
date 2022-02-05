@@ -1,6 +1,6 @@
 package world.entities;
 
-import world.customizables.actives.ElementalActive;
+import world.build.actives.ElementalActive;
 
 /**
  * The AOEProjectile class is used to represent the

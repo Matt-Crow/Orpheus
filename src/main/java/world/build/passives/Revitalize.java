@@ -1,9 +1,9 @@
-package world.customizables.passives;
+package world.build.passives;
 
 import world.statuses.Regeneration;
 
 
-public class Revitalize extends world.customizables.passives.ThresholdPassive{
+public class Revitalize extends world.build.passives.ThresholdPassive{
 	private boolean activated;
 	public Revitalize(){
 		super("Revitalize", 1);

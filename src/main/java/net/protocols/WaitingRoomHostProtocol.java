@@ -2,8 +2,8 @@ package net.protocols;
 
 import world.battle.Battle;
 import world.battle.Team;
-import world.customizables.Build;
-import world.customizables.BuildJsonUtil;
+import world.build.Build;
+import world.build.BuildJsonUtil;
 import world.entities.HumanPlayer;
 import java.awt.Color;
 import java.io.IOException;

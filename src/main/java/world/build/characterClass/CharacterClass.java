@@ -1,6 +1,6 @@
-package world.customizables.characterClass;
+package world.build.characterClass;
 
-import world.customizables.AbstractBuildAttribute;
+import world.build.AbstractBuildAttribute;
 import gui.graphics.CustomColors;
 import java.util.function.BiFunction;
 import util.Number;

@@ -1,4 +1,4 @@
-package world.customizables;
+package world.build;
 
 import util.Settings;
 import world.entities.AbstractPlayer;

@@ -1,7 +1,7 @@
 package gui.pages.customize;
 
 import util.Settings;
-import world.customizables.BuildJsonUtil;
+import world.build.BuildJsonUtil;
 import gui.components.FileChooserUtil;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;

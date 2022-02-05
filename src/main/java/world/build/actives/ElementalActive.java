@@ -1,8 +1,8 @@
-package world.customizables.actives;
+package world.build.actives;
 
 import util.Settings;
-import world.customizables.characterClass.CharacterClass;
-import world.customizables.characterClass.CharacterStatName;
+import world.build.characterClass.CharacterClass;
+import world.build.characterClass.CharacterStatName;
 import world.entities.AbstractPlayer;
 import world.entities.ParticleType;
 import world.entities.Projectile;

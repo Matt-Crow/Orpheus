@@ -1,7 +1,7 @@
 package gui.pages.worldSelect;
 
 import world.battle.Battle;
-import world.customizables.Build;
+import world.build.Build;
 import gui.components.BuildSelect;
 import gui.components.OptionBox;
 import gui.components.Style;

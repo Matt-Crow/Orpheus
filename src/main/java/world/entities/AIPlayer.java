@@ -1,7 +1,7 @@
 package world.entities;
 
 import controls.ai.PlayerAI;
-import world.customizables.characterClass.CharacterStatName;
+import world.build.characterClass.CharacterStatName;
 
 /**
  *

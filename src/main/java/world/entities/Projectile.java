@@ -4,7 +4,7 @@ import java.awt.Graphics;
 
 import gui.graphics.CustomColors;
 import util.Settings;
-import world.customizables.actives.ElementalActive;
+import world.build.actives.ElementalActive;
 import util.Random;
 
 public class Projectile extends AbstractReactiveEntity{

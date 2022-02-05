@@ -1,4 +1,4 @@
-package world.customizables;
+package world.build;
 
 import world.entities.AbstractPlayer;
 import java.io.Serializable;

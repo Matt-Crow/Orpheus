@@ -1,12 +1,12 @@
 package world.entities;
 
 import util.Settings;
-import world.customizables.Build;
-import world.customizables.DataSet;
-import world.customizables.actives.AbstractActive;
-import world.customizables.characterClass.CharacterClass;
-import world.customizables.characterClass.CharacterStatName;
-import world.customizables.passives.AbstractPassive;
+import world.build.Build;
+import world.build.DataSet;
+import world.build.actives.AbstractActive;
+import world.build.characterClass.CharacterClass;
+import world.build.characterClass.CharacterStatName;
+import world.build.passives.AbstractPassive;
 import gui.graphics.CustomColors;
 import java.awt.Color;
 import java.awt.Graphics;

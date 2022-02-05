@@ -1,4 +1,4 @@
-package world.customizables.actives;
+package world.build.actives;
 
 import util.Settings;
 import world.entities.AbstractPlayer;

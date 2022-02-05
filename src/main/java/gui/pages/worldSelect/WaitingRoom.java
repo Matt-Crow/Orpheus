@@ -1,6 +1,6 @@
 package gui.pages.worldSelect;
 
-import world.customizables.Build;
+import world.build.Build;
 import gui.components.BuildSelect;
 import gui.components.Chat;
 import gui.components.Style;

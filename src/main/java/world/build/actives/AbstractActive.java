@@ -1,10 +1,10 @@
-package world.customizables.actives;
+package world.build.actives;
 
 import java.awt.Color;
 import java.awt.Graphics;
 
 import util.Settings;
-import world.customizables.AbstractTriggerableAttribute;
+import world.build.AbstractTriggerableAttribute;
 
 /**
  * The AbstractActive class serves as the base for active abilities possessed by Players

@@ -2,7 +2,7 @@ package gui.components;
 
 import javax.swing.JComponent;
 import javax.swing.*;
-import world.customizables.AbstractBuildAttribute;
+import world.build.AbstractBuildAttribute;
 import java.awt.BorderLayout;
 import java.util.HashMap;
 

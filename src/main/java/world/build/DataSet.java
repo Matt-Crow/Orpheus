@@ -1,15 +1,15 @@
-package world.customizables;
+package world.build;
 
-import world.customizables.actives.AbstractActive;
-import world.customizables.actives.BoostActive;
-import world.customizables.actives.BoulderToss;
-import world.customizables.actives.ElementalActive;
-import world.customizables.actives.FlameCharge;
-import world.customizables.characterClass.CharacterClass;
-import world.customizables.passives.AbstractPassive;
-import world.customizables.passives.OnBeHitPassive;
-import world.customizables.passives.OnHitPassive;
-import world.customizables.passives.ThresholdPassive;
+import world.build.actives.AbstractActive;
+import world.build.actives.BoostActive;
+import world.build.actives.BoulderToss;
+import world.build.actives.ElementalActive;
+import world.build.actives.FlameCharge;
+import world.build.characterClass.CharacterClass;
+import world.build.passives.AbstractPassive;
+import world.build.passives.OnBeHitPassive;
+import world.build.passives.OnHitPassive;
+import world.build.passives.ThresholdPassive;
 import world.entities.ParticleType;
 import gui.graphics.CustomColors;
 import java.io.File;

@@ -1,4 +1,4 @@
-package world.customizables.actives;
+package world.build.actives;
 
 import world.statuses.AbstractStatus;
 import world.statuses.StatusTable;

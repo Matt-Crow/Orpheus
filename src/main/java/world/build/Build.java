@@ -1,4 +1,4 @@
-package world.customizables;
+package world.build;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
