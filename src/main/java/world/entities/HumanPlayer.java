@@ -13,7 +13,9 @@ import java.awt.Graphics;
 import java.util.NoSuchElementException;
 import gui.pages.worldPlay.WorldCanvas;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import util.CardinalDirection;
+import util.Direction;
 
 /**
  *
@@ -50,7 +52,7 @@ public class HumanPlayer extends AbstractPlayer{
 		setClass(b.getClassName());
 		setActives(b.getActiveNames());
 		setPassives(b.getPassiveNames());
-		setSpeed((int) (c.getSpeed() * (500.0 / Settings.FPS)));
+		setMaxSpeed((int) (c.getSpeed() * (500.0 / Settings.FPS)));
     }
     public void setClass(String name){
         DataSet ds = Settings.getDataSet();
@@ -139,11 +141,22 @@ public class HumanPlayer extends AbstractPlayer{
 		}
         
         if(this.getPath() == null){ //prevent double movement
-            movingInCardinalDir.forEach((dir, isMoving)->{
-                if(isMoving){
-                    move(dir);
+            int dx = 0;
+            int dy = 0;
+            for(Entry<CardinalDirection, Boolean> dir : movingInCardinalDir.entrySet()){
+                if(dir.getValue()){
+                    dx += dir.getKey().getXMod();
+                    dy += dir.getKey().getYMod();
                 }
-            });
+            }
+            
+            if(dx != 0 || dy != 0){
+                Direction newFacing = Direction.getDegreeByLengths(0, 0, dx, dy);
+                setFacing(newFacing.getDegrees());
+                setIsMoving(true);
+            } else {
+                setIsMoving(false);
+            }
         }
     }
     
@@ -159,7 +172,7 @@ public class HumanPlayer extends AbstractPlayer{
 		g.setColor(CustomColors.darkGrey);
 		g.fillOval(compassX - compassDiameter, compassY - compassDiameter, compassDiameter * 2, compassDiameter * 2); // draws from upper-left corner, not center
 		g.setColor(CustomColors.red);
-		g.drawLine(compassX, compassY, (int)(compassX + getDir().getXMod() * compassDiameter), (int)(compassY + getDir().getYMod() * compassDiameter));
+		g.drawLine(compassX, compassY, (int)(compassX + getFacing().getXMod() * compassDiameter), (int)(compassY + getFacing().getYMod() * compassDiameter));
 		
 		
 		int guiY = (int)(h * 0.9);

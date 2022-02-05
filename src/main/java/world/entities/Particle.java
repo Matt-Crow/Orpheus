@@ -11,7 +11,7 @@ public class Particle extends AbstractEntity{
 	
 	public Particle(int momentum, Color c){
 		super();
-        setSpeed(momentum);
+        setMaxSpeed(momentum);
 		color = c;
 		setRadius(5);
 		lifeSpan = 15;
@@ -19,7 +19,7 @@ public class Particle extends AbstractEntity{
     
     @Override
     public void doInit() {
-        setMoving(true);
+        setIsMoving(true);
 		age = 0;
     }
     

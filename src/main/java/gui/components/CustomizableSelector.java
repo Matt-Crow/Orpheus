@@ -63,7 +63,7 @@ public class CustomizableSelector extends JComponent {
         }
     }
     public void setSelected(AbstractBuildAttribute ac){
-        if(!options.containsValue(ac)){
+        if(!options.containsKey(ac.getName())){
             throw new IllegalArgumentException(ac.getName() + " is not a valid option");
         }
         chooser.setSelectedItem(ac.getName());

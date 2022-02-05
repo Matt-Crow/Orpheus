@@ -20,7 +20,7 @@ public class BoulderToss extends ElementalActive{
     @Override
     public void hit(Projectile hittingProjectile, AbstractPlayer p){
         super.hit(hittingProjectile, p);
-        p.knockBack(getRange(), hittingProjectile.getDir(), Settings.seconds(1));
+        p.knockBack(getRange(), hittingProjectile.getFacing(), Settings.seconds(1));
     }
     
     @Override

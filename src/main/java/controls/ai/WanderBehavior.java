@@ -43,7 +43,7 @@ public class WanderBehavior extends AbstractBehavior<AbstractPlayer>{
     public AbstractBehavior update() {
         AbstractBehavior nextBehavior = this;
         AbstractPlayer target = getTarget();
-        target.setMoving(true);
+        target.setIsMoving(true);
         if(checkIfPlayerInSightRange()){
             nextBehavior = new PursueBehavior(target, nearestEnemy());
         } else if(target.getPath() == null || target.getPath().noneLeft()){

@@ -163,7 +163,7 @@ public class ElementalActive extends AbstractActive{
      * @param arcDegrees the number of degrees in the arc
      */
     protected void spawnArc(int arcDegrees){
-        int start = getUser().getDir().getDegrees() - arcDegrees / 2;
+        int start = getUser().getFacing().getDegrees() - arcDegrees / 2;
         // spawn projectiles every 15 degrees
         for(int angleOffset = 0; angleOffset < arcDegrees; angleOffset += 15){
             spawnProjectile(start + angleOffset);

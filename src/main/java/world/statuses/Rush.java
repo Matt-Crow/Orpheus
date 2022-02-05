@@ -39,7 +39,7 @@ public class Rush extends AbstractStatus implements OnUpdateListener{
 
     @Override
     public void trigger(OnUpdateEvent e) {
-        e.getUpdated().applySpeedFilter(1 + 0.2 * getIntensityLevel());
+        e.getUpdated().multiplySpeedBy(1 + 0.2 * getIntensityLevel());
         use();
     }
 }

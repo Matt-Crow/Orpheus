@@ -18,7 +18,7 @@ public class Projectile extends AbstractReactiveEntity{
     
 	public Projectile(int useId, int x, int y, int degrees, int momentum, AbstractPlayer attackUser, ElementalActive a){
 		super();
-        setSpeed(momentum);
+        setMaxSpeed(momentum);
         init();
         setX(x);
         setY(y);
@@ -30,7 +30,7 @@ public class Projectile extends AbstractReactiveEntity{
 		registeredAttack = a;
 		range = a.getRange();
 		setRadius(25);
-		setMoving(true);
+		setIsMoving(true);
 		hit = null;
 	}
 	public int getUseId(){
@@ -65,7 +65,7 @@ public class Projectile extends AbstractReactiveEntity{
 	}
     
 	public boolean checkForCollisions(AbstractPlayer p){
-		boolean ret = super.checkForCollisions(p);
+		boolean ret = super.isCollidingWith(p);
 		if(ret && p.getLastHitById() != useId){
 			ret = true;
 			hit(p);
@@ -101,17 +101,17 @@ public class Projectile extends AbstractReactiveEntity{
 				break;
 			case SHEAR:
 				CustomColors rs = cs[Random.choose(0, cs.length - 1)];
-				spawnParticle(getDir().getDegrees() - 45, 5, rs);
+				spawnParticle(getFacing().getDegrees() - 45, 5, rs);
 				rs = cs[Random.choose(0, cs.length - 1)];
-				spawnParticle(getDir().getDegrees() + 45, 5, rs);
+				spawnParticle(getFacing().getDegrees() + 45, 5, rs);
 				break;
 			case BEAM:
 				CustomColors rbe = cs[Random.choose(0, cs.length - 1)];
-				spawnParticle(getDir().getDegrees() - 180, 5, rbe);
+				spawnParticle(getFacing().getDegrees() - 180, 5, rbe);
 				break;
 			case BLADE:
 				CustomColors rbl = cs[Random.choose(0, cs.length - 1)];
-				spawnParticle(getDir().getDegrees(), 0, rbl);
+				spawnParticle(getFacing().getDegrees(), 0, rbl);
 				break;
             case NONE:
                 break;

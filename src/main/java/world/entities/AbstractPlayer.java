@@ -51,7 +51,7 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
 	
 	public AbstractPlayer(String n, int minLifeSpan){
 		super();
-        setSpeed(Tile.TILE_SIZE * 5 / Settings.FPS);
+        setMaxSpeed(Tile.TILE_SIZE * 5 / Settings.FPS);
 		name = n;
         color = Color.black;
         
@@ -100,8 +100,8 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
 	}
 	public boolean withinFocus(){
 		// returns if has reached focal point
-		boolean withinX = Math.abs(getX() - focusX) < getSpeed();
-		boolean withinY = Math.abs(getY() - focusY) < getSpeed();
+		boolean withinX = Math.abs(getX() - focusX) < getMaxSpeed();
+		boolean withinY = Math.abs(getY() - focusY) < getMaxSpeed();
 		return withinX && withinY;
 	}
     
@@ -210,10 +210,10 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
         if(hasFocus){
 			if(withinFocus()){
 				hasFocus = false;
-				setMoving(false);
+				setIsMoving(false);
 			}else{
 				turnToFocus();
-				setMoving(true);
+				setIsMoving(true);
 			}
 		}
         if(knockbackDir != null){

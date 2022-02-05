@@ -40,7 +40,7 @@ public class FlameCharge extends ElementalActive {
             
             @Override
             public void trigger(OnUpdateEvent e) {
-                spawnProjectile(e.getUpdated().getDir().getDegrees() + 180);
+                spawnProjectile(e.getUpdated().getFacing().getDegrees() + 180);
                 timeLeft--;
                 if(timeLeft <= 0){
                     terminate();

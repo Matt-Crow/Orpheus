@@ -7,8 +7,6 @@ import world.events.Terminable;
 import world.events.TerminateListener;
 import world.WorldContent;
 import java.io.Serializable;
-import java.util.HashMap;
-import util.CardinalDirection;
 import util.SafeList;
 
 /**
@@ -16,18 +14,15 @@ import util.SafeList;
  * this class only includes behavior associated with vector-based movement and termination.
  */
 public abstract class AbstractEntity implements Serializable, Terminable{
-	/*
-	 * Position fields
-	 */
 	private int x;
 	private int y;
-    private int radius; //used for collisions
-	
-    private Direction dir; // the direction the entity is facing, ranging from 0-359 degrees, with 0 being the positive x axis, turning counterclockwise
-	private boolean moving; // moving in the given direction
-    
     private int maxSpeed;
-	private double speedFilter; // amount the entity's speed is multiplied by when moving. May depreciate later
+    private double speedMultiplier;
+    private int radius;
+    private boolean isMoving;
+    private Direction facing;
+    
+    
 	
 	/*
 	 * In-battle stuff
@@ -43,11 +38,18 @@ public abstract class AbstractEntity implements Serializable, Terminable{
 	private static int nextId = 0;
     
 	public AbstractEntity(){
+        x = 0;
+        y = 0;
+        maxSpeed = 0;
+        speedMultiplier = 1.0;
+        radius = 50;
+        isMoving = false;
+        facing = new Direction(0);
+        
 		id = "#" + nextId;
         inWorld = null;
-        radius = 50;
         terminateListeners = new SafeList<>();
-        dir = new Direction(0);
+        
 		nextId++;
 	}
     
@@ -66,19 +68,6 @@ public abstract class AbstractEntity implements Serializable, Terminable{
         return "Entity #" + id;
     }
     
-    public void setWorld(WorldContent w){
-        if(w == null){
-            throw new NullPointerException();
-        } else {
-            inWorld = w;
-        }
-    }
-    public WorldContent getWorld(){
-        return inWorld;
-    }
-    
-    
-	// movement functions
 	public final int getX(){
 		return x;
 	}
@@ -93,92 +82,57 @@ public abstract class AbstractEntity implements Serializable, Terminable{
         y = yc;
     }
     
-    public final void move(CardinalDirection dir){
-        x += dir.getXMod() * getMomentum();
-        y += dir.getYMod() * getMomentum();
-    }
-    
-    public final void setFacing(int degrees){
-        dir.setDegrees(degrees);
-    }
-    
-    
-    public final Direction getDir(){
-		return dir;
-	}
-    
-    /**
-     * Sets the movement speed of this entity
-     * @param speed
-     */
-	public final void setSpeed(int speed){
+    public final void setMaxSpeed(int speed){
 		maxSpeed = speed;
 	}
-    
-    public final int getSpeed(){
+    public final int getMaxSpeed(){
         return maxSpeed;
     }
     
-    //change later
-     /**
-     * @param f : the amount this entity's speed will be multiplied by
-     */
-	public final void applySpeedFilter(double f){
-		speedFilter *= f;
-	}
-    public final void clearSpeedFilter(){
-        speedFilter = 1.0;
-    }
-	public final void setMoving(boolean isMoving){
-		moving = isMoving;
-	}
-	public final boolean getIsMoving(){
-		return moving;
-	}
-	public final int getMomentum(){
-        /**
-         * returns how much this entity will move
-         */
-		return (int)(maxSpeed * speedFilter);
-	}
-	
-	public final void turnTo(int xCoord, int yCoord){
-        /**
-         * Rotates the entity to face the given point
-         */
-		dir = Direction.getDegreeByLengths(x, y, xCoord, yCoord);
+    public final void multiplySpeedBy(double f){
+		speedMultiplier *= f;
 	}
     
-	public void updateMovement(){
-		if(moving){
-            x += getMomentum() * dir.getXMod();
-            y += getMomentum() * dir.getYMod();
-        }
-		clearSpeedFilter();
-	}
+    // remove this later
+    public final void clearSpeedFilter(){
+        speedMultiplier = 1.0;
+    }
     
     public final void setRadius(int r){
-        radius = (r >= 0) ? r : -r;
+        if(r < 0){
+            throw new IllegalArgumentException(String.format("radius must be non-negative, so %d isn't allowed", r));
+        }
+        radius = r;
     }
     public final int getRadius(){
         return radius;
     }
-	
-	// inbattle methods
-	public final void setTeam(Team t){
-		team = t;
+    
+    public final void setIsMoving(boolean isMoving){
+		this.isMoving = isMoving;
 	}
-	public final Team getTeam(){
-		return team;
+	public final boolean getIsMoving(){
+		return isMoving;
 	}
-	
-	
-    public double distanceFrom(int xc, int yc){
-        return Math.sqrt(Math.pow(xc - x, 2) + Math.pow(yc - y, 2));
+    
+    public final void setFacing(int degrees){
+        facing.setDegrees(degrees);
     }
+    public final Direction getFacing(){
+		return facing;
+	}
+    
+    public final void turnTo(int xCoord, int yCoord){
+		facing = Direction.getDegreeByLengths(x, y, xCoord, yCoord);
+	}
+    
     public double distanceFrom(AbstractEntity e){
         return distanceFrom(e.getX(), e.getY());
     }
+    public double distanceFrom(int xc, int yc){
+        return Math.sqrt(Math.pow(xc - x, 2) + Math.pow(yc - y, 2));
+    }
+    
     public final boolean isWithin(int x, int y, int w, int h){
         return (
             x < this.x + radius //left
@@ -191,13 +145,55 @@ public abstract class AbstractEntity implements Serializable, Terminable{
     /**
      * Checks if this entity collides with another entity.
      * Subclasses should overload this with each subclass of AbstractEntity
- that needs special reactions
+     * that needs special reactions
      * 
      * @param e the AbstractEntity to check for collisions with
      * @return whether or not this collides with the given AbstractEntity
      */
-    public boolean checkForCollisions(AbstractEntity e){
+    public final boolean isCollidingWith(AbstractEntity e){
         return distanceFrom(e) <= e.getRadius() + radius;
+	}
+    
+    public void updateMovement(){
+		if(isMoving){
+            x += getMomentum() * facing.getXMod();
+            y += getMomentum() * facing.getYMod();
+        }
+		clearSpeedFilter();
+	}
+    
+    /**
+     *
+     * @return how much this entity will move this frame
+     */
+	public final int getMomentum(){
+		return (int)(maxSpeed * speedMultiplier);
+	}
+    
+    
+    
+    
+    
+    
+    
+    
+    public void setWorld(WorldContent w){
+        if(w == null){
+            throw new NullPointerException();
+        } else {
+            inWorld = w;
+        }
+    }
+    public WorldContent getWorld(){
+        return inWorld;
+    }
+	
+	// inbattle methods
+	public final void setTeam(Team t){
+		team = t;
+	}
+	public final Team getTeam(){
+		return team;
 	}
     
     @Override
@@ -216,8 +212,8 @@ public abstract class AbstractEntity implements Serializable, Terminable{
 		// called by battle
         terminateListeners.clear();
         
-		moving = false;
-		speedFilter = 1.0;
+		isMoving = false;
+		speedMultiplier = 1.0;
 		shouldTerminate = false;
         doInit();
 	}
@@ -244,10 +240,6 @@ public abstract class AbstractEntity implements Serializable, Terminable{
         team.add(e);
     }
     
-    public abstract void doInit();
-    public abstract void update();
-	public abstract void draw(Graphics g);
-
     @Override
     public void addTerminationListener(TerminateListener listen) {
         terminateListeners.add(listen);
@@ -257,4 +249,8 @@ public abstract class AbstractEntity implements Serializable, Terminable{
     public boolean removeTerminationListener(TerminateListener listen) {
         return terminateListeners.remove(listen);
     }
+    
+    public abstract void doInit();
+    public abstract void update();
+	public abstract void draw(Graphics g);
 }
