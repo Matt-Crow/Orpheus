@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import util.CardinalDirection;
 import util.Direction;
+import world.WorldContent;
 
 /**
  *
@@ -30,8 +31,8 @@ public class HumanPlayer extends AbstractPlayer{
     
     public static final int MIN_LIFE_SPAN = 10;
     
-    public HumanPlayer(String n) {
-        super(n, MIN_LIFE_SPAN);
+    public HumanPlayer(WorldContent inWorld, String n) {
+        super(inWorld, n, MIN_LIFE_SPAN);
         c = null;
         actives = new AbstractActive[3];
 		passives = new AbstractPassive[3];

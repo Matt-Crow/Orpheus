@@ -1,6 +1,7 @@
 package world.entities;
 
 import controls.ai.PlayerAI;
+import world.WorldContent;
 import world.build.characterClass.CharacterStatName;
 
 /**
@@ -11,8 +12,8 @@ public class AIPlayer extends AbstractPlayer{
     private final PlayerAI playerAI;
     private final int level;
      
-    public AIPlayer(String n, int lv) {
-        super(n, lv);
+    public AIPlayer(WorldContent inWorld, String n, int lv) {
+        super(inWorld, n, lv);
         playerAI = new PlayerAI(this);
         level = lv;
     }

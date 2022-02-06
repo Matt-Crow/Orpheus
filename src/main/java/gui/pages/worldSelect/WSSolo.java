@@ -26,7 +26,13 @@ public class WSSolo extends AbstractWSNewWorld{
     public void start(){
         LocalUser user = LocalUser.getInstance();
         AbstractOrpheusCommandInterpreter orpheus = new SoloOrpheusCommandInterpreter(user);
-        HumanPlayer player = new HumanPlayer(user.getName());
+        SoloWorld battleWorld = new SoloWorld(WorldContent.createDefaultBattle());
+        
+        
+        HumanPlayer player = new HumanPlayer(
+            battleWorld.getContent(),
+            user.getName()
+        );
         
         Team team1 = new Team("Players", Color.green);
         Team team2 = new Team("AI", Color.red);
@@ -34,8 +40,6 @@ public class WSSolo extends AbstractWSNewWorld{
         player.applyBuild(getSelectedBuild());
         team1.addMember(player);
 
-        SoloWorld battleWorld = new SoloWorld(WorldContent.createDefaultBattle());
-        
         //it's like a theme park or something
         battleWorld.createCanvas();
         

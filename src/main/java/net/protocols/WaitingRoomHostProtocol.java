@@ -39,6 +39,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
     
     private final Battle minigame;
     private final Team playerTeam;
+    private HostWorld world; // may be null at some points
     
     /*
     The Users who have joined the waiting room, but have
@@ -140,6 +141,10 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
     
     public final void prepareToStart(){
         playerTeam.clear();
+        world = new HostWorld(
+            getServer(), 
+            WorldContent.createDefaultBattle()
+        );
         requestBuilds();
     }
     
@@ -165,7 +170,10 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
         AbstractUser sender = sm.getSender();
         
         if(awaitingBuilds.contains(sender)){
-            player = new HumanPlayer(sender.getName());
+            player = new HumanPlayer(
+                world.getContent(), // world should not be null by now
+                sender.getName()
+            );
             awaitingBuilds.remove(sender);
         } else {
             err.println("Ugh oh, " + sender.getName() + " isn't on any team!");
@@ -200,28 +208,23 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
     private void checkIfReady(){
         if(awaitingBuilds.isEmpty()){
             try {
-                createWorld();
+                launchWorld();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
     }
     
-    /**
-     * Creates, sends, and switches to a new world
-     * @throws IOException 
-     */
-    private void createWorld() throws IOException{
-        HostWorld w = new HostWorld(getServer(), WorldContent.createDefaultBattle());
-        w.createCanvas();
+    private void launchWorld() throws IOException{
+        world.createCanvas();
         Team enemyTeam = new Team("AI", Color.red);
-        w.setPlayerTeam(playerTeam).setEnemyTeam(enemyTeam).setCurrentMinigame(minigame);
-        minigame.setHost(w.getContent());
-        w.init();
+        world.setPlayerTeam(playerTeam).setEnemyTeam(enemyTeam).setCurrentMinigame(minigame);
+        minigame.setHost(world.getContent());
+        world.init();
         
-        HostWorldProtocol protocol = new HostWorldProtocol(getServer(), w);
+        HostWorldProtocol protocol = new HostWorldProtocol(getServer(), world);
         getServer().setProtocol(protocol);
-        sendWorldInit(w.getContent());
+        sendWorldInit(world.getContent());
     }
     
     /**

@@ -10,10 +10,12 @@ import java.io.Serializable;
 import util.SafeList;
 
 /**
- * The AbstractEntity class is used as the base for anything that has to interact with players in game.
- * this class only includes behavior associated with vector-based movement and termination.
+ * The AbstractEntity class is used as the base for anything that moves and
+ * exists within a World.
  */
 public abstract class AbstractEntity implements Serializable, Terminable{
+    private final WorldContent inWorld;
+    
 	private int x;
 	private int y;
     private int maxSpeed;
@@ -23,21 +25,16 @@ public abstract class AbstractEntity implements Serializable, Terminable{
     private Direction facing;
     
     
-	
-	/*
-	 * In-battle stuff
-	 */
+
 	private Team team;
 	private boolean shouldTerminate;
 	
-    private final SafeList<TerminateListener> terminateListeners; //you just can't wait for me to die, can you!
-    
-    private WorldContent inWorld; //the world this is currently in
+    private final SafeList<TerminateListener> terminateListeners;
     
 	public final String id;
 	private static int nextId = 0;
     
-	public AbstractEntity(){
+	public AbstractEntity(WorldContent world){
         x = 0;
         y = 0;
         maxSpeed = 0;
@@ -47,7 +44,7 @@ public abstract class AbstractEntity implements Serializable, Terminable{
         facing = new Direction(0);
         
 		id = "#" + nextId;
-        inWorld = null;
+        inWorld = world;
         terminateListeners = new SafeList<>();
         
 		nextId++;
@@ -66,6 +63,10 @@ public abstract class AbstractEntity implements Serializable, Terminable{
     @Override
     public String toString(){
         return "Entity #" + id;
+    }
+    
+    public final WorldContent getWorld(){
+        return inWorld;
     }
     
 	public final int getX(){
@@ -169,26 +170,7 @@ public abstract class AbstractEntity implements Serializable, Terminable{
 	public final int getMomentum(){
 		return (int)(maxSpeed * speedMultiplier);
 	}
-    
-    
-    
-    
-    
-    
-    
-    
-    public void setWorld(WorldContent w){
-        if(w == null){
-            throw new NullPointerException();
-        } else {
-            inWorld = w;
-        }
-    }
-    public WorldContent getWorld(){
-        return inWorld;
-    }
 	
-	// inbattle methods
 	public final void setTeam(Team t){
 		team = t;
 	}
@@ -227,16 +209,14 @@ public abstract class AbstractEntity implements Serializable, Terminable{
     
     /**
      * Inserts an AbstractEntity into this' EntityNode chain.
-     * Since the AbstractEntity is inserted before this one,
- it will not be updated during this iteration of
- EntityManager.update
+     * Since the AbstractEntity is inserted before this one, it will not be 
+     * updated during this iteration of EntityManager.update
      * @param e the AbstractEntity to insert before this one
      */
     public final void spawn(AbstractEntity e){
         if(e == null){
             throw new NullPointerException();
         }
-        e.setWorld(inWorld);
         team.add(e);
     }
     

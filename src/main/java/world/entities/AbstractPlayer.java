@@ -49,8 +49,8 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
     public static final int RADIUS = 50;
     
 	
-	public AbstractPlayer(String n, int minLifeSpan){
-		super();
+	public AbstractPlayer(WorldContent inWorld, String n, int minLifeSpan){
+		super(inWorld);
         setMaxSpeed(Tile.TILE_SIZE * 5 / Settings.FPS);
 		name = n;
         color = Color.black;

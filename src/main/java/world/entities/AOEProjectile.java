@@ -1,5 +1,6 @@
 package world.entities;
 
+import world.WorldContent;
 import world.build.actives.ElementalActive;
 
 /**
@@ -16,8 +17,8 @@ import world.build.actives.ElementalActive;
  * @author Matt Crow
  */
 public class AOEProjectile extends Projectile{
-	public AOEProjectile(int id, int x, int y, int degrees, int momentum, AbstractPlayer attackUser, ElementalActive a){
-		super(id, x, y, degrees, momentum, attackUser, a);
+	public AOEProjectile(WorldContent inWorld, int id, int x, int y, int degrees, int momentum, AbstractPlayer attackUser, ElementalActive a){
+		super(inWorld, id, x, y, degrees, momentum, attackUser, a);
 		setRange((int) a.getAOE());
 	}
 }

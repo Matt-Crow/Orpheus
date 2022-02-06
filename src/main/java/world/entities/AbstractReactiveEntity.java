@@ -1,5 +1,6 @@
 package world.entities;
 
+import world.WorldContent;
 import world.events.ActionRegister;
 
 /**
@@ -13,8 +14,8 @@ public abstract class AbstractReactiveEntity extends AbstractEntity{
     
     private final ActionRegister actReg;
     
-    public AbstractReactiveEntity(){
-        super();
+    public AbstractReactiveEntity(WorldContent inWorld){
+        super(inWorld);
         
         actReg = new ActionRegister(this);
     }

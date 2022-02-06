@@ -111,10 +111,13 @@ public class Battle implements Serializable{
         AIPlayer p;
         
         for(int i = 0; i < waveSize; i++){
-            p = new AIPlayer(String.format("%s wave %d #%d", teamName, currentWave, i), enemyLvForWave(currentWave));
+            p = new AIPlayer(
+                host,
+                String.format("%s wave %d #%d", teamName, currentWave, i), 
+                enemyLvForWave(currentWave)
+            );
             
             ai.addMember(p);
-            p.setWorld(host);
             ai.initPlayer(p, host);
         }
     }

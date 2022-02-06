@@ -255,6 +255,15 @@ public class ElementalActive extends AbstractActive{
 	}
     
     public SeedProjectile createProjectile(){
-        return new SeedProjectile(nextUseId, getUser().getX(), getUser().getY(), 0, projectileSpeed, getUser(), this);
+        return new SeedProjectile(
+            getUser().getWorld(),
+            nextUseId, 
+            getUser().getX(), 
+            getUser().getY(), 
+            0, 
+            projectileSpeed, 
+            getUser(), 
+            this
+        );
     }
 }

@@ -4,7 +4,6 @@ import world.battle.Battle;
 import world.battle.Team;
 import world.entities.AbstractEntity;
 import world.entities.Particle;
-import world.entities.AbstractPlayer;
 import gui.graphics.Map;
 import java.awt.Graphics;
 import gui.pages.worldPlay.WorldCanvas;
@@ -60,7 +59,6 @@ public abstract class AbstractWorldShell {
     
     public AbstractWorldShell addParticle(Particle p){
         particles.add(p);
-        p.setWorld(content); // do I need this?
         return this;
     }
     
@@ -123,7 +121,6 @@ public abstract class AbstractWorldShell {
      */
     public void spawnIntoWorld(AbstractEntity e){
         content.spawnIntoWorld(e);
-        e.setWorld(content);
     }
     
     public final void updateParticles(){

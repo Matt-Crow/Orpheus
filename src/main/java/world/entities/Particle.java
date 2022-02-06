@@ -3,14 +3,15 @@ package world.entities;
 import util.Settings;
 import java.awt.Color;
 import java.awt.Graphics;
+import world.WorldContent;
 
 public class Particle extends AbstractEntity{
 	private final Color color;
 	private final int lifeSpan;
 	private int age;
 	
-	public Particle(int momentum, Color c){
-		super();
+	public Particle(WorldContent inWorld, int momentum, Color c){
+		super(inWorld);
         setMaxSpeed(momentum);
 		color = c;
 		setRadius(5);

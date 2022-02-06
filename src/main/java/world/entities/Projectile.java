@@ -6,6 +6,7 @@ import gui.graphics.CustomColors;
 import util.Settings;
 import world.build.actives.ElementalActive;
 import util.Random;
+import world.WorldContent;
 
 public class Projectile extends AbstractReactiveEntity{
 	private final AbstractPlayer user;
@@ -16,8 +17,8 @@ public class Projectile extends AbstractReactiveEntity{
 	
 	private final int useId; //used to prevent double hitting. May not be unique to a single projectile. See AbstractActive for more info
     
-	public Projectile(int useId, int x, int y, int degrees, int momentum, AbstractPlayer attackUser, ElementalActive a){
-		super();
+	public Projectile(WorldContent inWorld, int useId, int x, int y, int degrees, int momentum, AbstractPlayer attackUser, ElementalActive a){
+		super(inWorld);
         setMaxSpeed(momentum);
         init();
         setX(x);
@@ -74,7 +75,7 @@ public class Projectile extends AbstractReactiveEntity{
 	}
 	
 	public void spawnParticle(int degrees, int m, CustomColors c){
-		Particle p = new Particle(m, c);
+		Particle p = new Particle(getWorld(), m, c);
         p.init();
 		p.setX(getX());
         p.setY(getY());

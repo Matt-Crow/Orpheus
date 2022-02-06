@@ -25,13 +25,15 @@ public class WorldCanvasTester {
     public static void main(String[] args) throws IOException{
         LocalUser user = LocalUser.getInstance();
         SoloOrpheusCommandInterpreter orpheus = new SoloOrpheusCommandInterpreter(user);
-        HumanPlayer player = new HumanPlayer(user.getName());
+        HostWorld world = new HostWorld(new ServerProvider().createHost(), WorldContent.createDefaultBattle());
+        
+        
+        HumanPlayer player = new HumanPlayer(world.getContent(), user.getName());
         
         player.applyBuild(Settings.getDataSet().getDefaultBuild());
         
-        HostWorld world = new HostWorld(new ServerProvider().createHost(), WorldContent.createDefaultBattle());
         Team t1 = new Team("Test", Color.BLUE);
-        Team t2 = Team.constructRandomTeam("Rando", Color.yellow, 1, 1);
+        Team t2 = Team.constructRandomTeam(world.getContent(), "Rando", Color.yellow, 1, 1);
         t1.addMember(player);
         world.setPlayerTeam(t1).setEnemyTeam(t2);
         

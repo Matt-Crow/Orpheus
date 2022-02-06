@@ -81,10 +81,14 @@ public class Team extends SafeList<AbstractEntity> implements Serializable{
         return roster.get(id);
     }
     
-	public static Team constructRandomTeam(String name, Color color, int size, int lv){
+	public static Team constructRandomTeam(WorldContent inWorld, String name, Color color, int size, int lv){
 		Team t = new Team(name, color);
 		for(int teamSize = 0; teamSize < size; teamSize++){
-			AbstractPlayer p = new AIPlayer(name + " member #" + (teamSize + 1), lv);
+			AbstractPlayer p = new AIPlayer(
+                inWorld,
+                String.format("%s member #%d", name, (teamSize + 1)), 
+                lv
+            );
 			t.addMember(p);
 		}
 		return t;
