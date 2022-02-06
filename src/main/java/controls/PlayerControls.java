@@ -92,7 +92,7 @@ public class PlayerControls extends AbstractControlScheme implements MouseListen
         });
     }
     public String mouseString(){
-        WorldCanvas c = getPlayer().getWorld().getShell().getCanvas();
+        WorldCanvas c = getWorld().getCanvas();
         return String.format("(%d, %d)", c.getMouseX(), c.getMouseY());
     }
     public static int[] decodeMouseString(String s){

@@ -7,11 +7,7 @@ import world.build.actives.AbstractActive;
 import world.build.characterClass.CharacterClass;
 import world.build.characterClass.CharacterStatName;
 import world.build.passives.AbstractPassive;
-import gui.graphics.CustomColors;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.util.NoSuchElementException;
-import gui.pages.worldPlay.WorldCanvas;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import util.CardinalDirection;
@@ -160,40 +156,6 @@ public class HumanPlayer extends AbstractPlayer{
             }
         }
     }
-    
-    public void drawHUD(Graphics g, WorldCanvas wc){
-        int w = wc.getWidth();
-		int h = wc.getHeight();
-		
-		// compass
-		int compassX = w / 10 * 9; // center points
-		int compassY = h / 10 * 3;
-		int compassDiameter = w / 10;
-		
-		g.setColor(CustomColors.darkGrey);
-		g.fillOval(compassX - compassDiameter, compassY - compassDiameter, compassDiameter * 2, compassDiameter * 2); // draws from upper-left corner, not center
-		g.setColor(CustomColors.red);
-		g.drawLine(compassX, compassY, (int)(compassX + getFacing().getXMod() * compassDiameter), (int)(compassY + getFacing().getYMod() * compassDiameter));
-		
-		
-		int guiY = (int)(h * 0.9);
-		int sw = w / 5;
-		int sh = h / 10;
-		
-		// HP
-		String strHP = getLog().getHP() + "";
-		g.setColor(Color.red);
-		g.fillRect(0, guiY, sw, sh);
-		g.setColor(Color.black);
-		g.drawString("HP: " + strHP, (int)(w * 0.1), (int) (h * 0.93));
-		
-		// Actives
-		int i = sw;
-		for(AbstractActive a : getActives()){
-			a.drawStatusPane(g, i, (int)(h * 0.9), sw, sh);
-			i += sw;
-		}
-	}
 
     @Override
     public double getStatValue(CharacterStatName n) {

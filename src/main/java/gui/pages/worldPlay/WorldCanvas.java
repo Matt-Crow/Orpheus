@@ -9,7 +9,6 @@ import javax.swing.*;
 import controls.PlayerControls;
 import world.entities.AbstractPlayer;
 import java.awt.Graphics2D;
-import world.entities.HumanPlayer;
 import gui.pages.Canvas;
 
 /**
@@ -26,6 +25,7 @@ public class WorldCanvas extends Canvas{
     private boolean pauseEnabled;
     
     private String focusedEntityId;
+    private HeadsUpDisplay hud;
     
     public WorldCanvas(AbstractWorldShell w){
         super();
@@ -60,6 +60,7 @@ public class WorldCanvas extends Canvas{
         addEndOfFrameListener(pc);
         pc.registerControlsTo(this);
         focusedEntityId = pc.getPlayer().id;
+        hud = new HeadsUpDisplay(this, pc.getPlayer());
     }
     
     public void setPauseEnabled(boolean canPause){
@@ -110,7 +111,7 @@ public class WorldCanvas extends Canvas{
 		reset();
         
 		if(focusedEntityId != null){
-            ((HumanPlayer)world.getPlayerTeam().getMemberById(focusedEntityId)).drawHUD(g2d, this);
+            hud.draw(g);
         }
         
         if(world.getCurrentMinigame() != null && world.getCurrentMinigame().isDone()){

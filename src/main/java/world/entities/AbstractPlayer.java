@@ -11,7 +11,10 @@ import world.WorldContent;
 import world.build.actives.ElementalActive;
 import world.build.characterClass.CharacterStatName;
 import gui.graphics.Tile;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import util.Direction;
 import util.SafeList;
 
@@ -157,6 +160,12 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
             newStat.inflictOn(this);
 		}
 	}
+    
+    public final Collection<AbstractStatus> getInflictedStatuses(){
+        Collection<AbstractStatus> inflicted = new ArrayList<>();
+        statuses.forEach((status)->inflicted.add(status));
+        return inflicted;
+    }
 	
 	public void useMeleeAttack(){
 		if(slash.canUse()){
@@ -265,44 +274,49 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
 	
     @Override
 	public void draw(Graphics g){
-        int w = getWorld()
-            .getShell()
-            .getCanvas()
-            .getWidth();
-		int h = getWorld()
-            .getShell()
-            .getCanvas()
-            .getHeight();
+        int w = 1000;
+        int h = 1000;
 		int r = getRadius();
         
         if(path != null){
             path.draw(g);
         }
         
-        
-		// HP value
+        // HP value
 		g.setColor(Color.black);
-		g.drawString("HP: " + log.getHP(), getX() - w/12, getY() - h/8);
+		g.drawString(
+            String.format("HP: %d", getLog().getHP()), 
+            getX() - w/12, 
+            getY() - h/8
+        );
 		
-		// Update this to sprite later, doesn't scale to prevent hitbox snafoos
-		g.setColor(getTeam().getColor());
-		g.fillOval(getX() - r, getY() - r, 2 * r, 2 * r);
-		g.setColor(color);
-		g.fillOval(getX() - (int)(r * 0.8), getY() - (int)(r * 0.8), (int)(r * 1.6), (int)(r * 1.6));
-		
-		g.setColor(Color.black);
+        // list statuses
+        g.setColor(Color.black);
 		int y = getY() + h/10;
-		for(Object obj : statuses.toArray()){
-			AbstractStatus s = (AbstractStatus)obj;
-            String iStr = "";
-			int i = 0;
+        String iStr;
+        int i;
+		for(AbstractStatus s : getInflictedStatuses()){
+            iStr = "";
+			i = 0;
 			while(i < s.getIntensityLevel()){
 				iStr += "I";
 				i++;
 			}
-			g.drawString(s.getName() + " " + iStr + "(" + s.getUsesLeft() + ")", getX() - r, y);
+			g.drawString(
+                String.format(
+                    "%s %s (%d)", 
+                    s.getName(), iStr, s.getUsesLeft()
+                ), 
+                getX() - r, 
+                y
+            );
 			y += h/30;
 		}
+        
+		g.setColor(getTeam().getColor());
+		g.fillOval(getX() - r, getY() - r, 2 * r, 2 * r);
+		g.setColor(color);
+		g.fillOval(getX() - (int)(r * 0.8), getY() - (int)(r * 0.8), (int)(r * 1.6), (int)(r * 1.6));
 	}
 
     public abstract double getStatValue(CharacterStatName n);
