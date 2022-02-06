@@ -2,11 +2,11 @@ package world.entities;
 
 import java.awt.Graphics;
 import util.Direction;
-import world.battle.Team;
 import world.events.Terminable;
 import world.events.TerminateListener;
 import world.WorldContent;
 import java.io.Serializable;
+import util.Coordinates;
 import util.SafeList;
 
 /**
@@ -24,11 +24,7 @@ public abstract class AbstractEntity implements Serializable, Terminable{
     private boolean isMoving;
     private Direction facing;
     
-    
-
-	private Team team;
 	private boolean shouldTerminate;
-	
     private final SafeList<TerminateListener> terminateListeners;
     
 	public final String id;
@@ -127,13 +123,6 @@ public abstract class AbstractEntity implements Serializable, Terminable{
 		facing = Direction.getDegreeByLengths(x, y, xCoord, yCoord);
 	}
     
-    public final double distanceFrom(AbstractEntity e){
-        return distanceFrom(e.getX(), e.getY());
-    }
-    public final double distanceFrom(int xc, int yc){
-        return Math.sqrt(Math.pow(xc - x, 2) + Math.pow(yc - y, 2));
-    }
-    
     public final boolean isWithin(int x, int y, int w, int h){
         return (
             x < this.x + radius //left
@@ -152,15 +141,7 @@ public abstract class AbstractEntity implements Serializable, Terminable{
      * @return whether or not this collides with the given AbstractEntity
      */
     public final boolean isCollidingWith(AbstractEntity e){
-        return distanceFrom(e) <= e.getRadius() + radius;
-	}
-    
-    public void updateMovement(){
-		if(isMoving){
-            x += getMomentum() * facing.getXMod();
-            y += getMomentum() * facing.getYMod();
-        }
-		clearSpeedFilter();
+        return Coordinates.distanceBetween(this, e) <= e.getRadius() + radius;
 	}
     
     /**
@@ -170,13 +151,16 @@ public abstract class AbstractEntity implements Serializable, Terminable{
 	public final int getMomentum(){
 		return (int)(maxSpeed * speedMultiplier);
 	}
-	
-	public final void setTeam(Team t){
-		team = t;
-	}
-	public final Team getTeam(){
-		return team;
-	}
+    
+    @Override
+    public void addTerminationListener(TerminateListener listen) {
+        terminateListeners.add(listen);
+    }
+
+    @Override
+    public boolean removeTerminationListener(TerminateListener listen) {
+        return terminateListeners.remove(listen);
+    }
     
     @Override
 	public void terminate(){
@@ -190,47 +174,42 @@ public abstract class AbstractEntity implements Serializable, Terminable{
 		return shouldTerminate;
 	}
     
-    public final void init(){
+    
+    /**
+     * This method is called at the start of a Battle.
+     * Subclasses can override this method, but should ensure they call 
+     * super.init() somewhere within their override
+     */
+    public void init(){
 		// called by battle
         terminateListeners.clear();
         
 		isMoving = false;
 		speedMultiplier = 1.0;
 		shouldTerminate = false;
-        doInit();
 	}
     
-	public final void doUpdate(){
+    /**
+     * can be overridden, but subclasses should ensure they call super.update()
+     * in their implementation.
+     */
+	public void update(){
 		if(!shouldTerminate){
 			updateMovement();
-            update();
 		}
 	}
     
     /**
-     * Inserts an AbstractEntity into this' EntityNode chain.
-     * Since the AbstractEntity is inserted before this one, it will not be 
-     * updated during this iteration of EntityManager.update
-     * @param e the AbstractEntity to insert before this one
+     * can be overridden, but subclasses should ensure they call 
+     * super.updateMovement() in their implementation.
      */
-    public final void spawn(AbstractEntity e){
-        if(e == null){
-            throw new NullPointerException();
+    protected void updateMovement(){
+		if(isMoving){
+            x += getMomentum() * facing.getXMod();
+            y += getMomentum() * facing.getYMod();
         }
-        team.add(e);
-    }
+		clearSpeedFilter();
+	}
     
-    @Override
-    public void addTerminationListener(TerminateListener listen) {
-        terminateListeners.add(listen);
-    }
-
-    @Override
-    public boolean removeTerminationListener(TerminateListener listen) {
-        return terminateListeners.remove(listen);
-    }
-    
-    public abstract void doInit();
-    public abstract void update();
 	public abstract void draw(Graphics g);
 }

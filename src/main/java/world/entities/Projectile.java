@@ -80,7 +80,6 @@ public class Projectile extends AbstractReactiveEntity{
 		p.setX(getX());
         p.setY(getY());
         p.setFacing(degrees);
-		p.setTeam(getTeam());
         getWorld().getShell().addParticle(p);
 	}
     
@@ -123,8 +122,8 @@ public class Projectile extends AbstractReactiveEntity{
     }
     
 	@Override
-    public void doInit() {
-        super.doInit();
+    public void init() {
+        super.init();
     }
     
     @Override

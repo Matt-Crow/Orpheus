@@ -19,7 +19,8 @@ public class Particle extends AbstractEntity{
 	}
     
     @Override
-    public void doInit() {
+    public void init() {
+        super.init();
         setIsMoving(true);
 		age = 0;
     }
@@ -35,6 +36,7 @@ public class Particle extends AbstractEntity{
     
     @Override
 	public void update(){
+        super.update();
 		age++;
 		if(age >= lifeSpan){
 			terminate();

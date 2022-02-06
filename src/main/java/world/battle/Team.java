@@ -171,7 +171,7 @@ public class Team extends SafeList<AbstractEntity> implements Serializable{
     
     public void update(){
        forEach((AbstractEntity e)->{
-           e.doUpdate();
+           e.update();
        });
    }
    

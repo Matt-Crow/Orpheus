@@ -124,7 +124,7 @@ public abstract class AbstractWorldShell {
     }
     
     public final void updateParticles(){
-        particles.forEach((p)->p.doUpdate());
+        particles.forEach((p)->p.update());
     }
     public final void updateMinigame(){
         content.update();

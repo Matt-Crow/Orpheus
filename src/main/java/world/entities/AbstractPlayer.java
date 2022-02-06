@@ -11,7 +11,6 @@ import world.WorldContent;
 import world.build.actives.ElementalActive;
 import world.build.characterClass.CharacterStatName;
 import gui.graphics.Tile;
-import static java.lang.System.out;
 import java.util.Arrays;
 import util.Direction;
 import util.SafeList;
@@ -185,10 +184,9 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
 	}
     
     @Override
-	public void doInit(){
-        super.doInit();
+	public void init(){
+        super.init();
         statuses.clear();
-        getActionRegister().reset();
         
 		slash.init();
 		log.init();
@@ -206,7 +204,7 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
 	}
     
     @Override
-    public void updateMovement(){
+    protected void updateMovement(){
         if(hasFocus){
 			if(withinFocus()){
 				hasFocus = false;
@@ -238,12 +236,10 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
             if(path.noneLeft()){
                 path = null;
             } else {
-                //System.out.println("Refocusing..");
                 while(withinFocus() && !path.noneLeft()){
                     path.deque();
                     if(!path.noneLeft()){
                         PathInfo p = path.get();
-                        //System.out.println(p);
                         setFocus(p.getEndX(), p.getEndY());
                     }
                 }
@@ -257,13 +253,6 @@ public abstract class AbstractPlayer extends AbstractReactiveEntity{
         
         playerUpdate();
 	}
-    
-    //can get rid of this later
-    public void listStatuses(){
-        out.println("STATUSES:");
-        statuses.forEach((status)->out.println(status.getName()));
-        out.println("End of statues");
-    }
     
     @Override
     public void terminate(){
