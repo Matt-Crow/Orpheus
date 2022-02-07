@@ -14,7 +14,6 @@ import gui.graphics.Tile;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import util.Direction;
 import util.SafeList;
 
@@ -24,7 +23,7 @@ import util.SafeList;
  * 
  * @author Matt Crow
  */
-public abstract class AbstractPlayer extends AbstractReactiveEntity{
+public abstract class AbstractPlayer extends AbstractEntity{
 	private final String name;
 	private Color color;
     

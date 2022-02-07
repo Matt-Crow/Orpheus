@@ -1,7 +1,7 @@
 package world.events;
 
 import world.entities.AbstractPlayer;
-import world.entities.AbstractReactiveEntity;
+import world.entities.AbstractEntity;
 import java.io.Serializable;
 import static java.lang.System.out;
 import util.SafeList;
@@ -11,16 +11,16 @@ import util.SafeList;
  * It is used by the AbstractPlayer class to store Status effects and passives.
  */
 public class ActionRegister implements Serializable{
-	private final AbstractReactiveEntity registeredTo;
+	private final AbstractEntity registeredTo;
 	private final SafeList<OnHitListener> onHitRegister;
 	private final SafeList<OnHitListener> onBeHitRegister;
 	private final SafeList<OnUpdateListener> onUpdateRegister;
 	
     /**
      * Stores Listeners for an AbstractEntity.
-     * @param e the AbstractReactiveEntity to store Listeners for.
+     * @param e the AbstractEntity to store Listeners for.
      */
-	public ActionRegister(AbstractReactiveEntity e){
+	public ActionRegister(AbstractEntity e){
 		registeredTo = e;
 		onHitRegister = new SafeList<>();
 		onBeHitRegister = new SafeList<>();

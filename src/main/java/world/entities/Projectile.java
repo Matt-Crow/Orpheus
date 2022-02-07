@@ -10,7 +10,7 @@ import world.build.actives.ElementalActive;
 import util.Random;
 import world.WorldContent;
 
-public class Projectile extends AbstractReactiveEntity{
+public class Projectile extends AbstractEntity{
 	private final AbstractPlayer user;
 	private final ElementalActive registeredAttack;
 	private int distanceTraveled;
@@ -77,7 +77,7 @@ public class Projectile extends AbstractReactiveEntity{
 	}
 	
 	public void spawnParticle(int degrees, int m, CustomColors c){
-		Particle p = new Particle(getWorld(), m, c);
+		Particle p = new Particle(m, c);
         p.init();
 		p.setX(getX());
         p.setY(getY());

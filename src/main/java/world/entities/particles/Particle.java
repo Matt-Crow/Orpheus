@@ -3,16 +3,14 @@ package world.entities.particles;
 import util.Settings;
 import java.awt.Color;
 import java.awt.Graphics;
-import world.WorldContent;
-import world.entities.AbstractEntity;
+import world.entities.AbstractPrimitiveEntity;
 
-public class Particle extends AbstractEntity{
+public class Particle extends AbstractPrimitiveEntity {
 	private final Color color;
 	private final int lifeSpan;
-	private int age;
 	
-	public Particle(WorldContent inWorld, int momentum, Color c){
-		super(inWorld);
+	public Particle(int momentum, Color c){
+		super();
         setMaxSpeed(momentum);
 		color = c;
 		setRadius(5);
@@ -21,13 +19,6 @@ public class Particle extends AbstractEntity{
     
     public int getLifeSpan(){
         return lifeSpan;
-    }
-    
-    @Override
-    public void init() {
-        super.init();
-        setIsMoving(true);
-		age = 0;
     }
     
     @Override
@@ -40,11 +31,12 @@ public class Particle extends AbstractEntity{
 	}
     
     @Override
+    public void init(){
+        setIsMoving(true);
+    }
+    
+    @Override
 	public void update(){
         super.update();
-		age++;
-		if(age >= lifeSpan){
-			//terminate();
-		}
     }
 }

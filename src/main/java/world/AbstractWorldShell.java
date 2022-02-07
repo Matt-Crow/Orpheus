@@ -8,7 +8,6 @@ import gui.graphics.Map;
 import java.awt.Graphics;
 import gui.pages.worldPlay.WorldCanvas;
 import static java.lang.System.out;
-import util.SafeList;
 import world.entities.particles.ParticleCollection;
 
 /**
@@ -95,14 +94,7 @@ public abstract class AbstractWorldShell {
     
     public final void setContent(WorldContent newContent){
         content = newContent; 
-        content.setShell(this);
-        //content.getPlayerTeam().forEach((e)->e.setWorld(this));
-        //content.getAITeam().forEach((e)->e.setWorld(this));
-        Battle game = content.getMinigame();
-        if(game != null){
-            //game.setHost(this);
-        }
-        
+        content.setShell(this);       
     }
     public final WorldContent getContent(){
         return content;
