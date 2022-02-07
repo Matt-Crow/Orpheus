@@ -17,6 +17,7 @@ import world.entities.HumanPlayer;
  * CONTROLS:<br>
  * - click to move to the mouse cursor<br>
  * - Q to use melee attack
+ * - WASD to move
  * - 1-3 to use active abilities 1-3 respectively<br>
  * 
  * I am definitely going to want to change this later,

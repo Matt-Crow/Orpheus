@@ -1,9 +1,10 @@
-package world.entities;
+package world.entities.particles;
 
 import util.Settings;
 import java.awt.Color;
 import java.awt.Graphics;
 import world.WorldContent;
+import world.entities.AbstractEntity;
 
 public class Particle extends AbstractEntity{
 	private final Color color;
@@ -17,6 +18,10 @@ public class Particle extends AbstractEntity{
 		setRadius(5);
 		lifeSpan = 15;
 	}
+    
+    public int getLifeSpan(){
+        return lifeSpan;
+    }
     
     @Override
     public void init() {
@@ -39,7 +44,7 @@ public class Particle extends AbstractEntity{
         super.update();
 		age++;
 		if(age >= lifeSpan){
-			terminate();
+			//terminate();
 		}
     }
 }

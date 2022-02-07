@@ -1,4 +1,4 @@
-package world.entities;
+package world.entities.particles;
 
 public enum ParticleType {
 	BURST("burst"), 

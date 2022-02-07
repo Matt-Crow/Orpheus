@@ -3,12 +3,13 @@ package world;
 import world.battle.Battle;
 import world.battle.Team;
 import world.entities.AbstractEntity;
-import world.entities.Particle;
+import world.entities.particles.Particle;
 import gui.graphics.Map;
 import java.awt.Graphics;
 import gui.pages.worldPlay.WorldCanvas;
 import static java.lang.System.out;
 import util.SafeList;
+import world.entities.particles.ParticleCollection;
 
 /**
  * The AbstractWorldShell class acts as a shell
@@ -27,7 +28,7 @@ import util.SafeList;
  * @author Matt Crow
  */
 public abstract class AbstractWorldShell {
-    private final SafeList<Particle> particles;
+    private final ParticleCollection particles;
     
     // I don't think I need to link this here.
     private WorldCanvas canvas;
@@ -35,7 +36,7 @@ public abstract class AbstractWorldShell {
     private volatile WorldContent content;
     
     public AbstractWorldShell(WorldContent worldContent){
-        particles = new SafeList<>();
+        particles = new ParticleCollection();
         canvas = null;
         content = worldContent;
         worldContent.setShell(this);
@@ -125,6 +126,7 @@ public abstract class AbstractWorldShell {
     
     public final void updateParticles(){
         particles.forEach((p)->p.update());
+        particles.updatePoolAges();
     }
     public final void updateMinigame(){
         content.update();

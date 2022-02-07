@@ -10,7 +10,7 @@ import world.build.passives.AbstractPassive;
 import world.build.passives.OnBeHitPassive;
 import world.build.passives.OnHitPassive;
 import world.build.passives.ThresholdPassive;
-import world.entities.ParticleType;
+import world.entities.particles.ParticleType;
 import gui.graphics.CustomColors;
 import java.io.File;
 import java.io.IOException;

@@ -4,7 +4,7 @@ import util.Settings;
 import world.build.characterClass.CharacterClass;
 import world.build.characterClass.CharacterStatName;
 import world.entities.AbstractPlayer;
-import world.entities.ParticleType;
+import world.entities.particles.ParticleType;
 import world.entities.Projectile;
 import world.entities.SeedProjectile;
 import gui.graphics.CustomColors;

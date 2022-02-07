@@ -1,5 +1,7 @@
 package world.entities;
 
+import world.entities.particles.ParticleType;
+import world.entities.particles.Particle;
 import java.awt.Graphics;
 
 import gui.graphics.CustomColors;
