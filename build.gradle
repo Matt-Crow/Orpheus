@@ -28,6 +28,8 @@ sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 
+// NetBeans 8.2 requires this line for debug to work
+mainClassName = 'start.MainWindow'
 
 application {
     // Netbeans cannot do "run file" option if I include this line

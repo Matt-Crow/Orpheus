@@ -50,7 +50,8 @@ public class WorldCanvas extends Canvas{
         addMouseListener(pc);
         addEndOfFrameListener(pc);
         pc.registerControlsTo(this);
-        focusedEntityId = pc.getPlayer().id;
+        
+        focusedEntityId = pc.getPlayerId();
         hud = new HeadsUpDisplay(this, pc.getPlayer());
     }
     

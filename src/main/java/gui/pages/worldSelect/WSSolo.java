@@ -42,15 +42,15 @@ public class WSSolo extends AbstractWSNewWorld{
         
         player.applyBuild(getSelectedBuild());
         team1.addMember(player);
-
         
+        model.setPlayerTeam(team1);
+        model.setAITeam(team2);
+        
+        // model must have teams set before WorldCanvas init, as WC relies on getting the player team
         WorldCanvas renderer = new WorldCanvas(
             battleWorld, 
             new PlayerControls(battleWorld, player.id, orpheus)
         );
-        
-        model.setPlayerTeam(team1);
-        model.setAITeam(team2);
         
         Battle b = createBattle();
         battleWorld.setCurrentMinigame(b);
