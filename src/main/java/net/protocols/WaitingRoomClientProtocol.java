@@ -123,13 +123,15 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<Orphe
         WorldPage p = new WorldPage(orpheus);
         WorldCanvas renderer = new WorldCanvas(
             world,
-            new PlayerControls(world, me.getRemotePlayerId(), orpheus)
+            new PlayerControls(world, me.getRemotePlayerId(), orpheus),
+            false
         );
-        renderer.setPauseEnabled(false);
         p.setCanvas(renderer);
         room.getHost().switchToPage(p);
         
         RemoteProxyWorldProtocol protocol = new RemoteProxyWorldProtocol(getServer(), world);
         getServer().setProtocol(protocol);
+        
+        renderer.start();
     }
 }

@@ -46,13 +46,15 @@ public class WorldCanvasTester {
         
         WorldCanvas canvas = new WorldCanvas(
             world, 
-            new PlayerControls(world, player.id, orpheus)
+            new PlayerControls(world, player.id, orpheus),
+            true
         );
-        canvas.setPauseEnabled(true);
+        
         MainWindow mw = MainWindow.getInstance();
         WorldPage wp = new WorldPage(orpheus);
         wp.setCanvas(canvas);
         mw.switchToPage(wp);
+        canvas.start();
         
         user.setRemotePlayerId(player.id);
         
@@ -71,7 +73,6 @@ public class WorldCanvasTester {
         wp = new WorldPage(new SoloOrpheusCommandInterpreter(user));
         wp.setCanvas(canvas);
         mw.switchToPage(wp);
-        canvas.setPauseEnabled(true);
         
         world.getCanvas().registerKey(KeyEvent.VK_S, true, ()->{
             Team t = world.getPlayerTeam();

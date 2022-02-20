@@ -49,7 +49,8 @@ public class WSSolo extends AbstractWSNewWorld{
         // model must have teams set before WorldCanvas init, as WC relies on getting the player team
         WorldCanvas renderer = new WorldCanvas(
             battleWorld, 
-            new PlayerControls(battleWorld, player.id, orpheus)
+            new PlayerControls(battleWorld, player.id, orpheus),
+            true
         );
         
         Battle b = createBattle();
@@ -61,5 +62,6 @@ public class WSSolo extends AbstractWSNewWorld{
         WorldPage wp = new WorldPage(new SoloOrpheusCommandInterpreter(user));
         wp.setCanvas(renderer);
         getHost().switchToPage(wp);
+        renderer.start();
     }
 }

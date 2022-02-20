@@ -23,17 +23,26 @@ public class WorldCanvas extends Canvas{
     private final Timer timer;
     private final String focusedEntityId;
     private final HeadsUpDisplay hud;
-    private boolean paused;
-    private boolean pauseEnabled;
+    private final boolean pauseEnabled;
     
-    public WorldCanvas(AbstractWorldShell w, PlayerControls pc){
+    private boolean paused;
+    
+    /**
+     * 
+     * @param w
+     * @param pc
+     * @param pauseEnabled
+     * 
+     * The caller should call WorldCanvas.start() once they are using the canvas
+     */
+    public WorldCanvas(AbstractWorldShell w, PlayerControls pc, boolean pauseEnabled){
         super();
         world = w;
         
         w.setCanvas(this);
         
-        paused = true;
-        pauseEnabled = true;
+        paused = false;
+        this.pauseEnabled = pauseEnabled;
         timer = new Timer(1000 / Settings.FPS, (ActionEvent e) -> {
             world.update();
             endOfFrame();
@@ -55,13 +64,10 @@ public class WorldCanvas extends Canvas{
         hud = new HeadsUpDisplay(this, pc.getPlayer());
     }
     
-    public void setPauseEnabled(boolean canPause){
-        pauseEnabled = canPause;
-        if(!canPause && !timer.isRunning()){
-            paused = false;
-            timer.start();
-        }
+    public void start(){
+        timer.start();
     }
+    
     private void togglePause(){
         if(pauseEnabled){
             paused = !paused;
@@ -87,29 +93,23 @@ public class WorldCanvas extends Canvas{
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-        if(focusedEntityId == null){
-            centerOn(0, 0);
-        } else {
-            AbstractPlayer focus = world.getPlayerTeam().getMemberById(focusedEntityId);
-            centerOn(
-                focus.getX(),
-                focus.getY()
-            );
-        }
+        
+        AbstractPlayer focus = world.getPlayerTeam().getMemberById(focusedEntityId);
+        centerOn(
+            focus.getX(),
+            focus.getY()
+        );
 		Graphics2D g2d = applyTransforms(g);
 		
 		world.draw(g2d);
         
 		reset();
         
-		if(focusedEntityId != null){
-            hud.draw(g);
-        }
+        hud.draw(g);
         
-        if(world.getCurrentMinigame() != null && world.getCurrentMinigame().isDone()){
+        if(world.getCurrentMinigame().isDone()){
 			drawMatchResolution(g2d);
-        }
-        if(paused){
+        } else if(paused){
             drawPause(g2d);
         }
     }
@@ -123,6 +123,8 @@ public class WorldCanvas extends Canvas{
     
 	public void drawMatchResolution(Graphics g){
 		paused = true;
+        timer.stop();
+        
 		g.setColor(new Color(0, 0, 0, 200));
 		g.fillRect(0, 0, getWidth(), getHeight());
 		g.setColor(Color.yellow);
