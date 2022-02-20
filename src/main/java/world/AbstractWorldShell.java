@@ -2,12 +2,10 @@ package world;
 
 import world.battle.Battle;
 import world.battle.Team;
-import world.entities.AbstractEntity;
 import world.entities.particles.Particle;
 import gui.graphics.Map;
 import java.awt.Graphics;
 import gui.pages.worldPlay.WorldCanvas;
-import static java.lang.System.out;
 import world.entities.particles.ParticleCollection;
 
 /**
@@ -41,18 +39,10 @@ public abstract class AbstractWorldShell {
         worldContent.setShell(this);
     }
     
-    public final AbstractWorldShell setPlayerTeam(Team t){
-        content.setPlayerTeam(t);
-        return this;
-    }
-    public final AbstractWorldShell setEnemyTeam(Team t){
-        content.setAITeam(t);
-        return this;
-    }
-    
     public Team getPlayerTeam(){
         return content.getPlayerTeam();
     }
+    
     public Team getAITeam(){
         return content.getAITeam();
     }
@@ -62,16 +52,8 @@ public abstract class AbstractWorldShell {
         return this;
     }
     
-    public AbstractWorldShell setMap(Map m){
-        content.setMap(m);
-        return this;
-    }
     public Map getMap(){
         return content.getMap();
-    }
-    
-    public void createCanvas(){
-        canvas = new WorldCanvas(this);
     }
     
     public void setCanvas(WorldCanvas c){
@@ -80,6 +62,7 @@ public abstract class AbstractWorldShell {
         }
         canvas = c;
     }
+    
     public WorldCanvas getCanvas(){
         return canvas;
     }
@@ -96,6 +79,7 @@ public abstract class AbstractWorldShell {
         content = newContent; 
         content.setShell(this);       
     }
+    
     public final WorldContent getContent(){
         return content;
     }
@@ -103,17 +87,6 @@ public abstract class AbstractWorldShell {
     public void init(){
         content.init();
         particles.clear();
-    }
-    
-    /**
-     * Sets the coordinates of the given
-     * AbstractEntity onto a random valid tile
-     * on this' map.
-     * 
-     * @param e 
-     */
-    public void spawnIntoWorld(AbstractEntity e){
-        content.spawnIntoWorld(e);
     }
     
     public final void updateParticles(){
@@ -127,18 +100,6 @@ public abstract class AbstractWorldShell {
     public void draw(Graphics g){
         content.draw(g);
         particles.forEach((p)->p.draw(g));
-    }
-    
-    public void displayData(){
-        out.println("WORLD:");
-        out.println("Current minigame:");
-        out.println((getCurrentMinigame() == null) ? "null" : "battle");
-        //currentMinigame.displayData();
-        out.println("Current map:");
-        //currentMap.displayData();
-        out.println("Teams:");
-        getPlayerTeam().displayData();
-        getAITeam().displayData();
     }
     
     public abstract void update();

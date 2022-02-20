@@ -216,9 +216,11 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
     }
     
     private void launchWorld() throws IOException{
-        world.createCanvas();
+        //world.createCanvas();
         Team enemyTeam = new Team("AI", Color.red);
-        world.setPlayerTeam(playerTeam).setEnemyTeam(enemyTeam).setCurrentMinigame(minigame);
+        world.getContent().setPlayerTeam(playerTeam);
+        world.getContent().setAITeam(enemyTeam);
+        world.getContent().setMinigame(minigame);
         minigame.setHost(world.getContent());
         world.init();
         

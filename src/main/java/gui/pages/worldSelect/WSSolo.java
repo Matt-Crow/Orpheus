@@ -26,11 +26,14 @@ public class WSSolo extends AbstractWSNewWorld{
     public void start(){
         LocalUser user = LocalUser.getInstance();
         AbstractOrpheusCommandInterpreter orpheus = new SoloOrpheusCommandInterpreter(user);
-        SoloWorld battleWorld = new SoloWorld(WorldContent.createDefaultBattle());
         
+        WorldContent model = WorldContent.createDefaultBattle();
+        
+        //it's like a theme park or something
+        SoloWorld battleWorld = new SoloWorld(model);
         
         HumanPlayer player = new HumanPlayer(
-            battleWorld.getContent(),
+            model,
             user.getName()
         );
         
@@ -40,12 +43,14 @@ public class WSSolo extends AbstractWSNewWorld{
         player.applyBuild(getSelectedBuild());
         team1.addMember(player);
 
-        //it's like a theme park or something
-        battleWorld.createCanvas();
         
-        battleWorld
-            .setPlayerTeam(team1)
-            .setEnemyTeam(team2);
+        WorldCanvas renderer = new WorldCanvas(
+            battleWorld, 
+            new PlayerControls(battleWorld, player.id, orpheus)
+        );
+        
+        model.setPlayerTeam(team1);
+        model.setAITeam(team2);
         
         Battle b = createBattle();
         battleWorld.setCurrentMinigame(b);
@@ -53,12 +58,8 @@ public class WSSolo extends AbstractWSNewWorld{
         
         battleWorld.init();
         
-        WorldCanvas canv = battleWorld.getCanvas();
-        canv.addPlayerControls(new PlayerControls(battleWorld, player.id, orpheus));
-        //canv.addPlayerControls(new SoloPlayerControls(battleWorld, player.id));
-        
         WorldPage wp = new WorldPage(new SoloOrpheusCommandInterpreter(user));
-        wp.setCanvas(canv);
+        wp.setCanvas(renderer);
         getHost().switchToPage(wp);
     }
 }

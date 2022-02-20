@@ -25,7 +25,8 @@ public class WorldCanvasTester {
     public static void main(String[] args) throws IOException{
         LocalUser user = LocalUser.getInstance();
         SoloOrpheusCommandInterpreter orpheus = new SoloOrpheusCommandInterpreter(user);
-        HostWorld world = new HostWorld(new ServerProvider().createHost(), WorldContent.createDefaultBattle());
+        WorldContent content = WorldContent.createDefaultBattle();
+        HostWorld world = new HostWorld(new ServerProvider().createHost(), content);
         
         
         HumanPlayer player = new HumanPlayer(world.getContent(), user.getName());
@@ -35,15 +36,18 @@ public class WorldCanvasTester {
         Team t1 = new Team("Test", Color.BLUE);
         Team t2 = Team.constructRandomTeam(world.getContent(), "Rando", Color.yellow, 1, 1);
         t1.addMember(player);
-        world.setPlayerTeam(t1).setEnemyTeam(t2);
+        content.setPlayerTeam(t1);
+        content.setAITeam(t2);
         
         Battle b = new Battle(10, 5);
         b.setHost(world.getContent());
         world.setCurrentMinigame(b);
         world.init();
         
-        WorldCanvas canvas = new WorldCanvas(world);
-        canvas.addPlayerControls(new PlayerControls(world, player.id, orpheus));
+        WorldCanvas canvas = new WorldCanvas(
+            world, 
+            new PlayerControls(world, player.id, orpheus)
+        );
         canvas.setPauseEnabled(true);
         MainWindow mw = MainWindow.getInstance();
         WorldPage wp = new WorldPage(orpheus);
@@ -68,6 +72,7 @@ public class WorldCanvasTester {
         wp.setCanvas(canvas);
         mw.switchToPage(wp);
         canvas.setPauseEnabled(true);
+        
         world.getCanvas().registerKey(KeyEvent.VK_S, true, ()->{
             Team t = world.getPlayerTeam();
             System.out.println("Total entities to serialize: " + t.length());
@@ -77,19 +82,18 @@ public class WorldCanvasTester {
         });
         
         
-        
-        ObjectOutputStream out = new ObjectOutputStream(System.out);
-        String ser = null;
-        for(int i = 0; i < 1000000; i++){
-            world.getContent().serializeToString();
-            out.writeObject(ser);
-            //out.reset();
-            //WorldContent deser = WorldContent.fromSerializedString(ser);
-            //world.setContent(deser);
-            if(i % 10000 == 0){
-                System.out.println(i);
+        try (ObjectOutputStream out = new ObjectOutputStream(System.out)) {
+            String ser = null;
+            for(int i = 0; i < 1000000; i++){
+                world.getContent().serializeToString();
+                out.writeObject(ser);
+                //out.reset();
+                //WorldContent deser = WorldContent.fromSerializedString(ser);
+                //world.setContent(deser);
+                if(i % 10000 == 0){
+                    System.out.println(i);
+                }
             }
         }
-        out.close();
     }
 }

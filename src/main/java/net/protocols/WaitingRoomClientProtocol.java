@@ -117,16 +117,16 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<Orphe
         w.setShell(world);
         
         LocalUser me = LocalUser.getInstance();
-        //me.linkToRemotePlayerInWorld(world);
-        world.createCanvas();
         w.init(); // do I need this?
         
         RemoteOrpheusClient orpheus = new RemoteOrpheusClient(me, getServer());
         WorldPage p = new WorldPage(orpheus);
-        WorldCanvas canv = world.getCanvas();
-        canv.addPlayerControls(new PlayerControls(world, me.getRemotePlayerId(), orpheus));
-        canv.setPauseEnabled(false);
-        p.setCanvas(canv);
+        WorldCanvas renderer = new WorldCanvas(
+            world,
+            new PlayerControls(world, me.getRemotePlayerId(), orpheus)
+        );
+        renderer.setPauseEnabled(false);
+        p.setCanvas(renderer);
         room.getHost().switchToPage(p);
         
         RemoteProxyWorldProtocol protocol = new RemoteProxyWorldProtocol(getServer(), world);

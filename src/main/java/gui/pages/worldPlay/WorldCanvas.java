@@ -19,15 +19,14 @@ import gui.pages.Canvas;
  * @author Matt Crow
  */
 public class WorldCanvas extends Canvas{
-    private AbstractWorldShell world;
+    private final AbstractWorldShell world;
     private final Timer timer;
+    private final String focusedEntityId;
+    private final HeadsUpDisplay hud;
     private boolean paused;
     private boolean pauseEnabled;
     
-    private String focusedEntityId;
-    private HeadsUpDisplay hud;
-    
-    public WorldCanvas(AbstractWorldShell w){
+    public WorldCanvas(AbstractWorldShell w, PlayerControls pc){
         super();
         world = w;
         
@@ -48,14 +47,6 @@ public class WorldCanvas extends Canvas{
         registerKey(KeyEvent.VK_P, true, ()->togglePause());
         setZoom(0.5);
         
-        focusedEntityId = null;
-    }
-    
-    /**
-     * Remember to use this if you want to control a player!
-     * @param pc 
-     */
-    public final void addPlayerControls(PlayerControls pc){
         addMouseListener(pc);
         addEndOfFrameListener(pc);
         pc.registerControlsTo(this);
