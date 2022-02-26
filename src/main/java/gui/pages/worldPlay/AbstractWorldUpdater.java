@@ -1,6 +1,8 @@
 package gui.pages.worldPlay;
 
+import gui.pages.EndOfFrameListener;
 import java.awt.event.ActionEvent;
+import java.util.LinkedList;
 import javax.swing.Timer;
 import util.Settings;
 import world.AbstractWorldShell;
@@ -10,13 +12,15 @@ import world.AbstractWorldShell;
  * 
  * @author Matt Crow
  */
-public class WorldUpdater {
+public abstract class AbstractWorldUpdater {
+    private final LinkedList<EndOfFrameListener> updateListeners;
     private final AbstractWorldShell world;
     private final Timer updateTimer;
     private final boolean canPause;
     private boolean hasStarted;
     
-    public WorldUpdater(AbstractWorldShell world, boolean canPause){
+    public AbstractWorldUpdater(AbstractWorldShell world, boolean canPause){
+        updateListeners = new LinkedList<>();
         this.world = world;
         updateTimer = new Timer(1000 / Settings.FPS, this::update);
         updateTimer.stop();
@@ -44,11 +48,18 @@ public class WorldUpdater {
         }
     }
     
+    public void addEndOfFrameListener(EndOfFrameListener eofl){
+        updateListeners.add(eofl);
+    }
+    
     private void update(ActionEvent e){
         update();
     }
     
     private void update(){
-        world.update();
+        updateWorld(world);
+        updateListeners.forEach((eofl)->eofl.frameEnded());
     }
+    
+    protected abstract void updateWorld(AbstractWorldShell world);
 }

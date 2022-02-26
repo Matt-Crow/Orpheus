@@ -24,3 +24,10 @@ With that said, their are many changes that I want to make next time I have a ch
     Non-multiplayer just skips the step of sending to a remote server
 * will need some way of reliably shutting down servers once the program is done 
   with them
+* cleaning up the World system:
+    - role -  | - solo - | - host - | - client -
+    ==========#==========#==========#===========
+    renderer  | canvas   | none     | canvas
+    updater   | updater  | updater  | network
+    particles | updater  | none     | updater
+    controls  | controls | controls | network

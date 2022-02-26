@@ -15,14 +15,9 @@ import world.entities.HumanPlayer;
 
 /**
  * CONTROLS:<br>
- * - click to move to the mouse cursor<br>
- * - Q to use melee attack
- * - WASD to move
+ * - Q to use melee attack<br>
+ * - WASD to move<br>
  * - 1-3 to use active abilities 1-3 respectively<br>
- * 
- * I am definitely going to want to change this later,
- * as I don't feel these Runescapey controls fit the
- * fast paced theme of the game.
  * 
  * @author Matt Crow
  */
@@ -170,7 +165,7 @@ public class PlayerControls extends AbstractControlScheme implements MouseListen
     }
     
     @Override
-    public void frameEnded(Canvas c) {
+    public void frameEnded() {
         if(getPlayer() instanceof HumanPlayer && ((HumanPlayer)getPlayer()).getFollowingMouse()){
             move();
         }

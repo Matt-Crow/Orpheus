@@ -37,8 +37,8 @@ public class WorldContent implements Serializable{
     }
     
     /**
-     * Creates the classic AbstractWorldShell where battles 
- take place: a 20x20 square.
+     * Creates the classic AbstractWorldShell where battles take place: 
+     * a 20x20 square.
      * 
      * Handles most of the initialization for you,
      * all you need to do is add teams,
