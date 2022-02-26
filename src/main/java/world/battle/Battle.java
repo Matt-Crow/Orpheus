@@ -50,7 +50,7 @@ public class Battle implements Serializable{
 	
 	public void init(){
         Team players = host.getPlayers();
-        Team ai = host.getAITeam();
+        Team ai = host.getAi();
         ai.clear();
         
         players.setEnemy(ai);
@@ -97,7 +97,7 @@ public class Battle implements Serializable{
      * and heals all players in addition to clearing their damage backlog.
      */
     private void spawnWave(){
-        Team ai = host.getAITeam();
+        Team ai = host.getAi();
         String teamName = ai.getName();
         currentWave++;
         host.getPlayers().forEachMember((p)->{
@@ -125,7 +125,7 @@ public class Battle implements Serializable{
     public boolean isDone(){
         //is only one team not defeated? 
         Team p = host.getPlayers();
-        Team i = host.getAITeam();
+        Team i = host.getAi();
         return (p.isDefeated() && !i.isDefeated()) || (i.isDefeated() && !p.isDefeated());
     }
     
@@ -133,14 +133,14 @@ public class Battle implements Serializable{
         Team ret = null;
         if(isDone()){
             Team p = host.getPlayers();
-            Team i = host.getAITeam();
+            Team i = host.getAi();
             ret = (p.isDefeated()) ? i : p;
         }
         return ret;
     }
     
     public void update(){
-        if(host.getAITeam().isDefeated() && currentWave <= 9){
+        if(host.getAi().isDefeated() && currentWave <= 9){
             spawnWave();
         }
     }

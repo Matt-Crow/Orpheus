@@ -15,6 +15,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import util.Random;
 import util.SerialUtil;
+import world.entities.particles.Particle;
 
 /**
  *
@@ -26,40 +27,24 @@ public class WorldContent implements Serializable{
     private volatile Map currentMap;
     private volatile Battle currentMinigame; //in future versions, this will be changed to include other minigames
     
-    private transient AbstractWorldShell shell; 
+    private transient TempWorld temp; // remove once Entities reference TempWorld
     
     public WorldContent(int size){
         playerTeam = new Team("Players", Color.green);
         aiTeam = new Team("AI", Color.red);
         currentMap = new Map(size, size);
         currentMinigame = null;
-        shell = null;
     }
     
-    /**
-     * Creates the classic AbstractWorldShell where battles take place: 
-     * a 20x20 square.
-     * 
-     * Handles most of the initialization for you,
-     * all you need to do is add teams,
-     * then set it's minigame to a Battle
-     * 
-     * @return the newly created world.
-     */
-    public static WorldContent createDefaultBattle(){
-        WorldContent content = new WorldContent(20);
-        try {
-            content.setMap(MapLoader.readCsv(WorldContent.class.getResourceAsStream("/testMap.csv")));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        Tile block = new Tile(0, 0, CustomColors.GRAY);
-        block.setBlocking(true);
-        content.currentMap.addToTileSet(0, new Tile(0, 0, Color.BLUE));
-        content.currentMap.addToTileSet(1, block);
-        
-        return content;
+    public void setTempWorld(TempWorld temp){
+        this.temp = temp;
     }
+    
+    public void spawn(Particle p){
+        temp.spawn(p);
+    }
+    
+    
     
     public final void setPlayerTeam(Team t){
         playerTeam = t;
@@ -72,7 +57,7 @@ public class WorldContent implements Serializable{
     public final void setAITeam(Team t){
         aiTeam = t;
     }
-    public final Team getAITeam(){
+    public final Team getAi(){
         return aiTeam;
     }
     
@@ -89,7 +74,7 @@ public class WorldContent implements Serializable{
         }
         currentMinigame = b;
     }
-    public final Battle getMinigame(){
+    public final Battle getGame(){
         return currentMinigame;
     }
     
@@ -131,29 +116,6 @@ public class WorldContent implements Serializable{
         
         e.setX(rootX * Tile.TILE_SIZE + Tile.TILE_SIZE / 2);
         e.setY(rootY * Tile.TILE_SIZE + Tile.TILE_SIZE / 2);
-    }
-    
-    /**
-     * Notifies this that it is being contained in the given
-     * shell. Clients must invoke this method upon receiving
-     * the serialized form of WorldContent, as shell is transient.
-     * 
-     * @param newShell the client's shell which is being used
-     * to contain this WorldContent
-     */
-    public final void setShell(AbstractWorldShell newShell){
-        shell = newShell;
-    }
-    
-    /**
-     * 
-     * @return the shell containing this WorldContent
-     */
-    public final AbstractWorldShell getShell(){
-        if(shell == null){
-            throw new NullPointerException("Oops! Looks like someone forgot to call setShell()!");
-        }
-        return shell;
     }
     
     /**
@@ -201,13 +163,5 @@ public class WorldContent implements Serializable{
         aiTeam = (Team)ois.readObject();
         currentMap = (Map)ois.readObject();
         currentMinigame = (Battle)ois.readObject();
-    }
-    
-    public static void main(String[] args){
-        WorldContent content = WorldContent.createDefaultBattle();
-        System.out.println(content);
-        String serialized = content.serializeToString();
-        WorldContent newContent = WorldContent.fromSerializedString(serialized);
-        System.out.println(newContent);
     }
 }

@@ -29,14 +29,18 @@ public abstract class AbstractWorldShell {
     
     // I don't think I need to link this here.
     private WorldCanvas canvas;
-        
+    
+    private TempWorld temp; // remove once Entities reference TempWorld
     private volatile WorldContent content;
     
     public AbstractWorldShell(WorldContent worldContent){
         particles = new ParticleCollection();
         canvas = null;
         content = worldContent;
-        worldContent.setShell(this);
+    }
+    
+    public void setTempWorld(TempWorld temp){
+        this.temp = temp;
     }
     
     public Team getPlayerTeam(){
@@ -44,7 +48,11 @@ public abstract class AbstractWorldShell {
     }
     
     public Team getAITeam(){
-        return content.getAITeam();
+        return content.getAi();
+    }
+    
+    public void spawn(Particle p){
+        temp.spawn(p);
     }
     
     public AbstractWorldShell addParticle(Particle p){
@@ -72,12 +80,11 @@ public abstract class AbstractWorldShell {
         b.setHost(content);
     }
     public Battle getCurrentMinigame(){
-        return content.getMinigame();
+        return content.getGame();
     }  
     
     public final void setContent(WorldContent newContent){
-        content = newContent; 
-        content.setShell(this);       
+        content = newContent;     
     }
     
     public final WorldContent getContent(){

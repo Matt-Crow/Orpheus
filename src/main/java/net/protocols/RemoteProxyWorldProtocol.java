@@ -35,22 +35,6 @@ public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtoc
     private void receiveWorldUpdate(ServerMessagePacket sm){
         WorldContent content = (WorldContent)SerialUtil.fromSerializedString(sm.getMessage().getBody());
         proxy.setContent(content);
-        content.setShell(proxy);
-        //User.getUser().linkToRemotePlayerInWorld(proxy);
-        /*
-        Old receiveWorldUpdate, not sure if I need any of this
-        
-        //synchronized(teams){
-        SwingUtilities.invokeLater(()->{
-            Team[] ts = (Team[])SerialUtil.fromSerializedString(sm.getBody());
-            setPlayerTeam(ts[0]);
-            setEnemyTeam(ts[1]);
-
-            Master.getUser().linkToRemotePlayerInWorld(this); //since teams have changed
-        });
-        
-        //}
-        */
     }
     
     @Override

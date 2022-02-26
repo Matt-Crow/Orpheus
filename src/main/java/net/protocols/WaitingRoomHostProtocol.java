@@ -19,6 +19,8 @@ import users.AbstractUser;
 import java.util.HashSet;
 import net.messages.ServerMessage;
 import world.HostWorld;
+import world.TempWorld;
+import world.TempWorldBuilder;
 import world.WorldContent;
 
 /**
@@ -141,10 +143,15 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
     
     public final void prepareToStart(){
         playerTeam.clear();
-        world = new HostWorld(
-            getServer(), 
-            WorldContent.createDefaultBattle()
-        );
+        TempWorldBuilder worldBuilder = new TempWorldBuilder();
+        
+        // use this later
+        TempWorld completeWorld = worldBuilder
+            .withShell(new HostWorld(getServer(), null)) // todo get rid of dependency
+            .build(); 
+        
+        world = (HostWorld)completeWorld.getShell();
+        
         requestBuilds();
     }
     

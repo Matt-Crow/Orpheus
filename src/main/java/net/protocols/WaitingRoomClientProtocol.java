@@ -114,7 +114,6 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<Orphe
     private void receiveWorldInit(ServerMessagePacket sm){
         WorldContent w = WorldContent.fromSerializedString(sm.getMessage().getBody());
         RemoteProxyWorld world = new RemoteProxyWorld(sm.getSendingSocket().getInetAddress(), w);
-        w.setShell(world);
         
         LocalUser me = LocalUser.getInstance();
         w.init(); // do I need this?

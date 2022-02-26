@@ -11,7 +11,10 @@ import start.SoloOrpheusCommandInterpreter;
 import users.LocalUser;
 import util.SerialUtil;
 import util.Settings;
+import world.AbstractWorldShell;
 import world.HostWorld;
+import world.TempWorld;
+import world.TempWorldBuilder;
 import world.WorldContent;
 import world.battle.Battle;
 import world.battle.Team;
@@ -25,28 +28,32 @@ public class WorldCanvasTester {
     public static void main(String[] args) throws IOException{
         LocalUser user = LocalUser.getInstance();
         SoloOrpheusCommandInterpreter orpheus = new SoloOrpheusCommandInterpreter(user);
-        WorldContent content = WorldContent.createDefaultBattle();
-        HostWorld world = new HostWorld(new ServerProvider().createHost(), content);
+        
+        TempWorldBuilder builder = new TempWorldBuilder();
+        
+        AbstractWorldShell shell = new HostWorld(new ServerProvider().createHost(), null);
+        TempWorld entireWorld = builder.withShell(shell).build();
+        WorldContent world = entireWorld.getContent();
         
         
-        HumanPlayer player = new HumanPlayer(world.getContent(), user.getName());
+        HumanPlayer player = new HumanPlayer(entireWorld.getContent(), user.getName());
         
         player.applyBuild(Settings.getDataSet().getDefaultBuild());
         
         Team t1 = new Team("Test", Color.BLUE);
-        Team t2 = Team.constructRandomTeam(world.getContent(), "Rando", Color.yellow, 1, 1);
+        Team t2 = Team.constructRandomTeam(entireWorld.getContent(), "Rando", Color.yellow, 1, 1);
         t1.addMember(player);
-        content.setPlayerTeam(t1);
-        content.setAITeam(t2);
+        entireWorld.getContent().setPlayerTeam(t1);
+        entireWorld.getContent().setAITeam(t2);
         
         Battle b = new Battle(10, 5);
-        b.setHost(world.getContent());
-        world.setCurrentMinigame(b);
+        b.setHost(entireWorld.getContent());
+        world.setMinigame(b);
         world.init();
         
         WorldCanvas canvas = new WorldCanvas(
-            world, 
-            new PlayerControls(world, player.id, orpheus),
+            shell, 
+            new PlayerControls(shell, player.id, orpheus),
             true
         );
         
@@ -60,11 +67,10 @@ public class WorldCanvasTester {
         
         
         //now to try serializing it...
-        String serial = world.getContent().serializeToString();
+        String serial = world.serializeToString();
         
         WorldContent newContent = WorldContent.fromSerializedString(serial);
-        world.setContent(newContent);
-        newContent.setShell(world);
+        shell.setContent(newContent);
         
         //user.setPlayer((HumanPlayer)newContent.getPlayers().getMemberById(user.getRemotePlayerId()));
         
@@ -74,8 +80,8 @@ public class WorldCanvasTester {
         wp.setCanvas(canvas);
         mw.switchToPage(wp);
         
-        world.getCanvas().registerKey(KeyEvent.VK_S, true, ()->{
-            Team t = world.getPlayerTeam();
+        canvas.registerKey(KeyEvent.VK_S, true, ()->{
+            Team t = world.getPlayers();
             System.out.println("Total entities to serialize: " + t.length());
             String s = SerialUtil.serializeToString(t);
             Team tClone = (Team)SerialUtil.fromSerializedString(s);
@@ -86,7 +92,7 @@ public class WorldCanvasTester {
         try (ObjectOutputStream out = new ObjectOutputStream(System.out)) {
             String ser = null;
             for(int i = 0; i < 1000000; i++){
-                world.getContent().serializeToString();
+                shell.getContent().serializeToString();
                 out.writeObject(ser);
                 //out.reset();
                 //WorldContent deser = WorldContent.fromSerializedString(ser);

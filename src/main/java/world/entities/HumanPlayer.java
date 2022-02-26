@@ -111,10 +111,6 @@ public class HumanPlayer extends AbstractPlayer{
     public final void setMovingInDir(CardinalDirection dir, boolean isMoving){
         movingInCardinalDir.put(dir, isMoving);
     }
-    
-    public void moveToMouse(){
-        setPath(getWorld().getShell().getCanvas().getMouseX(), getWorld().getShell().getCanvas().getMouseY());
-    }
 
     @Override
     public void playerInit() {
