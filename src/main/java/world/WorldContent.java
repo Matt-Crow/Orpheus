@@ -64,7 +64,8 @@ public class WorldContent implements Serializable{
     public final void setPlayerTeam(Team t){
         playerTeam = t;
     }
-    public final Team getPlayerTeam(){
+    
+    public final Team getPlayers(){
         return playerTeam;
     }
     

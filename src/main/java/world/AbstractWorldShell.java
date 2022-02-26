@@ -40,7 +40,7 @@ public abstract class AbstractWorldShell {
     }
     
     public Team getPlayerTeam(){
-        return content.getPlayerTeam();
+        return content.getPlayers();
     }
     
     public Team getAITeam(){

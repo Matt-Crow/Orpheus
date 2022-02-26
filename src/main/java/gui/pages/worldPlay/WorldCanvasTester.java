@@ -66,7 +66,7 @@ public class WorldCanvasTester {
         world.setContent(newContent);
         newContent.setShell(world);
         
-        //user.setPlayer((HumanPlayer)newContent.getPlayerTeam().getMemberById(user.getRemotePlayerId()));
+        //user.setPlayer((HumanPlayer)newContent.getPlayers().getMemberById(user.getRemotePlayerId()));
         
         //newWorld.init();
         

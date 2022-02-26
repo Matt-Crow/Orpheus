@@ -49,7 +49,7 @@ public class Battle implements Serializable{
 	}
 	
 	public void init(){
-        Team players = host.getPlayerTeam();
+        Team players = host.getPlayers();
         Team ai = host.getAITeam();
         ai.clear();
         
@@ -100,14 +100,14 @@ public class Battle implements Serializable{
         Team ai = host.getAITeam();
         String teamName = ai.getName();
         currentWave++;
-        host.getPlayerTeam().forEachMember((p)->{
+        host.getPlayers().forEachMember((p)->{
             if(!p.getShouldTerminate()){
                 p.getLog().clearBacklog();
                 p.getLog().healPerc((double)currentWave / numWaves);
             }
         });
         int waveSize = numEnemiesForWave(currentWave); 
-        waveSize *= host.getPlayerTeam().getMembersRem().size();
+        waveSize *= host.getPlayers().getMembersRem().size();
         AIPlayer p;
         
         for(int i = 0; i < waveSize; i++){
@@ -124,7 +124,7 @@ public class Battle implements Serializable{
 	
     public boolean isDone(){
         //is only one team not defeated? 
-        Team p = host.getPlayerTeam();
+        Team p = host.getPlayers();
         Team i = host.getAITeam();
         return (p.isDefeated() && !i.isDefeated()) || (i.isDefeated() && !p.isDefeated());
     }
@@ -132,7 +132,7 @@ public class Battle implements Serializable{
     public Team getWinner(){
         Team ret = null;
         if(isDone()){
-            Team p = host.getPlayerTeam();
+            Team p = host.getPlayers();
             Team i = host.getAITeam();
             ret = (p.isDefeated()) ? i : p;
         }
