@@ -10,7 +10,6 @@ import controls.PlayerControls;
 import world.entities.AbstractPlayer;
 import java.awt.Graphics2D;
 import gui.pages.Canvas;
-import world.AbstractWorldShell;
 
 /**
  * P: pause
@@ -83,10 +82,6 @@ public class WorldCanvas extends Canvas{
     public void stop(){
         paused = true;
         timer.stop();
-    }
-    
-    public AbstractWorldShell getWorldShell(){
-        return world.getShell();
     }
     
     @Override

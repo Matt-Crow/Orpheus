@@ -5,11 +5,7 @@ import java.awt.Graphics;
 import world.entities.particles.ParticleCollection;
 
 /**
- * The AbstractWorldShell class acts as a shell
- * for WorldContent. Essentially, it allows SoloWorlds,
- * HostWorlds, and RemoteProxyWorlds to have different
- * behaviors for interacting with the underlying WorldContent.
- * The world also keeps track of all Particles, as leaving them lumped in
+ * Keeps track of all Particles, as leaving them lumped in
  * with Teams leads to drastic performance issues when serializing and checking
  * for collisions.
  * 
@@ -17,7 +13,6 @@ import world.entities.particles.ParticleCollection;
  * a stable, non-serialized interface with 
  * the volatile, serialized WorldContent.
  * 
- * The AbstractWorldShell handles all the drawing and updating as well.
  * @author Matt Crow
  */
 public abstract class AbstractWorldShell {

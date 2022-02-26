@@ -193,8 +193,6 @@ public class PlayerControls extends AbstractControlScheme implements MouseListen
     public static String getPlayerControlScheme(){
         StringBuilder sb = new StringBuilder();
         sb.append("#CONTROLS#\n");
-        sb.append("Click on a tile to move there\n");
-        sb.append("Hold down the mouse to 'follow' the mouse\n");
         sb.append("Or hold the W, A, S, or D keys to move\n");
         sb.append("(Q): use your melee attack\n");
         sb.append("(1-3): use your attacks 1, 2, or 3\n");
