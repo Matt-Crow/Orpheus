@@ -1,6 +1,6 @@
 package gui.pages.worldPlay;
 
-import world.AbstractWorldShell;
+import world.TempWorld;
 import util.Settings;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -10,6 +10,7 @@ import controls.PlayerControls;
 import world.entities.AbstractPlayer;
 import java.awt.Graphics2D;
 import gui.pages.Canvas;
+import world.AbstractWorldShell;
 
 /**
  * P: pause
@@ -19,7 +20,7 @@ import gui.pages.Canvas;
  * @author Matt Crow
  */
 public class WorldCanvas extends Canvas{
-    private final AbstractWorldShell world;
+    private final TempWorld world;
     private final Timer timer;
     private final String focusedEntityId;
     private final HeadsUpDisplay hud;
@@ -35,11 +36,9 @@ public class WorldCanvas extends Canvas{
      * 
      * The caller should call WorldCanvas.start() once they are using the canvas
      */
-    public WorldCanvas(AbstractWorldShell w, PlayerControls pc, boolean pauseEnabled){
+    public WorldCanvas(TempWorld w, PlayerControls pc, boolean pauseEnabled){
         super();
         world = w;
-        
-        w.setCanvas(this);
         
         paused = false;
         this.pauseEnabled = pauseEnabled;
@@ -87,14 +86,14 @@ public class WorldCanvas extends Canvas{
     }
     
     public AbstractWorldShell getWorldShell(){
-        return world;
+        return world.getShell();
     }
     
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         
-        AbstractPlayer focus = world.getPlayerTeam().getMemberById(focusedEntityId);
+        AbstractPlayer focus = world.getPlayers().getMemberById(focusedEntityId);
         centerOn(
             focus.getX(),
             focus.getY()
@@ -107,7 +106,7 @@ public class WorldCanvas extends Canvas{
         
         hud.draw(g);
         
-        if(world.getCurrentMinigame().isDone()){
+        if(world.getGame().isDone()){
 			drawMatchResolution(g2d);
         } else if(paused){
             drawPause(g2d);
@@ -129,7 +128,7 @@ public class WorldCanvas extends Canvas{
 		g.fillRect(0, 0, getWidth(), getHeight());
 		g.setColor(Color.yellow);
 		g.drawString("The match is ended,", (int) (getWidth() * 0.3), (int) (getHeight() * 0.3));
-		g.drawString(world.getCurrentMinigame().getWinner().getName(), (int) (getWidth() * 0.5), (int) (getHeight() * 0.5));
+		g.drawString(world.getGame().getWinner().getName(), (int) (getWidth() * 0.5), (int) (getHeight() * 0.5));
 		g.drawString("is victorious!", (int) (getWidth() * 0.7), (int) (getHeight() * 0.7));
 	}
 }

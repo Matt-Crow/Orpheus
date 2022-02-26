@@ -1,5 +1,6 @@
 package net.protocols;
 
+import gui.pages.worldPlay.HostWorldUpdater;
 import world.battle.Battle;
 import world.battle.Team;
 import world.build.Build;
@@ -41,7 +42,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
     
     private final Battle minigame;
     private final Team playerTeam;
-    private HostWorld world; // may be null at some points
+    private TempWorld world; // may be null at some points
     
     /*
     The Users who have joined the waiting room, but have
@@ -145,12 +146,9 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
         playerTeam.clear();
         TempWorldBuilder worldBuilder = new TempWorldBuilder();
         
-        // use this later
-        TempWorld completeWorld = worldBuilder
-            .withShell(new HostWorld(getServer(), null)) // todo get rid of dependency
+        world = worldBuilder
+            .withShell(new HostWorld(getServer()))
             .build(); 
-        
-        world = (HostWorld)completeWorld.getShell();
         
         requestBuilds();
     }
@@ -223,7 +221,8 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
     }
     
     private void launchWorld() throws IOException{
-        //world.createCanvas();
+        HostWorldUpdater updater = new HostWorldUpdater(getServer(), world);
+        
         Team enemyTeam = new Team("AI", Color.red);
         world.getContent().setPlayerTeam(playerTeam);
         world.getContent().setAITeam(enemyTeam);
@@ -234,6 +233,8 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
         HostWorldProtocol protocol = new HostWorldProtocol(getServer(), world);
         getServer().setProtocol(protocol);
         sendWorldInit(world.getContent());
+        
+        updater.start();
     }
     
     /**

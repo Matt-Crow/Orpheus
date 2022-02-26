@@ -1,6 +1,7 @@
 package gui.pages.worldSelect;
 
 import controls.PlayerControls;
+import gui.pages.worldPlay.SoloWorldUpdater;
 import world.battle.Battle;
 import world.battle.Team;
 import world.entities.HumanPlayer;
@@ -30,11 +31,11 @@ public class WSSolo extends AbstractWSNewWorld{
         AbstractOrpheusCommandInterpreter orpheus = new SoloOrpheusCommandInterpreter(user);
         TempWorldBuilder builder = new TempWorldBuilder();
         //it's like a theme park or something
-        SoloWorld battleWorld = new SoloWorld(null);
+        SoloWorld battleWorld = new SoloWorld();
         TempWorld entireWorld = builder.withShell(battleWorld).build();
         WorldContent model = entireWorld.getContent();
         
-        
+        SoloWorldUpdater updater = new SoloWorldUpdater(entireWorld);
         
         HumanPlayer player = new HumanPlayer(
             model,
@@ -52,20 +53,21 @@ public class WSSolo extends AbstractWSNewWorld{
         
         // model must have teams set before WorldCanvas init, as WC relies on getting the player team
         WorldCanvas renderer = new WorldCanvas(
-            battleWorld, 
-            new PlayerControls(battleWorld, player.id, orpheus),
+            entireWorld, 
+            new PlayerControls(entireWorld, player.id, orpheus),
             true
         );
         
         Battle b = createBattle();
-        battleWorld.setCurrentMinigame(b);
-        b.setHost(battleWorld.getContent());
+        model.setMinigame(b);
+        b.setHost(entireWorld.getContent());
         
-        battleWorld.init();
+        entireWorld.init();
         
         WorldPage wp = new WorldPage(new SoloOrpheusCommandInterpreter(user));
         wp.setCanvas(renderer);
         getHost().switchToPage(wp);
         renderer.start();
+        updater.start();
     }
 }

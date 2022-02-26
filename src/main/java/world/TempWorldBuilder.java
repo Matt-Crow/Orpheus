@@ -12,9 +12,15 @@ import java.io.IOException;
  */
 public class TempWorldBuilder {
     private AbstractWorldShell shell;
+    private WorldContent content;
     
     public TempWorldBuilder withShell(AbstractWorldShell shell){
         this.shell = shell;
+        return this;
+    }
+    
+    public TempWorldBuilder withContent(WorldContent content){
+        this.content = content;
         return this;
     }
     
@@ -45,7 +51,9 @@ public class TempWorldBuilder {
     
     public TempWorld build(){
         
-        WorldContent ser = createDefaultBattle();
+        WorldContent ser = (content == null) 
+            ? createDefaultBattle()
+            : content;
         TempWorld world = new TempWorld(ser, shell);
         
         return world;

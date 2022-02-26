@@ -7,6 +7,7 @@ import util.Random;
 import world.battle.Battle;
 import world.battle.Team;
 import world.entities.AbstractEntity;
+import world.entities.Projectile;
 import world.entities.particles.Particle;
 
 /**
@@ -25,9 +26,14 @@ public class TempWorld {
         noser.setTempWorld(this);
     }
     
-    // needed by WaitingRoomHostProtocol for now
     public AbstractWorldShell getShell(){
         return noser;
+    }
+    public void setContent(WorldContent content){
+        if(content == null){
+            throw new NullPointerException();
+        }
+        ser = content;
     }
     public WorldContent getContent(){
         return ser;
@@ -78,7 +84,7 @@ public class TempWorld {
         noser.init();
     }
     
-    public void update(){ // may need to split off into server / client updates
+    public void update(){
         ser.update();
         noser.update();
     }
@@ -86,5 +92,19 @@ public class TempWorld {
     public void draw(Graphics g){
         ser.draw(g);
         noser.draw(g);
+    }
+
+    public void updateParticles() {
+        noser.update();
+        spawnParticles(ser.getPlayers());
+        spawnParticles(ser.getAi());
+    }
+    
+    private void spawnParticles(Team t){
+        t.forEach((AbstractEntity member)->{
+            if(member instanceof Projectile){
+                ((Projectile)member).spawnParticles();
+            }
+        });
     }
 }

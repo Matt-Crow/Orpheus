@@ -4,6 +4,7 @@ import net.OrpheusClient;
 import net.messages.ServerMessagePacket;
 import util.SerialUtil;
 import world.RemoteProxyWorld;
+import world.TempWorld;
 import world.WorldContent;
 
 /**
@@ -13,7 +14,7 @@ import world.WorldContent;
  * @author Matt Crow
  */
 public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtocol<OrpheusClient>{
-    private final RemoteProxyWorld proxy;
+    private final TempWorld proxy;
     
     /**
      * @param runningServer
@@ -21,7 +22,7 @@ public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtoc
      * computer. World updates received by this protocol will be applied to
      * that proxy.
      */
-    public RemoteProxyWorldProtocol(OrpheusClient runningServer, RemoteProxyWorld localProxy){
+    public RemoteProxyWorldProtocol(OrpheusClient runningServer, TempWorld localProxy){
         super(runningServer);
         proxy = localProxy;
     }

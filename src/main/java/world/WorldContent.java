@@ -3,9 +3,7 @@ package world;
 import world.battle.Battle;
 import world.battle.Team;
 import world.entities.AbstractEntity;
-import gui.graphics.CustomColors;
 import gui.graphics.Map;
-import gui.graphics.MapLoader;
 import gui.graphics.Tile;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -15,6 +13,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import util.Random;
 import util.SerialUtil;
+import world.entities.AbstractPlayer;
+import world.entities.Projectile;
 import world.entities.particles.Particle;
 
 /**
@@ -73,6 +73,7 @@ public class WorldContent implements Serializable{
             throw new NullPointerException();
         }
         currentMinigame = b;
+        b.setHost(this);
     }
     public final Battle getGame(){
         return currentMinigame;
@@ -91,6 +92,24 @@ public class WorldContent implements Serializable{
         if(currentMinigame != null){
             currentMinigame.update();
         }
+        updateTeam(playerTeam);
+        updateTeam(aiTeam);
+    }
+    
+    private void updateTeam(Team t){
+        t.update();
+        t.forEach((AbstractEntity member)->{
+            getMap().checkForTileCollisions(member);
+            if(t.getEnemy() != null){
+                t.getEnemy().getMembersRem().forEach((AbstractPlayer enemy)->{
+                    if(member instanceof Projectile){
+                        // I thought that java handled this conversion?
+                        ((Projectile)member).checkForCollisions(enemy);
+                    }
+                    //member.checkForCollisions(enemy);
+                });
+            }
+        });
     }
     
     public final void draw(Graphics g){

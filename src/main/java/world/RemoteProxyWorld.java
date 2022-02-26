@@ -1,8 +1,5 @@
 package world;
 
-import world.battle.Team;
-import world.entities.AbstractEntity;
-import world.entities.Projectile;
 import java.net.InetAddress;
 
 /**
@@ -23,10 +20,9 @@ public class RemoteProxyWorld extends AbstractWorldShell{
      * 
      * @param hostIp the IP address of the machine where the world this
      * is proxying is hosted.
-     * @param worldContent the default contents of this world.
      */
-    public RemoteProxyWorld(InetAddress hostIp, WorldContent worldContent) {
-        super(worldContent);
+    public RemoteProxyWorld(InetAddress hostIp) {
+        super();
         remoteHostIp = hostIp;
     }    
     
@@ -39,18 +35,6 @@ public class RemoteProxyWorld extends AbstractWorldShell{
     public final InetAddress getHostIp(){
         return remoteHostIp;
     }
-    
-    /**
-     * Spawns particles for the given team.
-     * @param t 
-     */
-    private void updateTeam(Team t){
-        t.forEach((AbstractEntity member)->{
-            if(member instanceof Projectile){
-                ((Projectile)member).spawnParticles();
-            }
-        });
-    }
 
     /**
      * Updates all the non-serialized
@@ -60,10 +44,7 @@ public class RemoteProxyWorld extends AbstractWorldShell{
      */
     @Override
     public void update() {
-        updateTeam(getPlayerTeam());
-        updateTeam(getAITeam());
         updateParticles();
-        updateMinigame();
     }
 
 }

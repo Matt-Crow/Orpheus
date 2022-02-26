@@ -31,7 +31,7 @@ public class WorldCanvasTester {
         
         TempWorldBuilder builder = new TempWorldBuilder();
         
-        AbstractWorldShell shell = new HostWorld(new ServerProvider().createHost(), null);
+        AbstractWorldShell shell = new HostWorld(new ServerProvider().createHost());
         TempWorld entireWorld = builder.withShell(shell).build();
         WorldContent world = entireWorld.getContent();
         
@@ -52,8 +52,8 @@ public class WorldCanvasTester {
         world.init();
         
         WorldCanvas canvas = new WorldCanvas(
-            shell, 
-            new PlayerControls(shell, player.id, orpheus),
+            entireWorld, 
+            new PlayerControls(entireWorld, player.id, orpheus),
             true
         );
         
@@ -70,11 +70,7 @@ public class WorldCanvasTester {
         String serial = world.serializeToString();
         
         WorldContent newContent = WorldContent.fromSerializedString(serial);
-        shell.setContent(newContent);
-        
-        //user.setPlayer((HumanPlayer)newContent.getPlayers().getMemberById(user.getRemotePlayerId()));
-        
-        //newWorld.init();
+        entireWorld.setContent(newContent);
         
         wp = new WorldPage(new SoloOrpheusCommandInterpreter(user));
         wp.setCanvas(canvas);
@@ -92,7 +88,7 @@ public class WorldCanvasTester {
         try (ObjectOutputStream out = new ObjectOutputStream(System.out)) {
             String ser = null;
             for(int i = 0; i < 1000000; i++){
-                shell.getContent().serializeToString();
+                entireWorld.getContent().serializeToString();
                 out.writeObject(ser);
                 //out.reset();
                 //WorldContent deser = WorldContent.fromSerializedString(ser);

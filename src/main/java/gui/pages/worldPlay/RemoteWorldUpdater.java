@@ -6,10 +6,10 @@ import world.TempWorld;
  *
  * @author Matt Crow
  */
-public class SoloWorldUpdater extends AbstractWorldUpdater {
+public class RemoteWorldUpdater extends AbstractWorldUpdater {
 
-    public SoloWorldUpdater(TempWorld world) {
-        super(world, true);
+    public RemoteWorldUpdater(TempWorld world) {
+        super(world, false);
     }
 
     @Override

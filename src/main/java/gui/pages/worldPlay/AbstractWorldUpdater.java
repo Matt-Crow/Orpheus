@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 import java.util.LinkedList;
 import javax.swing.Timer;
 import util.Settings;
-import world.AbstractWorldShell;
+import world.TempWorld;
 
 /**
  * this should handle updating, while WorldCanvas handles rendering
@@ -14,12 +14,12 @@ import world.AbstractWorldShell;
  */
 public abstract class AbstractWorldUpdater {
     private final LinkedList<EndOfFrameListener> updateListeners;
-    private final AbstractWorldShell world;
+    private final TempWorld world;
     private final Timer updateTimer;
     private final boolean canPause;
     private boolean hasStarted;
     
-    public AbstractWorldUpdater(AbstractWorldShell world, boolean canPause){
+    public AbstractWorldUpdater(TempWorld world, boolean canPause){
         updateListeners = new LinkedList<>();
         this.world = world;
         updateTimer = new Timer(1000 / Settings.FPS, this::update);
@@ -61,5 +61,5 @@ public abstract class AbstractWorldUpdater {
         updateListeners.forEach((eofl)->eofl.frameEnded());
     }
     
-    protected abstract void updateWorld(AbstractWorldShell world);
+    protected abstract void updateWorld(TempWorld world);
 }

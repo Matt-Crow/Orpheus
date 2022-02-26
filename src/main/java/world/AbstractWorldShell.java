@@ -1,11 +1,7 @@
 package world;
 
-import world.battle.Battle;
-import world.battle.Team;
 import world.entities.particles.Particle;
-import gui.graphics.Map;
 import java.awt.Graphics;
-import gui.pages.worldPlay.WorldCanvas;
 import world.entities.particles.ParticleCollection;
 
 /**
@@ -27,72 +23,24 @@ import world.entities.particles.ParticleCollection;
 public abstract class AbstractWorldShell {
     private final ParticleCollection particles;
     
-    // I don't think I need to link this here.
-    private WorldCanvas canvas;
-    
     private TempWorld temp; // remove once Entities reference TempWorld
-    private volatile WorldContent content;
     
-    public AbstractWorldShell(WorldContent worldContent){
+    public AbstractWorldShell(){
         particles = new ParticleCollection();
-        canvas = null;
-        content = worldContent;
     }
     
     public void setTempWorld(TempWorld temp){
         this.temp = temp;
     }
-    
-    public Team getPlayerTeam(){
-        return content.getPlayers();
+    public TempWorld getTempWorld(){
+        return temp;
     }
     
-    public Team getAITeam(){
-        return content.getAi();
-    }
-    
-    public void spawn(Particle p){
-        temp.spawn(p);
-    }
-    
-    public AbstractWorldShell addParticle(Particle p){
+    public void addParticle(Particle p){
         particles.add(p);
-        return this;
-    }
-    
-    public Map getMap(){
-        return content.getMap();
-    }
-    
-    public void setCanvas(WorldCanvas c){
-        if(c == null){
-            throw new NullPointerException();
-        }
-        canvas = c;
-    }
-    
-    public WorldCanvas getCanvas(){
-        return canvas;
-    }
-    
-    public void setCurrentMinigame(Battle b){
-        content.setMinigame(b);
-        b.setHost(content);
-    }
-    public Battle getCurrentMinigame(){
-        return content.getGame();
-    }  
-    
-    public final void setContent(WorldContent newContent){
-        content = newContent;     
-    }
-    
-    public final WorldContent getContent(){
-        return content;
     }
     
     public void init(){
-        content.init();
         particles.clear();
     }
     
@@ -100,12 +48,8 @@ public abstract class AbstractWorldShell {
         particles.forEach((p)->p.update());
         particles.updatePoolAges();
     }
-    public final void updateMinigame(){
-        content.update();
-    }
     
     public void draw(Graphics g){
-        content.draw(g);
         particles.forEach((p)->p.draw(g));
     }
     

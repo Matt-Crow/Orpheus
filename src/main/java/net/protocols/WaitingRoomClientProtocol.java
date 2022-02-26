@@ -19,6 +19,8 @@ import net.OrpheusClient;
 import net.messages.ServerMessage;
 import start.RemoteOrpheusClient;
 import world.RemoteProxyWorld;
+import world.TempWorld;
+import world.TempWorldBuilder;
 import world.WorldContent;
 
 /**
@@ -113,7 +115,11 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<Orphe
      */
     private void receiveWorldInit(ServerMessagePacket sm){
         WorldContent w = WorldContent.fromSerializedString(sm.getMessage().getBody());
-        RemoteProxyWorld world = new RemoteProxyWorld(sm.getSendingSocket().getInetAddress(), w);
+        RemoteProxyWorld world = new RemoteProxyWorld(sm.getSendingSocket().getInetAddress());
+        
+        TempWorldBuilder builder = new TempWorldBuilder();
+        
+        TempWorld entireWorld = builder.withContent(w).withShell(world).build();
         
         LocalUser me = LocalUser.getInstance();
         w.init(); // do I need this?
@@ -121,14 +127,17 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<Orphe
         RemoteOrpheusClient orpheus = new RemoteOrpheusClient(me, getServer());
         WorldPage p = new WorldPage(orpheus);
         WorldCanvas renderer = new WorldCanvas(
-            world,
-            new PlayerControls(world, me.getRemotePlayerId(), orpheus),
+            entireWorld,
+            new PlayerControls(entireWorld, me.getRemotePlayerId(), orpheus),
             false
         );
         p.setCanvas(renderer);
         room.getHost().switchToPage(p);
         
-        RemoteProxyWorldProtocol protocol = new RemoteProxyWorldProtocol(getServer(), world);
+        RemoteProxyWorldProtocol protocol = new RemoteProxyWorldProtocol(
+            getServer(), 
+            entireWorld
+        );
         getServer().setProtocol(protocol);
         
         renderer.start();

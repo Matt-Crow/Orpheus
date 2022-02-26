@@ -1,9 +1,5 @@
 package world;
 
-import world.battle.Team;
-import world.entities.AbstractEntity;
-import world.entities.AbstractPlayer;
-import world.entities.Projectile;
 import net.OrpheusServer;
 import net.messages.ServerMessage;
 import net.messages.ServerMessageType;
@@ -11,7 +7,7 @@ import util.SerialUtil;
 
 /**
  * The HostWorld is used in conjunction with
- * HostWorldProtocol to 
+ * HostWorldProtocol and HostWorldUpdater to 
  * 1. Update local world contents, 
  * 2. serialize and send those contents to all clients so they can update their proxies,
  * 3. while the protocol handles receiving controls from remote players.
@@ -20,25 +16,9 @@ import util.SerialUtil;
 public class HostWorld extends AbstractWorldShell{
     private final OrpheusServer hostingServer;
     
-    public HostWorld(OrpheusServer hostingServer, WorldContent worldContent) {
-        super(worldContent);
+    public HostWorld(OrpheusServer hostingServer) {
+        super();
         this.hostingServer = hostingServer;
-    }
-    
-    private void updateTeam(Team t){
-        t.update();
-        t.forEach((AbstractEntity member)->{
-            getMap().checkForTileCollisions(member);
-            if(t.getEnemy() != null){
-                t.getEnemy().getMembersRem().forEach((AbstractPlayer enemy)->{
-                    if(member instanceof Projectile){
-                        // I thought that java handled this conversion?
-                        ((Projectile)member).checkForCollisions(enemy);
-                    }
-                    //member.checkForCollisions(enemy);
-                });
-            }
-        });
     }
     
     /**
@@ -49,12 +29,8 @@ public class HostWorld extends AbstractWorldShell{
      */
     @Override
     public void update() {
-        updateTeam(getPlayerTeam());
-        updateTeam(getAITeam());
-        updateParticles();
-        updateMinigame();
         hostingServer.send(new ServerMessage(
-            SerialUtil.serializeToString(getContent()),
+            SerialUtil.serializeToString(getTempWorld().getContent()),
             ServerMessageType.WORLD_UPDATE
         ));
     }
