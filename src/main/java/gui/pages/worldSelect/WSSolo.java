@@ -11,7 +11,6 @@ import gui.pages.worldPlay.WorldCanvas;
 import gui.pages.worldPlay.WorldPage;
 import start.AbstractOrpheusCommandInterpreter;
 import start.SoloOrpheusCommandInterpreter;
-import world.SoloWorld;
 import world.TempWorld;
 import world.TempWorldBuilder;
 import world.WorldContent;
@@ -29,10 +28,9 @@ public class WSSolo extends AbstractWSNewWorld{
     public void start(){
         LocalUser user = LocalUser.getInstance();
         AbstractOrpheusCommandInterpreter orpheus = new SoloOrpheusCommandInterpreter(user);
+        
         TempWorldBuilder builder = new TempWorldBuilder();
-        //it's like a theme park or something
-        SoloWorld battleWorld = new SoloWorld();
-        TempWorld entireWorld = builder.withShell(battleWorld).build();
+        TempWorld entireWorld = builder.build(); // default world for now
         WorldContent model = entireWorld.getContent();
         
         SoloWorldUpdater updater = new SoloWorldUpdater(entireWorld);

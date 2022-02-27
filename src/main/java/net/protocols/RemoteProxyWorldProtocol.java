@@ -3,7 +3,6 @@ package net.protocols;
 import net.OrpheusClient;
 import net.messages.ServerMessagePacket;
 import util.SerialUtil;
-import world.RemoteProxyWorld;
 import world.TempWorld;
 import world.WorldContent;
 

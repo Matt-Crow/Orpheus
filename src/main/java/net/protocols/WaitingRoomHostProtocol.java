@@ -19,7 +19,6 @@ import serialization.JsonUtil;
 import users.AbstractUser;
 import java.util.HashSet;
 import net.messages.ServerMessage;
-import world.HostWorld;
 import world.TempWorld;
 import world.TempWorldBuilder;
 import world.WorldContent;
@@ -146,9 +145,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
         playerTeam.clear();
         TempWorldBuilder worldBuilder = new TempWorldBuilder();
         
-        world = worldBuilder
-            .withShell(new HostWorld(getServer()))
-            .build(); 
+        world = worldBuilder.build(); // default build for now 
         
         requestBuilds();
     }

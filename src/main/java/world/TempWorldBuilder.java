@@ -11,10 +11,10 @@ import java.io.IOException;
  * @author Matt Crow
  */
 public class TempWorldBuilder {
-    private AbstractWorldShell shell;
+    private WorldShell shell;
     private WorldContent content;
     
-    public TempWorldBuilder withShell(AbstractWorldShell shell){
+    public TempWorldBuilder withShell(WorldShell shell){
         this.shell = shell;
         return this;
     }
@@ -25,8 +25,8 @@ public class TempWorldBuilder {
     }
     
     /**
-     * Creates the classic AbstractWorldShell where battles take place: 
-     * a 20x20 square.
+     * Creates the classic WorldShell where battles take place: 
+ a 20x20 square.
      * 
      * Handles most of the initialization for you,
      * all you need to do is add teams,
@@ -50,11 +50,14 @@ public class TempWorldBuilder {
     }
     
     public TempWorld build(){
-        
         WorldContent ser = (content == null) 
             ? createDefaultBattle()
             : content;
-        TempWorld world = new TempWorld(ser, shell);
+        WorldShell noser = (shell == null)
+            ? new WorldShell()
+            : shell;
+        
+        TempWorld world = new TempWorld(ser, noser);
         
         return world;
     }

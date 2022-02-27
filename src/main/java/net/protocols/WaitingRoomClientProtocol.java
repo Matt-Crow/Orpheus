@@ -1,6 +1,7 @@
 package net.protocols;
 
 import controls.PlayerControls;
+import gui.pages.worldPlay.RemoteWorldUpdater;
 import world.build.BuildJsonUtil;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
@@ -18,7 +19,6 @@ import javax.json.Json;
 import net.OrpheusClient;
 import net.messages.ServerMessage;
 import start.RemoteOrpheusClient;
-import world.RemoteProxyWorld;
 import world.TempWorld;
 import world.TempWorldBuilder;
 import world.WorldContent;
@@ -115,11 +115,10 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<Orphe
      */
     private void receiveWorldInit(ServerMessagePacket sm){
         WorldContent w = WorldContent.fromSerializedString(sm.getMessage().getBody());
-        RemoteProxyWorld world = new RemoteProxyWorld(sm.getSendingSocket().getInetAddress());
         
         TempWorldBuilder builder = new TempWorldBuilder();
         
-        TempWorld entireWorld = builder.withContent(w).withShell(world).build();
+        TempWorld entireWorld = builder.withContent(w).build();
         
         LocalUser me = LocalUser.getInstance();
         w.init(); // do I need this?
@@ -141,5 +140,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<Orphe
         getServer().setProtocol(protocol);
         
         renderer.start();
+        RemoteWorldUpdater updater = new RemoteWorldUpdater(entireWorld);
+        updater.start();
     }
 }

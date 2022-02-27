@@ -7,7 +7,10 @@ import util.SerialUtil;
 import world.TempWorld;
 
 /**
- *
+ * used in conjunction with HostWorldProtocol to 
+ * 1. Update local world contents, 
+ * 2. serialize and send those contents to all clients so they can update their proxies,
+ * 3. while the protocol handles receiving controls from remote players.
  * @author Matt Crow
  */
 public class HostWorldUpdater extends AbstractWorldUpdater {

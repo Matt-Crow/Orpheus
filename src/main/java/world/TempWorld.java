@@ -11,22 +11,22 @@ import world.entities.Projectile;
 import world.entities.particles.Particle;
 
 /**
- * Using this to phase out WorldContent & AbstractWorldShell
- * in exchange for World, SerializableWorldPart & NonSerializableWorldPart
+ * Using this to phase out WorldContent & WorldShell
+ in exchange for World, SerializableWorldPart & NonSerializableWorldPart
  * @author Matt Crow
  */
 public class TempWorld {
     private volatile WorldContent ser;
-    private final AbstractWorldShell noser;
+    private final WorldShell noser;
     
-    protected TempWorld(WorldContent ser, AbstractWorldShell noser){
+    protected TempWorld(WorldContent ser, WorldShell noser){
         this.ser = ser;
         this.noser = noser;
         ser.setTempWorld(this);
         noser.setTempWorld(this);
     }
     
-    public AbstractWorldShell getShell(){
+    public WorldShell getShell(){
         return noser;
     }
     public void setContent(WorldContent content){
@@ -34,6 +34,7 @@ public class TempWorld {
             throw new NullPointerException();
         }
         ser = content;
+        ser.setTempWorld(this);
     }
     public WorldContent getContent(){
         return ser;

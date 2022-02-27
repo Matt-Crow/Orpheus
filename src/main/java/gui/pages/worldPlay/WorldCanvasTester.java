@@ -5,14 +5,11 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import net.ServerProvider;
 import start.MainWindow;
 import start.SoloOrpheusCommandInterpreter;
 import users.LocalUser;
 import util.SerialUtil;
 import util.Settings;
-import world.AbstractWorldShell;
-import world.HostWorld;
 import world.TempWorld;
 import world.TempWorldBuilder;
 import world.WorldContent;
@@ -31,8 +28,7 @@ public class WorldCanvasTester {
         
         TempWorldBuilder builder = new TempWorldBuilder();
         
-        AbstractWorldShell shell = new HostWorld(new ServerProvider().createHost());
-        TempWorld entireWorld = builder.withShell(shell).build();
+        TempWorld entireWorld = builder.build();
         WorldContent world = entireWorld.getContent();
         
         
