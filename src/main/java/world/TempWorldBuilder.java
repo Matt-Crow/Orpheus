@@ -11,13 +11,7 @@ import java.io.IOException;
  * @author Matt Crow
  */
 public class TempWorldBuilder {
-    private WorldShell shell;
     private WorldContent content;
-    
-    public TempWorldBuilder withShell(WorldShell shell){
-        this.shell = shell;
-        return this;
-    }
     
     public TempWorldBuilder withContent(WorldContent content){
         this.content = content;
@@ -53,11 +47,8 @@ public class TempWorldBuilder {
         WorldContent ser = (content == null) 
             ? createDefaultBattle()
             : content;
-        WorldShell noser = (shell == null)
-            ? new WorldShell()
-            : shell;
         
-        TempWorld world = new TempWorld(ser, noser);
+        TempWorld world = new TempWorld(ser, new NonSerializableWorldPart());
         
         return world;
     }

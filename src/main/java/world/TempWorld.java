@@ -17,18 +17,14 @@ import world.entities.particles.Particle;
  */
 public class TempWorld {
     private volatile WorldContent ser;
-    private final WorldShell noser;
+    private final NonSerializableWorldPart noser;
     
-    protected TempWorld(WorldContent ser, WorldShell noser){
+    protected TempWorld(WorldContent ser, NonSerializableWorldPart noser){
         this.ser = ser;
         this.noser = noser;
         ser.setTempWorld(this);
-        noser.setTempWorld(this);
     }
     
-    public WorldShell getShell(){
-        return noser;
-    }
     public void setContent(WorldContent content){
         if(content == null){
             throw new NullPointerException();
