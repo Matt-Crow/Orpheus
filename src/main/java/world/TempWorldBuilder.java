@@ -5,6 +5,7 @@ import gui.graphics.MapLoader;
 import gui.graphics.Tile;
 import java.awt.Color;
 import java.io.IOException;
+import world.battle.Battle;
 
 /**
  *
@@ -12,9 +13,15 @@ import java.io.IOException;
  */
 public class TempWorldBuilder {
     private WorldContent content;
+    private Battle game;
     
     public TempWorldBuilder withContent(WorldContent content){
         this.content = content;
+        return this;
+    }
+    
+    public TempWorldBuilder withGame(Battle game){
+        this.game = game;
         return this;
     }
     
@@ -29,7 +36,7 @@ public class TempWorldBuilder {
      * @return the newly created world.
      */
     public WorldContent createDefaultBattle(){
-        WorldContent content = new WorldContent(20);
+        WorldContent content = new WorldContent(20, game);
         try {
             content.setMap(MapLoader.readCsv(WorldContent.class.getResourceAsStream("/testMap.csv")));
         } catch (IOException ex) {

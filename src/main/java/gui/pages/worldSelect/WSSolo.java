@@ -2,7 +2,6 @@ package gui.pages.worldSelect;
 
 import controls.PlayerControls;
 import gui.pages.worldPlay.SoloWorldUpdater;
-import world.battle.Battle;
 import world.battle.Team;
 import world.entities.HumanPlayer;
 import java.awt.Color;
@@ -30,7 +29,9 @@ public class WSSolo extends AbstractWSNewWorld{
         AbstractOrpheusCommandInterpreter orpheus = new SoloOrpheusCommandInterpreter(user);
         
         TempWorldBuilder builder = new TempWorldBuilder();
-        TempWorld entireWorld = builder.build(); // default world for now
+        TempWorld entireWorld = builder
+            .withGame(createBattle())
+            .build();
         WorldContent model = entireWorld.getContent();
         
         SoloWorldUpdater updater = new SoloWorldUpdater(entireWorld);
@@ -55,10 +56,6 @@ public class WSSolo extends AbstractWSNewWorld{
             new PlayerControls(entireWorld, player.id, orpheus),
             true
         );
-        
-        Battle b = createBattle();
-        model.setMinigame(b);
-        b.setHost(entireWorld.getContent());
         
         entireWorld.init();
         

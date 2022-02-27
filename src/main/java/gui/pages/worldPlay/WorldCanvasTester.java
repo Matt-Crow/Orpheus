@@ -28,7 +28,7 @@ public class WorldCanvasTester {
         
         TempWorldBuilder builder = new TempWorldBuilder();
         
-        TempWorld entireWorld = builder.build();
+        TempWorld entireWorld = builder.withGame(new Battle(10, 5)).build();
         WorldContent world = entireWorld.getContent();
         
         
@@ -42,10 +42,7 @@ public class WorldCanvasTester {
         entireWorld.getContent().setPlayerTeam(t1);
         entireWorld.getContent().setAITeam(t2);
         
-        Battle b = new Battle(10, 5);
-        b.setHost(entireWorld.getContent());
-        world.setMinigame(b);
-        world.init();
+        entireWorld.init();
         
         WorldCanvas canvas = new WorldCanvas(
             entireWorld, 
@@ -63,9 +60,9 @@ public class WorldCanvasTester {
         
         
         //now to try serializing it...
-        String serial = world.serializeToString();
+        String serial = SerialUtil.serializeToString(world);
         
-        WorldContent newContent = WorldContent.fromSerializedString(serial);
+        WorldContent newContent = (WorldContent)SerialUtil.fromSerializedString(serial);
         entireWorld.setContent(newContent);
         
         wp = new WorldPage(new SoloOrpheusCommandInterpreter(user));
@@ -84,11 +81,10 @@ public class WorldCanvasTester {
         try (ObjectOutputStream out = new ObjectOutputStream(System.out)) {
             String ser = null;
             for(int i = 0; i < 1000000; i++){
-                entireWorld.getContent().serializeToString();
-                out.writeObject(ser);
-                //out.reset();
-                //WorldContent deser = WorldContent.fromSerializedString(ser);
-                //world.setContent(deser);
+                ser = SerialUtil.serializeToString(entireWorld.getContent());
+                
+                WorldContent deser = (WorldContent) SerialUtil.fromSerializedString(ser);
+                entireWorld.setContent(deser);
                 if(i % 10000 == 0){
                     System.out.println(i);
                 }

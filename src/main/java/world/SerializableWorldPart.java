@@ -5,10 +5,13 @@ import java.awt.Graphics;
 import java.io.Serializable;
 import world.battle.Battle;
 import world.battle.Team;
+import world.entities.Projectile;
 
 /**
  * This is the part of a complete World that can be serialized and sent through
  * a network connection.
+ * 
+ * Currently in the process of reworking WorldContent into this class
  * 
  * @author Matt Crow
  */
@@ -52,6 +55,20 @@ public class SerializableWorldPart implements Serializable {
         players.update();
         ai.update();
         game.update();
+        checkForCollisions(players, ai);
+        checkForCollisions(ai, players);
+    }
+    
+    private void checkForCollisions(Team t1, Team t2) {
+        t1.forEach((e)->{
+            map.checkForTileCollisions(e);
+            if(e instanceof Projectile){
+                t2.getMembersRem().forEach((p)->{
+                    ((Projectile) e).checkForCollisions(p);
+                });
+            }
+            
+        });
     }
     
     public void draw(Graphics g){

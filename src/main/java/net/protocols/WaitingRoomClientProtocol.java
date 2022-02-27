@@ -19,6 +19,7 @@ import javax.json.Json;
 import net.OrpheusClient;
 import net.messages.ServerMessage;
 import start.RemoteOrpheusClient;
+import util.SerialUtil;
 import world.TempWorld;
 import world.TempWorldBuilder;
 import world.WorldContent;
@@ -114,14 +115,13 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<Orphe
      * @param sm 
      */
     private void receiveWorldInit(ServerMessagePacket sm){
-        WorldContent w = WorldContent.fromSerializedString(sm.getMessage().getBody());
+        WorldContent w = (WorldContent)SerialUtil.fromSerializedString(sm.getMessage().getBody());
         
         TempWorldBuilder builder = new TempWorldBuilder();
         
         TempWorld entireWorld = builder.withContent(w).build();
         
         LocalUser me = LocalUser.getInstance();
-        w.init(); // do I need this?
         
         RemoteOrpheusClient orpheus = new RemoteOrpheusClient(me, getServer());
         WorldPage p = new WorldPage(orpheus);

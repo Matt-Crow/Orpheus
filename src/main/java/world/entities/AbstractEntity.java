@@ -15,6 +15,11 @@ import world.events.ActionRegister;
  * exists within a World.
  */
 public abstract class AbstractEntity extends AbstractPrimitiveEntity implements Serializable, Terminable{
+    /*
+    either keep this, or replace it with transient World, and just make sure
+    that's set upon deserializing. Latter would allow some cleanup to the World
+    classes
+    */
     private final WorldContent inWorld;
     
     private double speedMultiplier;

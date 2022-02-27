@@ -19,6 +19,7 @@ import serialization.JsonUtil;
 import users.AbstractUser;
 import java.util.HashSet;
 import net.messages.ServerMessage;
+import util.SerialUtil;
 import world.TempWorld;
 import world.TempWorldBuilder;
 import world.WorldContent;
@@ -145,7 +146,9 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
         playerTeam.clear();
         TempWorldBuilder worldBuilder = new TempWorldBuilder();
         
-        world = worldBuilder.build(); // default build for now 
+        world = worldBuilder
+            .withGame(minigame)
+            .build(); 
         
         requestBuilds();
     }
@@ -223,8 +226,6 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
         Team enemyTeam = new Team("AI", Color.red);
         world.getContent().setPlayerTeam(playerTeam);
         world.getContent().setAITeam(enemyTeam);
-        world.getContent().setMinigame(minigame);
-        minigame.setHost(world.getContent());
         world.init();
         
         HostWorldProtocol protocol = new HostWorldProtocol(getServer(), world);
@@ -240,7 +241,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
      * @param w the world to send
      */
     private void sendWorldInit(WorldContent w){
-        String serial = w.serializeToString();
+        String serial = SerialUtil.serializeToString(w);
         ServerMessage sm = new ServerMessage(
             serial,
             ServerMessageType.WORLD_INIT
