@@ -8,7 +8,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import start.AbstractOrpheusCommandInterpreter;
 import util.CardinalDirection;
-import world.TempWorld;
+import world.World;
 import world.entities.AbstractPlayer;
 import world.entities.HumanPlayer;
 
@@ -23,7 +23,7 @@ import world.entities.HumanPlayer;
 public class PlayerControls extends AbstractControlScheme implements MouseListener, EndOfFrameListener{
     private final AbstractOrpheusCommandInterpreter interpreter;
     
-    public PlayerControls(TempWorld inWorld, String playerId, AbstractOrpheusCommandInterpreter interpreter) {
+    public PlayerControls(World inWorld, String playerId, AbstractOrpheusCommandInterpreter interpreter) {
         super(inWorld, playerId);
         this.interpreter = interpreter;
     }
@@ -99,7 +99,7 @@ public class PlayerControls extends AbstractControlScheme implements MouseListen
         return new int[]{x, y};
     }
     
-    public static void decode(TempWorld world, String s){
+    public static void decode(World world, String s){
         //Scanner tokenizer = new Scanner(s);
         int[] coords;
         HumanPlayer p = null;

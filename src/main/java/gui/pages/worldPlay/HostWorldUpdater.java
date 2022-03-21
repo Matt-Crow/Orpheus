@@ -4,7 +4,7 @@ import net.OrpheusServer;
 import net.messages.ServerMessage;
 import net.messages.ServerMessageType;
 import util.SerialUtil;
-import world.TempWorld;
+import world.World;
 
 /**
  * used in conjunction with HostWorldProtocol to 
@@ -16,16 +16,16 @@ import world.TempWorld;
 public class HostWorldUpdater extends AbstractWorldUpdater {
     private final OrpheusServer hostingServer;
     
-    public HostWorldUpdater(OrpheusServer hostingServer, TempWorld world) {
+    public HostWorldUpdater(OrpheusServer hostingServer, World world) {
         super(world, false);
         this.hostingServer = hostingServer;
     }
 
     @Override
-    protected void updateWorld(TempWorld world) {
+    protected void updateWorld(World world) {
         world.update();
         hostingServer.send(new ServerMessage(
-            SerialUtil.serializeToString(world.getContent()),
+            SerialUtil.serializeToString(world),
             ServerMessageType.WORLD_UPDATE
         ));
     }

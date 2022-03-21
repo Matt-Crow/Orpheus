@@ -1,6 +1,6 @@
 package gui.pages.worldPlay;
 
-import world.TempWorld;
+import world.World;
 
 /**
  *
@@ -8,12 +8,12 @@ import world.TempWorld;
  */
 public class RemoteWorldUpdater extends AbstractWorldUpdater {
 
-    public RemoteWorldUpdater(TempWorld world) {
+    public RemoteWorldUpdater(World world) {
         super(world, false);
     }
 
     @Override
-    protected void updateWorld(TempWorld world) {
+    protected void updateWorld(World world) {
         world.updateParticles();
     }
 }

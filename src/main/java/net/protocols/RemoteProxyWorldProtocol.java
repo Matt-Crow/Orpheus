@@ -4,6 +4,7 @@ import net.OrpheusClient;
 import net.messages.ServerMessagePacket;
 import util.SerialUtil;
 import world.TempWorld;
+import world.World;
 import world.WorldContent;
 
 /**
@@ -13,7 +14,7 @@ import world.WorldContent;
  * @author Matt Crow
  */
 public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtocol<OrpheusClient>{
-    private final TempWorld proxy;
+    private final World proxy;
     
     /**
      * @param runningServer
@@ -21,7 +22,7 @@ public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtoc
      * computer. World updates received by this protocol will be applied to
      * that proxy.
      */
-    public RemoteProxyWorldProtocol(OrpheusClient runningServer, TempWorld localProxy){
+    public RemoteProxyWorldProtocol(OrpheusClient runningServer, World localProxy){
         super(runningServer);
         proxy = localProxy;
     }
@@ -34,7 +35,11 @@ public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtoc
      */
     private void receiveWorldUpdate(ServerMessagePacket sm){
         WorldContent content = (WorldContent)SerialUtil.fromSerializedString(sm.getMessage().getBody());
-        proxy.setContent(content);
+        if(proxy instanceof TempWorld){
+            ((TempWorld)proxy).setContent(content);
+        } else {
+            throw new UnsupportedOperationException();
+        }        
     }
     
     @Override

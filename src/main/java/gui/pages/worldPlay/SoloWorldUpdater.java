@@ -1,6 +1,6 @@
 package gui.pages.worldPlay;
 
-import world.TempWorld;
+import world.World;
 
 /**
  *
@@ -8,12 +8,12 @@ import world.TempWorld;
  */
 public class SoloWorldUpdater extends AbstractWorldUpdater {
 
-    public SoloWorldUpdater(TempWorld world) {
+    public SoloWorldUpdater(World world) {
         super(world, true);
     }
 
     @Override
-    protected void updateWorld(TempWorld world) {
+    protected void updateWorld(World world) {
         world.updateParticles();
     }
 }

@@ -3,9 +3,9 @@ package world;
 import gui.graphics.Map;
 import java.awt.Graphics;
 import java.io.Serializable;
-import world.battle.Battle;
 import world.battle.Team;
 import world.entities.Projectile;
+import world.game.Game;
 
 /**
  * This is the part of a complete World that can be serialized and sent through
@@ -19,9 +19,9 @@ public class SerializableWorldPart implements Serializable {
     private final Map map;
     private final Team players;
     private final Team ai;
-    private final Battle game;
+    private final Game game;
     
-    public SerializableWorldPart(Map map, Team players, Team ai, Battle game){
+    public SerializableWorldPart(Map map, Team players, Team ai, Game game){
         this.map = map;
         this.players = players;
         this.ai = ai;
@@ -40,7 +40,7 @@ public class SerializableWorldPart implements Serializable {
         return ai;
     }
     
-    public Battle getGame(){
+    public Game getGame(){
         return game;
     }
     
@@ -48,7 +48,7 @@ public class SerializableWorldPart implements Serializable {
         map.init();
         //players.init(w); not supported yet
         //ai.init(w); not supported yet
-        game.init();
+        game.play();
     }
     
     protected void update(){

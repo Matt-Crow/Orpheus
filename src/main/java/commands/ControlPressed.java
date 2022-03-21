@@ -3,17 +3,17 @@ package commands;
 import controls.PlayerControls;
 import net.messages.ServerMessage;
 import net.messages.ServerMessageType;
-import world.TempWorld;
+import world.World;
 
 /**
  *
  * @author Matt Crow
  */
 public class ControlPressed implements SerializeableOrpheusCommand {
-    private final TempWorld world;
+    private final World world;
     private final String controlString;
     
-    public ControlPressed(TempWorld world, String controlString){
+    public ControlPressed(World world, String controlString){
         this.world = world;
         this.controlString = controlString;
     }

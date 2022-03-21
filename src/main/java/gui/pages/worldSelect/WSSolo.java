@@ -12,6 +12,8 @@ import start.AbstractOrpheusCommandInterpreter;
 import start.SoloOrpheusCommandInterpreter;
 import world.TempWorld;
 import world.TempWorldBuilder;
+import world.WorldImpl;
+import world.WorldBuilder;
 import world.WorldContent;
 
 /**
@@ -30,14 +32,14 @@ public class WSSolo extends AbstractWSNewWorld{
         
         TempWorldBuilder builder = new TempWorldBuilder();
         TempWorld entireWorld = builder
-            .withGame(createBattle())
+            .withGame(createGame())
             .build();
         WorldContent model = entireWorld.getContent();
         
         SoloWorldUpdater updater = new SoloWorldUpdater(entireWorld);
         
         HumanPlayer player = new HumanPlayer(
-            model,
+            entireWorld,
             user.getName()
         );
         
@@ -49,6 +51,12 @@ public class WSSolo extends AbstractWSNewWorld{
         
         model.setPlayerTeam(team1);
         model.setAITeam(team2);
+        
+        WorldImpl realWorld = new WorldBuilder()
+                .withGame(createGame())
+                .withPlayers(team1)
+                .withAi(team2)
+                .build();
         
         // model must have teams set before WorldCanvas init, as WC relies on getting the player team
         WorldCanvas renderer = new WorldCanvas(

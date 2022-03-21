@@ -6,8 +6,8 @@ import gui.graphics.MapLoader;
 import gui.graphics.Tile;
 import java.awt.Color;
 import java.io.IOException;
-import world.battle.Battle;
 import world.battle.Team;
+import world.game.Game;
 
 /**
  *
@@ -16,7 +16,7 @@ import world.battle.Team;
 public class WorldBuilder {
     private Team players;
     private Team ai;
-    private Battle game;
+    private Game game;
     
     public WorldBuilder(){
         
@@ -32,12 +32,12 @@ public class WorldBuilder {
         return this;
     }
     
-    public WorldBuilder withGame(Battle game){
+    public WorldBuilder withGame(Game game){
         this.game = game;
         return this;
     }
     
-    public World build(){
+    public WorldImpl build(){
         if(players == null){
             throw new RuntimeException();
         }
@@ -68,7 +68,9 @@ public class WorldBuilder {
         
         NonSerializableWorldPart noser = new NonSerializableWorldPart();
         
-        World w = new World(ser, noser);
+        WorldImpl w = new WorldImpl(ser, noser);
+        
+        game.setHost(w);
         
         return w;
     }

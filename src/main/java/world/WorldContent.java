@@ -1,6 +1,5 @@
 package world;
 
-import world.battle.Battle;
 import world.battle.Team;
 import world.entities.AbstractEntity;
 import gui.graphics.Map;
@@ -14,6 +13,7 @@ import java.io.Serializable;
 import util.Random;
 import world.entities.Projectile;
 import world.entities.particles.Particle;
+import world.game.Game;
 
 /**
  *
@@ -24,17 +24,16 @@ public class WorldContent implements Serializable{
     private volatile Team playerTeam;
     private volatile Team aiTeam;
     private volatile Map currentMap;
-    private volatile Battle game; //in future versions, this will be changed to include other minigames
+    private volatile Game game;
     
     private transient TempWorld temp; // remove once Entities reference TempWorld
     
     
-    public WorldContent(int size, Battle game){
+    public WorldContent(int size, Game game){
         playerTeam = new Team("Players", Color.green);
         aiTeam = new Team("AI", Color.red);
         currentMap = new Map(size, size);
         this.game = game;
-        game.setHost(this);
     }
     
     public void setTempWorld(TempWorld temp){
@@ -111,20 +110,18 @@ public class WorldContent implements Serializable{
         playerTeam = (Team)ois.readObject();
         aiTeam = (Team)ois.readObject();
         currentMap = (Map)ois.readObject();
-        game = (Battle)ois.readObject();
+        game = (Game)ois.readObject();
     }
 
 
     
-    public final Battle getGame(){
+    public final Game getGame(){
         return game;
     }
     
     protected void init(){
         currentMap.init();
-        playerTeam.init(this);
-        aiTeam.init(this);
-        game.init();
+        game.play();
     } 
     
     protected void update(){

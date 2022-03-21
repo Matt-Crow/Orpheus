@@ -1,26 +1,27 @@
 package world.entities;
 
 import controls.ai.PlayerAI;
-import world.WorldContent;
+import world.World;
 import world.build.characterClass.CharacterStatName;
 
 /**
  *
  * @author Matt
  */
-public class AIPlayer extends AbstractPlayer{
+public class AIPlayer extends AbstractPlayer {
+
     private final PlayerAI playerAI;
     private final int level;
-     
-    public AIPlayer(WorldContent inWorld, String n, int lv) {
+
+    public AIPlayer(World inWorld, String n, int lv) {
         super(inWorld, n, lv);
         playerAI = new PlayerAI(this);
         level = lv;
     }
-    
-    public PlayerAI getPlayerAI(){
-		return playerAI;
-	}
+
+    public PlayerAI getPlayerAI() {
+        return playerAI;
+    }
 
     @Override
     public void playerInit() {

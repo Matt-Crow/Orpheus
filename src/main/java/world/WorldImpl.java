@@ -11,29 +11,18 @@ import world.entities.particles.Particle;
 import world.game.Game;
 
 /**
- * Using this to phase out WorldContent & WorldShell
- in exchange for World, SerializableWorldPart & NonSerializableWorldPart
+ * This abstractifies the process of handling both parts of the world, both the
+ * serialized and non-serialized portions.
+ * 
  * @author Matt Crow
  */
-public class TempWorld implements World {
-    private volatile WorldContent ser;
+public class WorldImpl implements World{
+    private volatile SerializableWorldPart ser;
     private final NonSerializableWorldPart noser;
     
-    protected TempWorld(WorldContent ser, NonSerializableWorldPart noser){
+    protected WorldImpl(SerializableWorldPart ser, NonSerializableWorldPart noser){
         this.ser = ser;
         this.noser = noser;
-        ser.setTempWorld(this);
-    }
-    
-    public void setContent(WorldContent content){
-        if(content == null){
-            throw new NullPointerException();
-        }
-        ser = content;
-        ser.setTempWorld(this);
-    }
-    public WorldContent getContent(){
-        return ser;
     }
     
     @Override
@@ -88,12 +77,11 @@ public class TempWorld implements World {
     }
     
     @Override
-    public void update(){
+    public void update(){ // may need to split off into server / client updates
         ser.update();
         noser.update();
     }
     
-    @Override
     public void draw(Graphics g){
         ser.draw(g);
         noser.draw(g);

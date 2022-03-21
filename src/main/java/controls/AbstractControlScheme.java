@@ -1,7 +1,7 @@
 package controls;
 
 import world.entities.AbstractPlayer;
-import world.TempWorld;
+import world.World;
 
 /**
  * This acts as the base class
@@ -12,15 +12,15 @@ import world.TempWorld;
  * @author Matt Crow
  */
 public class AbstractControlScheme {
-    private final TempWorld targettedWorld;
+    private final World targettedWorld;
     private final String targettedEntityId; // can't store as AbstractPlayer b/c of serialization
     
-    public AbstractControlScheme(TempWorld world, String playerId){
+    public AbstractControlScheme(World world, String playerId){
         targettedWorld = world;
         targettedEntityId = playerId;
     }
     
-    public final TempWorld getWorld(){
+    public final World getWorld(){
         return targettedWorld;
     }
     public final String getPlayerId(){

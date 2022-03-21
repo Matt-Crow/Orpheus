@@ -3,7 +3,7 @@ package net.protocols;
 import controls.PlayerControls;
 import net.OrpheusServer;
 import net.messages.ServerMessagePacket;
-import world.TempWorld;
+import world.World;
 
 /**
  * The HostWorldProtocol is used by hosts to receive remote player controls,
@@ -15,9 +15,9 @@ import world.TempWorld;
  * @author Matt Crow
  */
 public class HostWorldProtocol extends AbstractOrpheusServerNonChatProtocol<OrpheusServer>{
-    private final TempWorld hostWorld;
+    private final World hostWorld;
     
-    public HostWorldProtocol(OrpheusServer runningServer, TempWorld forWorld){
+    public HostWorldProtocol(OrpheusServer runningServer, World forWorld){
         super(runningServer);
         hostWorld = forWorld;
     }

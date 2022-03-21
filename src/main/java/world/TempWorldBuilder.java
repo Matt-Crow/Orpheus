@@ -5,7 +5,7 @@ import gui.graphics.MapLoader;
 import gui.graphics.Tile;
 import java.awt.Color;
 import java.io.IOException;
-import world.battle.Battle;
+import world.game.Game;
 
 /**
  *
@@ -13,14 +13,14 @@ import world.battle.Battle;
  */
 public class TempWorldBuilder {
     private WorldContent content;
-    private Battle game;
+    private Game game;
     
     public TempWorldBuilder withContent(WorldContent content){
         this.content = content;
         return this;
     }
     
-    public TempWorldBuilder withGame(Battle game){
+    public TempWorldBuilder withGame(Game game){
         this.game = game;
         return this;
     }
@@ -56,6 +56,7 @@ public class TempWorldBuilder {
             : content;
         
         TempWorld world = new TempWorld(ser, new NonSerializableWorldPart());
+        game.setHost(world);
         
         return world;
     }

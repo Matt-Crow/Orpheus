@@ -22,6 +22,9 @@ chance to work on this:
 * Redo GUI
 * Security manager for multiplayer
 * use Socket to identify users, not IP address
+* WorldSerializer & WorldDeserializer
+* fix serialization
+* fix multiplayer
 * Idea: standard Orpheus workflow:
     1. receive input
     2. send message to server

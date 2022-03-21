@@ -1,6 +1,5 @@
 package gui.pages.worldSelect;
 
-import world.battle.Battle;
 import world.build.Build;
 import gui.components.BuildSelect;
 import gui.components.OptionBox;
@@ -10,6 +9,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import gui.pages.Page;
+import world.game.Game;
+import world.game.Onslaught;
 
 /**
  *
@@ -18,7 +19,6 @@ import gui.pages.Page;
 public abstract class AbstractWSNewWorld extends Page{
     private final BuildSelect playerBuild;
     private final OptionBox<Integer> numWaves;
-    private final OptionBox<Integer> maxEnemyLevel;
     private final JButton start;
     
     public AbstractWSNewWorld(){
@@ -37,9 +37,6 @@ public abstract class AbstractWSNewWorld extends Page{
         numWaves = numWaveSelect();
         add(numWaves);
         
-        maxEnemyLevel = enemyLvSelect();
-        add(maxEnemyLevel);
-        
         Style.applyStyling(this);
     }
     
@@ -54,20 +51,6 @@ public abstract class AbstractWSNewWorld extends Page{
             }
         });
         box.setSelected(3);
-        return box;
-    }
-    
-    private OptionBox<Integer> enemyLvSelect(){
-        Integer[] nums = new Integer[]{1, 10, 20};
-        
-        OptionBox<Integer> box = new OptionBox<>("Select maximum enemy level", nums);
-        box.addActionListener(new AbstractAction(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                repaint();
-            }
-        });
-        box.setSelected(10);
         return box;
     }
     
@@ -87,12 +70,8 @@ public abstract class AbstractWSNewWorld extends Page{
         return playerBuild.getSelectedBuild();
     }
     
-    /**
-     * Creates a new game based on the values selected in the GUI
-     * @return a new Battle. Future versions may support other minigames
-     */
-    public Battle createBattle(){
-        return new Battle(maxEnemyLevel.getSelected(), numWaves.getSelected());
+    public Game createGame(){
+        return new Onslaught(numWaves.getSelected());
     }
     
     public abstract void start();

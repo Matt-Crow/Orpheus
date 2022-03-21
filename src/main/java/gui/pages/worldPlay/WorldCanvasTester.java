@@ -12,8 +12,9 @@ import util.SerialUtil;
 import util.Settings;
 import world.TempWorld;
 import world.TempWorldBuilder;
+import world.WorldImpl;
+import world.WorldBuilder;
 import world.WorldContent;
-import world.battle.Battle;
 import world.battle.Team;
 import world.entities.HumanPlayer;
 
@@ -27,17 +28,19 @@ public class WorldCanvasTester {
         SoloOrpheusCommandInterpreter orpheus = new SoloOrpheusCommandInterpreter(user);
         
         TempWorldBuilder builder = new TempWorldBuilder();
+        WorldBuilder wb = new WorldBuilder();
         
-        TempWorld entireWorld = builder.withGame(new Battle(10, 5)).build();
+        TempWorld entireWorld = builder.build();
         WorldContent world = entireWorld.getContent();
+        WorldImpl realWorld = wb.build();
         
         
-        HumanPlayer player = new HumanPlayer(entireWorld.getContent(), user.getName());
+        HumanPlayer player = new HumanPlayer(entireWorld, user.getName());
         
         player.applyBuild(Settings.getDataSet().getDefaultBuild());
         
         Team t1 = new Team("Test", Color.BLUE);
-        Team t2 = Team.constructRandomTeam(entireWorld.getContent(), "Rando", Color.yellow, 1, 1);
+        Team t2 = Team.constructRandomTeam(entireWorld, "Rando", Color.yellow, 1, 1);
         t1.addMember(player);
         entireWorld.getContent().setPlayerTeam(t1);
         entireWorld.getContent().setAITeam(t2);
