@@ -13,7 +13,7 @@ import world.entities.AIPlayer;
  * @author Matt Crow <mattcrow19@gmail.com>
  */
 public class Onslaught implements Game, Serializable {    
-    private World host;
+    private transient World host;
     private final int numWaves;
     private int currentWave;
     

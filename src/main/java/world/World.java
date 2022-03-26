@@ -9,16 +9,20 @@ import world.game.Game;
 
 
 /**
- * enables both the proxy design pattern, should I need it, and for testing to
- * ensure WorldImpl and TempWorld are interchangeable
+ * enables the proxy design pattern for providing a stable reference to the
+ * volatile world content
  * 
  * @author Matt Crow <mattcrow19@gmail.com>
  */
 public interface World {
     
     /**
-     * @return the physical, static environment of this world
+     * @return the serializable content of this world
      */
+    public WorldContent getSerializableContent();
+    
+    public void setSerializableContent(WorldContent wc);
+    
     public Map getMap();
     
     public Game getGame();

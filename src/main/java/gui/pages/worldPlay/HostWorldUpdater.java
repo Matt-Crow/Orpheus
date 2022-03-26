@@ -3,7 +3,7 @@ package gui.pages.worldPlay;
 import net.OrpheusServer;
 import net.messages.ServerMessage;
 import net.messages.ServerMessageType;
-import util.SerialUtil;
+import serialization.WorldSerializer;
 import world.World;
 
 /**
@@ -25,7 +25,7 @@ public class HostWorldUpdater extends AbstractWorldUpdater {
     protected void updateWorld(World world) {
         world.update();
         hostingServer.send(new ServerMessage(
-            SerialUtil.serializeToString(world),
+            new WorldSerializer(world).serializeToString(),
             ServerMessageType.WORLD_UPDATE
         ));
     }

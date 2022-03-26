@@ -10,11 +10,7 @@ import gui.pages.worldPlay.WorldCanvas;
 import gui.pages.worldPlay.WorldPage;
 import start.AbstractOrpheusCommandInterpreter;
 import start.SoloOrpheusCommandInterpreter;
-import world.TempWorld;
-import world.TempWorldBuilder;
-import world.WorldImpl;
-import world.WorldBuilder;
-import world.WorldContent;
+import world.*;
 
 /**
  *
@@ -30,42 +26,33 @@ public class WSSolo extends AbstractWSNewWorld{
         LocalUser user = LocalUser.getInstance();
         AbstractOrpheusCommandInterpreter orpheus = new SoloOrpheusCommandInterpreter(user);
         
-        TempWorldBuilder builder = new TempWorldBuilder();
-        TempWorld entireWorld = builder
-            .withGame(createGame())
-            .build();
-        WorldContent model = entireWorld.getContent();
-        
-        SoloWorldUpdater updater = new SoloWorldUpdater(entireWorld);
-        
-        HumanPlayer player = new HumanPlayer(
-            entireWorld,
-            user.getName()
-        );
-        
         Team team1 = new Team("Players", Color.green);
         Team team2 = new Team("AI", Color.red);
         
-        player.applyBuild(getSelectedBuild());
-        team1.addMember(player);
-        
-        model.setPlayerTeam(team1);
-        model.setAITeam(team2);
-        
-        WorldImpl realWorld = new WorldBuilder()
+        World world = new WorldBuilderImpl()
                 .withGame(createGame())
                 .withPlayers(team1)
                 .withAi(team2)
                 .build();
         
+        SoloWorldUpdater updater = new SoloWorldUpdater(world);
+        
+        HumanPlayer player = new HumanPlayer(
+            world,
+            user.getName()
+        );
+        
+        player.applyBuild(getSelectedBuild());
+        team1.addMember(player);
+        
         // model must have teams set before WorldCanvas init, as WC relies on getting the player team
         WorldCanvas renderer = new WorldCanvas(
-            entireWorld, 
-            new PlayerControls(entireWorld, player.id, orpheus),
+            world, 
+            new PlayerControls(world, player.id, orpheus),
             true
         );
         
-        entireWorld.init();
+        world.init();
         
         WorldPage wp = new WorldPage(new SoloOrpheusCommandInterpreter(user));
         wp.setCanvas(renderer);

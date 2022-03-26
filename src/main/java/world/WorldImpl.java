@@ -11,18 +11,37 @@ import world.entities.particles.Particle;
 import world.game.Game;
 
 /**
- * This abstractifies the process of handling both parts of the world, both the
- * serialized and non-serialized portions.
+ * Handling both the serialized and non-serialized parts of the world.
+ * Objects should reference World instead of this class or either of its parts
+ * directly.
+ * 
+ * This class can be simplified to a proxy of the serialize-able world content
+ * if particles can be serialized efficiently.
+ * 
+ * Note that references to a World or WorldImpl are stable: they will not change
+ * as the world is serialized and de-serialized, unlike references to the 
+ * serialized content, which is constantly changing in multiplayer.
  * 
  * @author Matt Crow
  */
 public class WorldImpl implements World{
-    private volatile SerializableWorldPart ser;
+    private volatile WorldContent ser;
     private final NonSerializableWorldPart noser;
     
-    protected WorldImpl(SerializableWorldPart ser, NonSerializableWorldPart noser){
+    protected WorldImpl(WorldContent ser, NonSerializableWorldPart noser){
         this.ser = ser;
         this.noser = noser;
+    }
+    
+    @Override
+    public WorldContent getSerializableContent(){
+        return ser;
+    }
+    
+    @Override
+    public void setSerializableContent(WorldContent wc){
+        ser = wc;
+        wc.setWorld(this);
     }
     
     @Override
@@ -45,6 +64,11 @@ public class WorldImpl implements World{
         return ser.getGame();
     }
     
+    /**
+     * spawns the given entity at a random valid point in the world
+     * 
+     * @param e 
+     */
     @Override
     public void spawn(AbstractEntity e){
         int minX = 0;
@@ -82,6 +106,7 @@ public class WorldImpl implements World{
         noser.update();
     }
     
+    @Override
     public void draw(Graphics g){
         ser.draw(g);
         noser.draw(g);

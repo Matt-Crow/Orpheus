@@ -18,43 +18,44 @@ import java.io.StringReader;
 import javax.json.Json;
 import net.OrpheusClient;
 import net.messages.ServerMessage;
+import serialization.WorldSerializer;
 import start.RemoteOrpheusClient;
-import util.SerialUtil;
-import world.TempWorld;
-import world.TempWorldBuilder;
+import world.World;
+import world.WorldBuilder;
+import world.WorldBuilderImpl;
 import world.WorldContent;
 
 /**
  *
  * @author Matt
  */
-public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<OrpheusClient>{
+public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<OrpheusClient> {
+
     private final WaitingRoom room;
-    
+
     public WaitingRoomClientProtocol(OrpheusClient runningServer, WaitingRoom linkedRoom) {
         super(runningServer);
         this.room = linkedRoom;
     }
-        
+
     @Override
-    public boolean receiveMessage(ServerMessagePacket sm, OrpheusClient forServer){
+    public boolean receiveMessage(ServerMessagePacket sm, OrpheusClient forServer) {
         boolean received = true;
-        switch(sm.getMessage().getType()){
+        switch (sm.getMessage().getType()) {
             case WAITING_ROOM_INIT:
                 receiveInit(sm);
                 break;
             case WAITING_ROOM_UPDATE:
                 receiveUpdate(sm);
                 break;
-            case REQUEST_PLAYER_DATA:
-        {
-            try {
-                receiveBuildRequest(sm);
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            case REQUEST_PLAYER_DATA: {
+                try {
+                    receiveBuildRequest(sm);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
-        }
-                break;
+            break;
             case NOTIFY_IDS:
                 receiveRemoteId(sm);
                 break;
@@ -67,78 +68,80 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<Orphe
         }
         return received;
     }
-    
-    private void receiveInit(ServerMessagePacket sm){
+
+    private void receiveInit(ServerMessagePacket sm) {
         JsonObject obj = JsonUtil.fromString(sm.getMessage().getBody());
         JsonUtil.verify(obj, "team");
-        obj.getJsonArray("team").stream().forEach((jv)->{
-            if(jv.getValueType().equals(JsonValue.ValueType.OBJECT)){
-                AbstractUser u = AbstractUser.deserializeJson((JsonObject)jv);
+        obj.getJsonArray("team").stream().forEach((jv) -> {
+            if (jv.getValueType().equals(JsonValue.ValueType.OBJECT)) {
+                AbstractUser u = AbstractUser.deserializeJson((JsonObject) jv);
                 addToTeamProto(u);
             }
         });
         room.updateTeamDisplays();
     }
-    
-    private void receiveUpdate(ServerMessagePacket sm){
+
+    private void receiveUpdate(ServerMessagePacket sm) {
         JsonObject json = Json.createReader(
-            new StringReader(
-                sm.getMessage().getBody()
-            )
+                new StringReader(
+                        sm.getMessage().getBody()
+                )
         ).readObject();
         addToTeamProto(AbstractUser.deserializeJson(json));
         room.updateTeamDisplays();
     }
-    
-    public final void requestStart(){
+
+    public final void requestStart() {
         getServer().send(new ServerMessage("start", ServerMessageType.START_WORLD));
     }
-    
-    private synchronized void receiveBuildRequest(ServerMessagePacket sm) throws IOException{
+
+    private synchronized void receiveBuildRequest(ServerMessagePacket sm) throws IOException {
         getServer().send(new ServerMessage(
-            BuildJsonUtil.serializeJson(room.getSelectedBuild()).toString(),
-            ServerMessageType.PLAYER_DATA
+                BuildJsonUtil.serializeJson(room.getSelectedBuild()).toString(),
+                ServerMessageType.PLAYER_DATA
         ));
         room.setInputEnabled(false);
     }
-    
-    private void receiveRemoteId(ServerMessagePacket sm){
+
+    private void receiveRemoteId(ServerMessagePacket sm) {
         LocalUser.getInstance().setRemotePlayerId(sm.getMessage().getBody());
     }
-    
+
     /**
-     * allows remote users to receive and de-serialize the AbstractWorld created by the host.
-     * 
-     * this method is currently having problems, as the enemy team might not serialize,
-     * and it takes a couple seconds to load teams into the world
-     * 
-     * @param sm 
+     * allows remote users to receive and de-serialize the AbstractWorld created
+     * by the host.
+     *
+     * this method is currently having problems, as the enemy team might not
+     * serialize, and it takes a couple seconds to load teams into the world
+     *
+     * @param sm
      */
-    private void receiveWorldInit(ServerMessagePacket sm){
-        WorldContent w = (WorldContent)SerialUtil.fromSerializedString(sm.getMessage().getBody());
-        
-        TempWorldBuilder builder = new TempWorldBuilder();
-        
-        TempWorld entireWorld = builder.withContent(w).build();
-        
+    private void receiveWorldInit(ServerMessagePacket sm) {
+        WorldBuilder builder = new WorldBuilderImpl();
+
+        // don't like having to do static like this
+        World entireWorld = builder
+                .withContent((WorldContent) WorldSerializer.fromSerializedString(sm.getMessage().getBody()))
+                .build();
+
         LocalUser me = LocalUser.getInstance();
-        
+
         RemoteOrpheusClient orpheus = new RemoteOrpheusClient(me, getServer());
         WorldPage p = new WorldPage(orpheus);
         WorldCanvas renderer = new WorldCanvas(
-            entireWorld,
-            new PlayerControls(entireWorld, me.getRemotePlayerId(), orpheus),
-            false
+                entireWorld,
+                new PlayerControls(entireWorld, me.getRemotePlayerId(), orpheus),
+                false
         );
         p.setCanvas(renderer);
         room.getHost().switchToPage(p);
-        
+
         RemoteProxyWorldProtocol protocol = new RemoteProxyWorldProtocol(
-            getServer(), 
-            entireWorld
+                getServer(),
+                entireWorld
         );
         getServer().setProtocol(protocol);
-        
+
         renderer.start();
         RemoteWorldUpdater updater = new RemoteWorldUpdater(entireWorld);
         updater.start();

@@ -2,10 +2,8 @@ package net.protocols;
 
 import net.OrpheusClient;
 import net.messages.ServerMessagePacket;
-import util.SerialUtil;
-import world.TempWorld;
+import serialization.WorldSerializer;
 import world.World;
-import world.WorldContent;
 
 /**
  * The RemoteProxyProtocol is used by clients to receive serialized 
@@ -14,6 +12,7 @@ import world.WorldContent;
  * @author Matt Crow
  */
 public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtocol<OrpheusClient>{
+    private final WorldSerializer serializer;
     private final World proxy;
     
     /**
@@ -24,6 +23,7 @@ public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtoc
      */
     public RemoteProxyWorldProtocol(OrpheusClient runningServer, World localProxy){
         super(runningServer);
+        serializer = new WorldSerializer(localProxy);
         proxy = localProxy;
     }
     
@@ -34,12 +34,7 @@ public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtoc
      * @param sm 
      */
     private void receiveWorldUpdate(ServerMessagePacket sm){
-        WorldContent content = (WorldContent)SerialUtil.fromSerializedString(sm.getMessage().getBody());
-        if(proxy instanceof TempWorld){
-            ((TempWorld)proxy).setContent(content);
-        } else {
-            throw new UnsupportedOperationException();
-        }        
+        serializer.deserialize(sm.getMessage().getBody());       
     }
     
     @Override

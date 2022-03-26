@@ -23,8 +23,8 @@ import start.AbstractOrpheusCommandInterpreter;
  * So yes, it is rather convoluted:
  * use the MainWindow to render the WorldPage,
  * which renders the WorldCanvas,
- * which renders the TempWorld
- * which renders the AbstractWorldShell and WorldContent
+ * which renders the World
+ * which renders both the serialized and non-serialized world parts
  * 
  * @author Matt Crow
  */

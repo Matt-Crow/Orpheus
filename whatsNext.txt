@@ -1,15 +1,5 @@
-### CURRENT FOCUS ###
-replace TempWorldBuilder, TempWorld, and WorldContent
-with WorldBuilder, World, and NonSerializableWorldPart
-
-
-
 It's time to focus on other things.
-In it's current state, the program works, multiplayer is just a little... iffy.
 I'll definitely work on it more (time permitting)
-
-I like multiplayer enough, so I'll keep it around. Maybe someday, I'll have 
-enough experience with socket programming to make it work better.
 
 With that said, their are many changes that I want to make next time I have a 
 chance to work on this:
@@ -22,9 +12,8 @@ chance to work on this:
 * Redo GUI
 * Security manager for multiplayer
 * use Socket to identify users, not IP address
-* WorldSerializer & WorldDeserializer
-* fix serialization
-* fix multiplayer
+* finish fixing multiplayer
+* serialize particles?
 * Idea: standard Orpheus workflow:
     1. receive input
     2. send message to server

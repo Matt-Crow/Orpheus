@@ -97,6 +97,10 @@ public class Tile implements Serializable, JsonSerialable{
     }
     
     public void draw(Graphics g){
+        drawAt(g, x, y);
+    }
+    
+    public void drawAt(Graphics g, int x, int y){
         if(blocking){
             g.setColor(TANGIBLE_OUTLINE_COLOR);
         } else {

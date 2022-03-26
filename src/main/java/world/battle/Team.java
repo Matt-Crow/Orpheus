@@ -1,6 +1,5 @@
 package world.battle;
 
-import world.WorldContent;
 import java.awt.Color;
 import java.util.ArrayList;
 import world.entities.AbstractPlayer;
@@ -93,6 +92,10 @@ public class Team extends SafeList<AbstractEntity> implements Serializable {
         return t;
     }
     
+    public void setWorld(World w){
+        forEach((e)->e.setWorld(w));
+    }
+    
     /**
      * 
      * @param w 
@@ -103,23 +106,6 @@ public class Team extends SafeList<AbstractEntity> implements Serializable {
         roster.values().forEach((p)->{
             initPlayer(p, w);
         });
-    }
-
-    /**
-     * old version
-     * 
-     * Initializes a player into the team. This method can be invoked while in
-     * battle, so the player will be added to the given world and fully
-     * initialized.
-     *
-     * @param p
-     * @param w
-     */
-    public void initPlayer(AbstractPlayer p, WorldContent w) {
-        w.spawnIntoWorld(p);
-        p.init();
-        membersRem.add(p);
-        add(p);
     }
     
     /** 
@@ -132,6 +118,7 @@ public class Team extends SafeList<AbstractEntity> implements Serializable {
      */
     public void initPlayer(AbstractPlayer p, World w) {
         w.spawn(p);
+        p.setWorld(w);
         p.init();
         membersRem.add(p);
         add(p);

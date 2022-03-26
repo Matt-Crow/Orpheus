@@ -58,7 +58,7 @@ public class WorldCanvas extends Canvas {
         pc.registerControlsTo(this);
 
         focusedEntityId = pc.getPlayerId();
-        hud = new HeadsUpDisplay(this, pc.getPlayer());
+        hud = new HeadsUpDisplay(this, w, pc.getPlayerId());
     }
 
     public void start() {

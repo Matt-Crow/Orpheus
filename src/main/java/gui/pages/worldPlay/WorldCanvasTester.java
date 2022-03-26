@@ -3,94 +3,85 @@ package gui.pages.worldPlay;
 import controls.PlayerControls;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import start.MainWindow;
-import start.SoloOrpheusCommandInterpreter;
+import serialization.WorldSerializer;
+import start.*;
 import users.LocalUser;
-import util.SerialUtil;
 import util.Settings;
-import world.TempWorld;
-import world.TempWorldBuilder;
-import world.WorldImpl;
-import world.WorldBuilder;
-import world.WorldContent;
+import world.*;
 import world.battle.Team;
 import world.entities.HumanPlayer;
+import world.game.*;
 
 /**
  *
  * @author Matt Crow
  */
 public class WorldCanvasTester {
-    public static void main(String[] args) throws IOException{
+
+    private static final boolean GUI = !false;
+    private static final boolean BATCH_SERIALIZE = false;
+
+    public static void main(String[] args) {
+        WorldBuilder wb = new WorldBuilderImpl();
+
+        Team players = new Team("Test", Color.BLUE);
+        World w = wb
+                .withGame(new Onslaught(5))
+                .withPlayers(players)
+                .withAi(Team.constructRandomTeam(null, "Rando", Color.yellow, 1, 1))
+                .build();
+
         LocalUser user = LocalUser.getInstance();
-        SoloOrpheusCommandInterpreter orpheus = new SoloOrpheusCommandInterpreter(user);
-        
-        TempWorldBuilder builder = new TempWorldBuilder();
-        WorldBuilder wb = new WorldBuilder();
-        
-        TempWorld entireWorld = builder.build();
-        WorldContent world = entireWorld.getContent();
-        WorldImpl realWorld = wb.build();
-        
-        
-        HumanPlayer player = new HumanPlayer(entireWorld, user.getName());
-        
+        HumanPlayer player = new HumanPlayer(w, user.getName());
         player.applyBuild(Settings.getDataSet().getDefaultBuild());
-        
-        Team t1 = new Team("Test", Color.BLUE);
-        Team t2 = Team.constructRandomTeam(entireWorld, "Rando", Color.yellow, 1, 1);
-        t1.addMember(player);
-        entireWorld.getContent().setPlayerTeam(t1);
-        entireWorld.getContent().setAITeam(t2);
-        
-        entireWorld.init();
-        
-        WorldCanvas canvas = new WorldCanvas(
-            entireWorld, 
-            new PlayerControls(entireWorld, player.id, orpheus),
-            true
-        );
-        
-        MainWindow mw = MainWindow.getInstance();
-        WorldPage wp = new WorldPage(orpheus);
-        wp.setCanvas(canvas);
-        mw.switchToPage(wp);
-        canvas.start();
-        
+        players.addMember(player);
         user.setRemotePlayerId(player.id);
-        
-        
-        //now to try serializing it...
-        String serial = SerialUtil.serializeToString(world);
-        
-        WorldContent newContent = (WorldContent)SerialUtil.fromSerializedString(serial);
-        entireWorld.setContent(newContent);
-        
-        wp = new WorldPage(new SoloOrpheusCommandInterpreter(user));
-        wp.setCanvas(canvas);
-        mw.switchToPage(wp);
-        
-        canvas.registerKey(KeyEvent.VK_S, true, ()->{
-            Team t = world.getPlayers();
-            System.out.println("Total entities to serialize: " + t.length());
-            String s = SerialUtil.serializeToString(t);
-            Team tClone = (Team)SerialUtil.fromSerializedString(s);
-            System.out.println("Total entities deserialized: " + tClone.length());
-        });
-        
-        
-        try (ObjectOutputStream out = new ObjectOutputStream(System.out)) {
-            String ser = null;
-            for(int i = 0; i < 1000000; i++){
-                ser = SerialUtil.serializeToString(entireWorld.getContent());
-                
-                WorldContent deser = (WorldContent) SerialUtil.fromSerializedString(ser);
-                entireWorld.setContent(deser);
-                if(i % 10000 == 0){
-                    System.out.println(i);
+
+        w.init();
+
+        WorldSerializer ws = new WorldSerializer(w);
+
+        if (GUI) {
+            SoloOrpheusCommandInterpreter orpheus = new SoloOrpheusCommandInterpreter(user);
+
+            WorldCanvas canvas = new WorldCanvas(
+                    w,
+                    new PlayerControls(w, player.id, orpheus),
+                    true
+            );
+
+            MainWindow mw = MainWindow.getInstance();
+            WorldPage wp = new WorldPage(orpheus);
+            wp.setCanvas(canvas);
+            mw.switchToPage(wp);
+            canvas.start();
+
+            canvas.registerKey(KeyEvent.VK_R, true, () -> {
+                long start = System.currentTimeMillis();
+                String s = ws.serializeToString();
+                long middle = System.currentTimeMillis();
+                ws.deserialize(s);
+                long end = System.currentTimeMillis();
+                System.out.printf("took %d ms to serialize, %d ms to deserialize\n", middle - start, end - middle);
+            });
+        }
+
+        if (BATCH_SERIALIZE) {
+            try {
+                String ser = null;
+                long start = System.currentTimeMillis();
+                for (int i = 0; i < 1000; i++) {
+                    ser = ws.serializeToString();
+                    ws.deserialize(ser);
                 }
+                long end = System.currentTimeMillis();
+                System.out.printf(
+                        "Took %d ms to serialize-deserialize 1000 times\n",
+                        end - start
+                );
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                System.exit(-1);
             }
         }
     }

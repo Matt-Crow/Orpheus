@@ -18,9 +18,8 @@ import serialization.JsonUtil;
 import users.AbstractUser;
 import java.util.HashSet;
 import net.messages.ServerMessage;
-import util.SerialUtil;
-import world.TempWorldBuilder;
-import world.World;
+import serialization.WorldSerializer;
+import world.*;
 import world.game.Game;
 
 /**
@@ -143,11 +142,13 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
     
     public final void prepareToStart(){
         playerTeam.clear();
-        TempWorldBuilder worldBuilder = new TempWorldBuilder();
+        WorldBuilder worldBuilder = new WorldBuilderImpl();
         
         world = worldBuilder
-            .withGame(minigame)
-            .build(); 
+                .withGame(minigame)
+                .withPlayers(playerTeam)
+                .withAi(new Team("AI", Color.red))
+                .build(); 
         
         requestBuilds();
     }
@@ -222,9 +223,6 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
     private void launchWorld() throws IOException{
         HostWorldUpdater updater = new HostWorldUpdater(getServer(), world);
         
-        Team enemyTeam = new Team("AI", Color.red);
-        //world.getContent().setPlayerTeam(playerTeam);
-        //world.getContent().setAITeam(enemyTeam);
         world.init();
         
         HostWorldProtocol protocol = new HostWorldProtocol(getServer(), world);
@@ -240,7 +238,8 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
      * @param w the world to send
      */
     private void sendWorldInit(World w){
-        String serial = SerialUtil.serializeToString(w);
+        WorldSerializer ws = new WorldSerializer(w);
+        String serial = ws.serializeToString();
         ServerMessage sm = new ServerMessage(
             serial,
             ServerMessageType.WORLD_INIT

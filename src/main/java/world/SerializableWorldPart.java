@@ -15,7 +15,7 @@ import world.game.Game;
  * 
  * @author Matt Crow
  */
-public class SerializableWorldPart implements Serializable {
+public class SerializableWorldPart implements WorldContent, Serializable {
     private final Map map;
     private final Team players;
     private final Team ai;
@@ -28,30 +28,34 @@ public class SerializableWorldPart implements Serializable {
         this.game = game;
     }
     
+    @Override
     public Map getMap(){
         return map;
     }
     
+    @Override
     public Team getPlayers(){
         return players;
     }
     
+    @Override
     public Team getAi(){
         return ai;
     }
     
+    @Override
     public Game getGame(){
         return game;
     }
     
-    protected void init(){
+    @Override
+    public void init(){
         map.init();
-        //players.init(w); not supported yet
-        //ai.init(w); not supported yet
         game.play();
     }
     
-    protected void update(){
+    @Override
+    public void update(){
         players.update();
         ai.update();
         game.update();
@@ -71,9 +75,17 @@ public class SerializableWorldPart implements Serializable {
         });
     }
     
+    @Override
     public void draw(Graphics g){
         map.draw(g);
         ai.draw(g);
         players.draw(g);
+    }
+
+    @Override
+    public void setWorld(World w) {
+        game.setHost(w);
+        players.setWorld(w);
+        ai.setWorld(w);
     }
 }

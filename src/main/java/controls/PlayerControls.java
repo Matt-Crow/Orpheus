@@ -193,8 +193,8 @@ public class PlayerControls extends AbstractControlScheme implements MouseListen
     public static String getPlayerControlScheme(){
         StringBuilder sb = new StringBuilder();
         sb.append("#CONTROLS#\n");
-        sb.append("Or hold the W, A, S, or D keys to move\n");
-        sb.append("(Q): use your melee attack\n");
+        sb.append("W, A, S, or D keys to move\n");
+        sb.append("(Q): use your basic attack\n");
         sb.append("(1-3): use your attacks 1, 2, or 3\n");
         sb.append("(P): pause / resume (singleplayer only)\n");
         sb.append("(Z): zoom in\n");
