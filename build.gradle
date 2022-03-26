@@ -27,11 +27,20 @@ plugins {
 sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
+// has problems changing main class, so I'm using this instead
+def runMain = 'start.MainWindow'
+def testMain = 'gui.pages.worldPlay.WorldCanvasTester'
 
+def testing = false // !!! CHANGE THIS LINE TO SWITCH TO/FROM TESTING !!!
+
+def main = (testing) ? testMain : runMain
+
+// NetBeans 8.2 requires this line for debug to work
+mainClassName = main
 
 application {
     // Netbeans cannot do "run file" option if I include this line
-    mainClass = 'start.MainWindow'
+    mainClass = main
 }
 
 repositories {
@@ -48,7 +57,7 @@ dependencies {
 jar {
     manifest {
         attributes(
-            'Main-Class' : 'start.MainWindow'
+            'Main-Class' : main
         )
     }
 }
@@ -70,7 +79,7 @@ tasks.register('fatJar', Jar){
     }
     manifest {
         attributes(
-            'Main-Class' : 'start.MainWindow'
+            'Main-Class' : main
         )
     }
 }

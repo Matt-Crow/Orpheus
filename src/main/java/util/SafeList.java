@@ -1,18 +1,14 @@
 package util;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
 /**
+ * I will likely remove this class later
+ * 
  * Provides a variation of a LinkedList that is immune to
  * concurrent modification exceptions.
- * 
- * I may also use this class for some of the methods of Player and Entity
- * (managing statuses, action registers, teams, etc)
  * 
  * One extremely useful thing this class does is automatically 
  * remove Nodes as their data terminates
@@ -182,13 +178,18 @@ public class SafeList<T> implements Serializable{
         Node<T> curr = null;
         while(nodesRem != 0){
             prev = curr;
-            curr = (Node<T>) ois.readObject();
+            try {
+                // this was occasionally throwing errors
+                curr = (Node<T>) ois.readObject();
+            } catch(Exception ex){
+                throw ex;
+            }
             if(prev == null){
                 head = curr;
             } else {
                 prev.setNext(curr);
             }
-            nodesRem--;
+            --nodesRem;
         }
     }
     

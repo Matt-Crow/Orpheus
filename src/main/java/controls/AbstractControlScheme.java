@@ -1,7 +1,7 @@
 package controls;
 
 import world.entities.AbstractPlayer;
-import world.AbstractWorldShell;
+import world.World;
 
 /**
  * This acts as the base class
@@ -12,15 +12,15 @@ import world.AbstractWorldShell;
  * @author Matt Crow
  */
 public class AbstractControlScheme {
-    private final AbstractWorldShell targettedWorld;
-    private final String targettedEntityId;
+    private final World targettedWorld;
+    private final String targettedEntityId; // can't store as AbstractPlayer b/c of serialization
     
-    public AbstractControlScheme(AbstractWorldShell world, String playerId){
+    public AbstractControlScheme(World world, String playerId){
         targettedWorld = world;
         targettedEntityId = playerId;
     }
     
-    public final AbstractWorldShell getWorld(){
+    public final World getWorld(){
         return targettedWorld;
     }
     public final String getPlayerId(){
@@ -28,6 +28,6 @@ public class AbstractControlScheme {
     }
     
     public final AbstractPlayer getPlayer(){
-        return targettedWorld.getPlayerTeam().getMemberById(targettedEntityId);
+        return targettedWorld.getPlayers().getMemberById(targettedEntityId);
     }
 }

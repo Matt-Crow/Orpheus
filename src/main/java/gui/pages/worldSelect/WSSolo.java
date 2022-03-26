@@ -1,7 +1,7 @@
 package gui.pages.worldSelect;
 
 import controls.PlayerControls;
-import world.battle.Battle;
+import gui.pages.worldPlay.SoloWorldUpdater;
 import world.battle.Team;
 import world.entities.HumanPlayer;
 import java.awt.Color;
@@ -10,8 +10,7 @@ import gui.pages.worldPlay.WorldCanvas;
 import gui.pages.worldPlay.WorldPage;
 import start.AbstractOrpheusCommandInterpreter;
 import start.SoloOrpheusCommandInterpreter;
-import world.SoloWorld;
-import world.WorldContent;
+import world.*;
 
 /**
  *
@@ -26,39 +25,39 @@ public class WSSolo extends AbstractWSNewWorld{
     public void start(){
         LocalUser user = LocalUser.getInstance();
         AbstractOrpheusCommandInterpreter orpheus = new SoloOrpheusCommandInterpreter(user);
-        SoloWorld battleWorld = new SoloWorld(WorldContent.createDefaultBattle());
-        
-        
-        HumanPlayer player = new HumanPlayer(
-            battleWorld.getContent(),
-            user.getName()
-        );
         
         Team team1 = new Team("Players", Color.green);
         Team team2 = new Team("AI", Color.red);
         
+        World world = new WorldBuilderImpl()
+                .withGame(createGame())
+                .withPlayers(team1)
+                .withAi(team2)
+                .build();
+        
+        SoloWorldUpdater updater = new SoloWorldUpdater(world);
+        
+        HumanPlayer player = new HumanPlayer(
+            world,
+            user.getName()
+        );
+        
         player.applyBuild(getSelectedBuild());
         team1.addMember(player);
-
-        //it's like a theme park or something
-        battleWorld.createCanvas();
         
-        battleWorld
-            .setPlayerTeam(team1)
-            .setEnemyTeam(team2);
+        // model must have teams set before WorldCanvas init, as WC relies on getting the player team
+        WorldCanvas renderer = new WorldCanvas(
+            world, 
+            new PlayerControls(world, player.id, orpheus),
+            true
+        );
         
-        Battle b = createBattle();
-        battleWorld.setCurrentMinigame(b);
-        b.setHost(battleWorld.getContent());
-        
-        battleWorld.init();
-        
-        WorldCanvas canv = battleWorld.getCanvas();
-        canv.addPlayerControls(new PlayerControls(battleWorld, player.id, orpheus));
-        //canv.addPlayerControls(new SoloPlayerControls(battleWorld, player.id));
+        world.init();
         
         WorldPage wp = new WorldPage(new SoloOrpheusCommandInterpreter(user));
-        wp.setCanvas(canv);
+        wp.setCanvas(renderer);
         getHost().switchToPage(wp);
+        renderer.start();
+        updater.start();
     }
 }

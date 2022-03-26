@@ -1,6 +1,6 @@
 package net.protocols;
 
-import world.battle.Battle;
+import gui.pages.worldPlay.HostWorldUpdater;
 import world.battle.Team;
 import world.build.Build;
 import world.build.BuildJsonUtil;
@@ -18,8 +18,9 @@ import serialization.JsonUtil;
 import users.AbstractUser;
 import java.util.HashSet;
 import net.messages.ServerMessage;
-import world.HostWorld;
-import world.WorldContent;
+import serialization.WorldSerializer;
+import world.*;
+import world.game.Game;
 
 /**
  * The WaitingRoomHostProtocol is used to prepare a multiplayer game.
@@ -37,9 +38,9 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
      */
     public static final int WAIT_TIME = 3;
     
-    private final Battle minigame;
+    private final Game minigame;
     private final Team playerTeam;
-    private HostWorld world; // may be null at some points
+    private World world; // may be null at some points
     
     /*
     The Users who have joined the waiting room, but have
@@ -52,7 +53,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
      * @param runningServer
      * @param game the game which players will play once this protocol is done.
      */
-    public WaitingRoomHostProtocol(OrpheusServer runningServer, Battle game){
+    public WaitingRoomHostProtocol(OrpheusServer runningServer, Game game){
         super(runningServer);
         minigame = game;   
         playerTeam = new Team("Players", Color.blue);
@@ -141,10 +142,14 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
     
     public final void prepareToStart(){
         playerTeam.clear();
-        world = new HostWorld(
-            getServer(), 
-            WorldContent.createDefaultBattle()
-        );
+        WorldBuilder worldBuilder = new WorldBuilderImpl();
+        
+        world = worldBuilder
+                .withGame(minigame)
+                .withPlayers(playerTeam)
+                .withAi(new Team("AI", Color.red))
+                .build(); 
+        
         requestBuilds();
     }
     
@@ -171,7 +176,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
         
         if(awaitingBuilds.contains(sender)){
             player = new HumanPlayer(
-                world.getContent(), // world should not be null by now
+                world, // world should not be null by now,
                 sender.getName()
             );
             awaitingBuilds.remove(sender);
@@ -216,24 +221,25 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
     }
     
     private void launchWorld() throws IOException{
-        world.createCanvas();
-        Team enemyTeam = new Team("AI", Color.red);
-        world.setPlayerTeam(playerTeam).setEnemyTeam(enemyTeam).setCurrentMinigame(minigame);
-        minigame.setHost(world.getContent());
+        HostWorldUpdater updater = new HostWorldUpdater(getServer(), world);
+        
         world.init();
         
         HostWorldProtocol protocol = new HostWorldProtocol(getServer(), world);
         getServer().setProtocol(protocol);
-        sendWorldInit(world.getContent());
+        sendWorldInit(world);
+        
+        updater.start();
     }
     
     /**
-     * Serializes the worldContent, and sends it
+     * Serializes the world, and sends it
      * to each connected user, excluding the host
      * @param w the world to send
      */
-    private void sendWorldInit(WorldContent w){
-        String serial = w.serializeToString();
+    private void sendWorldInit(World w){
+        WorldSerializer ws = new WorldSerializer(w);
+        String serial = ws.serializeToString();
         ServerMessage sm = new ServerMessage(
             serial,
             ServerMessageType.WORLD_INIT

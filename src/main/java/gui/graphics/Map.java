@@ -1,24 +1,14 @@
 package gui.graphics;
 
-import controls.ai.Path;
-import controls.ai.PathInfo;
-import controls.ai.PathMinHeap;
+import controls.ai.*;
+import static gui.graphics.Tile.TILE_SIZE;
 import world.entities.AbstractEntity;
-import java.awt.Graphics;
-import java.awt.Color;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
+import java.awt.*;
+import java.io.*;
 import static java.lang.System.out;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Stack;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import serialization.JsonSerialable;
-import serialization.JsonUtil;
+import java.util.*;
+import javax.json.*;
+import serialization.*;
 
 /**
  * The Map class is used to store Tiles together to form 
@@ -31,7 +21,6 @@ public class Map implements Serializable, JsonSerialable{
     private final int[][] tileMap;
     //the base Tiles that are copied to construct the map
     private final HashMap<Integer, Tile> tileSet;
-    private final ArrayList<Tile> allTiles;
     private final ArrayList<Tile> tangibleTiles;
     
     public Map(int w, int h){
@@ -44,7 +33,6 @@ public class Map implements Serializable, JsonSerialable{
             }
         }
         tileSet = new HashMap<>();
-        allTiles = new ArrayList<>();
         tangibleTiles = new ArrayList<>();
     }
     
@@ -158,14 +146,12 @@ public class Map implements Serializable, JsonSerialable{
      * generating the tiles
      */
     public void init(){
-        allTiles.clear();
         tangibleTiles.clear();
         Tile t;
         for(int x = 0; x < width; x++){
             for(int y = 0; y < height; y++){
                 if(tileSet.containsKey(tileMap[x][y])){
                     t = tileSet.get(tileMap[x][y]).copy(x, y);
-                    allTiles.add(t);
                     if(t.getBlocking()){
                         tangibleTiles.add(t);
                     }
@@ -398,7 +384,11 @@ public class Map implements Serializable, JsonSerialable{
     public void draw(Graphics g){
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, getWidth(), getHeight());
-        allTiles.forEach((tile)->tile.draw(g));
+        for(int i = 0; i < width; ++i){
+            for(int j = 0; j < height; ++j){
+                tileSet.get(tileMap[i][j]).drawAt(g, i * TILE_SIZE, j * TILE_SIZE);
+            }
+        }
     }
 
     @Override

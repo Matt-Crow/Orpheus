@@ -170,7 +170,7 @@ public class Canvas extends JPanel{
         endOfFrameListeners.add(f);
     }
     public void endOfFrame(){
-        endOfFrameListeners.forEach(eofl -> eofl.frameEnded(this));
+        endOfFrameListeners.forEach(eofl -> eofl.frameEnded());
     }
     
     /**

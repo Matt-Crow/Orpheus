@@ -17,16 +17,14 @@ import javax.swing.SwingUtilities;
 import gui.pages.Page;
 import gui.pages.worldSelect.WSMain;
 import start.AbstractOrpheusCommandInterpreter;
-import world.HostWorld;
-import world.RemoteProxyWorld;
 
 /**
  * The WorldPage is used to render WorldCanvases.
  * So yes, it is rather convoluted:
- use the MainWindow to render the WorldPage,
- which renders the WorldPage,
- which renders the WorldCanvas,
- which renders the AbstractWorldShell.
+ * use the MainWindow to render the WorldPage,
+ * which renders the WorldCanvas,
+ * which renders the World
+ * which renders both the serialized and non-serialized world parts
  * 
  * @author Matt Crow
  */
@@ -91,17 +89,15 @@ public class WorldPage extends Page{
                 w.requestFocusInWindow();
             }
         });
-        if(w.getWorldShell() instanceof RemoteProxyWorld || w.getWorldShell() instanceof HostWorld){
-            try {
-                throw new RuntimeException("will need some way of starting the chat server");
-            } catch (RuntimeException ex) {
-                chat.logLocal("Failed to start chat server");
-                ex.printStackTrace();
-            }
+        
+        try {
+            throw new RuntimeException("will need some way of starting the chat server");
+        } catch (RuntimeException ex) {
+            chat.logLocal("Failed to start chat server");
+            ex.printStackTrace();
         }
+        
         SwingUtilities.invokeLater(()->w.requestFocusInWindow());
-        chat.logLocal("Currently rendering World " + w.getWorldShell().hashCode());
-        chat.logLocal("Rendered on WorldCanvas " + w.hashCode());
         revalidate();
         repaint();
         return this;

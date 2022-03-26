@@ -24,7 +24,7 @@ public class WSNewMulti extends AbstractWSNewWorld{
             OrpheusServer server = new ServerProvider().createHost();
             WaitingRoomHostProtocol hostProtocol = new WaitingRoomHostProtocol(
                 server,
-                createBattle()
+                createGame()
             );
             server.setProtocol(hostProtocol);   
             server.start();

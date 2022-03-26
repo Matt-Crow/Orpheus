@@ -3,11 +3,11 @@ import os
 
 def countFiles(pathStr):
     pathObj = Path(pathStr)
-    print("Count files for " + str(pathObj))
+    #print("Count files for " + str(pathObj))
 
     total = 0
     for fileOrDir in pathObj.iterdir():
-        print(fileOrDir)
+        #print(fileOrDir)
         if fileOrDir.is_dir():
             total = total + countFiles(fileOrDir)
         else:

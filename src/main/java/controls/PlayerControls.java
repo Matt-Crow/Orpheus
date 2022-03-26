@@ -1,7 +1,6 @@
 package controls;
 
 import commands.ControlPressed;
-import gui.pages.Canvas;
 import gui.pages.EndOfFrameListener;
 import gui.pages.worldPlay.WorldCanvas;
 import java.awt.event.KeyEvent;
@@ -9,27 +8,22 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import start.AbstractOrpheusCommandInterpreter;
 import util.CardinalDirection;
-import world.AbstractWorldShell;
+import world.World;
 import world.entities.AbstractPlayer;
 import world.entities.HumanPlayer;
 
 /**
  * CONTROLS:<br>
- * - click to move to the mouse cursor<br>
- * - Q to use melee attack
- * - WASD to move
+ * - Q to use melee attack<br>
+ * - WASD to move<br>
  * - 1-3 to use active abilities 1-3 respectively<br>
- * 
- * I am definitely going to want to change this later,
- * as I don't feel these Runescapey controls fit the
- * fast paced theme of the game.
  * 
  * @author Matt Crow
  */
 public class PlayerControls extends AbstractControlScheme implements MouseListener, EndOfFrameListener{
     private final AbstractOrpheusCommandInterpreter interpreter;
     
-    public PlayerControls(AbstractWorldShell inWorld, String playerId, AbstractOrpheusCommandInterpreter interpreter) {
+    public PlayerControls(World inWorld, String playerId, AbstractOrpheusCommandInterpreter interpreter) {
         super(inWorld, playerId);
         this.interpreter = interpreter;
     }
@@ -37,14 +31,14 @@ public class PlayerControls extends AbstractControlScheme implements MouseListen
     private String playerString(){
         return "#" + getPlayerId();
     }
-    public final String meleeString(){
-        return playerString() + " turn to " + mouseString() + "\n use melee";
+    public final String meleeString(WorldCanvas canvas){
+        return playerString() + " turn to " + mouseString(canvas) + "\n use melee";
     }
-    public final String attString(int i){
-        return playerString() + " turn to " + mouseString() + "\n use " + i;
+    public final String attString(int i, WorldCanvas canvas){
+        return playerString() + " turn to " + mouseString(canvas) + "\n use " + i;
     }
-    public final String moveString(){
-        return playerString() + " move to " + mouseString();
+    public final String moveString(WorldCanvas canvas){
+        return playerString() + " move to " + mouseString(canvas);
     }
     public final String directionStartString(CardinalDirection dir){
         return playerString() + " start move direction " + dir.toString();
@@ -53,18 +47,18 @@ public class PlayerControls extends AbstractControlScheme implements MouseListen
         return playerString() + " stop move direction " + dir.toString();
     }
     
-    public void registerControlsTo(Canvas plane){
+    public void registerControlsTo(WorldCanvas plane){
         plane.registerKey(KeyEvent.VK_Q, true, ()->{
-            useMeleeKey();
+            useMeleeKey(plane);
         });
         plane.registerKey(KeyEvent.VK_1, true, ()->{
-            useAttKey(0);
+            useAttKey(0, plane);
         });
         plane.registerKey(KeyEvent.VK_2, true, ()->{
-            useAttKey(1);
+            useAttKey(1, plane);
         });
         plane.registerKey(KeyEvent.VK_3, true, ()->{
-            useAttKey(2);
+            useAttKey(2, plane);
         });
         plane.registerKey(KeyEvent.VK_W, true, ()->{
             useDirKey(CardinalDirection.UP);
@@ -92,10 +86,11 @@ public class PlayerControls extends AbstractControlScheme implements MouseListen
             stopUseDirKey(CardinalDirection.RIGHT);
         });
     }
-    public String mouseString(){
-        WorldCanvas c = getWorld().getCanvas();
+    
+    public String mouseString(WorldCanvas c){
         return String.format("(%d, %d)", c.getMouseX(), c.getMouseY());
     }
+    
     public static int[] decodeMouseString(String s){
         String coords = s.substring(s.indexOf('(') + 1, s.indexOf(')'));
         String[] split = coords.split(",");
@@ -104,7 +99,7 @@ public class PlayerControls extends AbstractControlScheme implements MouseListen
         return new int[]{x, y};
     }
     
-    public static void decode(AbstractWorldShell world, String s){
+    public static void decode(World world, String s){
         //Scanner tokenizer = new Scanner(s);
         int[] coords;
         HumanPlayer p = null;
@@ -116,7 +111,7 @@ public class PlayerControls extends AbstractControlScheme implements MouseListen
             int startIndex = s.indexOf("#") + 1;
             int endIndex = s.indexOf(" ", startIndex);
             String playerId = s.substring(startIndex, endIndex);
-            p = (HumanPlayer)world.getPlayerTeam().getMemberById(playerId);
+            p = (HumanPlayer)world.getPlayers().getMemberById(playerId);
         } else {
             throw new UnsupportedOperationException("cannot decode string with no player id");
         }
@@ -170,9 +165,9 @@ public class PlayerControls extends AbstractControlScheme implements MouseListen
     }
     
     @Override
-    public void frameEnded(Canvas c) {
+    public void frameEnded() {
         if(getPlayer() instanceof HumanPlayer && ((HumanPlayer)getPlayer()).getFollowingMouse()){
-            move();
+            //move();
         }
     }
     
@@ -182,14 +177,11 @@ public class PlayerControls extends AbstractControlScheme implements MouseListen
     @Override
     public void mouseExited(MouseEvent e) {}
     
-    private void useMeleeKey(){
-        consumeCommand(meleeString());
+    private void useMeleeKey(WorldCanvas canvas){
+        consumeCommand(meleeString(canvas));
     }
-    private void useAttKey(int i){
-        consumeCommand(attString(i));
-    }
-    private void move(){
-        consumeCommand(moveString());
+    private void useAttKey(int i, WorldCanvas canvas){
+        consumeCommand(attString(i, canvas));
     }
     private void useDirKey(CardinalDirection d){
         consumeCommand(directionStartString(d));
@@ -201,10 +193,8 @@ public class PlayerControls extends AbstractControlScheme implements MouseListen
     public static String getPlayerControlScheme(){
         StringBuilder sb = new StringBuilder();
         sb.append("#CONTROLS#\n");
-        sb.append("Click on a tile to move there\n");
-        sb.append("Hold down the mouse to 'follow' the mouse\n");
-        sb.append("Or hold the W, A, S, or D keys to move\n");
-        sb.append("(Q): use your melee attack\n");
+        sb.append("W, A, S, or D keys to move\n");
+        sb.append("(Q): use your basic attack\n");
         sb.append("(1-3): use your attacks 1, 2, or 3\n");
         sb.append("(P): pause / resume (singleplayer only)\n");
         sb.append("(Z): zoom in\n");

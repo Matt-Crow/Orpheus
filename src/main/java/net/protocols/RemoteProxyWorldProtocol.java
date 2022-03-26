@@ -2,9 +2,8 @@ package net.protocols;
 
 import net.OrpheusClient;
 import net.messages.ServerMessagePacket;
-import util.SerialUtil;
-import world.RemoteProxyWorld;
-import world.WorldContent;
+import serialization.WorldSerializer;
+import world.World;
 
 /**
  * The RemoteProxyProtocol is used by clients to receive serialized 
@@ -13,7 +12,8 @@ import world.WorldContent;
  * @author Matt Crow
  */
 public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtocol<OrpheusClient>{
-    private final RemoteProxyWorld proxy;
+    private final WorldSerializer serializer;
+    private final World proxy;
     
     /**
      * @param runningServer
@@ -21,8 +21,9 @@ public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtoc
      * computer. World updates received by this protocol will be applied to
      * that proxy.
      */
-    public RemoteProxyWorldProtocol(OrpheusClient runningServer, RemoteProxyWorld localProxy){
+    public RemoteProxyWorldProtocol(OrpheusClient runningServer, World localProxy){
         super(runningServer);
+        serializer = new WorldSerializer(localProxy);
         proxy = localProxy;
     }
     
@@ -33,24 +34,7 @@ public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtoc
      * @param sm 
      */
     private void receiveWorldUpdate(ServerMessagePacket sm){
-        WorldContent content = (WorldContent)SerialUtil.fromSerializedString(sm.getMessage().getBody());
-        proxy.setContent(content);
-        content.setShell(proxy);
-        //User.getUser().linkToRemotePlayerInWorld(proxy);
-        /*
-        Old receiveWorldUpdate, not sure if I need any of this
-        
-        //synchronized(teams){
-        SwingUtilities.invokeLater(()->{
-            Team[] ts = (Team[])SerialUtil.fromSerializedString(sm.getBody());
-            setPlayerTeam(ts[0]);
-            setEnemyTeam(ts[1]);
-
-            Master.getUser().linkToRemotePlayerInWorld(this); //since teams have changed
-        });
-        
-        //}
-        */
+        serializer.deserialize(sm.getMessage().getBody());       
     }
     
     @Override

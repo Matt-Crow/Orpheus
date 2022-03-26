@@ -1,19 +1,19 @@
 It's time to focus on other things.
-In it's current state, the program works, multiplayer is just a little... iffy. Given that I knew next to nothing about socket programming when I began, and all the guides I've found have been rather basic, "iffy" is pretty good.
-Am I happy with where Orpheus is? No. I'll never be happy with it, not until it's perfect, and trying to perfect it is a wormhole I don't want to get sucked into.
-I'll definitely work on it more (time permitting), but I'd like to make another Java game, one less chaotic and difficult to balance than this.
+I'll definitely work on it more (time permitting)
 
-I like multiplayer enough, so I'll keep it around. Maybe someday, I'll have enough experience with socket programming to make it work better.
-
-With that said, their are many changes that I want to make next time I have a chance to work on this:
+With that said, their are many changes that I want to make next time I have a 
+chance to work on this:
 * Move to 3-D graphics?
 * Plugin customization system (players create their own Java classes)
-* Standard application folder stuff and logging, like what I used in ARCDHWebAutomator
+* Standard application folder stuff and logging, like what I used in 
+  ARCDHWebAutomator
 * Change player and team IDs to ints or long longs
 * General cleanup and reorganization
 * Redo GUI
 * Security manager for multiplayer
 * use Socket to identify users, not IP address
+* finish fixing multiplayer
+* serialize particles?
 * Idea: standard Orpheus workflow:
     1. receive input
     2. send message to server
@@ -24,3 +24,10 @@ With that said, their are many changes that I want to make next time I have a ch
     Non-multiplayer just skips the step of sending to a remote server
 * will need some way of reliably shutting down servers once the program is done 
   with them
+* cleaning up the World system:
+    - role -  | - solo - | - host - | - client -
+    ==========#==========#==========#===========
+    renderer  | canvas   | none     | canvas
+    updater   | updater  | updater  | network
+    particles | updater  | none     | updater
+    controls  | controls | controls | network

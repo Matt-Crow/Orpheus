@@ -1,33 +1,25 @@
 package net.protocols;
 
 import controls.PlayerControls;
-import java.awt.event.ActionEvent;
-import javax.swing.Timer;
 import net.OrpheusServer;
 import net.messages.ServerMessagePacket;
-import util.Settings;
-import world.HostWorld;
+import world.World;
 
 /**
  * The HostWorldProtocol is used by hosts to receive remote player controls,
  * applying the controls to players in the host's world as though the 
  * client pressed keys on the host's computer.
  * 
- * This will need to change once I update how remote controls work
+ * Updating the world is currently handled by HostWorldUpdater
  * 
  * @author Matt Crow
  */
 public class HostWorldProtocol extends AbstractOrpheusServerNonChatProtocol<OrpheusServer>{
-    private final HostWorld hostWorld;
+    private final World hostWorld;
     
-    public HostWorldProtocol(OrpheusServer runningServer, HostWorld forWorld){
+    public HostWorldProtocol(OrpheusServer runningServer, World forWorld){
         super(runningServer);
         hostWorld = forWorld;
-        Timer timer = new Timer(1000 / Settings.FPS, (ActionEvent e)->{
-            hostWorld.update();
-        });
-        timer.setRepeats(true);
-        timer.start();
     }
     
     private void receiveControl(ServerMessagePacket sm){
