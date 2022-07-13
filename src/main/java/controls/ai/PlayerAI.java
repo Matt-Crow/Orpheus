@@ -18,7 +18,7 @@ import java.io.Serializable;
  */
 public class PlayerAI implements Serializable{
 	private final AbstractPlayer appliedTo;
-    private AbstractBehavior currentBehavior;
+    private AbstractBehavior<AbstractPlayer> currentBehavior;
 	
 	public PlayerAI(AbstractPlayer p){
 		appliedTo = p;

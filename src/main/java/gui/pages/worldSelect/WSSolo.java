@@ -54,7 +54,7 @@ public class WSSolo extends AbstractWSNewWorld{
         
         world.init();
         
-        WorldPage wp = new WorldPage(new SoloOrpheusCommandInterpreter(user));
+        WorldPage wp = new WorldPage();
         wp.setCanvas(renderer);
         getHost().switchToPage(wp);
         renderer.start();

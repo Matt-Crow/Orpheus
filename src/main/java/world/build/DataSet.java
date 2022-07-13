@@ -1,43 +1,22 @@
 package world.build;
 
-import world.build.actives.AbstractActive;
-import world.build.actives.BoostActive;
-import world.build.actives.BoulderToss;
-import world.build.actives.ElementalActive;
-import world.build.actives.FlameCharge;
-import world.build.characterClass.CharacterClass;
-import world.build.passives.AbstractPassive;
-import world.build.passives.OnBeHitPassive;
-import world.build.passives.OnHitPassive;
-import world.build.passives.ThresholdPassive;
-import world.entities.particles.ParticleType;
-import gui.graphics.CustomColors;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import world.statuses.AbstractStatus;
-import world.statuses.Burn;
-import world.statuses.Regeneration;
-import world.statuses.Resistance;
-import world.statuses.Rush;
-import world.statuses.Strength;
-import world.statuses.Stun;
+
+import gui.graphics.CustomColors;
+import world.build.actives.*;
+import world.build.characterClass.CharacterClass;
+import world.build.passives.*;
+import world.entities.particles.ParticleType;
+import world.statuses.*;
 
 /**
- * The DataSet class is used to store all the Actives, Passives, 
- * CharacterClasses, and Builds.
- * Future versions will add the ability to load additional classes at runtime.
+ * Store all the Actives, Passives, CharacterClasses, and Builds.
+ * Future versions may add the ability to load additional classes at runtime.
  * 
- * Currently, Master.java contains a static DataSet, which is automatically 
- * populated
- * with all the default customizables when that file first loads: I needn't 
- * worry about customizables not being loaded.
+ * Currently, the Settings class contains a static DataSet, which is 
+ * automatically populated
  * 
  * @author Matt Crow
  */
@@ -341,47 +320,5 @@ public final class DataSet {
         loadDefaultCharacterClasses();
         loadDefaultPassives();
         loadDefaultBuilds();
-    }
-    
-    //https://stackoverflow.com/questions/11016092/how-to-load-classes-at-runtime-from-a-folder-or-jar
-    public void loadFile(File f){
-        try {
-            JarFile jar = new JarFile(f);
-            URLClassLoader loader = URLClassLoader.newInstance(new URL[]{
-                new URL("jar:file:" + f.getAbsolutePath() + "!/")
-            });
-            jar.stream().filter((JarEntry entry)->{
-                return !entry.isDirectory();
-            }).filter((JarEntry entry)->{
-                return entry.getName().endsWith(".class");
-            }).map((JarEntry entry)->{
-                return entry.getName().replace(".class", "").replace("/", ".");
-            }).forEach((String className)->{
-                System.out.println("DataSet.loadFile loading class " + className);
-                try {
-                    Class c = loader.loadClass(className);
-                    Object obj = c.newInstance();
-                    if(obj instanceof AbstractActive){
-                        addActive((AbstractActive)obj);
-                    } else if(obj instanceof AbstractPassive){
-                        addPassive((AbstractPassive)obj);
-                    } else if(obj instanceof CharacterClass){
-                        addCharacterClass((CharacterClass)obj);
-                    } else if(obj instanceof Build){
-                        addBuild((Build)obj);
-                    } else {
-                        System.err.println(c.getName() + " does not extend AbstractCustomizable");
-                    }
-                } catch (ClassNotFoundException ex) {
-                    ex.printStackTrace();
-                } catch (InstantiationException ex) {
-                    ex.printStackTrace();
-                } catch (IllegalAccessException ex) {
-                    ex.printStackTrace();
-                }
-            });
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
     }
 }

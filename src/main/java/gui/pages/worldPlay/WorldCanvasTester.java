@@ -51,7 +51,7 @@ public class WorldCanvasTester {
             );
 
             MainWindow mw = MainWindow.getInstance();
-            WorldPage wp = new WorldPage(orpheus);
+            WorldPage wp = new WorldPage();
             wp.setCanvas(canvas);
             mw.switchToPage(wp);
             canvas.start();

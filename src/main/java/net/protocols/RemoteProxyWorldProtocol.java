@@ -13,7 +13,6 @@ import world.World;
  */
 public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtocol<OrpheusClient>{
     private final WorldSerializer serializer;
-    private final World proxy;
     
     /**
      * @param runningServer
@@ -24,7 +23,6 @@ public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtoc
     public RemoteProxyWorldProtocol(OrpheusClient runningServer, World localProxy){
         super(runningServer);
         serializer = new WorldSerializer(localProxy);
-        proxy = localProxy;
     }
     
     /**

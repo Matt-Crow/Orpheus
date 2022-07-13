@@ -21,18 +21,12 @@ public class JsonUtil {
     
     public static JsonObject[] readFromFile(File f){
         ArrayList<JsonObject> objs = new ArrayList<>();
-        try {
+        try (
             BufferedReader buff = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
+        ){
             StringBuilder sb = new StringBuilder();
             JsonReaderFactory jrf = Json.createReaderFactory(null);
             JsonObject obj = null;
-            /*
-            JsonParserFactory jpf = Json.createParserFactory(null);
-            JsonParser parser = jpf.createParser(new FileInputStream(f));
-            while(parser.hasNext()){
-                //this can parse multiple it looks like
-            }*/
-            
             
             while(buff.ready()){
                 sb.append(buff.readLine().trim());

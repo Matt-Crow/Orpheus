@@ -7,7 +7,6 @@ import util.Coordinates;
 import world.entities.AIPlayer;
 import world.entities.AbstractEntity;
 import java.awt.Graphics;
-import java.io.Serializable;
 import java.util.function.Consumer;
 import static java.lang.System.out;
 import java.util.HashMap;
@@ -22,7 +21,7 @@ import world.World;
  *
  * @author Matt Crow
  */
-public class Team extends SafeList<AbstractEntity> implements Serializable {
+public class Team extends SafeList<AbstractEntity> {
 
     private final String name;
     private final Color color;

@@ -171,6 +171,7 @@ public class SafeList<T> implements Serializable{
         }
     }
     
+    @SuppressWarnings("unchecked")
     private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException{
         isIterating = ois.readBoolean();
         int nodesRem = ois.readInt(); //how many nodes there are left to read
@@ -180,7 +181,7 @@ public class SafeList<T> implements Serializable{
             prev = curr;
             try {
                 // this was occasionally throwing errors
-                curr = (Node<T>) ois.readObject();
+                curr = (Node<T>)ois.readObject();
             } catch(Exception ex){
                 throw ex;
             }

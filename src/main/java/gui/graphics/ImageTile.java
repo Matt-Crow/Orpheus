@@ -3,17 +3,15 @@ package gui.graphics;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
-import javax.imageio.ImageIO;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import serialization.JsonSerialable;
 import serialization.JsonUtil;
 
 /**
  * Mostly a test file
  * @author Matt
  */
-public class ImageTile extends Tile implements JsonSerialable{
+public class ImageTile extends Tile {
     private Image image;
     
     public ImageTile(int x, int y, Image i){

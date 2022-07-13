@@ -119,16 +119,17 @@ public class WSJoin extends Page{
     }
     
     public static void main(String[] args){
-        Scanner in = new Scanner(System.in);
-        System.out.println("Enter something to test if it is an IP address, then type 'exit' to quit.");
-        String ip = "";
-        while(!"exit".equalsIgnoreCase(ip)){
-            ip = in.nextLine();
-            System.out.print(ip + " is ");
-            if(!isIpAddr(ip)){
-                System.out.print("not ");
+        try (Scanner in = new Scanner(System.in)) {
+            System.out.println("Enter something to test if it is an IP address, then type 'exit' to quit.");
+            String ip = "";
+            while(!"exit".equalsIgnoreCase(ip)){
+                ip = in.nextLine();
+                System.out.print(ip + " is ");
+                if(!isIpAddr(ip)){
+                    System.out.print("not ");
+                }
+                System.out.println("an IP address");
             }
-            System.out.println("an IP address");
         }
     }
 }

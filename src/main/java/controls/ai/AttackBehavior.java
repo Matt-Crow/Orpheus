@@ -16,9 +16,9 @@ public class AttackBehavior extends AbstractBehavior<AbstractPlayer> {
     }
 
     @Override
-    public AbstractBehavior update() {
+    public AbstractBehavior<AbstractPlayer> update() {
         AbstractPlayer target = getTarget();
-        AbstractBehavior newBehavior = this;
+        AbstractBehavior<AbstractPlayer> newBehavior = this;
         
         if(attackThisGuy.getShouldTerminate()){
             newBehavior = new WanderBehavior(target);

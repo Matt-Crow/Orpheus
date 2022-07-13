@@ -1,10 +1,8 @@
 package gui.pages.customize;
 
-import util.Settings;
 import world.build.BuildJsonUtil;
 import gui.components.FileChooserUtil;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
 import java.io.File;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -20,30 +18,6 @@ public class CustomizeMain extends Page{
         super();
         
         addBackButton(new StartPlay());
-        JButton imp = new JButton("Import all customizables from a JAR file");
-        imp.addActionListener((ActionEvent e)->{
-            /*
-            File[] chosen = FileChooserUtil.chooseFiles();
-            if(chosen != null){
-                for(File f : chosen){
-                    if(f.getName().endsWith(".jar")){
-                        Settings.getDataSet().loadFile(f);
-                    }
-                }
-            }*/
-        });
-        addMenuItem(imp);
-        
-        JButton export = new JButton("Export all customizables to a file");
-        export.addActionListener((ActionEvent e)->{
-            FileChooserUtil.chooseDir("Choose a directory to create the export in", (f)->{
-                String exportName = JOptionPane.showInputDialog("Enter a name for this export:");
-                File dir = new File(f.getAbsolutePath() + "/" + exportName);
-                dir.mkdir();
-                throw new UnsupportedOperationException("Need to save customizables to a JAR file here");
-            });
-        });
-        addMenuItem(export);
         
         JButton impBuild = new JButton("Import Builds");
         impBuild.addActionListener((e)->{

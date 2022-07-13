@@ -16,8 +16,8 @@ public class PursueBehavior extends AbstractBehavior<AbstractPlayer> {
     }
 
     @Override
-    public AbstractBehavior update() {
-        AbstractBehavior newBehavior = this;
+    public AbstractBehavior<AbstractPlayer> update() {
+        AbstractBehavior<AbstractPlayer> newBehavior = this;
         AbstractPlayer target = getTarget();
         // check if in range
 		if(Coordinates.distanceBetween(target, pursueThisGuy) <= 100){

@@ -40,8 +40,8 @@ public class WanderBehavior extends AbstractBehavior<AbstractPlayer>{
     }
 
     @Override
-    public AbstractBehavior update() {
-        AbstractBehavior nextBehavior = this;
+    public AbstractBehavior<AbstractPlayer> update() {
+        AbstractBehavior<AbstractPlayer> nextBehavior = this;
         AbstractPlayer target = getTarget();
         target.setIsMoving(true);
         if(checkIfPlayerInSightRange()){

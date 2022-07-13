@@ -5,6 +5,8 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -84,22 +86,33 @@ public class ConnectionListener {
     
     public static void main(String[] args) throws IOException, InterruptedException{
         ServerSocket server = new ServerSocket(5000);
+        List<Socket> clients = new LinkedList<>();
+
         server.setSoTimeout(3000);
         ConnectionListener manager = new ConnectionListener(server, new Connections(), System.out::println);
         manager.startOrContinue();
-        new Socket(InetAddress.getLoopbackAddress(), 5000);
-        new Socket(InetAddress.getLoopbackAddress(), 5000);
-        new Socket(InetAddress.getLoopbackAddress(), 5000);
+
+        for(int i = 0; i < 3; ++i){
+            clients.add(new Socket(InetAddress.getLoopbackAddress(), 5000));
+        }
         System.out.println(manager);
         Thread.sleep(3000);
         manager.stop();
         manager.connections.closeAll();
         manager.startOrContinue();
         manager.startOrContinue();
-        new Socket(InetAddress.getLoopbackAddress(), 5000);
+        clients.add(new Socket(InetAddress.getLoopbackAddress(), 5000));
         Thread.sleep(3000);
         manager.stop();
         manager.connections.closeAll();
         System.out.println("end of program");
+
+        clients.forEach(c -> {
+            try {
+                c.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

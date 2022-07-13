@@ -127,7 +127,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<Orphe
         LocalUser me = LocalUser.getInstance();
 
         RemoteOrpheusClient orpheus = new RemoteOrpheusClient(me, getServer());
-        WorldPage p = new WorldPage(orpheus);
+        WorldPage p = new WorldPage();
         WorldCanvas renderer = new WorldCanvas(
                 entireWorld,
                 new PlayerControls(entireWorld, me.getRemotePlayerId(), orpheus),

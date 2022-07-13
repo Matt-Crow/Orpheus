@@ -16,7 +16,6 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import gui.pages.Page;
 import gui.pages.worldSelect.WSMain;
-import start.AbstractOrpheusCommandInterpreter;
 
 /**
  * The WorldPage is used to render WorldCanvases.
@@ -29,14 +28,12 @@ import start.AbstractOrpheusCommandInterpreter;
  * @author Matt Crow
  */
 public class WorldPage extends Page{
-    private final AbstractOrpheusCommandInterpreter commandExecutor;
     private final JPanel canvasArea;
     private WorldCanvas canvas;
     private final Chat chat;
     
-    public WorldPage(AbstractOrpheusCommandInterpreter commandExecutor){
+    public WorldPage(){
         super();
-        this.commandExecutor = commandExecutor;
         addBackButton(new WSMain(), ()->{
             if(canvas != null){
                 canvas.stop();

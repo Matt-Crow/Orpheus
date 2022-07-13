@@ -24,5 +24,5 @@ public abstract class AbstractBehavior<TargetType> implements Serializable {
      * 
      * @return the new Behavior for the target to transition to 
      */
-    public abstract AbstractBehavior update();
+    public abstract AbstractBehavior<TargetType> update();
 }

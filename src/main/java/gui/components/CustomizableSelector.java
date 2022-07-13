@@ -69,7 +69,6 @@ public class CustomizableSelector extends JComponent {
         chooser.setSelectedItem(ac.getName());
     }
     
-    @SuppressWarnings("unchecked")
     public AbstractBuildAttribute getSelected(){
         AbstractBuildAttribute ret = null;
         /*

@@ -3,7 +3,6 @@ package world.entities;
 import java.awt.Graphics;
 import world.events.Terminable;
 import world.events.TerminateListener;
-import java.io.Serializable;
 import util.Coordinates;
 import util.SafeList;
 import world.World;
@@ -14,7 +13,7 @@ import world.events.ActionRegister;
  * The AbstractEntity class is used as the base for anything that moves and
  * exists within a World.
  */
-public abstract class AbstractEntity extends AbstractPrimitiveEntity implements Serializable, Terminable {
+public abstract class AbstractEntity extends AbstractPrimitiveEntity implements Terminable {
     // make sure to set this after deserializing!
     private transient World world; 
 
