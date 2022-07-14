@@ -1,17 +1,15 @@
 package gui.components;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 import java.util.function.Consumer;
+
 import javax.swing.*;
+
 import net.OrpheusServer;
-import net.ServerProvider;
-import net.messages.ServerMessage;
-import net.messages.ServerMessageType;
+import net.messages.*;
 import net.protocols.ChatProtocol;
 import users.LocalUser;
 
@@ -132,23 +130,5 @@ public class Chat extends JComponent implements ActionListener{
                 ServerMessageType.CHAT
             ));
         }
-    }
-    
-    public static void main(String[] args) throws IOException{
-        JFrame f = new JFrame();
-        f.setSize(500, 500);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setVisible(true);
-        
-        JPanel p = new JPanel();
-        p.setLayout(new GridLayout(1, 1));
-        f.setContentPane(p);
-        p.setBackground(Color.red);
-        
-        Chat c = new Chat(new ServerProvider().createHost());
-        p.add(c);
-        c.openChatServer();
-        f.revalidate();
-        f.repaint();
     }
 }

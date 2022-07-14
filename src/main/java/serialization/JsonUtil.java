@@ -1,13 +1,9 @@
 package serialization;
 
-import util.Settings;
-import world.build.Build;
 import java.io.*;
-import static java.lang.System.out;
 import java.util.ArrayList;
-import java.util.Map.Entry;
+
 import javax.json.*;
-import world.build.BuildJsonUtil;
 
 /**
  *
@@ -57,15 +53,6 @@ public class JsonUtil {
             ex.printStackTrace();
         }
     }
-    public static void writeToFile(JsonObject obj, File file){
-        try {
-            FileWriter write = new FileWriter(file);
-            write.append(obj.toString());
-            write.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
     
     /**
      * Since javax.json.JsonObject is immutable,
@@ -91,49 +78,6 @@ public class JsonUtil {
     public static void verify(JsonObject obj, String key){
         if(!obj.containsKey(key)){
             throw new JsonException("Json Object is missing key \'" + key + "\'");
-        }
-    }
-    
-    public static void pprint(JsonObject obj, int indentLevel){
-        String indent = "";
-        for(int i = 0; i < indentLevel; i++){
-            indent += " ";
-        }
-        out.println(indent + "{");
-        for(Entry<String, JsonValue> val : obj.entrySet()){
-            out.print("    " + indent + val.getKey() + ": ");
-            if(val.getValue() instanceof JsonObject){
-                pprint((JsonObject)val.getValue(), indentLevel + 4);
-            } else if (val.getValue() instanceof JsonArray) {
-                out.println("[");
-                for(JsonValue j : (JsonArray)val.getValue()){
-                    if(j.getValueType().equals(JsonValue.ValueType.OBJECT)){
-                        pprint((JsonObject)j, indentLevel + 4);
-                    } else {
-                        out.println("        " + indent + j);
-                    }
-                }
-                out.println("    " + indent + "]");
-            } else {
-                out.println(val.getValue().toString());
-            }
-        };
-        out.println(indent + "}");
-    }
-    
-    public static void main(String[] args) throws Exception{
-        JsonObject obj = null;
-        Build b = null;
-        
-        for(Build bu : Settings.getDataSet().getAllBuilds()){
-            obj = BuildJsonUtil.serializeJson(bu);
-            pprint(obj, 0);
-            b = BuildJsonUtil.deserializeJson(obj);
-            if(b != null){
-                pprint(obj, 0);
-                out.println(bu.getDescription());
-                out.println(b.getDescription());
-            }
         }
     }
 }

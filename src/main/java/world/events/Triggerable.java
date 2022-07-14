@@ -5,21 +5,14 @@ import java.util.function.Consumer;
 import util.SafeList;
 
 /**
- * The Triggerable class is meant to replace most of
- * the "trigger this when something happens, then eventually
- * delete this" type effects that occur in Orpheus (statuses, actions, etc)
- * 
- * A Triggerable is basically a Consumer which will only run a given 
- * number of times before terminating. You will want to store Triggerables
- * in something that implements the TerminateListener interface so that it
- * can automatically remove this once it has terminated.
+ * A Triggerable is an event listener that can only run up to a given number of
+ * times, then effectively deletes itself.
  * 
  * Most simply, you can add it to a SafeList, which automatically handles
  * terminables.
  * 
  * @see TerminateListener
  * @see util.SafeList
- * @see util.Node
  * @author Matt Crow
  * @param <T> the type which will be fed into this in the trigger method.
  */
@@ -27,6 +20,7 @@ public class Triggerable<T> implements Terminable, Serializable {
     private boolean shouldTerminate;
     private final int maxUses;
     private int usesLeft;
+    private int timesTriggered;
     private final Consumer<T> f;
     
     private final SafeList<TerminateListener> termListens;
@@ -34,6 +28,7 @@ public class Triggerable<T> implements Terminable, Serializable {
     public Triggerable(int use, Consumer<T> function){
         maxUses = use;
         usesLeft = use;
+        timesTriggered = 0;
         shouldTerminate = false;
         f = function;
         
@@ -60,10 +55,14 @@ public class Triggerable<T> implements Terminable, Serializable {
     public int getUsesLeft(){
         return usesLeft;
     }
+    public int getTimesTriggered(){
+        return timesTriggered;
+    }
     
     public void reset(){
         shouldTerminate = false;
         usesLeft = maxUses;
+        timesTriggered = 0;
     }
     
     public void trigger(T param){
@@ -73,6 +72,7 @@ public class Triggerable<T> implements Terminable, Serializable {
         }
         f.accept(param);
         usesLeft--;
+        ++timesTriggered;
         
         //note that uses left of 0 or less will trigger infinite times
         if(usesLeft == 0){
@@ -100,25 +100,5 @@ public class Triggerable<T> implements Terminable, Serializable {
     public void terminate() {
         shouldTerminate = true;
         termListens.forEach((TerminateListener tl)->tl.objectWasTerminated(this));
-    }
-    
-    
-    public static void main(String[] args){
-        SafeList<Triggerable<Integer>> sti = new SafeList<>();
-        sti.add(new Triggerable<>(3, (i)->{
-            System.out.println("I should only run 3 times!");
-        }));
-        sti.add(new Triggerable<>((i)->{
-            System.out.println("But pie is forever.");
-        }));
-        sti.add(new Triggerable<>(1, (i)->{
-            System.out.println("urk!");
-        }));
-        for(int i = 0; i < 10; i++){
-            System.out.println("Round " + i);
-            sti.forEach((cti)->{
-                cti.trigger(0);
-            });
-        }
     }
 }
