@@ -16,6 +16,8 @@ import gui.pages.worldSelect.WaitingRoom;
 import java.io.IOException;
 import java.io.StringReader;
 import javax.json.Json;
+
+import net.AbstractNetworkClient;
 import net.OrpheusClient;
 import net.messages.ServerMessage;
 import serialization.WorldSerializer;
@@ -29,7 +31,7 @@ import world.WorldContent;
  *
  * @author Matt
  */
-public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<OrpheusClient> {
+public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
 
     private final WaitingRoom room;
 
@@ -39,7 +41,16 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol<Orphe
     }
 
     @Override
-    public boolean receiveMessage(ServerMessagePacket sm, OrpheusClient forServer) {
+    public OrpheusClient getServer(){
+        AbstractNetworkClient anc = super.getServer();
+        if(!(anc instanceof OrpheusClient)){
+            throw new UnsupportedOperationException("WaitingRoomClientProtocol can only run on an OrpheusClient");
+        }
+        return (OrpheusClient)anc;
+    }
+
+    @Override
+    public boolean receive(ServerMessagePacket sm) {
         boolean received = true;
         switch (sm.getMessage().getType()) {
             case WAITING_ROOM_INIT:

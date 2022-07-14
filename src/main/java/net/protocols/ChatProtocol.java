@@ -6,12 +6,11 @@ import net.messages.ServerMessagePacket;
 
 /**
  * @author Matt Crow
- * @param <T>
  */
-public class ChatProtocol<T extends AbstractNetworkClient> extends AbstractOrpheusServerProtocol<T>{
+public class ChatProtocol extends AbstractProtocol {
     private final Chat widget; // he he he. Widgit is fun to say
     
-    public ChatProtocol(T runningServer, Chat chat){
+    public ChatProtocol(AbstractNetworkClient runningServer, Chat chat){
         super(runningServer);
         widget = chat;
     }
@@ -21,7 +20,7 @@ public class ChatProtocol<T extends AbstractNetworkClient> extends AbstractOrphe
     }
     
     @Override
-    public boolean receiveMessage(ServerMessagePacket sm, T forServer) {
+    public boolean receive(ServerMessagePacket sm) {
         boolean handled = true;
         switch(sm.getMessage().getType()){
             case CHAT:

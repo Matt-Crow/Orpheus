@@ -14,7 +14,7 @@ import world.World;
  * 
  * @author Matt Crow
  */
-public class HostWorldProtocol extends AbstractOrpheusServerNonChatProtocol<OrpheusServer>{
+public class HostWorldProtocol extends AbstractOrpheusServerNonChatProtocol {
     private final World hostWorld;
     
     public HostWorldProtocol(OrpheusServer runningServer, World forWorld){
@@ -27,7 +27,7 @@ public class HostWorldProtocol extends AbstractOrpheusServerNonChatProtocol<Orph
     }
     
     @Override
-    public boolean receiveMessage(ServerMessagePacket sm, OrpheusServer forServer) {
+    public boolean receive(ServerMessagePacket sm) {
         /*
         For some reason I cannot fathom, this often fails to receive messages containing
         remote user's clicking to move. I've checked, and the remote user is sending the

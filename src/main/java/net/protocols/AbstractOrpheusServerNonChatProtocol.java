@@ -10,9 +10,9 @@ import net.AbstractNetworkClient;
  * @author Matt Crow
  * @param <T> the type of client that will run this
  */
-public abstract class AbstractOrpheusServerNonChatProtocol<T extends AbstractNetworkClient> extends AbstractOrpheusServerProtocol<T>{
+public abstract class AbstractOrpheusServerNonChatProtocol extends AbstractProtocol {
 
-    public AbstractOrpheusServerNonChatProtocol(T runningServer) {
+    public AbstractOrpheusServerNonChatProtocol(AbstractNetworkClient runningServer) {
         super(runningServer);
     }
 }

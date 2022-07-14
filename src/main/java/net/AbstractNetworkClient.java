@@ -14,11 +14,8 @@ import util.SafeList;
  */
 public abstract class AbstractNetworkClient {
     private volatile boolean isStarted;
-    
-    // this should be AbstractOrpheusServerNonChatProtocol<this.class>,
-    // but that is not allowed
     private volatile AbstractOrpheusServerNonChatProtocol protocol;
-    private volatile ChatProtocol<? super AbstractNetworkClient> chatProtocol;
+    private volatile ChatProtocol chatProtocol;
     
     //messages are cached if this does not yet have a way of handling them
     private final SafeList<ServerMessagePacket> cachedMessages;
@@ -31,17 +28,14 @@ public abstract class AbstractNetworkClient {
     }
     
     
-    
     public final boolean isStarted(){
         return isStarted;
     }
     
-    
-    
     public final void setProtocol(AbstractOrpheusServerNonChatProtocol protocol){
         this.protocol = protocol;
         cachedMessages.forEach((ServerMessagePacket sm)->{
-            if(protocol.receiveMessage(sm, this)){
+            if(protocol.receive(sm)){
                 cachedMessages.remove(sm);
                 System.out.println("uncached message " + sm.hashCode());
             }
@@ -60,10 +54,10 @@ public abstract class AbstractNetworkClient {
      * @param chatProtocol the ChatProtocol to handle messages
      * received by this server.
      */
-    public final void setChatProtocol(ChatProtocol<? super AbstractNetworkClient> chatProtocol){
+    public final void setChatProtocol(ChatProtocol chatProtocol){
         this.chatProtocol = chatProtocol;
         cachedMessages.forEach((ServerMessagePacket sm)->{
-            if(chatProtocol.receiveMessage(sm, this)){
+            if(chatProtocol.receive(sm)){
                 cachedMessages.remove(sm);
             }
         });
@@ -97,11 +91,11 @@ public abstract class AbstractNetworkClient {
         
         boolean handled = false;
         if(protocol != null){
-            handled = protocol.receiveMessage(sm, this);
+            handled = protocol.receive(sm);
         }
         if(chatProtocol != null){
             // old handled value AFTER chatProtocol, lest short-circuit
-            handled = chatProtocol.receiveMessage(sm, this) || handled;
+            handled = chatProtocol.receive(sm) || handled;
         }
         
         if(!handled){

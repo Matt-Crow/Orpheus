@@ -11,7 +11,7 @@ import world.World;
  * 
  * @author Matt Crow
  */
-public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtocol<OrpheusClient>{
+public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtocol{
     private final WorldSerializer serializer;
     
     /**
@@ -36,7 +36,7 @@ public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtoc
     }
     
     @Override
-    public boolean receiveMessage(ServerMessagePacket sm, OrpheusClient forServer) {
+    public boolean receive(ServerMessagePacket sm) {
         boolean handled = true;
         switch(sm.getMessage().getType()){
             case WORLD_UPDATE:

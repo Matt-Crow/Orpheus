@@ -7,15 +7,14 @@ import net.AbstractNetworkClient;
 /**
  *
  * @author Matt
- * @param <T>
  */
-public abstract class AbstractWaitingRoomProtocol<T extends AbstractNetworkClient> extends AbstractOrpheusServerNonChatProtocol<T>{
+public abstract class AbstractWaitingRoomProtocol extends AbstractOrpheusServerNonChatProtocol{
     /*
     Keeps track of which Users want to play.
     */
     private final HashSet<AbstractUser> teamProto;
     
-    public AbstractWaitingRoomProtocol(T runningServer){
+    public AbstractWaitingRoomProtocol(AbstractNetworkClient runningServer){
         super(runningServer);
         teamProto = new HashSet<>();
     }

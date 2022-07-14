@@ -11,6 +11,8 @@ import static java.lang.System.err;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
+
+import net.AbstractNetworkClient;
 import net.OrpheusServer;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
@@ -32,7 +34,7 @@ import world.game.Game;
  * and sends them information needed to remotely control that HumanPlayer. Serializes and sends the world as well.
  * @author Matt Crow
  */
-public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<OrpheusServer>{    
+public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {    
     /*
     measured in seconds
      */
@@ -59,9 +61,18 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol<Orpheus
         playerTeam = new Team("Players", Color.blue);
         awaitingBuilds = new HashSet<>();
     }
+
+    @Override
+    public OrpheusServer getServer(){
+        AbstractNetworkClient anc = super.getServer();
+        if(!(anc instanceof OrpheusServer)){
+            throw new UnsupportedOperationException("WaitingRoomHostProtocol must run on an OrpheusServer");
+        }
+        return (OrpheusServer)anc;
+    }
     
     @Override
-    public boolean receiveMessage(ServerMessagePacket sm, OrpheusServer forServer) {
+    public boolean receive(ServerMessagePacket sm) {
         boolean handled = true;
         
         switch(sm.getMessage().getType()){
