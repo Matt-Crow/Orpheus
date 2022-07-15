@@ -8,16 +8,17 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import gui.pages.Page;
 import gui.pages.mainMenu.StartPlay;
+import start.PageController;
 
 /**
  *
  * @author Matt
  */
 public class CustomizeMain extends Page{
-    public CustomizeMain(){
-        super();
+    public CustomizeMain(PageController host){
+        super(host);
         
-        addBackButton(new StartPlay());
+        addBackButton(new StartPlay(host));
         
         JButton impBuild = new JButton("Import Builds");
         impBuild.addActionListener((e)->{
@@ -44,7 +45,7 @@ public class CustomizeMain extends Page{
         
         JButton bui = new JButton("Customize Builds");
         bui.addActionListener((e)->{
-            getHost().switchToPage(new CustomizeChooseBuild());
+            getHost().switchToPage(new CustomizeChooseBuild(host));
         });
         add(bui);
     }

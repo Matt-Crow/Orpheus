@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import gui.pages.Page;
+import start.PageController;
 import world.game.Game;
 import world.game.Onslaught;
 
@@ -21,10 +22,10 @@ public abstract class AbstractWSNewWorld extends Page{
     private final OptionBox<Integer> numWaves;
     private final JButton start;
     
-    public AbstractWSNewWorld(){
-        super();
+    public AbstractWSNewWorld(PageController host){
+        super(host);
         
-        addBackButton(new WSMain());
+        addBackButton(new WSMain(host));
         
         setLayout(new GridLayout(2, 2));
         

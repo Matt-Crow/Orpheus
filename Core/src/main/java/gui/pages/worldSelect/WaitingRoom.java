@@ -15,6 +15,7 @@ import javax.swing.JTextArea;
 import net.protocols.WaitingRoomClientProtocol;
 import users.AbstractUser;
 import gui.pages.Page;
+import start.PageController;
 
 /**
  * WaitingRoom provides a "waiting room"
@@ -30,10 +31,10 @@ public class WaitingRoom extends Page{
     private final JButton startButton;
     private WaitingRoomClientProtocol backend;
     
-    public WaitingRoom(){
-        super();
+    public WaitingRoom(PageController host){
+        super(host);
         
-        addBackButton(new WSMain());
+        addBackButton(new WSMain(host));
         
         //grid layout was causing problems with chat.
         //since it couldn't fit in 1/4 of the JPanel, it compressed to just a thin line
@@ -77,8 +78,8 @@ public class WaitingRoom extends Page{
         repaint();
     }
     
-    public WaitingRoom(WaitingRoomClientProtocol protocol){
-        this();
+    public WaitingRoom(PageController host, WaitingRoomClientProtocol protocol){
+        this(host);
         setBackEnd(protocol);
     }
     

@@ -1,15 +1,9 @@
-It's time to focus on other things.
-I'll definitely work on it more (time permitting)
-
-With that said, their are many changes that I want to make next time I have a 
-chance to work on this:
 * Move to 3-D graphics?
 * Plugin customization system (players create their own Java classes)
 * Standard application folder stuff and logging, like what I used in 
   ARCDHWebAutomator
 * Change player and team IDs to ints or long longs
 * General cleanup and reorganization
-* Redo GUI
 * Security manager for multiplayer
 * use Socket to identify users, not IP address
 * finish fixing multiplayer

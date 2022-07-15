@@ -18,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import net.OrpheusClient;
 import net.protocols.WaitingRoomClientProtocol;
+import start.PageController;
 
 /**
  * Checking for IPv4 is currently disabled, as
@@ -51,10 +52,10 @@ public class WSJoin extends Page{
     private final JTextField ip;
     private final JFormattedTextField port;
     
-    public WSJoin() {
-        super();
+    public WSJoin(PageController host) {
+        super(host);
         
-        addBackButton(new WSMain());
+        addBackButton(new WSMain(host));
         
         setLayout(new GridLayout(1, 2));
         
@@ -104,7 +105,7 @@ public class WSJoin extends Page{
             LocalUser.getInstance().loginWindow(); // set username
             msgs.append("Attempting to connect to " + ipAddr + "...\n");
             OrpheusClient connection = new OrpheusClient(ipAddr, port);
-            WaitingRoom wait = new WaitingRoom();
+            WaitingRoom wait = new WaitingRoom(getHost());
             WaitingRoomClientProtocol protocol = new WaitingRoomClientProtocol(connection, wait);
             wait.setBackEnd(protocol);
             connection.setProtocol(protocol);

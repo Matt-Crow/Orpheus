@@ -2,7 +2,7 @@ package gui.pages;
 
 /**
  * Used to detect when the user switches
- * from one Page to another in MainWindow.
+ * from one Page to another in PageController.
  * 
  * Currently unused, not sure if I'll need it.
  * 

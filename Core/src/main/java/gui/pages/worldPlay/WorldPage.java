@@ -16,11 +16,12 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import gui.pages.Page;
 import gui.pages.worldSelect.WSMain;
+import start.PageController;
 
 /**
  * The WorldPage is used to render WorldCanvases.
  * So yes, it is rather convoluted:
- * use the MainWindow to render the WorldPage,
+ * use the PageController to render the WorldPage,
  * which renders the WorldCanvas,
  * which renders the World
  * which renders both the serialized and non-serialized world parts
@@ -32,9 +33,9 @@ public class WorldPage extends Page{
     private WorldCanvas canvas;
     private final Chat chat;
     
-    public WorldPage(){
-        super();
-        addBackButton(new WSMain(), ()->{
+    public WorldPage(PageController host){
+        super(host);
+        addBackButton(new WSMain(host), ()->{
             if(canvas != null){
                 canvas.stop();
             }

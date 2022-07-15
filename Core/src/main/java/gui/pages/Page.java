@@ -1,7 +1,7 @@
 
 package gui.pages;
 
-import start.MainWindow;
+import start.PageController;
 import gui.graphics.CustomColors;
 import gui.components.Style;
 import java.awt.BorderLayout;
@@ -28,12 +28,15 @@ import javax.swing.JPanel;
  * @author Matt Crow
  */
 public class Page extends JPanel{
+    private final PageController host;
     private final JMenuBar menuBar;
     private final JPanel content;
     private boolean hasInstantiated = false;
     
-    public Page(){
+    public Page(PageController host){
         super.setLayout(new BorderLayout());
+        
+        this.host = host;
         
         menuBar = new JMenuBar();
         super.add(menuBar, BorderLayout.PAGE_START);
@@ -51,14 +54,14 @@ public class Page extends JPanel{
     }
     
     /**
-     * Used to get the MainWindow this is
+     * Used to get the PageController this is
      * contained in. Use getHost().switchToPage(...)
      * to switch between pages.
      * 
      * @return the Main Window that is rendering Orpheus
      */
-    public MainWindow getHost(){
-        return MainWindow.getInstance();
+    public PageController getHost(){
+        return host;
     }
     
     /**

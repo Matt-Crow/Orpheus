@@ -9,25 +9,17 @@ import gui.pages.PageSwitchListener;
 import gui.pages.mainMenu.StartMainMenu;
 
 /**
- * MainWindow acts as the main frame for the game, and serves as the controller
- * for rendering the various pages.
+ * controls which page is currently rendered
  *
  * @author Matt Crow
  */
-public class MainWindow extends JFrame {
-
+public class PageController extends JFrame {
+    
     private final JPanel content;
     private Page currentPage;
 
-    private static MainWindow instance = null;
-
-    private MainWindow() {
-        super();
-
-        if (instance != null) {
-            throw new ExceptionInInitializerError("Can only have 1 instance of MainWindow");
-        }
-
+    
+    public PageController() {
         setTitle("The Orpheus Proposition");
 
         content = new JPanel();
@@ -43,12 +35,10 @@ public class MainWindow extends JFrame {
 
         currentPage = null;
 
-        switchToPage(new StartMainMenu());
-
-        instance = this;
+        switchToPage(new StartMainMenu(this));
     }
 
-    public MainWindow switchToPage(Page p) {
+    public PageController switchToPage(Page p) {
         if (p == null) {
             throw new NullPointerException();
         }
@@ -65,16 +55,5 @@ public class MainWindow extends JFrame {
             ((PageSwitchListener) currentPage).switchedToPage(p);
         }
         return this;
-    }
-
-    public static MainWindow getInstance() {
-        if (instance == null) {
-            instance = new MainWindow();
-        }
-        return instance;
-    }
-
-    public static void main(String[] args) {
-        new MainWindow();
     }
 }

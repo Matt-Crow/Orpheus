@@ -4,6 +4,7 @@ import gui.components.BuildSelect;
 import java.awt.BorderLayout;
 import javax.swing.JButton;
 import gui.pages.Page;
+import start.PageController;
 
 /**
  *
@@ -11,13 +12,13 @@ import gui.pages.Page;
  */
 public class CustomizeChooseBuild extends Page{
     private final BuildSelect buiSel;
-    public CustomizeChooseBuild(){
-        super();
+    public CustomizeChooseBuild(PageController host){
+        super(host);
         BorderLayout b = new BorderLayout();
         b.setVgap(30);
         setLayout(b);
         
-        addBackButton(new CustomizeMain());
+        addBackButton(new CustomizeMain(host));
         
         buiSel = new BuildSelect();
         buiSel.refreshOptions();
@@ -25,7 +26,7 @@ public class CustomizeChooseBuild extends Page{
         
         JButton customize = new JButton("Customize this build");
         customize.addActionListener((e)->{
-            CustomizeBuild cb = new CustomizeBuild();
+            CustomizeBuild cb = new CustomizeBuild(host);
             cb.setCustomizing(buiSel.getSelectedBuild());
             getHost().switchToPage(cb);
         });

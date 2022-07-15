@@ -1,6 +1,8 @@
-package gui.pages.worldPlay;
+package orpheus.client.gui.pages;
 
 import controls.PlayerControls;
+import gui.pages.worldPlay.WorldCanvas;
+import gui.pages.worldPlay.WorldPage;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import serialization.WorldSerializer;
@@ -13,7 +15,7 @@ import world.entities.HumanPlayer;
 import world.game.*;
 
 /**
- *
+ * Used to test the world canvas without going through the GUI as much
  * @author Matt Crow
  */
 public class WorldCanvasTester {
@@ -50,8 +52,8 @@ public class WorldCanvasTester {
                     true
             );
 
-            MainWindow mw = MainWindow.getInstance();
-            WorldPage wp = new WorldPage();
+            PageController mw = new PageController();
+            WorldPage wp = new WorldPage(mw);
             wp.setCanvas(canvas);
             mw.switchToPage(wp);
             canvas.start();

@@ -9,6 +9,7 @@ import users.LocalUser;
 import gui.pages.worldPlay.WorldCanvas;
 import gui.pages.worldPlay.WorldPage;
 import start.AbstractOrpheusCommandInterpreter;
+import start.PageController;
 import start.SoloOrpheusCommandInterpreter;
 import world.*;
 
@@ -17,8 +18,8 @@ import world.*;
  * @author Matt Crow
  */
 public class WSSolo extends AbstractWSNewWorld{
-    public WSSolo(){
-        super();
+    public WSSolo(PageController host){
+        super(host);
     }
     
     @Override
@@ -54,7 +55,7 @@ public class WSSolo extends AbstractWSNewWorld{
         
         world.init();
         
-        WorldPage wp = new WorldPage();
+        WorldPage wp = new WorldPage(getHost());
         wp.setCanvas(renderer);
         getHost().switchToPage(wp);
         renderer.start();

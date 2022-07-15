@@ -5,15 +5,16 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 import gui.pages.Page;
 import gui.pages.mainMenu.StartPlay;
+import start.PageController;
 
 /**
  * The Main sub page for the world select canvas.
  * @author Matt Crow
  */
 public class WSMain extends Page{
-    public WSMain(){
-        super();
-        addBackButton(new StartPlay());
+    public WSMain(PageController host){
+        super(host);
+        addBackButton(new StartPlay(host));
         setLayout(new GridLayout(1, 3));
         
         add(soloButton());
@@ -26,7 +27,7 @@ public class WSMain extends Page{
         JButton solo = new JButton("Play a game offline");
         Style.applyStyling(solo);
         solo.addActionListener((e)->{
-            getHost().switchToPage(new WSSolo());
+            getHost().switchToPage(new WSSolo(getHost()));
         });
         return solo;
     }
@@ -35,7 +36,7 @@ public class WSMain extends Page{
         JButton newMulti = new JButton("Host a multiplayer game");
         Style.applyStyling(newMulti);
         newMulti.addActionListener((e)->{
-            getHost().switchToPage(new WSNewMulti());
+            getHost().switchToPage(new WSNewMulti(getHost()));
         });
         return newMulti;
     }
@@ -44,7 +45,7 @@ public class WSMain extends Page{
         JButton joinMulti = new JButton("Join a multiplayer game");
         Style.applyStyling(joinMulti);
         joinMulti.addActionListener((e)->{
-            getHost().switchToPage(new WSJoin());
+            getHost().switchToPage(new WSJoin(getHost()));
         });
         return joinMulti;
     }

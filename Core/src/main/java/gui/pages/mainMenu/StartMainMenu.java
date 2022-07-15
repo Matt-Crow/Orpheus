@@ -8,31 +8,33 @@ import java.io.InputStreamReader;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import gui.pages.Page;
+import start.PageController;
 
 /**
  *
  * @author Matt
  */
 public class StartMainMenu extends Page{
-    public StartMainMenu(){
+    public StartMainMenu(PageController host){
+        super(host);
         addMenuItem(new JLabel("The Orpheus Proposition"));
         setLayout(new GridLayout(1, 3));
         
         JButton about = new JButton("About this game");
         about.addActionListener((e)->{
-            getHost().switchToPage(new StartTextDisplay(readFile("README.txt")));
+            getHost().switchToPage(new StartTextDisplay(host, readFile("README.txt")));
         });
         add(about);
         
         JButton play = new JButton("Play");
         play.addActionListener((e)->{
-            getHost().switchToPage(new StartPlay());
+            getHost().switchToPage(new StartPlay(host));
         });
         add(play);
         
         JButton howToPlay = new JButton("How to play");
         howToPlay.addActionListener((e)->{
-            getHost().switchToPage(new StartTextDisplay(readFile("howToPlay.txt")));
+            getHost().switchToPage(new StartTextDisplay(host, readFile("howToPlay.txt")));
         });
         add(howToPlay);
     }

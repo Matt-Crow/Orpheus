@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import gui.pages.Page;
+import start.PageController;
 
 /**
  *
@@ -23,8 +24,8 @@ public class CustomizeBuild extends Page{
     private final CustomizableSelector[] acts;
     private final CustomizableSelector[] pass;
     
-    public CustomizeBuild(){
-        super();
+    public CustomizeBuild(PageController host){
+        super(host);
         GridLayout g = new GridLayout(3, 3);
         g.setHgap(10);
         g.setVgap(10);
@@ -41,7 +42,7 @@ public class CustomizeBuild extends Page{
         JButton save = new JButton("Save and exit");
         save.addActionListener((e)->{
             save();
-            getHost().switchToPage(new CustomizeMain());
+            getHost().switchToPage(new CustomizeMain(host));
         });
         add(save);
         
