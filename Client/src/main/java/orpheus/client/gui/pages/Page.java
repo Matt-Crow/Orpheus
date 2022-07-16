@@ -1,7 +1,6 @@
 
 package orpheus.client.gui.pages;
 
-import orpheus.client.gui.pages.PageController;
 import gui.graphics.CustomColors;
 import orpheus.client.gui.components.Style;
 import java.awt.BorderLayout;
@@ -11,6 +10,7 @@ import java.awt.LayoutManager;
 import javax.swing.JButton;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
+import orpheus.client.gui.components.ComponentFactory;
 
 /**
  * Each Page is used as a view to
@@ -29,14 +29,16 @@ import javax.swing.JPanel;
  */
 public class Page extends JPanel{
     private final PageController host;
+    private final ComponentFactory components;
     private final JMenuBar menuBar;
     private final JPanel content;
     private boolean hasInstantiated = false;
     
-    public Page(PageController host){
+    public Page(PageController host, ComponentFactory components){
         super.setLayout(new BorderLayout());
         
         this.host = host;
+        this.components = components;
         
         menuBar = new JMenuBar();
         super.add(menuBar, BorderLayout.PAGE_START);
@@ -62,6 +64,13 @@ public class Page extends JPanel{
      */
     public PageController getHost(){
         return host;
+    }
+    
+    /**
+     * @return the component factory providing components to this
+     */
+    public ComponentFactory getComponentFactory(){
+        return components;
     }
     
     /**

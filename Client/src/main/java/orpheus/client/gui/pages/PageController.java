@@ -4,7 +4,8 @@ import javax.swing.JFrame;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import javax.swing.JPanel;
-import orpheus.client.gui.pages.mainMenu.StartMainMenu;
+import orpheus.client.gui.components.ComponentFactory;
+import orpheus.client.gui.pages.menu.Index;
 
 /**
  * controls which page is currently rendered
@@ -12,12 +13,14 @@ import orpheus.client.gui.pages.mainMenu.StartMainMenu;
  * @author Matt Crow
  */
 public class PageController extends JFrame {
-    
+    private final ComponentFactory components;
     private final JPanel content;
     private Page currentPage;
 
     
-    public PageController() {
+    public PageController(ComponentFactory components) {
+        this.components = components;
+        
         setTitle("The Orpheus Proposition");
 
         content = new JPanel();
@@ -33,7 +36,7 @@ public class PageController extends JFrame {
 
         currentPage = null;
 
-        switchToPage(new StartMainMenu(this));
+        switchToPage(new Index(this, components));
     }
 
     public PageController switchToPage(Page p) {

@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import orpheus.client.WaitingRoomClientProtocol;
+import orpheus.client.gui.components.ComponentFactory;
 import users.AbstractUser;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.PageController;
@@ -31,10 +32,10 @@ public class WaitingRoom extends Page{
     private final JButton startButton;
     private WaitingRoomClientProtocol backend;
     
-    public WaitingRoom(PageController host){
-        super(host);
+    public WaitingRoom(PageController host, ComponentFactory cf){
+        super(host, cf);
         
-        addBackButton(new WSMain(host));
+        addBackButton(new WSMain(host, cf));
         
         //grid layout was causing problems with chat.
         //since it couldn't fit in 1/4 of the JPanel, it compressed to just a thin line
@@ -57,7 +58,7 @@ public class WaitingRoom extends Page{
         gbc.fill = GridBagConstraints.BOTH;
         
         gbc.anchor = GridBagConstraints.LINE_START;
-        playerBuild = new BuildSelect();
+        playerBuild = new BuildSelect(cf);
         center.add(playerBuild, gbc.clone());
         
         gbc.anchor = GridBagConstraints.LINE_END;
@@ -78,8 +79,8 @@ public class WaitingRoom extends Page{
         repaint();
     }
     
-    public WaitingRoom(PageController host, WaitingRoomClientProtocol protocol){
-        this(host);
+    public WaitingRoom(PageController host, ComponentFactory cf, WaitingRoomClientProtocol protocol){
+        this(host, cf);
         setBackEnd(protocol);
     }
     

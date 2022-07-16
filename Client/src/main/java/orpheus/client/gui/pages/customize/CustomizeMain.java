@@ -6,8 +6,9 @@ import java.awt.GridLayout;
 import java.io.File;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import orpheus.client.gui.components.ComponentFactory;
 import orpheus.client.gui.pages.Page;
-import orpheus.client.gui.pages.mainMenu.StartPlay;
+import orpheus.client.gui.pages.menu.StartPlay;
 import orpheus.client.gui.pages.PageController;
 
 /**
@@ -15,10 +16,10 @@ import orpheus.client.gui.pages.PageController;
  * @author Matt
  */
 public class CustomizeMain extends Page{
-    public CustomizeMain(PageController host){
-        super(host);
+    public CustomizeMain(PageController host, ComponentFactory cf){
+        super(host, cf);
         
-        addBackButton(new StartPlay(host));
+        addBackButton(new StartPlay(host, cf));
         
         JButton impBuild = new JButton("Import Builds");
         impBuild.addActionListener((e)->{
@@ -45,7 +46,7 @@ public class CustomizeMain extends Page{
         
         JButton bui = new JButton("Customize Builds");
         bui.addActionListener((e)->{
-            getHost().switchToPage(new CustomizeChooseBuild(host));
+            getHost().switchToPage(new CustomizeChooseBuild(host, cf));
         });
         add(bui);
     }

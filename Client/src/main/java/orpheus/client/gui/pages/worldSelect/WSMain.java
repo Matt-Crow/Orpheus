@@ -3,8 +3,9 @@ package orpheus.client.gui.pages.worldSelect;
 import orpheus.client.gui.components.Style;
 import java.awt.GridLayout;
 import javax.swing.JButton;
+import orpheus.client.gui.components.ComponentFactory;
 import orpheus.client.gui.pages.Page;
-import orpheus.client.gui.pages.mainMenu.StartPlay;
+import orpheus.client.gui.pages.menu.StartPlay;
 import orpheus.client.gui.pages.PageController;
 
 /**
@@ -12,10 +13,14 @@ import orpheus.client.gui.pages.PageController;
  * @author Matt Crow
  */
 public class WSMain extends Page{
-    public WSMain(PageController host){
-        super(host);
-        addBackButton(new StartPlay(host));
+    private final ComponentFactory components;
+    
+    public WSMain(PageController host, ComponentFactory cf){
+        super(host, cf);
+        addBackButton(new StartPlay(host, cf));
         setLayout(new GridLayout(1, 3));
+        
+        components = cf;
         
         add(soloButton());
         add(newMultiButton());
@@ -27,7 +32,7 @@ public class WSMain extends Page{
         JButton solo = new JButton("Play a game offline");
         Style.applyStyling(solo);
         solo.addActionListener((e)->{
-            getHost().switchToPage(new WSSolo(getHost()));
+            getHost().switchToPage(new WSSolo(getHost(), getComponentFactory()));
         });
         return solo;
     }
@@ -36,7 +41,7 @@ public class WSMain extends Page{
         JButton newMulti = new JButton("Host a multiplayer game");
         Style.applyStyling(newMulti);
         newMulti.addActionListener((e)->{
-            getHost().switchToPage(new WSNewMulti(getHost()));
+            getHost().switchToPage(new WSNewMulti(getHost(), getComponentFactory()));
         });
         return newMulti;
     }
@@ -45,7 +50,7 @@ public class WSMain extends Page{
         JButton joinMulti = new JButton("Join a multiplayer game");
         Style.applyStyling(joinMulti);
         joinMulti.addActionListener((e)->{
-            getHost().switchToPage(new WSJoin(getHost()));
+            getHost().switchToPage(new WSJoin(getHost(), components));
         });
         return joinMulti;
     }

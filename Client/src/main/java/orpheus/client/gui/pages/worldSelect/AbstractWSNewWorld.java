@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import orpheus.client.gui.components.ComponentFactory;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.PageController;
 import world.game.Game;
@@ -22,14 +23,14 @@ public abstract class AbstractWSNewWorld extends Page{
     private final OptionBox<Integer> numWaves;
     private final JButton start;
     
-    public AbstractWSNewWorld(PageController host){
-        super(host);
+    public AbstractWSNewWorld(PageController host, ComponentFactory cf){
+        super(host, cf);
         
-        addBackButton(new WSMain(host));
+        addBackButton(new WSMain(host, cf));
         
         setLayout(new GridLayout(2, 2));
         
-        playerBuild = new BuildSelect();
+        playerBuild = new BuildSelect(cf);
         add(playerBuild);
         
         start = startButton();
@@ -44,7 +45,7 @@ public abstract class AbstractWSNewWorld extends Page{
     private OptionBox<Integer> numWaveSelect(){
         Integer[] nums = new Integer[]{1, 2, 3, 4, 5, 8};
         
-        OptionBox<Integer> box = new OptionBox<>("Select number of waves", nums);
+        OptionBox<Integer> box = new OptionBox<>(getComponentFactory(), "Select number of waves", nums);
         box.addActionListener(new AbstractAction(){
             @Override
             public void actionPerformed(ActionEvent e) {

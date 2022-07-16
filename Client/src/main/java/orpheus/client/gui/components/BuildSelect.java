@@ -13,14 +13,13 @@ import javax.swing.*;
 public class BuildSelect extends JComponent{
     private final JComboBox<String> box;
     private final JTextArea desc;
-    public BuildSelect() {
+    
+    public BuildSelect(ComponentFactory cf) {
         super();
         Style.applyStyling(this);
         setLayout(new BorderLayout());
         
-        JLabel title = new JLabel("Select Build");
-        Style.applyStyling(title);
-        add(title, BorderLayout.PAGE_START);
+        add(cf.makeLabel("Select Build"), BorderLayout.PAGE_START);
         
         desc = new JTextArea();
         desc.setEditable(false);

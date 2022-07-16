@@ -11,6 +11,7 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import orpheus.client.gui.components.ComponentFactory;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.PageController;
 
@@ -24,8 +25,8 @@ public class CustomizeBuild extends Page{
     private final CustomizableSelector[] acts;
     private final CustomizableSelector[] pass;
     
-    public CustomizeBuild(PageController host){
-        super(host);
+    public CustomizeBuild(PageController host, ComponentFactory cf){
+        super(host, cf);
         GridLayout g = new GridLayout(3, 3);
         g.setHgap(10);
         g.setVgap(10);
@@ -36,25 +37,25 @@ public class CustomizeBuild extends Page{
         nameArea.add(name);
         add(nameArea);
         
-        charClassSel = new CustomizableSelector("Character Class", new CharacterClass[]{});
+        charClassSel = new CustomizableSelector(cf, "Character Class", new CharacterClass[]{});
         add(charClassSel);
         
         JButton save = new JButton("Save and exit");
         save.addActionListener((e)->{
             save();
-            getHost().switchToPage(new CustomizeMain(host));
+            getHost().switchToPage(new CustomizeMain(host, cf));
         });
         add(save);
         
         acts = new CustomizableSelector[3];
         for(int i = 0; i < 3; i++){
-            acts[i] = new CustomizableSelector("Active #" + (i + 1), new AbstractActive[]{});
+            acts[i] = new CustomizableSelector(cf, "Active #" + (i + 1), new AbstractActive[]{});
             add(acts[i]);
         }
         
         pass = new CustomizableSelector[3];
         for(int i = 0; i < 3; i++){
-            pass[i] = new CustomizableSelector("Passive #" + (i + 1), new AbstractPassive[]{});
+            pass[i] = new CustomizableSelector(cf, "Passive #" + (i + 1), new AbstractPassive[]{});
             add(pass[i]);
         }
         

@@ -1,4 +1,4 @@
-package orpheus.client.gui.pages.mainMenu;
+package orpheus.client.gui.pages.menu;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
+import orpheus.client.gui.components.ComponentFactory;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.PageController;
 
@@ -14,9 +15,9 @@ import orpheus.client.gui.pages.PageController;
  * @author Matt
  */
 public class StartTextDisplay extends Page{
-    public StartTextDisplay(PageController host, String displayText){
-        super(host);
-        addBackButton(new StartMainMenu(host));
+    public StartTextDisplay(PageController host, ComponentFactory cf, String displayText){
+        super(host, cf);
+        addBackButton(new Index(host, cf));
         
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();

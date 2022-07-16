@@ -14,6 +14,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
+import orpheus.client.gui.components.ComponentFactory;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.worldSelect.WSMain;
 import orpheus.client.gui.pages.PageController;
@@ -33,9 +34,9 @@ public class WorldPage extends Page{
     private WorldCanvas canvas;
     private final Chat chat;
     
-    public WorldPage(PageController host){
-        super(host);
-        addBackButton(new WSMain(host), ()->{
+    public WorldPage(PageController host, ComponentFactory cf){
+        super(host, cf);
+        addBackButton(new WSMain(host, cf), ()->{
             if(canvas != null){
                 canvas.stop();
             }

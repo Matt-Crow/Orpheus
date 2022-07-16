@@ -6,6 +6,7 @@ import net.OrpheusServer;
 import net.ServerProvider;
 import orpheus.client.WaitingRoomClientProtocol;
 import net.protocols.WaitingRoomHostProtocol;
+import orpheus.client.gui.components.ComponentFactory;
 import orpheus.client.gui.pages.PageController;
 import users.LocalUser;
 
@@ -14,8 +15,8 @@ import users.LocalUser;
  * @author Matt Crow
  */
 public class WSNewMulti extends AbstractWSNewWorld{
-    public WSNewMulti(PageController host){
-        super(host);
+    public WSNewMulti(PageController host, ComponentFactory cf){
+        super(host, cf);
     }
     
     @Override
@@ -31,7 +32,7 @@ public class WSNewMulti extends AbstractWSNewWorld{
             server.start();
             
             OrpheusClient client = new OrpheusClient(server.getIpAddress(), server.getPort());
-            WaitingRoom room = new WaitingRoom(getHost());
+            WaitingRoom room = new WaitingRoom(getHost(), getComponentFactory());
             WaitingRoomClientProtocol clientProtocol = new WaitingRoomClientProtocol(client, room);
             client.setProtocol(clientProtocol);
             client.start();
