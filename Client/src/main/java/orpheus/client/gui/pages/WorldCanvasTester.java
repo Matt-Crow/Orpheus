@@ -1,8 +1,7 @@
 package orpheus.client.gui.pages;
 
-import controls.PlayerControls;
-import gui.pages.worldPlay.WorldCanvas;
-import gui.pages.worldPlay.WorldPage;
+import orpheus.client.gui.pages.worldPlay.WorldCanvas;
+import orpheus.client.gui.pages.worldPlay.WorldPage;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import serialization.WorldSerializer;

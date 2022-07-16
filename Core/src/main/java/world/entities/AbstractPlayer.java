@@ -9,7 +9,7 @@ import world.statuses.AbstractStatus;
 import util.Settings;
 import world.build.actives.ElementalActive;
 import world.build.characterClass.CharacterStatName;
-import gui.graphics.Tile;
+import world.Tile;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;

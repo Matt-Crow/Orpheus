@@ -7,6 +7,10 @@ repositories {
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/javax.json/javax.json-api
+    implementation 'javax.json:javax.json-api:1.1.4'
+    implementation 'org.glassfish:javax.json:1.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
     implementation project(':Core')
 }
 

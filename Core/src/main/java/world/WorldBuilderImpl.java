@@ -1,9 +1,6 @@
 package world;
 
 import gui.graphics.CustomColors;
-import gui.graphics.Map;
-import gui.graphics.MapLoader;
-import gui.graphics.Tile;
 import java.awt.Color;
 import java.io.IOException;
 import world.battle.Team;

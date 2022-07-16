@@ -8,7 +8,7 @@ import world.entities.particles.ParticleType;
 import world.entities.Projectile;
 import world.entities.SeedProjectile;
 import gui.graphics.CustomColors;
-import gui.graphics.Tile;
+import world.Tile;
 
 /**
  * When extending this class, you will want to overide the following methods:

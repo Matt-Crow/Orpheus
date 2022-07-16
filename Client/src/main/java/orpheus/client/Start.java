@@ -1,7 +1,7 @@
 package orpheus.client;
 
 import orpheus.client.gui.pages.WorldCanvasTester;
-import start.PageController;
+import orpheus.client.gui.pages.PageController;
 
 /**
  * Launches the client application

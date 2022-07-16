@@ -1,6 +1,6 @@
 package controls.ai;
 
-import gui.graphics.Tile;
+import world.Tile;
 import util.Coordinates;
 import util.Random;
 import world.entities.AbstractPlayer;

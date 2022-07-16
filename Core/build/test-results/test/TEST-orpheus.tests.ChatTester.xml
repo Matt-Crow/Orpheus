@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="orpheus.tests.ChatTester" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-07-15T22:17:03" hostname="LAPTOP-TOFVPK12" time="0.417">
-  <properties/>
-  <testcase name="chatCanOpenServer()" classname="orpheus.tests.ChatTester" time="0.417"/>
-  <system-out><![CDATA[OrpheusServer: Server initialized on 0.0.0.0:64691
-]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
