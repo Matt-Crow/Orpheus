@@ -17,10 +17,7 @@ public class Style {
     );
 
     public static void applyStyling(Component c) {
-        if (c instanceof JLabel){
-            return; // don't applyStyling to labels: ComponentFactory handles it
-        }
-        
+        /*
         if (c instanceof JComponent) {
             JComponent j = (JComponent) c;
             j.setOpaque(true);
@@ -56,5 +53,6 @@ public class Style {
         if (!(c instanceof JTextComponent)) {
             c.setBackground(CustomColors.gold);
         }
+        */
     }
 }

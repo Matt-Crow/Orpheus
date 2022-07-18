@@ -13,14 +13,11 @@ import orpheus.client.gui.pages.menu.Index;
  * @author Matt Crow
  */
 public class PageController extends JFrame {
-    private final ComponentFactory components;
     private final JPanel content;
     private Page currentPage;
 
     
-    public PageController(ComponentFactory components) {
-        this.components = components;
-        
+    public PageController(ComponentFactory components) {        
         setTitle("The Orpheus Proposition");
 
         content = new JPanel();
@@ -29,8 +26,8 @@ public class PageController extends JFrame {
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(
-                (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(),
-                (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration()).bottom
+            (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(),
+            (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration()).bottom
         );
         setVisible(true);
 

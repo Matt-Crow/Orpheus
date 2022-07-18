@@ -14,7 +14,6 @@ import users.LocalUser;
 import orpheus.client.gui.pages.Page;
 import java.text.NumberFormat;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import net.OrpheusClient;
 import orpheus.client.WaitingRoomClientProtocol;
@@ -81,8 +80,7 @@ public class WSJoin extends Page{
         port = new JFormattedTextField(NumberFormat.getIntegerInstance());
         right.add(port);
         
-        JButton join = new JButton("Join");
-        join.addActionListener((e)->{
+        right.add(cf.makeButton("Join", ()->{
             if(!isIpAddr(ip.getText())){
                 msgs.append('"' + ip.getText() + "\" doesn't look like an IP address to me. \n");
             } else if(port.getValue() == null || !(port.getValue() instanceof Number)){
@@ -91,8 +89,7 @@ public class WSJoin extends Page{
                 int p = ((Number)port.getValue()).intValue();
                 join(ip.getText(), p);
             }
-        });
-        right.add(join);
+        }));
         
         add(right);
     }

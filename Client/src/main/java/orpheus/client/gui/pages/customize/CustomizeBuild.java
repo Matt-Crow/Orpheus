@@ -8,7 +8,6 @@ import world.build.characterClass.CharacterClass;
 import world.build.passives.AbstractPassive;
 import orpheus.client.gui.components.CustomizableSelector;
 import java.awt.GridLayout;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import orpheus.client.gui.components.ComponentFactory;
@@ -40,12 +39,10 @@ public class CustomizeBuild extends Page{
         charClassSel = new CustomizableSelector(cf, "Character Class", new CharacterClass[]{});
         add(charClassSel);
         
-        JButton save = new JButton("Save and exit");
-        save.addActionListener((e)->{
+        add(cf.makeButton("Save and exit", ()->{
             save();
             getHost().switchToPage(new CustomizeMain(host, cf));
-        });
-        add(save);
+        }));
         
         acts = new CustomizableSelector[3];
         for(int i = 0; i < 3; i++){

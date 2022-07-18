@@ -1,11 +1,11 @@
 package orpheus.client.gui.pages.menu;
 
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import javax.swing.JButton;
 import orpheus.client.gui.components.ComponentFactory;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.PageController;
@@ -17,26 +17,20 @@ import orpheus.client.gui.pages.PageController;
 public class Index extends Page{
     public Index(PageController host, ComponentFactory cf){
         super(host, cf);
-        addMenuItem(cf.makeLabel("The Orpheus Proposition"));
+        addMenuItem(cf.makeSpaceAround(cf.makeLabel("The Orpheus Proposition"), Color.YELLOW));
         setLayout(new GridLayout(1, 3));
         
-        JButton about = new JButton("About this game");
-        about.addActionListener((e)->{
+        add(cf.makeSpaceAround(cf.makeButton("About this game", ()->{
             getHost().switchToPage(new StartTextDisplay(host, cf, readFile("README.txt")));
-        });
-        add(about);
+        }), Color.RED));
         
-        JButton play = new JButton("Play");
-        play.addActionListener((e)->{
+        add(cf.makeSpaceAround(cf.makeButton("Play", ()->{
             getHost().switchToPage(new StartPlay(host, cf));
-        });
-        add(play);
+        }), Color.GREEN));
         
-        JButton howToPlay = new JButton("How to play");
-        howToPlay.addActionListener((e)->{
+        add(cf.makeSpaceAround(cf.makeButton("How to play", ()->{
             getHost().switchToPage(new StartTextDisplay(host, cf, readFile("howToPlay.txt")));
-        });
-        add(howToPlay);
+        }), Color.BLUE));
     }
     
     private String readFile(String fileName){

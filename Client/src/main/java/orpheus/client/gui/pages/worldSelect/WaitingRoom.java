@@ -9,7 +9,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.util.Arrays;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import orpheus.client.WaitingRoomClientProtocol;
@@ -29,7 +28,6 @@ public class WaitingRoom extends Page{
     private final JTextArea teamList;
     private final Chat chat;
     private final BuildSelect playerBuild;
-    private final JButton startButton;
     private WaitingRoomClientProtocol backend;
     
     public WaitingRoom(PageController host, ComponentFactory cf){
@@ -67,11 +65,9 @@ public class WaitingRoom extends Page{
         
         add(center, BorderLayout.CENTER);
         
-        startButton = new JButton("Start the match");
-        startButton.addActionListener((e)->{
-            startButton();
-        });
-        add(startButton, BorderLayout.PAGE_END);
+        add(cf.makeButton("Start the match", ()->{
+            backend.requestStart();
+        }), BorderLayout.PAGE_END);
         
         backend = null;
         
@@ -105,10 +101,6 @@ public class WaitingRoom extends Page{
         return playerBuild.getSelectedBuild();
     }
     
-    public void setStartButtonEnabled(boolean b){
-        startButton.setEnabled(b);
-    }
-    
     public void setInputEnabled(boolean b){
         playerBuild.setEnabled(b);
     }
@@ -118,9 +110,5 @@ public class WaitingRoom extends Page{
     }
     public WaitingRoomClientProtocol getBackEnd(){
         return backend;
-    }
-    
-    public final void startButton(){
-        backend.requestStart();
     }
 }

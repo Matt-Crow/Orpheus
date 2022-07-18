@@ -7,7 +7,6 @@ import orpheus.client.gui.components.Style;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
-import javax.swing.JButton;
 import orpheus.client.gui.components.ComponentFactory;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.PageController;
@@ -21,7 +20,6 @@ import world.game.Onslaught;
 public abstract class AbstractWSNewWorld extends Page{
     private final BuildSelect playerBuild;
     private final OptionBox<Integer> numWaves;
-    private final JButton start;
     
     public AbstractWSNewWorld(PageController host, ComponentFactory cf){
         super(host, cf);
@@ -33,8 +31,7 @@ public abstract class AbstractWSNewWorld extends Page{
         playerBuild = new BuildSelect(cf);
         add(playerBuild);
         
-        start = startButton();
-        add(start);
+        add(cf.makeButton("Start World", this::start));
         
         numWaves = numWaveSelect();
         add(numWaves);
@@ -54,18 +51,6 @@ public abstract class AbstractWSNewWorld extends Page{
         });
         box.setSelected(3);
         return box;
-    }
-    
-    private JButton startButton(){
-        JButton ret = new JButton("Start World");
-        Style.applyStyling(ret);
-        ret.addActionListener(new AbstractAction(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                start();
-            }
-        });
-        return ret;
     }
     
     public Build getSelectedBuild(){

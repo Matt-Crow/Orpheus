@@ -4,7 +4,6 @@ import world.build.BuildJsonUtil;
 import orpheus.client.gui.components.FileChooserUtil;
 import java.awt.GridLayout;
 import java.io.File;
-import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import orpheus.client.gui.components.ComponentFactory;
 import orpheus.client.gui.pages.Page;
@@ -21,33 +20,24 @@ public class CustomizeMain extends Page{
         
         addBackButton(new StartPlay(host, cf));
         
-        JButton impBuild = new JButton("Import Builds");
-        impBuild.addActionListener((e)->{
+        addMenuItem(cf.makeButton("Import Builds", ()->{
             FileChooserUtil.chooseJsonFile("Choose the build file", (f)->{
                 BuildJsonUtil.loadFile(f);
             });
-        });
-        addMenuItem(impBuild);
+        }));
         
-        JButton expBuild = new JButton("Export Builds");
-        expBuild.addActionListener((e)->{
+        addMenuItem(cf.makeButton("Export Builds", ()->{
             FileChooserUtil.chooseDir("Choose a direcory to save builds to", (f)->{
                 String name = JOptionPane.showInputDialog("Enter a name for this export:");
                 File buildFile = new File(f.getAbsolutePath() + "/" + name);
                 BuildJsonUtil.saveAllToFile(buildFile);
             });
-        });
-        addMenuItem(expBuild);
-        
-        
+        }));
         
         setLayout(new GridLayout(1, 4));
         
-        
-        JButton bui = new JButton("Customize Builds");
-        bui.addActionListener((e)->{
+        add(cf.makeButton("Customize Builds", ()->{
             getHost().switchToPage(new CustomizeChooseBuild(host, cf));
-        });
-        add(bui);
+        }));
     }
 }

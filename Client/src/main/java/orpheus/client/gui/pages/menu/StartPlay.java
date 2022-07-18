@@ -1,7 +1,6 @@
 package orpheus.client.gui.pages.menu;
 
 import java.awt.GridLayout;
-import javax.swing.JButton;
 import orpheus.client.gui.components.ComponentFactory;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.worldSelect.WSMain;
@@ -19,16 +18,12 @@ public class StartPlay extends Page{
         
         addBackButton("Main Menu", new Index(host, cf));
         
-        JButton battle = new JButton("Battle");
-        battle.addActionListener((e)->{
+        add(cf.makeButton("Play a game", ()->{
             getHost().switchToPage(new WSMain(host, cf));
-        });
-        add(battle);
+        }));
         
-        JButton customize = new JButton("Customize");
-        customize.addActionListener((e)->{
+        add(cf.makeButton("Customize builds", ()->{
             getHost().switchToPage(new CustomizeMain(host, cf));
-        });
-        add(customize);
+        }));
     }
 }

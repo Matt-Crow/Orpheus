@@ -83,8 +83,7 @@ public class Page extends JPanel{
      * @return this
      */
     public Page addBackButton(String text, Page p, Runnable onGoBack){
-        JButton b = new JButton(text);
-        b.addActionListener((e)->{
+        JButton b = components.makeButton(text, ()->{
             if(p != null){
                 getHost().switchToPage(p);
             }
