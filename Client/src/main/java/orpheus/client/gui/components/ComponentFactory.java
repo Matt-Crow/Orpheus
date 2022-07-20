@@ -2,6 +2,7 @@ package orpheus.client.gui.components;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
@@ -13,13 +14,6 @@ import javax.swing.*;
  * @author Matt Crow
  */
 public class ComponentFactory {
-    
-    public JLabel makeLabel(String text){
-        JLabel label = new JLabel(text);
-        label.setVerticalAlignment(SwingConstants.CENTER);
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        return label;
-    }
     
     public JButton makeButton(String text, Runnable onClick){
         JButton button = new JButton(text);
@@ -40,6 +34,13 @@ public class ComponentFactory {
         return button;
     }
     
+    public JLabel makeLabel(String text){
+        JLabel label = new JLabel(text);
+        label.setVerticalAlignment(SwingConstants.CENTER);
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        return label;
+    }
+    
     public JPanel makeSpaceAround(JComponent component, Color spaceColor){
         JPanel p = new JPanel();
         
@@ -49,5 +50,26 @@ public class ComponentFactory {
         
         p.setBackground(spaceColor);
         return p;
+    }
+    
+    /**
+     * 
+     * @param text the text to include in the text area
+     * @return an un-editable text area 
+     */
+    public JTextArea makeTextArea(String text){
+        JTextArea textArea = new JTextArea(text);
+        textArea.setEditable(false);
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        textArea.setRows(4);
+        return textArea;
+    }
+    
+    /**
+     * @return an empty text area
+     */
+    public JTextArea makeTextArea(){
+        return makeTextArea("");
     }
 }

@@ -44,6 +44,7 @@ public class Canvas extends JPanel{
         initialTransform = null;
         endOfFrameListeners = new SafeList<>();
         setBackground(CustomColors.black);
+        setFocusable(true);
     }
     
     /**

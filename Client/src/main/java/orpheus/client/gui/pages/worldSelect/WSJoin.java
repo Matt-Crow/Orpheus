@@ -60,11 +60,7 @@ public class WSJoin extends Page{
         setLayout(new GridLayout(1, 2));
         
         //left side
-        msgs = new JTextArea("Messages will appear here!\n");
-        msgs.setLineWrap(true);
-        msgs.setWrapStyleWord(true);
-        msgs.setEditable(false);
-        
+        msgs = cf.makeTextArea("Messages will appear here!\n");        
         JScrollPane scrolly = new JScrollPane(msgs);
         scrolly.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrolly.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);

@@ -11,7 +11,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import orpheus.client.gui.components.ComponentFactory;
@@ -55,20 +54,16 @@ public class WorldPage extends Page{
         JPanel otherArea = new JPanel();
         otherArea.setLayout(new GridBagLayout());
         GridBagConstraints c2 = new GridBagConstraints();
-        chat = new Chat(null);
+        chat = new Chat(cf, null);
         c2.fill = GridBagConstraints.VERTICAL;
         c2.anchor = GridBagConstraints.FIRST_LINE_START;
         c2.weightx = 1.0;
         c2.weighty = 1.0;
         otherArea.add(chat, c2.clone());
         
-        JTextArea controls = new JTextArea(
+        JScrollPane scrolly = new JScrollPane(cf.makeTextArea(
             PlayerControls.getPlayerControlScheme()
-        );
-        controls.setEditable(false);
-        controls.setWrapStyleWord(true);
-        controls.setLineWrap(true);
-        JScrollPane scrolly = new JScrollPane(controls);
+        ));
         scrolly.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrolly.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         c2.gridx = GridBagConstraints.RELATIVE;

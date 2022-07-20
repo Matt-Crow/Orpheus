@@ -105,6 +105,11 @@ public class WorldCanvas extends Canvas {
         } else if (paused) {
             drawPause(g2d);
         }
+        
+        if(!isFocusOwner()){ // draw overlay if not focused
+            g.setColor(new Color(155, 155, 155, 200));
+            g.fillRect(0, 0, getWidth(), getHeight());
+        }
     }
 
     public void drawPause(Graphics g) {

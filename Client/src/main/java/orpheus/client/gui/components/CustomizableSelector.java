@@ -20,11 +20,7 @@ public class CustomizableSelector extends JComponent {
 
         add(cf.makeLabel(title), BorderLayout.PAGE_START);
 
-        desc = new JTextArea();
-        desc.setEditable(false);
-        desc.setLineWrap(true);
-        desc.setWrapStyleWord(true);
-        Style.applyStyling(desc);
+        desc = cf.makeTextArea();
         JScrollPane scrolly = new JScrollPane(desc);
         scrolly.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrolly.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);

@@ -46,13 +46,11 @@ public class Page extends JPanel{
         content = new JPanel();
         super.add(content, BorderLayout.CENTER);
         
-        hasInstantiated = true;
-        setFocusable(true);
+        //setFocusable(true);
         
         setBackground(CustomColors.black);
-        Style.applyStyling(this);
-        Style.applyStyling(menuBar);
-        Style.applyStyling(content);
+        
+        hasInstantiated = true;
     }
     
     /**
@@ -137,9 +135,7 @@ public class Page extends JPanel{
         if(c == null){
             throw new NullPointerException();
         }
-        Style.applyStyling(c);
         menuBar.add(c);
-        menuBar.setLayout(new GridLayout(1, menuBar.getComponentCount()));
         return this;
     }
     

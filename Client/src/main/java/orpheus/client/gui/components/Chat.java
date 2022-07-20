@@ -22,17 +22,14 @@ public class Chat extends JComponent implements ActionListener, ChatMessageListe
     private final OrpheusServer chatServer;
     private boolean chatServerOpened;
     
-    public Chat(OrpheusServer chatServer){
+    public Chat(ComponentFactory cf, OrpheusServer chatServer){
         super();
         
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         
-        //need to set how many rows and columns it displays, not the size
-        msgs = new JTextArea("###CHAT###", 4, 20);
-        msgs.setEditable(false);
-        msgs.setWrapStyleWord(true);
-        msgs.setLineWrap(true);
+        msgs = cf.makeTextArea("###CHAT###");
+        msgs.setColumns(20);
         
         box = new JScrollPane(msgs);
         gbc.weighty = 4;

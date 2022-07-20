@@ -3,7 +3,6 @@ package orpheus.client.gui.pages.worldSelect;
 import world.build.Build;
 import orpheus.client.gui.components.BuildSelect;
 import orpheus.client.gui.components.Chat;
-import orpheus.client.gui.components.Style;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -42,8 +41,7 @@ public class WaitingRoom extends Page{
         JPanel infoSection = new JPanel();
         infoSection.setLayout(new GridLayout(1, 3));
         
-        teamList = new JTextArea("Player Team:");
-        Style.applyStyling(teamList);
+        teamList = cf.makeTextArea("Player Team:");
         infoSection.add(teamList);
         
         add(infoSection, BorderLayout.PAGE_START);
@@ -60,7 +58,7 @@ public class WaitingRoom extends Page{
         center.add(playerBuild, gbc.clone());
         
         gbc.anchor = GridBagConstraints.LINE_END;
-        chat = new Chat(null);
+        chat = new Chat(cf, null);
         center.add(chat, gbc.clone());
         
         add(center, BorderLayout.CENTER);

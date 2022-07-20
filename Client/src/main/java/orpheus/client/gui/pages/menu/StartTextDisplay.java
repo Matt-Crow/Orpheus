@@ -4,7 +4,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import orpheus.client.gui.components.ComponentFactory;
 import orpheus.client.gui.pages.Page;
@@ -29,12 +28,7 @@ public class StartTextDisplay extends Page{
         gbc.weighty = 1;
         add(new JPanel(), gbc.clone());
         
-        JTextArea text = new JTextArea(displayText);
-        text.setEditable(false);
-        text.setWrapStyleWord(true);
-        text.setLineWrap(true);
-        
-        JScrollPane scrolly = new JScrollPane(text);
+        JScrollPane scrolly = new JScrollPane(cf.makeTextArea(displayText));
         scrolly.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrolly.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         

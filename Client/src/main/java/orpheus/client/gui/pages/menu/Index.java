@@ -20,6 +20,7 @@ public class Index extends Page{
         addMenuItem(cf.makeSpaceAround(cf.makeLabel("The Orpheus Proposition"), Color.YELLOW));
         setLayout(new GridLayout(1, 3));
         
+        // not sure how I feel about small buttons
         add(cf.makeSpaceAround(cf.makeButton("About this game", ()->{
             getHost().switchToPage(new StartTextDisplay(host, cf, readFile("README.txt")));
         }), Color.RED));

@@ -1,4 +1,4 @@
-package orpheus.client.gui.pages.customize;
+package orpheus.client.gui.pages;
 
 import util.Settings;
 import world.build.Build;
@@ -9,17 +9,16 @@ import world.build.passives.AbstractPassive;
 import orpheus.client.gui.components.CustomizableSelector;
 import java.awt.GridLayout;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import orpheus.client.gui.components.ComponentFactory;
-import orpheus.client.gui.pages.Page;
-import orpheus.client.gui.pages.PageController;
+import orpheus.client.gui.pages.menu.StartPlay;
 
 /**
  *
  * @author Matt
  */
 public class CustomizeBuild extends Page{
-    private final JTextArea name;
+    private final JTextField name;
     private final CustomizableSelector charClassSel;
     private final CustomizableSelector[] acts;
     private final CustomizableSelector[] pass;
@@ -31,8 +30,9 @@ public class CustomizeBuild extends Page{
         g.setVgap(10);
         setLayout(g);
         JPanel nameArea = new JPanel();
-        name = new JTextArea("Build name");
-        name.setEditable(true);
+        name = new JTextField();
+        name.setToolTipText("Build name");
+        //name.setEditable(true);
         nameArea.add(name);
         add(nameArea);
         
@@ -41,7 +41,7 @@ public class CustomizeBuild extends Page{
         
         add(cf.makeButton("Save and exit", ()->{
             save();
-            getHost().switchToPage(new CustomizeMain(host, cf));
+            getHost().switchToPage(new StartPlay(host, cf));
         }));
         
         acts = new CustomizableSelector[3];

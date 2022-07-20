@@ -10,7 +10,7 @@ import javax.swing.*;
  *
  * @author Matt
  */
-public class BuildSelect extends JComponent{
+public class BuildSelect extends JPanel{
     private final JComboBox<String> box;
     private final JTextArea desc;
     
@@ -21,10 +21,8 @@ public class BuildSelect extends JComponent{
         
         add(cf.makeLabel("Select Build"), BorderLayout.PAGE_START);
         
-        desc = new JTextArea();
-        desc.setEditable(false);
-        desc.setWrapStyleWord(true);
-        desc.setLineWrap(true);
+        desc = cf.makeTextArea();
+        desc.setColumns(80);
         desc.setTabSize(4);
         
         JScrollPane scrolly = new JScrollPane(desc);
