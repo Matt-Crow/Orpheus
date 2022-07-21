@@ -1,4 +1,4 @@
-package orpheus.client.gui.pages.worldSelect;
+package orpheus.client.gui.pages.worldselect;
 
 import world.build.Build;
 import orpheus.client.gui.components.BuildSelect;
@@ -28,7 +28,7 @@ public class WaitingRoom extends Page{
     public WaitingRoom(PageController host, ComponentFactory cf){
         super(host, cf);
         
-        addBackButton(new WSMain(host, cf));
+        addBackButton(()-> new WSMain(host, cf));
         
         setLayout(new BorderLayout());
         

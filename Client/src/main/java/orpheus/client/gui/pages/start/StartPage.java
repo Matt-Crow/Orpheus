@@ -1,6 +1,5 @@
 package orpheus.client.gui.pages.start;
 
-import java.awt.Color;
 import java.awt.GridLayout;
 import java.io.BufferedReader;
 import java.io.IOException;

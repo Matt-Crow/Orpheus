@@ -46,13 +46,13 @@ public class PageController extends JFrame {
         content.revalidate();
         p.requestFocus();
         content.repaint();
-        if (currentPage != null && currentPage instanceof PageSwitchListener) {
-            ((PageSwitchListener) currentPage).leavingPage(currentPage);
+        
+        if(currentPage != null){
+            currentPage.leavingPage();
         }
         currentPage = p;
-        if (p instanceof PageSwitchListener) {
-            ((PageSwitchListener) currentPage).switchedToPage(p);
-        }
+        currentPage.enteredPage();
+        
         return this;
     }
 }

@@ -1,4 +1,4 @@
-package orpheus.client.gui.pages.worldSelect;
+package orpheus.client.gui.pages.worldselect;
 
 import java.io.IOException;
 import net.OrpheusClient;

@@ -15,7 +15,7 @@ import orpheus.client.gui.pages.PageController;
 public class StartTextDisplay extends Page{
     public StartTextDisplay(PageController host, ComponentFactory cf, String displayText){
         super(host, cf);
-        addBackButton(new StartPage(host, cf));
+        addBackButton(()-> new StartPage(host, cf));
         
         /*
         Layout: text occupies the middle 50% of the screen

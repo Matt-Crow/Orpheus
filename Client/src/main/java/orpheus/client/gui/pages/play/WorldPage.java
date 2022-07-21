@@ -1,4 +1,4 @@
-package orpheus.client.gui.pages.worldPlay;
+package orpheus.client.gui.pages.play;
 
 import orpheus.client.gui.pages.PlayerControls;
 import orpheus.client.gui.components.Chat;
@@ -15,12 +15,10 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import orpheus.client.gui.components.ComponentFactory;
 import orpheus.client.gui.pages.Page;
-import orpheus.client.gui.pages.worldSelect.WSMain;
+import orpheus.client.gui.pages.worldselect.WSMain;
 import orpheus.client.gui.pages.PageController;
 
 /**
- * The WorldPage is used to render WorldCanvases.
- * So yes, it is rather convoluted:
  * use the PageController to render the WorldPage,
  * which renders the WorldCanvas,
  * which renders the World
@@ -35,12 +33,8 @@ public class WorldPage extends Page{
     
     public WorldPage(PageController host, ComponentFactory cf){
         super(host, cf);
-        addBackButton(new WSMain(host, cf), ()->{
-            if(canvas != null){
-                canvas.stop();
-            }
-        });        
         
+        addBackButton(()-> new WSMain(host, cf));        
         setLayout(new BorderLayout());
         
         canvasArea = new JPanel();
@@ -71,6 +65,13 @@ public class WorldPage extends Page{
         otherArea.add(scrolly, c2.clone());
         
         add(otherArea, BorderLayout.PAGE_END);
+    }
+    
+    @Override
+    public void leavingPage(){
+        if(canvas != null){
+            canvas.stop();
+        }
     }
     
     public WorldPage setCanvas(WorldCanvas w){

@@ -1,9 +1,8 @@
 
 package orpheus.client.gui.pages;
 
-import gui.graphics.CustomColors;
-import java.awt.BorderLayout;
 import java.awt.Component;
+import java.util.function.Supplier;
 import javax.swing.JButton;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
@@ -27,13 +26,9 @@ public class Page extends JPanel{
     private final JMenuBar menuBar;
     
     public Page(PageController host, ComponentFactory components){
-        super.setLayout(new BorderLayout());
-        
         this.host = host;
         this.components = components;
         menuBar = new JMenuBar();
-        
-        setBackground(CustomColors.black);
     }
     
     /**
@@ -63,19 +58,21 @@ public class Page extends JPanel{
     
     /**
      * Adds a button to the menu bar which, when clicked, will redirect
-     * the user to the given Page (p), then run the given runnable.
+     * the user to the given Page
      * 
      * @param text the text to display on the back button.
-     * @param p the page this button should link to
-     * @param onGoBack the runnable to run after switching pages
+     * @param p supplies the page this button should link to
      * @return this
      */
-    public Page addBackButton(String text, Page p, Runnable onGoBack){
+    public Page addBackButton(String text, Supplier<Page> p){
         JButton b = components.makeButton(text, ()->{
             if(p != null){
-                getHost().switchToPage(p);
+                /*
+                supplier is more memory efficient than passing a Page, as now
+                the page is only instantiated upon clicking the button
+                */
+                getHost().switchToPage(p.get());
             }
-            onGoBack.run();
         });
         addMenuItem(b);
         return this;
@@ -83,37 +80,13 @@ public class Page extends JPanel{
     
     /**
      * Adds a button to the menu bar which, when clicked, will redirect
-     * the user to the given Page (p)
+     * the user to the given Page
      * 
-     * @param text the text to display on the back button.
-     * @param p the page this button should link to
+     * @param p supplies the page this button should link to
      * @return this
      */
-    public Page addBackButton(String text, Page p){
-        return addBackButton(text, p, ()->{});
-    }
-    
-    /**
-     * Adds a button to the menu bar which, when clicked, will redirect
-     * the user to the given Page (p)
-     * 
-     * @param p the page this button should link to
-     * @return this
-     */
-    public Page addBackButton(Page p){
+    public Page addBackButton(Supplier<Page> p){
         return addBackButton("Back", p);
-    }
-    
-    /**
-     * Adds a button to the menu bar which, when clicked, will redirect
-     * the user to the given Page (p), then run the given runnable.
-     * 
-     * @param p the page this button should link to
-     * @param r the runnable to run after switching pages
-     * @return this
-     */
-    public Page addBackButton(Page p, Runnable r){
-        return addBackButton("Back", p, r);
     }
     
     /**
@@ -126,5 +99,20 @@ public class Page extends JPanel{
         }
         menuBar.add(c);
         return this;
+    }
+    
+    /**
+     * called by PageController upon moving to this Page
+     */
+    public void enteredPage(){
+        
+    }
+    
+    /**
+     * called by PageController upon switching from this Page to another.
+     * Subclasses should override this method if they require tear-down behavior.
+     */
+    public void leavingPage(){
+        
     }
 }

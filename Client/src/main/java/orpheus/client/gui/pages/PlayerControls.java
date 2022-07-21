@@ -3,7 +3,7 @@ package orpheus.client.gui.pages;
 import commands.ControlPressed;
 import controls.AbstractControlScheme;
 import net.protocols.EndOfFrameListener;
-import orpheus.client.gui.pages.worldPlay.WorldCanvas;
+import orpheus.client.gui.pages.play.WorldCanvas;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;

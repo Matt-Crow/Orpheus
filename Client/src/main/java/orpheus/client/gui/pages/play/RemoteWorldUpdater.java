@@ -1,4 +1,4 @@
-package orpheus.client.gui.pages.worldPlay;
+package orpheus.client.gui.pages.play;
 
 import net.protocols.AbstractWorldUpdater;
 import world.World;

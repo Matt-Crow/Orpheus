@@ -1,4 +1,4 @@
-package orpheus.client.gui.pages.worldSelect;
+package orpheus.client.gui.pages.worldselect;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -28,7 +28,7 @@ public abstract class AbstractWSNewWorld extends Page{
     public AbstractWSNewWorld(PageController host, ComponentFactory cf){
         super(host, cf);
         
-        addBackButton(new WSMain(host, cf));
+        addBackButton(()-> new WSMain(host, cf));
         
         setLayout(new BorderLayout());
         

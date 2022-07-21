@@ -1,7 +1,7 @@
 package orpheus.client;
 
 import orpheus.client.gui.pages.PlayerControls;
-import orpheus.client.gui.pages.worldPlay.RemoteWorldUpdater;
+import orpheus.client.gui.pages.play.RemoteWorldUpdater;
 import world.build.BuildJsonUtil;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
@@ -10,9 +10,9 @@ import net.messages.ServerMessageType;
 import serialization.JsonUtil;
 import users.AbstractUser;
 import users.LocalUser;
-import orpheus.client.gui.pages.worldPlay.WorldCanvas;
-import orpheus.client.gui.pages.worldPlay.WorldPage;
-import orpheus.client.gui.pages.worldSelect.WaitingRoom;
+import orpheus.client.gui.pages.play.WorldCanvas;
+import orpheus.client.gui.pages.play.WorldPage;
+import orpheus.client.gui.pages.worldselect.WaitingRoom;
 import java.io.IOException;
 import java.io.StringReader;
 import javax.json.Json;

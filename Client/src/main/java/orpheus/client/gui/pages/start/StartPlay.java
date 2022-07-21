@@ -10,7 +10,7 @@ import orpheus.client.gui.components.BuildSelect;
 import orpheus.client.gui.components.ComponentFactory;
 import orpheus.client.gui.components.FileChooserUtil;
 import orpheus.client.gui.pages.Page;
-import orpheus.client.gui.pages.worldSelect.WSMain;
+import orpheus.client.gui.pages.worldselect.WSMain;
 import orpheus.client.gui.pages.PageController;
 import orpheus.client.gui.pages.CustomizeBuild;
 import world.build.BuildJsonUtil;
@@ -23,7 +23,7 @@ public class StartPlay extends Page{
     public StartPlay(PageController host, ComponentFactory cf){
         super(host, cf);
         
-        addBackButton("Main Menu", new StartPage(host, cf));
+        addBackButton("Main Menu", ()-> new StartPage(host, cf));
         addMenuItem(cf.makeButton("Import Builds", this::showImportBuildsDialog));
         addMenuItem(cf.makeButton("Export Builds", this::showExportBuildsDialog));
         

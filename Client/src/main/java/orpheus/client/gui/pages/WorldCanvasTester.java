@@ -1,7 +1,7 @@
 package orpheus.client.gui.pages;
 
-import orpheus.client.gui.pages.worldPlay.WorldCanvas;
-import orpheus.client.gui.pages.worldPlay.WorldPage;
+import orpheus.client.gui.pages.play.WorldCanvas;
+import orpheus.client.gui.pages.play.WorldPage;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import orpheus.client.gui.components.ComponentFactory;

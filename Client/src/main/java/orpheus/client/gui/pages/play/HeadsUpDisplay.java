@@ -1,4 +1,4 @@
-package orpheus.client.gui.pages.worldPlay;
+package orpheus.client.gui.pages.play;
 
 import gui.graphics.CustomColors;
 import java.awt.Color;

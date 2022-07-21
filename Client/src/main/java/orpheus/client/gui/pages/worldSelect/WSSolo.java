@@ -1,4 +1,4 @@
-package orpheus.client.gui.pages.worldSelect;
+package orpheus.client.gui.pages.worldselect;
 
 import orpheus.client.gui.pages.PlayerControls;
 import net.protocols.SoloWorldUpdater;
@@ -7,8 +7,8 @@ import world.entities.HumanPlayer;
 import java.awt.Color;
 import orpheus.client.gui.components.ComponentFactory;
 import users.LocalUser;
-import orpheus.client.gui.pages.worldPlay.WorldCanvas;
-import orpheus.client.gui.pages.worldPlay.WorldPage;
+import orpheus.client.gui.pages.play.WorldCanvas;
+import orpheus.client.gui.pages.play.WorldPage;
 import start.AbstractOrpheusCommandInterpreter;
 import orpheus.client.gui.pages.PageController;
 import start.SoloOrpheusCommandInterpreter;
