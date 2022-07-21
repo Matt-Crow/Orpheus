@@ -12,7 +12,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import orpheus.client.gui.components.ComponentFactory;
-import orpheus.client.gui.pages.menu.StartPlay;
+import orpheus.client.gui.pages.start.StartPlay;
 
 /**
  *
@@ -32,6 +32,7 @@ public class CustomizeBuild extends Page{
         JPanel nameArea = cf.makePanel();
         nameArea.add(cf.makeLabel("Build name"));
         name = new JTextField();
+        name.setColumns(10);
         name.setToolTipText("Build name");
         nameArea.add(name);
         add(nameArea);
@@ -40,6 +41,7 @@ public class CustomizeBuild extends Page{
         add(charClassSel);
         
         JPanel activesArea = cf.makePanel();
+        activesArea.setLayout(new GridLayout(1, 3));
         acts = new CustomizableSelector[3];
         for(int i = 0; i < 3; i++){
             acts[i] = new CustomizableSelector(cf, "Active #" + (i + 1), new AbstractActive[]{});
@@ -48,6 +50,7 @@ public class CustomizeBuild extends Page{
         add(activesArea);
         
         JPanel passivesArea = cf.makePanel();
+        passivesArea.setLayout(new GridLayout(1, 3));
         pass = new CustomizableSelector[3];
         for(int i = 0; i < 3; i++){
             pass[i] = new CustomizableSelector(cf, "Passive #" + (i + 1), new AbstractPassive[]{});

@@ -34,6 +34,7 @@ public class ComponentFactory {
     
     public JLabel makeLabel(String text){
         JLabel label = new JLabel(text);
+        label.setOpaque(true);
         label.setVerticalAlignment(SwingConstants.CENTER);
         label.setHorizontalAlignment(SwingConstants.CENTER);
         return label;

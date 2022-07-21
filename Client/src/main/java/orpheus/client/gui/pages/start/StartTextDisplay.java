@@ -1,4 +1,4 @@
-package orpheus.client.gui.pages.menu;
+package orpheus.client.gui.pages.start;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -15,7 +15,7 @@ import orpheus.client.gui.pages.PageController;
 public class StartTextDisplay extends Page{
     public StartTextDisplay(PageController host, ComponentFactory cf, String displayText){
         super(host, cf);
-        addBackButton(new Index(host, cf));
+        addBackButton(new StartPage(host, cf));
         
         /*
         Layout: text occupies the middle 50% of the screen

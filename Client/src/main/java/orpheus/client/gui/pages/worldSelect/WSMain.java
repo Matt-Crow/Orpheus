@@ -4,7 +4,7 @@ import orpheus.client.gui.components.Style;
 import java.awt.GridLayout;
 import orpheus.client.gui.components.ComponentFactory;
 import orpheus.client.gui.pages.Page;
-import orpheus.client.gui.pages.menu.StartPlay;
+import orpheus.client.gui.pages.start.StartPlay;
 import orpheus.client.gui.pages.PageController;
 
 /**

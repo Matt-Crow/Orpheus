@@ -1,4 +1,4 @@
-package orpheus.client.gui.pages.menu;
+package orpheus.client.gui.pages.start;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -23,7 +23,7 @@ public class StartPlay extends Page{
     public StartPlay(PageController host, ComponentFactory cf){
         super(host, cf);
         
-        addBackButton("Main Menu", new Index(host, cf));
+        addBackButton("Main Menu", new StartPage(host, cf));
         addMenuItem(cf.makeButton("Import Builds", this::showImportBuildsDialog));
         addMenuItem(cf.makeButton("Export Builds", this::showExportBuildsDialog));
         

@@ -5,7 +5,7 @@ import javax.swing.*;
 import java.awt.Toolkit;
 import javax.swing.JPanel;
 import orpheus.client.gui.components.ComponentFactory;
-import orpheus.client.gui.pages.menu.Index;
+import orpheus.client.gui.pages.start.StartPage;
 
 /**
  * controls which page is currently rendered
@@ -33,7 +33,7 @@ public class PageController extends JFrame {
 
         currentPage = null;
 
-        switchToPage(new Index(this, components));
+        switchToPage(new StartPage(this, components));
     }
 
     public PageController switchToPage(Page p) {
