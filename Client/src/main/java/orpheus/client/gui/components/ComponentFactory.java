@@ -1,8 +1,6 @@
 package orpheus.client.gui.components;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
@@ -41,8 +39,18 @@ public class ComponentFactory {
         return label;
     }
     
+    public JPanel makePanel(){
+        JPanel panel = new JPanel();
+        
+        return panel;
+    }
+    
+    public JPanel makeSpaceAround(JComponent component){
+        return makeSpaceAround(component, Color.GRAY);
+    }
+    
     public JPanel makeSpaceAround(JComponent component, Color spaceColor){
-        JPanel p = new JPanel();
+        JPanel p = makePanel();
         
         // center align component: https://stackoverflow.com/a/898054
         p.setLayout(new GridBagLayout());

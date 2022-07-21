@@ -1,9 +1,7 @@
 package orpheus.client.gui.components;
 
-import java.awt.BorderLayout;
 import javax.swing.*;
 
-import java.awt.GridLayout;
 import java.util.HashMap;
 
 public class OptionBox<T> extends JComponent {
@@ -13,14 +11,13 @@ public class OptionBox<T> extends JComponent {
 
     public OptionBox(ComponentFactory cf, String t, T[] opt) {
         super();
-        Style.applyStyling(this);
-        setLayout(new BorderLayout());
+        
+        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
-        add(cf.makeLabel(t), BorderLayout.PAGE_START);
+        add(cf.makeLabel(t));
 
         box = new JComboBox<>();
-        Style.applyStyling(box);
-        add(box, BorderLayout.CENTER);
+        add(box);
 
         options = new HashMap<>();
         for (T opt1 : opt) {

@@ -1,6 +1,6 @@
 package orpheus.client.gui.pages.worldSelect;
 
-import java.awt.GridLayout;
+import java.awt.BorderLayout;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -57,37 +57,45 @@ public class WSJoin extends Page{
         
         addBackButton(new WSMain(host, cf));
         
-        setLayout(new GridLayout(1, 2));
+        setLayout(new BorderLayout());
         
-        //left side
+        JPanel center = cf.makePanel();
+        center.setLayout(new BoxLayout(center, BoxLayout.PAGE_AXIS));
+        add(center, BorderLayout.CENTER);
+        
         msgs = cf.makeTextArea("Messages will appear here!\n");        
         JScrollPane scrolly = new JScrollPane(msgs);
         scrolly.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrolly.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        add(scrolly);
+        center.add(scrolly);
         
-        //right side
-        ip = new JTextField("enter host address here");
+        // input form
+        JPanel addressRow = cf.makePanel();
+        center.add(addressRow);
+        addressRow.add(cf.makeLabel("IP Address"));
+        ip = new JTextField("xxx.yyy.zzz.ttt");
+        ip.setColumns(20);
+        addressRow.add(ip);
         
-        JPanel right = new JPanel();
-        right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
-        right.add(ip);
-        
+        JPanel portRow = cf.makePanel();
+        center.add(portRow);
+        portRow.add(cf.makeLabel("Port"));
         port = new JFormattedTextField(NumberFormat.getIntegerInstance());
-        right.add(port);
+        port.setColumns(20);
+        portRow.add(port);
         
-        right.add(cf.makeButton("Join", ()->{
-            if(!isIpAddr(ip.getText())){
-                msgs.append('"' + ip.getText() + "\" doesn't look like an IP address to me. \n");
-            } else if(port.getValue() == null || !(port.getValue() instanceof Number)){
-                msgs.append("please specify a port");
-            } else {
-                int p = ((Number)port.getValue()).intValue();
-                join(ip.getText(), p);
-            }
-        }));
-        
-        add(right);
+        add(cf.makeSpaceAround(cf.makeButton("Join", this::joinButtonClicked)), BorderLayout.PAGE_END);
+    }
+    
+    private void joinButtonClicked(){
+        if(!isIpAddr(ip.getText())){
+            msgs.append('"' + ip.getText() + "\" doesn't look like an IP address to me. \n");
+        } else if(port.getValue() == null || !(port.getValue() instanceof Number)){
+            msgs.append("please specify a port");
+        } else {
+            int p = ((Number)port.getValue()).intValue();
+            join(ip.getText(), p);
+        }
     }
     
     private static boolean isIpAddr(String s){
@@ -106,7 +114,6 @@ public class WSJoin extends Page{
             connection.start();
             msgs.append("success!\n");
             getHost().switchToPage(wait);
-            //wait.joinServer(ipAddr);
         } catch (IOException ex) {
             msgs.append(ex.getMessage() + '\n');
             msgs.append(Arrays.toString(ex.getStackTrace()) + '\n');

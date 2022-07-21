@@ -30,11 +30,11 @@ public class StartPlay extends Page{
         
         setLayout(new GridLayout(1, 2));
         
-        add(cf.makeButton("Play a game", ()->{
+        add(cf.makeSpaceAround(cf.makeButton("Play a game", ()->{
             getHost().switchToPage(new WSMain(host, cf));
-        }));
+        }), Color.RED));
         
-        JPanel buildSection = new JPanel();
+        JPanel buildSection = cf.makePanel();
         buildSection.setLayout(new BorderLayout());
         buildSection.add(cf.makeLabel("Your Builds"), BorderLayout.PAGE_START);
         BuildSelect bs = new BuildSelect(cf);

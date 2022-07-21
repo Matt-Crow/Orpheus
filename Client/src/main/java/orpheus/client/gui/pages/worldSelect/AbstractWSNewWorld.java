@@ -1,12 +1,16 @@
 package orpheus.client.gui.pages.worldSelect;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import world.build.Build;
 import orpheus.client.gui.components.BuildSelect;
 import orpheus.client.gui.components.OptionBox;
-import orpheus.client.gui.components.Style;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
 import orpheus.client.gui.components.ComponentFactory;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.PageController;
@@ -26,17 +30,25 @@ public abstract class AbstractWSNewWorld extends Page{
         
         addBackButton(new WSMain(host, cf));
         
-        setLayout(new GridLayout(2, 2));
+        setLayout(new BorderLayout());
         
+        add(cf.makeLabel("New World"), BorderLayout.PAGE_START);
+        
+        JPanel center = cf.makePanel();
+        center.setLayout(new BoxLayout(center, BoxLayout.PAGE_AXIS));
+        add(center, BorderLayout.CENTER);
+        
+        center.add(Box.createRigidArea(new Dimension(20, 20))); // padding
         playerBuild = new BuildSelect(cf);
-        add(playerBuild);
-        
-        add(cf.makeButton("Start World", this::start));
-        
+        center.add(playerBuild);
+        center.add(Box.createRigidArea(new Dimension(20, 20)));
         numWaves = numWaveSelect();
-        add(numWaves);
+        center.add(cf.makeSpaceAround(numWaves, Color.GRAY));
         
-        Style.applyStyling(this);
+        add(cf.makeSpaceAround(
+                cf.makeButton("Start World", this::start), 
+                Color.GRAY
+        ), BorderLayout.PAGE_END);
     }
     
     private OptionBox<Integer> numWaveSelect(){

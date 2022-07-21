@@ -4,11 +4,7 @@ import world.build.Build;
 import orpheus.client.gui.components.BuildSelect;
 import orpheus.client.gui.components.Chat;
 import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.util.Arrays;
-import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import orpheus.client.WaitingRoomClientProtocol;
 import orpheus.client.gui.components.ComponentFactory;
@@ -34,43 +30,25 @@ public class WaitingRoom extends Page{
         
         addBackButton(new WSMain(host, cf));
         
-        //grid layout was causing problems with chat.
-        //since it couldn't fit in 1/4 of the JPanel, it compressed to just a thin line
         setLayout(new BorderLayout());
         
-        JPanel infoSection = new JPanel();
-        infoSection.setLayout(new GridLayout(1, 3));
+        add(cf.makeLabel("Waiting for players to join..."), BorderLayout.PAGE_START);
         
-        teamList = cf.makeTextArea("Player Team:");
-        infoSection.add(teamList);
-        
-        add(infoSection, BorderLayout.PAGE_START);
-        
-        JPanel center = new JPanel();
-        center.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        
-        gbc.anchor = GridBagConstraints.LINE_START;
-        playerBuild = new BuildSelect(cf);
-        center.add(playerBuild, gbc.clone());
-        
-        gbc.anchor = GridBagConstraints.LINE_END;
         chat = new Chat(cf, null);
-        center.add(chat, gbc.clone());
+        add(chat, BorderLayout.LINE_START);
         
-        add(center, BorderLayout.CENTER);
+        playerBuild = new BuildSelect(cf);
+        add(playerBuild, BorderLayout.CENTER);
         
-        add(cf.makeButton("Start the match", ()->{
+        teamList = cf.makeTextArea("Player Team:"); 
+        teamList.setColumns(20);
+        add(teamList, BorderLayout.LINE_END);
+        
+        add(cf.makeSpaceAround(cf.makeButton("Start the match", ()->{
             backend.requestStart();
-        }), BorderLayout.PAGE_END);
+        })), BorderLayout.PAGE_END);
         
         backend = null;
-        
-        revalidate();
-        repaint();
     }
     
     public WaitingRoom(PageController host, ComponentFactory cf, WaitingRoomClientProtocol protocol){
