@@ -1,7 +1,7 @@
 package orpheus.client.gui.pages;
 
-import javax.swing.JFrame;
-import java.awt.GridLayout;
+import java.awt.BorderLayout;
+import javax.swing.*;
 import java.awt.Toolkit;
 import javax.swing.JPanel;
 import orpheus.client.gui.components.ComponentFactory;
@@ -21,7 +21,7 @@ public class PageController extends JFrame {
         setTitle("The Orpheus Proposition");
 
         content = new JPanel();
-        content.setLayout(new GridLayout(1, 1));
+        content.setLayout(new BorderLayout());
         setContentPane(content);
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -41,7 +41,8 @@ public class PageController extends JFrame {
             throw new NullPointerException();
         }
         content.removeAll();
-        content.add(p);
+        content.add(p.getMenuBar(), BorderLayout.PAGE_START);
+        content.add(p, BorderLayout.CENTER);
         content.revalidate();
         p.requestFocus();
         content.repaint();

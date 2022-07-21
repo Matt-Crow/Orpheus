@@ -2,28 +2,22 @@
 package orpheus.client.gui.pages;
 
 import gui.graphics.CustomColors;
-import orpheus.client.gui.components.Style;
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.GridLayout;
-import java.awt.LayoutManager;
 import javax.swing.JButton;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import orpheus.client.gui.components.ComponentFactory;
 
 /**
- * Each Page is used as a view to
- * render the game.
+ * Each Page is used as a complete view of the GUI.
  * 
  * Each Page consists of 2 sections:
- * A menu bar along the top of the screen,
- * and a main content section which takes up
- * the rest.
+ * - A menu bar along the top of the screen,
+ * - and a main content section which takes up the rest.
  * 
- * Calls to add(...) and setLayout(...) will
- * be forwarded to the content section, not this
- * entire component.
+ * Use this component like a regular JPanel, but use addMenuItem to add items to
+ * the menu.
  * 
  * @author Matt Crow
  */
@@ -31,26 +25,15 @@ public class Page extends JPanel{
     private final PageController host;
     private final ComponentFactory components;
     private final JMenuBar menuBar;
-    private final JPanel content;
-    private boolean hasInstantiated = false;
     
     public Page(PageController host, ComponentFactory components){
         super.setLayout(new BorderLayout());
         
         this.host = host;
         this.components = components;
-        
         menuBar = new JMenuBar();
-        super.add(menuBar, BorderLayout.PAGE_START);
-        
-        content = new JPanel();
-        super.add(content, BorderLayout.CENTER);
-        
-        //setFocusable(true);
         
         setBackground(CustomColors.black);
-        
-        hasInstantiated = true;
     }
     
     /**
@@ -69,6 +52,13 @@ public class Page extends JPanel{
      */
     public ComponentFactory getComponentFactory(){
         return components;
+    }
+    
+    /**
+     * @return the menu of actions associated with this page
+     */
+    public JMenuBar getMenuBar(){
+        return menuBar;
     }
     
     /**
@@ -127,7 +117,6 @@ public class Page extends JPanel{
     }
     
     /**
-     * Adds a component to the menu bar, then resizes the bar to accommodate it.
      * @param c the component to add
      * @return this
      */
@@ -137,29 +126,5 @@ public class Page extends JPanel{
         }
         menuBar.add(c);
         return this;
-    }
-    
-    /**
-     * Sets the layout <b> of the content section, not this entire component. </b>
-     * @param l the LayoutManager to apply to the content section
-     */
-    @Override
-    public void setLayout(LayoutManager l){
-        if(hasInstantiated){
-            content.setLayout(l);
-        } else {
-            super.setLayout(l);
-        }
-    }
-    
-    //this is the supermethod called by all variations of add
-    @Override
-    public void addImpl(Component comp, Object constraints, int index){
-        if(hasInstantiated){
-            content.add(comp, constraints, index);
-        } else {
-            super.addImpl(comp, constraints, index);
-        }
-        Style.applyStyling(comp);
     }
 }

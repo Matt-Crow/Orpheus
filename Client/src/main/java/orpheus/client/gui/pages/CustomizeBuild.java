@@ -8,6 +8,7 @@ import world.build.characterClass.CharacterClass;
 import world.build.passives.AbstractPassive;
 import orpheus.client.gui.components.CustomizableSelector;
 import java.awt.GridLayout;
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import orpheus.client.gui.components.ComponentFactory;
@@ -23,39 +24,43 @@ public class CustomizeBuild extends Page{
     private final CustomizableSelector[] acts;
     private final CustomizableSelector[] pass;
     
-    public CustomizeBuild(PageController host, ComponentFactory cf){
+    public CustomizeBuild(PageController host, ComponentFactory cf, Build customizing){
         super(host, cf);
-        GridLayout g = new GridLayout(3, 3);
-        g.setHgap(10);
-        g.setVgap(10);
-        setLayout(g);
-        JPanel nameArea = new JPanel();
+        
+        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        
+        JPanel nameArea = cf.makePanel();
+        nameArea.add(cf.makeLabel("Build name"));
         name = new JTextField();
         name.setToolTipText("Build name");
-        //name.setEditable(true);
         nameArea.add(name);
         add(nameArea);
         
         charClassSel = new CustomizableSelector(cf, "Character Class", new CharacterClass[]{});
         add(charClassSel);
         
-        add(cf.makeButton("Save and exit", ()->{
-            save();
-            getHost().switchToPage(new StartPlay(host, cf));
-        }));
-        
+        JPanel activesArea = cf.makePanel();
         acts = new CustomizableSelector[3];
         for(int i = 0; i < 3; i++){
             acts[i] = new CustomizableSelector(cf, "Active #" + (i + 1), new AbstractActive[]{});
-            add(acts[i]);
+            activesArea.add(acts[i]);
         }
+        add(activesArea);
         
+        JPanel passivesArea = cf.makePanel();
         pass = new CustomizableSelector[3];
         for(int i = 0; i < 3; i++){
             pass[i] = new CustomizableSelector(cf, "Passive #" + (i + 1), new AbstractPassive[]{});
-            add(pass[i]);
+           passivesArea.add(pass[i]);
         }
+        add(passivesArea);
         
+        add(cf.makeSpaceAround(cf.makeButton("Save and exit", ()->{
+            save();
+            getHost().switchToPage(new StartPlay(host, cf));
+        })));
+        
+        // populate fields
         DataSet ds = Settings.getDataSet();
         
         charClassSel.setOptions(ds.getAllCharacterClasses());
@@ -63,9 +68,12 @@ public class CustomizeBuild extends Page{
             acts[i].setOptions(ds.getAllActives());
             pass[i].setOptions(ds.getAllPassives());
         }
+        
+        
+        setCustomizing(customizing);
     }
 
-    public void setCustomizing(Build selectedBuild) {
+    private void setCustomizing(Build selectedBuild) {
         DataSet ds = Settings.getDataSet();
         name.setText(selectedBuild.getName());
         charClassSel.setSelected(ds.getCharacterClassByName(selectedBuild.getClassName()));

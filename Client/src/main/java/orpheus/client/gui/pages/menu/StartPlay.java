@@ -41,8 +41,11 @@ public class StartPlay extends Page{
         bs.refreshOptions();
         buildSection.add(bs, BorderLayout.CENTER);
         buildSection.add(cf.makeButton("Customize this build", ()->{
-            CustomizeBuild cb = new CustomizeBuild(host, cf);
-            cb.setCustomizing(bs.getSelectedBuild());
+            CustomizeBuild cb = new CustomizeBuild(
+                    host, 
+                    cf,
+                    bs.getSelectedBuild()
+            );
             getHost().switchToPage(cb);
         }), BorderLayout.PAGE_END);
         
