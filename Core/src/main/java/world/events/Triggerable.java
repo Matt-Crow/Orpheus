@@ -3,6 +3,7 @@ package world.events;
 import java.io.Serializable;
 import java.util.function.Consumer;
 import util.SafeList;
+import world.events.termination.TerminationListener;
 
 /**
  * A Triggerable is an event listener that can only run up to a given number of
@@ -11,19 +12,18 @@ import util.SafeList;
  * Most simply, you can add it to a SafeList, which automatically handles
  * terminables.
  * 
- * @see TerminateListener
  * @see util.SafeList
  * @author Matt Crow
  * @param <T> the type which will be fed into this in the trigger method.
  */
-public class Triggerable<T> implements Terminable, Serializable {
+public class Triggerable<T> implements Terminable, Serializable, world.events.termination.Terminable {
     private boolean shouldTerminate;
     private final int maxUses;
     private int usesLeft;
     private int timesTriggered;
     private final Consumer<T> f;
     
-    private final SafeList<TerminateListener> termListens;
+    private final SafeList<TerminationListener> termListens;
     
     public Triggerable(int use, Consumer<T> function){
         maxUses = use;
@@ -87,18 +87,19 @@ public class Triggerable<T> implements Terminable, Serializable {
     }
 
     @Override
-    public void addTerminationListener(TerminateListener listen) {
+    public void addTerminationListener(TerminationListener listen) {
         termListens.add(listen);
-    }
-
-    @Override
-    public boolean removeTerminationListener(TerminateListener listen) {
-        return termListens.remove(listen);
     }
 
     @Override
     public void terminate() {
         shouldTerminate = true;
-        termListens.forEach((TerminateListener tl)->tl.objectWasTerminated(this));
+        termListens.forEach((TerminationListener tl)->tl.objectWasTerminated(this));
+        termListens.clear();
+    }
+
+    @Override
+    public boolean isTerminating() {
+        return usesLeft == 0; // don't use <= 0, as infinite durations use -1
     }
 }

@@ -1,7 +1,8 @@
 package util;
 
-import world.events.Terminable;
-import world.events.TerminateListener;
+import world.events.termination.Terminable;
+import world.events.termination.TerminationListener;
+
 import java.io.Serializable;
 
 /**
@@ -15,7 +16,7 @@ import java.io.Serializable;
  * @author Matt Crow
  * @param <T> the type of element this Node will contain
  */
-public class Node<T> implements Serializable, TerminateListener{
+public class Node<T> implements Serializable, TerminationListener{
     private final SafeList<T> container; 
     private transient volatile Node<T> prev;
     private transient volatile Node<T> next;
@@ -159,12 +160,9 @@ public class Node<T> implements Serializable, TerminateListener{
     }
 
     @Override
-    public void objectWasTerminated(Object o) {
+    public void objectWasTerminated(Terminable o) {
         if(o == val){
             delete();
-            if(o instanceof Terminable){
-                ((Terminable)o).removeTerminationListener(this);
-            }
         }
     }
 }

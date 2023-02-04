@@ -3,8 +3,7 @@ package world.build.actives;
 import world.entities.particles.ParticleType;
 import world.events.OnUpdateEvent;
 import world.events.OnUpdateListener;
-import world.events.Terminable;
-import world.events.TerminateListener;
+import world.events.termination.*;
 import gui.graphics.CustomColors;
 import world.statuses.Rush;
 import util.SafeList;
@@ -31,7 +30,7 @@ public class FlameCharge extends ElementalActive {
         
         // Need this to dual-implement these two interfaces. Probably a better way.
         class TermUpdate implements OnUpdateListener, Terminable {
-            private final SafeList<TerminateListener> termListens;
+            private final SafeList<TerminationListener> termListens;
             private int timeLeft;
             public TermUpdate(int time){
                 termListens = new SafeList<>();
@@ -48,18 +47,18 @@ public class FlameCharge extends ElementalActive {
             }
 
             @Override
-            public void addTerminationListener(TerminateListener listen) {
+            public void addTerminationListener(TerminationListener listen) {
                 termListens.add(listen);
-            }
-
-            @Override
-            public boolean removeTerminationListener(TerminateListener listen) {
-                return termListens.remove(listen);
             }
 
             @Override
             public void terminate() {
                 termListens.forEach((l)->l.objectWasTerminated(this));
+            }
+
+            @Override
+            public boolean isTerminating() {
+                return timeLeft <= 0;
             }
             
         }

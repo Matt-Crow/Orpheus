@@ -1,8 +1,7 @@
 package world.entities;
 
 import java.awt.Graphics;
-import world.events.Terminable;
-import world.events.TerminateListener;
+import world.events.termination.*;
 import util.Coordinates;
 import util.SafeList;
 import world.World;
@@ -23,7 +22,7 @@ public abstract class AbstractEntity extends AbstractPrimitiveEntity implements 
     private Team team;
 
     private boolean shouldTerminate;
-    private final SafeList<TerminateListener> terminateListeners;
+    private final SafeList<TerminationListener> terminateListeners;
 
     public final String id;
     private static int nextId = 0;
@@ -107,21 +106,17 @@ public abstract class AbstractEntity extends AbstractPrimitiveEntity implements 
     }
 
     @Override
-    public void addTerminationListener(TerminateListener listen) {
+    public void addTerminationListener(TerminationListener listen) {
         terminateListeners.add(listen);
-    }
-
-    @Override
-    public boolean removeTerminationListener(TerminateListener listen) {
-        return terminateListeners.remove(listen);
     }
 
     @Override
     public void terminate() {
         shouldTerminate = true;
-        terminateListeners.forEach((TerminateListener tl) -> {
+        terminateListeners.forEach((TerminationListener tl) -> {
             tl.objectWasTerminated(this);
         });
+        terminateListeners.clear();
     }
 
     public final boolean getShouldTerminate() {
@@ -173,6 +168,11 @@ public abstract class AbstractEntity extends AbstractPrimitiveEntity implements 
     protected void updateMovement() {
         super.updateMovement();
         clearSpeedFilter();
+    }
+
+    @Override
+    public boolean isTerminating() {
+        return shouldTerminate;
     }
 
     @Override

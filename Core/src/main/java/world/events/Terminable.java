@@ -1,5 +1,7 @@
 package world.events;
 
+import world.events.termination.TerminationListener;
+
 /**
  * Used by Objects stored in SafeLists that want to remove themselves
  * from the list when they die. SafeList nodes will add themselves as
@@ -13,14 +15,7 @@ package world.events;
  * @author Matt Crow
  */
 public interface Terminable {
-    public void addTerminationListener(TerminateListener listen);
-    
-    /**
-     * should be automatically invoked by TerminateListeners 
-     * @param listen
-     * @return 
-     */
-    public boolean removeTerminationListener(TerminateListener listen);
+    public void addTerminationListener(TerminationListener listen);
     
     /**
      * Iterate through TerminateListeners,
