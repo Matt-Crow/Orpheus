@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="orpheus.tests.TriggerableTester" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-07-14T22:21:34" hostname="LAPTOP-TOFVPK12" time="0.007">
+<testsuite name="orpheus.tests.TriggerableTester" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-07-21T22:30:03" hostname="LAPTOP-TOFVPK12" time="0.021">
   <properties/>
-  <testcase name="testTriggerable()" classname="orpheus.tests.TriggerableTester" time="0.007"/>
+  <testcase name="testTriggerable()" classname="orpheus.tests.TriggerableTester" time="0.021"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

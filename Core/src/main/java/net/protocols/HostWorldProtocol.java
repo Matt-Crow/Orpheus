@@ -1,6 +1,6 @@
 package net.protocols;
 
-import controls.PlayerControls;
+import commands.ControlDecoder;
 import net.OrpheusServer;
 import net.messages.ServerMessagePacket;
 import world.World;
@@ -23,7 +23,7 @@ public class HostWorldProtocol extends AbstractOrpheusServerNonChatProtocol {
     }
     
     private void receiveControl(ServerMessagePacket sm){
-        PlayerControls.decode(hostWorld, sm.getMessage().getBody());
+        ControlDecoder.decode(hostWorld, sm.getMessage().getBody());
     }
     
     @Override

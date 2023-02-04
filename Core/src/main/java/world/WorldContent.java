@@ -1,6 +1,5 @@
 package world;
 
-import gui.graphics.Map;
 import java.awt.Graphics;
 import world.battle.Team;
 import world.game.Game;

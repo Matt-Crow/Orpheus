@@ -21,27 +21,11 @@ enable these warnings
 */
 
 plugins {
-    id 'application'
+    id 'java'
 }
 
 sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-
-// has problems changing main class, so I'm using this instead
-def runMain = 'start.MainWindow'
-def testMain = 'gui.pages.worldPlay.WorldCanvasTester'
-
-def testing = false // !!! CHANGE THIS LINE TO SWITCH TO/FROM TESTING !!!
-
-def main = (testing) ? testMain : runMain
-
-// NetBeans 8.2 requires this line for debug to work
-mainClassName = main
-
-application {
-    // Netbeans cannot do "run file" option if I include this line
-    mainClass = main
-}
 
 repositories {
     mavenCentral()
@@ -58,33 +42,25 @@ test {
     useJUnitPlatform()
 }
 
-
-jar {
-    manifest {
-        attributes(
-            'Main-Class' : main
-        )
-    }
-}
-
 tasks.withType(JavaCompile){
     options.compilerArgs << "-Xlint:unchecked"
 }
-
-tasks.register('fatJar', Jar){
-    archiveClassifier = 'complete'
-    duplicatesStrategy = 'include'
-    
-    //include dependencies in JAR file
-    from sourceSets.main.output
-    
-    dependsOn configurations.runtimeClasspath
-    from {
-        configurations.runtimeClasspath.findAll { it.name.endsWith(".jar") }.collect {zipTree(it)}
-    }
-    manifest {
-        attributes(
-            'Main-Class' : main
-        )
-    }
-}
+/*
+* tasks.register('fatJar', Jar){
+*    archiveClassifier = 'complete'
+*    duplicatesStrategy = 'include'
+*    
+*    //include dependencies in JAR file
+*    from sourceSets.main.output
+*    
+*    dependsOn configurations.runtimeClasspath
+*    from {
+*        configurations.runtimeClasspath.findAll { it.name.endsWith(".jar") }.collect {zipTree(it)}
+*    }
+*    manifest {
+*        attributes(
+*            'Main-Class' : main
+*        )
+*    }
+*}
+ */

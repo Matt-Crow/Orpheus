@@ -4,7 +4,7 @@ import world.events.OnHitListener;
 import world.events.OnHitEvent;
 import world.entities.AbstractPlayer;
 import util.Settings;
-import gui.graphics.Tile;
+import world.Tile;
 import java.util.function.UnaryOperator;
 import util.Direction;
 import util.Number;

@@ -1,6 +1,5 @@
 package net.protocols;
 
-import gui.pages.worldPlay.HostWorldUpdater;
 import world.battle.Team;
 import world.build.Build;
 import world.build.BuildJsonUtil;
