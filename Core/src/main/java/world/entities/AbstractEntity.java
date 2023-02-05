@@ -3,7 +3,6 @@ package world.entities;
 import java.awt.Graphics;
 import world.events.termination.*;
 import util.Coordinates;
-import util.SafeList;
 import world.World;
 import world.battle.Team;
 import world.events.ActionRegister;
@@ -22,7 +21,7 @@ public abstract class AbstractEntity extends AbstractPrimitiveEntity implements 
     private Team team;
 
     private boolean shouldTerminate;
-    private final SafeList<TerminationListener> terminateListeners;
+    private final TerminationListeners terminationListeners = new TerminationListeners();
 
     public final String id;
     private static int nextId = 0;
@@ -32,13 +31,12 @@ public abstract class AbstractEntity extends AbstractPrimitiveEntity implements 
         id = "#" + nextId;
         this.world = world; // null world needs to be allowed due to circular dependencies 
         actReg = new ActionRegister(this);
-        terminateListeners = new SafeList<>();
         nextId++;
     }
 
     @Override
     public final boolean equals(Object o) {
-        return o != null && o instanceof AbstractEntity && o == this && ((AbstractEntity) o).id.equals(id);
+        return o != null && o instanceof AbstractEntity && ((AbstractEntity) o).id.equals(id);
     }
 
     @Override
@@ -107,16 +105,13 @@ public abstract class AbstractEntity extends AbstractPrimitiveEntity implements 
 
     @Override
     public void addTerminationListener(TerminationListener listen) {
-        terminateListeners.add(listen);
+        terminationListeners.add(listen);
     }
 
     @Override
     public void terminate() {
         shouldTerminate = true;
-        terminateListeners.forEach((TerminationListener tl) -> {
-            tl.objectWasTerminated(this);
-        });
-        terminateListeners.clear();
+        terminationListeners.objectWasTerminated(this);
     }
 
     public final boolean getShouldTerminate() {
@@ -144,8 +139,7 @@ public abstract class AbstractEntity extends AbstractPrimitiveEntity implements 
      */
     @Override
     public void init() {
-        // called by battle
-        terminateListeners.clear();
+        terminationListeners.clear();
         actReg.reset();
         setIsMoving(false);
         speedMultiplier = 1.0;

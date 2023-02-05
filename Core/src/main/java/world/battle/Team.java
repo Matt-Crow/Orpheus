@@ -3,15 +3,14 @@ package world.battle;
 import java.awt.Color;
 import java.util.ArrayList;
 import world.entities.AbstractPlayer;
+import world.events.termination.Terminables;
 import util.Coordinates;
 import world.entities.AIPlayer;
 import world.entities.AbstractEntity;
 import java.awt.Graphics;
+import java.io.Serializable;
 import java.util.function.Consumer;
-import static java.lang.System.out;
 import java.util.HashMap;
-import users.LocalUser;
-import util.SafeList;
 import world.World;
 
 /**
@@ -21,8 +20,7 @@ import world.World;
  *
  * @author Matt Crow
  */
-public class Team extends SafeList<AbstractEntity> {
-
+public class Team implements Serializable {
     private final String name;
     private final Color color;
     private Team enemyTeam;
@@ -31,6 +29,11 @@ public class Team extends SafeList<AbstractEntity> {
 
     private final HashMap<String, AbstractPlayer> roster;
     private final ArrayList<AbstractPlayer> membersRem;
+
+    /**
+     * the entities belonging to this team
+     */
+    private final Terminables<AbstractEntity> entities = new Terminables<>();
 
     public Team(String n, Color c) {
         super();
@@ -92,7 +95,7 @@ public class Team extends SafeList<AbstractEntity> {
     }
     
     public void setWorld(World w){
-        forEach((e)->e.setWorld(w));
+        entities.forEach((e)->e.setWorld(w));
     }
     
     /**
@@ -105,6 +108,18 @@ public class Team extends SafeList<AbstractEntity> {
         roster.values().forEach((p)->{
             initPlayer(p, w);
         });
+    }
+
+    public void add(AbstractEntity e) {
+        entities.add(e);
+    }
+    
+    public void clear() {
+        entities.clear();
+    }
+
+    public void forEach(Consumer<AbstractEntity> doThis) {
+        entities.forEach(doThis);
     }
     
     /** 
@@ -120,7 +135,7 @@ public class Team extends SafeList<AbstractEntity> {
         p.setWorld(w);
         p.init();
         membersRem.add(p);
-        add(p);
+        entities.add(p);
     }
 
     public void setEnemy(Team t) {
@@ -177,17 +192,16 @@ public class Team extends SafeList<AbstractEntity> {
     }
 
     public void update() {
-        forEach((AbstractEntity e) -> {
-            e.update();
-        });
+        entities.forEach((e) -> e.update());
+        entities.update(); // these are separate things
     }
 
     public void draw(Graphics g) {
-        forEach((AbstractEntity e) -> e.draw(g));
+        entities.forEach((e) -> e.draw(g));
     }
 
     public void print() {
-        forEach((e) -> {
+        entities.forEach((e) -> {
             System.out.println(e.toString());
         });
     }
@@ -201,18 +215,6 @@ public class Team extends SafeList<AbstractEntity> {
      */
     public void notifyTerminate(AbstractPlayer p) {
         membersRem.remove(p);
-    }
-
-    @Override
-    public void displayData() {
-        out.println("TEAM: " + name + "(ID: " + id + ")");
-        out.println("Roster: ");
-        roster.values().stream().forEach((AbstractPlayer p) -> {
-            if (p.id.equals(LocalUser.getInstance().getRemotePlayerId())) {
-                out.print("*");
-            }
-            out.println(p.getName() + "(ID: " + p.id + ")");
-        });
     }
 
     @Override

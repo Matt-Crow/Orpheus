@@ -1,12 +1,13 @@
 package world.events.termination;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
  * Maintains and manages a list of TerminationListeners.
  * Composite design pattern to reduce code duplication.
  */
-public class TerminationListeners implements TerminationListener {
+public class TerminationListeners implements Serializable, TerminationListener {
     /**
      * the collection of objects this is managing
      */
@@ -20,9 +21,16 @@ public class TerminationListeners implements TerminationListener {
         listeners.add(listener);
     }
 
+    /**
+     * removes all registered listeners
+     */
+    public void clear() {
+        listeners.clear();
+    }
+
     @Override
     public void objectWasTerminated(Terminable terminable) {
         listeners.forEach((listener) -> listener.objectWasTerminated(terminable));
-        listeners.clear();
+        clear();
     }
 }

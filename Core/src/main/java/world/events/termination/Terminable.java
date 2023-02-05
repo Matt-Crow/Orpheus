@@ -19,7 +19,7 @@ public interface Terminable {
     /**
      * Notifies listeners that this has terminated.
      * It is an error to call this method multiple times.
-     * Generally speaking, and instance of Terminables should call this method.
+     * Generally speaking, an instance of Terminables should call this method.
      * @see Terminables
      */
     public void terminate();

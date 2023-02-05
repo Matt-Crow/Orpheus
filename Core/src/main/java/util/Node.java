@@ -1,7 +1,6 @@
 package util;
 
-import world.events.termination.Terminable;
-import world.events.termination.TerminationListener;
+import world.events.termination.*;
 
 import java.io.Serializable;
 

@@ -7,10 +7,11 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.geom.AffineTransform;
+import java.util.LinkedList;
+
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
-import util.SafeList;
 
 /**
  * This is used by WorldCanvas to render
@@ -29,7 +30,7 @@ public class Canvas extends JPanel{
     private Graphics2D graphics;
     private AffineTransform initialTransform;
     
-    private final SafeList<EndOfFrameListener> endOfFrameListeners;
+    private final LinkedList<EndOfFrameListener> endOfFrameListeners;
     
     /**
      * Creates a canvas, which keeps track of
@@ -42,7 +43,7 @@ public class Canvas extends JPanel{
         zoom = 1.0;
         graphics = null;
         initialTransform = null;
-        endOfFrameListeners = new SafeList<>();
+        endOfFrameListeners = new LinkedList<>();
         setBackground(CustomColors.black);
         setFocusable(true);
     }

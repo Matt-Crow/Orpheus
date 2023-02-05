@@ -6,15 +6,15 @@ import java.awt.Graphics;
 import controls.ai.Path;
 import controls.ai.PathInfo;
 import world.statuses.AbstractStatus;
+import world.statuses.StatusName;
 import util.Settings;
 import world.build.actives.ElementalActive;
 import world.build.characterClass.CharacterStatName;
+import world.events.termination.Terminable;
+import world.events.termination.TerminationListener;
 import world.Tile;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.HashMap;
 import util.Direction;
-import util.SafeList;
 import world.World;
 
 /**
@@ -22,8 +22,8 @@ import world.World;
  * battle related capabilities.
  *
  * @author Matt Crow
- */
-public abstract class AbstractPlayer extends AbstractEntity {
+ */                                                         // needs to listen for status termination
+public abstract class AbstractPlayer extends AbstractEntity implements TerminationListener {
 
     private final String name;
     private Color color;
@@ -44,7 +44,9 @@ public abstract class AbstractPlayer extends AbstractEntity {
 
     private final ElementalActive slash;
     private final DamageBacklog log;
-    private final SafeList<AbstractStatus> statuses; //change to hashtable
+
+    private final HashMap<StatusName, AbstractStatus> stats = new HashMap<>();
+    
     //both players and AI need to find paths, given the current controls
     private Path path;
 
@@ -68,7 +70,6 @@ public abstract class AbstractPlayer extends AbstractEntity {
         slash.setUser(this);
         log = new DamageBacklog(this, minLifeSpan);
         path = null;
-        statuses = new SafeList<>();
 
         lastHitById = -1;
         lastHitBy = null;
@@ -138,37 +139,23 @@ public abstract class AbstractPlayer extends AbstractEntity {
     }
 
     public void inflict(AbstractStatus newStat) {
-        boolean found = false;
+        boolean found = stats.containsKey(newStat.getStatusName());
         boolean shouldReplace = false;
 
-        AbstractStatus[] objStatuses = Arrays
-                .stream(statuses.toArray())
-                .toArray(size -> new AbstractStatus[size]);
-
-        for (AbstractStatus s : objStatuses) {
-            if (s.getStatusName() == newStat.getStatusName()) {
-                // already inflicted
-                found = true;
-                if (s.getIntensityLevel() < newStat.getIntensityLevel()) {
-                    // better level
-                    s.terminate();
-                    shouldReplace = true;
-                } else if (s.getUsesLeft() < newStat.getMaxUses()) {
-                    s.terminate();
-                    shouldReplace = true;
-                }
+        if (found) {
+            AbstractStatus oldStat = stats.get(newStat.getStatusName());
+            if (oldStat.getIntensityLevel() < newStat.getIntensityLevel()) {
+                shouldReplace = true;
+            } else if (oldStat.getUsesLeft() < newStat.getUsesLeft()) {
+                shouldReplace = true;
             }
         }
-        if (shouldReplace || !found) {
-            statuses.add(newStat);
-            newStat.inflictOn(this);
-        }
-    }
 
-    public final Collection<AbstractStatus> getInflictedStatuses() {
-        Collection<AbstractStatus> inflicted = new ArrayList<>();
-        statuses.forEach((status) -> inflicted.add(status));
-        return inflicted;
+        if (shouldReplace || !found) {
+            stats.put(newStat.getStatusName(), newStat);
+            newStat.inflictOn(this);
+            newStat.addTerminationListener(this);
+        }
     }
 
     public void useMeleeAttack() {
@@ -198,7 +185,7 @@ public abstract class AbstractPlayer extends AbstractEntity {
     @Override
     public void init() {
         super.init();
-        statuses.clear();
+        stats.clear();
 
         slash.init();
         log.init();
@@ -275,6 +262,20 @@ public abstract class AbstractPlayer extends AbstractEntity {
     }
 
     @Override
+    public void objectWasTerminated(Terminable terminable) {
+        if (terminable instanceof AbstractStatus) {
+            removeStatus((AbstractStatus)terminable);
+        }
+    }
+
+    private void removeStatus(AbstractStatus status) {
+        AbstractStatus old = stats.get(status.getStatusName()); // may be null
+        if (old == status) {
+            stats.remove(old.getStatusName());
+        }
+    }
+
+    @Override
     public void draw(Graphics g) {
         int w = 1000;
         int h = 1000;
@@ -297,7 +298,7 @@ public abstract class AbstractPlayer extends AbstractEntity {
         int y = getY() + h / 10;
         String iStr;
         int i;
-        for (AbstractStatus s : getInflictedStatuses()) {
+        for (AbstractStatus s : stats.values()) {
             iStr = "";
             i = 0;
             while (i < s.getIntensityLevel()) {

@@ -1,12 +1,10 @@
 package world.statuses;
 
-import world.events.Terminable;
-import world.events.termination.TerminationListener;
+import world.events.termination.*;
 import world.entities.AbstractPlayer;
 import java.io.Serializable;
 import util.Number;
 import java.util.function.UnaryOperator;
-import util.SafeList;
 
 /**
  * AbstractStatus is the base class for all statuses in Orpheus.
@@ -17,7 +15,7 @@ import util.SafeList;
  * @see ActionRegister
  * @see AbstractPlayer#inflict(statuses.AbstractStatus) 
  */
-public abstract class AbstractStatus implements Serializable, Terminable, world.events.termination.Terminable{
+public abstract class AbstractStatus implements Serializable, Terminable {
 	private final StatusName code; //the Enum of this status' name
 	private final String name;
 	
@@ -27,8 +25,7 @@ public abstract class AbstractStatus implements Serializable, Terminable, world.
 	private final int level;
     
     private boolean hasTerminated;
-    private final SafeList<TerminationListener> termListens;
-    
+    private final TerminationListeners terminationListeners = new TerminationListeners();    
 	
     /**
      * 
@@ -50,7 +47,6 @@ public abstract class AbstractStatus implements Serializable, Terminable, world.
         level = Number.minMax(1, lv, 3);
         
         hasTerminated = false;
-        termListens = new SafeList<>();
 	}
 	
 	public StatusName getStatusName(){
@@ -118,14 +114,14 @@ public abstract class AbstractStatus implements Serializable, Terminable, world.
     
     @Override
     public void addTerminationListener(TerminationListener listen) {
-        termListens.add(listen);
+        terminationListeners.add(listen);
     }
 
     @Override
     public void terminate() {
         if(!hasTerminated){
             hasTerminated = true;
-            termListens.forEach((TerminationListener tl)->tl.objectWasTerminated(this));
+            terminationListeners.objectWasTerminated(this);
         }
     }
 
