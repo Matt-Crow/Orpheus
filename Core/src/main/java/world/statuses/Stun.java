@@ -1,16 +1,17 @@
 package world.statuses;
 
+import world.events.EventListener;
 import world.events.OnUpdateEvent;
-import world.events.OnUpdateListener;
 import util.Number;
 import world.entities.AbstractPlayer;
 import util.Settings;
+
 import java.util.function.UnaryOperator;
 
 /**
  * The Stun status decreases an AbstractEntity's movement speed
  */
-public class Stun extends AbstractStatus implements OnUpdateListener{
+public class Stun extends AbstractStatus implements EventListener<OnUpdateEvent> {
     private static final UnaryOperator<Integer> CALC = (i)->{return Settings.seconds(Number.minMax(1, i, 3));};
     /**
      * The Stun status will decrease an AbstractEntity's movement speed
@@ -38,7 +39,7 @@ public class Stun extends AbstractStatus implements OnUpdateListener{
     }
 
     @Override
-    public void trigger(OnUpdateEvent e) {
+    public void handle(OnUpdateEvent e) {
         e.getUpdated().multiplySpeedBy(1.0 - 0.25 * getIntensityLevel());
         use();
     }

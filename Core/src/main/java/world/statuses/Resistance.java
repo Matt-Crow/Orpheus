@@ -1,7 +1,7 @@
 package world.statuses;
 
+import world.events.EventListener;
 import world.events.OnUpdateEvent;
-import world.events.OnUpdateListener;
 import util.Settings;
 import world.entities.AbstractPlayer;
 import java.util.function.UnaryOperator;
@@ -14,7 +14,7 @@ import util.Number;
  * Needs reworking.
  * @see world.battle.DamageBacklog
  */
-public class Resistance extends AbstractStatus implements OnUpdateListener{
+public class Resistance extends AbstractStatus implements EventListener<OnUpdateEvent> {
     private static final UnaryOperator<Integer> CALC = (i)->{return Settings.seconds(Number.minMax(1, i, 3) * 2 + 1);};
     /**
      * 
@@ -42,7 +42,7 @@ public class Resistance extends AbstractStatus implements OnUpdateListener{
     }
 
     @Override
-    public void trigger(OnUpdateEvent t) {
+    public void handle(OnUpdateEvent t) {
         ((AbstractPlayer)t.getUpdated()).getLog().applyFilter(1 - 0.25 * getIntensityLevel());
         use();
     }

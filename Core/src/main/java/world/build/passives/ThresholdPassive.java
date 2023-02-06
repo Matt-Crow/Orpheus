@@ -1,7 +1,7 @@
 package world.build.passives;
 
+import world.events.EventListener;
 import world.events.OnUpdateEvent;
-import world.events.OnUpdateListener;
 import world.entities.AbstractPlayer;
 import util.Number;
 
@@ -9,7 +9,7 @@ import util.Number;
  * Triggers so long as the user is below a set percentage
  * of their maximum HP
  */
-public class ThresholdPassive extends AbstractPassive implements OnUpdateListener{
+public class ThresholdPassive extends AbstractPassive implements EventListener<OnUpdateEvent> {
 	private final int threshold;
     private final int baseThreshold;
     
@@ -42,7 +42,7 @@ public class ThresholdPassive extends AbstractPassive implements OnUpdateListene
     }
     
     @Override
-    public void trigger(OnUpdateEvent e) {
+    public void handle(OnUpdateEvent e) {
         if(((AbstractPlayer)e.getUpdated()).getLog().getHPPerc() <= threshold){
             applyEffect((AbstractPlayer)e.getUpdated());
             trigger();

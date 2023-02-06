@@ -1,7 +1,7 @@
 package world.statuses;
 
+import world.events.EventListener;
 import world.events.OnUpdateEvent;
-import world.events.OnUpdateListener;
 import world.entities.AbstractPlayer;
 import util.Number;
 import util.Settings;
@@ -10,7 +10,7 @@ import java.util.function.UnaryOperator;
 /**
  * Regeneration restores an AbstractEntity's hit points over time.
  */
-public class Regeneration extends AbstractStatus implements OnUpdateListener{
+public class Regeneration extends AbstractStatus implements EventListener<OnUpdateEvent> {
     private static final UnaryOperator<Integer> CALC = (i)->{return Settings.seconds(Number.minMax(1, i, 3)) + 2;};
     /**
      * Creates the Regeneration status.
@@ -40,7 +40,7 @@ public class Regeneration extends AbstractStatus implements OnUpdateListener{
     }
 
     @Override
-    public void trigger(OnUpdateEvent e) {
+    public void handle(OnUpdateEvent e) {
         if(e.getUpdated() instanceof AbstractPlayer){
             ((AbstractPlayer)e.getUpdated()).getLog().healPerc(2.5 * getIntensityLevel() / Settings.FPS);
         }

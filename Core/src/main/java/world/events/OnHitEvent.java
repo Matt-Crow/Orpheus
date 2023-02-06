@@ -5,7 +5,7 @@ import world.entities.AbstractEntity;
 /**
  * Created whenever one AbstractEntity hits another.
  */
-public class OnHitEvent {
+public class OnHitEvent implements Event {
     private final AbstractEntity hitter;
     private final AbstractEntity wasHit;
     

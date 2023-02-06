@@ -1,10 +1,10 @@
 package world.build.passives;
 
+import world.events.EventListener;
 import world.events.OnHitEvent;
-import world.events.OnHitListener;
 import world.entities.AbstractPlayer;
 
-public class OnBeHitPassive extends AbstractPassive implements OnHitListener{
+public class OnBeHitPassive extends AbstractPassive implements EventListener<OnHitEvent> {
 	/**
 	 * Triggers once the user's hitbox intercepts 
 	 * that of an enemy projectile
@@ -30,7 +30,7 @@ public class OnBeHitPassive extends AbstractPassive implements OnHitListener{
     }
     
 	@Override
-    public void trigger(OnHitEvent e) {
+    public void handle(OnHitEvent e) {
         if(getTargetsUser()){
             applyEffect((AbstractPlayer)e.getWasHit());
         } else {

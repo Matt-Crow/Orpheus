@@ -1,6 +1,6 @@
 package world.statuses;
 
-import world.events.OnHitListener;
+import world.events.EventListener;
 import world.events.OnHitEvent;
 import world.entities.AbstractPlayer;
 import util.Settings;
@@ -12,7 +12,7 @@ import util.Number;
 /**
  * Strength causes the afflicted AbstractEntity to knock back those it hits and do more damage
  */
-public class Strength extends AbstractStatus implements OnHitListener{
+public class Strength extends AbstractStatus implements EventListener<OnHitEvent> {
     private static final UnaryOperator<Integer> CALC = (i)->{return Number.minMax(1, i, 3) * 2 + 1;};
     /**
      * 
@@ -41,7 +41,7 @@ public class Strength extends AbstractStatus implements OnHitListener{
     }
 
     @Override
-    public void trigger(OnHitEvent e) {
+    public void handle(OnHitEvent e) {
         AbstractPlayer user = (AbstractPlayer)e.getHitter();
         AbstractPlayer target = (AbstractPlayer)e.getWasHit();
         target.getLog().logPercentageDamage(3.5 * getIntensityLevel());

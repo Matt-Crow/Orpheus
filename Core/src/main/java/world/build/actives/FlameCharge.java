@@ -1,8 +1,8 @@
 package world.build.actives;
 
 import world.entities.particles.ParticleType;
+import world.events.EventListener;
 import world.events.OnUpdateEvent;
-import world.events.OnUpdateListener;
 import world.events.termination.*;
 import gui.graphics.CustomColors;
 import world.statuses.Rush;
@@ -28,7 +28,7 @@ public class FlameCharge extends ElementalActive {
         Rush status = new Rush(2, 3);
         
         // Need this to dual-implement these two interfaces. Probably a better way.
-        class TermUpdate implements OnUpdateListener, Terminable {
+        class TermUpdate implements EventListener<OnUpdateEvent>, Terminable {
             private final TerminationListeners terminationListeners = new TerminationListeners();
             private int timeLeft;
 
@@ -37,7 +37,7 @@ public class FlameCharge extends ElementalActive {
             }
             
             @Override
-            public void trigger(OnUpdateEvent e) {
+            public void handle(OnUpdateEvent e) {
                 spawnProjectile(e.getUpdated().getFacing().getDegrees() + 180);
                 timeLeft--;
                 if(timeLeft <= 0){
@@ -61,7 +61,7 @@ public class FlameCharge extends ElementalActive {
             }
             
         }
-        OnUpdateListener listen = new TermUpdate(status.getUsesLeft());
+        EventListener<OnUpdateEvent> listen = new TermUpdate(status.getUsesLeft());
         getUser().getActionRegister().addOnUpdate(listen);
         getUser().inflict(status);
     }

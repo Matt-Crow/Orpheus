@@ -1,10 +1,10 @@
 package world.build.passives;
 
+import world.events.EventListener;
 import world.events.OnHitEvent;
-import world.events.OnHitListener;
 import world.entities.AbstractPlayer;
 
-public class OnHitPassive extends AbstractPassive implements OnHitListener{
+public class OnHitPassive extends AbstractPassive implements EventListener<OnHitEvent> {
 	/**
 	 * Triggers upon a projectile registered to the
 	 * user colliding with an enemy player
@@ -32,7 +32,7 @@ public class OnHitPassive extends AbstractPassive implements OnHitListener{
     }
     
     @Override
-    public void trigger(OnHitEvent e) {
+    public void handle(OnHitEvent e) {
         if(getTargetsUser()){
             applyEffect((AbstractPlayer)e.getHitter());
         } else {
