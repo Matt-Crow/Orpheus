@@ -1,6 +1,5 @@
 package net.protocols;
 
-import net.protocols.AbstractWorldUpdater;
 import net.OrpheusServer;
 import net.messages.ServerMessage;
 import net.messages.ServerMessageType;

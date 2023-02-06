@@ -1,12 +1,10 @@
 package world.statuses;
 
-import world.events.Terminable;
-import world.events.TerminateListener;
+import world.events.termination.*;
 import world.entities.AbstractPlayer;
 import java.io.Serializable;
 import util.Number;
 import java.util.function.UnaryOperator;
-import util.SafeList;
 
 /**
  * AbstractStatus is the base class for all statuses in Orpheus.
@@ -17,7 +15,7 @@ import util.SafeList;
  * @see ActionRegister
  * @see AbstractPlayer#inflict(statuses.AbstractStatus) 
  */
-public abstract class AbstractStatus implements Serializable, Terminable{
+public abstract class AbstractStatus implements Serializable, Terminable {
 	private final StatusName code; //the Enum of this status' name
 	private final String name;
 	
@@ -27,8 +25,7 @@ public abstract class AbstractStatus implements Serializable, Terminable{
 	private final int level;
     
     private boolean hasTerminated;
-    private final SafeList<TerminateListener> termListens;
-    
+    private final TerminationListeners terminationListeners = new TerminationListeners();    
 	
     /**
      * 
@@ -50,7 +47,6 @@ public abstract class AbstractStatus implements Serializable, Terminable{
         level = Number.minMax(1, lv, 3);
         
         hasTerminated = false;
-        termListens = new SafeList<>();
 	}
 	
 	public StatusName getStatusName(){
@@ -117,21 +113,21 @@ public abstract class AbstractStatus implements Serializable, Terminable{
 	}
     
     @Override
-    public void addTerminationListener(TerminateListener listen) {
-        termListens.add(listen);
-    }
-
-    @Override
-    public boolean removeTerminationListener(TerminateListener listen) {
-        return termListens.remove(listen);
+    public void addTerminationListener(TerminationListener listen) {
+        terminationListeners.add(listen);
     }
 
     @Override
     public void terminate() {
         if(!hasTerminated){
             hasTerminated = true;
-            termListens.forEach((TerminateListener tl)->tl.objectWasTerminated(this));
+            terminationListeners.objectWasTerminated(this);
         }
+    }
+
+    @Override
+    public boolean isTerminating() {
+        return usesLeft <= 0;
     }
     
     public final void use(){

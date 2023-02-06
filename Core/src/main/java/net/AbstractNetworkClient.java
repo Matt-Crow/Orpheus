@@ -1,11 +1,12 @@
 package net;
 
 import java.io.IOException;
+import java.util.LinkedList;
+
 import net.messages.ServerMessage;
 import net.messages.ServerMessagePacket;
 import net.protocols.AbstractOrpheusServerNonChatProtocol;
 import net.protocols.ChatProtocol;
-import util.SafeList;
 
 /**
  * This class represents either a client or server in a multiplayer Orpheus game.
@@ -17,14 +18,16 @@ public abstract class AbstractNetworkClient {
     private volatile AbstractOrpheusServerNonChatProtocol protocol;
     private volatile ChatProtocol chatProtocol;
     
-    //messages are cached if this does not yet have a way of handling them
-    private final SafeList<ServerMessagePacket> cachedMessages;
+    /**
+     * messages are cached if this does not yet have a way of handling them
+     */
+    private LinkedList<ServerMessagePacket> cachedMessages;
     
     public AbstractNetworkClient(){
         isStarted = false;
         protocol = null;
         chatProtocol = null;
-        cachedMessages = new SafeList<>();
+        cachedMessages = new LinkedList<>();
     }
     
     
@@ -34,12 +37,16 @@ public abstract class AbstractNetworkClient {
     
     public final void setProtocol(AbstractOrpheusServerNonChatProtocol protocol){
         this.protocol = protocol;
-        cachedMessages.forEach((ServerMessagePacket sm)->{
-            if(protocol.receive(sm)){
-                cachedMessages.remove(sm);
-                System.out.println("uncached message " + sm.hashCode());
+        LinkedList<ServerMessagePacket> smps = new LinkedList<>();
+        boolean wasHandled;
+        for (ServerMessagePacket smp : cachedMessages) {
+            wasHandled = protocol.receive(smp);
+            if (!wasHandled) {
+                // add back to queue if not received
+                smps.add(smp);
             }
-        });
+        }
+        cachedMessages = smps;
     }
     
     /**

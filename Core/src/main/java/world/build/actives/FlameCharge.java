@@ -1,13 +1,11 @@
 package world.build.actives;
 
 import world.entities.particles.ParticleType;
+import world.events.EventListener;
 import world.events.OnUpdateEvent;
-import world.events.OnUpdateListener;
-import world.events.Terminable;
-import world.events.TerminateListener;
+import world.events.termination.*;
 import gui.graphics.CustomColors;
 import world.statuses.Rush;
-import util.SafeList;
 
 /**
  *
@@ -30,16 +28,16 @@ public class FlameCharge extends ElementalActive {
         Rush status = new Rush(2, 3);
         
         // Need this to dual-implement these two interfaces. Probably a better way.
-        class TermUpdate implements OnUpdateListener, Terminable {
-            private final SafeList<TerminateListener> termListens;
+        class TermUpdate implements EventListener<OnUpdateEvent>, Terminable {
+            private final TerminationListeners terminationListeners = new TerminationListeners();
             private int timeLeft;
+
             public TermUpdate(int time){
-                termListens = new SafeList<>();
                 timeLeft = time;
             }
             
             @Override
-            public void trigger(OnUpdateEvent e) {
+            public void handle(OnUpdateEvent e) {
                 spawnProjectile(e.getUpdated().getFacing().getDegrees() + 180);
                 timeLeft--;
                 if(timeLeft <= 0){
@@ -48,22 +46,22 @@ public class FlameCharge extends ElementalActive {
             }
 
             @Override
-            public void addTerminationListener(TerminateListener listen) {
-                termListens.add(listen);
-            }
-
-            @Override
-            public boolean removeTerminationListener(TerminateListener listen) {
-                return termListens.remove(listen);
+            public void addTerminationListener(TerminationListener listen) {
+                terminationListeners.add(listen);
             }
 
             @Override
             public void terminate() {
-                termListens.forEach((l)->l.objectWasTerminated(this));
+                terminationListeners.objectWasTerminated(this);
+            }
+
+            @Override
+            public boolean isTerminating() {
+                return timeLeft <= 0;
             }
             
         }
-        OnUpdateListener listen = new TermUpdate(status.getUsesLeft());
+        EventListener<OnUpdateEvent> listen = new TermUpdate(status.getUsesLeft());
         getUser().getActionRegister().addOnUpdate(listen);
         getUser().inflict(status);
     }
