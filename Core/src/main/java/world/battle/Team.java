@@ -21,6 +21,7 @@ import world.World;
  * @author Matt Crow
  */
 public class Team implements Serializable {
+    private transient World world;
     private final String name;
     private final Color color;
     private Team enemyTeam;
@@ -95,6 +96,7 @@ public class Team implements Serializable {
     }
     
     public void setWorld(World w){
+        world = w;
         entities.forEach((e)->e.setWorld(w));
     }
     
@@ -103,6 +105,7 @@ public class Team implements Serializable {
      * @param w 
      */
     public void init(World w){
+        world = w;
         membersRem.clear();
         clear();
         roster.values().forEach((p)->{
@@ -111,6 +114,7 @@ public class Team implements Serializable {
     }
 
     public void add(AbstractEntity e) {
+        e.setWorld(world);
         entities.add(e);
     }
     

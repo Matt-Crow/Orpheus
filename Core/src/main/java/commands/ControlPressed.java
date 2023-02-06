@@ -1,6 +1,5 @@
 package commands;
 
-import commands.ControlDecoder;
 import net.messages.ServerMessage;
 import net.messages.ServerMessageType;
 import world.World;
