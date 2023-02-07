@@ -1,6 +1,7 @@
 package orpheus.client.gui.pages.play;
 
 import orpheus.client.gui.pages.PlayerControls;
+import orpheus.client.AppContext;
 import orpheus.client.gui.components.Chat;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -31,10 +32,10 @@ public class WorldPage extends Page{
     private WorldCanvas canvas;
     private final Chat chat;
     
-    public WorldPage(PageController host, ComponentFactory cf){
-        super(host, cf);
+    public WorldPage(AppContext context, PageController host, ComponentFactory cf){
+        super(context, host, cf);
         
-        addBackButton(()-> new WSMain(host, cf));        
+        addBackButton(()-> new WSMain(context, host, cf));        
         setLayout(new BorderLayout());
         
         canvasArea = new JPanel();

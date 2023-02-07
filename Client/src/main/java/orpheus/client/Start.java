@@ -2,6 +2,7 @@ package orpheus.client;
 
 import orpheus.client.gui.components.ComponentFactory;
 import orpheus.client.gui.pages.WorldCanvasTester;
+import util.Settings;
 import orpheus.client.gui.pages.PageController;
 
 /**
@@ -27,7 +28,9 @@ public class Start {
         if(testCanvas){
             WorldCanvasTester.main(args);
         } else {
-            new PageController(new ComponentFactory()); // todo replace with app
+            var settings = new Settings();
+            var context = new AppContext(settings);
+            new PageController(context, new ComponentFactory());
         }
     }
 }

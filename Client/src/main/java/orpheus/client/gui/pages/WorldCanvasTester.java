@@ -4,6 +4,8 @@ import orpheus.client.gui.pages.play.WorldCanvas;
 import orpheus.client.gui.pages.play.WorldPage;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+
+import orpheus.client.AppContext;
 import orpheus.client.gui.components.ComponentFactory;
 import serialization.WorldSerializer;
 import start.*;
@@ -52,9 +54,11 @@ public class WorldCanvasTester {
                     true
             );
             
+            var settings = new Settings();
+            var context = new AppContext(settings);
             ComponentFactory cf = new ComponentFactory();
-            PageController mw = new PageController(cf);
-            WorldPage wp = new WorldPage(mw, cf);
+            PageController mw = new PageController(context, cf);
+            WorldPage wp = new WorldPage(context, mw, cf);
             wp.setCanvas(canvas);
             mw.switchToPage(wp);
             canvas.start();

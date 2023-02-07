@@ -5,6 +5,8 @@ import net.protocols.SoloWorldUpdater;
 import world.battle.Team;
 import world.entities.HumanPlayer;
 import java.awt.Color;
+
+import orpheus.client.AppContext;
 import orpheus.client.gui.components.ComponentFactory;
 import users.LocalUser;
 import orpheus.client.gui.pages.play.WorldCanvas;
@@ -19,8 +21,8 @@ import world.*;
  * @author Matt Crow
  */
 public class WSSolo extends AbstractWSNewWorld{
-    public WSSolo(PageController host, ComponentFactory cf){
-        super(host, cf);
+    public WSSolo(AppContext context, PageController host, ComponentFactory cf){
+        super(context, host, cf);
     }
     
     @Override
@@ -56,7 +58,7 @@ public class WSSolo extends AbstractWSNewWorld{
         
         world.init();
         
-        WorldPage wp = new WorldPage(getHost(), getComponentFactory());
+        WorldPage wp = new WorldPage(getContext(), getHost(), getComponentFactory());
         wp.setCanvas(renderer);
         getHost().switchToPage(wp);
         renderer.start();

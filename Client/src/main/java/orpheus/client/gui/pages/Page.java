@@ -6,6 +6,8 @@ import java.util.function.Supplier;
 import javax.swing.JButton;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
+
+import orpheus.client.AppContext;
 import orpheus.client.gui.components.ComponentFactory;
 
 /**
@@ -21,14 +23,27 @@ import orpheus.client.gui.components.ComponentFactory;
  * @author Matt Crow
  */
 public class Page extends JPanel{
+    /**
+     * the context of the application this is being run in
+     */
+    private final AppContext context;
+
     private final PageController host;
     private final ComponentFactory components;
     private final JMenuBar menuBar;
     
-    public Page(PageController host, ComponentFactory components){
+    public Page(AppContext context, PageController host, ComponentFactory components){
+        this.context = context;
         this.host = host;
         this.components = components;
         menuBar = new JMenuBar();
+    }
+
+    /**
+     * @return the application context this is running in
+     */
+    public AppContext getContext() {
+        return context;
     }
     
     /**

@@ -6,6 +6,8 @@ import orpheus.client.gui.components.Chat;
 import java.awt.BorderLayout;
 import java.util.Arrays;
 import javax.swing.JTextArea;
+
+import orpheus.client.AppContext;
 import orpheus.client.WaitingRoomClientProtocol;
 import orpheus.client.gui.components.ComponentFactory;
 import users.AbstractUser;
@@ -25,10 +27,10 @@ public class WaitingRoom extends Page{
     private final BuildSelect playerBuild;
     private WaitingRoomClientProtocol backend;
     
-    public WaitingRoom(PageController host, ComponentFactory cf){
-        super(host, cf);
+    public WaitingRoom(AppContext context, PageController host, ComponentFactory cf){
+        super(context, host, cf);
         
-        addBackButton(()-> new WSMain(host, cf));
+        addBackButton(()-> new WSMain(context, host, cf));
         
         setLayout(new BorderLayout());
         
@@ -51,8 +53,8 @@ public class WaitingRoom extends Page{
         backend = null;
     }
     
-    public WaitingRoom(PageController host, ComponentFactory cf, WaitingRoomClientProtocol protocol){
-        this(host, cf);
+    public WaitingRoom(AppContext context, PageController host, ComponentFactory cf, WaitingRoomClientProtocol protocol){
+        this(context, host, cf);
         setBackEnd(protocol);
     }
     

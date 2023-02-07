@@ -12,9 +12,11 @@ import javax.swing.*;
  * @author Matt Crow
  */
 public class ComponentFactory {
+    private static Color PRIMARY_COLOR = new Color(155, 155, 0); // gold
     
     public JButton makeButton(String text, Runnable onClick){
         JButton button = new JButton(text);
+        button.setBackground(PRIMARY_COLOR);
         button.addActionListener((e)->onClick.run());
         button.addMouseListener(new MouseAdapter() {
             @Override
@@ -25,7 +27,7 @@ public class ComponentFactory {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                button.setBackground(new JButton().getBackground());
+                button.setBackground(PRIMARY_COLOR);
                 button.repaint();
             }
         });

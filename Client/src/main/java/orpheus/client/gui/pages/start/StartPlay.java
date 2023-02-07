@@ -6,13 +6,15 @@ import java.awt.GridLayout;
 import java.io.File;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import orpheus.client.AppContext;
 import orpheus.client.gui.components.BuildSelect;
 import orpheus.client.gui.components.ComponentFactory;
 import orpheus.client.gui.components.FileChooserUtil;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.worldselect.WSMain;
 import orpheus.client.gui.pages.PageController;
-import orpheus.client.gui.pages.CustomizeBuild;
+import orpheus.client.gui.pages.CustomizeBuildPage;
 import world.build.BuildJsonUtil;
 
 /**
@@ -20,10 +22,10 @@ import world.build.BuildJsonUtil;
  * @author Matt
  */
 public class StartPlay extends Page{
-    public StartPlay(PageController host, ComponentFactory cf){
-        super(host, cf);
+    public StartPlay(AppContext context, PageController host, ComponentFactory cf){
+        super(context, host, cf);
         
-        addBackButton("Main Menu", ()-> new StartPage(host, cf));
+        addBackButton("Main Menu", ()-> new StartPage(context, host, cf));
         addMenuItem(cf.makeButton("Import Builds", this::showImportBuildsDialog));
         addMenuItem(cf.makeButton("Export Builds", this::showExportBuildsDialog));
         
@@ -31,7 +33,7 @@ public class StartPlay extends Page{
         setLayout(new GridLayout(1, 2));
         
         add(cf.makeSpaceAround(cf.makeButton("Play a game", ()->{
-            getHost().switchToPage(new WSMain(host, cf));
+            getHost().switchToPage(new WSMain(context, host, cf));
         }), Color.RED));
         
         JPanel buildSection = cf.makePanel();
@@ -41,7 +43,8 @@ public class StartPlay extends Page{
         bs.refreshOptions();
         buildSection.add(bs, BorderLayout.CENTER);
         buildSection.add(cf.makeButton("Customize this build", ()->{
-            CustomizeBuild cb = new CustomizeBuild(
+            CustomizeBuildPage cb = new CustomizeBuildPage(
+                    context,
                     host, 
                     cf,
                     bs.getSelectedBuild()

@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import world.build.Build;
+import orpheus.client.AppContext;
 import orpheus.client.gui.components.BuildSelect;
 import orpheus.client.gui.components.OptionBox;
 import java.awt.event.ActionEvent;
@@ -25,10 +26,10 @@ public abstract class AbstractWSNewWorld extends Page{
     private final BuildSelect playerBuild;
     private final OptionBox<Integer> numWaves;
     
-    public AbstractWSNewWorld(PageController host, ComponentFactory cf){
-        super(host, cf);
+    public AbstractWSNewWorld(AppContext context, PageController host, ComponentFactory cf){
+        super(context, host, cf);
         
-        addBackButton(()-> new WSMain(host, cf));
+        addBackButton(()-> new WSMain(context, host, cf));
         
         setLayout(new BorderLayout());
         

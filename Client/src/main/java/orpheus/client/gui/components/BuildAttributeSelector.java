@@ -1,18 +1,28 @@
 package orpheus.client.gui.components;
 
-import javax.swing.JComponent;
-import javax.swing.*;
-import world.build.AbstractBuildAttribute;
 import java.awt.BorderLayout;
 import java.util.HashMap;
+import javax.swing.*;
 
-public class CustomizableSelector extends JComponent {
+import world.build.AbstractBuildAttribute;
 
-    private final JTextArea desc;
+/**
+ * presents a component where the user can select an AbstractBuildAttribute, 
+ * such as a CharacterClass, Active, or Passive
+ */
+public class BuildAttributeSelector<T extends AbstractBuildAttribute> extends JComponent {
+
+    /**
+     * presents a list of AbstractBuildAttribute names
+     */
     private final JComboBox<String> chooser;
-    private final HashMap<String, AbstractBuildAttribute> options;
 
-    public CustomizableSelector(ComponentFactory cf, String title, AbstractBuildAttribute[] a) {
+    /**
+     * maps choices in the chooser to AbstractBuildAttributes
+     */
+    private final HashMap<String, T> options;
+
+    public BuildAttributeSelector(ComponentFactory cf, String title, T[] a) {
         super();
         options = new HashMap<>();
 
@@ -20,12 +30,11 @@ public class CustomizableSelector extends JComponent {
 
         add(cf.makeLabel(title), BorderLayout.PAGE_START);
 
-        desc = cf.makeTextArea();
-        JScrollPane scrolly = new JScrollPane(desc);
+        var desc = cf.makeTextArea();
+        var scrolly = new JScrollPane(desc);
         scrolly.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrolly.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         add(scrolly, BorderLayout.CENTER);
-        Style.applyStyling(scrolly);
 
         chooser = new JComboBox<>();
         chooser.addActionListener((e) -> {
@@ -36,15 +45,24 @@ public class CustomizableSelector extends JComponent {
                 });
             }
         });
-        Style.applyStyling(chooser);
         add(chooser, BorderLayout.PAGE_END);
-
-        Style.applyStyling(this);
 
         setOptions(a);
     }
 
-    public void addOption(AbstractBuildAttribute ac) {
+    /**
+     * replaces all the options this currently has with the new ones
+     * @param acs the new build attribute the user can select
+     */
+    public void setOptions(T[] acs) {
+        chooser.removeAllItems();
+        options.clear();
+        for (T ac : acs) {
+            addOption(ac);
+        }
+    }
+
+    private void addOption(T ac) {
         if (options.containsKey(ac.getName())) {
             throw new IllegalArgumentException(ac.getName() + " is already an option.");
         }
@@ -52,23 +70,25 @@ public class CustomizableSelector extends JComponent {
         chooser.addItem(ac.getName());
     }
 
-    public void setOptions(AbstractBuildAttribute[] acs) {
-        chooser.removeAllItems();
-        options.clear();
-        for (AbstractBuildAttribute ac : acs) {
-            addOption(ac);
-        }
-    }
-
-    public void setSelected(AbstractBuildAttribute ac) {
+    /**
+     * chooses the build attribute with the same name as the given one
+     * @param ac the build attribute to simulate selecting
+     * @throws IllegalArgumentException if no attribute with the given one's 
+     *  name is an option
+     */
+    public void setSelected(T ac) {
         if (!options.containsKey(ac.getName())) {
             throw new IllegalArgumentException(ac.getName() + " is not a valid option");
         }
         chooser.setSelectedItem(ac.getName());
     }
 
-    public AbstractBuildAttribute getSelected() {
-        AbstractBuildAttribute ret = null;
+    /**
+     * @return the build attribute the user selected, or null if no attribute is
+     *  selected
+     */
+    public T getSelected() {
+        T ret = null;
         /*
         JComboBox::getSelectedItem returns Object, but this method should throw
         an exception if the selected item is not a String for some reason

@@ -16,6 +16,7 @@ import java.text.NumberFormat;
 import javax.swing.BoxLayout;
 import javax.swing.JFormattedTextField;
 import net.OrpheusClient;
+import orpheus.client.AppContext;
 import orpheus.client.WaitingRoomClientProtocol;
 import orpheus.client.gui.components.ComponentFactory;
 import orpheus.client.gui.pages.PageController;
@@ -52,10 +53,10 @@ public class WSJoin extends Page{
     private final JTextField ip;
     private final JFormattedTextField port;
     
-    public WSJoin(PageController host, ComponentFactory cf) {
-        super(host, cf);
+    public WSJoin(AppContext context, PageController host, ComponentFactory cf) {
+        super(context, host, cf);
         
-        addBackButton(()-> new WSMain(host, cf));
+        addBackButton(()-> new WSMain(context, host, cf));
         
         setLayout(new BorderLayout());
         
@@ -107,7 +108,7 @@ public class WSJoin extends Page{
             LocalUser.getInstance().loginWindow(); // set username
             msgs.append("Attempting to connect to " + ipAddr + "...\n");
             OrpheusClient connection = new OrpheusClient(ipAddr, port);
-            WaitingRoom wait = new WaitingRoom(getHost(), getComponentFactory());
+            WaitingRoom wait = new WaitingRoom(getContext(), getHost(), getComponentFactory());
             WaitingRoomClientProtocol protocol = new WaitingRoomClientProtocol(connection, wait);
             wait.setBackEnd(protocol);
             connection.setProtocol(protocol);
