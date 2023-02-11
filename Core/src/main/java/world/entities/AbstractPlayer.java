@@ -10,6 +10,7 @@ import world.statuses.StatusName;
 import util.Settings;
 import world.build.actives.ElementalActive;
 import world.build.characterClass.CharacterStatName;
+import world.entities.particles.ParticleType;
 import world.events.termination.Terminable;
 import world.events.termination.TerminationListener;
 import world.Tile;
@@ -66,7 +67,8 @@ public abstract class AbstractPlayer extends AbstractEntity implements Terminati
         knockbackMag = 0;
         knockbackDur = 0;
 
-        slash = (ElementalActive) Settings.getDataSet().getActiveByName("Slash");
+        slash = new ElementalActive("Slash", 1, 1, 5, 0, 3); // todo maybe change
+        slash.setParticleType(ParticleType.SHEAR);
         slash.setUser(this);
         log = new DamageBacklog(this, minLifeSpan);
         path = null;

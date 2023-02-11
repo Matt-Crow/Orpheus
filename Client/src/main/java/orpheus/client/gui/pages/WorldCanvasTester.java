@@ -5,7 +5,7 @@ import orpheus.client.gui.pages.play.WorldPage;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 
-import orpheus.client.AppContext;
+import orpheus.client.ClientAppContext;
 import orpheus.client.gui.components.ComponentFactory;
 import serialization.WorldSerializer;
 import start.*;
@@ -26,18 +26,23 @@ public class WorldCanvasTester {
     private static final boolean BATCH_SERIALIZE = false;
 
     public static void main(String[] args) {
-        WorldBuilder wb = new WorldBuilderImpl();
+        var settings = new Settings();
+        var cf = new ComponentFactory();
+        var context = new ClientAppContext(settings, cf);
+        
+        var wb = new WorldBuilderImpl();
 
-        Team players = new Team("Test", Color.BLUE);
-        World w = wb
+        var players = new Team("Test", Color.BLUE);
+        var w = wb
                 .withGame(new Onslaught(5))
                 .withPlayers(players)
                 .withAi(Team.constructRandomTeam(null, "Rando", Color.yellow, 1, 1))
                 .build();
 
-        LocalUser user = LocalUser.getInstance();
-        HumanPlayer player = new HumanPlayer(w, user.getName());
-        player.applyBuild(Settings.getDataSet().getDefaultBuild());
+        var user = LocalUser.getInstance();
+        var player = new HumanPlayer(w, user.getName());
+        var ds = context.getDataSet();
+        player.applyBuild(ds.assemble(ds.getDefaultBuild()));
         players.addMember(player);
         user.setRemotePlayerId(player.id);
 
@@ -54,11 +59,8 @@ public class WorldCanvasTester {
                     true
             );
             
-            var settings = new Settings();
-            var context = new AppContext(settings);
-            ComponentFactory cf = new ComponentFactory();
-            PageController mw = new PageController(context, cf);
-            WorldPage wp = new WorldPage(context, mw, cf);
+            PageController mw = new PageController(context);
+            WorldPage wp = new WorldPage(context, mw);
             wp.setCanvas(canvas);
             mw.switchToPage(wp);
             canvas.start();

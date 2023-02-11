@@ -1,23 +1,29 @@
 package orpheus.client.gui.components;
 
-import util.Settings;
+import world.build.AssembledBuild;
 import world.build.Build;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 
+import orpheus.client.ClientAppContext;
+
 /**
- *
+ * A component that allows players to select which build they want to use
  * @author Matt
  */
 public class BuildSelect extends JPanel{
+    private final ClientAppContext ctx;
     private final JComboBox<String> box;
     private final JTextArea desc;
     
-    public BuildSelect(ComponentFactory cf) {
+    public BuildSelect(ClientAppContext ctx) {
         super();
+        this.ctx = ctx;
         Style.applyStyling(this);
         setLayout(new BorderLayout());
+        
+        var cf = ctx.getComponentFactory();
         
         add(cf.makeLabel("Select Build"), BorderLayout.PAGE_START);
         
@@ -25,7 +31,7 @@ public class BuildSelect extends JPanel{
         desc.setColumns(80);
         desc.setTabSize(4);
         
-        JScrollPane scrolly = new JScrollPane(desc);
+        var scrolly = new JScrollPane(desc);
         scrolly.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrolly.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         add(scrolly, BorderLayout.CENTER);
@@ -34,19 +40,16 @@ public class BuildSelect extends JPanel{
         Style.applyStyling(box);
         add(box, BorderLayout.PAGE_END);
         
-        box.addActionListener(new AbstractAction(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Build b = getSelectedBuild();
-                if(b != null){
-                    desc.setText(b.getDescription());
-                }
-                SwingUtilities.invokeLater(()->{
-                    scrolly.getVerticalScrollBar().setValue(0);
-                });
-                
-                repaint();
+        box.addActionListener((ActionEvent e) -> {
+            var b = getSelectedAssembledBuild();
+            if(b != null){
+                desc.setText(b.getDescription());
             }
+            SwingUtilities.invokeLater(()->{
+                scrolly.getVerticalScrollBar().setValue(0);
+            });
+            
+            repaint();
         });
         
         refreshOptions();
@@ -54,17 +57,24 @@ public class BuildSelect extends JPanel{
     
     public void refreshOptions(){
         box.removeAllItems();
-        for(Build b : Settings.getDataSet().getAllBuilds()){
+        for(var b : ctx.getDataSet().getAllBuilds()){
             box.addItem(b.getName());
         }
     }
     
     public Build getSelectedBuild(){
-        String name = (String)box.getSelectedItem();
+        var name = (String)box.getSelectedItem();
         Build ret = null;
         if(name != null){
-            ret = Settings.getDataSet().getBuildByName(name);
+            ret = ctx.getDataSet().getBuildByName(name);
         }
         return ret;
+    }
+
+    public AssembledBuild getSelectedAssembledBuild() {
+        var unassembled = getSelectedBuild();
+        return (unassembled == null) 
+            ? null 
+            : ctx.getDataSet().assemble(unassembled);
     }
 }

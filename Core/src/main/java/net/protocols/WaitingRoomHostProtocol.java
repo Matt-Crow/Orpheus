@@ -3,6 +3,7 @@ package net.protocols;
 import world.battle.Team;
 import world.build.Build;
 import world.build.BuildJsonUtil;
+import world.build.DataSet;
 import world.entities.HumanPlayer;
 import java.awt.Color;
 import java.io.IOException;
@@ -40,6 +41,12 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
     public static final int WAIT_TIME = 3;
     
     private final Game minigame;
+    
+    /**
+     * the data set this will use to assemble player builds
+     */
+    private final DataSet dataSet;
+
     private final Team playerTeam;
     private World world; // may be null at some points
     
@@ -54,9 +61,14 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
      * @param runningServer
      * @param game the game which players will play once this protocol is done.
      */
-    public WaitingRoomHostProtocol(OrpheusServer runningServer, Game game){
+    public WaitingRoomHostProtocol(
+        OrpheusServer runningServer, 
+        Game game,
+        DataSet dataSet
+    ){
         super(runningServer);
-        minigame = game;   
+        minigame = game;
+        this.dataSet = dataSet;
         playerTeam = new Team("Players", Color.blue);
         awaitingBuilds = new HashSet<>();
     }
@@ -196,7 +208,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         }
 
         Build b = BuildJsonUtil.deserializeJson(JsonUtil.fromString(sm.getMessage().getBody()));
-        player.applyBuild(b);
+        player.applyBuild(dataSet.assemble(b));
         playerTeam.addMember(player);
         
         sendRemoteId(sender, player.id);

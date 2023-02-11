@@ -1,18 +1,16 @@
 package orpheus.client.gui.pages;
 
-import util.Settings;
 import world.build.Build;
 import world.build.actives.AbstractActive;
 import world.build.characterClass.CharacterClass;
 import world.build.passives.AbstractPassive;
-import orpheus.client.AppContext;
+import orpheus.client.ClientAppContext;
 import orpheus.client.gui.components.BuildAttributeSelector;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JTextField;
-import orpheus.client.gui.components.ComponentFactory;
 import orpheus.client.gui.pages.start.StartPlay;
 
 /**
@@ -25,8 +23,10 @@ public class CustomizeBuildPage extends Page {
     private final ArrayList<BuildAttributeSelector<AbstractActive>> acts;
     private final ArrayList<BuildAttributeSelector<AbstractPassive>> pass;
     
-    public CustomizeBuildPage(AppContext context, PageController host, ComponentFactory cf, Build customizing){
-        super(context, host, cf);
+    public CustomizeBuildPage(ClientAppContext context, PageController host, Build customizing){
+        super(context, host);
+
+        var cf = context.getComponentFactory();
         
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         
@@ -61,11 +61,11 @@ public class CustomizeBuildPage extends Page {
         
         add(cf.makeSpaceAround(cf.makeButton("Save and exit", ()->{
             save();
-            getHost().switchToPage(new StartPlay(context, host, cf));
+            getHost().switchToPage(new StartPlay(context, host));
         })));
         
         // populate fields
-        var ds = Settings.getDataSet();
+        var ds = context.getDataSet();
         
         charClassSel.setOptions(ds.getAllCharacterClasses());
         for(int i = 0; i < 3; i++){
@@ -77,7 +77,7 @@ public class CustomizeBuildPage extends Page {
     }
 
     private void setCustomizing(Build selectedBuild) {
-        var ds = Settings.getDataSet();
+        var ds = getContext().getDataSet();
         name.setText(selectedBuild.getName());
         charClassSel.setSelected(ds.getCharacterClassByName(selectedBuild.getClassName()));
         String[] actNames = selectedBuild.getActiveNames();
@@ -89,7 +89,7 @@ public class CustomizeBuildPage extends Page {
     }
     
     private void save(){
-        getContext().getSettings().getDataSet().addBuild(new Build(
+        getContext().getDataSet().addBuild(new Build(
             name.getText(),
             charClassSel.getSelected().getName(),
             acts.get(0).getSelected().getName(),

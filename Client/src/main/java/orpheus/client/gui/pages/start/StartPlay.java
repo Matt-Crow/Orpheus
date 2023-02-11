@@ -7,9 +7,8 @@ import java.io.File;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import orpheus.client.AppContext;
+import orpheus.client.ClientAppContext;
 import orpheus.client.gui.components.BuildSelect;
-import orpheus.client.gui.components.ComponentFactory;
 import orpheus.client.gui.components.FileChooserUtil;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.worldselect.WSMain;
@@ -22,10 +21,12 @@ import world.build.BuildJsonUtil;
  * @author Matt
  */
 public class StartPlay extends Page{
-    public StartPlay(AppContext context, PageController host, ComponentFactory cf){
-        super(context, host, cf);
+    public StartPlay(ClientAppContext context, PageController host){
+        super(context, host);
+
+        var cf = context.getComponentFactory();
         
-        addBackButton("Main Menu", ()-> new StartPage(context, host, cf));
+        addBackButton("Main Menu", ()-> new StartPage(context, host));
         addMenuItem(cf.makeButton("Import Builds", this::showImportBuildsDialog));
         addMenuItem(cf.makeButton("Export Builds", this::showExportBuildsDialog));
         
@@ -33,20 +34,19 @@ public class StartPlay extends Page{
         setLayout(new GridLayout(1, 2));
         
         add(cf.makeSpaceAround(cf.makeButton("Play a game", ()->{
-            getHost().switchToPage(new WSMain(context, host, cf));
+            getHost().switchToPage(new WSMain(context, host));
         }), Color.RED));
         
         JPanel buildSection = cf.makePanel();
         buildSection.setLayout(new BorderLayout());
         buildSection.add(cf.makeLabel("Your Builds"), BorderLayout.PAGE_START);
-        BuildSelect bs = new BuildSelect(cf);
+        BuildSelect bs = new BuildSelect(context);
         bs.refreshOptions();
         buildSection.add(bs, BorderLayout.CENTER);
         buildSection.add(cf.makeButton("Customize this build", ()->{
             CustomizeBuildPage cb = new CustomizeBuildPage(
                     context,
-                    host, 
-                    cf,
+                    host,
                     bs.getSelectedBuild()
             );
             getHost().switchToPage(cb);
@@ -58,7 +58,7 @@ public class StartPlay extends Page{
     
     private void showImportBuildsDialog(){
         FileChooserUtil.chooseJsonFile("Choose the build file", (f)->{
-            BuildJsonUtil.loadFile(f);
+            BuildJsonUtil.loadFileInto(f, getContext().getDataSet());
         });
     }
     
@@ -66,7 +66,7 @@ public class StartPlay extends Page{
         FileChooserUtil.chooseDir("Choose a direcory to save builds to", (f)->{
             String name = JOptionPane.showInputDialog("Enter a name for this export:");
             File buildFile = new File(f.getAbsolutePath() + "/" + name);
-            BuildJsonUtil.saveAllToFile(buildFile);
+            BuildJsonUtil.saveAllToFile(getContext().getDataSet(), buildFile);
         });
     }
 }

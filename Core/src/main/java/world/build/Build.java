@@ -1,16 +1,8 @@
 package world.build;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-import util.Settings;
-
-
 /**
- * A Build is a collection of 
- * CharacterClass, 
- * 3 active abilities,
- * and 3 passive abilities
- * which are applied to Players at the beginning of a match
+ * A Build is a collection of CharacterClass, 3 active abilities, and 3 passive 
+ * abilities which are applied to Players at the beginning of a match
  * @author Matt
  */
 public class Build{	
@@ -51,40 +43,21 @@ public class Build{
 	public String[] getPassiveNames(){
 		return passiveNames;
 	}
-    
-    public String getDescription(){
-        DataSet ds = Settings.getDataSet();
-        
+
+    public String getDescription() {
         StringBuilder sb = new StringBuilder();
-        String sep = "~~~~~~~~~~~~~~~~~~~~";
-        sb.append("Build ").append(name).append(": \n");
-        sb.append("Class: \n").append(
-            entab(
-                ds.getCharacterClassByName(className).getDescription())
-        )
-            .append("\n");
-        sb.append("Actives: \n");
-        for(String an : activeNames){
-            sb.append(
-                entab(
-                    sep + '\n' +
-                    ds.getActiveByName(an).getDescription()
-                )
-            ).append("\n");
+
+        sb.append("Build\n");
+        sb.append(String.format(" * name: %s\n", name));
+        sb.append(String.format(" * class: %s\n", className));
+        sb.append(" * actives:\n");
+        for (String act : activeNames) {
+            sb.append(String.format("\t * %s\n", act));
         }
-        sb.append("Passives: \n");
-        for(String pn : passiveNames){
-            sb.append(
-                entab(
-                    sep + '\n' +
-                    ds.getPassiveByName(pn).getDescription()
-                )
-            ).append("\n");
+        sb.append(" * passives:\n");
+        for (String pas : passiveNames) {
+            sb.append(String.format("\t * %s\n", pas));
         }
         return sb.toString();
-    }
-    
-    public static String entab(String s){
-        return Arrays.stream(s.split("\n")).collect(Collectors.joining("\n\t", "\t", ""));
     }
 }

@@ -5,8 +5,7 @@ import java.awt.GridBagLayout;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
-import orpheus.client.AppContext;
-import orpheus.client.gui.components.ComponentFactory;
+import orpheus.client.ClientAppContext;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.PageController;
 
@@ -15,10 +14,12 @@ import orpheus.client.gui.pages.PageController;
  * @author Matt
  */
 public class StartTextDisplay extends Page{
-    public StartTextDisplay(AppContext context, PageController host, ComponentFactory cf, String displayText){
-        super(context, host, cf);
-        addBackButton(()-> new StartPage(context, host, cf));
+    public StartTextDisplay(ClientAppContext context, PageController host, String displayText){
+        super(context, host);
+        addBackButton(()-> new StartPage(context, host));
         
+        var cf = context.getComponentFactory();
+
         /*
         Layout: text occupies the middle 50% of the screen
         */

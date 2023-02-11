@@ -29,8 +29,8 @@ public class Start {
             WorldCanvasTester.main(args);
         } else {
             var settings = new Settings();
-            var context = new AppContext(settings);
-            new PageController(context, new ComponentFactory());
+            var context = new ClientAppContext(settings, new ComponentFactory());
+            new PageController(context);
         }
     }
 }

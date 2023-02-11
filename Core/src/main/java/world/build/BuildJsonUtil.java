@@ -1,6 +1,5 @@
 package world.build;
 
-import util.Settings;
 import java.io.File;
 import java.util.Arrays;
 import javax.json.Json;
@@ -15,20 +14,25 @@ import serialization.JsonUtil;
  * @author Matt Crow
  */
 public class BuildJsonUtil {
-    public static void saveAllToFile(File f){
-        JsonObject[] objs = Arrays.stream(Settings.getDataSet().getAllBuilds()).map((Build b)->{
+    public static void saveAllToFile(DataSet dataSet, File f){
+        JsonObject[] objs = Arrays.stream(dataSet.getAllBuilds()).map((Build b)->{
             return serializeJson(b);
         }).toArray(size -> new JsonObject[size]);
         JsonUtil.writeToFile(objs, f);  
     }
     
-    public static void loadFile(File f){
+    /**
+     * adds all builds from the given file into the given data set, overriding
+     * any existing ones with the same names, without deleting any existing ones
+     * @param f the file to read
+     * @param dataSet the data set to load new builds into
+     */
+    public static void loadFileInto(File f, DataSet dataSet){
         Build b = null;
-        DataSet ds = Settings.getDataSet();
         for(JsonObject obj : JsonUtil.readFromFile(f)){
             b = deserializeJson(obj);
             if(b != null){
-                ds.addBuild(b);
+                dataSet.addBuild(b);
             }
         }
     }

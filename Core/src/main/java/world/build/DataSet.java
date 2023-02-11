@@ -44,6 +44,21 @@ public final class DataSet {
         addPassive(DEFAULT_PASSIVE);
         addBuild(DEFAULT_BUILD);
     }
+
+    public AssembledBuild getAssembledBuildByName(String name) {
+        return assemble(getBuildByName(name));
+    }
+
+    public AssembledBuild assemble(Build b) {
+        AssembledBuild assembled = new AssembledBuild(
+            b.getName(), 
+            getCharacterClassByName(b.getClassName()), 
+            Arrays.stream(b.getActiveNames()).map(this::getActiveByName).toArray((s) -> new AbstractActive[s]),
+            Arrays.stream(b.getPassiveNames()).map(this::getPassiveByName).toArray((s) -> new AbstractPassive[s])
+        );
+
+        return assembled;
+    }
     
     @SuppressWarnings("unchecked")
     private <T extends AbstractBuildAttribute> void addToMap(T c, HashMap<String, T> map){
