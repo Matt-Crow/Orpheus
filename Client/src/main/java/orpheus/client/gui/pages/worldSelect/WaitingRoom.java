@@ -9,7 +9,6 @@ import javax.swing.JTextArea;
 
 import orpheus.client.ClientAppContext;
 import orpheus.client.WaitingRoomClientProtocol;
-import users.AbstractUser;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.PageController;
 
@@ -35,7 +34,7 @@ public class WaitingRoom extends Page{
         
         add(cf.makeLabel("Waiting for players to join..."), BorderLayout.PAGE_START);
         
-        chat = new Chat(cf, null);
+        chat = new Chat(context, null);
         add(chat, BorderLayout.LINE_START);
         
         playerBuild = new BuildSelect(context);
@@ -69,7 +68,7 @@ public class WaitingRoom extends Page{
         String newStr = "Player Team: \n";
         newStr = Arrays
             .stream(backend.getTeamProto())
-            .map((AbstractUser use) -> "* " + use.getName() + "\n")
+            .map((use) -> "* " + use.getName() + "\n")
             .reduce(newStr, String::concat);
         teamList.setText(newStr);
     }

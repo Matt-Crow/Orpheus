@@ -2,6 +2,8 @@ package net;
 
 import java.io.IOException;
 
+import orpheus.core.users.LocalUser;
+
 /**
  *
  * @author Matt Crow
@@ -13,8 +15,8 @@ public class ServerProvider {
         return server;
     }
     
-    public final OrpheusClient createClient(String hostIp, int hostPort) throws IOException {
-        OrpheusClient client = new OrpheusClient(hostIp, hostPort);
+    public final OrpheusClient createClient(LocalUser user, String hostIp, int hostPort) throws IOException {
+        OrpheusClient client = new OrpheusClient(user, hostIp, hostPort);
         client.start();
         return client;
     }

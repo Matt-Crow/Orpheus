@@ -12,9 +12,10 @@ import net.OrpheusServer;
 import net.messages.*;
 import net.protocols.ChatMessageListener;
 import net.protocols.ChatProtocol;
-import users.LocalUser;
+import orpheus.client.ClientAppContext;
 
 public class Chat extends JComponent implements ActionListener, ChatMessageListener {
+    private final ClientAppContext context;
     private final JTextArea msgs;
     private final JScrollPane box;
     private final JTextField newMsg;
@@ -22,9 +23,12 @@ public class Chat extends JComponent implements ActionListener, ChatMessageListe
     private final OrpheusServer chatServer;
     private boolean chatServerOpened;
     
-    public Chat(ComponentFactory cf, OrpheusServer chatServer){
+    public Chat(ClientAppContext context, OrpheusServer chatServer){
         super();
+        this.context = context;
         
+        var cf = context.getComponentFactory();
+
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         
@@ -123,10 +127,10 @@ public class Chat extends JComponent implements ActionListener, ChatMessageListe
         if(!chatServerOpened){
             openChatServer();
         }
-        if(this.chatServer.isStarted()){
+        if(chatServer.isStarted()){
             logLocal("Joined chat with " + ipAddr);
             chatServer.send(new ServerMessage(
-                LocalUser.getInstance().getName() + " has joined the chat.",
+                context.getLoggedInUser().getName() + " has joined the chat.",
                 ServerMessageType.CHAT
             ));
         }

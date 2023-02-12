@@ -1,6 +1,5 @@
 package start;
 
-import users.AbstractUser;
 import commands.OrpheusCommand;
 
 /**
@@ -11,15 +10,6 @@ import commands.OrpheusCommand;
  * @author Matt Crow
  */
 public abstract class AbstractOrpheusCommandInterpreter {
-    private final AbstractUser user;
-    
-    protected AbstractOrpheusCommandInterpreter(AbstractUser user){
-        this.user = user;
-    }
-    
-    public final AbstractUser getUser(){
-        return user;
-    }
     
     public final void execute(OrpheusCommand cmd){
         doSendMessage(cmd);

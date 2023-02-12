@@ -1,14 +1,14 @@
 package orpheus.client.gui.pages.worldselect;
 
 import java.io.IOException;
+
 import net.OrpheusClient;
 import net.OrpheusServer;
 import net.ServerProvider;
+import net.protocols.WaitingRoomHostProtocol;
 import orpheus.client.ClientAppContext;
 import orpheus.client.WaitingRoomClientProtocol;
-import net.protocols.WaitingRoomHostProtocol;
 import orpheus.client.gui.pages.PageController;
-import users.LocalUser;
 
 /**
  *
@@ -21,7 +21,7 @@ public class WSNewMulti extends AbstractWSNewWorld{
     
     @Override
     public void start(){
-        LocalUser.getInstance().loginWindow();
+        getContext().showLoginWindow(); // ask annonymous users to log in
         try{
             OrpheusServer server = new ServerProvider().createHost();
             WaitingRoomHostProtocol hostProtocol = new WaitingRoomHostProtocol(
@@ -32,7 +32,11 @@ public class WSNewMulti extends AbstractWSNewWorld{
             server.setProtocol(hostProtocol);   
             server.start();
             
-            OrpheusClient client = new OrpheusClient(server.getIpAddress(), server.getPort());
+            OrpheusClient client = new OrpheusClient(
+                getContext().getLoggedInUser(),
+                server.getIpAddress(),
+                server.getPort()
+            );
             WaitingRoom room = new WaitingRoom(getContext(), getHost());
             WaitingRoomClientProtocol clientProtocol = new WaitingRoomClientProtocol(client, room);
             client.setProtocol(clientProtocol);

@@ -16,8 +16,8 @@ import net.AbstractNetworkClient;
 import net.OrpheusServer;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
+import orpheus.core.users.User;
 import serialization.JsonUtil;
-import users.AbstractUser;
 import java.util.HashSet;
 import net.messages.ServerMessage;
 import serialization.WorldSerializer;
@@ -54,7 +54,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
     The Users who have joined the waiting room, but have
     not yet sent their Builds to the server
     */
-    private final HashSet<AbstractUser> awaitingBuilds;
+    private final HashSet<User> awaitingBuilds;
     
     /**
      * Creates the protocol.
@@ -122,7 +122,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         addUserToTeam automatically notifies everone 
         connected that someone has joined
         */
-        AbstractUser joiningUser = sm.getSender();
+        User joiningUser = sm.getSender();
         addUserToTeam(joiningUser);
         
         /*
@@ -133,7 +133,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         JsonObjectBuilder initMsgBuild = Json.createObjectBuilder();
         initMsgBuild.add("type", "waiting room init");
         JsonArrayBuilder userListBuild = Json.createArrayBuilder();
-        for(AbstractUser u : getTeamProto()){
+        for(User u : getTeamProto()){
             userListBuild.add(u.serializeJson());
         }
         initMsgBuild.add("team", userListBuild.build());
@@ -150,7 +150,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
      * and alerts all connected players
      * @param u the User who wants to play
      */
-    public final void addUserToTeam(AbstractUser u){
+    public final void addUserToTeam(User u){
         if(addToTeamProto(u)){
             awaitingBuilds.add(u);
             ServerMessage sm = new ServerMessage(
@@ -194,7 +194,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
      */
     private void receiveBuildInfo(ServerMessagePacket sm){
         HumanPlayer player = null;
-        AbstractUser sender = sm.getSender();
+        User sender = sm.getSender();
         
         if(awaitingBuilds.contains(sender)){
             player = new HumanPlayer(
@@ -220,7 +220,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
      * @param ipAddr the user to send the IDs to.
      * @param playerId the ID of that user's Player on this computer
      */
-    private void sendRemoteId(AbstractUser user, String playerId){
+    private void sendRemoteId(User user, String playerId){
         ServerMessage sm = new ServerMessage(
             playerId,
             ServerMessageType.NOTIFY_IDS

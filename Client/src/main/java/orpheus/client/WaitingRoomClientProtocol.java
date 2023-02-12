@@ -8,11 +8,11 @@ import javax.json.JsonValue;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import serialization.JsonUtil;
-import users.AbstractUser;
-import users.LocalUser;
 import orpheus.client.gui.pages.play.WorldCanvas;
 import orpheus.client.gui.pages.play.WorldPage;
 import orpheus.client.gui.pages.worldselect.WaitingRoom;
+import orpheus.core.users.User;
+
 import java.io.IOException;
 import java.io.StringReader;
 import javax.json.Json;
@@ -87,7 +87,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
         JsonUtil.verify(obj, "team");
         obj.getJsonArray("team").stream().forEach((jv) -> {
             if (jv.getValueType().equals(JsonValue.ValueType.OBJECT)) {
-                AbstractUser u = AbstractUser.deserializeJson((JsonObject) jv);
+                User u = User.fromJson((JsonObject) jv);
                 addToTeamProto(u);
             }
         });
@@ -100,7 +100,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
                         sm.getMessage().getBody()
                 )
         ).readObject();
-        addToTeamProto(AbstractUser.deserializeJson(json));
+        addToTeamProto(User.fromJson(json));
         room.updateTeamDisplays();
     }
 
@@ -117,7 +117,8 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
     }
 
     private void receiveRemoteId(ServerMessagePacket sm) {
-        LocalUser.getInstance().setRemotePlayerId(sm.getMessage().getBody());
+        var player = room.getContext().getLoggedInUser();
+        player.setRemotePlayerId(sm.getMessage().getBody());
     }
 
     /**
@@ -137,9 +138,9 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
                 .withContent((WorldContent) WorldSerializer.fromSerializedString(sm.getMessage().getBody()))
                 .build();
 
-        LocalUser me = LocalUser.getInstance();
+        var me = room.getContext().getLoggedInUser();
 
-        RemoteOrpheusClient orpheus = new RemoteOrpheusClient(me, getServer());
+        RemoteOrpheusClient orpheus = new RemoteOrpheusClient(getServer());
         WorldPage p = new WorldPage(room.getContext(), room.getHost());
         WorldCanvas renderer = new WorldCanvas(
                 entireWorld,

@@ -1,13 +1,23 @@
 package orpheus.client;
 
+import java.util.Optional;
+
+import javax.swing.JOptionPane;
+
 import orpheus.client.gui.components.ComponentFactory;
 import orpheus.core.AppContext;
+import orpheus.core.users.LocalUser;
 import util.Settings;
 
 /**
  * the top-level, psuedo-static application context
  */
 public class ClientAppContext extends AppContext {
+
+    /**
+     * the currently logged in user
+     */
+    private Optional<LocalUser> user = Optional.empty();
 
     /**
      * used to produce components for the GUI
@@ -33,5 +43,25 @@ public class ClientAppContext extends AppContext {
      */
     public ComponentFactory getComponentFactory() {
         return componentFactory;
+    }
+
+    /**
+     * shows the login window iff no user is logged in
+     */
+    public void showLoginWindow() {
+        if (user.isEmpty()) {
+            var name = JOptionPane.showInputDialog("Enter a username:");
+            if (name != null) {
+                user = Optional.of(new LocalUser(name));
+            }
+        }
+    }
+
+    /**
+     * throws an exception if no user is logged in
+     * @return
+     */
+    public LocalUser getLoggedInUser() {
+        return user.get();
     }
 }

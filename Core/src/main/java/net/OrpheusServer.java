@@ -10,8 +10,8 @@ import net.messages.MessageListener;
 import net.messages.ServerMessage;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
+import orpheus.core.users.User;
 import serialization.JsonUtil;
-import users.AbstractUser;
 
 /**
  * OrpheusServer is a somewhat deceptive title, as this is
@@ -115,7 +115,7 @@ public class OrpheusServer extends AbstractNetworkClient {
         }
     }
     
-    public final boolean send(ServerMessage sm, AbstractUser recipient){
+    public final boolean send(ServerMessage sm, User recipient){
         boolean success = false;
         if(clients.isConnectedTo(recipient)){
             try {
@@ -153,14 +153,14 @@ public class OrpheusServer extends AbstractNetworkClient {
             log("already connected");
         } else if(isConnected){
             //connected to IP, but no user data set yet
-            AbstractUser sender = AbstractUser.deserializeJson(JsonUtil.fromString(sm.getMessage().getBody()));      
+            User sender = User.fromJson(JsonUtil.fromString(sm.getMessage().getBody()));      
             sm.setSender(sender);
             clients.setUser(sender, sm.getSendingSocket());
         } else {
             //not connected, no user data
             try {
                 connect(sm.getSendingSocket());
-                AbstractUser sender = AbstractUser.deserializeJson(JsonUtil.fromString(sm.getMessage().getBody()));
+                User sender = User.fromJson(JsonUtil.fromString(sm.getMessage().getBody()));
                 sm.setSender(sender);
                 clients.getConnectionTo(ip).setRemoteUser(sender);
             } catch (IOException ex){

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="orpheus.tests.JsonUtilTester" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-02-11T21:34:01" hostname="LAPTOP-TOFVPK12" time="0.186">
+<testsuite name="orpheus.tests.JsonUtilTester" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-02-12T00:15:47" hostname="LAPTOP-TOFVPK12" time="0.084">
   <properties/>
-  <testcase name="testJsonUtil()" classname="orpheus.tests.JsonUtilTester" time="0.186"/>
+  <testcase name="testJsonUtil()" classname="orpheus.tests.JsonUtilTester" time="0.084"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

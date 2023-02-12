@@ -2,22 +2,23 @@ package orpheus.client.gui.pages.worldselect;
 
 import java.awt.BorderLayout;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Pattern;
+
+import javax.swing.BoxLayout;
+import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
-import users.LocalUser;
-import orpheus.client.gui.pages.Page;
-import java.text.NumberFormat;
-import javax.swing.BoxLayout;
-import javax.swing.JFormattedTextField;
+
 import net.OrpheusClient;
 import orpheus.client.ClientAppContext;
 import orpheus.client.WaitingRoomClientProtocol;
+import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.PageController;
 
 /**
@@ -103,10 +104,10 @@ public class WSJoin extends Page{
     }
     
     private void join(String ipAddr, int port){
+        getContext().showLoginWindow(); // ask annonymous users to log in
+        msgs.append("Attempting to connect to " + ipAddr + "...\n");
         try {
-            LocalUser.getInstance().loginWindow(); // set username
-            msgs.append("Attempting to connect to " + ipAddr + "...\n");
-            OrpheusClient connection = new OrpheusClient(ipAddr, port);
+            OrpheusClient connection = new OrpheusClient(getContext().getLoggedInUser(), ipAddr, port);
             WaitingRoom wait = new WaitingRoom(getContext(), getHost());
             WaitingRoomClientProtocol protocol = new WaitingRoomClientProtocol(connection, wait);
             wait.setBackEnd(protocol);

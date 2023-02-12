@@ -1,6 +1,8 @@
 package net.connections;
 
 import net.messages.ServerMessagePacket;
+import orpheus.core.users.User;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -8,14 +10,18 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import net.messages.ServerMessage;
-import users.AbstractUser;
 
 /**
  *
  * @author Matt Crow
  */
 public class Connection {
-    private AbstractUser remoteUser; //the remoteUser playing Orpheus on the machine this connects to
+
+    /**
+     * the user playing Orpheus on the machine this connects to
+     */
+    private User remoteUser;
+    
     private final Socket clientSocket;    
     private final BufferedReader fromClient;
     private final BufferedWriter toClient;
@@ -62,10 +68,10 @@ public class Connection {
         }
     }
     
-    public void setRemoteUser(AbstractUser u){
+    public void setRemoteUser(User u){
         remoteUser = u;
     }
-    public AbstractUser getRemoteUser(){
+    public User getRemoteUser(){
         return remoteUser;
     }
     

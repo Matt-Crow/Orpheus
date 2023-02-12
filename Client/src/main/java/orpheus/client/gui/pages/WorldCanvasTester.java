@@ -2,6 +2,8 @@ package orpheus.client.gui.pages;
 
 import orpheus.client.gui.pages.play.WorldCanvas;
 import orpheus.client.gui.pages.play.WorldPage;
+import orpheus.core.users.LocalUser;
+
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 
@@ -9,7 +11,6 @@ import orpheus.client.ClientAppContext;
 import orpheus.client.gui.components.ComponentFactory;
 import serialization.WorldSerializer;
 import start.*;
-import users.LocalUser;
 import util.Settings;
 import world.*;
 import world.battle.Team;
@@ -39,7 +40,7 @@ public class WorldCanvasTester {
                 .withAi(Team.constructRandomTeam(null, "Rando", Color.yellow, 1, 1))
                 .build();
 
-        var user = LocalUser.getInstance();
+        var user = new LocalUser("Foo");
         var player = new HumanPlayer(w, user.getName());
         var ds = context.getDataSet();
         player.applyBuild(ds.assemble(ds.getDefaultBuild()));
@@ -51,7 +52,7 @@ public class WorldCanvasTester {
         WorldSerializer ws = new WorldSerializer(w);
 
         if (GUI) {
-            SoloOrpheusCommandInterpreter orpheus = new SoloOrpheusCommandInterpreter(user);
+            SoloOrpheusCommandInterpreter orpheus = new SoloOrpheusCommandInterpreter();
 
             WorldCanvas canvas = new WorldCanvas(
                     w,

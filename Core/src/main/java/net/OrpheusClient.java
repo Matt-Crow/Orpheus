@@ -7,20 +7,22 @@ import net.messages.MessageListener;
 import net.messages.ServerMessage;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
-import users.LocalUser;
+import orpheus.core.users.LocalUser;
 
 /**
  *
  * @author Matt Crow
  */
 public class OrpheusClient extends AbstractNetworkClient {
+    private final LocalUser user;
     private final String hostIp;
     private final int hostPort;
     
     private Connection toServer;
     
-    public OrpheusClient(String hostIp, int hostPort){
+    public OrpheusClient(LocalUser user, String hostIp, int hostPort){
         super();
+        this.user = user;
         this.hostIp = hostIp;
         this.hostPort = hostPort;
     }
@@ -32,7 +34,7 @@ public class OrpheusClient extends AbstractNetworkClient {
         MessageListener listener = new MessageListener(toServer, this::receiveMessage);
         listener.startListening();
         send(new ServerMessage(
-            LocalUser.getInstance().serializeJson().toString(), 
+            user.serializeJson().toString(), 
             ServerMessageType.PLAYER_JOINED
         ));
     }

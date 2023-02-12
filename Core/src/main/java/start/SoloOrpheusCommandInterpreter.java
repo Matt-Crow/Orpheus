@@ -1,16 +1,12 @@
 package start;
 
-import users.AbstractUser;
 import commands.OrpheusCommand;
 
 /**
- *
+ * immediately forwards commands to itself
  * @author Matt Crow
  */
 public class SoloOrpheusCommandInterpreter extends AbstractOrpheusCommandInterpreter {
-    public SoloOrpheusCommandInterpreter(AbstractUser user){
-        super(user);
-    }
 
     @Override
     public void doSendMessage(OrpheusCommand packet) {

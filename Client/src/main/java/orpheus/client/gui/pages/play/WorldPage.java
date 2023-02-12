@@ -50,7 +50,7 @@ public class WorldPage extends Page{
         JPanel otherArea = new JPanel();
         otherArea.setLayout(new GridBagLayout());
         GridBagConstraints c2 = new GridBagConstraints();
-        chat = new Chat(cf, null);
+        chat = new Chat(context, null);
         c2.fill = GridBagConstraints.VERTICAL;
         c2.anchor = GridBagConstraints.FIRST_LINE_START;
         c2.weightx = 1.0;

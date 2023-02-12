@@ -1,6 +1,5 @@
 package start;
 
-import users.AbstractUser;
 import commands.OrpheusCommand;
 import commands.SerializeableOrpheusCommand;
 import net.OrpheusClient;
@@ -12,8 +11,8 @@ import net.OrpheusClient;
 public class RemoteOrpheusClient extends AbstractOrpheusCommandInterpreter {
     private final OrpheusClient client;
     
-    public RemoteOrpheusClient(AbstractUser user, OrpheusClient client) {
-        super(user);
+    public RemoteOrpheusClient(OrpheusClient client) {
+        super();
         this.client = client;
     }
 

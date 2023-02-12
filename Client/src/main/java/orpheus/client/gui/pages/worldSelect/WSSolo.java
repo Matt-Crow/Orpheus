@@ -7,7 +7,6 @@ import world.entities.HumanPlayer;
 import java.awt.Color;
 
 import orpheus.client.ClientAppContext;
-import users.LocalUser;
 import orpheus.client.gui.pages.play.WorldCanvas;
 import orpheus.client.gui.pages.play.WorldPage;
 import start.AbstractOrpheusCommandInterpreter;
@@ -26,8 +25,7 @@ public class WSSolo extends AbstractWSNewWorld{
     
     @Override
     public void start(){
-        LocalUser user = LocalUser.getInstance();
-        AbstractOrpheusCommandInterpreter orpheus = new SoloOrpheusCommandInterpreter(user);
+        AbstractOrpheusCommandInterpreter orpheus = new SoloOrpheusCommandInterpreter();
         
         Team team1 = new Team("Players", Color.green);
         Team team2 = new Team("AI", Color.red);
@@ -42,7 +40,7 @@ public class WSSolo extends AbstractWSNewWorld{
         
         HumanPlayer player = new HumanPlayer(
             world,
-            user.getName()
+            "local user"
         );
         
         player.applyBuild(getSelectedBuild());
