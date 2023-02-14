@@ -22,7 +22,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'Server.App'
+    mainClass = 'orpheus.server.Main'
 }
 
 tasks.named('test') {
