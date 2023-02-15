@@ -2,8 +2,12 @@ package orpheus.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 
+import orpheus.core.net.messages.Message;
+import orpheus.server.connections.Connection;
 import orpheus.server.connections.ConnectionListenerThread;
+import orpheus.server.connections.MessageListenerThread;
 
 /**
  * waits for connections, then directs the client to a waiting room
@@ -27,7 +31,7 @@ public class OrpheusServer {
     
     private OrpheusServer(ServerSocket socket) {
         this.socket = socket;
-        this.listenerThread = ConnectionListenerThread.spawn(socket);
+        this.listenerThread = ConnectionListenerThread.spawn(socket, this::connect);
     }
 
     /**
@@ -69,5 +73,23 @@ public class OrpheusServer {
      */
     public int getPort() {
         return socket.getLocalPort();
+    }
+
+    private void connect(Socket client) {
+        try {
+            tryConnect(client);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+    
+    private void tryConnect(Socket client) throws IOException {
+        var connection = Connection.connect(client);
+        var t = new MessageListenerThread(connection, this::receive);
+        // todo save t for later
+    }
+
+    private void receive(Message message) {
+        System.out.printf("Server received %s", message.toString());
     }
 }

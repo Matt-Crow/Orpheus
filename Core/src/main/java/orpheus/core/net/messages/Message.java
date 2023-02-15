@@ -1,12 +1,13 @@
 package orpheus.core.net.messages;
 
+import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.Optional;
 
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import javax.json.JsonValue;
-import javax.json.JsonValue.ValueType;
+import javax.json.stream.JsonGenerator;
 
 import orpheus.core.users.User;
 
@@ -94,7 +95,7 @@ public class Message {
      * converts this message to JSON
      * @return the JSON representation of this object
      */
-    public JsonValue toJson() {
+    public JsonObject toJson() {
         JsonObjectBuilder builder = Json.createObjectBuilder();
         if (sender.isPresent()) {
             builder.add("sender", sender.get().serializeJson());
@@ -104,12 +105,25 @@ public class Message {
         return builder.build();
     }
 
-    public static Message fromJson(JsonValue json) {
-        if (json.getValueType() != ValueType.OBJECT) {
-            throw new IllegalArgumentException("can only be decoded from JSON object");
-        }
+    public static Message fromJson(JsonObject json) {
+        MessageType type = MessageType.fromString(json.getString("type"));
+        JsonObject body = json.getJsonObject("body");
 
-        // todo convert to object, decode
-        throw new RuntimeException("todo");
+        Message message = (json.containsKey("sender"))
+            ? new Message(User.fromJson(json.getJsonObject("sender")), type, body)
+            : new Message(type, body);
+        
+        return message;
+    }
+
+    @Override
+    public String toString() {
+        var w = new StringWriter();
+        var config = new HashMap<String, String>();
+        config.put(JsonGenerator.PRETTY_PRINTING, "");
+        Json.createWriterFactory(config)
+            .createWriter(w)
+            .writeObject(toJson());
+        return w.toString();
     }
 }
