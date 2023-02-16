@@ -1,7 +1,7 @@
 package orpheus.server.connections;
 
 import java.io.IOException;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 import orpheus.core.net.messages.Message;
 
@@ -18,7 +18,7 @@ public class MessageListenerThread {
     /**
      * handles messages received from the connection
      */
-    private final Consumer<Message> handleMessage;
+    private final BiConsumer<Connection, Message> handleMessage;
 
     /**
      * the thread this is listening on
@@ -30,7 +30,7 @@ public class MessageListenerThread {
      */
     private boolean listening;
 
-    public MessageListenerThread(Connection listeningTo, Consumer<Message> handleMessage) {
+    public MessageListenerThread(Connection listeningTo, BiConsumer<Connection, Message> handleMessage) {
         this.listeningTo = listeningTo;
         this.handleMessage = handleMessage;
         listening = true;
@@ -41,15 +41,21 @@ public class MessageListenerThread {
     private void listen() {
         try {
             tryListen();
-        } catch(Exception ex) {
-            throw new RuntimeException(ex);
+        } catch(IOException ex) {
+            // sadly, it doesn't look like there's a better way of handling this
+            if (ex.getMessage().equals("Stream closed")) {
+                //System.out.println("stream closed: stopping");
+                stop();
+            } else {
+                throw new RuntimeException(ex);
+            }
         }
     }
 
     private void tryListen() throws IOException {
         while (listening) {
             var message = listeningTo.receive();
-            handleMessage.accept(message);
+            handleMessage.accept(listeningTo, message);
         }
     }
 

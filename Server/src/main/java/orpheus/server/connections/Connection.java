@@ -11,6 +11,7 @@ import java.net.Socket;
 import javax.json.Json;
 
 import orpheus.core.net.messages.Message;
+import orpheus.core.net.messages.MessageType;
 
 /**
  * a connection between an OrpheusServer & OrpheusClient
@@ -70,6 +71,7 @@ public class Connection {
     }
 
     public void close() throws IOException {
+        send(new Message(MessageType.CLOSE_CONNECTION));
         from.close();
         to.close();
         other.close();

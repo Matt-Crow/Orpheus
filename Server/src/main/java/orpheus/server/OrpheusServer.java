@@ -3,11 +3,15 @@ package orpheus.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Optional;
 
 import orpheus.core.net.messages.Message;
+import orpheus.core.net.messages.MessageType;
 import orpheus.server.connections.Connection;
 import orpheus.server.connections.ConnectionListenerThread;
+import orpheus.server.connections.Connections;
 import orpheus.server.connections.MessageListenerThread;
+import orpheus.server.protocols.Protocol;
 
 /**
  * waits for connections, then directs the client to a waiting room
@@ -24,6 +28,16 @@ public class OrpheusServer {
      */
     private final ConnectionListenerThread listenerThread;
 
+    /**
+     * the collection of connections this has established with clients
+     */
+    private final Connections connections;
+
+    /**
+     * the current protocol running on this server
+     */
+    private Optional<Protocol> protocol;
+
     /*
     The amount of time a call to server.accept() will block for
     */
@@ -31,7 +45,9 @@ public class OrpheusServer {
     
     private OrpheusServer(ServerSocket socket) {
         this.socket = socket;
-        this.listenerThread = ConnectionListenerThread.spawn(socket, this::connect);
+        listenerThread = ConnectionListenerThread.spawn(socket, this::connect);
+        connections = new Connections();
+        protocol = Optional.empty();
     }
 
     /**
@@ -46,8 +62,17 @@ public class OrpheusServer {
         return server;
     }
 
+    /**
+     * configures the server to handle messages using the given protocol
+     * @param protocol the new protocol to use
+     */
+    public void setProtocol(Protocol protocol) {
+        this.protocol = Optional.of(protocol);
+    }
+
     public void shutDown() {
-        this.listenerThread.terminate(); // also handles the socket
+        connections.closeAll();
+        listenerThread.terminate(); // also handles the socket
     }
 
     /**
@@ -87,9 +112,16 @@ public class OrpheusServer {
         var connection = Connection.connect(client);
         var t = new MessageListenerThread(connection, this::receive);
         // todo save t for later
+        connections.add(connection);
     }
 
-    private void receive(Message message) {
+    private void receive(Connection sender, Message message) {
         System.out.printf("Server received %s", message.toString());
+        if (message.getMessageType() == MessageType.CLOSE_CONNECTION) {
+            connections.close(sender);
+        }
+        if (protocol.isPresent()) {
+            protocol.get().receive(this, sender, message);
+        }
     }
 }

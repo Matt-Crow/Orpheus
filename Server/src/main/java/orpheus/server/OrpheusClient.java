@@ -6,6 +6,7 @@ import java.net.UnknownHostException;
 
 import orpheus.core.net.messages.Message;
 import orpheus.server.connections.Connection;
+import orpheus.server.connections.MessageListenerThread;
 
 /**
  * connects to a remote OrpheusServer to exchange messages
@@ -17,8 +18,14 @@ public class OrpheusClient {
      */
     private final Connection connection;
 
+    /**
+     * listens for messages from the server
+     */
+    private final MessageListenerThread messageListenerThread;
+
     private OrpheusClient(Connection connection) {
         this.connection = connection;
+        messageListenerThread = new MessageListenerThread(connection, this::handleMessage);
     }
 
     /**
@@ -43,5 +50,18 @@ public class OrpheusClient {
      */
     public void send(Message message) throws IOException {
         connection.send(message);
+    }
+
+    /**
+     * closes the connection to the server
+     * @throws IOException
+     */
+    public void disconnect() throws IOException {
+        messageListenerThread.stop();
+        connection.close();
+    }
+
+    private void handleMessage(Connection from, Message message) {
+        System.out.printf("Client received %s", message.toString());
     }
 }

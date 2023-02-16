@@ -20,7 +20,13 @@ public enum MessageType {
      * waiting room. When received by a client, they should connect to the port
      * contained in the message.
      */
-    NEW_WAITING_ROOM("new waiting room");
+    NEW_WAITING_ROOM("new waiting room"),
+
+    /**
+     * Indicates the socket this was received from is about to close, and 
+     * should therefore stop being used.
+     */
+    CLOSE_CONNECTION("close connection");
 
     private final String name;
 
