@@ -8,9 +8,9 @@ import java.util.Arrays;
 import javax.swing.JTextArea;
 
 import orpheus.client.ClientAppContext;
-import orpheus.client.WaitingRoomClientProtocol;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.PageController;
+import orpheus.client.protocols.WaitingRoomClientProtocol;
 
 /**
  * WaitingRoom provides a "waiting room"

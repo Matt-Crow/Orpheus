@@ -17,9 +17,9 @@ import javax.swing.ScrollPaneConstants;
 
 import net.OrpheusClient;
 import orpheus.client.ClientAppContext;
-import orpheus.client.WaitingRoomClientProtocol;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.PageController;
+import orpheus.client.protocols.WaitingRoomClientProtocol;
 
 /**
  * Checking for IPv4 is currently disabled, as

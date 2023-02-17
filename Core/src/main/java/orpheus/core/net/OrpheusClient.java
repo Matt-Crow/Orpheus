@@ -1,12 +1,12 @@
-package orpheus.server;
+package orpheus.core.net;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Optional;
 
+import orpheus.core.net.connections.Connection;
 import orpheus.core.net.messages.Message;
-import orpheus.server.connections.Connection;
-import orpheus.server.connections.MessageListenerThread;
 
 /**
  * connects to a remote OrpheusServer to exchange messages
@@ -19,13 +19,14 @@ public class OrpheusClient {
     private final Connection connection;
 
     /**
-     * listens for messages from the server
+     * the protocol this uses to handle messages
      */
-    private final MessageListenerThread messageListenerThread;
+    private Optional<ClientProtocol> protocol;
 
     private OrpheusClient(Connection connection) {
         this.connection = connection;
-        messageListenerThread = new MessageListenerThread(connection, this::handleMessage);
+        protocol = Optional.empty();
+        connection.addMessageListener(this::handleMessage);
     }
 
     /**
@@ -44,6 +45,14 @@ public class OrpheusClient {
     }
 
     /**
+     * sets the new protocol to use
+     * @param protocol the new protocol to use
+     */
+    public void setProtocol(ClientProtocol protocol) {
+        this.protocol = Optional.of(protocol);
+    }
+
+    /**
      * sends a message to the server
      * @param message the message to send
      * @throws IOException if an error occurs while sending to the server
@@ -57,11 +66,13 @@ public class OrpheusClient {
      * @throws IOException
      */
     public void disconnect() throws IOException {
-        messageListenerThread.stop();
         connection.close();
     }
 
     private void handleMessage(Connection from, Message message) {
         System.out.printf("Client received %s", message.toString());
+        if (protocol.isPresent()) {
+            protocol.get().receive(this, from, message);
+        }
     }
 }

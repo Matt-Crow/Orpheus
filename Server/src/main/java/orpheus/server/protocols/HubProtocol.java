@@ -5,17 +5,18 @@ import java.util.ArrayList;
 
 import javax.json.Json;
 
+import orpheus.core.net.SocketAddress;
 import orpheus.core.net.WaitingRoom;
+import orpheus.core.net.connections.Connection;
 import orpheus.core.net.messages.Message;
 import orpheus.core.net.messages.MessageType;
 import orpheus.core.users.User;
 import orpheus.server.OrpheusServer;
-import orpheus.server.connections.Connection;
 
 /**
  * allows clients to get & create waiting rooms
  */
-public class HubProtocol implements Protocol {
+public class HubProtocol implements ServerProtocol {
 
     @Override
     public void receive(OrpheusServer server, Connection from, Message message) {
@@ -40,7 +41,7 @@ public class HubProtocol implements Protocol {
     private Message makeWaitingRoomListMessage() {
         // todo read from list of waiting rooms & associated servers
         // they would not use same port as server received
-        var dummy = new WaitingRoom("123:45:67:89", 1234);
+        var dummy = new WaitingRoom(new SocketAddress("123:45:67:89", 1234));
         dummy.addUser(new User("Foo"));
         dummy.addUser(new User("Bar"));
 

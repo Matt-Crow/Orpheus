@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 
+import orpheus.core.net.connections.Connection;
+
 /**
  * maintains a list of connections so they can be closed on server shutdown
  */

@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 
 import orpheus.client.gui.components.ComponentFactory;
 import orpheus.core.AppContext;
+import orpheus.core.net.OrpheusClient;
 import orpheus.core.users.LocalUser;
 import util.Settings;
 
@@ -18,6 +19,11 @@ public class ClientAppContext extends AppContext {
      * the currently logged in user
      */
     private Optional<LocalUser> user = Optional.empty();
+
+    /**
+     * the client connected to a server
+     */
+    private Optional<OrpheusClient> client = Optional.empty();
 
     /**
      * used to produce components for the GUI

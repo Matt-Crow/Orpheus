@@ -1,12 +1,12 @@
-package orpheus.server.connections;
+package orpheus.core.net.connections;
 
 import java.io.IOException;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import orpheus.core.net.messages.Message;
 
 /**
- * listens for messages from a connection
+ * Listens for messages from a connection.
  */
 public class MessageListenerThread {
     
@@ -18,7 +18,7 @@ public class MessageListenerThread {
     /**
      * handles messages received from the connection
      */
-    private final BiConsumer<Connection, Message> handleMessage;
+    private final Consumer<Message> handleMessage;
 
     /**
      * the thread this is listening on
@@ -30,7 +30,7 @@ public class MessageListenerThread {
      */
     private boolean listening;
 
-    public MessageListenerThread(Connection listeningTo, BiConsumer<Connection, Message> handleMessage) {
+    public MessageListenerThread(Connection listeningTo, Consumer<Message> handleMessage) {
         this.listeningTo = listeningTo;
         this.handleMessage = handleMessage;
         listening = true;
@@ -55,10 +55,15 @@ public class MessageListenerThread {
     private void tryListen() throws IOException {
         while (listening) {
             var message = listeningTo.receive();
-            handleMessage.accept(listeningTo, message);
+            handleMessage.accept(message);
         }
     }
 
+    /**
+     * Notifies the thread to terminate after its next listening attempt 
+     * succeeds or fails - does not immediately stop the thread. It is not an
+     * error to call this method multiple times.
+     */
     public void stop() {
         listening = false;
     }

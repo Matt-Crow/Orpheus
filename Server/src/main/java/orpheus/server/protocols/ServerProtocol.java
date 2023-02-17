@@ -1,13 +1,13 @@
 package orpheus.server.protocols;
 
+import orpheus.core.net.connections.Connection;
 import orpheus.core.net.messages.Message;
 import orpheus.server.OrpheusServer;
-import orpheus.server.connections.Connection;
 
 /**
  * a protocol running on a server, which decides how to handle messages
  */
-public interface Protocol {
+public interface ServerProtocol {
     
     /**
      * handles the given message

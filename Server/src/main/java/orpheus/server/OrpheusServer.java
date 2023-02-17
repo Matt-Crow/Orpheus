@@ -5,13 +5,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Optional;
 
+import orpheus.core.net.connections.Connection;
 import orpheus.core.net.messages.Message;
 import orpheus.core.net.messages.MessageType;
-import orpheus.server.connections.Connection;
 import orpheus.server.connections.ConnectionListenerThread;
 import orpheus.server.connections.Connections;
-import orpheus.server.connections.MessageListenerThread;
-import orpheus.server.protocols.Protocol;
+import orpheus.server.protocols.ServerProtocol;
 
 /**
  * waits for connections, then directs the client to a waiting room
@@ -36,7 +35,7 @@ public class OrpheusServer {
     /**
      * the current protocol running on this server
      */
-    private Optional<Protocol> protocol;
+    private Optional<ServerProtocol> protocol;
 
     /*
     The amount of time a call to server.accept() will block for
@@ -66,7 +65,7 @@ public class OrpheusServer {
      * configures the server to handle messages using the given protocol
      * @param protocol the new protocol to use
      */
-    public void setProtocol(Protocol protocol) {
+    public void setProtocol(ServerProtocol protocol) {
         this.protocol = Optional.of(protocol);
     }
 
@@ -110,8 +109,7 @@ public class OrpheusServer {
     
     private void tryConnect(Socket client) throws IOException {
         var connection = Connection.connect(client);
-        var t = new MessageListenerThread(connection, this::receive);
-        // todo save t for later
+        connection.addMessageListener(this::receive);
         connections.add(connection);
     }
 

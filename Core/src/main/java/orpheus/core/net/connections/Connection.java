@@ -1,4 +1,4 @@
-package orpheus.server.connections;
+package orpheus.core.net.connections;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -7,6 +7,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiConsumer;
 
 import javax.json.Json;
 
@@ -33,10 +36,22 @@ public class Connection {
      */
     private final BufferedWriter to;
 
+    /**
+     * repeatedly calls this object's receive method in another thread
+     */
+    private final MessageListenerThread thread;
+
+    /**
+     * notifies these upon receiving a message
+     */
+    private final List<BiConsumer<Connection, Message>> messageListeners;
+
     private Connection(Socket other, BufferedReader from, BufferedWriter to) {
         this.other = other;
         this.from = from;
         this.to = to;
+        messageListeners = new ArrayList<>();
+        thread = new MessageListenerThread(this, this::notifyListeners);
     }
 
     /**
@@ -50,6 +65,15 @@ public class Connection {
         var to = new BufferedWriter(new OutputStreamWriter(other.getOutputStream()));
         var connection = new Connection(other, from, to);
         return connection;
+    }
+
+    /**
+     * Registers the given listener to receive messages received from this 
+     * connection.
+     * @param listener the listener to register.
+     */
+    public void addMessageListener(BiConsumer<Connection, Message> listener) {
+        messageListeners.add(listener);
     }
 
     /**
@@ -72,8 +96,13 @@ public class Connection {
 
     public void close() throws IOException {
         send(new Message(MessageType.CLOSE_CONNECTION));
+        thread.stop();
         from.close();
         to.close();
         other.close();
+    }
+
+    private void notifyListeners(Message message) {
+        messageListeners.forEach((listener) -> listener.accept(this, message));
     }
 }

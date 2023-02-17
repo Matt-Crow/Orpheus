@@ -1,4 +1,4 @@
-package orpheus.client;
+package orpheus.client.protocols;
 
 import orpheus.client.gui.pages.PlayerControls;
 import orpheus.client.gui.pages.play.RemoteWorldUpdater;

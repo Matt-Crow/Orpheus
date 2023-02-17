@@ -16,23 +16,17 @@ import serialization.JsonSerialable;
 public class WaitingRoom implements JsonSerialable {
     
     /**
-     * the IP address of the server this is running on
+     * the address of the server this is running on
      */
-    private final String ip;
-
-    /**
-     * the port of the server this is running on
-     */
-    private final int port;
+    private final SocketAddress address;
 
     /**
      * the users in the waiting room
      */
     private final List<User> players;
 
-    public WaitingRoom(String ip, int port) {
-        this.ip = ip;
-        this.port = port;
+    public WaitingRoom(SocketAddress address) {
+        this.address = address;
         players = new ArrayList<>();
     }
 
@@ -51,17 +45,13 @@ public class WaitingRoom implements JsonSerialable {
             playersJson.add(user.serializeJson());
         }
         return Json.createObjectBuilder()
-            .add("ip", ip)
-            .add("port", port)
+            .add("address", address.serializeJson())
             .add("players", playersJson)
             .build();
     }
 
     public static WaitingRoom fromJson(JsonObject json) {
-        var room = new WaitingRoom(
-            json.getString("ip"),
-            json.getInt("port")
-        );
+        var room = new WaitingRoom(SocketAddress.fromJson(json.getJsonObject("address")));
 
         json.getJsonArray("players")
             .stream()
