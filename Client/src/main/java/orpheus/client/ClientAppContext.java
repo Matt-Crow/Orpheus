@@ -70,4 +70,12 @@ public class ClientAppContext extends AppContext {
     public LocalUser getLoggedInUser() {
         return user.get();
     }
+
+    public void setClient(OrpheusClient client) {
+        this.client = Optional.of(client);
+    }
+
+    public Optional<OrpheusClient> getClient() {
+        return client;
+    }
 }

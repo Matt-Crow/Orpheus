@@ -1,15 +1,16 @@
 package orpheus.client.gui.pages.start;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.GridLayout;
 import java.io.File;
+
+import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import orpheus.client.ClientAppContext;
 import orpheus.client.gui.components.BuildSelect;
 import orpheus.client.gui.components.FileChooserUtil;
+import orpheus.client.gui.components.HubForm;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.worldselect.WSMain;
 import orpheus.client.gui.pages.PageController;
@@ -30,12 +31,20 @@ public class StartPlay extends Page{
         addMenuItem(cf.makeButton("Import Builds", this::showImportBuildsDialog));
         addMenuItem(cf.makeButton("Export Builds", this::showExportBuildsDialog));
         
+        setLayout(new BorderLayout());
         
-        setLayout(new GridLayout(1, 2));
-        
-        add(cf.makeSpaceAround(cf.makeButton("Play a game", ()->{
+        var playPanel = cf.makePanel();
+        playPanel.setLayout(new BoxLayout(playPanel, BoxLayout.Y_AXIS));
+        playPanel.add(cf.makeLabel("Play a game"));
+        playPanel.add(cf.makeButton("old menu", ()->{
             getHost().switchToPage(new WSMain(context, host));
-        }), Color.RED));
+        }));
+        playPanel.add(new HubForm(
+            context,
+            "Connect to a Hub",
+            host
+        ));
+        add(cf.makeSpaceAround(playPanel), BorderLayout.LINE_START);
         
         JPanel buildSection = cf.makePanel();
         buildSection.setLayout(new BorderLayout());
@@ -45,14 +54,14 @@ public class StartPlay extends Page{
         buildSection.add(bs, BorderLayout.CENTER);
         buildSection.add(cf.makeButton("Customize this build", ()->{
             CustomizeBuildPage cb = new CustomizeBuildPage(
-                    context,
-                    host,
-                    bs.getSelectedBuild()
+                context,
+                host,
+                bs.getSelectedBuild()
             );
             getHost().switchToPage(cb);
         }), BorderLayout.PAGE_END);
         
-        add(buildSection);
+        add(buildSection, BorderLayout.LINE_END);
     }
     
     

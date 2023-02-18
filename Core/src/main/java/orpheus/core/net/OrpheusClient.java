@@ -31,14 +31,13 @@ public class OrpheusClient {
 
     /**
      * Creates a new client for a server hosted on the given IP address and port
-     * @param ip the IP address of the host server
-     * @param port the port of the host server
+     * @param address the socket address of the host server
      * @return a new client, ready to communicate with the server
      * @throws UnknownHostException if an invalid host is given
      * @throws IOException on any IO problems
      */
-    public static OrpheusClient create(String ip, int port) throws UnknownHostException, IOException {
-        var socket = new Socket(ip, port);
+    public static OrpheusClient create(SocketAddress address) throws UnknownHostException, IOException {
+        var socket = new Socket(address.getAddress(), address.getPort());
         var connection = Connection.connect(socket);
         var client = new OrpheusClient(connection);
         return client;

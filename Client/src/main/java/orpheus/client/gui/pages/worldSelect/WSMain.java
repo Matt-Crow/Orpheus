@@ -17,7 +17,7 @@ public class WSMain extends Page{
         super(context, host);
         var cf = context.getComponentFactory();
         addBackButton(()-> new StartPlay(context, host));
-        setLayout(new GridLayout(1, 3));
+        setLayout(new GridLayout(1, 1));
         
         add(cf.makeButton("Play a game offline", ()->{
             getHost().switchToPage(new WSSolo(context, getHost()));
@@ -25,9 +25,6 @@ public class WSMain extends Page{
         
         add(cf.makeButton("Host a multiplayer game", ()->{
             getHost().switchToPage(new WSNewMulti(context, getHost()));
-        }));
-        add(cf.makeButton("Join a multiplayer game", ()->{
-            getHost().switchToPage(new WSJoin(context, getHost()));
         }));
         Style.applyStyling(this);
     }

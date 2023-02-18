@@ -62,6 +62,20 @@ public class ComponentFactory {
         p.setBackground(spaceColor);
         return p;
     }
+
+    /**
+     * Adds a scroll pane around the given component, which will always show a
+     * verical scrollbar, but never a horizontal one.
+     * 
+     * @param component the component to decorate
+     * @return the decorated component
+     */
+    public JScrollPane makeVerticalScrollAround(JComponent component) {
+        var scrolly = new JScrollPane(component);
+        scrolly.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scrolly.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        return scrolly;
+    }
     
     /**
      * 

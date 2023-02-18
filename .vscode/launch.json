@@ -1,0 +1,56 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Client",
+            "request": "launch",
+            "mainClass": "orpheus.client.Start",
+            "projectName": "Client"
+        },
+        {
+            "type": "java",
+            "name": "WorldCanvasTester",
+            "request": "launch",
+            "mainClass": "orpheus.client.gui.pages.WorldCanvasTester",
+            "projectName": "Client"
+        },
+        {
+            "type": "java",
+            "name": "WSJoin",
+            "request": "launch",
+            "mainClass": "orpheus.client.gui.pages.worldselect.WSJoin",
+            "projectName": "Client"
+        },
+        {
+            "type": "java",
+            "name": "Old OrpheusServer",
+            "request": "launch",
+            "mainClass": "net.OrpheusServer",
+            "projectName": "Core"
+        },
+        {
+            "type": "java",
+            "name": "Old ConnectionListener",
+            "request": "launch",
+            "mainClass": "net.connections.ConnectionListener",
+            "projectName": "Core"
+        },
+        {
+            "type": "java",
+            "name": "Server",
+            "request": "launch",
+            "mainClass": "orpheus.server.Main",
+            "projectName": "Server"
+        }
+    ]
+}
