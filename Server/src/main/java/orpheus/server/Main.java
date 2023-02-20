@@ -2,10 +2,10 @@ package orpheus.server;
 
 import java.io.IOException;
 
+import net.messages.ServerMessageType;
 import orpheus.core.net.OrpheusClient;
 import orpheus.core.net.SocketAddress;
 import orpheus.core.net.messages.Message;
-import orpheus.core.net.messages.MessageType;
 import orpheus.server.protocols.HubProtocol;
 
 public class Main {
@@ -16,8 +16,8 @@ public class Main {
         server.setProtocol(new HubProtocol());
 
         var client = OrpheusClient.create(new SocketAddress(server.getIpAddress(), server.getPort()));
-        client.send(new Message(MessageType.LIST_WAITING_ROOMS));
-        client.send(new Message(MessageType.NEW_WAITING_ROOM));
+        client.send(new Message(ServerMessageType.LIST_WAITING_ROOMS));
+        client.send(new Message(ServerMessageType.NEW_WAITING_ROOM));
         
         //server.shutDown();
     }

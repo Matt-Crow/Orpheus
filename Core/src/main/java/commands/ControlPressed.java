@@ -1,7 +1,7 @@
 package commands;
 
-import net.messages.ServerMessage;
 import net.messages.ServerMessageType;
+import orpheus.core.net.messages.Message;
 import world.World;
 
 /**
@@ -18,8 +18,8 @@ public class ControlPressed implements SerializeableOrpheusCommand {
     }
     
     @Override
-    public ServerMessage serialize() {
-        ServerMessage sm = new ServerMessage(controlString, ServerMessageType.CONTROL_PRESSED);
+    public Message serialize() {
+        Message sm = new Message(controlString, ServerMessageType.CONTROL_PRESSED);
         return sm;
     }
 

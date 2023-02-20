@@ -2,6 +2,7 @@ package net.messages;
 
 import java.net.Socket;
 
+import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
 
 /**
@@ -16,19 +17,19 @@ import orpheus.core.users.User;
 public class ServerMessagePacket {
     private final Socket sendingSocket;
     private User fromUser;
-    private final ServerMessage containedMessage;
+    private final Message containedMessage;
     /**
      * 
      * 
      * @param sendingSocket the Socket this message was received from
      * @param packetContents the message contained herein
      */
-    public ServerMessagePacket(Socket sendingSocket, ServerMessage packetContents){
+    public ServerMessagePacket(Socket sendingSocket, Message packetContents){
         this.sendingSocket = sendingSocket;
         containedMessage = packetContents;
     }
     
-    public final ServerMessage getMessage(){
+    public final Message getMessage(){
         return containedMessage;
     }
     

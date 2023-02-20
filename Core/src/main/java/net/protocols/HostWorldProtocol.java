@@ -23,7 +23,7 @@ public class HostWorldProtocol extends AbstractProtocol {
     }
     
     private void receiveControl(ServerMessagePacket sm){
-        ControlDecoder.decode(hostWorld, sm.getMessage().getBody());
+        ControlDecoder.decode(hostWorld, sm.getMessage().getBodyText());
     }
     
     @Override

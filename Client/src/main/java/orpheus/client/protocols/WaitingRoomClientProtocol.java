@@ -11,6 +11,7 @@ import serialization.JsonUtil;
 import orpheus.client.gui.pages.play.WorldCanvas;
 import orpheus.client.gui.pages.play.WorldPage;
 import orpheus.client.gui.pages.worldselect.WaitingRoom;
+import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
 
 import java.io.IOException;
@@ -19,7 +20,6 @@ import javax.json.Json;
 
 import net.AbstractNetworkClient;
 import net.OrpheusClient;
-import net.messages.ServerMessage;
 import net.protocols.AbstractWaitingRoomProtocol;
 import net.protocols.RemoteProxyWorldProtocol;
 import serialization.WorldSerializer;
@@ -83,7 +83,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
     }
 
     private void receiveInit(ServerMessagePacket sm) {
-        JsonObject obj = JsonUtil.fromString(sm.getMessage().getBody());
+        JsonObject obj = JsonUtil.fromString(sm.getMessage().getBodyText());
         JsonUtil.verify(obj, "team");
         obj.getJsonArray("team").stream().forEach((jv) -> {
             if (jv.getValueType().equals(JsonValue.ValueType.OBJECT)) {
@@ -97,7 +97,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
     private void receiveUpdate(ServerMessagePacket sm) {
         JsonObject json = Json.createReader(
                 new StringReader(
-                        sm.getMessage().getBody()
+                        sm.getMessage().getBodyText()
                 )
         ).readObject();
         addToTeamProto(User.fromJson(json));
@@ -105,11 +105,11 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
     }
 
     public final void requestStart() {
-        getServer().send(new ServerMessage("start", ServerMessageType.START_WORLD));
+        getServer().send(new Message("start", ServerMessageType.START_WORLD));
     }
 
     private synchronized void receiveBuildRequest(ServerMessagePacket sm) throws IOException {
-        getServer().send(new ServerMessage(
+        getServer().send(new Message(
                 BuildJsonUtil.serializeJson(room.getSelectedBuild()).toString(),
                 ServerMessageType.PLAYER_DATA
         ));
@@ -118,7 +118,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
 
     private void receiveRemoteId(ServerMessagePacket sm) {
         var player = room.getContext().getLoggedInUser();
-        player.setRemotePlayerId(sm.getMessage().getBody());
+        player.setRemotePlayerId(sm.getMessage().getBodyText());
     }
 
     /**
@@ -134,7 +134,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
         WorldBuilder builder = new WorldBuilderImpl();
 
         World entireWorld = builder
-            .withContent((WorldContent) WorldSerializer.fromSerializedString(sm.getMessage().getBody()))
+            .withContent((WorldContent) WorldSerializer.fromSerializedString(sm.getMessage().getBodyText()))
             .build();
 
         var me = room.getContext().getLoggedInUser();
@@ -149,7 +149,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
         p.setCanvas(renderer);
 
         // set up chat protocol
-        var chatProtocol = new ClientChatProtocol(getServer(), p.getChatBox());
+        var chatProtocol = new ClientChatProtocol(me, getServer(), p.getChatBox());
         getServer().setChatProtocol(chatProtocol);
 
         room.getHost().switchToPage(p);

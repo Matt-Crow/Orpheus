@@ -3,7 +3,8 @@ package net.connections;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.HashMap;
-import net.messages.ServerMessage;
+
+import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
 
 /**
@@ -76,9 +77,17 @@ public class Connections {
         return connections.get(userToSocket.get(user));
     }
     
-    public final void broadcast(ServerMessage sm) throws IOException{
+    public final void broadcast(Message sm) throws IOException{
         for(Connection conn : connections.values()){
             conn.writeServerMessage(sm);
+        }
+    }
+
+    public void sendToAllExcept(Message message, User user) throws IOException {
+        for (var conn : connections.values()) {
+            if (!conn.getRemoteUser().equals(user)) {
+                conn.writeServerMessage(message);
+            }
         }
     }
     

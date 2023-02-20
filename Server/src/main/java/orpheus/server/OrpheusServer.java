@@ -5,9 +5,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Optional;
 
+import net.messages.ServerMessageType;
 import orpheus.core.net.connections.Connection;
 import orpheus.core.net.messages.Message;
-import orpheus.core.net.messages.MessageType;
 import orpheus.server.connections.ConnectionListenerThread;
 import orpheus.server.connections.Connections;
 import orpheus.server.protocols.ServerProtocol;
@@ -115,7 +115,7 @@ public class OrpheusServer {
 
     private void receive(Connection sender, Message message) {
         System.out.printf("Server received %s", message.toString());
-        if (message.getMessageType() == MessageType.CLOSE_CONNECTION) {
+        if (message.getType() == ServerMessageType.CLOSE_CONNECTION) {
             connections.close(sender);
         }
         if (protocol.isPresent()) {

@@ -13,8 +13,8 @@ import java.util.function.BiConsumer;
 
 import javax.json.Json;
 
+import net.messages.ServerMessageType;
 import orpheus.core.net.messages.Message;
-import orpheus.core.net.messages.MessageType;
 
 /**
  * a connection between an OrpheusServer & OrpheusClient
@@ -82,7 +82,7 @@ public class Connection {
      * @throws IOException if an error occurs while writing the message
      */
     public void send(Message message) throws IOException {
-        to.write(message.toJson().toString());
+        to.write(message.serializeJson().toString());
         to.newLine();
         to.flush();
     }
@@ -90,12 +90,12 @@ public class Connection {
     public Message receive() throws IOException {
         var line = from.readLine();
         var json = Json.createReader(new StringReader(line)).readObject();
-        var message = Message.fromJson(json);
+        var message = Message.deserializeJson(json);
         return message;
     }
 
     public void close() throws IOException {
-        send(new Message(MessageType.CLOSE_CONNECTION));
+        send(new Message(ServerMessageType.CLOSE_CONNECTION));
         thread.stop();
         from.close();
         to.close();

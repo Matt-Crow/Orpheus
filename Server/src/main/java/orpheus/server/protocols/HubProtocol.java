@@ -5,11 +5,11 @@ import java.util.ArrayList;
 
 import javax.json.Json;
 
+import net.messages.ServerMessageType;
 import orpheus.core.net.SocketAddress;
 import orpheus.core.net.WaitingRoom;
 import orpheus.core.net.connections.Connection;
 import orpheus.core.net.messages.Message;
-import orpheus.core.net.messages.MessageType;
 import orpheus.core.users.User;
 import orpheus.server.OrpheusServer;
 
@@ -20,7 +20,7 @@ public class HubProtocol implements ServerProtocol {
 
     @Override
     public void receive(OrpheusServer server, Connection from, Message message) {
-        switch (message.getMessageType()) {
+        switch (message.getType()) {
             case LIST_WAITING_ROOMS: {
                 var response = makeWaitingRoomListMessage();
                 try {
@@ -57,6 +57,6 @@ public class HubProtocol implements ServerProtocol {
             .add("rooms", roomsJson.build())
             .build();
         
-        return new Message(MessageType.LIST_WAITING_ROOMS, json);
+        return new Message(ServerMessageType.LIST_WAITING_ROOMS, json);
     }
 }

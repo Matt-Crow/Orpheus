@@ -32,7 +32,7 @@ public class RemoteProxyWorldProtocol extends AbstractProtocol{
      * @param sm 
      */
     private void receiveWorldUpdate(ServerMessagePacket sm){
-        serializer.deserialize(sm.getMessage().getBody());       
+        serializer.deserialize(sm.getMessage().getBodyText());       
     }
     
     @Override

@@ -10,9 +10,9 @@ import javax.json.JsonObjectBuilder;
 
 import net.AbstractNetworkClient;
 import net.OrpheusServer;
-import net.messages.ServerMessage;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
+import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
 import serialization.JsonUtil;
 import serialization.WorldSerializer;
@@ -139,7 +139,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         }
         initMsgBuild.add("team", userListBuild.build());
         
-        ServerMessage initMsg = new ServerMessage(
+        Message initMsg = new Message(
             initMsgBuild.build().toString(),
             ServerMessageType.WAITING_ROOM_INIT
         );
@@ -154,7 +154,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
     public final void addUserToTeam(User u){
         if(addToTeamProto(u)){
             awaitingBuilds.add(u);
-            ServerMessage sm = new ServerMessage(
+            Message sm = new Message(
                 u.serializeJson().toString(),
                 ServerMessageType.WAITING_ROOM_UPDATE
             );
@@ -173,7 +173,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
             .withAi(new Team("AI", Color.red))
             .build(); 
     
-        getServer().send(new ServerMessage(
+        getServer().send(new Message(
             "please provide build information",
             ServerMessageType.REQUEST_PLAYER_DATA
         ));
@@ -202,7 +202,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         );
         awaitingBuilds.remove(sender);
 
-        var json = JsonUtil.fromString(sm.getMessage().getBody());
+        var json = JsonUtil.fromString(sm.getMessage().getBodyText());
         var build = BuildJsonUtil.deserializeJson(json);
         player.applyBuild(dataSet.assemble(build));
         playerTeam.addMember(player);
@@ -217,7 +217,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
      * @param playerId the ID of that user's Player on this computer
      */
     private void sendRemoteId(User user, String playerId){
-        ServerMessage sm = new ServerMessage(
+        Message sm = new Message(
             playerId,
             ServerMessageType.NOTIFY_IDS
         );
@@ -258,7 +258,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
     private void sendWorldInit(World w){
         WorldSerializer ws = new WorldSerializer(w);
         String serial = ws.serializeToString();
-        ServerMessage sm = new ServerMessage(
+        Message sm = new Message(
             serial,
             ServerMessageType.WORLD_INIT
         );

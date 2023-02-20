@@ -48,7 +48,11 @@ public class WSNewMulti extends AbstractWSNewWorld{
             room.setBackEnd(clientProtocol);
 
             // set up chat protocol
-            var chatProtocol = new ClientChatProtocol(client, room.getChat());
+            var chatProtocol = new ClientChatProtocol(
+                getContext().getLoggedInUser(),
+                client, 
+                room.getChat()
+            );
             client.setChatProtocol(chatProtocol);
 
             room.getChat().output(String.format(

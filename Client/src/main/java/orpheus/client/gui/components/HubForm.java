@@ -114,7 +114,11 @@ public class HubForm extends JComponent {
         var protocol = new WaitingRoomClientProtocol(client, waitingRoomPage);
         waitingRoomPage.setBackEnd(protocol);
         client.setProtocol(protocol);
-        client.setChatProtocol(new ClientChatProtocol(client, waitingRoomPage.getChat()));
+        client.setChatProtocol(new ClientChatProtocol(
+            context.getLoggedInUser(),
+            client, 
+            waitingRoomPage.getChat()
+        ));
         client.start();
         host.switchToPage(waitingRoomPage);
     }

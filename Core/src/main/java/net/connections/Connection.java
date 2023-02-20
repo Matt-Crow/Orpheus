@@ -1,6 +1,7 @@
 package net.connections;
 
 import net.messages.ServerMessagePacket;
+import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
 
 import java.io.BufferedReader;
@@ -9,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import net.messages.ServerMessage;
 
 /**
  *
@@ -32,7 +32,7 @@ public class Connection {
         fromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
     }
     
-    public final void writeServerMessage(ServerMessage sm) throws IOException{        
+    public final void writeServerMessage(Message sm) throws IOException{        
         // do I need to make sure the JsonString contains no newlines?
         toClient.write(sm.toJsonString());
         toClient.write('\n');
@@ -42,7 +42,7 @@ public class Connection {
     // blocks until the client writes something
     public final ServerMessagePacket readServerMessage() throws IOException{
         // This works, so I guess toJsonString excapes newlines or something?
-        ServerMessage deser = ServerMessage.deserializeJson(fromClient.readLine());
+        Message deser = Message.deserializeJson(fromClient.readLine());
         
         return new ServerMessagePacket(clientSocket, deser);
     }

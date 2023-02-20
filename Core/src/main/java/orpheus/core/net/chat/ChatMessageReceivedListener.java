@@ -9,5 +9,5 @@ public interface ChatMessageReceivedListener {
      * Called whenever the client receives a chat message from the server.
      * @param message the message received.
      */
-    public void chatMessageReceived(String message);
+    public void chatMessageReceived(ChatMessage message);
 }

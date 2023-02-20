@@ -4,11 +4,12 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Optional;
 
-import net.messages.ServerMessage;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import net.protocols.AbstractProtocol;
+import orpheus.core.net.chat.ChatMessage;
 import orpheus.core.net.chat.ChatProtocol;
+import orpheus.core.net.messages.Message;
 
 /**
  * This class represents either a client or server in a multiplayer Orpheus game.
@@ -69,7 +70,7 @@ public abstract class AbstractNetworkClient {
         var newCachedMessages = new LinkedList<ServerMessagePacket>();
         cachedMessages.forEach((ServerMessagePacket sm)->{
             if (sm.getMessage().getType() == ServerMessageType.CHAT) {
-                chatProtocol.receiveChatMessage(sm.getSender(), sm.getMessage().getBody());
+                chatProtocol.receiveChatMessage(ChatMessage.fromJson(sm.getMessage().getBody()));
             } else {
                 newCachedMessages.add(sm);
             }
@@ -109,9 +110,8 @@ public abstract class AbstractNetworkClient {
             handled = protocol.receive(sm);
         }
         if (chatProtocol.isPresent() && sm.getMessage().getType() == ServerMessageType.CHAT){
-            // old handled value AFTER chatProtocol, lest short-circuit
             handled = true;
-            chatProtocol.get().receiveChatMessage(sm.getSender(), sm.getMessage().getBody());
+            chatProtocol.get().receiveChatMessage(ChatMessage.fromJson(sm.getMessage().getBody()));
         }
         
         if(!handled){
@@ -124,5 +124,5 @@ public abstract class AbstractNetworkClient {
     protected abstract void doStart() throws IOException;
     protected abstract void doStop() throws IOException;
     protected abstract void doReceiveMessage(ServerMessagePacket sm);
-    public abstract void send(ServerMessage sm);
+    public abstract void send(Message sm);
 }
