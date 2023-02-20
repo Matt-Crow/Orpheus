@@ -11,7 +11,7 @@ import world.World;
  * 
  * @author Matt Crow
  */
-public class RemoteProxyWorldProtocol extends AbstractOrpheusServerNonChatProtocol{
+public class RemoteProxyWorldProtocol extends AbstractProtocol{
     private final WorldSerializer serializer;
     
     /**

@@ -10,6 +10,7 @@ import net.messages.MessageListener;
 import net.messages.ServerMessage;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
+import net.protocols.ServerChatProtocol;
 import orpheus.core.users.User;
 import serialization.JsonUtil;
 
@@ -30,7 +31,7 @@ import serialization.JsonUtil;
  * If the de-serialization is successful, it takes the type of that message,
  * and gives it to the current protocols
  * 
- * @see net.protocols.AbstractOrpheusServerNonChatProtocol
+ * @see net.protocols.AbstractProtocol
  * 
  * @author Matt Crow
  */
@@ -58,6 +59,8 @@ public class OrpheusServer extends AbstractNetworkClient {
         
         clients = new Connections();
         connectionHandler = new ConnectionListener(server, clients, this::setUpMessageListener);
+
+        this.setChatProtocol(new ServerChatProtocol(this));
     }
         
     /**

@@ -1,8 +1,5 @@
 package orpheus.client.gui.pages.play;
 
-import orpheus.client.gui.pages.PlayerControls;
-import orpheus.client.ClientAppContext;
-import orpheus.client.gui.components.Chat;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -10,13 +7,18 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
+
+import orpheus.client.ClientAppContext;
+import orpheus.client.gui.components.ChatBox;
 import orpheus.client.gui.pages.Page;
-import orpheus.client.gui.pages.worldselect.WSMain;
 import orpheus.client.gui.pages.PageController;
+import orpheus.client.gui.pages.PlayerControls;
+import orpheus.client.gui.pages.worldselect.WSMain;
 
 /**
  * use the PageController to render the WorldPage,
@@ -26,10 +28,14 @@ import orpheus.client.gui.pages.PageController;
  * 
  * @author Matt Crow
  */
-public class WorldPage extends Page{
+public class WorldPage extends Page {
     private final JPanel canvasArea;
     private WorldCanvas canvas;
-    private final Chat chat;
+
+    /**
+     * the chatbox where the player can enter messages
+     */
+    private final ChatBox chatBox;
     
     public WorldPage(ClientAppContext context, PageController host){
         super(context, host);
@@ -50,12 +56,12 @@ public class WorldPage extends Page{
         JPanel otherArea = new JPanel();
         otherArea.setLayout(new GridBagLayout());
         GridBagConstraints c2 = new GridBagConstraints();
-        chat = new Chat(context, null);
+        chatBox = new ChatBox(context);
         c2.fill = GridBagConstraints.VERTICAL;
         c2.anchor = GridBagConstraints.FIRST_LINE_START;
         c2.weightx = 1.0;
         c2.weighty = 1.0;
-        otherArea.add(chat, c2.clone());
+        otherArea.add(chatBox, c2.clone());
         
         JScrollPane scrolly = new JScrollPane(cf.makeTextArea(
             PlayerControls.getPlayerControlScheme()
@@ -75,6 +81,14 @@ public class WorldPage extends Page{
             canvas.stop();
         }
     }
+
+    /**
+     * Allows the server to attach itself as a listener to the chat.
+     * @return the chatbox shown on the page.
+     */
+    public ChatBox getChatBox() {
+        return chatBox;
+    }
     
     public WorldPage setCanvas(WorldCanvas w){
         canvas = w;
@@ -86,13 +100,6 @@ public class WorldPage extends Page{
                 w.requestFocusInWindow();
             }
         });
-        
-        try {
-            throw new RuntimeException("will need some way of starting the chat server");
-        } catch (RuntimeException ex) {
-            chat.logLocal("Failed to start chat server");
-            ex.printStackTrace();
-        }
         
         SwingUtilities.invokeLater(()->w.requestFocusInWindow());
         revalidate();

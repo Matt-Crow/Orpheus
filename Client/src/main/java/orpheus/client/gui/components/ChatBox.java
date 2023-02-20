@@ -3,7 +3,6 @@ package orpheus.client.gui.components;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -13,21 +12,14 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import net.protocols.ChatMessageListener;
 import orpheus.client.ClientAppContext;
-
-/*
-ChatProtocol cp = new ChatProtocol(chatServer);
-cp.addChatListener(this);
-chatServer.setChatProtocol(cp);
- */
-
+import orpheus.core.net.chat.ChatMessageSentListener;
 
 /**
  * A widget players can use to message other players, which also displays some
  * output from the program.
  */
-public class ChatBox extends JComponent implements ChatMessageListener {
+public class ChatBox extends JComponent {
     
     /**
      * allows players to show / hide the chat
@@ -55,9 +47,9 @@ public class ChatBox extends JComponent implements ChatMessageListener {
     private final JScrollPane scrolly;
 
     /**
-     * notified when a message is logged in the chat
+     * notified when the user sends a chat message
      */
-    private final List<Consumer<String>> messageListeners;
+    private final List<ChatMessageSentListener> messageSentListeners;
 
     public ChatBox(ClientAppContext context) {
         super();
@@ -85,15 +77,15 @@ public class ChatBox extends JComponent implements ChatMessageListener {
         inputBox.addActionListener((ActionEvent e) -> sendInput());
         body.add(inputBox, BorderLayout.PAGE_END);
 
-        messageListeners = new ArrayList<>();
+        messageSentListeners = new ArrayList<>();
     }
 
     /**
-     * Registers the given listener to be notified of message this user sends.
+     * Registers the given listener to be notified of message the user sends.
      * @param listener the listener to register
      */
-    public void addMessageListener(Consumer<String> listener) {
-        messageListeners.add(listener);
+    public void addMessageSentListener(ChatMessageSentListener listener) {
+        messageSentListeners.add(listener);
     }
 
     private void toggle() {
@@ -113,7 +105,7 @@ public class ChatBox extends JComponent implements ChatMessageListener {
      * @param message the message to send.
      */
     public void send(String message) {
-        messageListeners.forEach((listener) -> listener.accept(message));
+        messageSentListeners.forEach((listener) -> listener.chatMessageSent(message));
         output("You: " + message);
     }
 
@@ -129,10 +121,5 @@ public class ChatBox extends JComponent implements ChatMessageListener {
             bar.setValue(bar.getMaximum());
             scrolly.repaint();
         });
-    }
-
-    @Override
-    public void messageReceived(String message) {
-        output(message);
     }
 }

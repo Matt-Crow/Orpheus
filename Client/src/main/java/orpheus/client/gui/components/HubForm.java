@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import orpheus.client.ClientAppContext;
 import orpheus.client.gui.pages.PageController;
 import orpheus.client.gui.pages.worldselect.WaitingRoom;
+import orpheus.client.protocols.ClientChatProtocol;
 import orpheus.client.protocols.WaitingRoomClientProtocol;
 import orpheus.core.net.OrpheusClient;
 import orpheus.core.net.SocketAddress;
@@ -108,13 +109,14 @@ public class HubForm extends JComponent {
 
     private void doOldConnection(SocketAddress address) throws IOException {
         context.showLoginWindow(); // ask annonymous users to log in
-        net.OrpheusClient connection = new net.OrpheusClient(context.getLoggedInUser(), address.getAddress(), address.getPort());
-        WaitingRoom wait = new WaitingRoom(context, host);
-        WaitingRoomClientProtocol protocol = new WaitingRoomClientProtocol(connection, wait);
-        wait.setBackEnd(protocol);
-        connection.setProtocol(protocol);
-        connection.start();
-        host.switchToPage(wait);
+        var client = new net.OrpheusClient(context.getLoggedInUser(), address.getAddress(), address.getPort());
+        var waitingRoomPage = new WaitingRoom(context, host);
+        var protocol = new WaitingRoomClientProtocol(client, waitingRoomPage);
+        waitingRoomPage.setBackEnd(protocol);
+        client.setProtocol(protocol);
+        client.setChatProtocol(new ClientChatProtocol(client, waitingRoomPage.getChat()));
+        client.start();
+        host.switchToPage(waitingRoomPage);
     }
 
     private void doNewConnection(SocketAddress address) throws UnknownHostException, IOException {

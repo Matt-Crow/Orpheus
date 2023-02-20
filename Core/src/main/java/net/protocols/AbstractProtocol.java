@@ -4,16 +4,17 @@ import net.AbstractNetworkClient;
 import net.messages.ServerMessagePacket;
 
 /**
- * an AbstractProtocol is responsible for receiving messages sent to a server
+ * Runs on an AbstractNetworkClient and dictates how it should react to messages
+ * received.
+ * 
+ * @author Matt Crow
  */
 public abstract class AbstractProtocol {
     private final AbstractNetworkClient server;
 
-
-    public AbstractProtocol(AbstractNetworkClient server){
-        this.server = server;
+    public AbstractProtocol(AbstractNetworkClient runningServer) {
+        this.server = runningServer;
     }
-
 
     protected AbstractNetworkClient getServer(){
         return server;

@@ -2,7 +2,8 @@ package orpheus.client.gui.pages.worldselect;
 
 import world.build.Build;
 import orpheus.client.gui.components.BuildSelect;
-import orpheus.client.gui.components.Chat;
+import orpheus.client.gui.components.ChatBox;
+
 import java.awt.BorderLayout;
 import java.util.Arrays;
 import javax.swing.JTextArea;
@@ -19,9 +20,9 @@ import orpheus.client.protocols.WaitingRoomClientProtocol;
  * 
  * @author Matt Crow
  */
-public class WaitingRoom extends Page{
+public class WaitingRoom extends Page {
     private final JTextArea teamList;
-    private final Chat chat;
+    private final ChatBox chat;
     private final BuildSelect playerBuild;
     private WaitingRoomClientProtocol backend;
     
@@ -34,7 +35,7 @@ public class WaitingRoom extends Page{
         
         add(cf.makeLabel("Waiting for players to join..."), BorderLayout.PAGE_START);
         
-        chat = new Chat(context, null);
+        chat = new ChatBox(context);
         add(chat, BorderLayout.LINE_START);
         
         playerBuild = new BuildSelect(context);
@@ -56,7 +57,7 @@ public class WaitingRoom extends Page{
         setBackEnd(protocol);
     }
     
-    public final Chat getChat(){
+    public final ChatBox getChat(){
         return chat;
     }
     
@@ -84,6 +85,7 @@ public class WaitingRoom extends Page{
     public void setBackEnd(WaitingRoomClientProtocol protocol){
         backend = protocol;
     }
+
     public WaitingRoomClientProtocol getBackEnd(){
         return backend;
     }

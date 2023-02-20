@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import javax.swing.JOptionPane;
 
+import net.AbstractNetworkClient;
 import orpheus.client.gui.components.ComponentFactory;
 import orpheus.core.AppContext;
 import orpheus.core.net.OrpheusClient;
@@ -24,6 +25,11 @@ public class ClientAppContext extends AppContext {
      * the client connected to a server
      */
     private Optional<OrpheusClient> client = Optional.empty();
+
+    /**
+     * using this one until old code is migrated to OrpheusClient
+     */
+    private Optional<AbstractNetworkClient> oldClient = Optional.empty();
 
     /**
      * used to produce components for the GUI
@@ -77,5 +83,13 @@ public class ClientAppContext extends AppContext {
 
     public Optional<OrpheusClient> getClient() {
         return client;
+    }
+
+    public void setClient(AbstractNetworkClient oldClient) {
+        this.oldClient = Optional.of(oldClient);
+    }
+
+    public Optional<AbstractNetworkClient> getOldClient() {
+        return oldClient;
     }
 }

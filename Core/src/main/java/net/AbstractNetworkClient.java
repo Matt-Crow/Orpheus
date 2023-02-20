@@ -2,11 +2,13 @@ package net;
 
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.Optional;
 
 import net.messages.ServerMessage;
 import net.messages.ServerMessagePacket;
-import net.protocols.AbstractOrpheusServerNonChatProtocol;
-import net.protocols.ChatProtocol;
+import net.messages.ServerMessageType;
+import net.protocols.AbstractProtocol;
+import orpheus.core.net.chat.ChatProtocol;
 
 /**
  * This class represents either a client or server in a multiplayer Orpheus game.
@@ -15,8 +17,12 @@ import net.protocols.ChatProtocol;
  */
 public abstract class AbstractNetworkClient {
     private volatile boolean isStarted;
-    private volatile AbstractOrpheusServerNonChatProtocol protocol;
-    private volatile ChatProtocol chatProtocol;
+    private volatile AbstractProtocol protocol;
+
+    /**
+     * handles chat messages received
+     */
+    private Optional<ChatProtocol> chatProtocol;
     
     /**
      * messages are cached if this does not yet have a way of handling them
@@ -26,7 +32,7 @@ public abstract class AbstractNetworkClient {
     public AbstractNetworkClient(){
         isStarted = false;
         protocol = null;
-        chatProtocol = null;
+        chatProtocol = Optional.empty();
         cachedMessages = new LinkedList<>();
     }
     
@@ -35,7 +41,7 @@ public abstract class AbstractNetworkClient {
         return isStarted;
     }
     
-    public final void setProtocol(AbstractOrpheusServerNonChatProtocol protocol){
+    public final void setProtocol(AbstractProtocol protocol){
         this.protocol = protocol;
         LinkedList<ServerMessagePacket> smps = new LinkedList<>();
         boolean wasHandled;
@@ -55,19 +61,21 @@ public abstract class AbstractNetworkClient {
      * regular protocols, but chat also can't interfere
      * with the other protocol!
      * 
-     * ... or I could just have the other protocols
-     * forward to their chat...
-     * 
-     * @param chatProtocol the ChatProtocol to handle messages
+     * @param chatProtocol the ChatProtocol to handle chat messages
      * received by this server.
      */
-    public final void setChatProtocol(ChatProtocol chatProtocol){
-        this.chatProtocol = chatProtocol;
+    public void setChatProtocol(ChatProtocol chatProtocol){
+        this.chatProtocol = Optional.of(chatProtocol);
+        var newCachedMessages = new LinkedList<ServerMessagePacket>();
         cachedMessages.forEach((ServerMessagePacket sm)->{
-            if(chatProtocol.receive(sm)){
-                cachedMessages.remove(sm);
+            if (sm.getMessage().getType() == ServerMessageType.CHAT) {
+                chatProtocol.receiveChatMessage(sm.getSender(), sm.getMessage().getBody());
+            } else {
+                newCachedMessages.add(sm);
             }
         });
+        cachedMessages.clear();
+        cachedMessages.addAll(newCachedMessages);
     }
     
     /*
@@ -76,7 +84,7 @@ public abstract class AbstractNetworkClient {
     */
     public final void clearProtocols(){
         protocol = null;
-        chatProtocol = null;
+        //chatProtocol = null; don't do this!
     }
     
     public final void start() throws IOException {
@@ -100,13 +108,14 @@ public abstract class AbstractNetworkClient {
         if(protocol != null){
             handled = protocol.receive(sm);
         }
-        if(chatProtocol != null){
+        if (chatProtocol.isPresent() && sm.getMessage().getType() == ServerMessageType.CHAT){
             // old handled value AFTER chatProtocol, lest short-circuit
-            handled = chatProtocol.receive(sm) || handled;
+            handled = true;
+            chatProtocol.get().receiveChatMessage(sm.getSender(), sm.getMessage().getBody());
         }
         
         if(!handled){
-            System.err.printf("Couldn't handle %s\n", sm.getMessage().getType().toString());
+            System.err.printf("Couldn't handle message with type %s\n", sm.getMessage().getType().toString());
             cachedMessages.add(sm);
         }
     }

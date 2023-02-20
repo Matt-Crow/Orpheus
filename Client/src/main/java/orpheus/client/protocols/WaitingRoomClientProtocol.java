@@ -133,26 +133,30 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
     private void receiveWorldInit(ServerMessagePacket sm) {
         WorldBuilder builder = new WorldBuilderImpl();
 
-        // don't like having to do static like this
         World entireWorld = builder
-                .withContent((WorldContent) WorldSerializer.fromSerializedString(sm.getMessage().getBody()))
-                .build();
+            .withContent((WorldContent) WorldSerializer.fromSerializedString(sm.getMessage().getBody()))
+            .build();
 
         var me = room.getContext().getLoggedInUser();
 
         RemoteOrpheusClient orpheus = new RemoteOrpheusClient(getServer());
         WorldPage p = new WorldPage(room.getContext(), room.getHost());
         WorldCanvas renderer = new WorldCanvas(
-                entireWorld,
-                new PlayerControls(entireWorld, me.getRemotePlayerId(), orpheus),
-                false
+            entireWorld,
+            new PlayerControls(entireWorld, me.getRemotePlayerId(), orpheus),
+            false
         );
         p.setCanvas(renderer);
+
+        // set up chat protocol
+        var chatProtocol = new ClientChatProtocol(getServer(), p.getChatBox());
+        getServer().setChatProtocol(chatProtocol);
+
         room.getHost().switchToPage(p);
 
         RemoteProxyWorldProtocol protocol = new RemoteProxyWorldProtocol(
-                getServer(),
-                entireWorld
+            getServer(),
+            entireWorld
         );
         getServer().setProtocol(protocol);
 
