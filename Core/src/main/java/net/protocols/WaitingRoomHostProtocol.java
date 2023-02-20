@@ -1,27 +1,28 @@
 package net.protocols;
 
-import world.battle.Team;
-import world.build.Build;
-import world.build.BuildJsonUtil;
-import world.build.DataSet;
-import world.entities.HumanPlayer;
 import java.awt.Color;
 import java.io.IOException;
-import static java.lang.System.err;
+import java.util.HashSet;
+
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 
 import net.AbstractNetworkClient;
 import net.OrpheusServer;
+import net.messages.ServerMessage;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import orpheus.core.users.User;
 import serialization.JsonUtil;
-import java.util.HashSet;
-import net.messages.ServerMessage;
 import serialization.WorldSerializer;
-import world.*;
+import world.World;
+import world.WorldBuilder;
+import world.WorldBuilderImpl;
+import world.battle.Team;
+import world.build.BuildJsonUtil;
+import world.build.DataSet;
+import world.entities.HumanPlayer;
 import world.game.Game;
 
 /**
@@ -167,15 +168,11 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         WorldBuilder worldBuilder = new WorldBuilderImpl();
         
         world = worldBuilder
-                .withGame(minigame)
-                .withPlayers(playerTeam)
-                .withAi(new Team("AI", Color.red))
-                .build(); 
-        
-        requestBuilds();
-    }
+            .withGame(minigame)
+            .withPlayers(playerTeam)
+            .withAi(new Team("AI", Color.red))
+            .build(); 
     
-    private void requestBuilds(){
         getServer().send(new ServerMessage(
             "please provide build information",
             ServerMessageType.REQUEST_PLAYER_DATA
@@ -193,22 +190,21 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
      * @param sm a server message containing the sender's Build, serialized as a JSON object string
      */
     private void receiveBuildInfo(ServerMessagePacket sm){
-        HumanPlayer player = null;
         User sender = sm.getSender();
-        
-        if(awaitingBuilds.contains(sender)){
-            player = new HumanPlayer(
-                world, // world should not be null by now,
-                sender.getName()
-            );
-            awaitingBuilds.remove(sender);
-        } else {
-            err.println("Ugh oh, " + sender.getName() + " isn't on any team!");
-            return;
-        }
 
-        Build b = BuildJsonUtil.deserializeJson(JsonUtil.fromString(sm.getMessage().getBody()));
-        player.applyBuild(dataSet.assemble(b));
+        if (!awaitingBuilds.contains(sender)) {
+            throw new RuntimeException(String.format("received second build from %s, expected only once", sender.getName()));
+        }
+        
+        var player = new HumanPlayer(
+            world, // world should not be null by now,
+            sender.getName()
+        );
+        awaitingBuilds.remove(sender);
+
+        var json = JsonUtil.fromString(sm.getMessage().getBody());
+        var build = BuildJsonUtil.deserializeJson(json);
+        player.applyBuild(dataSet.assemble(build));
         playerTeam.addMember(player);
         
         sendRemoteId(sender, player.id);

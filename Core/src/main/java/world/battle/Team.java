@@ -108,7 +108,7 @@ public class Team implements Serializable {
         world = w;
         membersRem.clear();
         clear();
-        roster.values().forEach((p)->{
+        roster.values().forEach((p)->{ // concurrent modification
             initPlayer(p, w);
         });
     }

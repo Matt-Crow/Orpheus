@@ -28,6 +28,12 @@ public abstract class AbstractStatus implements Serializable, Terminable {
     private final TerminationListeners terminationListeners = new TerminationListeners();    
 	
     /**
+     * ensures client & server are using compatible version of this class when
+     * serializing / deserializing
+     */
+    private static final long serialVersionUID = 1L;
+    
+    /**
      * 
      * @param enumName the enum corresponding to this status. Used for serialization.
      * These next two use my standard 1-3 system, where 1 means "weak", 2 means "average", and 3 means "strong".

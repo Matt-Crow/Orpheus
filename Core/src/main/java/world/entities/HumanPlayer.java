@@ -27,6 +27,12 @@ public class HumanPlayer extends AbstractPlayer {
 
     public static final int MIN_LIFE_SPAN = 10;
 
+    /**
+     * ensures client & server are using compatible version of this class when
+     * serializing / deserializing
+     */
+    private static final long serialVersionUID = 1L;
+
     public HumanPlayer(World inWorld, String n) {
         super(inWorld, n, MIN_LIFE_SPAN);
         c = null;

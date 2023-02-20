@@ -48,8 +48,6 @@ public class Chat extends JComponent implements ActionListener, ChatMessageListe
         gbc.fill = GridBagConstraints.BOTH;
         add(newMsg, gbc.clone());
         
-        initCmds();
-        
         logLocal("enter '/?' to list commands");
         
         this.chatServer = chatServer;
@@ -59,18 +57,6 @@ public class Chat extends JComponent implements ActionListener, ChatMessageListe
         repaint();
     }
     
-    private void initCmds(){
-        addCmd("?", (String[] ss)->listCmds());
-        addCmd("connect", (ss)->{
-            try {
-                String ip = ss[0].split(":")[0];
-                int port = Integer.parseInt(ss[0].split(":")[1], 10);
-                joinChat(ip, port);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        });
-    }
     public void addCmd(String cmd, Consumer<String[]> function){
         CMDS.put(cmd.toUpperCase(), function);
     }
@@ -120,19 +106,6 @@ public class Chat extends JComponent implements ActionListener, ChatMessageListe
             ChatProtocol cp = new ChatProtocol(chatServer);
             cp.addChatListener(this);
             chatServer.setChatProtocol(cp);
-        }
-    }
-    
-    public void joinChat(String ipAddr, int port) throws IOException{
-        if(!chatServerOpened){
-            openChatServer();
-        }
-        if(chatServer.isStarted()){
-            logLocal("Joined chat with " + ipAddr);
-            chatServer.send(new ServerMessage(
-                context.getLoggedInUser().getName() + " has joined the chat.",
-                ServerMessageType.CHAT
-            ));
         }
     }
 
