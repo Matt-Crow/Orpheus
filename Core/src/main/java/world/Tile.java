@@ -7,14 +7,16 @@ import java.io.Serializable;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+
+import orpheus.core.world.graph.Graphable;
 import serialization.JsonSerialable;
 import serialization.JsonUtil;
 
 /**
  * Tiles are rendered whenever World.draw is invoked
  * @author Matt Crow
- */
-public class Tile implements Serializable, JsonSerialable{
+ */                        // todo rm Serializable, JsonSerialable
+public class Tile implements Serializable, JsonSerialable, Graphable {
     public static final int TILE_SIZE = 100;
     private static final int TILE_SPACING = (int)(TILE_SIZE * 0.05);
     private static final int RECT_SIZE = (int)(TILE_SIZE * 0.9);
@@ -147,5 +149,10 @@ public class Tile implements Serializable, JsonSerialable{
         );
         ret.setBlocking(obj.getBoolean("blocking"));
         return ret;
+    }
+
+    @Override
+    public orpheus.core.world.graph.Tile toGraph() {
+        return new orpheus.core.world.graph.Tile(c, blocking);
     }
 }
