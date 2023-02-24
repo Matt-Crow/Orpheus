@@ -169,6 +169,5 @@ public abstract class AbstractEntity extends AbstractPrimitiveEntity implements 
         return shouldTerminate;
     }
 
-    @Override
     public abstract void draw(Graphics g);
 }

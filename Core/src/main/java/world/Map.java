@@ -1,23 +1,33 @@
 package world;
 
-import controls.ai.*;
-import orpheus.core.world.graph.Graphable;
-
-import static world.Tile.TILE_SIZE;
-import world.entities.AbstractEntity;
-import java.awt.*;
-import java.io.*;
 import static java.lang.System.out;
-import java.util.*;
-import javax.json.*;
-import serialization.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Stack;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+
+import controls.ai.Path;
+import controls.ai.PathInfo;
+import controls.ai.PathMinHeap;
+import orpheus.core.world.graph.Graphable;
+import serialization.JsonSerialable;
+import serialization.JsonUtil;
+import world.entities.AbstractEntity;
 
 /**
  * The Map class is used to store Tiles together to form 
  * a 2-dimensional playing field for players to play on.
  * @author Matt
  */                       // todo rm Serializable, JsonSerilable
-public class Map implements Serializable, JsonSerialable, Graphable{
+public class Map implements Serializable, JsonSerialable, Graphable {
     private final int width; //in tiles
     private final int height;
     private final int[][] tileMap;
@@ -380,17 +390,6 @@ public class Map implements Serializable, JsonSerialable, Graphable{
     
     public final Path findPath(AbstractEntity from, AbstractEntity to){
         return findPath(from.getX(), from.getY(), to.getX(), to.getY());
-    }
-    
-    
-    public void draw(Graphics g){
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, getWidth(), getHeight());
-        for(int i = 0; i < width; ++i){
-            for(int j = 0; j < height; ++j){
-                tileSet.get(tileMap[j][i]).drawAt(g, i * TILE_SIZE, j * TILE_SIZE);
-            }
-        }
     }
 
     @Override

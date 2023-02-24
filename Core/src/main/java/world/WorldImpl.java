@@ -1,6 +1,9 @@
 package world;
 
 import java.awt.Graphics;
+import java.util.stream.Collectors;
+
+import orpheus.core.world.graph.Graphable;
 import util.Random;
 import world.battle.Team;
 import world.entities.AbstractEntity;
@@ -22,7 +25,7 @@ import world.game.Game;
  * 
  * @author Matt Crow
  */
-public class WorldImpl implements World{
+public class WorldImpl implements World, Graphable {
     private volatile WorldContent ser;
     private final NonSerializableWorldPart noser;
     
@@ -106,8 +109,8 @@ public class WorldImpl implements World{
     
     @Override
     public void draw(Graphics g){
+        toGraph().draw(g);
         ser.draw(g);
-        noser.draw(g);
     }
 
     @Override
@@ -123,5 +126,13 @@ public class WorldImpl implements World{
                 ((Projectile)member).spawnParticles();
             }
         });
+    }
+
+    @Override
+    public orpheus.core.world.graph.World toGraph() {
+        return new orpheus.core.world.graph.World(
+            getMap().toGraph(),
+            noser.getParticles().stream().map((particle) -> particle.toGraph()).collect(Collectors.toList())
+        );
     }
 }

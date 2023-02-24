@@ -1,14 +1,14 @@
 package world;
 
-import java.awt.Graphics;
+import java.util.Collection;
+
 import world.entities.particles.Particle;
 import world.entities.particles.ParticleCollection;
 
 /**
- * This is the part of the world that is not serialized.
- * 
- * Keeps track of all Particles, as leaving them lumped in with Teams leads to 
- * drastic performance issues when serializing.
+ * This is the part of the world that is not serialized, as it either does not
+ * change, or is purely cosmetic, and thus has no impact on gameplay, and would
+ * slow down serialization too much if serialized.
  * 
  * Essentially, provides a stable, non-serialized parallel to the volatile, 
  * serialized part.
@@ -29,6 +29,10 @@ public class NonSerializableWorldPart {
     protected void init(){
         particles.clear();
     }
+
+    protected Collection<Particle> getParticles() {
+        return particles.toList();
+    }
     
     /**
      * Updates all the non-serialized
@@ -39,9 +43,5 @@ public class NonSerializableWorldPart {
     protected void update(){
         particles.forEach((p)->p.update());
         particles.updatePoolAges();
-    }
-    
-    protected void draw(Graphics g){
-        particles.forEach((p)->p.draw(g));
     }
 }

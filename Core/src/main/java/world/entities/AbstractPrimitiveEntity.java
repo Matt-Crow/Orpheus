@@ -1,6 +1,5 @@
 package world.entities;
 
-import java.awt.Graphics;
 import java.io.Serializable;
 import util.Direction;
 
@@ -121,6 +120,4 @@ public abstract class AbstractPrimitiveEntity implements Serializable {
     }
 
     public abstract void init();
-
-    public abstract void draw(Graphics g);
 }

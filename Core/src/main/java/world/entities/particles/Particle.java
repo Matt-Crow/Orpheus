@@ -1,11 +1,10 @@
 package world.entities.particles;
 
-import util.Settings;
 import java.awt.Color;
-import java.awt.Graphics;
+import orpheus.core.world.graph.Graphable;
 import world.entities.AbstractPrimitiveEntity;
 
-public class Particle extends AbstractPrimitiveEntity {
+public class Particle extends AbstractPrimitiveEntity implements Graphable {
 	private final Color color;
 	private final int lifeSpan;
 	
@@ -22,15 +21,6 @@ public class Particle extends AbstractPrimitiveEntity {
     }
     
     @Override
-	public void draw(Graphics g){
-        if(!Settings.DISABLEPARTICLES){
-            int r = getRadius();
-            g.setColor(color);
-            g.fillRect(getX() - r, getY() - r, r * 2, r * 2);
-        }
-	}
-    
-    @Override
     public void init(){
         setIsMoving(true);
     }
@@ -38,5 +28,10 @@ public class Particle extends AbstractPrimitiveEntity {
     @Override
 	public void update(){
         super.update();
+    }
+
+    @Override
+    public orpheus.core.world.graph.Particle toGraph() {
+        return new orpheus.core.world.graph.Particle(getX(), getY(), getRadius(), color);
     }
 }
