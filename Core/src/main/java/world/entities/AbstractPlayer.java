@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import controls.ai.Path;
 import controls.ai.PathInfo;
-import orpheus.core.world.graph.Graphable;
 import orpheus.core.world.graph.Player;
 import world.statuses.AbstractStatus;
 import world.statuses.StatusName;
@@ -17,6 +16,7 @@ import world.events.termination.Terminable;
 import world.events.termination.TerminationListener;
 import world.Tile;
 import java.util.HashMap;
+
 import util.Direction;
 import world.World;
 
@@ -25,8 +25,8 @@ import world.World;
  * battle related capabilities.
  *
  * @author Matt Crow
- */                                                                               // needs to listen for status termination
-public abstract class AbstractPlayer extends AbstractEntity implements Graphable, TerminationListener {
+ */                                                         // needs to listen for status termination
+public abstract class AbstractPlayer extends AbstractEntity implements TerminationListener {
 
     private final String name;
     private Color color;
@@ -281,49 +281,7 @@ public abstract class AbstractPlayer extends AbstractEntity implements Graphable
 
     @Override
     public void draw(Graphics g) {
-        int w = 1000;
-        int h = 1000;
-        int r = getRadius();
-
-        if (path != null) {
-            path.draw(g);
-        }
-
-        // HP value
-        g.setColor(Color.black);
-        g.drawString(
-                String.format("HP: %d", getLog().getHP()),
-                getX() - w / 12,
-                getY() - h / 8
-        );
-
-        // list statuses
-        g.setColor(Color.black);
-        int y = getY() + h / 10;
-        String iStr;
-        int i;
-        for (AbstractStatus s : stats.values()) {
-            iStr = "";
-            i = 0;
-            while (i < s.getIntensityLevel()) {
-                iStr += "I";
-                i++;
-            }
-            g.drawString(
-                    String.format(
-                            "%s %s (%d)",
-                            s.getName(), iStr, s.getUsesLeft()
-                    ),
-                    getX() - r,
-                    y
-            );
-            y += h / 30;
-        }
-
-        g.setColor(getTeam().getColor());
-        g.fillOval(getX() - r, getY() - r, 2 * r, 2 * r);
-        g.setColor(color);
-        g.fillOval(getX() - (int) (r * 0.8), getY() - (int) (r * 0.8), (int) (r * 1.6), (int) (r * 1.6));
+        toGraph().draw(g);
     }
 
     public abstract double getStatValue(CharacterStatName n);
@@ -333,6 +291,14 @@ public abstract class AbstractPlayer extends AbstractEntity implements Graphable
     public abstract void playerUpdate();
 
     public orpheus.core.world.graph.Player toGraph() {
-        return new Player();
+        return new Player(
+            getX(), 
+            getY(), 
+            getRadius(),
+            getLog().getHP(),
+            stats.values().stream().map(AbstractStatus::toString).toList(),
+            getTeam().getColor(),
+            color
+        );
     }
 }

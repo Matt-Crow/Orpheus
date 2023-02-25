@@ -1,10 +1,9 @@
 package world.entities.particles;
 
 import java.awt.Color;
-import orpheus.core.world.graph.Graphable;
 import world.entities.AbstractPrimitiveEntity;
 
-public class Particle extends AbstractPrimitiveEntity implements Graphable {
+public class Particle extends AbstractPrimitiveEntity {
 	private final Color color;
 	private final int lifeSpan;
 	

@@ -20,6 +20,18 @@ public class Entity implements GraphElement {
         this.radius = radius;
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getRadius() {
+        return radius;
+    }
+    
     @Override
     public void draw(Graphics g) {
         throw new UnsupportedOperationException("Unimplemented method 'draw'");
@@ -32,13 +44,5 @@ public class Entity implements GraphElement {
             .add("y", y)
             .add("radius", radius)
             .build();
-    }
-
-    public Entity fromJson(JsonObject json) {
-        return new Entity(
-            json.getInt("x"),
-            json.getInt("y"),
-            json.getInt("radius")
-        );
     }
 }

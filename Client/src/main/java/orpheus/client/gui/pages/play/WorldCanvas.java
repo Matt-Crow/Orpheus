@@ -99,7 +99,7 @@ public class WorldCanvas extends Canvas {
         );
         Graphics2D g2d = applyTransforms(g);
 
-        // todo use the worldRenderer once graph is done
+        // todo use the worldRenderer once RemoteWorldRenderer
         //worldRenderer.draw(g2d);
         world.draw(g2d);
 

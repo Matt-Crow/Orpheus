@@ -158,4 +158,14 @@ public abstract class AbstractStatus implements Serializable, Terminable {
     public abstract String getDesc();
     
     public abstract AbstractStatus copy();
+
+    @Override
+    public String toString() {
+        var is = "";
+        for (var i = 0; i < level; i++) {
+            is += 'I';
+        }
+
+        return String.format("%s %s (%d)", name, is, usesLeft);
+    }
 }
