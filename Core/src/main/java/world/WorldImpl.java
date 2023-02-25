@@ -3,7 +3,6 @@ package world;
 import java.awt.Graphics;
 import java.util.stream.Collectors;
 
-import orpheus.core.world.graph.Graphable;
 import util.Random;
 import world.battle.Team;
 import world.entities.AbstractEntity;
@@ -25,7 +24,7 @@ import world.game.Game;
  * 
  * @author Matt Crow
  */
-public class WorldImpl implements World, Graphable {
+public class WorldImpl implements World {
     private volatile WorldContent ser;
     private final NonSerializableWorldPart noser;
     
@@ -132,6 +131,8 @@ public class WorldImpl implements World, Graphable {
     public orpheus.core.world.graph.World toGraph() {
         return new orpheus.core.world.graph.World(
             getMap().toGraph(),
+            getPlayers().toGraph(),
+            getAi().toGraph(),
             noser.getParticles().stream().map((particle) -> particle.toGraph()).collect(Collectors.toList())
         );
     }

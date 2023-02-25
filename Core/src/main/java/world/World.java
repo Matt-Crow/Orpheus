@@ -1,6 +1,8 @@
 package world;
 
 import java.awt.Graphics;
+
+import orpheus.core.world.graph.Graphable;
 import world.battle.Team;
 import world.entities.AbstractEntity;
 import world.entities.particles.Particle;
@@ -13,7 +15,7 @@ import world.game.Game;
  * 
  * @author Matt Crow <mattcrow19@gmail.com>
  */
-public interface World {
+public interface World extends Graphable {
     
     /**
      * @return the serializable content of this world
@@ -51,4 +53,6 @@ public interface World {
     public void updateParticles();
     
     public void draw(Graphics g);
+
+    public orpheus.core.world.graph.World toGraph();
 }

@@ -15,17 +15,22 @@ import util.Settings;
 public class World implements GraphElement {
 
     private final Map map;
+    private final Team players;
+    private final Team enemies;
     private final Collection<Particle> particles;
 
-    public World(Map map, Collection<Particle> particles) {
+    public World(Map map, Team players, Team enemies, Collection<Particle> particles) {
         this.map = map;
+        this.players = players;
+        this.enemies = enemies;
         this.particles = particles;
     }
 
     @Override
     public void draw(Graphics g) {
         map.draw(g);
-
+        enemies.draw(g);
+        players.draw(g);
         if (!Settings.DISABLEPARTICLES) {
             particles.forEach((p) -> p.draw(g));
         }
@@ -40,6 +45,8 @@ public class World implements GraphElement {
 
         return Json.createObjectBuilder()
             .add("map", map.serializeJson())
+            .add("players", players.serializeJson())
+            .add("enemies", enemies.serializeJson())
             .add("particles", particlesJson)
             .build();
     }
@@ -54,6 +61,8 @@ public class World implements GraphElement {
 
         return new World(
             Map.fromJson(json.getJsonObject("map")),
+            Team.fromJson(json.getJsonObject("players")),
+            Team.fromJson(json.getJsonObject("enemies")),
             particles
         );
     }

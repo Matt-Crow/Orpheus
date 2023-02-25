@@ -10,6 +10,9 @@ import world.entities.AbstractEntity;
 import java.awt.Graphics;
 import java.io.Serializable;
 import java.util.function.Consumer;
+
+import orpheus.core.world.graph.Graphable;
+
 import java.util.HashMap;
 import world.World;
 
@@ -20,7 +23,7 @@ import world.World;
  *
  * @author Matt Crow
  */
-public class Team implements Serializable {
+public class Team implements Serializable, Graphable {
     private transient World world;
     private final String name;
     private final Color color;
@@ -229,5 +232,10 @@ public class Team implements Serializable {
     @Override
     public int hashCode() {
         return id.hashCode();
+    }
+
+    @Override
+    public orpheus.core.world.graph.Team toGraph() {
+        return new orpheus.core.world.graph.Team(membersRem.stream().map((player) -> player.toGraph()).toList());
     }
 }

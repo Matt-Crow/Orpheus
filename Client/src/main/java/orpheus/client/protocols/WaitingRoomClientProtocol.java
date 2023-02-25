@@ -1,6 +1,7 @@
 package orpheus.client.protocols;
 
 import orpheus.client.gui.pages.PlayerControls;
+import orpheus.client.gui.pages.play.RemoteWorldRenderer;
 import orpheus.client.gui.pages.play.RemoteWorldUpdater;
 import world.build.BuildJsonUtil;
 import javax.json.JsonObject;
@@ -138,15 +139,17 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
             .build();
 
         var me = room.getContext().getLoggedInUser();
+        var renderer = new RemoteWorldRenderer(entireWorld.toGraph());
 
         RemoteOrpheusClient orpheus = new RemoteOrpheusClient(getServer());
         WorldPage p = new WorldPage(room.getContext(), room.getHost());
-        WorldCanvas renderer = new WorldCanvas(
+        WorldCanvas canvas = new WorldCanvas(
+            renderer,
             entireWorld,
             new PlayerControls(entireWorld, me.getRemotePlayerId(), orpheus),
             false
         );
-        p.setCanvas(renderer);
+        p.setCanvas(canvas);
 
         // set up chat protocol
         var chatProtocol = new ClientChatProtocol(me, getServer(), p.getChatBox());
@@ -154,13 +157,15 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
 
         room.getHost().switchToPage(p);
 
+        // todo make one of these (I forget which) continuously update renderer
+        // renderer.setWorld(deserialized)
         RemoteProxyWorldProtocol protocol = new RemoteProxyWorldProtocol(
             getServer(),
             entireWorld
         );
         getServer().setProtocol(protocol);
 
-        renderer.start();
+        canvas.start();
         RemoteWorldUpdater updater = new RemoteWorldUpdater(entireWorld);
         updater.start();
     }

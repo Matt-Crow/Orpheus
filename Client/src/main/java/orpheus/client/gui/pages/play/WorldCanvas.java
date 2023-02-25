@@ -18,6 +18,8 @@ import orpheus.client.gui.pages.Canvas;
  */
 public class WorldCanvas extends Canvas {
 
+    private final WorldRenderer worldRenderer;
+
     private final World world;
     private final Timer timer;
     private final String focusedEntityId;
@@ -34,8 +36,11 @@ public class WorldCanvas extends Canvas {
      *
      * The caller should call WorldCanvas.start() once they are using the canvas
      */
-    public WorldCanvas(World w, PlayerControls pc, boolean pauseEnabled) {
+    public WorldCanvas(WorldRenderer worldRenderer, World w, PlayerControls pc, boolean pauseEnabled) {
         super();
+
+        this.worldRenderer = worldRenderer;
+
         world = w;
 
         paused = false;
@@ -94,6 +99,8 @@ public class WorldCanvas extends Canvas {
         );
         Graphics2D g2d = applyTransforms(g);
 
+        // todo use the worldRenderer once graph is done
+        //worldRenderer.draw(g2d);
         world.draw(g2d);
 
         reset();

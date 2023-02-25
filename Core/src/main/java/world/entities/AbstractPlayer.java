@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import controls.ai.Path;
 import controls.ai.PathInfo;
+import orpheus.core.world.graph.Graphable;
+import orpheus.core.world.graph.Player;
 import world.statuses.AbstractStatus;
 import world.statuses.StatusName;
 import util.Settings;
@@ -23,8 +25,8 @@ import world.World;
  * battle related capabilities.
  *
  * @author Matt Crow
- */                                                         // needs to listen for status termination
-public abstract class AbstractPlayer extends AbstractEntity implements TerminationListener {
+ */                                                                               // needs to listen for status termination
+public abstract class AbstractPlayer extends AbstractEntity implements Graphable, TerminationListener {
 
     private final String name;
     private Color color;
@@ -329,4 +331,8 @@ public abstract class AbstractPlayer extends AbstractEntity implements Terminati
     public abstract void playerInit();
 
     public abstract void playerUpdate();
+
+    public orpheus.core.world.graph.Player toGraph() {
+        return new Player();
+    }
 }
