@@ -6,7 +6,6 @@ import world.build.characterClass.CharacterStatName;
 import world.entities.AbstractPlayer;
 import world.entities.particles.ParticleType;
 import world.entities.Projectile;
-import world.entities.SeedProjectile;
 import gui.graphics.CustomColors;
 import world.Tile;
 
@@ -162,7 +161,7 @@ public class ElementalActive extends AbstractActive {
      * @param facingDegrees the direction the new projectile will travel
      */
     protected void spawnProjectile(int facingDegrees) {
-        SeedProjectile p = createProjectile();
+        var p = createProjectile();
         p.setFacing(facingDegrees);
         getUser().spawn(p);
     }
@@ -259,16 +258,15 @@ public class ElementalActive extends AbstractActive {
         return desc.toString();
     }
 
-    public SeedProjectile createProjectile() {
-        return new SeedProjectile(
-                getUser().getWorld(),
-                nextUseId,
-                getUser().getX(),
-                getUser().getY(),
-                0,
-                projectileSpeed,
-                getUser(),
-                this
+    public Projectile createProjectile() {
+        return Projectile.seed(
+            getUser().getWorld(),
+            nextUseId,
+            getUser().getX(),
+            getUser().getY(),
+            0,
+            projectileSpeed,
+            this
         );
     }
 }

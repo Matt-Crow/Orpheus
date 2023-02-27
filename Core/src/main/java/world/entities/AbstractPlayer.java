@@ -43,7 +43,6 @@ public abstract class AbstractPlayer extends AbstractEntity implements Terminati
     private int knockbackDur;
 
     private int lastHitById; //the useId of the last projectile that hit this player
-    private AbstractPlayer lastHitBy;
 
     private final ElementalActive slash;
     private final DamageBacklog log;
@@ -76,7 +75,6 @@ public abstract class AbstractPlayer extends AbstractEntity implements Terminati
         path = null;
 
         lastHitById = -1;
-        lastHitBy = null;
 
         setRadius(RADIUS);
     }
@@ -175,7 +173,6 @@ public abstract class AbstractPlayer extends AbstractEntity implements Terminati
      */
     public final void wasHitBy(Projectile p) {
         lastHitById = p.getUseId();
-        lastHitBy = p.getUser();
     }
 
     public void logDamage(int dmg) {
@@ -196,7 +193,6 @@ public abstract class AbstractPlayer extends AbstractEntity implements Terminati
 
         path = null;
         lastHitById = -1;
-        lastHitBy = null;
 
         hasFocus = false;
         knockbackDir = null;
@@ -259,9 +255,6 @@ public abstract class AbstractPlayer extends AbstractEntity implements Terminati
     @Override
     public void terminate() {
         super.terminate();
-        if (lastHitBy != null) {
-            lastHitBy.getLog().healPerc(5);
-        }
         getTeam().notifyTerminate(this);
     }
 
