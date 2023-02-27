@@ -1,6 +1,6 @@
 package orpheus.client.gui.pages;
 
-import orpheus.client.gui.pages.play.LocalWorldRenderer;
+import orpheus.client.gui.pages.play.LocalWorldSupplier;
 import orpheus.client.gui.pages.play.WorldCanvas;
 import orpheus.client.gui.pages.play.WorldPage;
 import orpheus.core.users.LocalUser;
@@ -56,10 +56,9 @@ public class WorldCanvasTester {
             SoloOrpheusCommandInterpreter orpheus = new SoloOrpheusCommandInterpreter();
 
             WorldCanvas canvas = new WorldCanvas(
-                new LocalWorldRenderer(w),
+                new LocalWorldSupplier(w),
                 w,
-                new PlayerControls(w, player.id, orpheus),
-                true
+                new PlayerControls(w, player.id, orpheus)
             );
             
             PageController mw = new PageController(context);

@@ -1,7 +1,7 @@
 package orpheus.client.protocols;
 
 import orpheus.client.gui.pages.PlayerControls;
-import orpheus.client.gui.pages.play.RemoteWorldRenderer;
+import orpheus.client.gui.pages.play.RemoteWorldSupplier;
 import orpheus.client.gui.pages.play.RemoteWorldUpdater;
 import world.build.BuildJsonUtil;
 import javax.json.JsonObject;
@@ -22,7 +22,6 @@ import javax.json.Json;
 import net.AbstractNetworkClient;
 import net.OrpheusClient;
 import net.protocols.AbstractWaitingRoomProtocol;
-import net.protocols.RemoteProxyWorldProtocol;
 import serialization.WorldSerializer;
 import start.RemoteOrpheusClient;
 import world.World;
@@ -139,15 +138,14 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
             .build();
 
         var me = room.getContext().getLoggedInUser();
-        var renderer = new RemoteWorldRenderer(entireWorld.toGraph());
+        var worldSupplier = new RemoteWorldSupplier(entireWorld.toGraph());
 
         RemoteOrpheusClient orpheus = new RemoteOrpheusClient(getServer());
         WorldPage p = new WorldPage(room.getContext(), room.getHost());
         WorldCanvas canvas = new WorldCanvas(
-            renderer,
+            worldSupplier,
             entireWorld,
-            new PlayerControls(entireWorld, me.getRemotePlayerId(), orpheus),
-            false
+            new PlayerControls(entireWorld, me.getRemotePlayerId(), orpheus)
         );
         p.setCanvas(canvas);
 
@@ -157,11 +155,9 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
 
         room.getHost().switchToPage(p);
 
-        // todo make one of these (I forget which) continuously update renderer
-        // renderer.setWorld(deserialized)
         RemoteProxyWorldProtocol protocol = new RemoteProxyWorldProtocol(
             getServer(),
-            entireWorld
+            worldSupplier
         );
         getServer().setProtocol(protocol);
 

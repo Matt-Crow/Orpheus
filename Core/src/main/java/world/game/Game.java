@@ -1,5 +1,6 @@
 package world.game;
 
+import orpheus.core.world.graph.Graphable;
 import world.World;
 
 /**
@@ -7,7 +8,7 @@ import world.World;
  * 
  * @author Matt Crow <mattcrow19@gmail.com>
  */
-public interface Game {
+public interface Game extends Graphable {
     /**
      * games will need access to the world they're running in
      * @param w the world this is running in
@@ -34,4 +35,12 @@ public interface Game {
      * @return whether or not the players have won 
      */
     public boolean isPlayerWin();
+
+    @Override
+    default orpheus.core.world.graph.Game toGraph() {
+        return new orpheus.core.world.graph.Game(
+            isOver(),
+            isPlayerWin()
+        );
+    }
 }

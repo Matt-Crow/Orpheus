@@ -16,10 +16,15 @@ public enum ServerMessageType {
     PLAYER_DATA("player data"),
     NOTIFY_IDS("notify ids"), //used by WSWaitForPlayers to tell Users what their Team's and Player's IDs are on the host server
     WORLD_INIT("world init"),
-    WORLD_UPDATE("world update"),
     CONTROL_PRESSED("control pressed"),
     START_WORLD("start"),
     SERVER_SHUTDOWN("END OF LINE"),
+
+    /**
+     * When received by the client, it will deserialize the message body into a
+     * world graph. The server should not respond to this message.
+     */
+    WORLD("world"),
     
     /**
      * When received by the server, it will respond with a list of available 

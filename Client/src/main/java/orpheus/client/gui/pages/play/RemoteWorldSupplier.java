@@ -1,16 +1,14 @@
 package orpheus.client.gui.pages.play;
 
-import java.awt.Graphics;
-
 import orpheus.core.world.graph.World;
 
 /**
- * Renders a world that exists on a remote server
+ * Supplies a world that exists on a remote server
  */
-public class RemoteWorldRenderer implements WorldRenderer {
+public class RemoteWorldSupplier implements WorldGraphSupplier {
     private volatile World world;
 
-    public RemoteWorldRenderer(World world) {
+    public RemoteWorldSupplier(World world) {
         this.world = world;
     }
 
@@ -19,7 +17,7 @@ public class RemoteWorldRenderer implements WorldRenderer {
     }
 
     @Override
-    public void draw(Graphics g) {
-        world.draw(g);
+    public World get() {
+        return world;
     }
 }

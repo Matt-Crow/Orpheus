@@ -133,7 +133,8 @@ public class WorldImpl implements World {
             getMap().toGraph(),
             getPlayers().toGraph(),
             getAi().toGraph(),
-            noser.getParticles().stream().map((particle) -> particle.toGraph()).collect(Collectors.toList())
+            noser.getParticles().stream().map((particle) -> particle.toGraph()).collect(Collectors.toList()),
+            getGame().toGraph()
         );
     }
 }

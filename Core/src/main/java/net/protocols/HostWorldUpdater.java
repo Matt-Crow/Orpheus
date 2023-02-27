@@ -3,7 +3,6 @@ package net.protocols;
 import net.OrpheusServer;
 import net.messages.ServerMessageType;
 import orpheus.core.net.messages.Message;
-import serialization.WorldSerializer;
 import world.World;
 
 /**
@@ -24,9 +23,10 @@ public class HostWorldUpdater extends AbstractWorldUpdater {
     @Override
     protected void updateWorld(World world) {
         world.update();
+        
         hostingServer.send(new Message(
-            new WorldSerializer(world).serializeToString(),
-            ServerMessageType.WORLD_UPDATE
+            ServerMessageType.WORLD, 
+            world.toGraph().serializeJson()
         ));
     }
 }

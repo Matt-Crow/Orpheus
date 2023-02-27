@@ -12,21 +12,30 @@ import javax.json.JsonObject;
  * renders and serializes a Player
  */
 public class Player extends Entity {
-
+    private final String id;
     private final int hp;
     private final List<String> statuses;
     private final Color teamColor;
     private final Color color;
 
-    public Player(int x, int y, int radius, int hp, List<String> statuses, 
-        Color teamColor, Color color) {
+    public Player(String id, int x, int y, int radius, int hp, 
+        List<String> statuses, Color teamColor, Color color) {
         super(x, y, radius);
+        this.id = id;
         this.hp = hp;
         this.statuses = statuses;
         this.teamColor = teamColor;
         this.color = color;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+    
     @Override
     public void draw(Graphics g) {
         int x = getX();
@@ -58,6 +67,7 @@ public class Player extends Entity {
             serializedStatuses.add(status);
         }
         return Json.createObjectBuilder(super.serializeJson())
+            .add("id", id)
             .add("hp", hp)
             .add("statuses", serializedStatuses)
             .add("teamColor", teamColor.getRGB())
@@ -73,6 +83,7 @@ public class Player extends Entity {
             statuses.add(array.getString(i));
         }
         return new Player(
+            json.getString("id"),
             json.getInt("x"),
             json.getInt("y"),
             json.getInt("radius"),

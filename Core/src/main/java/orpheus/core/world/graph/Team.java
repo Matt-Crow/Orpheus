@@ -1,8 +1,9 @@
 package orpheus.core.world.graph;
 
 import java.awt.Graphics;
-import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -12,10 +13,14 @@ import javax.json.JsonObject;
  */
 public class Team implements GraphElement {
 
-    private final Collection<Player> members; // might need entity instead
+    private final List<Player> members; // might need entity instead
     
-    public Team(Collection<Player> members) {
+    public Team(List<Player> members) {
         this.members = members;
+    }
+
+    public Optional<Player> getMemberById(String id) {
+        return members.stream().filter((p) -> p.getId().equals(id)).findFirst();
     }
 
     @Override

@@ -292,6 +292,7 @@ public abstract class AbstractPlayer extends AbstractEntity implements Terminati
 
     public orpheus.core.world.graph.Player toGraph() {
         return new Player(
+            id,
             getX(), 
             getY(), 
             getRadius(),

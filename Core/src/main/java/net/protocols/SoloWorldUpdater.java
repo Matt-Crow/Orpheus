@@ -14,6 +14,6 @@ public class SoloWorldUpdater extends AbstractWorldUpdater {
 
     @Override
     protected void updateWorld(World world) {
-        world.updateParticles();
+        world.update();
     }
 }

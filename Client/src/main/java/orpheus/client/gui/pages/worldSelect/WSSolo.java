@@ -7,7 +7,7 @@ import world.entities.HumanPlayer;
 import java.awt.Color;
 
 import orpheus.client.ClientAppContext;
-import orpheus.client.gui.pages.play.LocalWorldRenderer;
+import orpheus.client.gui.pages.play.LocalWorldSupplier;
 import orpheus.client.gui.pages.play.WorldCanvas;
 import orpheus.client.gui.pages.play.WorldPage;
 import start.AbstractOrpheusCommandInterpreter;
@@ -49,10 +49,9 @@ public class WSSolo extends AbstractWSNewWorld{
         
         // model must have teams set before WorldCanvas init, as WC relies on getting the player team
         WorldCanvas renderer = new WorldCanvas(
-            new LocalWorldRenderer(world),
+            new LocalWorldSupplier(world),
             world, 
-            new PlayerControls(world, player.id, orpheus),
-            true
+            new PlayerControls(world, player.id, orpheus)
         );
         
         world.init();

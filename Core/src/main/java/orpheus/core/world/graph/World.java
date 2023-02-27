@@ -18,12 +18,26 @@ public class World implements GraphElement {
     private final Team players;
     private final Team enemies;
     private final Collection<Particle> particles;
+    private final Game game;
 
-    public World(Map map, Team players, Team enemies, Collection<Particle> particles) {
+    public World(Map map, Team players, Team enemies, Collection<Particle> particles, Game game) {
         this.map = map;
         this.players = players;
         this.enemies = enemies;
         this.particles = particles;
+        this.game = game;
+    }
+
+    public Team getPlayers() {
+        return players;
+    }
+
+    public Team getEnemies() {
+        return enemies;
+    }
+
+    public Game getGame() {
+        return game;
     }
 
     @Override
@@ -48,6 +62,7 @@ public class World implements GraphElement {
             .add("players", players.serializeJson())
             .add("enemies", enemies.serializeJson())
             .add("particles", particlesJson)
+            .add("game", game.serializeJson())
             .build();
     }
 
@@ -63,7 +78,8 @@ public class World implements GraphElement {
             Map.fromJson(json.getJsonObject("map")),
             Team.fromJson(json.getJsonObject("players")),
             Team.fromJson(json.getJsonObject("enemies")),
-            particles
+            particles,
+            Game.fromJson(json.getJsonObject("game"))
         );
     }
 }
