@@ -2,7 +2,6 @@ package world.entities;
 
 import world.battle.DamageBacklog;
 import java.awt.Color;
-import java.awt.Graphics;
 import controls.ai.Path;
 import controls.ai.PathInfo;
 import orpheus.core.world.graph.Player;
@@ -270,11 +269,6 @@ public abstract class AbstractPlayer extends AbstractEntity implements Terminati
         if (old == status) {
             stats.remove(old.getStatusName());
         }
-    }
-
-    @Override
-    public void draw(Graphics g) {
-        toGraph().draw(g);
     }
 
     public abstract double getStatValue(CharacterStatName n);

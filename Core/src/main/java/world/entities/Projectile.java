@@ -1,8 +1,8 @@
 package world.entities;
 
-import world.entities.particles.ParticleType;
 import world.entities.particles.Particle;
-import java.awt.Graphics;
+
+import java.util.Arrays;
 
 import gui.graphics.CustomColors;
 import util.Settings;
@@ -196,11 +196,14 @@ public class Projectile extends AbstractEntity {
     }
 
     @Override
-    public void draw(Graphics g) {
-        if (registeredAttack.getParticleType() == ParticleType.NONE || Settings.DISABLEPARTICLES) {
-            int r = getRadius();
-            g.setColor(registeredAttack.getUser().getTeam().getColor());
-            g.fillOval(getX() - r, getY() - r, 2 * r, 2 * r);
-        }
+    public orpheus.core.world.graph.Projectile toGraph() {
+        return new orpheus.core.world.graph.Projectile(
+            getX(),
+            getY(),
+            getRadius(),
+            registeredAttack.getUser().getTeam().getColor(),
+            Arrays.stream(registeredAttack.getColors()).toList(),
+            registeredAttack.getParticleType()
+        );
     }
 }

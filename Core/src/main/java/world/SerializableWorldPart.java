@@ -1,6 +1,5 @@
 package world;
 
-import java.awt.Graphics;
 import java.io.Serializable;
 import world.battle.Team;
 import world.entities.Projectile;
@@ -72,13 +71,6 @@ public class SerializableWorldPart implements WorldContent, Serializable {
             }
             
         });
-    }
-    
-    @Override
-    public void draw(Graphics g){
-        // map.toGraph().draw(g); handled by non-serialized part
-        ai.draw(g);
-        players.draw(g);
     }
 
     @Override

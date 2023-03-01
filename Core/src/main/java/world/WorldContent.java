@@ -1,6 +1,5 @@
 package world;
 
-import java.awt.Graphics;
 import world.battle.Team;
 import world.game.Game;
 
@@ -25,5 +24,4 @@ public interface WorldContent {
     
     public void init();
     public void update();
-    public void draw(Graphics g);
 }

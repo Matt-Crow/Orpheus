@@ -1,8 +1,5 @@
 package world;
 
-import java.awt.Graphics;
-import java.util.stream.Collectors;
-
 import util.Random;
 import world.battle.Team;
 import world.entities.AbstractEntity;
@@ -105,12 +102,6 @@ public class WorldImpl implements World {
         ser.update();
         noser.update();
     }
-    
-    @Override
-    public void draw(Graphics g){
-        toGraph().draw(g);
-        ser.draw(g);
-    }
 
     @Override
     public void updateParticles() {
@@ -133,7 +124,6 @@ public class WorldImpl implements World {
             getMap().toGraph(),
             getPlayers().toGraph(),
             getAi().toGraph(),
-            noser.getParticles().stream().map((particle) -> particle.toGraph()).collect(Collectors.toList()),
             getGame().toGraph()
         );
     }

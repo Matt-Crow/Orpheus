@@ -1,7 +1,6 @@
 package world.entities.particles;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -51,13 +50,5 @@ public class ParticleCollection {
     
     public void clear(){
         pools.clear();
-    }
-
-    public List<Particle> toList() {
-        var particles = new LinkedList<Particle>();
-        for (var pool : pools) {
-            pool.forEach((particle) -> particles.add(particle));
-        }
-        return particles;
     }
 }

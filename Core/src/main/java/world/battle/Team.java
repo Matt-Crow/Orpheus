@@ -3,17 +3,19 @@ package world.battle;
 import java.awt.Color;
 import java.util.ArrayList;
 import world.entities.AbstractPlayer;
+import world.entities.Projectile;
 import world.events.termination.Terminables;
 import util.Coordinates;
 import world.entities.AIPlayer;
 import world.entities.AbstractEntity;
-import java.awt.Graphics;
 import java.io.Serializable;
 import java.util.function.Consumer;
 
 import orpheus.core.world.graph.Graphable;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+
 import world.World;
 
 /**
@@ -203,10 +205,6 @@ public class Team implements Serializable, Graphable {
         entities.update(); // these are separate things
     }
 
-    public void draw(Graphics g) {
-        entities.forEach((e) -> e.draw(g));
-    }
-
     public void print() {
         entities.forEach((e) -> {
             System.out.println(e.toString());
@@ -236,6 +234,16 @@ public class Team implements Serializable, Graphable {
 
     @Override
     public orpheus.core.world.graph.Team toGraph() {
-        return new orpheus.core.world.graph.Team(membersRem.stream().map((player) -> player.toGraph()).toList());
+        var projectiles = new LinkedList<orpheus.core.world.graph.Projectile>();
+        entities.forEach((e) -> {
+            if (e instanceof Projectile) {
+                projectiles.add(((Projectile)e).toGraph());
+            }
+        });
+        
+        return new orpheus.core.world.graph.Team(
+            membersRem.stream().map((player) -> player.toGraph()).toList(),
+            projectiles
+        );
     }
 }

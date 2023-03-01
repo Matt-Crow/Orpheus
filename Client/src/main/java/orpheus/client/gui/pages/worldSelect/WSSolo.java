@@ -1,15 +1,16 @@
 package orpheus.client.gui.pages.worldselect;
 
 import orpheus.client.gui.pages.PlayerControls;
-import net.protocols.SoloWorldUpdater;
 import world.battle.Team;
 import world.entities.HumanPlayer;
 import java.awt.Color;
 
 import orpheus.client.ClientAppContext;
 import orpheus.client.gui.pages.play.LocalWorldSupplier;
+import orpheus.client.gui.pages.play.SoloWorldUpdater;
 import orpheus.client.gui.pages.play.WorldCanvas;
 import orpheus.client.gui.pages.play.WorldPage;
+import orpheus.core.world.graph.particles.Particles;
 import start.AbstractOrpheusCommandInterpreter;
 import orpheus.client.gui.pages.PageController;
 import start.SoloOrpheusCommandInterpreter;
@@ -37,7 +38,10 @@ public class WSSolo extends AbstractWSNewWorld{
                 .withAi(team2)
                 .build();
         
-        SoloWorldUpdater updater = new SoloWorldUpdater(world);
+        var graph = new LocalWorldSupplier(world);
+        var particles = new Particles();
+        SoloWorldUpdater updater = new SoloWorldUpdater(graph, particles, world);
+        
         
         HumanPlayer player = new HumanPlayer(
             world,
@@ -49,7 +53,8 @@ public class WSSolo extends AbstractWSNewWorld{
         
         // model must have teams set before WorldCanvas init, as WC relies on getting the player team
         WorldCanvas renderer = new WorldCanvas(
-            new LocalWorldSupplier(world),
+            graph,
+            particles,
             world, 
             new PlayerControls(world, player.id, orpheus)
         );

@@ -1,7 +1,5 @@
 package world;
 
-import java.util.Collection;
-
 import world.entities.particles.Particle;
 import world.entities.particles.ParticleCollection;
 
@@ -28,10 +26,6 @@ public class NonSerializableWorldPart {
     
     protected void init(){
         particles.clear();
-    }
-
-    protected Collection<Particle> getParticles() {
-        return particles.toList();
     }
     
     /**

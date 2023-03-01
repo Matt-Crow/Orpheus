@@ -1,26 +1,26 @@
-package net.protocols;
+package orpheus.core.world.updaters;
 
 import java.awt.event.ActionEvent;
 import java.util.LinkedList;
 import javax.swing.Timer;
+
+import net.protocols.EndOfFrameListener;
 import util.Settings;
-import world.World;
 
 /**
- * this should handle updating, while WorldCanvas handles rendering
+ * Updates either a world or its graph, but does not handle drawing, as that
+ * should run on a seperate timer.
  * 
  * @author Matt Crow
  */
 public abstract class AbstractWorldUpdater {
     private final LinkedList<EndOfFrameListener> updateListeners;
-    private final World world;
     private final Timer updateTimer;
     private final boolean canPause;
     private boolean hasStarted;
     
-    public AbstractWorldUpdater(World world, boolean canPause){
+    public AbstractWorldUpdater(boolean canPause){
         updateListeners = new LinkedList<>();
-        this.world = world;
         updateTimer = new Timer(1000 / Settings.FPS, this::update);
         updateTimer.stop();
         this.canPause = canPause;
@@ -56,9 +56,9 @@ public abstract class AbstractWorldUpdater {
     }
     
     private void update(){
-        updateWorld(world);
+        doUpdate();
         updateListeners.forEach((eofl)->eofl.frameEnded());
     }
     
-    protected abstract void updateWorld(World world);
+    protected abstract void doUpdate();
 }

@@ -7,6 +7,8 @@ import java.awt.Graphics;
 import java.awt.event.*;
 import javax.swing.*;
 import orpheus.client.gui.pages.PlayerControls;
+import orpheus.core.world.graph.particles.Particles;
+
 import java.awt.Graphics2D;
 import orpheus.client.gui.pages.Canvas;
 
@@ -23,6 +25,11 @@ public class WorldCanvas extends Canvas {
     private final WorldGraphSupplier worldSupplier;
 
     /**
+     * renders particles on this canvas
+     */
+    private final Particles particles;
+
+    /**
      * handles repainting - but not updating - the world
      */
     private final Timer repaintTimer;
@@ -35,11 +42,12 @@ public class WorldCanvas extends Canvas {
     /**
      * The caller should call WorldCanvas.start() once they are using the canvas
      */
-    public WorldCanvas(WorldGraphSupplier worldSupplier, World w, PlayerControls pc) {
+    public WorldCanvas(WorldGraphSupplier worldSupplier, Particles particles, World w, PlayerControls pc) {
 
         super();
 
         this.worldSupplier = worldSupplier;
+        this.particles = particles;
 
         paused = false;
         repaintTimer = new Timer(1000 / Settings.FPS, (ActionEvent e) -> {
@@ -101,6 +109,7 @@ public class WorldCanvas extends Canvas {
         Graphics2D g2d = applyTransforms(g);
 
         world.draw(g2d);
+        particles.draw(g2d);
 
         reset();
 

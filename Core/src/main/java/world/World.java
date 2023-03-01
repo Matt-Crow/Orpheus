@@ -1,7 +1,5 @@
 package world;
 
-import java.awt.Graphics;
-
 import orpheus.core.world.graph.Graphable;
 import world.battle.Team;
 import world.entities.AbstractEntity;
@@ -51,8 +49,6 @@ public interface World extends Graphable {
     public void update();
     
     public void updateParticles();
-    
-    public void draw(Graphics g);
 
     public orpheus.core.world.graph.World toGraph();
 }

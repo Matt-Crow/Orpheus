@@ -1,10 +1,12 @@
-package orpheus.core.world.graph;
+package orpheus.core.world.graph.particles;
 
 import java.awt.Color;
 import java.awt.Graphics;
 
 import javax.json.Json;
 import javax.json.JsonObject;
+
+import orpheus.core.world.graph.Entity;
 
 /**
  * serializes and renders a particle
@@ -16,6 +18,10 @@ public class Particle extends Entity {
     public Particle(int x, int y, int radius, Color color) {
         super(x, y, radius);
         this.color = color;
+    }
+
+    public void move() {
+        // todo
     }
 
     @Override

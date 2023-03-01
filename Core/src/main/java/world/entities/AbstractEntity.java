@@ -1,6 +1,5 @@
 package world.entities;
 
-import java.awt.Graphics;
 import world.events.termination.*;
 import util.Coordinates;
 import world.World;
@@ -168,6 +167,4 @@ public abstract class AbstractEntity extends AbstractPrimitiveEntity implements 
     public boolean isTerminating() {
         return shouldTerminate;
     }
-
-    public abstract void draw(Graphics g);
 }

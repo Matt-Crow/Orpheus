@@ -14,6 +14,7 @@ import orpheus.client.gui.pages.play.WorldPage;
 import orpheus.client.gui.pages.worldselect.WaitingRoom;
 import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
+import orpheus.core.world.graph.particles.Particles;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -142,16 +143,16 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
 
         RemoteOrpheusClient orpheus = new RemoteOrpheusClient(getServer());
         WorldPage p = new WorldPage(room.getContext(), room.getHost());
+        var particles = new Particles();
         WorldCanvas canvas = new WorldCanvas(
             worldSupplier,
+            particles,
             entireWorld,
             new PlayerControls(entireWorld, me.getRemotePlayerId(), orpheus)
         );
         p.setCanvas(canvas);
 
-        // set up chat protocol
-        var chatProtocol = new ClientChatProtocol(me, getServer(), p.getChatBox());
-        getServer().setChatProtocol(chatProtocol);
+        getServer().setChatProtocol(new ClientChatProtocol(me, getServer(), p.getChatBox()));
 
         room.getHost().switchToPage(p);
 
@@ -162,7 +163,8 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
         getServer().setProtocol(protocol);
 
         canvas.start();
-        RemoteWorldUpdater updater = new RemoteWorldUpdater(entireWorld);
-        updater.start();
+        
+        // todo also allow this to stop
+        new RemoteWorldUpdater(worldSupplier, particles).start();
     }
 }

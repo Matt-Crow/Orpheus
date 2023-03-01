@@ -3,6 +3,7 @@ package net.protocols;
 import net.OrpheusServer;
 import net.messages.ServerMessageType;
 import orpheus.core.net.messages.Message;
+import orpheus.core.world.updaters.AbstractWorldUpdater;
 import world.World;
 
 /**
@@ -14,14 +15,16 @@ import world.World;
  */
 public class HostWorldUpdater extends AbstractWorldUpdater {
     private final OrpheusServer hostingServer;
+    private final World world;
     
     public HostWorldUpdater(OrpheusServer hostingServer, World world) {
-        super(world, false);
+        super(false);
+        this.world = world;
         this.hostingServer = hostingServer;
     }
 
     @Override
-    protected void updateWorld(World world) {
+    protected void doUpdate() {
         world.update();
         
         hostingServer.send(new Message(

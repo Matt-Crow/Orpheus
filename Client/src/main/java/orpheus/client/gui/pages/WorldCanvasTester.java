@@ -4,6 +4,7 @@ import orpheus.client.gui.pages.play.LocalWorldSupplier;
 import orpheus.client.gui.pages.play.WorldCanvas;
 import orpheus.client.gui.pages.play.WorldPage;
 import orpheus.core.users.LocalUser;
+import orpheus.core.world.graph.particles.Particles;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
@@ -54,9 +55,12 @@ public class WorldCanvasTester {
 
         if (GUI) {
             SoloOrpheusCommandInterpreter orpheus = new SoloOrpheusCommandInterpreter();
+            var particles = new Particles();
+            // todo something needs to keep updating particles
 
             WorldCanvas canvas = new WorldCanvas(
                 new LocalWorldSupplier(w),
+                particles,
                 w,
                 new PlayerControls(w, player.id, orpheus)
             );

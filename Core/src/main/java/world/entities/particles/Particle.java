@@ -28,9 +28,4 @@ public class Particle extends AbstractPrimitiveEntity {
 	public void update(){
         super.update();
     }
-
-    @Override
-    public orpheus.core.world.graph.Particle toGraph() {
-        return new orpheus.core.world.graph.Particle(getX(), getY(), getRadius(), color);
-    }
 }

@@ -7,7 +7,7 @@ public class Settings {
 	 * number of angles a player can have - also affects particle spawn rate
 	 */
 	public static final int TICKSTOROTATE = 16;
-	public static final boolean DISABLEPARTICLES = false; // causes lag
+	public static final boolean DISABLEPARTICLES = false;
 	public static final int FPS = 30;
     
 	// seconds to frames
