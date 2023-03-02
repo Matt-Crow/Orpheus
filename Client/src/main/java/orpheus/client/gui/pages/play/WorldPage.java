@@ -1,10 +1,8 @@
 package orpheus.client.gui.pages.play;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -37,7 +35,7 @@ public class WorldPage extends Page {
      */
     private final ChatBox chatBox;
     
-    public WorldPage(ClientAppContext context, PageController host){
+    public WorldPage(ClientAppContext context, PageController host, HeadsUpDisplay hud){
         super(context, host);
 
         var cf = context.getComponentFactory();
@@ -46,10 +44,11 @@ public class WorldPage extends Page {
         setLayout(new BorderLayout());
         
         canvasArea = new JPanel();
-        canvasArea.setBackground(Color.red);
+        canvasArea.setLayout(new BorderLayout());
         canvasArea.setFocusable(false);
-        canvasArea.setLayout(new GridLayout(1, 1));
         add(canvasArea, BorderLayout.CENTER);
+
+        canvasArea.add(hud, BorderLayout.PAGE_END);
         
         //other area
         //make this collapsable
@@ -92,8 +91,7 @@ public class WorldPage extends Page {
     
     public WorldPage setCanvas(WorldCanvas w){
         canvas = w;
-        canvasArea.removeAll();
-        canvasArea.add(w);
+        canvasArea.add(w, BorderLayout.CENTER);
         w.addMouseListener(new MouseAdapter(){
             @Override
             public void mouseClicked(MouseEvent e){

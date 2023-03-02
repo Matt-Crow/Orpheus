@@ -35,7 +35,6 @@ public class WorldCanvas extends Canvas {
     private final Timer repaintTimer;
 
     private final String focusedEntityId;
-    private final HeadsUpDisplay hud;
 
     private boolean paused;
 
@@ -67,7 +66,6 @@ public class WorldCanvas extends Canvas {
         pc.registerControlsTo(this);
 
         focusedEntityId = pc.getPlayerId();
-        hud = new HeadsUpDisplay(this, w, pc.getPlayerId());
     }
 
     public void start() {
@@ -112,8 +110,6 @@ public class WorldCanvas extends Canvas {
         particles.draw(g2d);
 
         reset();
-
-        hud.draw(g);
 
         if (world.getGame().isOver()) {
             drawMatchResolution(g2d);

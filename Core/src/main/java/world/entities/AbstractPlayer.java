@@ -86,6 +86,14 @@ public abstract class AbstractPlayer extends AbstractEntity implements Terminati
         color = c;
     }
 
+    protected Color getColor() {
+        return color;
+    }
+
+    protected HashMap<StatusName, AbstractStatus> getStatuses() {
+        return stats;
+    }
+
     public DamageBacklog getLog() {
         return log;
     }

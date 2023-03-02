@@ -121,7 +121,9 @@ public abstract class AbstractTriggerableAttribute extends AbstractBuildAttribut
 
     @Override
     public void update() {
-        framesUntilUse -= 1;
+        if (framesUntilUse > 0) {
+            framesUntilUse -= 1;
+        }
     }
 
     /**

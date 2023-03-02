@@ -6,6 +6,8 @@ import world.build.actives.AbstractActive;
 import world.build.characterClass.CharacterClass;
 import world.build.characterClass.CharacterStatName;
 import world.build.passives.AbstractPassive;
+import world.statuses.AbstractStatus;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -161,5 +163,20 @@ public class HumanPlayer extends AbstractPlayer {
                 break;
         }
         return ret;
+    }
+
+    @Override
+    public orpheus.core.world.graph.Player toGraph() {
+        return new orpheus.core.world.graph.Player(
+            id,
+            getX(), 
+            getY(), 
+            getRadius(),
+            getLog().getHP(),
+            getStatuses().values().stream().map(AbstractStatus::toString).toList(),
+            getTeam().getColor(),
+            getColor(),
+            Arrays.stream(actives).map(AbstractActive::toGraph).toList()
+        );
     }
 }

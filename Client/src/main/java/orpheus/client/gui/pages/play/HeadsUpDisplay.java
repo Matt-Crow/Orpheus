@@ -1,72 +1,88 @@
 package orpheus.client.gui.pages.play;
 
-import gui.graphics.CustomColors;
+import net.protocols.EndOfFrameListener;
+
+import java.awt.FlowLayout;
 import java.awt.Color;
-import java.awt.Graphics;
-import world.World;
-import world.build.actives.AbstractActive;
-import world.entities.AbstractPlayer;
-import world.entities.HumanPlayer;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 
 /**
  * provides a HeadsUpDisplay for an AbstractPlayer
  *
  * @author Matt Crow
  */
-public class HeadsUpDisplay {
-    private final WorldCanvas renderedOn;
-    private final World world;
-    private final String playerId;
-    /*
-    cannot directly reference a player, as they are serialized
-    instead, world and playerId remain stable, so reference those
-    */
+public class HeadsUpDisplay extends JComponent implements EndOfFrameListener {
+    
+    /**
+     * supplied player details
+     */
+    private final WorldGraphSupplier graph;
 
-    protected HeadsUpDisplay(WorldCanvas renderedOn, World world, String playerId) {
-        this.renderedOn = renderedOn;
-        this.world = world;
+    /**
+     * cannot directly reference a player, as they are serialized instead, world 
+     * and playerId remain stable, so reference those
+    */
+    private final String playerId;
+
+    /**
+     * displays the player's remaining HP
+     */
+    private final JLabel playerHp;
+
+    /**
+     * displays the player's 3 active abilities
+     */
+    private final JLabel[] activeLabels;
+    
+
+    public HeadsUpDisplay(WorldGraphSupplier graph, String playerId) {
+
+        setLayout(new FlowLayout(FlowLayout.CENTER));
+        playerHp = new JLabel("---");
+        playerHp.setOpaque(true);
+        playerHp.setBackground(Color.RED);
+        add(playerHp);
+
+        activeLabels = new JLabel[3];
+        for (var i = 0; i < 3; i++) {
+            activeLabels[i] = new JLabel("---");
+            activeLabels[i].setOpaque(true);
+            add(activeLabels[i]);
+        }
+
+        this.graph = graph;
         this.playerId = playerId;
     }
 
-    protected void draw(Graphics g) {
-        int w = renderedOn.getWidth();
-        int h = renderedOn.getHeight();
-
-        // compass
-        int compassX = w / 10 * 9; // center points
-        int compassY = h / 10 * 3;
-        int compassDiameter = w / 10;
+    @Override
+    public void frameEnded() {
+        var maybePlayer = graph.get()
+            .getPlayers()
+            .getMemberById(playerId);
         
-        AbstractPlayer forPlayer = world.getPlayers().getMemberById(playerId);
-
-        g.setColor(CustomColors.darkGrey);
-        g.fillOval(compassX - compassDiameter, compassY - compassDiameter, compassDiameter * 2, compassDiameter * 2); // draws from upper-left corner, not center
-        g.setColor(CustomColors.red);
-        g.drawLine(
-                compassX,
-                compassY,
-                (int) (compassX + forPlayer.getFacing().getXMod() * compassDiameter),
-                (int) (compassY + forPlayer.getFacing().getYMod() * compassDiameter)
-        );
-
-        int guiY = (int) (h * 0.9);
-        int sw = w / 5;
-        int sh = h / 10;
-
-        // HP
-        String strHP = forPlayer.getLog().getHP() + "";
-        g.setColor(Color.red);
-        g.fillRect(0, guiY, sw, sh);
-        g.setColor(Color.black);
-        g.drawString("HP: " + strHP, (int) (w * 0.1), (int) (h * 0.93));
-
-        // Actives
-        if (forPlayer instanceof HumanPlayer) {
-            int i = sw;
-            for (AbstractActive a : ((HumanPlayer) forPlayer).getActives()) {
-                a.drawStatusPane(g, i, (int) (h * 0.9), sw, sh);
-                i += sw;
-            }
+        if (!maybePlayer.isPresent()) {
+            return; // exit early if player not found
         }
+
+        var player = maybePlayer.get();
+        playerHp.setText(String.format("HP: %4d", player.getHp()));
+
+        var actives = player.getActives();
+        for (var i = 0; i < actives.size() && i < activeLabels.length; i++) {
+            var active = actives.get(i);
+            var label = activeLabels[i];
+            if (active.getCooldown() == 0) {
+                label.setText(actives.get(i).getName());
+                label.setForeground(Color.BLACK);
+                label.setBackground(Color.YELLOW);
+            } else {
+                label.setText(String.format("On cooldown: %3d", active.getCooldown()));
+                label.setForeground(Color.RED);
+                label.setBackground(Color.BLACK);
+            }    
+        }
+        
+        repaint();
     }
 }

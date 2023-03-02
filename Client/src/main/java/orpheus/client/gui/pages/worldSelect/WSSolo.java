@@ -6,6 +6,7 @@ import world.entities.HumanPlayer;
 import java.awt.Color;
 
 import orpheus.client.ClientAppContext;
+import orpheus.client.gui.pages.play.HeadsUpDisplay;
 import orpheus.client.gui.pages.play.LocalWorldSupplier;
 import orpheus.client.gui.pages.play.SoloWorldUpdater;
 import orpheus.client.gui.pages.play.WorldCanvas;
@@ -60,8 +61,11 @@ public class WSSolo extends AbstractWSNewWorld{
         );
         
         world.init();
+
+        var hud = new HeadsUpDisplay(graph, player.id);
+        updater.addEndOfFrameListener(hud);
         
-        WorldPage wp = new WorldPage(getContext(), getHost());
+        WorldPage wp = new WorldPage(getContext(), getHost(), hud);
         wp.setCanvas(renderer);
         getHost().switchToPage(wp);
         renderer.start();

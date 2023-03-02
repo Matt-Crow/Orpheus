@@ -1,6 +1,7 @@
 package orpheus.client.protocols;
 
 import orpheus.client.gui.pages.PlayerControls;
+import orpheus.client.gui.pages.play.HeadsUpDisplay;
 import orpheus.client.gui.pages.play.RemoteWorldSupplier;
 import orpheus.client.gui.pages.play.RemoteWorldUpdater;
 import world.build.BuildJsonUtil;
@@ -140,9 +141,13 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
 
         var me = room.getContext().getLoggedInUser();
         var worldSupplier = new RemoteWorldSupplier(entireWorld.toGraph());
-
+        var hud = new HeadsUpDisplay(worldSupplier, me.getRemotePlayerId());
         RemoteOrpheusClient orpheus = new RemoteOrpheusClient(getServer());
-        WorldPage p = new WorldPage(room.getContext(), room.getHost());
+        WorldPage p = new WorldPage(
+            room.getContext(), 
+            room.getHost(),
+            hud
+        );
         var particles = new Particles();
         WorldCanvas canvas = new WorldCanvas(
             worldSupplier,
@@ -165,6 +170,8 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
         canvas.start();
         
         // todo also allow this to stop
-        new RemoteWorldUpdater(worldSupplier, particles).start();
+        var updater = new RemoteWorldUpdater(worldSupplier, particles);
+        updater.addEndOfFrameListener(hud);
+        updater.start();
     }
 }
