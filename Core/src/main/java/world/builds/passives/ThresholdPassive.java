@@ -1,4 +1,4 @@
-package world.build.passives;
+package world.builds.passives;
 
 import world.events.EventListener;
 import world.events.OnUpdateEvent;

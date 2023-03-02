@@ -4,7 +4,7 @@ import java.awt.BorderLayout;
 import java.util.HashMap;
 import javax.swing.*;
 
-import world.build.AbstractBuildAttribute;
+import world.builds.AbstractBuildAttribute;
 
 /**
  * presents a component where the user can select an AbstractBuildAttribute, 

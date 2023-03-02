@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 
 import orpheus.core.AppContext;
 import util.Settings;
-import world.build.Build;
-import world.build.BuildJsonUtil;
+import world.builds.Build;
+import world.builds.BuildJsonUtil;
 
 public class JsonUtilTester {
     

@@ -1,4 +1,4 @@
-package world.build.actives;
+package world.builds.actives;
 
 import world.statuses.AbstractStatus;
 import world.statuses.StatusTable;

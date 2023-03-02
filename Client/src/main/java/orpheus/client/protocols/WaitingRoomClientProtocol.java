@@ -4,7 +4,7 @@ import orpheus.client.gui.pages.PlayerControls;
 import orpheus.client.gui.pages.play.HeadsUpDisplay;
 import orpheus.client.gui.pages.play.RemoteWorldSupplier;
 import orpheus.client.gui.pages.play.RemoteWorldUpdater;
-import world.build.BuildJsonUtil;
+
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 import net.messages.ServerMessagePacket;
@@ -30,6 +30,7 @@ import world.World;
 import world.WorldBuilder;
 import world.WorldBuilderImpl;
 import world.WorldContent;
+import world.builds.BuildJsonUtil;
 
 /**
  *

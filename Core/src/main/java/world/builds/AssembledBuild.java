@@ -1,11 +1,11 @@
-package world.build;
+package world.builds;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import world.build.actives.AbstractActive;
-import world.build.characterClass.CharacterClass;
-import world.build.passives.AbstractPassive;
+import world.builds.actives.AbstractActive;
+import world.builds.characterClass.CharacterClass;
+import world.builds.passives.AbstractPassive;
 
 /**
  * an AssembledBuild is a Build which has been loaded from a DataSet

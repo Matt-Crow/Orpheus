@@ -1,4 +1,4 @@
-package world.build;
+package world.builds;
 
 /**
  * A Build is a collection of CharacterClass, 3 active abilities, and 3 passive 

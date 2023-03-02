@@ -1,4 +1,4 @@
-package world.build;
+package world.builds;
 
 import world.entities.AbstractPlayer;
 import java.io.Serializable;

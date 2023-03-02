@@ -1,9 +1,9 @@
-package world.build.characterClass;
+package world.builds.characterClass;
 
-import world.build.AbstractBuildAttribute;
 import gui.graphics.CustomColors;
 import java.util.function.BiFunction;
 import util.Number;
+import world.builds.AbstractBuildAttribute;
 
 
 /**

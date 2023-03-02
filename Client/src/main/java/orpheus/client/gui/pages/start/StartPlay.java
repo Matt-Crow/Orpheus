@@ -13,9 +13,9 @@ import orpheus.client.gui.components.FileChooserUtil;
 import orpheus.client.gui.components.HubForm;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.worldselect.WSMain;
+import world.builds.BuildJsonUtil;
 import orpheus.client.gui.pages.PageController;
 import orpheus.client.gui.pages.CustomizeBuildPage;
-import world.build.BuildJsonUtil;
 
 /**
  *

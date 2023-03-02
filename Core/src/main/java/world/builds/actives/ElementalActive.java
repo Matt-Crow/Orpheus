@@ -1,13 +1,13 @@
-package world.build.actives;
+package world.builds.actives;
 
 import util.Settings;
-import world.build.characterClass.CharacterClass;
-import world.build.characterClass.CharacterStatName;
 import world.entities.AbstractPlayer;
 import world.entities.particles.ParticleType;
 import world.entities.Projectile;
 import gui.graphics.CustomColors;
 import world.Tile;
+import world.builds.characterClass.CharacterClass;
+import world.builds.characterClass.CharacterStatName;
 
 /**
  * When extending this class, you will want to overide the following methods:

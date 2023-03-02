@@ -1,6 +1,6 @@
-package world.build.passives;
+package world.builds.passives;
 
-import world.build.AbstractTriggerableAttribute;
+import world.builds.AbstractTriggerableAttribute;
 
 public abstract class AbstractPassive extends AbstractTriggerableAttribute{
 	/**

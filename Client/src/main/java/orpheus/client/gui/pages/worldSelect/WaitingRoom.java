@@ -1,6 +1,5 @@
 package orpheus.client.gui.pages.worldselect;
 
-import world.build.Build;
 import orpheus.client.gui.components.BuildSelect;
 import orpheus.client.gui.components.ChatBox;
 
@@ -12,6 +11,7 @@ import orpheus.client.ClientAppContext;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.PageController;
 import orpheus.client.protocols.WaitingRoomClientProtocol;
+import world.builds.Build;
 
 /**
  * WaitingRoom provides a "waiting room"

@@ -1,6 +1,9 @@
 package world.entities;
 
 import world.battle.DamageBacklog;
+import world.builds.actives.ElementalActive;
+import world.builds.characterClass.CharacterStatName;
+
 import java.awt.Color;
 import controls.ai.Path;
 import controls.ai.PathInfo;
@@ -8,8 +11,6 @@ import orpheus.core.world.graph.Player;
 import world.statuses.AbstractStatus;
 import world.statuses.StatusName;
 import util.Settings;
-import world.build.actives.ElementalActive;
-import world.build.characterClass.CharacterStatName;
 import world.entities.particles.ParticleType;
 import world.events.termination.Terminable;
 import world.events.termination.TerminationListener;

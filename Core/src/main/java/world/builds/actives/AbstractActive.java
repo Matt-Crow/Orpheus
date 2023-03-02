@@ -1,7 +1,7 @@
-package world.build.actives;
+package world.builds.actives;
 
 import orpheus.core.world.graph.Graphable;
-import world.build.AbstractTriggerableAttribute;
+import world.builds.AbstractTriggerableAttribute;
 
 /**
  * The AbstractActive class serves as the base for active abilities possessed by Players

@@ -1,11 +1,6 @@
 package world.entities;
 
 import util.Settings;
-import world.build.AssembledBuild;
-import world.build.actives.AbstractActive;
-import world.build.characterClass.CharacterClass;
-import world.build.characterClass.CharacterStatName;
-import world.build.passives.AbstractPassive;
 import world.statuses.AbstractStatus;
 
 import java.util.Arrays;
@@ -14,6 +9,11 @@ import java.util.Map.Entry;
 import util.CardinalDirection;
 import util.Direction;
 import world.World;
+import world.builds.AssembledBuild;
+import world.builds.actives.AbstractActive;
+import world.builds.characterClass.CharacterClass;
+import world.builds.characterClass.CharacterStatName;
+import world.builds.passives.AbstractPassive;
 
 /**
  *

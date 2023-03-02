@@ -1,12 +1,12 @@
 package orpheus.client.gui.components;
 
-import world.build.AssembledBuild;
-import world.build.Build;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 import orpheus.client.ClientAppContext;
+import world.builds.AssembledBuild;
+import world.builds.Build;
 
 /**
  * A component that allows players to select which build they want to use

@@ -1,4 +1,4 @@
-package world.build.characterClass;
+package world.builds.characterClass;
 
 import java.util.NoSuchElementException;
 

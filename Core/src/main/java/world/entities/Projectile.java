@@ -6,9 +6,9 @@ import java.util.Arrays;
 
 import gui.graphics.CustomColors;
 import util.Settings;
-import world.build.actives.ElementalActive;
 import util.Random;
 import world.World;
+import world.builds.actives.ElementalActive;
 
 public class Projectile extends AbstractEntity {
 

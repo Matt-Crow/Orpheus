@@ -1,9 +1,5 @@
 package orpheus.client.gui.pages;
 
-import world.build.Build;
-import world.build.actives.AbstractActive;
-import world.build.characterClass.CharacterClass;
-import world.build.passives.AbstractPassive;
 import orpheus.client.ClientAppContext;
 import orpheus.client.gui.components.BuildAttributeSelector;
 import java.awt.GridLayout;
@@ -12,6 +8,10 @@ import java.util.ArrayList;
 import javax.swing.BoxLayout;
 import javax.swing.JTextField;
 import orpheus.client.gui.pages.start.StartPlay;
+import world.builds.Build;
+import world.builds.actives.AbstractActive;
+import world.builds.characterClass.CharacterClass;
+import world.builds.passives.AbstractPassive;
 
 /**
  * the page where players can modify builds

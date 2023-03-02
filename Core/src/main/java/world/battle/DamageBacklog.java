@@ -1,6 +1,6 @@
 package world.battle;
 
-import world.build.characterClass.CharacterStatName;
+import world.builds.characterClass.CharacterStatName;
 import world.entities.AbstractPlayer;
 import util.Settings;
 import java.io.Serializable;

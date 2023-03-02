@@ -20,8 +20,8 @@ import world.World;
 import world.WorldBuilder;
 import world.WorldBuilderImpl;
 import world.battle.Team;
-import world.build.BuildJsonUtil;
-import world.build.DataSet;
+import world.builds.BuildJsonUtil;
+import world.builds.DataSet;
 import world.entities.HumanPlayer;
 import world.game.Game;
 

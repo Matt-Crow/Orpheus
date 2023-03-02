@@ -1,13 +1,13 @@
-package world.build;
+package world.builds;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 
 import gui.graphics.CustomColors;
-import world.build.actives.*;
-import world.build.characterClass.CharacterClass;
-import world.build.passives.*;
+import world.builds.actives.*;
+import world.builds.characterClass.CharacterClass;
+import world.builds.passives.*;
 import world.entities.particles.ParticleType;
 import world.statuses.*;
 

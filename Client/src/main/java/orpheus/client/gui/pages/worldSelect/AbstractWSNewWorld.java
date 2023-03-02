@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 
-import world.build.AssembledBuild;
 import orpheus.client.ClientAppContext;
 import orpheus.client.gui.components.BuildSelect;
 import orpheus.client.gui.components.OptionBox;
@@ -15,6 +14,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.PageController;
+import world.builds.AssembledBuild;
 import world.game.Game;
 import world.game.Onslaught;
 
