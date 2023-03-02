@@ -10,6 +10,7 @@ import javax.json.JsonObject;
 
 import orpheus.core.world.graph.particles.Particle;
 import orpheus.core.world.graph.particles.Particles;
+import util.Direction;
 import util.Random;
 import util.Settings;
 import world.entities.particles.ParticleType;
@@ -18,14 +19,21 @@ import world.entities.particles.ParticleType;
  * serializes and renders a projectile
  */
 public class Projectile extends Entity {
+    /**
+     * The number of particles generated each frame by projectiles with a burst
+     * particle type.
+     */
+    private static final int BURST_PARTICLES = 8;
 
-    // todo add facing direction
+    private final Direction facing;
     private final Color color;
     private final List<? extends Color> particleColors;
     private final ParticleType particleType;
 
-    public Projectile(int x, int y, int radius, Color color, List<? extends Color> particleColors, ParticleType particleType) {
+    public Projectile(int x, int y, int radius, Direction facing, Color color, 
+        List<? extends Color> particleColors, ParticleType particleType) {
         super(x, y, radius);
+        this.facing = facing;
         this.color = color;
         this.particleColors = particleColors;
         this.particleType = particleType;
@@ -38,18 +46,22 @@ public class Projectile extends Entity {
     public void spawnParticlesInto(Particles particles) {
         switch (particleType) {
             case BURST: {
-                for (var i = 0; i < Settings.TICKSTOROTATE; i++) {
-                    particles.add(spawnParticle(360 * i / Settings.TICKSTOROTATE, 5));
+                for (var i = 0; i < BURST_PARTICLES; i++) {
+                    particles.add(spawnParticle(360 * i / BURST_PARTICLES, 5));
                 }
                 break;
             }
             case SHEAR: {
+                particles.add(spawnParticle(-45, 5));
+                particles.add(spawnParticle(45, 5));
                 break;
             }
             case BEAM: {
+                particles.add(spawnParticle(180, 5));
                 break;
             }
             case BLADE: {
+                particles.add(spawnParticle(0, 0));
                 break;
             }
             case NONE: {
@@ -66,9 +78,10 @@ public class Projectile extends Entity {
         return new Particle(
             getX(),
             getY(),
-            5, // radius of 5
+            speed,
+            Direction.fromDegrees(facing.getDegrees() + angleOffset),
             c
-        ); // todo speed, angleOffset, // todo add facing direction
+        );
     }
 
     @Override
@@ -87,6 +100,7 @@ public class Projectile extends Entity {
             array.add(color.getRGB());
         }
         return Json.createObjectBuilder(super.serializeJson())
+            .add("facing", facing.getDegrees())
             .add("color", color.getRGB())
             .add("particleColors", array)
             .add("particleType", particleType.toString())
@@ -104,6 +118,7 @@ public class Projectile extends Entity {
             json.getInt("x"),
             json.getInt("y"),
             json.getInt("radius"),
+            Direction.fromDegrees(json.getInt("facing")),
             new Color(json.getInt("color")),
             particleColors,
             ParticleType.fromString(json.getString("particleType"))

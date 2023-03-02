@@ -135,10 +135,6 @@ public class Projectile extends AbstractEntity {
         if (!Settings.DISABLEPARTICLES && !getShouldTerminate()) {
             switch (registeredAttack.getParticleType()) {
                 case BURST:
-                    for (int i = 0; i < Settings.TICKSTOROTATE; i++) {
-                        CustomColors rbu = cs[Random.choose(0, cs.length - 1)];
-                        spawnParticle(360 * i / Settings.TICKSTOROTATE, 5, rbu);
-                    }
                     break;
                 case SHEAR:
                     CustomColors rs = cs[Random.choose(0, cs.length - 1)];
@@ -201,6 +197,7 @@ public class Projectile extends AbstractEntity {
             getX(),
             getY(),
             getRadius(),
+            getFacing().copy(),
             registeredAttack.getUser().getTeam().getColor(),
             Arrays.stream(registeredAttack.getColors()).toList(),
             registeredAttack.getParticleType()

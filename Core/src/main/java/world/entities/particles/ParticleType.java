@@ -1,10 +1,35 @@
 package world.entities.particles;
 
+import java.util.Arrays;
+
+/**
+ * Used by projectiles to determine the shape they should spawn particles in.
+ */
 public enum ParticleType {
+
+    /**
+     * emit particles in all directions
+     */
 	BURST("burst"), 
-    BEAM("beam"), 
+
+    /**
+     * emit particles behind
+     */
+    BEAM("beam"),
+
+    /**
+     * emit particles in a wake
+     */
     SHEAR("shear"),
+
+    /**
+     * emit immobile particles at your location
+     */
     BLADE("blade"), 
+
+    /**
+     * emit no particles
+     */
     NONE("none");
     
     private final String name;
@@ -14,14 +39,10 @@ public enum ParticleType {
     }
     
     public static ParticleType fromString(String s){
-        ParticleType ret = null;
-        for(ParticleType pt : values()){
-            if(pt.toString().toLowerCase().equals(s.toLowerCase())){
-                ret = pt;
-                break;
-            }
-        }
-        return ret;
+        return Arrays.stream(values())
+            .filter((pt) -> pt.name.equals(s))
+            .findFirst()
+            .get();
     }
     
     @Override
