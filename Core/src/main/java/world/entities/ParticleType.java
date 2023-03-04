@@ -1,4 +1,4 @@
-package world.entities.particles;
+package world.entities;
 
 import java.util.Arrays;
 

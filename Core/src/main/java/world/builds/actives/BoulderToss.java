@@ -2,7 +2,7 @@ package world.builds.actives;
 
 import util.Settings;
 import world.entities.AbstractPlayer;
-import world.entities.particles.ParticleType;
+import world.entities.ParticleType;
 import world.entities.Projectile;
 import gui.graphics.CustomColors;
 

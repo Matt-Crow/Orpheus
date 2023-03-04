@@ -71,9 +71,7 @@ public class WorldBuilderImpl implements WorldBuilder {
             game
         );
         
-        NonSerializableWorldPart noser = new NonSerializableWorldPart();
-        
-        WorldImpl w = new WorldImpl(ser, noser);
+        WorldImpl w = new WorldImpl(ser);
         
         game.setHost(w);
         players.setWorld(w);

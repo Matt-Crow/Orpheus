@@ -11,7 +11,6 @@ import orpheus.core.world.graph.Player;
 import world.statuses.AbstractStatus;
 import world.statuses.StatusName;
 import util.Settings;
-import world.entities.particles.ParticleType;
 import world.events.termination.Terminable;
 import world.events.termination.TerminationListener;
 import world.Tile;

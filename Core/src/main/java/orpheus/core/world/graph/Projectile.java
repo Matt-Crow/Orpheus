@@ -13,7 +13,7 @@ import orpheus.core.world.graph.particles.Particles;
 import util.Direction;
 import util.Random;
 import util.Settings;
-import world.entities.particles.ParticleType;
+import world.entities.ParticleType;
 
 /**
  * serializes and renders a projectile

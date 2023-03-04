@@ -1,12 +1,8 @@
 package world.entities;
 
-import world.entities.particles.Particle;
-
 import java.util.Arrays;
 
-import gui.graphics.CustomColors;
 import util.Settings;
-import util.Random;
 import world.World;
 import world.builds.actives.ElementalActive;
 
@@ -116,48 +112,6 @@ public class Projectile extends AbstractEntity {
         return ret;
     }
 
-    public void spawnParticle(int degrees, int m, CustomColors c) {
-        Particle p = new Particle(m, c);
-        p.init();
-        p.setX(getX());
-        p.setY(getY());
-        p.setFacing(degrees);
-        getWorld().spawn(p);
-    }
-
-    /**
-     * Needs to be kept separate from update, as update is not invoked by
-     * clients. Update automatically calls this method.
-     */
-    public void spawnParticles() {
-        CustomColors[] cs = registeredAttack.getColors();
-
-        if (!Settings.DISABLEPARTICLES && !getShouldTerminate()) {
-            switch (registeredAttack.getParticleType()) {
-                case BURST:
-                    break;
-                case SHEAR:
-                    CustomColors rs = cs[Random.choose(0, cs.length - 1)];
-                    spawnParticle(getFacing().getDegrees() - 45, 5, rs);
-                    rs = cs[Random.choose(0, cs.length - 1)];
-                    spawnParticle(getFacing().getDegrees() + 45, 5, rs);
-                    break;
-                case BEAM:
-                    CustomColors rbe = cs[Random.choose(0, cs.length - 1)];
-                    spawnParticle(getFacing().getDegrees() - 180, 5, rbe);
-                    break;
-                case BLADE:
-                    CustomColors rbl = cs[Random.choose(0, cs.length - 1)];
-                    spawnParticle(getFacing().getDegrees(), 0, rbl);
-                    break;
-                case NONE:
-                    break;
-                default:
-                    System.out.println("The particle type of " + registeredAttack.getParticleType() + " is not found for Projectile.java");
-            }
-        }
-    }
-
     @Override
     public void init() {
         super.init();
@@ -168,11 +122,9 @@ public class Projectile extends AbstractEntity {
         super.update();
         distanceTraveled += getMomentum();
 
-        // need to change range based on projectile type: attack range for seed, aoe for aoeprojectile
         if (distanceTraveled >= range && !getShouldTerminate()) {
             terminate();
         }
-        spawnParticles();
     }
 
     @Override

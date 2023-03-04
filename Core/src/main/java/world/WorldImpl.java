@@ -3,8 +3,6 @@ package world;
 import util.Random;
 import world.battle.Team;
 import world.entities.AbstractEntity;
-import world.entities.Projectile;
-import world.entities.particles.Particle;
 import world.game.Game;
 
 /**
@@ -22,23 +20,10 @@ import world.game.Game;
  * @author Matt Crow
  */
 public class WorldImpl implements World {
-    private volatile WorldContent ser;
-    private final NonSerializableWorldPart noser;
+    private final WorldContent ser;
     
-    protected WorldImpl(WorldContent ser, NonSerializableWorldPart noser){
+    protected WorldImpl(WorldContent ser){
         this.ser = ser;
-        this.noser = noser;
-    }
-    
-    @Override
-    public WorldContent getSerializableContent(){
-        return ser;
-    }
-    
-    @Override
-    public void setSerializableContent(WorldContent wc){
-        ser = wc;
-        wc.setWorld(this);
     }
     
     @Override
@@ -85,37 +70,15 @@ public class WorldImpl implements World {
     }
     
     @Override
-    public void spawn(Particle p){
-        noser.addParticle(p);
-    }
-    
-    @Override
     public void init(){
         ser.init();
-        noser.init();
         getPlayers().init(this);
         getAi().init(this);
     }
     
     @Override
-    public void update(){ // may need to split off into server / client updates
+    public void update(){
         ser.update();
-        noser.update();
-    }
-
-    @Override
-    public void updateParticles() {
-        noser.update();
-        spawnParticles(ser.getPlayers());
-        spawnParticles(ser.getAi());
-    }
-    
-    private void spawnParticles(Team t){
-        t.forEach((AbstractEntity member)->{
-            if(member instanceof Projectile){
-                ((Projectile)member).spawnParticles();
-            }
-        });
     }
 
     @Override

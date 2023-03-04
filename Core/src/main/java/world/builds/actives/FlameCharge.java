@@ -1,6 +1,6 @@
 package world.builds.actives;
 
-import world.entities.particles.ParticleType;
+import world.entities.ParticleType;
 import world.events.EventListener;
 import world.events.OnUpdateEvent;
 import world.events.termination.*;

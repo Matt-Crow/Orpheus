@@ -8,7 +8,7 @@ import gui.graphics.CustomColors;
 import world.builds.actives.*;
 import world.builds.characterClass.CharacterClass;
 import world.builds.passives.*;
-import world.entities.particles.ParticleType;
+import world.entities.ParticleType;
 import world.statuses.*;
 
 /**
