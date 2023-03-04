@@ -38,15 +38,15 @@ public class Team implements GraphElement {
     }
     
     @Override
-    public JsonObject serializeJson() {
+    public JsonObject toJson() {
         var serializedMembers = Json.createArrayBuilder();
         for (var member : members) {
-            serializedMembers.add(member.serializeJson());
+            serializedMembers.add(member.toJson());
         }
 
         var serializedProjectiles = Json.createArrayBuilder();
         for (var projectile : projectiles) {
-            serializedProjectiles.add(projectile.serializeJson());
+            serializedProjectiles.add(projectile.toJson());
         }
 
         return Json.createObjectBuilder()

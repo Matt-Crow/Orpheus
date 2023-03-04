@@ -19,7 +19,7 @@ public class ServerChatProtocol implements ChatProtocol {
 
     @Override
     public void receiveChatMessage(ChatMessage message) {
-        var sendMe = new Message(ServerMessageType.CHAT, message.serializeJson());
+        var sendMe = new Message(ServerMessageType.CHAT, message.toJson());
         runningOn.sendToAllExcept(sendMe, message.getSender());
     }
 }

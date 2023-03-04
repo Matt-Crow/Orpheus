@@ -29,7 +29,7 @@ public class JsonArrayHelper {
     }
 
     public static <T extends GraphElement> JsonArray fromGraphElements(Collection<T> items) {
-        return toJsonArray(items, (item, array) -> array.add(item.serializeJson()));
+        return toJsonArray(items, (item, array) -> array.add(item.toJson()));
     }
 
     public static <T> List<T> toList(JsonArray array, BiFunction<JsonArray, Integer, T> mapper) {

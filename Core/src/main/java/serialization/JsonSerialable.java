@@ -3,18 +3,6 @@ package serialization;
 import javax.json.JsonObject;
 
 /**
- * This is an alternative to making static helper classes
- * (A La UpgradableJsonUtil) for serializing objects as JSON.
- * As I say in UpgradableJsonUtil, I'm not sure which way I want to serialize
- * (in class or in a helper class), so I'm trying both for now.
- * 
- * JSON serialization will only be used for storing Upgradables as a file,
- * not for multiplayer, as java.io.Serializable handles all that
- * 
- * @author Matt Crow
- */
-
-/**
  * Classes which implement this interface
  * must include a static method to 'undo' the process
  * of serializeJson: a way to convert a JsonObject to 
@@ -29,5 +17,5 @@ public interface JsonSerialable {
      * from that JsonObject.
      * @return a JSON representation of this
      */
-    public abstract JsonObject serializeJson();
+    public abstract JsonObject toJson();
 }

@@ -42,9 +42,9 @@ public class ChatMessage implements JsonSerialable {
     }
 
     @Override
-    public JsonObject serializeJson() {
+    public JsonObject toJson() {
         return Json.createObjectBuilder()
-            .add("sender", sender.serializeJson())
+            .add("sender", sender.toJson())
             .add("message", message)
             .build();
     }

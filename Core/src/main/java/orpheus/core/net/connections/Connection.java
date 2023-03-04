@@ -82,7 +82,7 @@ public class Connection {
      * @throws IOException if an error occurs while writing the message
      */
     public void send(Message message) throws IOException {
-        to.write(message.serializeJson().toString());
+        to.write(message.toJson().toString());
         to.newLine();
         to.flush();
     }

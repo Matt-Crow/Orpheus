@@ -29,7 +29,7 @@ public class HostWorldUpdater extends AbstractWorldUpdater {
         
         hostingServer.send(new Message(
             ServerMessageType.WORLD, 
-            world.toGraph().serializeJson()
+            world.toGraph().toJson()
         ));
     }
 }

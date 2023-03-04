@@ -114,7 +114,7 @@ public class Tile implements Serializable, JsonSerialable, Graphable {
     }
 
     @Override
-    public JsonObject serializeJson(){
+    public JsonObject toJson(){
         JsonObjectBuilder obj = Json.createObjectBuilder();
         obj.add("type", "tile");
         obj.add("x index", x / TILE_SIZE);

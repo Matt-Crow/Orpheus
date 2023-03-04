@@ -28,7 +28,7 @@ public class TurnTo implements Command {
     }
     
     @Override
-    public JsonObject serializeJson() {
+    public JsonObject toJson() {
         return Json.createObjectBuilder()
             .add("type", "TurnTo")
             .add("playerId", playerId)

@@ -24,11 +24,11 @@ public class UseCantrip implements Command {
     }
     
     @Override
-    public JsonObject serializeJson() {
+    public JsonObject toJson() {
         return Json.createObjectBuilder()
             .add("type", "UseCantrip")
             .add("playerId", playerId)
-            .add("turnTo", turnTo.serializeJson())
+            .add("turnTo", turnTo.toJson())
             .build();
     }
 

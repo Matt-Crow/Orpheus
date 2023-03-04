@@ -47,7 +47,7 @@ public class SocketAddress implements JsonSerialable {
     }
 
     @Override
-    public JsonObject serializeJson() {
+    public JsonObject toJson() {
         return Json.createObjectBuilder()
             .add("address", address)
             .add("port", port)

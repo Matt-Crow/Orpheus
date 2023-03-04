@@ -34,7 +34,7 @@ public class OrpheusClient extends AbstractNetworkClient {
         MessageListener listener = new MessageListener(toServer, this::receiveMessage);
         listener.startListening();
         send(new Message(
-            user.serializeJson().toString(), 
+            user.toJson().toString(), 
             ServerMessageType.PLAYER_JOINED
         ));
     }

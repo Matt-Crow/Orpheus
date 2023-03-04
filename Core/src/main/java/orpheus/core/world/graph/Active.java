@@ -29,7 +29,7 @@ public class Active implements GraphElement {
     }
     
     @Override
-    public JsonObject serializeJson() {
+    public JsonObject toJson() {
         return Json.createObjectBuilder()
             .add("name", name)
             .add("cooldown", cooldown)

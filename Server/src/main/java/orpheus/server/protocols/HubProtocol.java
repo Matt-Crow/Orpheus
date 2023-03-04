@@ -50,7 +50,7 @@ public class HubProtocol implements ServerProtocol {
 
         var roomsJson = Json.createArrayBuilder();
         for (var room : rooms) {
-            roomsJson.add(room.serializeJson());
+            roomsJson.add(room.toJson());
         }
 
         var json = Json.createObjectBuilder()

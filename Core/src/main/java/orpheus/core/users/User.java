@@ -39,7 +39,7 @@ public class User implements JsonSerialable {
     }
 
     @Override
-    public JsonObject serializeJson(){
+    public JsonObject toJson(){
         JsonObjectBuilder objBuild = Json.createObjectBuilder();
         objBuild.add("name", name);
         return objBuild.build();

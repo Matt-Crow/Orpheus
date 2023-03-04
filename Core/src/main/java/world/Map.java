@@ -393,13 +393,13 @@ public class Map implements Serializable, JsonSerialable, Graphable {
     }
 
     @Override
-    public JsonObject serializeJson() {
+    public JsonObject toJson() {
         JsonObjectBuilder b = Json.createObjectBuilder();
         b.add("type", "map");
         b.add("tile map", getCsv());
         JsonObjectBuilder tileSetBuilder = Json.createObjectBuilder();
         tileSet.entrySet().stream().forEach((e)->{
-            tileSetBuilder.add(e.getKey().toString(), e.getValue().serializeJson());
+            tileSetBuilder.add(e.getKey().toString(), e.getValue().toJson());
         });
         b.add("tile set", tileSetBuilder.build());
         return b.build();

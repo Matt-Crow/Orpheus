@@ -51,7 +51,7 @@ public class Map implements GraphElement {
     }
     
     @Override
-    public JsonObject serializeJson() {
+    public JsonObject toJson() {
         var serializedTileMap = Json.createArrayBuilder();
         for (var y = 0; y < heightInTiles; y++) {
             var row = Json.createArrayBuilder();
@@ -65,7 +65,7 @@ public class Map implements GraphElement {
         for (var kv : tileSet.entrySet()) {
             serializedTileSet.add(Json.createObjectBuilder()
                 .add("key", kv.getKey())
-                .add("value", kv.getValue().serializeJson())
+                .add("value", kv.getValue().toJson())
             );
         }
 

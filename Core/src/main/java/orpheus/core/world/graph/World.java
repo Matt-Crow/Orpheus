@@ -48,12 +48,12 @@ public class World implements GraphElement {
     }
     
     @Override
-    public JsonObject serializeJson() {
+    public JsonObject toJson() {
         return Json.createObjectBuilder()
-            .add("map", map.serializeJson())
-            .add("players", players.serializeJson())
-            .add("enemies", enemies.serializeJson())
-            .add("game", game.serializeJson())
+            .add("map", map.toJson())
+            .add("players", players.toJson())
+            .add("enemies", enemies.toJson())
+            .add("game", game.toJson())
             .build();
     }
 

@@ -74,8 +74,8 @@ public class Player extends Entity {
     }
     
     @Override
-    public JsonObject serializeJson() {
-        return Json.createObjectBuilder(super.serializeJson())
+    public JsonObject toJson() {
+        return Json.createObjectBuilder(super.toJson())
             .add("id", id)
             .add("hp", hp)
             .add("statuses", JsonArrayHelper.fromStrings(statuses))

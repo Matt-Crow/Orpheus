@@ -26,7 +26,7 @@ public class StopMoving implements Command {
     }
     
     @Override
-    public JsonObject serializeJson() {
+    public JsonObject toJson() {
         return Json.createObjectBuilder()
             .add("type", "StopMoving")
             .add("playerId", playerId)

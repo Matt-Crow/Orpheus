@@ -41,7 +41,7 @@ public class ClientChatProtocol implements ChatProtocol, ChatMessageSentListener
     public void chatMessageSent(String message) {
         client.send(new Message(
             ServerMessageType.CHAT, 
-            new ChatMessage(sender, message).serializeJson())
+            new ChatMessage(sender, message).toJson())
         );
     }
 

@@ -134,7 +134,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         initMsgBuild.add("type", "waiting room init");
         JsonArrayBuilder userListBuild = Json.createArrayBuilder();
         for(User u : getTeamProto()){
-            userListBuild.add(u.serializeJson());
+            userListBuild.add(u.toJson());
         }
         initMsgBuild.add("team", userListBuild.build());
         
@@ -154,7 +154,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         if(addToTeamProto(u)){
             awaitingBuilds.add(u);
             Message sm = new Message(
-                u.serializeJson().toString(),
+                u.toJson().toString(),
                 ServerMessageType.WAITING_ROOM_UPDATE
             );
             getServer().send(sm);
@@ -244,7 +244,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         
         HostWorldProtocol protocol = new HostWorldProtocol(getServer(), world);
         getServer().setProtocol(protocol);
-        getServer().send(new Message(ServerMessageType.WORLD, world.toGraph().serializeJson()));
+        getServer().send(new Message(ServerMessageType.WORLD, world.toGraph().toJson()));
         
         updater.start();
     }

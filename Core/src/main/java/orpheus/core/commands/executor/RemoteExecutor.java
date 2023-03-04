@@ -18,6 +18,6 @@ public class RemoteExecutor implements Executor {
 
     @Override
     public void execute(Command command) {
-        client.send(new Message(ServerMessageType.CONTROL_PRESSED, command.serializeJson()));
+        client.send(new Message(ServerMessageType.CONTROL_PRESSED, command.toJson()));
     }
 }

@@ -161,10 +161,10 @@ public class Message implements JsonSerialable {
      * @return a JSON representation of this. 
      */
     @Override
-    public JsonObject serializeJson() {
+    public JsonObject toJson() {
         var builder = Json.createObjectBuilder();
         if (sender.isPresent()) {
-            builder.add("sender", sender.get().serializeJson());
+            builder.add("sender", sender.get().toJson());
         }
         builder.add("type", type.toString());
         builder.add("body", body);
@@ -173,7 +173,7 @@ public class Message implements JsonSerialable {
     
     
     public final String toJsonString(){
-        return serializeJson().toString();
+        return toJson().toString();
     }
     
     /**
@@ -202,7 +202,7 @@ public class Message implements JsonSerialable {
         config.put(JsonGenerator.PRETTY_PRINTING, "");
         Json.createWriterFactory(config)
             .createWriter(w)
-            .writeObject(serializeJson());
+            .writeObject(toJson());
         return w.toString();
     }
 }

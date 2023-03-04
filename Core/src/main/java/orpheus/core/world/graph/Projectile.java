@@ -94,12 +94,12 @@ public class Projectile extends Entity {
     }
     
     @Override
-    public JsonObject serializeJson() {
+    public JsonObject toJson() {
         var array = Json.createArrayBuilder();
         for (var color : particleColors) {
             array.add(color.getRGB());
         }
-        return Json.createObjectBuilder(super.serializeJson())
+        return Json.createObjectBuilder(super.toJson())
             .add("facing", facing.getDegrees())
             .add("color", color.getRGB())
             .add("particleColors", array)

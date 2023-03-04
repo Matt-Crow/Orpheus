@@ -39,13 +39,13 @@ public class WaitingRoom implements JsonSerialable {
     }
 
     @Override
-    public JsonObject serializeJson() {
+    public JsonObject toJson() {
         var playersJson = Json.createArrayBuilder();
         for (var user : players) {
-            playersJson.add(user.serializeJson());
+            playersJson.add(user.toJson());
         }
         return Json.createObjectBuilder()
-            .add("address", address.serializeJson())
+            .add("address", address.toJson())
             .add("players", playersJson)
             .build();
     }
