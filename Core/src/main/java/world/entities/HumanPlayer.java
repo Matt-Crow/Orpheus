@@ -24,7 +24,6 @@ public class HumanPlayer extends AbstractPlayer {
     private CharacterClass c;
     private final AbstractActive[] actives;
     private final AbstractPassive[] passives;
-    private boolean followingMouse;
     private final HashMap<CardinalDirection, Boolean> movingInCardinalDir; // used for key controls 
 
     public static final int MIN_LIFE_SPAN = 10;
@@ -48,7 +47,6 @@ public class HumanPlayer extends AbstractPlayer {
         for (CardinalDirection dir : CardinalDirection.values()) {
             movingInCardinalDir.put(dir, false);
         }
-        followingMouse = false;
     }
 
     public void applyBuild(AssembledBuild b) {
@@ -90,14 +88,6 @@ public class HumanPlayer extends AbstractPlayer {
         if (actives[num].canUse()) {
             actives[num].trigger();
         }
-    }
-
-    public final void setFollowingMouse(boolean b) {
-        followingMouse = b;
-    }
-
-    public final boolean getFollowingMouse() {
-        return followingMouse;
     }
 
     public final void setMovingInDir(CardinalDirection dir, boolean isMoving) {

@@ -61,8 +61,6 @@ public class WorldCanvas extends Canvas {
         registerKey(KeyEvent.VK_P, true, () -> togglePause());
         setZoom(0.5);
 
-        addMouseListener(pc);
-        addEndOfFrameListener(pc);
         pc.registerControlsTo(this);
 
         focusedEntityId = pc.getPlayerId();

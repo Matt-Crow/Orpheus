@@ -13,6 +13,7 @@ import serialization.JsonUtil;
 import orpheus.client.gui.pages.play.WorldCanvas;
 import orpheus.client.gui.pages.play.WorldPage;
 import orpheus.client.gui.pages.worldselect.WaitingRoom;
+import orpheus.core.commands.executor.RemoteExecutor;
 import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
 import orpheus.core.world.graph.particles.Particles;
@@ -25,7 +26,6 @@ import net.AbstractNetworkClient;
 import net.OrpheusClient;
 import net.protocols.AbstractWaitingRoomProtocol;
 import serialization.WorldSerializer;
-import start.RemoteOrpheusClient;
 import world.World;
 import world.WorldBuilder;
 import world.WorldBuilderImpl;
@@ -143,7 +143,6 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
         var me = room.getContext().getLoggedInUser();
         var worldSupplier = new RemoteWorldSupplier(entireWorld.toGraph());
         var hud = new HeadsUpDisplay(worldSupplier, me.getRemotePlayerId());
-        RemoteOrpheusClient orpheus = new RemoteOrpheusClient(getServer());
         WorldPage p = new WorldPage(
             room.getContext(), 
             room.getHost(),
@@ -154,7 +153,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
             worldSupplier,
             particles,
             entireWorld,
-            new PlayerControls(entireWorld, me.getRemotePlayerId(), orpheus)
+            new PlayerControls(me.getRemotePlayerId(), new RemoteExecutor(getServer()))
         );
         p.setCanvas(canvas);
 

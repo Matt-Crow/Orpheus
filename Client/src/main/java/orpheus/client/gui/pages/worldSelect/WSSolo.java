@@ -11,10 +11,9 @@ import orpheus.client.gui.pages.play.LocalWorldSupplier;
 import orpheus.client.gui.pages.play.SoloWorldUpdater;
 import orpheus.client.gui.pages.play.WorldCanvas;
 import orpheus.client.gui.pages.play.WorldPage;
+import orpheus.core.commands.executor.LocalExecutor;
 import orpheus.core.world.graph.particles.Particles;
-import start.AbstractOrpheusCommandInterpreter;
 import orpheus.client.gui.pages.PageController;
-import start.SoloOrpheusCommandInterpreter;
 import world.*;
 
 /**
@@ -28,8 +27,6 @@ public class WSSolo extends AbstractWSNewWorld{
     
     @Override
     public void start(){
-        AbstractOrpheusCommandInterpreter orpheus = new SoloOrpheusCommandInterpreter();
-        
         Team team1 = new Team("Players", Color.green);
         Team team2 = new Team("AI", Color.red);
         
@@ -44,11 +41,7 @@ public class WSSolo extends AbstractWSNewWorld{
         SoloWorldUpdater updater = new SoloWorldUpdater(graph, particles, world);
         
         
-        HumanPlayer player = new HumanPlayer(
-            world,
-            "local user"
-        );
-        
+        HumanPlayer player = new HumanPlayer(world, "local user");
         player.applyBuild(getSelectedBuild());
         team1.addMember(player);
         
@@ -57,7 +50,7 @@ public class WSSolo extends AbstractWSNewWorld{
             graph,
             particles,
             world, 
-            new PlayerControls(world, player.id, orpheus)
+            new PlayerControls(player.id, new LocalExecutor(world))
         );
         
         world.init();

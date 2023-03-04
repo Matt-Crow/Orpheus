@@ -1,8 +1,9 @@
 package net.protocols;
 
-import commands.ControlDecoder;
 import net.OrpheusServer;
 import net.messages.ServerMessagePacket;
+import orpheus.core.commands.*;
+import orpheus.core.commands.executor.LocalExecutor;
 import world.World;
 
 /**
@@ -15,26 +16,15 @@ import world.World;
  * @author Matt Crow
  */
 public class HostWorldProtocol extends AbstractProtocol {
-    private final World hostWorld;
+    private final LocalExecutor executor;
     
     public HostWorldProtocol(OrpheusServer runningServer, World forWorld){
         super(runningServer);
-        hostWorld = forWorld;
-    }
-    
-    private void receiveControl(ServerMessagePacket sm){
-        ControlDecoder.decode(hostWorld, sm.getMessage().getBodyText());
+        executor = new LocalExecutor(forWorld);
     }
     
     @Override
     public boolean receive(ServerMessagePacket sm) {
-        /*
-        For some reason I cannot fathom, this often fails to receive messages containing
-        remote user's clicking to move. I've checked, and the remote user is sending the
-        messages, and this always handles the clicks when this receives the message, but
-        the server doesn't always receive those messages. Odd how that only happens with
-        movement.
-        */
         boolean handled = true;
         switch(sm.getMessage().getType()){
             case CONTROL_PRESSED:
@@ -45,5 +35,35 @@ public class HostWorldProtocol extends AbstractProtocol {
                 break;
         }
         return handled;
+    }
+    
+    private void receiveControl(ServerMessagePacket sm){
+        var json = sm.getMessage().getBody();
+
+        switch (json.getString("type")) {
+            case "StartMoving": {
+                executor.execute(StartMoving.fromJson(json));
+                break;
+            }
+            case "StopMoving": {
+                executor.execute(StopMoving.fromJson(json));
+                break;
+            }
+            case "TurnTo": {
+                executor.execute(TurnTo.fromJson(json));
+                break;
+            }
+            case "UseActive": {
+                executor.execute(UseActive.fromJson(json));
+                break;
+            }
+            case "UseCantrip": {
+                executor.execute(UseCantrip.fromJson(json));
+                break;
+            }
+            default: {
+                throw new UnsupportedOperationException(String.format("Unrecognized command type: \"%s\"", json.getString("type")));
+            }
+        }
     }
 }

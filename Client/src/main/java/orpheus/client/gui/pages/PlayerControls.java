@@ -1,17 +1,15 @@
 package orpheus.client.gui.pages;
 
-import commands.ControlPressed;
-import controls.AbstractControlScheme;
-import net.protocols.EndOfFrameListener;
 import orpheus.client.gui.pages.play.WorldCanvas;
+import orpheus.core.commands.StartMoving;
+import orpheus.core.commands.StopMoving;
+import orpheus.core.commands.TurnTo;
+import orpheus.core.commands.UseActive;
+import orpheus.core.commands.UseCantrip;
+import orpheus.core.commands.executor.Executor;
+
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import start.AbstractOrpheusCommandInterpreter;
 import util.CardinalDirection;
-import world.World;
-import world.entities.AbstractPlayer;
-import world.entities.HumanPlayer;
 
 /**
  * CONTROLS:<br>
@@ -21,33 +19,16 @@ import world.entities.HumanPlayer;
  * 
  * @author Matt Crow
  */
-public class PlayerControls extends AbstractControlScheme implements MouseListener, EndOfFrameListener{
-    private final AbstractOrpheusCommandInterpreter interpreter;
+public class PlayerControls {
+
+    private final String playerId;
+    private final Executor commandExecutor;
     
-    public PlayerControls(World inWorld, String playerId, AbstractOrpheusCommandInterpreter interpreter) {
-        super(inWorld, playerId);
-        this.interpreter = interpreter;
+    public PlayerControls(String playerId, Executor commandExecutor) {
+        this.playerId = playerId;
+        this.commandExecutor = commandExecutor;
     }
-    
-    private String playerString(){
-        return "#" + getPlayerId();
-    }
-    public final String meleeString(WorldCanvas canvas){
-        return playerString() + " turn to " + mouseString(canvas) + "\n use melee";
-    }
-    public final String attString(int i, WorldCanvas canvas){
-        return playerString() + " turn to " + mouseString(canvas) + "\n use " + i;
-    }
-    public final String moveString(WorldCanvas canvas){
-        return playerString() + " move to " + mouseString(canvas);
-    }
-    public final String directionStartString(CardinalDirection dir){
-        return playerString() + " start move direction " + dir.toString();
-    }
-    public final String directionStopString(CardinalDirection dir){
-        return playerString() + " stop move direction " + dir.toString();
-    }
-    
+        
     public void registerControlsTo(WorldCanvas plane){
         plane.registerKey(KeyEvent.VK_Q, true, ()->{
             useMeleeKey(plane);
@@ -87,54 +68,29 @@ public class PlayerControls extends AbstractControlScheme implements MouseListen
             stopUseDirKey(CardinalDirection.RIGHT);
         });
     }
-    
-    public String mouseString(WorldCanvas c){
-        return String.format("(%d, %d)", c.getMouseX(), c.getMouseY());
-    }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {}
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        AbstractPlayer player = getPlayer();
-        if(player instanceof HumanPlayer){
-            ((HumanPlayer)getPlayer()).setFollowingMouse(true);
-        }
+    public String getPlayerId() {
+        return playerId;
     }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        AbstractPlayer player = getPlayer();
-        if(player instanceof HumanPlayer){
-            ((HumanPlayer)getPlayer()).setFollowingMouse(false);
-        }
-    }
-    
-    @Override
-    public void frameEnded() {
-        if(getPlayer() instanceof HumanPlayer && ((HumanPlayer)getPlayer()).getFollowingMouse()){
-            //move();
-        }
-    }
-    
-    @Override
-    public void mouseEntered(MouseEvent e) {}
-
-    @Override
-    public void mouseExited(MouseEvent e) {}
     
     private void useMeleeKey(WorldCanvas canvas){
-        consumeCommand(meleeString(canvas));
+        commandExecutor.execute(new UseCantrip(playerId, turnTo(canvas)));
     }
+    
     private void useAttKey(int i, WorldCanvas canvas){
-        consumeCommand(attString(i, canvas));
+        commandExecutor.execute(new UseActive(playerId, turnTo(canvas), i));
     }
+
+    private TurnTo turnTo(WorldCanvas canvas) {
+        return new TurnTo(playerId, canvas.getMouseX(), canvas.getMouseY());
+    }
+    
     private void useDirKey(CardinalDirection d){
-        consumeCommand(directionStartString(d));
+        commandExecutor.execute(new StartMoving(playerId, d));
     }
+    
     private void stopUseDirKey(CardinalDirection d){
-        consumeCommand(directionStopString(d));
+        commandExecutor.execute(new StopMoving(playerId, d));
     }
     
     public static String getPlayerControlScheme(){
@@ -147,9 +103,5 @@ public class PlayerControls extends AbstractControlScheme implements MouseListen
         sb.append("(Z): zoom in\n");
         sb.append("(X): zoom out\n");
         return sb.toString();
-    }
-
-    public void consumeCommand(String command) {
-        interpreter.doSendMessage(new ControlPressed(this.getWorld(), command));
     }
 }

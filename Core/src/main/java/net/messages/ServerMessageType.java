@@ -16,9 +16,14 @@ public enum ServerMessageType {
     PLAYER_DATA("player data"),
     NOTIFY_IDS("notify ids"), //used by WSWaitForPlayers to tell Users what their Team's and Player's IDs are on the host server
     WORLD_INIT("world init"),
-    CONTROL_PRESSED("control pressed"),
     START_WORLD("start"),
     SERVER_SHUTDOWN("END OF LINE"),
+
+    /**
+     * Used to serialize control presses via the command design pattern so the
+     * server can execute them.
+     */
+    CONTROL_PRESSED("control pressed"),
 
     /**
      * When received by the client, it will deserialize the message body into a
