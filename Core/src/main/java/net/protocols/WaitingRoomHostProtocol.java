@@ -15,7 +15,6 @@ import net.messages.ServerMessageType;
 import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
 import serialization.JsonUtil;
-import serialization.WorldSerializer;
 import world.World;
 import world.WorldBuilder;
 import world.WorldBuilderImpl;
@@ -245,23 +244,8 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         
         HostWorldProtocol protocol = new HostWorldProtocol(getServer(), world);
         getServer().setProtocol(protocol);
-        sendWorldInit(world);
+        getServer().send(new Message(ServerMessageType.WORLD, world.toGraph().serializeJson()));
         
         updater.start();
-    }
-    
-    /**
-     * Serializes the world, and sends it
-     * to each connected user, excluding the host
-     * @param w the world to send
-     */
-    private void sendWorldInit(World w){
-        WorldSerializer ws = new WorldSerializer(w);
-        String serial = ws.serializeToString();
-        Message sm = new Message(
-            serial,
-            ServerMessageType.WORLD_INIT
-        );
-        getServer().send(sm);
     }
 }

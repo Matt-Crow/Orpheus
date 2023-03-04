@@ -16,6 +16,7 @@ import orpheus.client.gui.pages.worldselect.WaitingRoom;
 import orpheus.core.commands.executor.RemoteExecutor;
 import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
+import orpheus.core.world.graph.World;
 import orpheus.core.world.graph.particles.Particles;
 
 import java.io.IOException;
@@ -25,11 +26,6 @@ import javax.json.Json;
 import net.AbstractNetworkClient;
 import net.OrpheusClient;
 import net.protocols.AbstractWaitingRoomProtocol;
-import serialization.WorldSerializer;
-import world.World;
-import world.WorldBuilder;
-import world.WorldBuilderImpl;
-import world.WorldContent;
 import world.builds.BuildJsonUtil;
 
 /**
@@ -75,8 +71,8 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
             case NOTIFY_IDS:
                 receiveRemoteId(sm);
                 break;
-            case WORLD_INIT:
-                receiveWorldInit(sm);
+            case WORLD:
+                receiveWorld(sm);
                 break;
             default:
                 received = false;
@@ -133,26 +129,16 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
      *
      * @param sm
      */
-    private void receiveWorldInit(ServerMessagePacket sm) {
-        WorldBuilder builder = new WorldBuilderImpl();
-
-        World entireWorld = builder
-            .withContent((WorldContent) WorldSerializer.fromSerializedString(sm.getMessage().getBodyText()))
-            .build();
-
+    private void receiveWorld(ServerMessagePacket sm) {
+        var world = World.fromJson(sm.getMessage().getBody());
         var me = room.getContext().getLoggedInUser();
-        var worldSupplier = new RemoteWorldSupplier(entireWorld.toGraph());
+        var worldSupplier = new RemoteWorldSupplier(world);
         var hud = new HeadsUpDisplay(worldSupplier, me.getRemotePlayerId());
-        WorldPage p = new WorldPage(
-            room.getContext(), 
-            room.getHost(),
-            hud
-        );
+        var p = new WorldPage(room.getContext(), room.getHost(), hud);
         var particles = new Particles();
-        WorldCanvas canvas = new WorldCanvas(
+        var canvas = new WorldCanvas(
             worldSupplier,
             particles,
-            entireWorld,
             new PlayerControls(me.getRemotePlayerId(), new RemoteExecutor(getServer()))
         );
         p.setCanvas(canvas);

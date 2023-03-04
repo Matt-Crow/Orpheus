@@ -49,7 +49,6 @@ public class WSSolo extends AbstractWSNewWorld{
         WorldCanvas renderer = new WorldCanvas(
             graph,
             particles,
-            world, 
             new PlayerControls(player.id, new LocalExecutor(world))
         );
         

@@ -1,6 +1,5 @@
 package orpheus.client.gui.pages.play;
 
-import world.World;
 import util.Settings;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -41,8 +40,7 @@ public class WorldCanvas extends Canvas {
     /**
      * The caller should call WorldCanvas.start() once they are using the canvas
      */
-    public WorldCanvas(WorldGraphSupplier worldSupplier, Particles particles, World w, PlayerControls pc) {
-
+    public WorldCanvas(WorldGraphSupplier worldSupplier, Particles particles, PlayerControls pc) {
         super();
 
         this.worldSupplier = worldSupplier;
