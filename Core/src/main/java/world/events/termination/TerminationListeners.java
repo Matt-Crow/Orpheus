@@ -1,13 +1,12 @@
 package world.events.termination;
 
-import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
  * Maintains and manages a list of TerminationListeners.
  * Composite design pattern to reduce code duplication.
  */
-public class TerminationListeners implements Serializable, TerminationListener {
+public class TerminationListeners implements TerminationListener {
     /**
      * the collection of objects this is managing
      */

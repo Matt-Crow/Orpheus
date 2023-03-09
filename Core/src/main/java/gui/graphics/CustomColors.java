@@ -10,7 +10,6 @@ import java.awt.Color;
  * @author Matt Crow
  */
 public class CustomColors extends Color{
-	private static final long serialVersionUID = 1L;
 	
 	public static final CustomColors red = new CustomColors(255, 55, 0);
 	public static final CustomColors orange = new CustomColors(255, 100, 0);

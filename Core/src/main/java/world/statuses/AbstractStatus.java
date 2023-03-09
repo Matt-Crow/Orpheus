@@ -2,7 +2,6 @@ package world.statuses;
 
 import world.events.termination.*;
 import world.entities.AbstractPlayer;
-import java.io.Serializable;
 import util.Number;
 import java.util.function.UnaryOperator;
 
@@ -15,7 +14,7 @@ import java.util.function.UnaryOperator;
  * @see ActionRegister
  * @see AbstractPlayer#inflict(statuses.AbstractStatus) 
  */
-public abstract class AbstractStatus implements Serializable, Terminable {
+public abstract class AbstractStatus implements Terminable {
 	private final StatusName code; //the Enum of this status' name
 	private final String name;
 	
@@ -26,12 +25,6 @@ public abstract class AbstractStatus implements Serializable, Terminable {
     
     private boolean hasTerminated;
     private final TerminationListeners terminationListeners = new TerminationListeners();    
-	
-    /**
-     * ensures client & server are using compatible version of this class when
-     * serializing / deserializing
-     */
-    private static final long serialVersionUID = 1L;
     
     /**
      * 

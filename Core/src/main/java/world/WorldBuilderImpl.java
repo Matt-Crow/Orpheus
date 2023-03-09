@@ -16,14 +16,6 @@ public class WorldBuilderImpl implements WorldBuilder {
     private Game game;
     
     @Override
-    public WorldBuilderImpl withContent(WorldContent wc){
-        players = wc.getPlayers();
-        ai = wc.getAi();
-        game = wc.getGame();
-        return this;
-    }
-    
-    @Override
     public WorldBuilderImpl withPlayers(Team players){
         this.players = players;
         return this;
@@ -63,20 +55,12 @@ public class WorldBuilderImpl implements WorldBuilder {
         block.setBlocking(true);
         defaultMap.addToTileSet(0, new Tile(0, 0, Color.BLUE));
         defaultMap.addToTileSet(1, block);
+                
+        var world = new WorldImpl(defaultMap, players, ai, game);
+        game.setHost(world);
+        players.setWorld(world);
+        ai.setWorld(world);
         
-        SerializableWorldPart ser = new SerializableWorldPart(
-            defaultMap,
-            players,
-            ai,
-            game
-        );
-        
-        WorldImpl w = new WorldImpl(ser);
-        
-        game.setHost(w);
-        players.setWorld(w);
-        ai.setWorld(w);
-        
-        return w;
+        return world;
     }
 }

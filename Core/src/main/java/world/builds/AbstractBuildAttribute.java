@@ -1,13 +1,12 @@
 package world.builds;
 
 import world.entities.AbstractPlayer;
-import java.io.Serializable;
 
 /**
  * A AbstractBuildAttribute is a choice players can make when customizing the 
  * character they play as.
  */
-public abstract class AbstractBuildAttribute implements Serializable{
+public abstract class AbstractBuildAttribute {
     private final String name;
 	private AbstractPlayer user;
 	

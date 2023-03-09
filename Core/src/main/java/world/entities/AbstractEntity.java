@@ -11,18 +11,15 @@ import world.events.ActionRegister;
  * exists within a World.
  */
 public abstract class AbstractEntity extends AbstractPrimitiveEntity implements Terminable {
-    // make sure to set this after deserializing!
-    private transient World world; 
-
-    private double speedMultiplier;
-
-    private final ActionRegister actReg;
+    
+    private World world; 
     private Team team;
-
+    private double speedMultiplier;
     private boolean shouldTerminate;
     private final TerminationListeners terminationListeners = new TerminationListeners();
-
+    private final ActionRegister actReg;
     public final String id;
+
     private static int nextId = 0;
 
     public AbstractEntity(World world) {
@@ -49,7 +46,7 @@ public abstract class AbstractEntity extends AbstractPrimitiveEntity implements 
     }
     
     /**
-     * required because world is transient
+     * Allows this to be instantiated before the given world
      * @param world the world this exists in
      */
     public void setWorld(World world){

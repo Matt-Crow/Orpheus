@@ -2,32 +2,22 @@ package world;
 
 import static java.lang.System.out;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
-
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
 
 import controls.ai.Path;
 import controls.ai.PathInfo;
 import controls.ai.PathMinHeap;
 import orpheus.core.world.graph.Graphable;
-import serialization.JsonSerialable;
-import serialization.JsonUtil;
 import world.entities.AbstractEntity;
 
 /**
  * The Map class is used to store Tiles together to form 
  * a 2-dimensional playing field for players to play on.
  * @author Matt
- */                       // todo rm Serializable, JsonSerilable
-public class Map implements Serializable, JsonSerialable, Graphable {
+ */
+public class Map implements Graphable {
     private final int width; //in tiles
     private final int height;
     private final int[][] tileMap;
@@ -381,8 +371,6 @@ public class Map implements Serializable, JsonSerialable, Graphable {
             out.println(String.format("(%d, %d) to (%d, %d)", x1, y1, x2, y2));
             out.println("Stack: ");
             stack.forEach((PathInfo pi)->out.println(pi.toString()));
-            out.println("Heap: ");
-            heap.print();
             e.printStackTrace();
         }
         return ret;
@@ -390,33 +378,6 @@ public class Map implements Serializable, JsonSerialable, Graphable {
     
     public final Path findPath(AbstractEntity from, AbstractEntity to){
         return findPath(from.getX(), from.getY(), to.getX(), to.getY());
-    }
-
-    @Override
-    public JsonObject toJson() {
-        JsonObjectBuilder b = Json.createObjectBuilder();
-        b.add("type", "map");
-        b.add("tile map", getCsv());
-        JsonObjectBuilder tileSetBuilder = Json.createObjectBuilder();
-        tileSet.entrySet().stream().forEach((e)->{
-            tileSetBuilder.add(e.getKey().toString(), e.getValue().toJson());
-        });
-        b.add("tile set", tileSetBuilder.build());
-        return b.build();
-    }
-    
-    public static Map deserializeJson(JsonObject obj) throws IOException{
-        JsonUtil.verify(obj, "tile map");
-        JsonUtil.verify(obj, "tile set");
-        InputStream in = new ByteArrayInputStream(obj.getString("tile map").getBytes());
-        Map ret = MapLoader.readCsv(in);
-        
-        //deserialize tile set
-        JsonObject tileSet = obj.getJsonObject("tile set");
-        tileSet.entrySet().forEach((e)->{
-            ret.addToTileSet(Integer.parseInt(e.getKey()), Tile.deserializeJson((JsonObject)e.getValue()));
-        });
-        return ret;
     }
 
     @Override

@@ -7,8 +7,7 @@ import world.game.Game;
 
 
 /**
- * enables the proxy design pattern for providing a stable reference to the
- * volatile world content
+ * A world is where games occur.
  * 
  * @author Matt Crow <mattcrow19@gmail.com>
  */

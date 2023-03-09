@@ -1,13 +1,12 @@
 package world.statuses;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 // will probably phase out of future versions
-public final class StatusTable implements Serializable{
+public final class StatusTable {
 	/**
 	 * Used to store status data for actives and passives
 	 */

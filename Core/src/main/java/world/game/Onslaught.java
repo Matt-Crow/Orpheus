@@ -1,6 +1,5 @@
 package world.game;
 
-import java.io.Serializable;
 import world.World;
 import world.battle.Team;
 import world.entities.AIPlayer;
@@ -12,8 +11,8 @@ import world.entities.AIPlayer;
  * 
  * @author Matt Crow <mattcrow19@gmail.com>
  */
-public class Onslaught implements Game, Serializable {    
-    private transient World host;
+public class Onslaught implements Game {    
+    private World host;
     private final int numWaves;
     private int currentWave;
     

@@ -8,7 +8,6 @@ import world.events.termination.Terminables;
 import util.Coordinates;
 import world.entities.AIPlayer;
 import world.entities.AbstractEntity;
-import java.io.Serializable;
 import java.util.function.Consumer;
 
 import orpheus.core.world.graph.Graphable;
@@ -25,8 +24,8 @@ import world.World;
  *
  * @author Matt Crow
  */
-public class Team implements Serializable, Graphable {
-    private transient World world;
+public class Team implements Graphable {
+    private World world;
     private final String name;
     private final Color color;
     private Team enemyTeam;
