@@ -35,10 +35,6 @@ import world.game.Game;
  * @author Matt Crow
  */
 public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {    
-    /*
-    measured in seconds
-     */
-    public static final int WAIT_TIME = 3;
     
     private final Game minigame;
     
@@ -145,12 +141,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         getServer().send(initMsg, sm.getSender());
     }
     
-    /**
-     * Puts the given user on the teamProto,
-     * and alerts all connected players
-     * @param u the User who wants to play
-     */
-    public final void addUserToTeam(User u){
+    private void addUserToTeam(User u){
         if(addToTeamProto(u)){
             awaitingBuilds.add(u);
             Message sm = new Message(
@@ -161,7 +152,6 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         }
     }
     
-    
     public final void prepareToStart(){
         playerTeam.clear();
         WorldBuilder worldBuilder = new WorldBuilderImpl();
@@ -170,7 +160,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
             .withGame(minigame)
             .withPlayers(playerTeam)
             .withAi(new Team("AI", Color.red))
-            .build(); 
+            .build();
     
         getServer().send(new Message(
             "please provide build information",
@@ -188,7 +178,9 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
      * 
      * @param sm a server message containing the sender's Build, serialized as a JSON object string
      */
-    private void receiveBuildInfo(ServerMessagePacket sm){
+    private synchronized void receiveBuildInfo(ServerMessagePacket sm){
+        // synchronized avoids duplicate player IDs
+        
         User sender = sm.getSender();
 
         if (!awaitingBuilds.contains(sender)) {
@@ -207,6 +199,9 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         playerTeam.addMember(player);
         
         sendRemoteId(sender, player.id);
+
+        System.out.printf("Received build info %s from %s.\nSending id %s\n", json, sender.getName(), player.id);
+
         checkIfReady();
     }
     

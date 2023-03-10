@@ -34,15 +34,12 @@ public class Onslaught implements Game {
 
     @Override
     public void play() {
-        Team players = host.getPlayers();
-        Team ai = host.getAi();
+        var players = host.getPlayers();
+        var ai = host.getAi();
         ai.clear();
         
         players.setEnemy(ai);
         ai.setEnemy(players);
-        
-        players.init(host);
-        ai.init(host);
         
         currentWave = 0;
         spawnWave();
