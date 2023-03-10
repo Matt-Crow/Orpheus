@@ -1,27 +1,8 @@
 * Move to 3-D graphics?
 * Plugin customization system (players create their own Java classes)
-* Standard application folder stuff and logging, like what I used in 
-  ARCDHWebAutomator
 * Change player and team IDs to ints or long longs
 * General cleanup and reorganization
-* Security manager for multiplayer
 * use Socket to identify users, not IP address
 * finish fixing multiplayer
-* serialize particles?
-* Idea: standard Orpheus workflow:
-    1. receive input
-    2. send message to server
-    3. transmit message to host
-    4. host processes message
-    5. host sends back response
-    6. update accordingly
-    Non-multiplayer just skips the step of sending to a remote server
 * will need some way of reliably shutting down servers once the program is done 
   with them
-* cleaning up the World system:
-    - role -  | - solo - | - host - | - client -
-    ==========#==========#==========#===========
-    renderer  | canvas   | none     | canvas
-    updater   | updater  | updater  | network
-    particles | updater  | none     | updater
-    controls  | controls | controls | network
