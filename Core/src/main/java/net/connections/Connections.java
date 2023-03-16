@@ -3,8 +3,9 @@ package net.connections;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.HashMap;
-import net.messages.ServerMessage;
-import users.AbstractUser;
+
+import orpheus.core.net.messages.Message;
+import orpheus.core.users.User;
 
 /**
  * Connections is simply a collection of Connection objects.
@@ -12,7 +13,7 @@ import users.AbstractUser;
  * @author Matt Crow
  */
 public class Connections {
-    private final HashMap<AbstractUser, Socket> userToSocket;
+    private final HashMap<User, Socket> userToSocket;
     private final HashMap<Socket, Connection> connections;
     
     public Connections(){
@@ -20,7 +21,7 @@ public class Connections {
         connections = new HashMap<>();
     }
     
-    public final boolean isConnectedTo(AbstractUser client){
+    public final boolean isConnectedTo(User client){
         return userToSocket.containsKey(client);
     }
     
@@ -43,7 +44,7 @@ public class Connections {
             connections.remove(client);
             
             // remove entry from user table
-            AbstractUser u = userToSocket.entrySet().stream().filter((e)->{
+            User u = userToSocket.entrySet().stream().filter((e)->{
                 return e.getValue().equals(client);
             }).map((e)->e.getKey()).findFirst().orElse(null);
             
@@ -53,7 +54,7 @@ public class Connections {
         }
     }
     
-    public final void disconnectFrom(AbstractUser client){
+    public final void disconnectFrom(User client){
         if(userToSocket.containsKey(client)){
             disconnectFrom(userToSocket.get(client));
             userToSocket.remove(client);
@@ -62,8 +63,8 @@ public class Connections {
     
     public final void closeAll(){
         // avoid concurrent modification exception
-        AbstractUser[] all = userToSocket.keySet().toArray(new AbstractUser[connections.size()]);
-        for(AbstractUser s : all){
+        User[] all = userToSocket.keySet().toArray(new User[connections.size()]);
+        for(User s : all){
             disconnectFrom(s);
         }
     }
@@ -72,13 +73,21 @@ public class Connections {
         return connections.get(client);
     }
     
-    public final Connection getConnectionTo(AbstractUser user){
+    public final Connection getConnectionTo(User user){
         return connections.get(userToSocket.get(user));
     }
     
-    public final void broadcast(ServerMessage sm) throws IOException{
+    public final void broadcast(Message sm) throws IOException{
         for(Connection conn : connections.values()){
             conn.writeServerMessage(sm);
+        }
+    }
+
+    public void sendToAllExcept(Message message, User user) throws IOException {
+        for (var conn : connections.values()) {
+            if (!conn.getRemoteUser().equals(user)) {
+                conn.writeServerMessage(message);
+            }
         }
     }
     
@@ -92,7 +101,7 @@ public class Connections {
         return sb.toString();
     }
 
-    public void setUser(AbstractUser sender, Socket sendingSocket) {
+    public void setUser(User sender, Socket sendingSocket) {
         userToSocket.put(sender, sendingSocket);
         getConnectionTo(sendingSocket).setRemoteUser(sender);
     }

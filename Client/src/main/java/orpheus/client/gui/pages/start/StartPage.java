@@ -5,7 +5,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import orpheus.client.gui.components.ComponentFactory;
+
+import orpheus.client.ClientAppContext;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.PageController;
 
@@ -14,21 +15,24 @@ import orpheus.client.gui.pages.PageController;
  * @author Matt
  */
 public class StartPage extends Page{
-    public StartPage(PageController host, ComponentFactory cf){
-        super(host, cf);
+    public StartPage(ClientAppContext context, PageController host){
+        super(context, host);
+
+        var cf = context.getComponentFactory();
+
         addMenuItem(cf.makeSpaceAround(cf.makeLabel("The Orpheus Proposition")));
         setLayout(new GridLayout(1, 3));
         
         add(cf.makeButton("About this game", ()->{
-            getHost().switchToPage(new StartTextDisplay(host, cf, readFile("README.txt")));
+            getHost().switchToPage(new StartTextDisplay(context, host, readFile("README.txt")));
         }));
         
         add(cf.makeButton("Play", ()->{
-            getHost().switchToPage(new StartPlay(host, cf));
+            getHost().switchToPage(new StartPlay(context, host));
         }));
         
         add(cf.makeButton("How to play", ()->{
-            getHost().switchToPage(new StartTextDisplay(host, cf, readFile("howToPlay.txt")));
+            getHost().switchToPage(new StartTextDisplay(context, host, readFile("howToPlay.txt")));
         }));
     }
     

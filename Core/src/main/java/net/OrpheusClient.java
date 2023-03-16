@@ -4,25 +4,28 @@ import java.io.IOException;
 import java.net.Socket;
 import net.connections.Connection;
 import net.messages.MessageListener;
-import net.messages.ServerMessage;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
-import users.LocalUser;
+import orpheus.core.net.SocketAddress;
+import orpheus.core.net.messages.Message;
+import orpheus.core.users.LocalUser;
 
 /**
  *
  * @author Matt Crow
  */
 public class OrpheusClient extends AbstractNetworkClient {
+    private final LocalUser user;
     private final String hostIp;
     private final int hostPort;
     
     private Connection toServer;
-    
-    public OrpheusClient(String hostIp, int hostPort){
+
+    public OrpheusClient(LocalUser user, SocketAddress connectTo) {
         super();
-        this.hostIp = hostIp;
-        this.hostPort = hostPort;
+        this.user = user;
+        this.hostIp = connectTo.getAddress();
+        this.hostPort = connectTo.getPort();
     }
     
     @Override
@@ -31,15 +34,15 @@ public class OrpheusClient extends AbstractNetworkClient {
         toServer = new Connection(client);
         MessageListener listener = new MessageListener(toServer, this::receiveMessage);
         listener.startListening();
-        send(new ServerMessage(
-            LocalUser.getInstance().serializeJson().toString(), 
+        send(new Message(
+            user.toJson().toString(), 
             ServerMessageType.PLAYER_JOINED
         ));
     }
 
     @Override
     protected void doStop() throws IOException {
-        send(new ServerMessage(
+        send(new Message(
             "bye",
             ServerMessageType.PLAYER_LEFT
         ));
@@ -54,7 +57,7 @@ public class OrpheusClient extends AbstractNetworkClient {
     }
 
     @Override
-    public final void send(ServerMessage sm) {
+    public final void send(Message sm) {
         try {
             toServer.writeServerMessage(sm);
         } catch (IOException ex) {

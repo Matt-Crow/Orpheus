@@ -8,6 +8,13 @@ import java.util.ArrayList;
  * @author Matt
  */
 public class MapLoader {
+
+    /**
+     * note that the returned map does not yet have any tiles in its tileSet
+     * @param s
+     * @return
+     * @throws IOException
+     */
     public static Map readCsv(InputStream s) throws IOException{
         BufferedReader r = new BufferedReader(new InputStreamReader(s));
         String data = "";

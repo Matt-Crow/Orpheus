@@ -1,13 +1,12 @@
 package world.events.termination;
 
-import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.function.Consumer;
 
 /**
  * Maintains and manages a collection of Terminable objects
  */
-public class Terminables<T extends Terminable> implements Serializable {
+public class Terminables<T extends Terminable> {
     /**
      * the collection of objects this is managing
      */

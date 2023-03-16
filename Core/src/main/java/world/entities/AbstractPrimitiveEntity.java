@@ -1,7 +1,6 @@
 package world.entities;
 
-import java.awt.Graphics;
-import java.io.Serializable;
+import orpheus.core.world.graph.Graphable;
 import util.Direction;
 
 /**
@@ -11,7 +10,7 @@ import util.Direction;
  *
  * @author Matt Crow
  */
-public abstract class AbstractPrimitiveEntity implements Serializable {
+public abstract class AbstractPrimitiveEntity implements Graphable {
 
     private int x;
     private int y;
@@ -122,5 +121,8 @@ public abstract class AbstractPrimitiveEntity implements Serializable {
 
     public abstract void init();
 
-    public abstract void draw(Graphics g);
+    @Override
+    public orpheus.core.world.graph.Entity toGraph() {
+        return new orpheus.core.world.graph.Entity(x, y, radius);
+    }
 }

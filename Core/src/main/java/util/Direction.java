@@ -1,7 +1,5 @@
 package util;
 
-import java.io.Serializable;
-
 /**
  * The Direction class is used to 
  * get vectors that are used for
@@ -10,13 +8,17 @@ import java.io.Serializable;
  * canvas to keep the player
  * facing forward.
  */
-public class Direction implements Serializable{
+public class Direction {
 	
 	private int degrees;
 	
 	public Direction(int deg){
 		degrees = deg;
 		setBounds();
+	}
+
+	public static Direction fromDegrees(int degrees) {
+		return new Direction(degrees);
 	}
 	
 	public static Direction getDegreeByLengths(int x1, int y1, int x2, int y2){
@@ -95,5 +97,12 @@ public class Direction implements Serializable{
 	}
 	public double[] getVector(){
 		return new double[]{getXMod(), getYMod()};
+	}
+
+	/**
+	 * @return a deep copy of this Direction
+	 */
+	public Direction copy() {
+		return Direction.fromDegrees(degrees);
 	}
 }

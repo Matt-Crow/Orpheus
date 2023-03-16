@@ -1,7 +1,5 @@
 package controls.ai;
 
-import java.io.Serializable;
-
 /**
  * The PathInfo class is used to record paths through a World.
  * It functions more as a struct than a class, mostly just used to store data
@@ -9,7 +7,7 @@ import java.io.Serializable;
  * 
  * @author Matt Crow
  */
-public class PathInfo implements Serializable{
+public class PathInfo {
     private final int fromX;
     private final int fromY;
     private final int toX;

@@ -2,12 +2,11 @@ package world.events;
 
 import world.entities.AbstractPlayer;
 import world.entities.AbstractEntity;
-import java.io.Serializable;
 /**
  * An ActionRegister is used to store OnHit- and OnUpdate-Listeners, and register them to an AbstractEntity.
  * It is used by the AbstractPlayer class to store Status effects and passives.
  */
-public class ActionRegister implements Serializable {
+public class ActionRegister {
 	private final AbstractEntity registeredTo;
 	private final EventListeners<OnHitEvent> onHitListeners = new EventListeners<>();
 	private final EventListeners<OnHitEvent> onBeHitListeners = new EventListeners<>();
@@ -55,6 +54,7 @@ public class ActionRegister implements Serializable {
         OnUpdateEvent e = new OnUpdateEvent(registeredTo);
 		onUpdateListeners.handle(e);
 	}
+	
 	public void reset(){
 		onHitListeners.clear();
 		onBeHitListeners.clear();

@@ -3,7 +3,6 @@ package controls.ai;
 import world.events.OnHitEvent;
 import world.entities.AbstractPlayer;
 import util.Settings;
-import java.io.Serializable;
 
 /**
  * The PlayerAI class is used to control non-human-controlled
@@ -16,7 +15,7 @@ import java.io.Serializable;
  * 
  * @author Matt Crow
  */
-public class PlayerAI implements Serializable{
+public class PlayerAI {
 	private final AbstractPlayer appliedTo;
     private AbstractBehavior<AbstractPlayer> currentBehavior;
 	

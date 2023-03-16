@@ -1,19 +1,21 @@
 package world.entities;
 
 import world.battle.DamageBacklog;
+import world.builds.actives.ElementalActive;
+import world.builds.characterClass.CharacterStatName;
+
 import java.awt.Color;
-import java.awt.Graphics;
 import controls.ai.Path;
 import controls.ai.PathInfo;
+import orpheus.core.world.graph.Player;
 import world.statuses.AbstractStatus;
 import world.statuses.StatusName;
 import util.Settings;
-import world.build.actives.ElementalActive;
-import world.build.characterClass.CharacterStatName;
 import world.events.termination.Terminable;
 import world.events.termination.TerminationListener;
 import world.Tile;
 import java.util.HashMap;
+
 import util.Direction;
 import world.World;
 
@@ -40,7 +42,6 @@ public abstract class AbstractPlayer extends AbstractEntity implements Terminati
     private int knockbackDur;
 
     private int lastHitById; //the useId of the last projectile that hit this player
-    private AbstractPlayer lastHitBy;
 
     private final ElementalActive slash;
     private final DamageBacklog log;
@@ -66,13 +67,13 @@ public abstract class AbstractPlayer extends AbstractEntity implements Terminati
         knockbackMag = 0;
         knockbackDur = 0;
 
-        slash = (ElementalActive) Settings.getDataSet().getActiveByName("Slash");
+        slash = new ElementalActive("Slash", 1, 1, 5, 0, 3); // todo maybe change
+        slash.setParticleType(ParticleType.SHEAR);
         slash.setUser(this);
         log = new DamageBacklog(this, minLifeSpan);
         path = null;
 
         lastHitById = -1;
-        lastHitBy = null;
 
         setRadius(RADIUS);
     }
@@ -83,6 +84,14 @@ public abstract class AbstractPlayer extends AbstractEntity implements Terminati
 
     public final void setColor(Color c) {
         color = c;
+    }
+
+    protected Color getColor() {
+        return color;
+    }
+
+    protected HashMap<StatusName, AbstractStatus> getStatuses() {
+        return stats;
     }
 
     public DamageBacklog getLog() {
@@ -171,7 +180,6 @@ public abstract class AbstractPlayer extends AbstractEntity implements Terminati
      */
     public final void wasHitBy(Projectile p) {
         lastHitById = p.getUseId();
-        lastHitBy = p.getUser();
     }
 
     public void logDamage(int dmg) {
@@ -192,7 +200,6 @@ public abstract class AbstractPlayer extends AbstractEntity implements Terminati
 
         path = null;
         lastHitById = -1;
-        lastHitBy = null;
 
         hasFocus = false;
         knockbackDir = null;
@@ -255,9 +262,6 @@ public abstract class AbstractPlayer extends AbstractEntity implements Terminati
     @Override
     public void terminate() {
         super.terminate();
-        if (lastHitBy != null) {
-            lastHitBy.getLog().healPerc(5);
-        }
         getTeam().notifyTerminate(this);
     }
 
@@ -275,56 +279,22 @@ public abstract class AbstractPlayer extends AbstractEntity implements Terminati
         }
     }
 
-    @Override
-    public void draw(Graphics g) {
-        int w = 1000;
-        int h = 1000;
-        int r = getRadius();
-
-        if (path != null) {
-            path.draw(g);
-        }
-
-        // HP value
-        g.setColor(Color.black);
-        g.drawString(
-                String.format("HP: %d", getLog().getHP()),
-                getX() - w / 12,
-                getY() - h / 8
-        );
-
-        // list statuses
-        g.setColor(Color.black);
-        int y = getY() + h / 10;
-        String iStr;
-        int i;
-        for (AbstractStatus s : stats.values()) {
-            iStr = "";
-            i = 0;
-            while (i < s.getIntensityLevel()) {
-                iStr += "I";
-                i++;
-            }
-            g.drawString(
-                    String.format(
-                            "%s %s (%d)",
-                            s.getName(), iStr, s.getUsesLeft()
-                    ),
-                    getX() - r,
-                    y
-            );
-            y += h / 30;
-        }
-
-        g.setColor(getTeam().getColor());
-        g.fillOval(getX() - r, getY() - r, 2 * r, 2 * r);
-        g.setColor(color);
-        g.fillOval(getX() - (int) (r * 0.8), getY() - (int) (r * 0.8), (int) (r * 1.6), (int) (r * 1.6));
-    }
-
     public abstract double getStatValue(CharacterStatName n);
 
     public abstract void playerInit();
 
     public abstract void playerUpdate();
+
+    public orpheus.core.world.graph.Player toGraph() {
+        return new Player(
+            id,
+            getX(), 
+            getY(), 
+            getRadius(),
+            getLog().getHP(),
+            stats.values().stream().map(AbstractStatus::toString).toList(),
+            getTeam().getColor(),
+            color
+        );
+    }
 }

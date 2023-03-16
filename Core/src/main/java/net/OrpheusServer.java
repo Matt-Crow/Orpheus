@@ -7,11 +7,13 @@ import net.connections.Connection;
 import net.connections.ConnectionListener;
 import net.connections.Connections;
 import net.messages.MessageListener;
-import net.messages.ServerMessage;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
+import net.protocols.ServerChatProtocol;
+import orpheus.core.net.SocketAddress;
+import orpheus.core.net.messages.Message;
+import orpheus.core.users.User;
 import serialization.JsonUtil;
-import users.AbstractUser;
 
 /**
  * OrpheusServer is a somewhat deceptive title, as this is
@@ -30,7 +32,7 @@ import users.AbstractUser;
  * If the de-serialization is successful, it takes the type of that message,
  * and gives it to the current protocols
  * 
- * @see net.protocols.AbstractOrpheusServerNonChatProtocol
+ * @see net.protocols.AbstractProtocol
  * 
  * @author Matt Crow
  */
@@ -58,6 +60,8 @@ public class OrpheusServer extends AbstractNetworkClient {
         
         clients = new Connections();
         connectionHandler = new ConnectionListener(server, clients, this::setUpMessageListener);
+
+        this.setChatProtocol(new ServerChatProtocol(this));
     }
         
     /**
@@ -68,7 +72,7 @@ public class OrpheusServer extends AbstractNetworkClient {
      */
     @Override
     protected final void doStart() throws IOException{
-        log(String.format("Server initialized on %s", getConnectionString()));
+        log(String.format("Server initialized on %s", getSocketAddress()));
         clients.closeAll();
         clearProtocols();
         
@@ -77,26 +81,26 @@ public class OrpheusServer extends AbstractNetworkClient {
     
     @Override
     protected final void doStop() throws IOException {
-        send(new ServerMessage(
+        send(new Message(
             "server shutting down",
             ServerMessageType.SERVER_SHUTDOWN
         ));
         
         server.close();
     }
-    
+
     /**
-     * @return the address of the server in the form IP:PORT 
+     * @return the socket address this server is listening for connections on
      */
-    public final String getConnectionString(){
-        return String.format("%s:%d", server.getInetAddress().getHostAddress(), getPort());
+    public SocketAddress getSocketAddress() {
+        return new SocketAddress(getIpAddress(), getPort());
     }
     
-    public final String getIpAddress(){
+    private String getIpAddress(){
         return server.getInetAddress().getHostAddress();
     }
     
-    public final int getPort(){
+    private int getPort(){
         return server.getLocalPort();
     }
     
@@ -107,15 +111,23 @@ public class OrpheusServer extends AbstractNetworkClient {
     }
     
     @Override
-    public final void send(ServerMessage sm){
+    public final void send(Message sm){
         try {
             clients.broadcast(sm);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
+
+    public void sendToAllExcept(Message message, User user) {
+        try {
+            clients.sendToAllExcept(message, user);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
     
-    public final boolean send(ServerMessage sm, AbstractUser recipient){
+    public final boolean send(Message sm, User recipient){
         boolean success = false;
         if(clients.isConnectedTo(recipient)){
             try {
@@ -153,14 +165,14 @@ public class OrpheusServer extends AbstractNetworkClient {
             log("already connected");
         } else if(isConnected){
             //connected to IP, but no user data set yet
-            AbstractUser sender = AbstractUser.deserializeJson(JsonUtil.fromString(sm.getMessage().getBody()));      
+            User sender = User.fromJson(JsonUtil.fromString(sm.getMessage().getBodyText()));      
             sm.setSender(sender);
             clients.setUser(sender, sm.getSendingSocket());
         } else {
             //not connected, no user data
             try {
                 connect(sm.getSendingSocket());
-                AbstractUser sender = AbstractUser.deserializeJson(JsonUtil.fromString(sm.getMessage().getBody()));
+                User sender = User.fromJson(JsonUtil.fromString(sm.getMessage().getBodyText()));
                 sm.setSender(sender);
                 clients.getConnectionTo(ip).setRemoteUser(sender);
             } catch (IOException ex){
@@ -197,7 +209,7 @@ public class OrpheusServer extends AbstractNetworkClient {
                 try {
                     Connection conn = new Connection(new Socket(os.getIpAddress(), os.getPort()));
                     Thread.sleep(1000);
-                    conn.writeServerMessage(new ServerMessage("bye", ServerMessageType.PLAYER_LEFT));
+                    conn.writeServerMessage(new Message("bye", ServerMessageType.PLAYER_LEFT));
                     conn.close();
                     System.out.println("Bye");
                 } catch (IOException ex) {

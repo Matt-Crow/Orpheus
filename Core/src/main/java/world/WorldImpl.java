@@ -1,65 +1,47 @@
 package world;
 
-import java.awt.Graphics;
 import util.Random;
 import world.battle.Team;
 import world.entities.AbstractEntity;
 import world.entities.Projectile;
-import world.entities.particles.Particle;
 import world.game.Game;
 
 /**
- * Handling both the serialized and non-serialized parts of the world.
- * Objects should reference World instead of this class or either of its parts
- * directly.
- * 
- * This class can be simplified to a proxy of the serialize-able world content
- * if particles can be serialized efficiently.
- * 
- * Note that references to a World or WorldImpl are stable: they will not change
- * as the world is serialized and de-serialized, unlike references to the 
- * serialized content, which is constantly changing in multiplayer.
+ * Implements the world games occur in.
  * 
  * @author Matt Crow
  */
-public class WorldImpl implements World{
-    private volatile WorldContent ser;
-    private final NonSerializableWorldPart noser;
+public class WorldImpl implements World {
+    private final Map map;
+    private final Team players;
+    private final Team ai;
+    private final Game game;
     
-    protected WorldImpl(WorldContent ser, NonSerializableWorldPart noser){
-        this.ser = ser;
-        this.noser = noser;
-    }
-    
-    @Override
-    public WorldContent getSerializableContent(){
-        return ser;
-    }
-    
-    @Override
-    public void setSerializableContent(WorldContent wc){
-        ser = wc;
-        wc.setWorld(this);
+    protected WorldImpl(Map map, Team players, Team ai, Game game){
+        this.map = map;
+        this.players = players;
+        this.ai = ai;
+        this.game = game;
     }
     
     @Override
     public Map getMap(){
-        return ser.getMap();
+        return map;
     }
     
     @Override
     public Team getPlayers(){
-        return ser.getPlayers();
+        return players;
     }
     
     @Override
     public Team getAi(){
-        return ser.getAi();
+        return ai;
     }
     
     @Override
     public Game getGame(){
-        return ser.getGame();
+        return game;
     }
     
     /**
@@ -70,9 +52,9 @@ public class WorldImpl implements World{
     @Override
     public void spawn(AbstractEntity e){
         int minX = 0;
-        int maxX = getMap().getWidth() / Tile.TILE_SIZE;
+        int maxX = map.getWidth() / Tile.TILE_SIZE;
         int minY = 0;
-        int maxY = getMap().getHeight() / Tile.TILE_SIZE;
+        int maxY = map.getHeight() / Tile.TILE_SIZE;
         int rootX = 0;
         int rootY = 0;
         
@@ -86,42 +68,40 @@ public class WorldImpl implements World{
     }
     
     @Override
-    public void spawn(Particle p){
-        noser.addParticle(p);
-    }
-    
-    @Override
     public void init(){
-        ser.init();
-        noser.init();
-        getPlayers().init(this);
-        getAi().init(this);
+        map.init();
+        game.play();
+        players.init(this);
+        ai.init(this);
     }
     
     @Override
-    public void update(){ // may need to split off into server / client updates
-        ser.update();
-        noser.update();
+    public void update(){
+        players.update();
+        ai.update();
+        game.update();
+        checkForCollisions(players, ai);
+        checkForCollisions(ai, players);
     }
     
-    @Override
-    public void draw(Graphics g){
-        ser.draw(g);
-        noser.draw(g);
+    private void checkForCollisions(Team t1, Team t2) {
+        t1.forEach((e)->{
+            map.checkForTileCollisions(e);
+            if(e instanceof Projectile){
+                t2.getMembersRem().forEach((p)->{
+                    ((Projectile) e).checkForCollisions(p);
+                });
+            }
+        });
     }
 
     @Override
-    public void updateParticles() {
-        noser.update();
-        spawnParticles(ser.getPlayers());
-        spawnParticles(ser.getAi());
-    }
-    
-    private void spawnParticles(Team t){
-        t.forEach((AbstractEntity member)->{
-            if(member instanceof Projectile){
-                ((Projectile)member).spawnParticles();
-            }
-        });
+    public orpheus.core.world.graph.World toGraph() {
+        return new orpheus.core.world.graph.World(
+            map.toGraph(),
+            players.toGraph(),
+            ai.toGraph(),
+            game.toGraph()
+        );
     }
 }

@@ -1,9 +1,9 @@
 package net.protocols;
 
 import net.OrpheusServer;
-import net.messages.ServerMessage;
 import net.messages.ServerMessageType;
-import serialization.WorldSerializer;
+import orpheus.core.net.messages.Message;
+import orpheus.core.world.updaters.AbstractWorldUpdater;
 import world.World;
 
 /**
@@ -15,18 +15,21 @@ import world.World;
  */
 public class HostWorldUpdater extends AbstractWorldUpdater {
     private final OrpheusServer hostingServer;
+    private final World world;
     
     public HostWorldUpdater(OrpheusServer hostingServer, World world) {
-        super(world, false);
+        super(false);
+        this.world = world;
         this.hostingServer = hostingServer;
     }
 
     @Override
-    protected void updateWorld(World world) {
+    protected void doUpdate() {
         world.update();
-        hostingServer.send(new ServerMessage(
-            new WorldSerializer(world).serializeToString(),
-            ServerMessageType.WORLD_UPDATE
+        
+        hostingServer.send(new Message(
+            ServerMessageType.WORLD, 
+            world.toGraph().toJson()
         ));
     }
 }

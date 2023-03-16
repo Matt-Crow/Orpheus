@@ -1,13 +1,13 @@
 package orpheus.client.gui.pages.play;
 
-import world.World;
 import util.Settings;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.*;
 import javax.swing.*;
 import orpheus.client.gui.pages.PlayerControls;
-import world.entities.AbstractPlayer;
+import orpheus.core.world.graph.particles.Particles;
+
 import java.awt.Graphics2D;
 import orpheus.client.gui.pages.Canvas;
 
@@ -18,87 +18,94 @@ import orpheus.client.gui.pages.Canvas;
  */
 public class WorldCanvas extends Canvas {
 
-    private final World world;
-    private final Timer timer;
+    /**
+     * renders a world on this canvas
+     */
+    private final WorldGraphSupplier worldSupplier;
+
+    /**
+     * renders particles on this canvas
+     */
+    private final Particles particles;
+
+    /**
+     * handles repainting - but not updating - the world
+     */
+    private final Timer repaintTimer;
+
     private final String focusedEntityId;
-    private final HeadsUpDisplay hud;
-    private final boolean pauseEnabled;
 
     private boolean paused;
 
     /**
-     *
-     * @param w
-     * @param pc
-     * @param pauseEnabled
-     *
      * The caller should call WorldCanvas.start() once they are using the canvas
      */
-    public WorldCanvas(World w, PlayerControls pc, boolean pauseEnabled) {
+    public WorldCanvas(WorldGraphSupplier worldSupplier, Particles particles, PlayerControls pc) {
         super();
-        world = w;
+
+        this.worldSupplier = worldSupplier;
+        this.particles = particles;
 
         paused = false;
-        this.pauseEnabled = pauseEnabled;
-        timer = new Timer(1000 / Settings.FPS, (ActionEvent e) -> {
-            world.update();
+        repaintTimer = new Timer(1000 / Settings.FPS, (ActionEvent e) -> {
             endOfFrame();
             repaint();
         });
-        timer.setRepeats(true);
-        timer.stop();
+        repaintTimer.setRepeats(true);
+        repaintTimer.stop();
 
         registerKey(KeyEvent.VK_Z, true, () -> zoomIn());
         registerKey(KeyEvent.VK_X, true, () -> zoomOut());
         registerKey(KeyEvent.VK_P, true, () -> togglePause());
         setZoom(0.5);
 
-        addMouseListener(pc);
-        addEndOfFrameListener(pc);
         pc.registerControlsTo(this);
 
         focusedEntityId = pc.getPlayerId();
-        hud = new HeadsUpDisplay(this, w, pc.getPlayerId());
     }
 
     public void start() {
-        timer.start();
+        repaintTimer.start();
     }
 
     private void togglePause() {
-        if (pauseEnabled) {
-            paused = !paused;
-            if (paused) {
-                timer.stop();
-            } else {
-                timer.start();
-            }
-            repaint();
+        paused = !paused;
+        if (paused) {
+            repaintTimer.stop();
+        } else {
+            repaintTimer.start();
         }
+        repaint();
     }
 
     //need this for when leaving world page
     public void stop() {
         paused = true;
-        timer.stop();
+        repaintTimer.stop();
     }
 
     @Override
     public void paintComponent(Graphics g) {
+        var world = worldSupplier.get();
+
         super.paintComponent(g);
 
-        AbstractPlayer focus = world.getPlayers().getMemberById(focusedEntityId);
-        centerOn(
-                focus.getX(),
-                focus.getY()
-        );
+        var focus = world.getPlayers()
+            .getMemberById(focusedEntityId);
+        
+        if (focus.isPresent()) {
+            centerOn(
+                focus.get().getX(),
+                focus.get().getY()
+            );
+        }
+        
         Graphics2D g2d = applyTransforms(g);
 
         world.draw(g2d);
+        particles.draw(g2d);
 
         reset();
-
-        hud.draw(g);
 
         if (world.getGame().isOver()) {
             drawMatchResolution(g2d);
@@ -121,17 +128,18 @@ public class WorldCanvas extends Canvas {
     }
 
     public void drawMatchResolution(Graphics g) {
+        var world = worldSupplier.get();
         paused = true;
-        timer.stop();
+        repaintTimer.stop();
 
         g.setColor(new Color(0, 0, 0, 200));
         g.fillRect(0, 0, getWidth(), getHeight());
         g.setColor(Color.yellow);
         g.drawString("The match is ended,", (int) (getWidth() * 0.3), (int) (getHeight() * 0.3));
         String winner = (world.getGame().isPlayerWin())
-            ? world.getPlayers().getName()
-            : world.getAi().getName();
+            ? "players"
+            : "enemies";
         g.drawString(winner, (int) (getWidth() * 0.5), (int) (getHeight() * 0.5));
-        g.drawString("is victorious!", (int) (getWidth() * 0.7), (int) (getHeight() * 0.7));
+        g.drawString("are victorious!", (int) (getWidth() * 0.7), (int) (getHeight() * 0.7));
     }
 }

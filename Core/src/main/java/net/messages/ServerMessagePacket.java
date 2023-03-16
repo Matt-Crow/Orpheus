@@ -1,7 +1,9 @@
 package net.messages;
 
 import java.net.Socket;
-import users.AbstractUser;
+
+import orpheus.core.net.messages.Message;
+import orpheus.core.users.User;
 
 /**
  * The ServerMessagePacket class is used to add information
@@ -14,20 +16,20 @@ import users.AbstractUser;
  */
 public class ServerMessagePacket {
     private final Socket sendingSocket;
-    private AbstractUser fromUser;
-    private final ServerMessage containedMessage;
+    private User fromUser;
+    private final Message containedMessage;
     /**
      * 
      * 
      * @param sendingSocket the Socket this message was received from
      * @param packetContents the message contained herein
      */
-    public ServerMessagePacket(Socket sendingSocket, ServerMessage packetContents){
+    public ServerMessagePacket(Socket sendingSocket, Message packetContents){
         this.sendingSocket = sendingSocket;
         containedMessage = packetContents;
     }
     
-    public final ServerMessage getMessage(){
+    public final Message getMessage(){
         return containedMessage;
     }
     
@@ -36,15 +38,13 @@ public class ServerMessagePacket {
     }
     
     /**
-     * Called by OrpheusServer to associate
-     * a logged-in User with this message.
-     * @param u the user to associate this 
-     * message with
+     * Called by OrpheusServer to associate a logged-in User with this message.
+     * @param u the user to associate this message with
      */
-    public final void setSender(AbstractUser u){
+    public final void setSender(User u){
         fromUser = u;
     }
-    public final AbstractUser getSender(){
+    public final User getSender(){
         return fromUser;
     }
     

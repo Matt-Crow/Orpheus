@@ -3,7 +3,8 @@ package orpheus.client.gui.pages.worldselect;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import world.build.Build;
+
+import orpheus.client.ClientAppContext;
 import orpheus.client.gui.components.BuildSelect;
 import orpheus.client.gui.components.OptionBox;
 import java.awt.event.ActionEvent;
@@ -11,9 +12,10 @@ import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import orpheus.client.gui.components.ComponentFactory;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.PageController;
+import orpheus.client.gui.pages.start.StartPlay;
+import world.builds.AssembledBuild;
 import world.game.Game;
 import world.game.Onslaught;
 
@@ -25,10 +27,10 @@ public abstract class AbstractWSNewWorld extends Page{
     private final BuildSelect playerBuild;
     private final OptionBox<Integer> numWaves;
     
-    public AbstractWSNewWorld(PageController host, ComponentFactory cf){
-        super(host, cf);
-        
-        addBackButton(()-> new WSMain(host, cf));
+    public AbstractWSNewWorld(ClientAppContext context, PageController host){
+        super(context, host);
+        var cf = context.getComponentFactory();
+        addBackButton(()-> new StartPlay(context, host));
         
         setLayout(new BorderLayout());
         
@@ -39,7 +41,7 @@ public abstract class AbstractWSNewWorld extends Page{
         add(center, BorderLayout.CENTER);
         
         center.add(Box.createRigidArea(new Dimension(20, 20))); // padding
-        playerBuild = new BuildSelect(cf);
+        playerBuild = new BuildSelect(context);
         center.add(playerBuild);
         center.add(Box.createRigidArea(new Dimension(20, 20)));
         numWaves = numWaveSelect();
@@ -54,7 +56,11 @@ public abstract class AbstractWSNewWorld extends Page{
     private OptionBox<Integer> numWaveSelect(){
         Integer[] nums = new Integer[]{1, 2, 3, 4, 5, 8};
         
-        OptionBox<Integer> box = new OptionBox<>(getComponentFactory(), "Select number of waves", nums);
+        OptionBox<Integer> box = new OptionBox<>(
+            getContext().getComponentFactory(), 
+            "Select number of waves", 
+            nums
+        );
         box.addActionListener(new AbstractAction(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -65,8 +71,8 @@ public abstract class AbstractWSNewWorld extends Page{
         return box;
     }
     
-    public Build getSelectedBuild(){
-        return playerBuild.getSelectedBuild();
+    public AssembledBuild getSelectedBuild(){
+        return playerBuild.getSelectedAssembledBuild();
     }
     
     public Game createGame(){

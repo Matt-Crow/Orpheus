@@ -1,9 +1,8 @@
 package world.battle;
 
-import world.build.characterClass.CharacterStatName;
+import world.builds.characterClass.CharacterStatName;
 import world.entities.AbstractPlayer;
 import util.Settings;
-import java.io.Serializable;
 
 /**
  * The damage backlog is used to keep track of the damage a player has taken,
@@ -20,7 +19,7 @@ import java.io.Serializable;
  *
  * Every second, the AbstractPlayer regenerates 3% of their maximum HP.
  */
-public final class DamageBacklog implements Serializable{
+public final class DamageBacklog {
 	private final AbstractPlayer registeredTo;
     private int maxHP;
 	private int remHP;
@@ -126,21 +125,8 @@ public final class DamageBacklog implements Serializable{
 		heal((int) (maxHP * (percent / 100)));
 	}
 	public void update(){
-		/*
-		Op.add("Before updating backlog for " + registeredTo.getName() + ":");
-		Op.add("*HP remaining: " + remHP);
-		Op.add("*Backlog: " + backlog);
-		Op.add("*Backlog filter: " + filter);
-		*/
 		deplete();
-		/*
-		Op.add("After updating backlog: ");
-		Op.add("*HP remaining: " + remHP);
-		Op.add("*Backlog: " + backlog);
-		Op.add("*Backlog filter: " + filter);
 		
-		Op.dp();
-		*/
 		secondaryFilter = 1.0;
 		
 		timeSinceLastHeal += 1;

@@ -8,7 +8,6 @@ import world.game.Game;
  * @author Matt Crow <mattcrow19@gmail.com>
  */
 public interface WorldBuilder {
-    public WorldBuilder withContent(WorldContent wc);
     public WorldBuilder withGame(Game g);
     public WorldBuilder withPlayers(Team t);
     public WorldBuilder withAi(Team t);

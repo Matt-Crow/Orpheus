@@ -1,21 +1,23 @@
 package world;
 
-import controls.ai.*;
-import static world.Tile.TILE_SIZE;
-import world.entities.AbstractEntity;
-import java.awt.*;
-import java.io.*;
 import static java.lang.System.out;
-import java.util.*;
-import javax.json.*;
-import serialization.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Stack;
+
+import controls.ai.Path;
+import controls.ai.PathInfo;
+import controls.ai.PathMinHeap;
+import orpheus.core.world.graph.Graphable;
+import world.entities.AbstractEntity;
 
 /**
  * The Map class is used to store Tiles together to form 
  * a 2-dimensional playing field for players to play on.
  * @author Matt
  */
-public class Map implements Serializable, JsonSerialable{
+public class Map implements Graphable {
     private final int width; //in tiles
     private final int height;
     private final int[][] tileMap;
@@ -26,10 +28,10 @@ public class Map implements Serializable, JsonSerialable{
     public Map(int w, int h){
         width = w;
         height = h;
-        tileMap = new int[w][h];
+        tileMap = new int[h][w];
         for(int i = 0; i < w; i++){
             for(int j = 0; j < h; j++){
-                tileMap[i][j] = 0;
+                tileMap[j][i] = 0;
             }
         }
         tileSet = new HashMap<>();
@@ -44,7 +46,7 @@ public class Map implements Serializable, JsonSerialable{
         StringBuilder b = new StringBuilder();
         for(int y = 0; y < height; y++){
             for(int x = 0; x < width; x++){
-                b.append(Integer.toString(tileMap[x][y]));
+                b.append(Integer.toString(tileMap[y][x]));
                 if(x == width - 1){
                     // on the last one
                     b.append('\n');
@@ -96,7 +98,7 @@ public class Map implements Serializable, JsonSerialable{
         if(xIdx < 0 || xIdx >= width || yIdx < 0 || yIdx >= height){
             throw new IndexOutOfBoundsException();
         }
-        tileMap[xIdx][yIdx] = value;
+        tileMap[yIdx][xIdx] = value;
         return this;
     }
     
@@ -137,8 +139,8 @@ public class Map implements Serializable, JsonSerialable{
      */
     public boolean isOpenTile(int xCoord, int yCoord){
         return isValidIndex(xCoord / Tile.TILE_SIZE, yCoord / Tile.TILE_SIZE)
-            && tileSet.containsKey(tileMap[xCoord / Tile.TILE_SIZE][yCoord / Tile.TILE_SIZE])
-            && !tileSet.get(tileMap[xCoord / Tile.TILE_SIZE][yCoord / Tile.TILE_SIZE]).getBlocking();
+            && tileSet.containsKey(tileMap[yCoord / Tile.TILE_SIZE][xCoord / Tile.TILE_SIZE])
+            && !tileSet.get(tileMap[yCoord / Tile.TILE_SIZE][xCoord / Tile.TILE_SIZE]).getBlocking();
     }
     
     /**
@@ -150,13 +152,13 @@ public class Map implements Serializable, JsonSerialable{
         Tile t;
         for(int x = 0; x < width; x++){
             for(int y = 0; y < height; y++){
-                if(tileSet.containsKey(tileMap[x][y])){
-                    t = tileSet.get(tileMap[x][y]).copy(x, y);
+                if(tileSet.containsKey(tileMap[y][x])){
+                    t = tileSet.get(tileMap[y][x]).copy(x, y);
                     if(t.getBlocking()){
                         tangibleTiles.add(t);
                     }
                 } else {
-                    System.out.println("Tile set does not contain key " + tileMap[x][y]);
+                    System.out.println("Tile set does not contain key " + tileMap[y][x]);
                 }
             }
         }
@@ -252,10 +254,10 @@ public class Map implements Serializable, JsonSerialable{
             while(currXIdx != destX || currYIdx != destY){
                 //out.println("Currently at (" + currXIdx + ", " + currYIdx + ")");
                 //push adjacent points to the heap
-                canUp = currYIdx > minY && tileMap[currXIdx][currYIdx - 1] == 0 && !visited[currXIdx][currYIdx - 1];
-                canDown = currYIdx < maxY && tileMap[currXIdx][currYIdx + 1] == 0 && !visited[currXIdx][currYIdx + 1];
-                canLeft = currXIdx > minX && tileMap[currXIdx - 1][currYIdx] == 0 && !visited[currXIdx - 1][currYIdx];
-                canRight = currXIdx < maxX && tileMap[currXIdx + 1][currYIdx] == 0 && !visited[currXIdx + 1][currYIdx];
+                canUp = currYIdx > minY && tileMap[currYIdx - 1][currXIdx] == 0 && !visited[currXIdx][currYIdx - 1];
+                canDown = currYIdx < maxY && tileMap[currYIdx + 1][currXIdx] == 0 && !visited[currXIdx][currYIdx + 1];
+                canLeft = currXIdx > minX && tileMap[currYIdx][currXIdx - 1] == 0 && !visited[currXIdx - 1][currYIdx];
+                canRight = currXIdx < maxX && tileMap[currYIdx][currXIdx + 1] == 0 && !visited[currXIdx + 1][currYIdx];
                 currX = (int)((currXIdx + 0.5) * t);
                 currY = (int)((currYIdx + 0.5) * t);
                 
@@ -300,7 +302,7 @@ public class Map implements Serializable, JsonSerialable{
                     );
                     heap.siftUp(p);
                 }
-                if(canUp && canLeft && tileMap[currXIdx - 1][currYIdx - 1] == 0){
+                if(canUp && canLeft && tileMap[currYIdx - 1][currXIdx - 1] == 0){
                     p = new PathInfo(
                         currX, 
                         currY, 
@@ -310,7 +312,7 @@ public class Map implements Serializable, JsonSerialable{
                     );
                     heap.siftUp(p);
                 }
-                if(canUp && canRight && tileMap[currXIdx + 1][currYIdx - 1] == 0){
+                if(canUp && canRight && tileMap[currYIdx - 1][currXIdx + 1] == 0){
                     p = new PathInfo(
                         currX, 
                         currY, 
@@ -320,7 +322,7 @@ public class Map implements Serializable, JsonSerialable{
                     );
                     heap.siftUp(p);
                 }
-                if(canDown && canLeft && tileMap[currXIdx - 1][currYIdx + 1] == 0){
+                if(canDown && canLeft && tileMap[currYIdx + 1][currXIdx - 1] == 0){
                     p = new PathInfo(
                         currX, 
                         currY, 
@@ -330,7 +332,7 @@ public class Map implements Serializable, JsonSerialable{
                     );
                     heap.siftUp(p);
                 }
-                if(canDown && canRight && tileMap[currXIdx + 1][currYIdx + 1] == 0){
+                if(canDown && canRight && tileMap[currYIdx + 1][currXIdx + 1] == 0){
                     p = new PathInfo(
                         currX, 
                         currY, 
@@ -369,8 +371,6 @@ public class Map implements Serializable, JsonSerialable{
             out.println(String.format("(%d, %d) to (%d, %d)", x1, y1, x2, y2));
             out.println("Stack: ");
             stack.forEach((PathInfo pi)->out.println(pi.toString()));
-            out.println("Heap: ");
-            heap.print();
             e.printStackTrace();
         }
         return ret;
@@ -379,42 +379,19 @@ public class Map implements Serializable, JsonSerialable{
     public final Path findPath(AbstractEntity from, AbstractEntity to){
         return findPath(from.getX(), from.getY(), to.getX(), to.getY());
     }
-    
-    
-    public void draw(Graphics g){
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, getWidth(), getHeight());
-        for(int i = 0; i < width; ++i){
-            for(int j = 0; j < height; ++j){
-                tileSet.get(tileMap[i][j]).drawAt(g, i * TILE_SIZE, j * TILE_SIZE);
-            }
-        }
-    }
 
     @Override
-    public JsonObject serializeJson() {
-        JsonObjectBuilder b = Json.createObjectBuilder();
-        b.add("type", "map");
-        b.add("tile map", getCsv());
-        JsonObjectBuilder tileSetBuilder = Json.createObjectBuilder();
-        tileSet.entrySet().stream().forEach((e)->{
-            tileSetBuilder.add(e.getKey().toString(), e.getValue().serializeJson());
-        });
-        b.add("tile set", tileSetBuilder.build());
-        return b.build();
-    }
-    
-    public static Map deserializeJson(JsonObject obj) throws IOException{
-        JsonUtil.verify(obj, "tile map");
-        JsonUtil.verify(obj, "tile set");
-        InputStream in = new ByteArrayInputStream(obj.getString("tile map").getBytes());
-        Map ret = MapLoader.readCsv(in);
-        
-        //deserialize tile set
-        JsonObject tileSet = obj.getJsonObject("tile set");
-        tileSet.entrySet().forEach((e)->{
-            ret.addToTileSet(Integer.parseInt(e.getKey()), Tile.deserializeJson((JsonObject)e.getValue()));
-        });
-        return ret;
+    public orpheus.core.world.graph.Map toGraph() {
+        var g = new orpheus.core.world.graph.Map(width, height);
+        for (var y = 0; y < height; y++) {
+            for (var x = 0; x < width; x++) {
+                g.setTile(x, y, tileMap[y][x]);
+            }
+        }
+
+        for (var kv : tileSet.entrySet()) {
+            g.addToTileSet(kv.getKey(), kv.getValue().toGraph());
+        }
+        return g;
     }
 }

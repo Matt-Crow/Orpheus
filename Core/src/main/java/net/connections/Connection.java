@@ -1,21 +1,27 @@
 package net.connections;
 
 import net.messages.ServerMessagePacket;
+import orpheus.core.net.messages.Message;
+import orpheus.core.users.User;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import net.messages.ServerMessage;
-import users.AbstractUser;
 
 /**
  *
  * @author Matt Crow
  */
 public class Connection {
-    private AbstractUser remoteUser; //the remoteUser playing Orpheus on the machine this connects to
+
+    /**
+     * the user playing Orpheus on the machine this connects to
+     */
+    private User remoteUser;
+    
     private final Socket clientSocket;    
     private final BufferedReader fromClient;
     private final BufferedWriter toClient;
@@ -26,7 +32,7 @@ public class Connection {
         fromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
     }
     
-    public final void writeServerMessage(ServerMessage sm) throws IOException{        
+    public final void writeServerMessage(Message sm) throws IOException{        
         // do I need to make sure the JsonString contains no newlines?
         toClient.write(sm.toJsonString());
         toClient.write('\n');
@@ -36,7 +42,7 @@ public class Connection {
     // blocks until the client writes something
     public final ServerMessagePacket readServerMessage() throws IOException{
         // This works, so I guess toJsonString excapes newlines or something?
-        ServerMessage deser = ServerMessage.deserializeJson(fromClient.readLine());
+        Message deser = Message.deserializeJson(fromClient.readLine());
         
         return new ServerMessagePacket(clientSocket, deser);
     }
@@ -62,10 +68,10 @@ public class Connection {
         }
     }
     
-    public void setRemoteUser(AbstractUser u){
+    public void setRemoteUser(User u){
         remoteUser = u;
     }
-    public AbstractUser getRemoteUser(){
+    public User getRemoteUser(){
         return remoteUser;
     }
     

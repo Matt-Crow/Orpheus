@@ -16,11 +16,17 @@ public class EventListeners<T extends Event> implements EventListener<T> {
     private LinkedList<EventListener<T>> listeners = new LinkedList<>();
 
     /**
+     * the event listeners that will be added to the next iteration - this 
+     * avoids concurrent modification of listeners
+     */
+    private LinkedList<EventListener<T>> next = new LinkedList<>();
+
+    /**
      * registers a new event listener
      * @param listener the listener to register
      */
     public void add(EventListener<T> listener) {
-        listeners.add(listener);
+        next.add(listener);
     }
 
     /**
@@ -28,11 +34,11 @@ public class EventListeners<T extends Event> implements EventListener<T> {
      */
     public void clear() {
         listeners.clear();
+        next.clear();
     }
 
     @Override
     public void handle(T e) {
-        LinkedList<EventListener<T>> next = new LinkedList<>();
         for (EventListener<T> listener : listeners) {
             listener.handle(e);
             if ( // check if a terminable listener needs to be removed
@@ -43,5 +49,6 @@ public class EventListeners<T extends Event> implements EventListener<T> {
             }
         }
         listeners = next;
+        next = new LinkedList<>();
     }
 }

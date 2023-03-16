@@ -1,20 +1,25 @@
 package orpheus.client.gui.pages.play;
 
-import net.protocols.AbstractWorldUpdater;
-import world.World;
+import orpheus.core.world.graph.particles.Particles;
+import orpheus.core.world.updaters.AbstractWorldUpdater;
 
 /**
  *
  * @author Matt Crow
  */
 public class RemoteWorldUpdater extends AbstractWorldUpdater {
+    private final WorldGraphSupplier world;
+    private final Particles particles;
 
-    public RemoteWorldUpdater(World world) {
-        super(world, false);
+    public RemoteWorldUpdater(WorldGraphSupplier world, Particles particles) {
+        super(false);
+        this.world = world;
+        this.particles = particles;
     }
 
     @Override
-    protected void updateWorld(World world) {
-        world.updateParticles();
+    protected void doUpdate() {
+        world.get().spawnParticlesInto(particles);
+        particles.update();
     }
 }

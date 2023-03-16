@@ -1,16 +1,19 @@
 package orpheus.client.gui.pages.worldselect;
 
-import world.build.Build;
 import orpheus.client.gui.components.BuildSelect;
-import orpheus.client.gui.components.Chat;
+import orpheus.client.gui.components.ChatBox;
+import orpheus.client.gui.components.ShowHideDecorator;
+
 import java.awt.BorderLayout;
 import java.util.Arrays;
 import javax.swing.JTextArea;
-import orpheus.client.WaitingRoomClientProtocol;
-import orpheus.client.gui.components.ComponentFactory;
-import users.AbstractUser;
+
+import orpheus.client.ClientAppContext;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.PageController;
+import orpheus.client.gui.pages.start.StartPlay;
+import orpheus.client.protocols.WaitingRoomClientProtocol;
+import world.builds.Build;
 
 /**
  * WaitingRoom provides a "waiting room"
@@ -19,25 +22,25 @@ import orpheus.client.gui.pages.PageController;
  * 
  * @author Matt Crow
  */
-public class WaitingRoom extends Page{
+public class WaitingRoom extends Page {
     private final JTextArea teamList;
-    private final Chat chat;
+    private final ChatBox chat;
     private final BuildSelect playerBuild;
     private WaitingRoomClientProtocol backend;
     
-    public WaitingRoom(PageController host, ComponentFactory cf){
-        super(host, cf);
-        
-        addBackButton(()-> new WSMain(host, cf));
+    public WaitingRoom(ClientAppContext context, PageController host){
+        super(context, host);
+        var cf = context.getComponentFactory();
+        addBackButton(()-> new StartPlay(context, host));
         
         setLayout(new BorderLayout());
         
         add(cf.makeLabel("Waiting for players to join..."), BorderLayout.PAGE_START);
         
-        chat = new Chat(cf, null);
-        add(chat, BorderLayout.LINE_START);
+        chat = new ChatBox(context);
+        add(new ShowHideDecorator(cf, chat), BorderLayout.LINE_START);
         
-        playerBuild = new BuildSelect(cf);
+        playerBuild = new BuildSelect(context);
         add(playerBuild, BorderLayout.CENTER);
         
         teamList = cf.makeTextArea("Player Team:"); 
@@ -51,12 +54,12 @@ public class WaitingRoom extends Page{
         backend = null;
     }
     
-    public WaitingRoom(PageController host, ComponentFactory cf, WaitingRoomClientProtocol protocol){
-        this(host, cf);
+    public WaitingRoom(ClientAppContext context, PageController host, WaitingRoomClientProtocol protocol){
+        this(context, host);
         setBackEnd(protocol);
     }
     
-    public final Chat getChat(){
+    public final ChatBox getChat(){
         return chat;
     }
     
@@ -68,7 +71,7 @@ public class WaitingRoom extends Page{
         String newStr = "Player Team: \n";
         newStr = Arrays
             .stream(backend.getTeamProto())
-            .map((AbstractUser use) -> "* " + use.getName() + "\n")
+            .map((use) -> "* " + use.getName() + "\n")
             .reduce(newStr, String::concat);
         teamList.setText(newStr);
     }
@@ -84,6 +87,7 @@ public class WaitingRoom extends Page{
     public void setBackEnd(WaitingRoomClientProtocol protocol){
         backend = protocol;
     }
+
     public WaitingRoomClientProtocol getBackEnd(){
         return backend;
     }

@@ -12,9 +12,11 @@ import javax.swing.*;
  * @author Matt Crow
  */
 public class ComponentFactory {
+    private static Color PRIMARY_COLOR = new Color(155, 155, 0); // gold
     
     public JButton makeButton(String text, Runnable onClick){
         JButton button = new JButton(text);
+        button.setBackground(PRIMARY_COLOR);
         button.addActionListener((e)->onClick.run());
         button.addMouseListener(new MouseAdapter() {
             @Override
@@ -25,7 +27,7 @@ public class ComponentFactory {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                button.setBackground(new JButton().getBackground());
+                button.setBackground(PRIMARY_COLOR);
                 button.repaint();
             }
         });
@@ -59,6 +61,20 @@ public class ComponentFactory {
         
         p.setBackground(spaceColor);
         return p;
+    }
+
+    /**
+     * Adds a scroll pane around the given component, which will always show a
+     * verical scrollbar, but never a horizontal one.
+     * 
+     * @param component the component to decorate
+     * @return the decorated component
+     */
+    public JScrollPane makeVerticalScrollAround(JComponent component) {
+        var scrolly = new JScrollPane(component);
+        scrolly.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scrolly.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        return scrolly;
     }
     
     /**

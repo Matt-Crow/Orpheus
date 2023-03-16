@@ -1,12 +1,9 @@
 package net.protocols;
 
-import world.battle.Team;
-import world.build.Build;
-import world.build.BuildJsonUtil;
-import world.entities.HumanPlayer;
 import java.awt.Color;
 import java.io.IOException;
-import static java.lang.System.err;
+import java.util.HashSet;
+
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
@@ -15,12 +12,16 @@ import net.AbstractNetworkClient;
 import net.OrpheusServer;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
+import orpheus.core.net.messages.Message;
+import orpheus.core.users.User;
 import serialization.JsonUtil;
-import users.AbstractUser;
-import java.util.HashSet;
-import net.messages.ServerMessage;
-import serialization.WorldSerializer;
-import world.*;
+import world.World;
+import world.WorldBuilder;
+import world.WorldBuilderImpl;
+import world.battle.Team;
+import world.builds.BuildJsonUtil;
+import world.builds.DataSet;
+import world.entities.HumanPlayer;
 import world.game.Game;
 
 /**
@@ -34,12 +35,14 @@ import world.game.Game;
  * @author Matt Crow
  */
 public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {    
-    /*
-    measured in seconds
-     */
-    public static final int WAIT_TIME = 3;
     
     private final Game minigame;
+    
+    /**
+     * the data set this will use to assemble player builds
+     */
+    private final DataSet dataSet;
+
     private final Team playerTeam;
     private World world; // may be null at some points
     
@@ -47,17 +50,22 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
     The Users who have joined the waiting room, but have
     not yet sent their Builds to the server
     */
-    private final HashSet<AbstractUser> awaitingBuilds;
+    private final HashSet<User> awaitingBuilds;
     
     /**
      * Creates the protocol.
      * @param runningServer
      * @param game the game which players will play once this protocol is done.
      */
-    public WaitingRoomHostProtocol(OrpheusServer runningServer, Game game){
+    public WaitingRoomHostProtocol(
+        OrpheusServer runningServer, 
+        Game game,
+        DataSet dataSet
+    ){
         super(runningServer);
-        minigame = game;   
-        playerTeam = new Team("Players", Color.blue);
+        minigame = game;
+        this.dataSet = dataSet;
+        playerTeam = new Team("Players", Color.GREEN);
         awaitingBuilds = new HashSet<>();
     }
 
@@ -110,7 +118,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         addUserToTeam automatically notifies everone 
         connected that someone has joined
         */
-        AbstractUser joiningUser = sm.getSender();
+        User joiningUser = sm.getSender();
         addUserToTeam(joiningUser);
         
         /*
@@ -121,50 +129,40 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         JsonObjectBuilder initMsgBuild = Json.createObjectBuilder();
         initMsgBuild.add("type", "waiting room init");
         JsonArrayBuilder userListBuild = Json.createArrayBuilder();
-        for(AbstractUser u : getTeamProto()){
-            userListBuild.add(u.serializeJson());
+        for(User u : getTeamProto()){
+            userListBuild.add(u.toJson());
         }
         initMsgBuild.add("team", userListBuild.build());
         
-        ServerMessage initMsg = new ServerMessage(
+        Message initMsg = new Message(
             initMsgBuild.build().toString(),
             ServerMessageType.WAITING_ROOM_INIT
         );
         getServer().send(initMsg, sm.getSender());
     }
     
-    /**
-     * Puts the given user on the teamProto,
-     * and alerts all connected players
-     * @param u the User who wants to play
-     */
-    public final void addUserToTeam(AbstractUser u){
+    private void addUserToTeam(User u){
         if(addToTeamProto(u)){
             awaitingBuilds.add(u);
-            ServerMessage sm = new ServerMessage(
-                u.serializeJson().toString(),
+            Message sm = new Message(
+                u.toJson().toString(),
                 ServerMessageType.WAITING_ROOM_UPDATE
             );
             getServer().send(sm);
         }
     }
     
-    
     public final void prepareToStart(){
         playerTeam.clear();
         WorldBuilder worldBuilder = new WorldBuilderImpl();
         
         world = worldBuilder
-                .withGame(minigame)
-                .withPlayers(playerTeam)
-                .withAi(new Team("AI", Color.red))
-                .build(); 
-        
-        requestBuilds();
-    }
+            .withGame(minigame)
+            .withPlayers(playerTeam)
+            .withAi(new Team("AI", Color.red))
+            .build();
     
-    private void requestBuilds(){
-        getServer().send(new ServerMessage(
+        getServer().send(new Message(
             "please provide build information",
             ServerMessageType.REQUEST_PLAYER_DATA
         ));
@@ -180,26 +178,30 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
      * 
      * @param sm a server message containing the sender's Build, serialized as a JSON object string
      */
-    private void receiveBuildInfo(ServerMessagePacket sm){
-        HumanPlayer player = null;
-        AbstractUser sender = sm.getSender();
+    private synchronized void receiveBuildInfo(ServerMessagePacket sm){
+        // synchronized avoids duplicate player IDs
         
-        if(awaitingBuilds.contains(sender)){
-            player = new HumanPlayer(
-                world, // world should not be null by now,
-                sender.getName()
-            );
-            awaitingBuilds.remove(sender);
-        } else {
-            err.println("Ugh oh, " + sender.getName() + " isn't on any team!");
-            return;
-        }
+        User sender = sm.getSender();
 
-        Build b = BuildJsonUtil.deserializeJson(JsonUtil.fromString(sm.getMessage().getBody()));
-        player.applyBuild(b);
+        if (!awaitingBuilds.contains(sender)) {
+            throw new RuntimeException(String.format("received second build from %s, expected only once", sender.getName()));
+        }
+        
+        var player = new HumanPlayer(
+            world, // world should not be null by now,
+            sender.getName()
+        );
+        awaitingBuilds.remove(sender);
+
+        var json = JsonUtil.fromString(sm.getMessage().getBodyText());
+        var build = BuildJsonUtil.deserializeJson(json);
+        player.applyBuild(dataSet.assemble(build));
         playerTeam.addMember(player);
         
         sendRemoteId(sender, player.id);
+
+        System.out.printf("Received build info %s from %s.\nSending id %s\n", json, sender.getName(), player.id);
+
         checkIfReady();
     }
     
@@ -208,8 +210,8 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
      * @param ipAddr the user to send the IDs to.
      * @param playerId the ID of that user's Player on this computer
      */
-    private void sendRemoteId(AbstractUser user, String playerId){
-        ServerMessage sm = new ServerMessage(
+    private void sendRemoteId(User user, String playerId){
+        Message sm = new Message(
             playerId,
             ServerMessageType.NOTIFY_IDS
         );
@@ -237,23 +239,8 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         
         HostWorldProtocol protocol = new HostWorldProtocol(getServer(), world);
         getServer().setProtocol(protocol);
-        sendWorldInit(world);
+        getServer().send(new Message(ServerMessageType.WORLD, world.toGraph().toJson()));
         
         updater.start();
-    }
-    
-    /**
-     * Serializes the world, and sends it
-     * to each connected user, excluding the host
-     * @param w the world to send
-     */
-    private void sendWorldInit(World w){
-        WorldSerializer ws = new WorldSerializer(w);
-        String serial = ws.serializeToString();
-        ServerMessage sm = new ServerMessage(
-            serial,
-            ServerMessageType.WORLD_INIT
-        );
-        getServer().send(sm);
     }
 }

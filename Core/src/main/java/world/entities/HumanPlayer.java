@@ -1,18 +1,19 @@
 package world.entities;
 
 import util.Settings;
-import world.build.Build;
-import world.build.DataSet;
-import world.build.actives.AbstractActive;
-import world.build.characterClass.CharacterClass;
-import world.build.characterClass.CharacterStatName;
-import world.build.passives.AbstractPassive;
-import java.util.NoSuchElementException;
+import world.statuses.AbstractStatus;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import util.CardinalDirection;
 import util.Direction;
 import world.World;
+import world.builds.AssembledBuild;
+import world.builds.actives.AbstractActive;
+import world.builds.characterClass.CharacterClass;
+import world.builds.characterClass.CharacterStatName;
+import world.builds.passives.AbstractPassive;
 
 /**
  *
@@ -23,7 +24,6 @@ public class HumanPlayer extends AbstractPlayer {
     private CharacterClass c;
     private final AbstractActive[] actives;
     private final AbstractPassive[] passives;
-    private boolean followingMouse;
     private final HashMap<CardinalDirection, Boolean> movingInCardinalDir; // used for key controls 
 
     public static final int MIN_LIFE_SPAN = 10;
@@ -33,7 +33,6 @@ public class HumanPlayer extends AbstractPlayer {
         c = null;
         actives = new AbstractActive[3];
         passives = new AbstractPassive[3];
-        setClass("Default");
         movingInCardinalDir = new HashMap<>();
         clearMovement();
     }
@@ -42,25 +41,17 @@ public class HumanPlayer extends AbstractPlayer {
         for (CardinalDirection dir : CardinalDirection.values()) {
             movingInCardinalDir.put(dir, false);
         }
-        followingMouse = false;
     }
 
-    // Build stuff
-    public void applyBuild(Build b) {
-        setClass(b.getClassName());
-        setActives(b.getActiveNames());
-        setPassives(b.getPassiveNames());
+    public void applyBuild(AssembledBuild b) {
+        setClass(b.getCharacterClass().copy());
+        setActives(Arrays.stream(b.getActives()).map((act) -> act.copy()).toArray((s) -> new AbstractActive[s]));
+        setPassives(Arrays.stream(b.getPassives()).map((pas) -> pas.copy()).toArray((s) -> new AbstractPassive[s]));
         setMaxSpeed((int) (c.getSpeed() * (500.0 / Settings.FPS)));
     }
 
-    public void setClass(String name) {
-        DataSet ds = Settings.getDataSet();
-        try {
-            c = ds.getCharacterClassByName(name.toUpperCase());
-        } catch (NoSuchElementException ex) {
-            ex.printStackTrace();
-            c = ds.getDefaultCharacterClass();
-        }
+    public void setClass(CharacterClass characterClass) {
+        c = characterClass;
         setColor(c.getColors()[0]);
         c.setUser(this);
     }
@@ -69,16 +60,10 @@ public class HumanPlayer extends AbstractPlayer {
         return c;
     }
 
-    public void setActives(String[] names) {
-        DataSet ds = Settings.getDataSet();
-        for (int nameIndex = 0; nameIndex < 3; nameIndex++) {
-            try {
-                actives[nameIndex] = ds.getActiveByName(names[nameIndex]);
-            } catch (NoSuchElementException ex) {
-                ex.printStackTrace();
-                actives[nameIndex] = ds.getDefaultActive();
-            }
-            actives[nameIndex].setUser(this);
+    public void setActives(AbstractActive[] actives) {
+        for (int i = 0; i < 3; i++) {
+            this.actives[i] = actives[i];
+            this.actives[i].setUser(this);
         }
     }
 
@@ -86,16 +71,10 @@ public class HumanPlayer extends AbstractPlayer {
         return actives;
     }
 
-    public void setPassives(String[] names) {
-        DataSet ds = Settings.getDataSet();
-        for (int nameIndex = 0; nameIndex < 3; nameIndex++) {
-            try {
-                passives[nameIndex] = ds.getPassiveByName(names[nameIndex]);
-            } catch (NoSuchElementException ex) {
-                ex.printStackTrace();
-                passives[nameIndex] = ds.getDefaultPassive();
-            }
-            passives[nameIndex].setUser(this);
+    public void setPassives(AbstractPassive[] passives) {
+        for (int i = 0; i < 3; i++) {
+            this.passives[i] = passives[i];
+            this.passives[i].setUser(this);
         }
     }
 
@@ -103,14 +82,6 @@ public class HumanPlayer extends AbstractPlayer {
         if (actives[num].canUse()) {
             actives[num].trigger();
         }
-    }
-
-    public final void setFollowingMouse(boolean b) {
-        followingMouse = b;
-    }
-
-    public final boolean getFollowingMouse() {
-        return followingMouse;
     }
 
     public final void setMovingInDir(CardinalDirection dir, boolean isMoving) {
@@ -176,5 +147,20 @@ public class HumanPlayer extends AbstractPlayer {
                 break;
         }
         return ret;
+    }
+
+    @Override
+    public orpheus.core.world.graph.Player toGraph() {
+        return new orpheus.core.world.graph.Player(
+            id,
+            getX(), 
+            getY(), 
+            getRadius(),
+            getLog().getHP(),
+            getStatuses().values().stream().map(AbstractStatus::toString).toList(),
+            getTeam().getColor(),
+            getColor(),
+            Arrays.stream(actives).map(AbstractActive::toGraph).toList()
+        );
     }
 }

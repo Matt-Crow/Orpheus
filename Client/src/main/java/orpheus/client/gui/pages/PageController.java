@@ -4,7 +4,8 @@ import java.awt.BorderLayout;
 import javax.swing.*;
 import java.awt.Toolkit;
 import javax.swing.JPanel;
-import orpheus.client.gui.components.ComponentFactory;
+
+import orpheus.client.ClientAppContext;
 import orpheus.client.gui.pages.start.StartPage;
 
 /**
@@ -15,9 +16,8 @@ import orpheus.client.gui.pages.start.StartPage;
 public class PageController extends JFrame {
     private final JPanel content;
     private Page currentPage;
-
     
-    public PageController(ComponentFactory components) {        
+    public PageController(ClientAppContext context) {        
         setTitle("The Orpheus Proposition");
 
         content = new JPanel();
@@ -33,7 +33,7 @@ public class PageController extends JFrame {
 
         currentPage = null;
 
-        switchToPage(new StartPage(this, components));
+        switchToPage(new StartPage(context, this));
     }
 
     public PageController switchToPage(Page p) {

@@ -1,12 +1,10 @@
 package world.events;
 
-import java.io.Serializable;
-
 /**
  * Denotes that a class listens for events in the application
  */
 @FunctionalInterface
-public interface EventListener<T extends Event> extends Serializable {
+public interface EventListener<T extends Event> {
     
     /**
      * called whenever a subject this is registered with emits an event

@@ -2,7 +2,7 @@ package world.entities;
 
 import controls.ai.PlayerAI;
 import world.World;
-import world.build.characterClass.CharacterStatName;
+import world.builds.characterClass.CharacterStatName;
 
 /**
  *

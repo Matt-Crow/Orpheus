@@ -3,10 +3,10 @@ package orpheus.client.gui.pages;
 
 import java.awt.Component;
 import java.util.function.Supplier;
-import javax.swing.JButton;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
-import orpheus.client.gui.components.ComponentFactory;
+
+import orpheus.client.ClientAppContext;
 
 /**
  * Each Page is used as a complete view of the GUI.
@@ -21,14 +21,25 @@ import orpheus.client.gui.components.ComponentFactory;
  * @author Matt Crow
  */
 public class Page extends JPanel{
+    /**
+     * the context of the application this is being run in
+     */
+    private final ClientAppContext context;
+
     private final PageController host;
-    private final ComponentFactory components;
     private final JMenuBar menuBar;
     
-    public Page(PageController host, ComponentFactory components){
+    public Page(ClientAppContext context, PageController host){
+        this.context = context;
         this.host = host;
-        this.components = components;
         menuBar = new JMenuBar();
+    }
+
+    /**
+     * @return the application context this is running in
+     */
+    public ClientAppContext getContext() {
+        return context;
     }
     
     /**
@@ -40,13 +51,6 @@ public class Page extends JPanel{
      */
     public PageController getHost(){
         return host;
-    }
-    
-    /**
-     * @return the component factory providing components to this
-     */
-    public ComponentFactory getComponentFactory(){
-        return components;
     }
     
     /**
@@ -65,7 +69,7 @@ public class Page extends JPanel{
      * @return this
      */
     public Page addBackButton(String text, Supplier<Page> p){
-        JButton b = components.makeButton(text, ()->{
+        var b = context.getComponentFactory().makeButton(text, ()->{
             if(p != null){
                 /*
                 supplier is more memory efficient than passing a Page, as now

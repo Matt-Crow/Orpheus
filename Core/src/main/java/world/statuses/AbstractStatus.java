@@ -2,7 +2,6 @@ package world.statuses;
 
 import world.events.termination.*;
 import world.entities.AbstractPlayer;
-import java.io.Serializable;
 import util.Number;
 import java.util.function.UnaryOperator;
 
@@ -15,7 +14,7 @@ import java.util.function.UnaryOperator;
  * @see ActionRegister
  * @see AbstractPlayer#inflict(statuses.AbstractStatus) 
  */
-public abstract class AbstractStatus implements Serializable, Terminable {
+public abstract class AbstractStatus implements Terminable {
 	private final StatusName code; //the Enum of this status' name
 	private final String name;
 	
@@ -26,7 +25,7 @@ public abstract class AbstractStatus implements Serializable, Terminable {
     
     private boolean hasTerminated;
     private final TerminationListeners terminationListeners = new TerminationListeners();    
-	
+    
     /**
      * 
      * @param enumName the enum corresponding to this status. Used for serialization.
@@ -152,4 +151,14 @@ public abstract class AbstractStatus implements Serializable, Terminable {
     public abstract String getDesc();
     
     public abstract AbstractStatus copy();
+
+    @Override
+    public String toString() {
+        var is = "";
+        for (var i = 0; i < level; i++) {
+            is += 'I';
+        }
+
+        return String.format("%s %s (%d)", name, is, usesLeft);
+    }
 }

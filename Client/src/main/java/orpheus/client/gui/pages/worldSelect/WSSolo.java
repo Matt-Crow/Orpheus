@@ -1,17 +1,19 @@
 package orpheus.client.gui.pages.worldselect;
 
 import orpheus.client.gui.pages.PlayerControls;
-import net.protocols.SoloWorldUpdater;
 import world.battle.Team;
 import world.entities.HumanPlayer;
 import java.awt.Color;
-import orpheus.client.gui.components.ComponentFactory;
-import users.LocalUser;
+
+import orpheus.client.ClientAppContext;
+import orpheus.client.gui.pages.play.HeadsUpDisplay;
+import orpheus.client.gui.pages.play.LocalWorldSupplier;
+import orpheus.client.gui.pages.play.SoloWorldUpdater;
 import orpheus.client.gui.pages.play.WorldCanvas;
 import orpheus.client.gui.pages.play.WorldPage;
-import start.AbstractOrpheusCommandInterpreter;
+import orpheus.core.commands.executor.LocalExecutor;
+import orpheus.core.world.graph.particles.Particles;
 import orpheus.client.gui.pages.PageController;
-import start.SoloOrpheusCommandInterpreter;
 import world.*;
 
 /**
@@ -19,15 +21,12 @@ import world.*;
  * @author Matt Crow
  */
 public class WSSolo extends AbstractWSNewWorld{
-    public WSSolo(PageController host, ComponentFactory cf){
-        super(host, cf);
+    public WSSolo(ClientAppContext context, PageController host){
+        super(context, host);
     }
     
     @Override
     public void start(){
-        LocalUser user = LocalUser.getInstance();
-        AbstractOrpheusCommandInterpreter orpheus = new SoloOrpheusCommandInterpreter(user);
-        
         Team team1 = new Team("Players", Color.green);
         Team team2 = new Team("AI", Color.red);
         
@@ -37,26 +36,28 @@ public class WSSolo extends AbstractWSNewWorld{
                 .withAi(team2)
                 .build();
         
-        SoloWorldUpdater updater = new SoloWorldUpdater(world);
+        var graph = new LocalWorldSupplier(world);
+        var particles = new Particles();
+        SoloWorldUpdater updater = new SoloWorldUpdater(graph, particles, world);
         
-        HumanPlayer player = new HumanPlayer(
-            world,
-            user.getName()
-        );
         
+        HumanPlayer player = new HumanPlayer(world, "local user");
         player.applyBuild(getSelectedBuild());
         team1.addMember(player);
         
         // model must have teams set before WorldCanvas init, as WC relies on getting the player team
         WorldCanvas renderer = new WorldCanvas(
-            world, 
-            new PlayerControls(world, player.id, orpheus),
-            true
+            graph,
+            particles,
+            new PlayerControls(player.id, new LocalExecutor(world))
         );
         
         world.init();
+
+        var hud = new HeadsUpDisplay(graph, player.id);
+        updater.addEndOfFrameListener(hud);
         
-        WorldPage wp = new WorldPage(getHost(), getComponentFactory());
+        WorldPage wp = new WorldPage(getContext(), getHost(), hud);
         wp.setCanvas(renderer);
         getHost().switchToPage(wp);
         renderer.start();

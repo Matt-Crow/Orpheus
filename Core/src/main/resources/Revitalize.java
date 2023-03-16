@@ -3,7 +3,7 @@
 import world.statuses.Regeneration;
 
 
-public class Revitalize extends world.build.passives.ThresholdPassive{
+public class Revitalize extends world.builds.passives.ThresholdPassive{
 	private boolean activated;
 	public Revitalize(){
 		super("Revitalize", 25);

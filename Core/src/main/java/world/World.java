@@ -1,26 +1,17 @@
 package world;
 
-import java.awt.Graphics;
+import orpheus.core.world.graph.Graphable;
 import world.battle.Team;
 import world.entities.AbstractEntity;
-import world.entities.particles.Particle;
 import world.game.Game;
 
 
 /**
- * enables the proxy design pattern for providing a stable reference to the
- * volatile world content
+ * A world is where games occur.
  * 
  * @author Matt Crow <mattcrow19@gmail.com>
  */
-public interface World {
-    
-    /**
-     * @return the serializable content of this world
-     */
-    public WorldContent getSerializableContent();
-    
-    public void setSerializableContent(WorldContent wc);
+public interface World extends Graphable {
     
     public Map getMap();
     
@@ -37,18 +28,9 @@ public interface World {
      */
     public void spawn(AbstractEntity e);
     
-    /**
-     * inserts the given particle into this world
-     * 
-     * @param p the particle to insert into this world 
-     */
-    public void spawn(Particle p);
-    
     public void init();
     
     public void update();
-    
-    public void updateParticles();
-    
-    public void draw(Graphics g);
+
+    public orpheus.core.world.graph.World toGraph();
 }
