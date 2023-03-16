@@ -10,6 +10,7 @@ import net.messages.MessageListener;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import net.protocols.ServerChatProtocol;
+import orpheus.core.net.SocketAddress;
 import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
 import serialization.JsonUtil;
@@ -71,7 +72,7 @@ public class OrpheusServer extends AbstractNetworkClient {
      */
     @Override
     protected final void doStart() throws IOException{
-        log(String.format("Server initialized on %s", getConnectionString()));
+        log(String.format("Server initialized on %s", getSocketAddress()));
         clients.closeAll();
         clearProtocols();
         
@@ -87,19 +88,19 @@ public class OrpheusServer extends AbstractNetworkClient {
         
         server.close();
     }
-    
+
     /**
-     * @return the address of the server in the form IP:PORT 
+     * @return the socket address this server is listening for connections on
      */
-    public final String getConnectionString(){
-        return String.format("%s:%d", server.getInetAddress().getHostAddress(), getPort());
+    public SocketAddress getSocketAddress() {
+        return new SocketAddress(getIpAddress(), getPort());
     }
     
-    public final String getIpAddress(){
+    private String getIpAddress(){
         return server.getInetAddress().getHostAddress();
     }
     
-    public final int getPort(){
+    private int getPort(){
         return server.getLocalPort();
     }
     

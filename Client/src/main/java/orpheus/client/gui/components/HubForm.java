@@ -2,7 +2,6 @@ package orpheus.client.gui.components;
 
 import java.awt.BorderLayout;
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.text.NumberFormat;
 
 import javax.swing.BoxLayout;
@@ -16,7 +15,6 @@ import orpheus.client.gui.pages.PageController;
 import orpheus.client.gui.pages.worldselect.WaitingRoom;
 import orpheus.client.protocols.ClientChatProtocol;
 import orpheus.client.protocols.WaitingRoomClientProtocol;
-import orpheus.core.net.OrpheusClient;
 import orpheus.core.net.SocketAddress;
 
 /**
@@ -109,23 +107,19 @@ public class HubForm extends JComponent {
 
     private void doOldConnection(SocketAddress address) throws IOException {
         context.showLoginWindow(); // ask annonymous users to log in
-        var client = new net.OrpheusClient(context.getLoggedInUser(), address.getAddress(), address.getPort());
+        var user = context.getLoggedInUser();
+
+        var client = new net.OrpheusClient(user, address);
         var waitingRoomPage = new WaitingRoom(context, host);
         var protocol = new WaitingRoomClientProtocol(client, waitingRoomPage);
         waitingRoomPage.setBackEnd(protocol);
         client.setProtocol(protocol);
         client.setChatProtocol(new ClientChatProtocol(
-            context.getLoggedInUser(),
+            user,
             client, 
             waitingRoomPage.getChat()
         ));
         client.start();
         host.switchToPage(waitingRoomPage);
-    }
-
-    private void doNewConnection(SocketAddress address) throws UnknownHostException, IOException {
-        var client = OrpheusClient.create(address);
-        // todo set protocol?
-        context.setClient(client);
     }
 }

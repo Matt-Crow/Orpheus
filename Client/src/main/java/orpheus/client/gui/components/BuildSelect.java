@@ -20,7 +20,6 @@ public class BuildSelect extends JPanel{
     public BuildSelect(ClientAppContext ctx) {
         super();
         this.ctx = ctx;
-        Style.applyStyling(this);
         setLayout(new BorderLayout());
         
         var cf = ctx.getComponentFactory();
@@ -37,7 +36,6 @@ public class BuildSelect extends JPanel{
         add(scrolly, BorderLayout.CENTER);
         
         box = new JComboBox<>();
-        Style.applyStyling(box);
         add(box, BorderLayout.PAGE_END);
         
         box.addActionListener((ActionEvent e) -> {

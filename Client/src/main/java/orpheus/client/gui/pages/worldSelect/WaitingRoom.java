@@ -2,6 +2,7 @@ package orpheus.client.gui.pages.worldselect;
 
 import orpheus.client.gui.components.BuildSelect;
 import orpheus.client.gui.components.ChatBox;
+import orpheus.client.gui.components.ShowHideDecorator;
 
 import java.awt.BorderLayout;
 import java.util.Arrays;
@@ -10,6 +11,7 @@ import javax.swing.JTextArea;
 import orpheus.client.ClientAppContext;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.PageController;
+import orpheus.client.gui.pages.start.StartPlay;
 import orpheus.client.protocols.WaitingRoomClientProtocol;
 import world.builds.Build;
 
@@ -29,14 +31,14 @@ public class WaitingRoom extends Page {
     public WaitingRoom(ClientAppContext context, PageController host){
         super(context, host);
         var cf = context.getComponentFactory();
-        addBackButton(()-> new WSMain(context, host));
+        addBackButton(()-> new StartPlay(context, host));
         
         setLayout(new BorderLayout());
         
         add(cf.makeLabel("Waiting for players to join..."), BorderLayout.PAGE_START);
         
         chat = new ChatBox(context);
-        add(chat, BorderLayout.LINE_START);
+        add(new ShowHideDecorator(cf, chat), BorderLayout.LINE_START);
         
         playerBuild = new BuildSelect(context);
         add(playerBuild, BorderLayout.CENTER);

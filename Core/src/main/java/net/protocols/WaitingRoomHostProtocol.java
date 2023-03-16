@@ -65,7 +65,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         super(runningServer);
         minigame = game;
         this.dataSet = dataSet;
-        playerTeam = new Team("Players", Color.blue);
+        playerTeam = new Team("Players", Color.GREEN);
         awaitingBuilds = new HashSet<>();
     }
 

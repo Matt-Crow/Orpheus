@@ -2,8 +2,6 @@ package orpheus.client.gui.pages.worldselect;
 
 import java.io.IOException;
 
-import net.OrpheusClient;
-import net.OrpheusServer;
 import net.ServerProvider;
 import net.protocols.WaitingRoomHostProtocol;
 import orpheus.client.ClientAppContext;
@@ -22,42 +20,34 @@ public class WSNewMulti extends AbstractWSNewWorld{
     
     @Override
     public void start(){
-        getContext().showLoginWindow(); // ask annonymous users to log in
+        var context = getContext();
+        context.showLoginWindow(); // ask annonymous users to log in
+
+        var sp = new ServerProvider();
+
         try{
-            OrpheusServer server = new ServerProvider().createHost();
-            WaitingRoomHostProtocol hostProtocol = new WaitingRoomHostProtocol(
+            var server = sp.createHost();
+            server.setProtocol(new WaitingRoomHostProtocol(
                 server,
                 createGame(),
-                getContext().getDataSet()
-            );
-            server.setProtocol(hostProtocol);   
-            server.start();
+                context.getDataSet()
+            ));
             
-            OrpheusClient client = new OrpheusClient(
-                getContext().getLoggedInUser(),
-                server.getIpAddress(),
-                server.getPort()
-            );
-            WaitingRoom room = new WaitingRoom(getContext(), getHost());
-            WaitingRoomClientProtocol clientProtocol = new WaitingRoomClientProtocol(client, room);
-            client.setProtocol(clientProtocol);
-            client.start();
-
-            getContext().setClient(client);
-            
+            var user = context.getLoggedInUser();
+            var client = sp.createClient(user, server.getSocketAddress());
+            var room = new WaitingRoom(context, getHost());
+            var clientProtocol = new WaitingRoomClientProtocol(client, room);
             room.setBackEnd(clientProtocol);
+            client.setProtocol(clientProtocol);
+            context.setClient(client);
 
             // set up chat protocol
-            var chatProtocol = new ClientChatProtocol(
-                getContext().getLoggedInUser(),
-                client, 
-                room.getChat()
-            );
-            client.setChatProtocol(chatProtocol);
+            var chat = room.getChat();
+            client.setChatProtocol(new ClientChatProtocol(user, client, chat));
 
-            room.getChat().output(String.format(
+            chat.output(String.format(
                 "Server started on %s", 
-                server.getConnectionString()
+                server.getSocketAddress().toString()
             ));
             getHost().switchToPage(room);
         } catch (IOException ex) {

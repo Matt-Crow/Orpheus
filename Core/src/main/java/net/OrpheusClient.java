@@ -6,6 +6,7 @@ import net.connections.Connection;
 import net.messages.MessageListener;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
+import orpheus.core.net.SocketAddress;
 import orpheus.core.net.messages.Message;
 import orpheus.core.users.LocalUser;
 
@@ -19,12 +20,12 @@ public class OrpheusClient extends AbstractNetworkClient {
     private final int hostPort;
     
     private Connection toServer;
-    
-    public OrpheusClient(LocalUser user, String hostIp, int hostPort){
+
+    public OrpheusClient(LocalUser user, SocketAddress connectTo) {
         super();
         this.user = user;
-        this.hostIp = hostIp;
-        this.hostPort = hostPort;
+        this.hostIp = connectTo.getAddress();
+        this.hostPort = connectTo.getPort();
     }
     
     @Override

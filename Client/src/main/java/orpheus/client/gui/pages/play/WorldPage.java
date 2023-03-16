@@ -13,10 +13,11 @@ import javax.swing.SwingUtilities;
 
 import orpheus.client.ClientAppContext;
 import orpheus.client.gui.components.ChatBox;
+import orpheus.client.gui.components.ShowHideDecorator;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.PageController;
 import orpheus.client.gui.pages.PlayerControls;
-import orpheus.client.gui.pages.worldselect.WSMain;
+import orpheus.client.gui.pages.start.StartPlay;
 
 /**
  * use the PageController to render the WorldPage,
@@ -40,7 +41,7 @@ public class WorldPage extends Page {
 
         var cf = context.getComponentFactory();
         
-        addBackButton(()-> new WSMain(context, host));        
+        addBackButton(()-> new StartPlay(context, host));        
         setLayout(new BorderLayout());
         
         canvasArea = new JPanel();
@@ -51,7 +52,6 @@ public class WorldPage extends Page {
         canvasArea.add(hud, BorderLayout.PAGE_END);
         
         //other area
-        //make this collapsable
         JPanel otherArea = new JPanel();
         otherArea.setLayout(new GridBagLayout());
         GridBagConstraints c2 = new GridBagConstraints();
@@ -71,7 +71,10 @@ public class WorldPage extends Page {
         c2.fill = GridBagConstraints.BOTH;
         otherArea.add(scrolly, c2.clone());
         
-        add(otherArea, BorderLayout.PAGE_END);
+        add(
+            new ShowHideDecorator(context.getComponentFactory(), otherArea), 
+            BorderLayout.PAGE_END
+        );
     }
     
     @Override

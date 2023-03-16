@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.BorderLayout;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -20,11 +19,6 @@ import orpheus.core.net.chat.ChatMessageSentListener;
  * output from the program.
  */
 public class ChatBox extends JComponent {
-    
-    /**
-     * allows players to show / hide the chat
-     */
-    private final JButton toggleButton;
 
     /**
      * can be toggled visible / invisible
@@ -55,13 +49,6 @@ public class ChatBox extends JComponent {
         super();
         setLayout(new BorderLayout());
         var cf = context.getComponentFactory();
-        
-        var top = cf.makePanel();
-        top.setLayout(new BorderLayout());
-        toggleButton = cf.makeButton("X", this::toggle);
-        top.add(toggleButton, BorderLayout.LINE_END);
-        top.add(cf.makeLabel("Chat"), BorderLayout.CENTER);
-        add(top, BorderLayout.PAGE_START);
 
         body = cf.makePanel();
         body.setLayout(new BorderLayout());
@@ -86,13 +73,6 @@ public class ChatBox extends JComponent {
      */
     public void addMessageSentListener(ChatMessageSentListener listener) {
         messageSentListeners.add(listener);
-    }
-
-    private void toggle() {
-        var visible = body.isVisible();
-        toggleButton.setText("O");
-        toggleButton.setToolTipText("open chat");
-        body.setVisible(false);
     }
 
     private void sendInput() {

@@ -14,6 +14,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.PageController;
+import orpheus.client.gui.pages.start.StartPlay;
 import world.builds.AssembledBuild;
 import world.game.Game;
 import world.game.Onslaught;
@@ -29,7 +30,7 @@ public abstract class AbstractWSNewWorld extends Page{
     public AbstractWSNewWorld(ClientAppContext context, PageController host){
         super(context, host);
         var cf = context.getComponentFactory();
-        addBackButton(()-> new WSMain(context, host));
+        addBackButton(()-> new StartPlay(context, host));
         
         setLayout(new BorderLayout());
         
