@@ -31,8 +31,6 @@ public class Team implements Graphable {
     private final String name;
     private final Color color;
     private Team enemyTeam;
-    private final String id;
-    private static int nextId = 0;
 
     private final HashMap<UUID, AbstractPlayer> roster;
     private final ArrayList<AbstractPlayer> membersRem;
@@ -46,14 +44,8 @@ public class Team implements Graphable {
         super();
         name = n;
         color = c;
-        id = "#" + nextId;
-        nextId++;
         roster = new HashMap<>();
         membersRem = new ArrayList<>();
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getName() {
@@ -221,16 +213,6 @@ public class Team implements Graphable {
      */
     public void notifyTerminate(AbstractPlayer p) {
         membersRem.remove(p);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return obj != null && obj instanceof Team && ((Team) obj).getId().equals(id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
     }
 
     @Override

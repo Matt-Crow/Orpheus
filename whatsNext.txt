@@ -1,6 +1,5 @@
 * Move to 3-D graphics?
 * Plugin customization system (players create their own Java classes)
-* Change team IDs to UUID or remove
 * General cleanup and reorganization
 * use Socket to identify users, not IP address
 * finish fixing multiplayer
