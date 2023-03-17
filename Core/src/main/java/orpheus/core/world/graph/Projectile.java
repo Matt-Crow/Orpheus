@@ -18,7 +18,7 @@ import world.entities.ParticleType;
 /**
  * serializes and renders a projectile
  */
-public class Projectile extends Entity {
+public class Projectile extends WorldOccupant {
     /**
      * The number of particles generated each frame by projectiles with a burst
      * particle type.

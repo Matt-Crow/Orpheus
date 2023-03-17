@@ -13,7 +13,7 @@ import orpheus.core.world.graph.utils.JsonArrayHelper;
 /**
  * renders and serializes a Player
  */
-public class Player extends Entity {
+public class Player extends WorldOccupant {
     private final UUID id;
     private final int hp;
     private final List<String> statuses;

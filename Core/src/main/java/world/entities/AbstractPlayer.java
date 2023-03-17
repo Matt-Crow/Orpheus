@@ -63,7 +63,7 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
     public AbstractPlayer(World inWorld, String n, int minLifeSpan) {
         super(inWorld);
         id = UUID.randomUUID();
-        setMaxSpeed(Tile.TILE_SIZE * 5 / Settings.FPS);
+        setBaseSpeed(Tile.TILE_SIZE * 5 / Settings.FPS);
         name = n;
         color = Color.black;
 
@@ -130,8 +130,8 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
 
     public boolean withinFocus() {
         // returns if has reached focal point
-        boolean withinX = Math.abs(getX() - focusX) < getMaxSpeed();
-        boolean withinY = Math.abs(getY() - focusY) < getMaxSpeed();
+        boolean withinX = Math.abs(getX() - focusX) < getBaseSpeed();
+        boolean withinY = Math.abs(getY() - focusY) < getBaseSpeed();
         return withinX && withinY;
     }
 
@@ -229,10 +229,10 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
         if (hasFocus) {
             if (withinFocus()) {
                 hasFocus = false;
-                setIsMoving(false);
+                setMoving(false);
             } else {
                 turnToFocus();
-                setIsMoving(true);
+                setMoving(true);
             }
         }
         if (knockbackDir != null) {

@@ -47,7 +47,7 @@ public class HumanPlayer extends AbstractPlayer {
         setClass(b.getCharacterClass().copy());
         setActives(Arrays.stream(b.getActives()).map((act) -> act.copy()).toArray((s) -> new AbstractActive[s]));
         setPassives(Arrays.stream(b.getPassives()).map((pas) -> pas.copy()).toArray((s) -> new AbstractPassive[s]));
-        setMaxSpeed((int) (c.getSpeed() * (500.0 / Settings.FPS)));
+        setBaseSpeed((int) (c.getSpeed() * (500.0 / Settings.FPS)));
     }
 
     public void setClass(CharacterClass characterClass) {
@@ -122,9 +122,9 @@ public class HumanPlayer extends AbstractPlayer {
             if (dx != 0 || dy != 0) {
                 Direction newFacing = Direction.getDegreeByLengths(0, 0, dx, dy);
                 setFacing(newFacing.getDegrees());
-                setIsMoving(true);
+                setMoving(true);
             } else {
-                setIsMoving(false);
+                setMoving(false);
             }
         }
     }

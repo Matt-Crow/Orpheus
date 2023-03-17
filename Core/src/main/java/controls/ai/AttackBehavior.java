@@ -28,7 +28,7 @@ public class AttackBehavior extends AbstractBehavior<AbstractPlayer> {
         } else {
             target.setFocus(attackThisGuy);
             target.useMeleeAttack();
-            target.setIsMoving(false);
+            target.setMoving(false);
         }
         
         return newBehavior;

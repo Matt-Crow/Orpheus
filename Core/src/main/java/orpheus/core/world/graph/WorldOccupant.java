@@ -8,13 +8,13 @@ import javax.json.JsonObject;
 /**
  * a simple collection of properties used by other graphs
  */
-public class Entity implements GraphElement {
+public class WorldOccupant implements GraphElement {
     
     private final int x;
     private final int y;
     private final int radius;
 
-    public Entity(int x, int y, int radius) {
+    public WorldOccupant(int x, int y, int radius) {
         this.x = x;
         this.y = y;
         this.radius = radius;

@@ -10,7 +10,7 @@ import world.builds.actives.ElementalActive;
 public class Projectile extends WorldOccupant {
 
     private final ElementalActive registeredAttack;
-    private int distanceTraveled;
+    private double distanceTraveled;
     private int range;
 
     /**
@@ -24,7 +24,7 @@ public class Projectile extends WorldOccupant {
         ElementalActive a, boolean canExplode) {
         
         super(a.getUser().getWorld());
-        setMaxSpeed(momentum);
+        setBaseSpeed(momentum);
         init();
         setX(x);
         setY(y);
@@ -35,7 +35,7 @@ public class Projectile extends WorldOccupant {
         registeredAttack = a;
         range = a.getRange();
         setRadius(25);
-        setIsMoving(true);
+        setMoving(true);
         this.canExplode = canExplode;
     }
 
@@ -119,7 +119,7 @@ public class Projectile extends WorldOccupant {
     @Override
     public void update() {
         super.update();
-        distanceTraveled += getMomentum();
+        distanceTraveled += getComputedSpeed();
 
         if (distanceTraveled >= range && !isTerminating()) {
             terminate();
