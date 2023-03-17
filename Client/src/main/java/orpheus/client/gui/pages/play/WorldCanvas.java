@@ -4,6 +4,8 @@ import util.Settings;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.*;
+import java.util.UUID;
+
 import javax.swing.*;
 import orpheus.client.gui.pages.PlayerControls;
 import orpheus.core.world.graph.particles.Particles;
@@ -33,7 +35,10 @@ public class WorldCanvas extends Canvas {
      */
     private final Timer repaintTimer;
 
-    private final String focusedEntityId;
+    /**
+     * The ID of the player to center the camera on
+     */
+    private final UUID focusedEntityId;
 
     private boolean paused;
 

@@ -9,6 +9,8 @@ import orpheus.core.commands.UseCantrip;
 import orpheus.core.commands.executor.Executor;
 
 import java.awt.event.KeyEvent;
+import java.util.UUID;
+
 import util.CardinalDirection;
 
 /**
@@ -21,10 +23,10 @@ import util.CardinalDirection;
  */
 public class PlayerControls {
 
-    private final String playerId;
+    private final UUID playerId;
     private final Executor commandExecutor;
     
-    public PlayerControls(String playerId, Executor commandExecutor) {
+    public PlayerControls(UUID playerId, Executor commandExecutor) {
         this.playerId = playerId;
         this.commandExecutor = commandExecutor;
     }
@@ -69,7 +71,7 @@ public class PlayerControls {
         });
     }
 
-    public String getPlayerId() {
+    public UUID getPlayerId() {
         return playerId;
     }
     

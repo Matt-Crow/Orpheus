@@ -20,7 +20,7 @@ public class AttackBehavior extends AbstractBehavior<AbstractPlayer> {
         AbstractPlayer target = getTarget();
         AbstractBehavior<AbstractPlayer> newBehavior = this;
         
-        if(attackThisGuy.getShouldTerminate()){
+        if(attackThisGuy.isTerminating()){
             newBehavior = new WanderBehavior(target);
         } else if(Coordinates.distanceBetween(target, attackThisGuy) >= 100){
             // out of range

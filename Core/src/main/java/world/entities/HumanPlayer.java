@@ -152,7 +152,7 @@ public class HumanPlayer extends AbstractPlayer {
     @Override
     public orpheus.core.world.graph.Player toGraph() {
         return new orpheus.core.world.graph.Player(
-            id,
+            getId(),
             getX(), 
             getY(), 
             getRadius(),

@@ -3,6 +3,7 @@ package net.protocols;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.UUID;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -198,9 +199,10 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         player.applyBuild(dataSet.assemble(build));
         playerTeam.addMember(player);
         
-        sendRemoteId(sender, player.id);
+        sendRemoteId(sender, player.getId());
 
-        System.out.printf("Received build info %s from %s.\nSending id %s\n", json, sender.getName(), player.id);
+        System.out.printf("Received build info %s from %s.\nSending id %s\n", 
+            json, sender.getName(), player.getId());
 
         checkIfReady();
     }
@@ -210,9 +212,9 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
      * @param ipAddr the user to send the IDs to.
      * @param playerId the ID of that user's Player on this computer
      */
-    private void sendRemoteId(User user, String playerId){
+    private void sendRemoteId(User user, UUID playerId){
         Message sm = new Message(
-            playerId,
+            playerId.toString(),
             ServerMessageType.NOTIFY_IDS
         );
         getServer().send(sm, user);

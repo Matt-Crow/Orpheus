@@ -14,6 +14,7 @@ import orpheus.core.world.graph.Graphable;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.UUID;
 
 import world.World;
 
@@ -32,7 +33,7 @@ public class Team implements Graphable {
     private final String id;
     private static int nextId = 0;
 
-    private final HashMap<String, AbstractPlayer> roster;
+    private final HashMap<UUID, AbstractPlayer> roster;
     private final ArrayList<AbstractPlayer> membersRem;
 
     /**
@@ -69,7 +70,7 @@ public class Team implements Graphable {
      * @param m
      */
     public void addMember(AbstractPlayer m) {
-        roster.put(m.id, m);
+        roster.put(m.getId(), m);
         m.setTeam(this);
     }
 
@@ -82,7 +83,7 @@ public class Team implements Graphable {
      * @return the player on this team with the given id, or null if one doesn't
      * exist
      */
-    public AbstractPlayer getMemberById(String id) {
+    public AbstractPlayer getMemberById(UUID id) {
         return roster.get(id);
     }
 
@@ -165,7 +166,7 @@ public class Team implements Graphable {
         AbstractPlayer ret = membersRem.get(0);
         int distance = (int) Coordinates.distanceBetween(ret.getX(), ret.getY(), x, y);
         for (AbstractPlayer p : membersRem) {
-            if (p.getShouldTerminate()) {
+            if (p.isTerminating()) {
                 continue;
             }
             int check = (int) Coordinates.distanceBetween(p.getX(), p.getY(), x, y);

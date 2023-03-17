@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -23,7 +24,7 @@ public class Team implements GraphElement {
         this.projectiles = projectiles;
     }
 
-    public Optional<Player> getMemberById(String id) {
+    public Optional<Player> getMemberById(UUID id) {
         return members.stream().filter((p) -> p.getId().equals(id)).findFirst();
     }
 

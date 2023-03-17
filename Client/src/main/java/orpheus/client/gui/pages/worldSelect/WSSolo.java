@@ -49,12 +49,12 @@ public class WSSolo extends AbstractWSNewWorld{
         WorldCanvas renderer = new WorldCanvas(
             graph,
             particles,
-            new PlayerControls(player.id, new LocalExecutor(world))
+            new PlayerControls(player.getId(), new LocalExecutor(world))
         );
         
         world.init();
 
-        var hud = new HeadsUpDisplay(graph, player.id);
+        var hud = new HeadsUpDisplay(graph, player.getId());
         updater.addEndOfFrameListener(hud);
         
         WorldPage wp = new WorldPage(getContext(), getHost(), hud);

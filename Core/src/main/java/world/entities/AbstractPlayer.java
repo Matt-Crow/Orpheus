@@ -15,6 +15,7 @@ import world.events.termination.Terminable;
 import world.events.termination.TerminationListener;
 import world.Tile;
 import java.util.HashMap;
+import java.util.UUID;
 
 import util.Direction;
 import world.World;
@@ -26,6 +27,11 @@ import world.World;
  * @author Matt Crow
  */                                                         // needs to listen for status termination
 public abstract class AbstractPlayer extends AbstractEntity implements TerminationListener {
+
+    /**
+     * A unique identifier for this player
+     */
+    private final UUID id;
 
     private final String name;
     private Color color;
@@ -55,6 +61,7 @@ public abstract class AbstractPlayer extends AbstractEntity implements Terminati
 
     public AbstractPlayer(World inWorld, String n, int minLifeSpan) {
         super(inWorld);
+        id = UUID.randomUUID();
         setMaxSpeed(Tile.TILE_SIZE * 5 / Settings.FPS);
         name = n;
         color = Color.black;
@@ -76,6 +83,13 @@ public abstract class AbstractPlayer extends AbstractEntity implements Terminati
         lastHitById = -1;
 
         setRadius(RADIUS);
+    }
+
+    /**
+     * @return this player's unique identifier
+     */
+    public UUID getId() {
+        return id;
     }
 
     public final String getName() {
@@ -231,7 +245,6 @@ public abstract class AbstractPlayer extends AbstractEntity implements Terminati
         } else {
             super.updateMovement();
         }
-        clearSpeedFilter();
     }
 
     @Override

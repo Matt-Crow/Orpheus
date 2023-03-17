@@ -1,18 +1,19 @@
 package orpheus.core.users;
 
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * a user that also tracks their remote player ID
  */
 public class LocalUser extends User {
-    private Optional<String> remotePlayerId = Optional.empty();
+    private Optional<UUID> remotePlayerId = Optional.empty();
 
     public LocalUser(String name) {
         super(name);
     }
 
-    public void setRemotePlayerId(String remotePlayerId) {
+    public void setRemotePlayerId(UUID remotePlayerId) {
         if (remotePlayerId == null) {
             throw new IllegalArgumentException("Remote player ID cannot be null");
         }
@@ -23,7 +24,7 @@ public class LocalUser extends User {
      * throws an exception if remote ID is not set
      * @return the ID of the entity in the world this is controlling
      */
-    public String getRemotePlayerId() {
+    public UUID getRemotePlayerId() {
         return remotePlayerId.get();
     }
 }

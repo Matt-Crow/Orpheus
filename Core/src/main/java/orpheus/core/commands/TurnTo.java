@@ -1,5 +1,7 @@
 package orpheus.core.commands;
 
+import java.util.UUID;
+
 import javax.json.Json;
 import javax.json.JsonObject;
 
@@ -10,11 +12,11 @@ import world.World;
  * attacking.
  */
 public class TurnTo implements Command {
-    private final String playerId;
+    private final UUID playerId;
     private final int x;
     private final int y;
 
-    public TurnTo(String playerId, int x, int y) {
+    public TurnTo(UUID playerId, int x, int y) {
         this.playerId = playerId;
         this.x = x;
         this.y = y;
@@ -31,7 +33,7 @@ public class TurnTo implements Command {
     public JsonObject toJson() {
         return Json.createObjectBuilder()
             .add("type", "TurnTo")
-            .add("playerId", playerId)
+            .add("playerId", playerId.toString())
             .add("x", x)
             .add("y", y)
             .build();
@@ -39,7 +41,7 @@ public class TurnTo implements Command {
 
     public static TurnTo fromJson(JsonObject json) {
         return new TurnTo(
-            json.getString("playerId"),
+            UUID.fromString(json.getString("playerId")),
             json.getInt("x"),
             json.getInt("y")
         );

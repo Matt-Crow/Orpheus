@@ -3,6 +3,7 @@ package orpheus.client.gui.pages.play;
 import net.protocols.EndOfFrameListener;
 
 import java.awt.FlowLayout;
+import java.util.UUID;
 import java.awt.Color;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -23,7 +24,7 @@ public class HeadsUpDisplay extends JComponent implements EndOfFrameListener {
      * cannot directly reference a player, as they are serialized instead, world 
      * and playerId remain stable, so reference those
     */
-    private final String playerId;
+    private final UUID playerId;
 
     /**
      * displays the player's remaining HP
@@ -36,7 +37,7 @@ public class HeadsUpDisplay extends JComponent implements EndOfFrameListener {
     private final JLabel[] activeLabels;
     
 
-    public HeadsUpDisplay(WorldGraphSupplier graph, String playerId) {
+    public HeadsUpDisplay(WorldGraphSupplier graph, UUID playerId) {
 
         setLayout(new FlowLayout(FlowLayout.CENTER));
         playerHp = new JLabel("---");

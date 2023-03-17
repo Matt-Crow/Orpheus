@@ -19,11 +19,10 @@ public class Projectile extends AbstractEntity {
 
     private final int useId; //used to prevent double hitting. May not be unique to a single projectile. See AbstractActive for more info
 
-    private Projectile(World inWorld, int useId, int x, int y, int degrees, 
-        int momentum, ElementalActive a, 
-        boolean canExplode) {
+    private Projectile(int useId, int x, int y, int degrees, int momentum, 
+        ElementalActive a, boolean canExplode) {
         
-        super(inWorld);
+        super(a.getUser().getWorld());
         setMaxSpeed(momentum);
         init();
         setX(x);
@@ -42,7 +41,7 @@ public class Projectile extends AbstractEntity {
     private Projectile(World inWorld, int useId, int x, int y, int degrees, 
         int momentum, ElementalActive a) {
         
-        this(inWorld, useId, x, y, degrees, momentum, a, false);
+        this(useId, x, y, degrees, momentum, a, false);
     }
 
     /**
@@ -81,8 +80,7 @@ public class Projectile extends AbstractEntity {
     public static Projectile explosion(World inWorld, int useId, int x, int y, 
         int angle, int momentum, ElementalActive from) {
         
-        var p = new Projectile(inWorld, useId, x, y, angle, momentum, 
-            from, false);
+        var p = new Projectile(useId, x, y, angle, momentum, from, false);
         p.range = (int)from.getAOE();
 
         return p;
@@ -122,7 +120,7 @@ public class Projectile extends AbstractEntity {
         super.update();
         distanceTraveled += getMomentum();
 
-        if (distanceTraveled >= range && !getShouldTerminate()) {
+        if (distanceTraveled >= range && !isTerminating()) {
             terminate();
         }
     }

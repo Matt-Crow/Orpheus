@@ -3,6 +3,7 @@ package orpheus.core.world.graph;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.List;
+import java.util.UUID;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -13,19 +14,19 @@ import orpheus.core.world.graph.utils.JsonArrayHelper;
  * renders and serializes a Player
  */
 public class Player extends Entity {
-    private final String id;
+    private final UUID id;
     private final int hp;
     private final List<String> statuses;
     private final Color teamColor;
     private final Color color;
     private final List<Active> actives;
 
-    public Player(String id, int x, int y, int radius, int hp, 
+    public Player(UUID id, int x, int y, int radius, int hp, 
         List<String> statuses, Color teamColor, Color color) {
         this(id, x, y, radius, hp, statuses, teamColor, color, List.of());
     }
 
-    public Player(String id, int x, int y, int radius, int hp, 
+    public Player(UUID id, int x, int y, int radius, int hp, 
         List<String> statuses, Color teamColor, Color color, List<Active> actives) {
         
         super(x, y, radius);
@@ -37,7 +38,7 @@ public class Player extends Entity {
         this.actives = actives;
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
@@ -76,7 +77,7 @@ public class Player extends Entity {
     @Override
     public JsonObject toJson() {
         return Json.createObjectBuilder(super.toJson())
-            .add("id", id)
+            .add("id", id.toString())
             .add("hp", hp)
             .add("statuses", JsonArrayHelper.fromStrings(statuses))
             .add("teamColor", teamColor.getRGB())
@@ -87,7 +88,7 @@ public class Player extends Entity {
 
     public static Player fromJson(JsonObject json) {
         return new Player(
-            json.getString("id"),
+            UUID.fromString(json.getString("id")),
             json.getInt("x"),
             json.getInt("y"),
             json.getInt("radius"),

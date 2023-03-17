@@ -1,5 +1,7 @@
 package orpheus.core.commands;
 
+import java.util.UUID;
+
 import javax.json.Json;
 import javax.json.JsonObject;
 
@@ -7,10 +9,10 @@ import world.World;
 
 public class UseCantrip implements Command {
 
-    private final String playerId;
+    private final UUID playerId;
     private final TurnTo turnTo;
 
-    public UseCantrip(String playerId, TurnTo turnTo) {
+    public UseCantrip(UUID playerId, TurnTo turnTo) {
         this.playerId = playerId;
         this.turnTo = turnTo;
     }
@@ -27,14 +29,14 @@ public class UseCantrip implements Command {
     public JsonObject toJson() {
         return Json.createObjectBuilder()
             .add("type", "UseCantrip")
-            .add("playerId", playerId)
+            .add("playerId", playerId.toString())
             .add("turnTo", turnTo.toJson())
             .build();
     }
 
     public static UseCantrip fromJson(JsonObject json) {
         return new UseCantrip(
-            json.getString("playerId"), 
+            UUID.fromString(json.getString("playerId")), 
             TurnTo.fromJson(json.getJsonObject("turnTo"))
         );
     }

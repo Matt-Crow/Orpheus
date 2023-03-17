@@ -1,6 +1,9 @@
 package world.entities;
 
 import world.events.termination.*;
+
+import java.util.Optional;
+
 import util.Coordinates;
 import world.World;
 import world.battle.Team;
@@ -12,58 +15,103 @@ import world.events.ActionRegister;
  */
 public abstract class AbstractEntity extends AbstractPrimitiveEntity implements Terminable {
     
-    private World world; 
-    private Team team;
-    private double speedMultiplier;
-    private boolean shouldTerminate;
-    private final TerminationListeners terminationListeners = new TerminationListeners();
+    /**
+     * The game world this entity occupies. Allows empty due to circular 
+     * dependencies between entities & worlds.
+     */
+    private Optional<World> world = Optional.empty();
+
+    /**
+     * The team this entity is a member of. Allows empty due to circular 
+     * dependencies between entities & teams.
+     */
+    private Optional<Team> team = Optional.empty();
+
+    /**
+     * How much this entity's movement should be multiplied by this frame
+     */
+    private double speedMultiplier = 1.0;
+
+    /**
+     * Registers various game event listeners
+     */
     private final ActionRegister actReg;
-    public final String id;
 
-    private static int nextId = 0;
+    /**
+     * Whether this entity is in its terminating phase
+     */
+    private boolean terminating = false;
 
-    public AbstractEntity(World world) {
-        speedMultiplier = 1.0;
-        id = "#" + nextId;
-        this.world = world; // null world needs to be allowed due to circular dependencies 
+    /**
+     * The objects to notify when this entity terminates
+     */
+    private final TerminationListeners terminationListeners = new TerminationListeners();
+
+    /**
+     * Creates an entity that does not yet exist in a world. You must call 
+     * setWorld before using this entity.
+     */
+    public AbstractEntity() {
         actReg = new ActionRegister(this);
-        nextId++;
     }
 
-    @Override
-    public final boolean equals(Object o) {
-        return o != null && o instanceof AbstractEntity && ((AbstractEntity) o).id.equals(id);
+    /**
+     * Creates an entity that may or may not yet exist in a world.
+     * @param world the world this entity exists in, or null.
+     */
+    public AbstractEntity(World world) {
+        this();
+        if (world != null) {
+            this.world = Optional.of(world);
+        }
     }
 
-    @Override
-    public final int hashCode() {
-        return id.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return "Entity #" + id;
-    }
-    
     /**
      * Allows this to be instantiated before the given world
      * @param world the world this exists in
      */
     public void setWorld(World world){
-        this.world = world;
+        this.world = Optional.of(world);
     }
     
-    public final World getWorld() {
-        return world;
+    /**
+     * Throws an exception if this entity's world has not been set
+     * @return the world this entity occupies
+     */
+    public World getWorld() {
+        return world.get();
     }
 
-    public final void multiplySpeedBy(double f) {
-        speedMultiplier *= f;
+    /**
+     * Allows this to be instantiated before the given team
+     * @param team the team this entity belongs to
+     */
+    public void setTeam(Team team) {
+        this.team = Optional.of(team);
     }
 
-    // remove this later
-    public final void clearSpeedFilter() {
-        speedMultiplier = 1.0;
+    /**
+     * Throws an exception if this entity's team has not been set
+     * @return the team this entity belongs to
+     */
+    public Team getTeam() {
+        return team.get();
+    }
+
+    /**
+     * Applies a modifier to this entity's speed that will be removed at the end
+     * of the frame.
+     * @param multiplier the multipier to affect this entity's speed by - multiplicative
+     */
+    public void multiplySpeedBy(double multiplier) {
+        speedMultiplier *= multiplier;
+    }
+
+    /**
+     * @return the game event listeners attached to this entity
+     */
+    public ActionRegister getActionRegister() {
+        return actReg;
     }
 
     /**
@@ -79,24 +127,25 @@ public abstract class AbstractEntity extends AbstractPrimitiveEntity implements 
     }
 
     /**
+     * Adds an entity to this one's team & world
+     *
+     * @param e the AbstractEntity to insert before this one
+     */
+    public final void spawn(AbstractEntity e) {
+        if (e == null) {
+            throw new NullPointerException();
+        }
+        e.setWorld(getWorld());
+        getTeam().add(e);
+    }
+
+    /**
      *
      * @return how much this entity will move this frame
      */
     @Override
     public final int getMomentum() {
         return (int) (getMaxSpeed() * speedMultiplier);
-    }
-
-    public final ActionRegister getActionRegister() {
-        return actReg;
-    }
-
-    public final void setTeam(Team t) {
-        team = t;
-    }
-
-    public final Team getTeam() {
-        return team;
     }
 
     @Override
@@ -106,26 +155,8 @@ public abstract class AbstractEntity extends AbstractPrimitiveEntity implements 
 
     @Override
     public void terminate() {
-        shouldTerminate = true;
+        terminating = true;
         terminationListeners.objectWasTerminated(this);
-    }
-
-    public final boolean getShouldTerminate() {
-        return shouldTerminate;
-    }
-
-    /**
-     * Inserts an AbstractEntity into this' EntityNode chain. Since the
-     * AbstractEntity is inserted before this one, it will not be updated during
-     * this iteration of EntityManager.update
-     *
-     * @param e the AbstractEntity to insert before this one
-     */
-    public final void spawn(AbstractEntity e) {
-        if (e == null) {
-            throw new NullPointerException();
-        }
-        team.add(e);
     }
 
     /**
@@ -139,7 +170,7 @@ public abstract class AbstractEntity extends AbstractPrimitiveEntity implements 
         actReg.reset();
         setIsMoving(false);
         speedMultiplier = 1.0;
-        shouldTerminate = false;
+        terminating = false;
     }
 
     /**
@@ -148,7 +179,7 @@ public abstract class AbstractEntity extends AbstractPrimitiveEntity implements 
      */
     @Override
     public void update() {
-        if (!shouldTerminate) {
+        if (!terminating) {
             super.update();
             actReg.triggerOnUpdate();
         }
@@ -157,11 +188,11 @@ public abstract class AbstractEntity extends AbstractPrimitiveEntity implements 
     @Override
     protected void updateMovement() {
         super.updateMovement();
-        clearSpeedFilter();
+        speedMultiplier = 1.0;
     }
 
     @Override
     public boolean isTerminating() {
-        return shouldTerminate;
+        return terminating;
     }
 }

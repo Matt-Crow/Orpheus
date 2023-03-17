@@ -21,6 +21,8 @@ import orpheus.core.world.graph.particles.Particles;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.UUID;
+
 import javax.json.Json;
 
 import net.AbstractNetworkClient;
@@ -115,9 +117,10 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
         room.setInputEnabled(false);
     }
 
+    // todo have players supply their own ID
     private void receiveRemoteId(ServerMessagePacket sm) {
         var player = room.getContext().getLoggedInUser();
-        player.setRemotePlayerId(sm.getMessage().getBodyText());
+        player.setRemotePlayerId(UUID.fromString(sm.getMessage().getBodyText()));
     }
 
     /**
