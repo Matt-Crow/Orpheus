@@ -1,4 +1,4 @@
-package world.entities;
+package orpheus.core.world.occupants;
 
 import world.events.termination.*;
 
@@ -7,13 +7,14 @@ import java.util.Optional;
 import util.Coordinates;
 import world.World;
 import world.battle.Team;
+import world.entities.AbstractPrimitiveEntity;
 import world.events.ActionRegister;
 
 /**
  * The AbstractEntity class is used as the base for anything that moves and
  * exists within a World.
  */
-public abstract class AbstractEntity extends AbstractPrimitiveEntity implements Terminable {
+public abstract class WorldOccupant extends AbstractPrimitiveEntity implements Terminable {
     
     /**
      * The game world this entity occupies. Allows empty due to circular 
@@ -51,7 +52,7 @@ public abstract class AbstractEntity extends AbstractPrimitiveEntity implements 
      * Creates an entity that does not yet exist in a world. You must call 
      * setWorld before using this entity.
      */
-    public AbstractEntity() {
+    public WorldOccupant() {
         actReg = new ActionRegister(this);
     }
 
@@ -59,7 +60,7 @@ public abstract class AbstractEntity extends AbstractPrimitiveEntity implements 
      * Creates an entity that may or may not yet exist in a world.
      * @param world the world this entity exists in, or null.
      */
-    public AbstractEntity(World world) {
+    public WorldOccupant(World world) {
         this();
         if (world != null) {
             this.world = Optional.of(world);
@@ -122,7 +123,7 @@ public abstract class AbstractEntity extends AbstractPrimitiveEntity implements 
      * @param e the AbstractEntity to check for collisions with
      * @return whether or not this collides with the given AbstractEntity
      */
-    public final boolean isCollidingWith(AbstractEntity e) {
+    public final boolean isCollidingWith(WorldOccupant e) {
         return Coordinates.distanceBetween(this, e) <= e.getRadius() + getRadius();
     }
 
@@ -131,7 +132,7 @@ public abstract class AbstractEntity extends AbstractPrimitiveEntity implements 
      *
      * @param e the AbstractEntity to insert before this one
      */
-    public final void spawn(AbstractEntity e) {
+    public final void spawn(WorldOccupant e) {
         if (e == null) {
             throw new NullPointerException();
         }

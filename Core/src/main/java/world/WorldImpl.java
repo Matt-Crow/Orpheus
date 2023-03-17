@@ -1,8 +1,8 @@
 package world;
 
+import orpheus.core.world.occupants.WorldOccupant;
 import util.Random;
 import world.battle.Team;
-import world.entities.AbstractEntity;
 import world.entities.Projectile;
 import world.game.Game;
 
@@ -50,7 +50,7 @@ public class WorldImpl implements World {
      * @param e 
      */
     @Override
-    public void spawn(AbstractEntity e){
+    public void spawn(WorldOccupant e){
         int minX = 0;
         int maxX = map.getWidth() / Tile.TILE_SIZE;
         int minY = 0;

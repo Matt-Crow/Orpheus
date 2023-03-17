@@ -1,15 +1,15 @@
 package world.events;
 
-import world.entities.AbstractEntity;
+import orpheus.core.world.occupants.WorldOccupant;
 
 public class OnUpdateEvent implements Event {
-	private final AbstractEntity updatee;
+	private final WorldOccupant updatee;
 
-    public OnUpdateEvent(AbstractEntity e){
+    public OnUpdateEvent(WorldOccupant e){
 		updatee = e;
 	}
     
-    public AbstractEntity getUpdated(){
+    public WorldOccupant getUpdated(){
         return updatee;
     }
 }

@@ -1,20 +1,20 @@
 package world.events;
 
-import world.entities.AbstractEntity;
+import orpheus.core.world.occupants.WorldOccupant;
 
 /**
  * Created whenever one AbstractEntity hits another.
  */
 public class OnHitEvent implements Event {
-    private final AbstractEntity hitter;
-    private final AbstractEntity wasHit;
+    private final WorldOccupant hitter;
+    private final WorldOccupant wasHit;
     
     /**
      * Creates the event.
      * @param hitter the AbstractEntity who collided with the other.
      * @param wasHit the AbstractEntity who was hit.
      */
-    public OnHitEvent(AbstractEntity hitter, AbstractEntity wasHit){
+    public OnHitEvent(WorldOccupant hitter, WorldOccupant wasHit){
         this.hitter = hitter;
         this.wasHit = wasHit;
     }
@@ -23,7 +23,7 @@ public class OnHitEvent implements Event {
      * 
      * @return the AbstractEntity who struck another.
      */
-    public AbstractEntity getHitter(){
+    public WorldOccupant getHitter(){
         return hitter;
     }
     
@@ -31,7 +31,7 @@ public class OnHitEvent implements Event {
      * 
      * @return the AbstractEntity who was hit.
      */
-    public AbstractEntity getWasHit(){
+    public WorldOccupant getWasHit(){
         return wasHit;
     }
 }

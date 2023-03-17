@@ -2,11 +2,12 @@ package world.entities;
 
 import java.util.Arrays;
 
+import orpheus.core.world.occupants.WorldOccupant;
 import util.Settings;
 import world.World;
 import world.builds.actives.ElementalActive;
 
-public class Projectile extends AbstractEntity {
+public class Projectile extends WorldOccupant {
 
     private final ElementalActive registeredAttack;
     private int distanceTraveled;

@@ -1,9 +1,9 @@
 package world;
 
-import world.entities.AbstractEntity;
 import java.awt.Color;
 import java.awt.Graphics;
 import orpheus.core.world.graph.Graphable;
+import orpheus.core.world.occupants.WorldOccupant;
 
 /**
  * Tiles are rendered whenever World.draw is invoked
@@ -54,11 +54,11 @@ public class Tile implements Graphable {
         return c;
     }
     
-    public final boolean contains(AbstractEntity e){
+    public final boolean contains(WorldOccupant e){
         return e.isWithin(x, y, TILE_SIZE, TILE_SIZE);
     }
     
-    public void shoveOut(AbstractEntity e){
+    public void shoveOut(WorldOccupant e){
         
         //first, check to see which kind of collision to check for
         //if I shove from both axis, results in entities acting strangely with blocks

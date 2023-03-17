@@ -1,8 +1,8 @@
 package world;
 
 import orpheus.core.world.graph.Graphable;
+import orpheus.core.world.occupants.WorldOccupant;
 import world.battle.Team;
-import world.entities.AbstractEntity;
 import world.game.Game;
 
 
@@ -26,7 +26,7 @@ public interface World extends Graphable {
      * 
      * @param e the entity to insert into this world 
      */
-    public void spawn(AbstractEntity e);
+    public void spawn(WorldOccupant e);
     
     public void init();
     

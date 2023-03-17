@@ -10,7 +10,7 @@ import controls.ai.Path;
 import controls.ai.PathInfo;
 import controls.ai.PathMinHeap;
 import orpheus.core.world.graph.Graphable;
-import world.entities.AbstractEntity;
+import orpheus.core.world.occupants.WorldOccupant;
 
 /**
  * The Map class is used to store Tiles together to form 
@@ -165,7 +165,7 @@ public class Map implements Graphable {
     }
     
     
-    public void checkForTileCollisions(AbstractEntity e){
+    public void checkForTileCollisions(WorldOccupant e){
         //make sure the entity is within the world
         if(e.getX() - e.getRadius() < 0){
             //outside of left bound
@@ -376,7 +376,7 @@ public class Map implements Graphable {
         return ret;
     }
     
-    public final Path findPath(AbstractEntity from, AbstractEntity to){
+    public final Path findPath(WorldOccupant from, WorldOccupant to){
         return findPath(from.getX(), from.getY(), to.getX(), to.getY());
     }
 

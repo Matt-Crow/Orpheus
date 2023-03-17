@@ -8,6 +8,7 @@ import java.awt.Color;
 import controls.ai.Path;
 import controls.ai.PathInfo;
 import orpheus.core.world.graph.Player;
+import orpheus.core.world.occupants.WorldOccupant;
 import world.statuses.AbstractStatus;
 import world.statuses.StatusName;
 import util.Settings;
@@ -26,7 +27,7 @@ import world.World;
  *
  * @author Matt Crow
  */                                                         // needs to listen for status termination
-public abstract class AbstractPlayer extends AbstractEntity implements TerminationListener {
+public abstract class AbstractPlayer extends WorldOccupant implements TerminationListener {
 
     /**
      * A unique identifier for this player
@@ -119,7 +120,7 @@ public abstract class AbstractPlayer extends AbstractEntity implements Terminati
         hasFocus = true;
     }
 
-    public final void setFocus(AbstractEntity e) {
+    public final void setFocus(WorldOccupant e) {
         setFocus(e.getX(), e.getY());
     }
 

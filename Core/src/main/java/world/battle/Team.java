@@ -7,10 +7,11 @@ import world.entities.Projectile;
 import world.events.termination.Terminables;
 import util.Coordinates;
 import world.entities.AIPlayer;
-import world.entities.AbstractEntity;
+
 import java.util.function.Consumer;
 
 import orpheus.core.world.graph.Graphable;
+import orpheus.core.world.occupants.WorldOccupant;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -39,7 +40,7 @@ public class Team implements Graphable {
     /**
      * the entities belonging to this team
      */
-    private final Terminables<AbstractEntity> entities = new Terminables<>();
+    private final Terminables<WorldOccupant> entities = new Terminables<>();
 
     public Team(String n, Color c) {
         super();
@@ -118,7 +119,7 @@ public class Team implements Graphable {
         });
     }
 
-    public void add(AbstractEntity e) {
+    public void add(WorldOccupant e) {
         e.setWorld(world);
         entities.add(e);
     }
@@ -127,7 +128,7 @@ public class Team implements Graphable {
         entities.clear();
     }
 
-    public void forEach(Consumer<AbstractEntity> doThis) {
+    public void forEach(Consumer<WorldOccupant> doThis) {
         entities.forEach(doThis);
     }
     

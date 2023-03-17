@@ -1,13 +1,13 @@
 package world.events;
 
+import orpheus.core.world.occupants.WorldOccupant;
 import world.entities.AbstractPlayer;
-import world.entities.AbstractEntity;
 /**
  * An ActionRegister is used to store OnHit- and OnUpdate-Listeners, and register them to an AbstractEntity.
  * It is used by the AbstractPlayer class to store Status effects and passives.
  */
 public class ActionRegister {
-	private final AbstractEntity registeredTo;
+	private final WorldOccupant registeredTo;
 	private final EventListeners<OnHitEvent> onHitListeners = new EventListeners<>();
 	private final EventListeners<OnHitEvent> onBeHitListeners = new EventListeners<>();
 	private final EventListeners<OnUpdateEvent> onUpdateListeners = new EventListeners<>();
@@ -16,7 +16,7 @@ public class ActionRegister {
      * Stores Listeners for an AbstractEntity.
      * @param e the AbstractEntity to store Listeners for.
      */
-	public ActionRegister(AbstractEntity e){
+	public ActionRegister(WorldOccupant e){
 		registeredTo = e;
 	}
 

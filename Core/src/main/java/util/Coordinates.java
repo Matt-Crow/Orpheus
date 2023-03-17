@@ -1,6 +1,6 @@
 package util;
 
-import world.entities.AbstractEntity;
+import orpheus.core.world.occupants.WorldOccupant;
 
 public class Coordinates {
 	public static double distanceBetween(int x1, int y1, int x2, int y2){
@@ -15,7 +15,7 @@ public class Coordinates {
 		return Math.sqrt(insideTheBox);
 	}
 	
-	public static double distanceBetween(AbstractEntity e1, AbstractEntity e2){
+	public static double distanceBetween(WorldOccupant e1, WorldOccupant e2){
 		return distanceBetween(e1.getX(), e1.getY(), e2.getX(), e2.getY());
 	}
 }
