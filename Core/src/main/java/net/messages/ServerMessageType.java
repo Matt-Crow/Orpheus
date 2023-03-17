@@ -14,7 +14,6 @@ public enum ServerMessageType {
     WAITING_ROOM_UPDATE("waiting room update"),
     REQUEST_PLAYER_DATA("request player data"),
     PLAYER_DATA("player data"),
-    NOTIFY_IDS("notify ids"), //used by WSWaitForPlayers to tell Users what their Team's and Player's IDs are on the host server
     START_WORLD("start"),
     SERVER_SHUTDOWN("END OF LINE"),
 

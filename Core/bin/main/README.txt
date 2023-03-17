@@ -3,7 +3,7 @@ It is typical for me to create game applications when learning a new programming
 and Orpheus is no different.
 Since 2017, this project has taught me many things about java:
 * how to manage a large project by myself.
-* how to build Graphic User Interfaces using Java Swing.
+* how to build Graphic LocalUser Interfaces using Java Swing.
 * how to create class hierarchies.
 * how to perform serialization with both JSON and Object streams.
 * how to build a peer-to-peer network application.

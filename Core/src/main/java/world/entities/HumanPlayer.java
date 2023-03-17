@@ -5,6 +5,7 @@ import world.statuses.AbstractStatus;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.Map.Entry;
 import util.CardinalDirection;
 import util.Direction;
@@ -29,7 +30,11 @@ public class HumanPlayer extends AbstractPlayer {
     public static final int MIN_LIFE_SPAN = 10;
 
     public HumanPlayer(World inWorld, String n) {
-        super(inWorld, n, MIN_LIFE_SPAN);
+        this(inWorld, n, UUID.randomUUID());
+    }
+
+    public HumanPlayer(World inWorld, String n, UUID id) {
+        super(inWorld, n, MIN_LIFE_SPAN, id);
         c = null;
         actives = new AbstractActive[3];
         passives = new AbstractPassive[3];

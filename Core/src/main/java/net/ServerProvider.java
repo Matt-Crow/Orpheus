@@ -3,7 +3,7 @@ package net;
 import java.io.IOException;
 
 import orpheus.core.net.SocketAddress;
-import orpheus.core.users.LocalUser;
+import orpheus.core.users.User;
 
 /**
  * Allows easier access to creating and starting servers, but is mostly unneeded
@@ -29,7 +29,7 @@ public class ServerProvider {
      * @return a client connected to the server on the given address
      * @throws IOException if the client fails to connect
      */
-    public final OrpheusClient createClient(LocalUser user, SocketAddress address) throws IOException {
+    public final OrpheusClient createClient(User user, SocketAddress address) throws IOException {
         var client = new OrpheusClient(user, address);
         client.start();
         return client;

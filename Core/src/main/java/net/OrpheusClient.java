@@ -8,20 +8,20 @@ import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import orpheus.core.net.SocketAddress;
 import orpheus.core.net.messages.Message;
-import orpheus.core.users.LocalUser;
+import orpheus.core.users.User;
 
 /**
  *
  * @author Matt Crow
  */
 public class OrpheusClient extends AbstractNetworkClient {
-    private final LocalUser user;
+    private final User user;
     private final String hostIp;
     private final int hostPort;
     
     private Connection toServer;
 
-    public OrpheusClient(LocalUser user, SocketAddress connectTo) {
+    public OrpheusClient(User user, SocketAddress connectTo) {
         super();
         this.user = user;
         this.hostIp = connectTo.getAddress();

@@ -8,7 +8,7 @@ import net.AbstractNetworkClient;
 import orpheus.client.gui.components.ComponentFactory;
 import orpheus.core.AppContext;
 import orpheus.core.net.OrpheusClient;
-import orpheus.core.users.LocalUser;
+import orpheus.core.users.User;
 import util.Settings;
 
 /**
@@ -19,7 +19,7 @@ public class ClientAppContext extends AppContext {
     /**
      * the currently logged in user
      */
-    private Optional<LocalUser> user = Optional.empty();
+    private Optional<User> user = Optional.empty();
 
     /**
      * the client connected to a server
@@ -64,7 +64,7 @@ public class ClientAppContext extends AppContext {
         if (user.isEmpty()) {
             var name = JOptionPane.showInputDialog("Enter a username:");
             if (name != null) {
-                user = Optional.of(new LocalUser(name));
+                user = Optional.of(new User(name));
             }
         }
     }
@@ -73,7 +73,7 @@ public class ClientAppContext extends AppContext {
      * throws an exception if no user is logged in
      * @return
      */
-    public LocalUser getLoggedInUser() {
+    public User getLoggedInUser() {
         return user.get();
     }
 

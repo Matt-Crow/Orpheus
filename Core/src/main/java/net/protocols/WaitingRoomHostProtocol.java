@@ -3,7 +3,6 @@ package net.protocols;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.UUID;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -30,8 +29,8 @@ import world.game.Game;
  * The process of this protocol is as follows:
  * 1. Whenever someone connects to the server, adds them to the player team.
  * 2. Once the host clicks the start button, users are notified that the game will start soon.
- * 3. Once the time has elapsed, sends requests for the Builds of each connected User.
- * 4. After each Build has been received, creates a new World, applies each User's Build to a HumanPlayer in that World, 
+ * 3. Once the time has elapsed, sends requests for the Builds of each connected LocalUser.
+ * 4. After each Build has been received, creates a new World, applies each LocalUser's Build to a HumanPlayer in that World, 
  * and sends them information needed to remotely control that HumanPlayer. Serializes and sends the world as well.
  * @author Matt Crow
  */
@@ -190,7 +189,8 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         
         var player = new HumanPlayer(
             world, // world should not be null by now,
-            sender.getName()
+            sender.getName(),
+            sender.getId()
         );
         awaitingBuilds.remove(sender);
 
@@ -198,26 +198,8 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         var build = BuildJsonUtil.deserializeJson(json);
         player.applyBuild(dataSet.assemble(build));
         playerTeam.addMember(player);
-        
-        sendRemoteId(sender, player.getId());
-
-        System.out.printf("Received build info %s from %s.\nSending id %s\n", 
-            json, sender.getName(), player.getId());
 
         checkIfReady();
-    }
-    
-    /**
-     * Called by receiveBuild
-     * @param ipAddr the user to send the IDs to.
-     * @param playerId the ID of that user's Player on this computer
-     */
-    private void sendRemoteId(User user, UUID playerId){
-        Message sm = new Message(
-            playerId.toString(),
-            ServerMessageType.NOTIFY_IDS
-        );
-        getServer().send(sm, user);
     }
     
     

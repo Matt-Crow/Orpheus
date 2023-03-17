@@ -21,7 +21,6 @@ import orpheus.core.world.graph.particles.Particles;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.UUID;
 
 import javax.json.Json;
 
@@ -68,11 +67,8 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
-            }
-            break;
-            case NOTIFY_IDS:
-                receiveRemoteId(sm);
                 break;
+            }
             case WORLD:
                 receiveWorld(sm);
                 break;
@@ -97,9 +93,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
 
     private void receiveUpdate(ServerMessagePacket sm) {
         JsonObject json = Json.createReader(
-                new StringReader(
-                        sm.getMessage().getBodyText()
-                )
+            new StringReader(sm.getMessage().getBodyText())
         ).readObject();
         addToTeamProto(User.fromJson(json));
         room.updateTeamDisplays();
@@ -117,12 +111,6 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
         room.setInputEnabled(false);
     }
 
-    // todo have players supply their own ID
-    private void receiveRemoteId(ServerMessagePacket sm) {
-        var player = room.getContext().getLoggedInUser();
-        player.setRemotePlayerId(UUID.fromString(sm.getMessage().getBodyText()));
-    }
-
     /**
      * allows remote users to receive and de-serialize the AbstractWorld created
      * by the host.
@@ -136,13 +124,13 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
         var world = World.fromJson(sm.getMessage().getBody());
         var me = room.getContext().getLoggedInUser();
         var worldSupplier = new RemoteWorldSupplier(world);
-        var hud = new HeadsUpDisplay(worldSupplier, me.getRemotePlayerId());
+        var hud = new HeadsUpDisplay(worldSupplier, me.getId());
         var p = new WorldPage(room.getContext(), room.getHost(), hud);
         var particles = new Particles();
         var canvas = new WorldCanvas(
             worldSupplier,
             particles,
-            new PlayerControls(me.getRemotePlayerId(), new RemoteExecutor(getServer()))
+            new PlayerControls(me.getId(), new RemoteExecutor(getServer()))
         );
         p.setCanvas(canvas);
 

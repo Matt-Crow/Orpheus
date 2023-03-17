@@ -32,7 +32,7 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
     /**
      * A unique identifier for this player
      */
-    private final UUID id;
+    private final UUID id; // can pull into HumanPlayer once Team is generic
 
     private final String name;
     private Color color;
@@ -61,8 +61,12 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
     public static final int RADIUS = 50;
 
     public AbstractPlayer(World inWorld, String n, int minLifeSpan) {
+        this(inWorld, n, minLifeSpan, UUID.randomUUID());
+    }
+
+    public AbstractPlayer(World inWorld, String n, int minLifeSpan, UUID id) {
         super(inWorld);
-        id = UUID.randomUUID();
+        this.id = id;
         setBaseSpeed(Tile.TILE_SIZE * 5 / Settings.FPS);
         name = n;
         color = Color.black;
