@@ -42,7 +42,8 @@ public class WSSolo extends AbstractWSNewWorld{
         
         
         HumanPlayer player = new HumanPlayer(world, "local user");
-        player.applyBuild(getSelectedBuild());
+        var selected = getSelectedBuild().get();
+        player.applyBuild(getContext().getSpecificationResolver().resolve(selected));
         team1.addMember(player);
         
         // model must have teams set before WorldCanvas init, as WC relies on getting the player team

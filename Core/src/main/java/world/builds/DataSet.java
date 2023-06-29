@@ -1,10 +1,15 @@
 package world.builds;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 
 import gui.graphics.CustomColors;
+import orpheus.core.champions.Champion;
+import orpheus.core.champions.ChampionSpecification;
+import orpheus.core.champions.Specification;
 import world.builds.actives.*;
 import world.builds.characterClass.CharacterClass;
 import world.builds.passives.*;
@@ -25,6 +30,7 @@ public final class DataSet {
     public final HashMap<String, CharacterClass> allCharacterClasses;
     public final HashMap<String, AbstractPassive> allPassives;
     public final HashMap<String, Build> allBuilds;
+    private final HashMap<String, Champion> allChampions;
     
     private final AbstractActive DEFAULT_ACTIVE = new ElementalActive("Default", 3, 3, 3, 3, 3);
     private final CharacterClass DEFAULT_CHARACTER_CLASS = new CharacterClass("Default", CustomColors.rainbow, 3, 3, 3, 3);
@@ -36,6 +42,7 @@ public final class DataSet {
         allCharacterClasses = new HashMap<>();
         allPassives = new HashMap<>();
         allBuilds = new HashMap<>();
+        allChampions = new HashMap<>();
         
         DEFAULT_PASSIVE.addStatus(new Resistance(2, 2));
         
@@ -91,6 +98,10 @@ public final class DataSet {
         }
         allBuilds.put(b.getName().toUpperCase(), b);
 	}
+
+    public void addChampion(Champion champion) {
+        allChampions.put(champion.getName().toUpperCase(), champion);
+    }
     
     private <T extends AbstractBuildAttribute> void addAllToMap(T[] cs, HashMap<String, T> map){
         if(cs == null){
@@ -142,6 +153,14 @@ public final class DataSet {
         }
         return allBuilds.get(name.toUpperCase()).copy();
 	}
+    public Champion getChampionByName(String name) {
+        name = name.toUpperCase();
+        if (!allChampions.containsKey(name)) {
+            throw new NoSuchElementException("No champion found with name " + name);
+        }
+        return allChampions.get(name).copy();
+            
+    }
     
     public AbstractBuildAttribute[] getAll(HashMap<String, ? extends AbstractBuildAttribute> map){
         return map.values().toArray(new AbstractBuildAttribute[map.size()]);
@@ -157,6 +176,21 @@ public final class DataSet {
 	}
     public Build[] getAllBuilds(){
         return allBuilds.values().toArray(new Build[allBuilds.size()]);
+    }
+
+    /**
+     * @return all specifications players can choose from
+     */
+    public Collection<Specification> getAllSpecifications() {
+        var result = new ArrayList<Specification>();
+        for (var build : getAllBuilds()) {
+            result.add(build);
+        }
+        for (var champion : allChampions.values()) {
+            result.add(new ChampionSpecification(champion.getName()));
+        }
+
+        return result;
     }
     
     public String[] getAllNames(HashMap<String, ? extends AbstractBuildAttribute> map){

@@ -50,7 +50,6 @@ public class StartPlay extends Page{
         buildSection.setLayout(new BorderLayout());
         buildSection.add(cf.makeLabel("Your Builds"), BorderLayout.PAGE_START);
         BuildSelect bs = new BuildSelect(context);
-        bs.refreshOptions();
         buildSection.add(bs, BorderLayout.CENTER);
         buildSection.add(cf.makeButton("Customize this build", ()->{
             CustomizeBuildPage cb = new CustomizeBuildPage(

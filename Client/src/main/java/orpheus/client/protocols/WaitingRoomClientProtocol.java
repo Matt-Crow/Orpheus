@@ -27,7 +27,6 @@ import javax.json.Json;
 import net.AbstractNetworkClient;
 import net.OrpheusClient;
 import net.protocols.AbstractWaitingRoomProtocol;
-import world.builds.BuildJsonUtil;
 
 /**
  *
@@ -104,8 +103,10 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
     }
 
     private synchronized void receiveBuildRequest(ServerMessagePacket sm) throws IOException {
+        var selectedBuild = room.getSelectedBuild();
+        var json = selectedBuild.get().toJson();
         getServer().send(new Message(
-                BuildJsonUtil.serializeJson(room.getSelectedBuild()).toString(),
+                json.toString(),
                 ServerMessageType.PLAYER_DATA
         ));
         room.setInputEnabled(false);

@@ -30,7 +30,7 @@ public class WSNewMulti extends AbstractWSNewWorld{
             server.setProtocol(new WaitingRoomHostProtocol(
                 server,
                 createGame(),
-                context.getDataSet()
+                context.getSpecificationResolver()
             ));
             
             var user = context.getLoggedInUser();

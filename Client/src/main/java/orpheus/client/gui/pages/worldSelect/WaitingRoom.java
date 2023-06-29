@@ -1,11 +1,13 @@
 package orpheus.client.gui.pages.worldselect;
 
-import orpheus.client.gui.components.BuildSelect;
 import orpheus.client.gui.components.ChatBox;
 import orpheus.client.gui.components.ShowHideDecorator;
+import orpheus.client.gui.components.SpecificationSelector;
 
 import java.awt.BorderLayout;
 import java.util.Arrays;
+import java.util.Optional;
+
 import javax.swing.JTextArea;
 
 import orpheus.client.ClientAppContext;
@@ -13,7 +15,7 @@ import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.PageController;
 import orpheus.client.gui.pages.start.StartPlay;
 import orpheus.client.protocols.WaitingRoomClientProtocol;
-import world.builds.Build;
+import orpheus.core.champions.Specification;
 
 /**
  * WaitingRoom provides a "waiting room"
@@ -25,7 +27,7 @@ import world.builds.Build;
 public class WaitingRoom extends Page {
     private final JTextArea teamList;
     private final ChatBox chat;
-    private final BuildSelect playerBuild;
+    private final SpecificationSelector<Specification> playerBuild;
     private WaitingRoomClientProtocol backend;
     
     public WaitingRoom(ClientAppContext context, PageController host){
@@ -40,7 +42,10 @@ public class WaitingRoom extends Page {
         chat = new ChatBox(context);
         add(new ShowHideDecorator(cf, chat), BorderLayout.LINE_START);
         
-        playerBuild = new BuildSelect(context);
+        playerBuild = new SpecificationSelector<>(
+            context.getComponentFactory(),
+            context.getDataSet().getAllSpecifications()
+        );
         add(playerBuild, BorderLayout.CENTER);
         
         teamList = cf.makeTextArea("Player Team:"); 
@@ -76,8 +81,8 @@ public class WaitingRoom extends Page {
         teamList.setText(newStr);
     }
     
-    public Build getSelectedBuild(){
-        return playerBuild.getSelectedBuild();
+    public Optional<Specification> getSelectedBuild(){
+        return playerBuild.getSelected();
     }
     
     public void setInputEnabled(boolean b){

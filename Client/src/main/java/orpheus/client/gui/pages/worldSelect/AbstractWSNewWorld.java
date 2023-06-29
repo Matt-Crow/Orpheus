@@ -5,9 +5,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 
 import orpheus.client.ClientAppContext;
-import orpheus.client.gui.components.BuildSelect;
 import orpheus.client.gui.components.OptionBox;
+import orpheus.client.gui.components.SpecificationSelector;
+
 import java.awt.event.ActionEvent;
+import java.util.Optional;
+
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -15,7 +18,7 @@ import javax.swing.JPanel;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.PageController;
 import orpheus.client.gui.pages.start.StartPlay;
-import world.builds.AssembledBuild;
+import orpheus.core.champions.Specification;
 import world.game.Game;
 import world.game.Onslaught;
 
@@ -24,7 +27,7 @@ import world.game.Onslaught;
  * @author Matt Crow
  */
 public abstract class AbstractWSNewWorld extends Page{
-    private final BuildSelect playerBuild;
+    private final SpecificationSelector<Specification> playerBuild;
     private final OptionBox<Integer> numWaves;
     
     public AbstractWSNewWorld(ClientAppContext context, PageController host){
@@ -41,7 +44,10 @@ public abstract class AbstractWSNewWorld extends Page{
         add(center, BorderLayout.CENTER);
         
         center.add(Box.createRigidArea(new Dimension(20, 20))); // padding
-        playerBuild = new BuildSelect(context);
+        playerBuild = new SpecificationSelector<>(
+            context.getComponentFactory(),
+            context.getDataSet().getAllSpecifications()
+        );
         center.add(playerBuild);
         center.add(Box.createRigidArea(new Dimension(20, 20)));
         numWaves = numWaveSelect();
@@ -71,8 +77,8 @@ public abstract class AbstractWSNewWorld extends Page{
         return box;
     }
     
-    public AssembledBuild getSelectedBuild(){
-        return playerBuild.getSelectedAssembledBuild();
+    public Optional<Specification> getSelectedBuild(){
+        return playerBuild.getSelected();
     }
     
     public Game createGame(){
