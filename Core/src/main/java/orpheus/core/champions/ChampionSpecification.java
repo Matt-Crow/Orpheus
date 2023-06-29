@@ -48,4 +48,9 @@ public class ChampionSpecification implements Specification {
     public String toString() {
         return String.format("Champion: %s", name);
     }
+
+    @Override
+    public ChampionSpecification copy() {
+        return new ChampionSpecification(name);
+    }
 }

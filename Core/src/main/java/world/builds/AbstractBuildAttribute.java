@@ -1,12 +1,13 @@
 package world.builds;
 
+import orpheus.core.utils.Prototype;
 import world.entities.AbstractPlayer;
 
 /**
  * A AbstractBuildAttribute is a choice players can make when customizing the 
  * character they play as.
  */
-public abstract class AbstractBuildAttribute {
+public abstract class AbstractBuildAttribute implements Prototype {
     private final String name;
 	private AbstractPlayer user;
 	
@@ -14,6 +15,7 @@ public abstract class AbstractBuildAttribute {
         name = n;
 	}
     
+	@Override
 	public final String getName(){
 		return name;
 	}
@@ -31,8 +33,7 @@ public abstract class AbstractBuildAttribute {
 		return String.format("BuildAttribute \"%s\"", name);
 	}
     
-    
-    
+    @Override
     public abstract AbstractBuildAttribute copy();
     
     public abstract String getDescription();

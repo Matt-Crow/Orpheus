@@ -59,7 +59,7 @@ public class SpecificationResolverTester {
         var dataSet = new DataSet();
         dataSet.addChampion(new Champion(
             "foo", 
-            dataSet.getDefaultCharacterClass(), 
+            new CharacterClass("bar", null, 0, 0, 0, 0), 
             new AbstractActive[] {
 
             }, 

@@ -3,13 +3,12 @@ package world.builds;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.NoSuchElementException;
 
 import gui.graphics.CustomColors;
 import orpheus.core.champions.Champion;
 import orpheus.core.champions.ChampionSpecification;
 import orpheus.core.champions.Specification;
+import orpheus.core.utils.PrototypeFactory;
 import world.builds.actives.*;
 import world.builds.characterClass.CharacterClass;
 import world.builds.passives.*;
@@ -26,38 +25,93 @@ import world.statuses.*;
  * @author Matt Crow
  */
 public final class DataSet {
-    public final HashMap<String, AbstractActive> allActives;
-    public final HashMap<String, CharacterClass> allCharacterClasses;
-    public final HashMap<String, AbstractPassive> allPassives;
-    public final HashMap<String, Build> allBuilds;
-    private final HashMap<String, Champion> allChampions;
+    private final PrototypeFactory<ChampionSpecification> championSpecifications = new PrototypeFactory<>();
+    private final PrototypeFactory<Champion> champions = new PrototypeFactory<>();
+    private final PrototypeFactory<Build> builds = new PrototypeFactory<>();
+    private final PrototypeFactory<CharacterClass> characterClasses = new PrototypeFactory<>();
+    private final PrototypeFactory<AbstractActive> actives = new PrototypeFactory<>();
+    private final PrototypeFactory<AbstractPassive> passives = new PrototypeFactory<>();
     
     private final AbstractActive DEFAULT_ACTIVE = new ElementalActive("Default", 3, 3, 3, 3, 3);
     private final CharacterClass DEFAULT_CHARACTER_CLASS = new CharacterClass("Default", CustomColors.rainbow, 3, 3, 3, 3);
     private final AbstractPassive DEFAULT_PASSIVE = new ThresholdPassive("Default", 2);
     private final Build DEFAULT_BUILD = new Build("0x138", "Default", "RAINBOW OF DOOM", "Healing Rain", "Speed Test", "Burning Edge", "Escapist", "Cursed");
     
-    public DataSet(){
-        allActives = new HashMap<>();
-        allCharacterClasses = new HashMap<>();
-        allPassives = new HashMap<>();
-        allBuilds = new HashMap<>();
-        allChampions = new HashMap<>();
-        
+    public DataSet(){        
         DEFAULT_PASSIVE.addStatus(new Resistance(2, 2));
         
-        addActive(DEFAULT_ACTIVE);
+        actives.add(DEFAULT_ACTIVE);
+        passives.add(DEFAULT_PASSIVE);
         addCharacterClass(DEFAULT_CHARACTER_CLASS);
-        addPassive(DEFAULT_PASSIVE);
         addBuild(DEFAULT_BUILD);
     }
 
-    public AssembledBuild getAssembledBuildByName(String name) {
-        return assemble(getBuildByName(name));
+    public void addChampion(Champion champion) {
+        championSpecifications.add(champion.getSpecification());
+        champions.add(champion);
     }
 
+    public void addBuild(Build b){
+		builds.add(b);
+	}
+
+    public void addCharacterClass(CharacterClass c){
+        characterClasses.add(c);
+    }
+
+    public void addActives(AbstractActive[] as){
+        actives.addAll(Arrays.asList(as));
+    }
+
+    public void addPassives(AbstractPassive[] ps){
+		passives.addAll(Arrays.asList(ps));
+	}
+
+    public Champion getChampionByName(String name) {
+        return champions.make(name);  
+    }
+
+    public CharacterClass getCharacterClassByName(String n){
+        return characterClasses.make(n);
+    }
+
+    public AbstractActive getActiveByName(String n){
+        return actives.make(n);
+    }
+    
+    public AbstractPassive getPassiveByName(String n){
+        return passives.make(n);
+	}
+
+    /**
+     * @return all specifications players can choose from
+     */
+    public Collection<Specification> getAllSpecifications() {
+        var result = new ArrayList<Specification>();
+        result.addAll(builds.getAll());
+        result.addAll(championSpecifications.getAll());
+        return result;
+    }
+
+    public Build[] getAllBuilds() {
+        // needs to be seperate from getAllSpecs since players can customize builds
+        return builds.getAll().toArray(Build[]::new);
+    }
+    
+    public CharacterClass[] getAllCharacterClasses(){
+        return characterClasses.getAll().toArray(CharacterClass[]::new);
+    }
+
+    public AbstractActive[] getAllActives(){
+        return actives.getAll().toArray(AbstractActive[]::new);
+    }
+
+    public AbstractPassive[] getAllPassives(){
+		return passives.getAll().toArray(AbstractPassive[]::new);
+	}
+
     public AssembledBuild assemble(Build b) {
-        AssembledBuild assembled = new AssembledBuild(
+        var assembled = new AssembledBuild(
             b.getName(), 
             getCharacterClassByName(b.getClassName()), 
             Arrays.stream(b.getActiveNames()).map(this::getActiveByName).toArray((s) -> new AbstractActive[s]),
@@ -65,165 +119,25 @@ public final class DataSet {
         );
 
         return assembled;
-    }
-    
-    @SuppressWarnings("unchecked")
-    private <T extends AbstractBuildAttribute> void addToMap(T c, HashMap<String, T> map){
-        if(c == null){
-            throw new NullPointerException("Cannot add null to map");
-        }
-        if(map == null){
-            throw new NullPointerException("Cannot add customizable to null map");
-        }
-        
-        /*
-        unchecked cast to type T, but the copy method of AbstractBuildAttribute
-        should return the same type as the object it operates on
-        */
-        map.put(c.getName().toUpperCase(), (T)c.copy());
-    }
-    public void addActive(AbstractActive a){
-        addToMap(a, allActives);
-    }
-    public void addCharacterClass(CharacterClass c){
-        addToMap(c, allCharacterClasses);
-    }
-    public void addPassive(AbstractPassive p){
-		addToMap(p, allPassives);
-	}
-    //Build does not extends AbstractBuildAttribute, so I cannot trigger addToMap
-    public void addBuild(Build b){
-		if(b == null){
-            throw new NullPointerException();
-        }
-        allBuilds.put(b.getName().toUpperCase(), b);
-	}
+    } 
 
-    public void addChampion(Champion champion) {
-        allChampions.put(champion.getName().toUpperCase(), champion);
-    }
-    
-    private <T extends AbstractBuildAttribute> void addAllToMap(T[] cs, HashMap<String, T> map){
-        if(cs == null){
-            throw new NullPointerException("Cannot add null to map");
-        }
-        if(map == null){
-            throw new NullPointerException("Cannot add customizables to null map");
-        }
-        for(T c : cs){
-            addToMap(c, map);
-        }
-    }
-    public void addActives(AbstractActive[] as){
-        addAllToMap(as, allActives);
-    }
-    public void addCharacterClasses(CharacterClass[] cs){
-        addAllToMap(cs, allCharacterClasses);
-    }
-    public void addPassives(AbstractPassive[] ps){
-		addAllToMap(ps, allPassives);
-	}
-    public void addBuilds(Build[] bs){
-        if(bs == null){
-            throw new NullPointerException("cannot add null builds");
-        }
-        for(Build b : bs){
-            addBuild(b);
-        }
-    }
-    
-    public AbstractBuildAttribute getByName(String n, HashMap<String, ? extends AbstractBuildAttribute> map){
-        if(!map.containsKey(n.toUpperCase())){
-            throw new NoSuchElementException("No customizable found with name " + n);
-        }
-        return map.get(n.toUpperCase()).copy();
-    }
-    public AbstractActive getActiveByName(String n){
-        return (AbstractActive)getByName(n, allActives);
-    }
-    public CharacterClass getCharacterClassByName(String n){
-        return (CharacterClass)getByName(n, allCharacterClasses);
-    }
-    public AbstractPassive getPassiveByName(String n){
-        return (AbstractPassive)getByName(n, allPassives);
-	}
-    public Build getBuildByName(String name){
-		if(!allBuilds.containsKey(name.toUpperCase())){
-            throw new NoSuchElementException("No build found with name " + name + ". Did you remember to call Build.addBuild(...)?");
-        }
-        return allBuilds.get(name.toUpperCase()).copy();
-	}
-    public Champion getChampionByName(String name) {
-        name = name.toUpperCase();
-        if (!allChampions.containsKey(name)) {
-            throw new NoSuchElementException("No champion found with name " + name);
-        }
-        return allChampions.get(name).copy();
-            
-    }
-    
-    public AbstractBuildAttribute[] getAll(HashMap<String, ? extends AbstractBuildAttribute> map){
-        return map.values().toArray(new AbstractBuildAttribute[map.size()]);
-    }
-    public AbstractActive[] getAllActives(){
-        return Arrays.copyOf(getAll(allActives), allActives.size(), AbstractActive[].class);
-    }
-    public CharacterClass[] getAllCharacterClasses(){
-        return Arrays.copyOf(getAll(allCharacterClasses), allCharacterClasses.size(), CharacterClass[].class);
-    }
-    public AbstractPassive[] getAllPassives(){
-		return Arrays.copyOf(getAll(allPassives), allPassives.size(), AbstractPassive[].class);
-	}
-    public Build[] getAllBuilds(){
-        return allBuilds.values().toArray(new Build[allBuilds.size()]);
+    public void loadDefaults(){
+        loadDefaultCharacterClasses();
+        loadDefaultActives();
+        loadDefaultPassives();
+        loadDefaultBuilds();
     }
 
-    /**
-     * @return all specifications players can choose from
-     */
-    public Collection<Specification> getAllSpecifications() {
-        var result = new ArrayList<Specification>();
-        for (var build : getAllBuilds()) {
-            result.add(build);
-        }
-        for (var champion : allChampions.values()) {
-            result.add(new ChampionSpecification(champion.getName()));
-        }
+    private void loadDefaultCharacterClasses(){
+		characterClasses.addAll(Arrays.asList(new CharacterClass[]{
+            new CharacterClass("Fire", CustomColors.fireColors, 1, 5, 4, 3),
+            new CharacterClass("Air", CustomColors.airColors, 2, 3, 1, 5),
+            new CharacterClass("Earth", CustomColors.earthColors, 4, 4, 4, 1),
+            new CharacterClass("Water", CustomColors.waterColors, 5, 1, 3, 3)
+        }));
+    }
 
-        return result;
-    }
-    
-    public String[] getAllNames(HashMap<String, ? extends AbstractBuildAttribute> map){
-        //key is capitalized, but we want regular casing, so we can't get this from the key set
-        return map.values().stream().map((AbstractBuildAttribute c)->c.getName()).toArray(String[]::new);
-    }
-    public String[] getAllActiveNames(){
-        return getAllNames(allActives);
-    }
-    public String[] getAllCharacterClassNames(){
-        return getAllNames(allCharacterClasses);
-    }
-    public String[] getAllPassivesNames(){
-		return getAllNames(allPassives);
-	}
-    public String[] getAllBuildNames(){
-		return allBuilds.values().stream().map((b)->b.getName()).toArray(String[]::new);
-	}
-    
-    public AbstractActive getDefaultActive(){
-        return DEFAULT_ACTIVE.copy();
-    }    
-    public CharacterClass getDefaultCharacterClass(){
-        return DEFAULT_CHARACTER_CLASS.copy();
-    }
-    public AbstractPassive getDefaultPassive(){
-        return DEFAULT_PASSIVE.copy();
-    }
-    public Build getDefaultBuild(){
-        return DEFAULT_BUILD.copy();
-    }
-    
-    public void loadDefaultActives(){
+    private void loadDefaultActives(){
 		ElementalActive s = new ElementalActive("Slash", 1, 1, 5, 0, 3);
 		s.setParticleType(ParticleType.SHEAR);
         
@@ -292,24 +206,8 @@ public final class DataSet {
 			bs
 		});
     }
-    
-    public void loadDefaultCharacterClasses(){
-        CharacterClass fire = new CharacterClass("Fire", CustomColors.fireColors, 1, 5, 4, 3);
-		CharacterClass air = new CharacterClass("Air", CustomColors.airColors, 2, 3, 1, 5);
-		CharacterClass earth = new CharacterClass("Earth", CustomColors.earthColors, 4, 4, 4, 1);
-		CharacterClass water = new CharacterClass("Water", CustomColors.waterColors, 5, 1, 3, 3);
-		
-		addCharacterClasses(
-            new CharacterClass[]{
-                fire,
-                air,
-                earth,
-                water
-            }
-        );
-    }
-    
-    public void loadDefaultPassives(){
+
+    private void loadDefaultPassives(){
         // on be hit
 		OnBeHitPassive t = new OnBeHitPassive("Toughness", true);
 		t.addStatus(new Resistance(1, 1));
@@ -354,20 +252,14 @@ public final class DataSet {
                 ch
 		});
     }
-    public void loadDefaultBuilds(){
-        addBuilds(new Build[]{
+
+    private void loadDefaultBuilds(){
+        builds.addAll(Arrays.asList(new Build[]{
             new Build("Default Earth", "Earth", "Boulder Toss", "Warrior's Stance", "Earthquake", "Toughness", "Retaliation", "Crippling Hits"),
             new Build("Default Fire", "Fire", "Fireball", "Fields of Fire", "Burning Rage", "Escapist", "Burning Edge", "Bracing"),
             new Build("Default Water", "Water", "Waterbolt", "Whirlpool", "Healing Rain", "Sharpen", "Bracing", "Leechhealer"),
             new Build("Default Air", "Air", "Boreus", "Zephyrus", "Speed Test", "Momentum", "Sharpen", "Leechhealer"),
             new Build("Flame Charge Fire", "Fire", "Flame Charge", "Earthquake", "Burning Rage", "Cursed", "Burning Edge", "Crippling Hits"),
-        });
-    }
-    
-    public void loadDefaults(){
-        loadDefaultActives();
-        loadDefaultCharacterClasses();
-        loadDefaultPassives();
-        loadDefaultBuilds();
-    }
+        }));
+    } 
 }
