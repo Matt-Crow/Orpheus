@@ -2,6 +2,7 @@ package serialization;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.json.*;
 
@@ -79,5 +80,16 @@ public class JsonUtil {
         if(!obj.containsKey(key)){
             throw new JsonException("Json Object is missing key \'" + key + "\'");
         }
+    }
+
+    public static List<String> toList(JsonArray json) {
+        // JsonString::getString is not the same as JsonValue::toString
+        return json.getValuesAs(JsonString::getString);
+    }
+
+    public static JsonArray toJsonArray(List<String> strings) {
+        var builder = Json.createArrayBuilder();
+        strings.forEach(builder::add);
+        return builder.build();
     }
 }

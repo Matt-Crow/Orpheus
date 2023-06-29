@@ -1,9 +1,13 @@
 package world.builds;
 
+import java.util.Arrays;
+
+import javax.json.Json;
 import javax.json.JsonObject;
 
 import orpheus.core.champions.BuildOrChampion;
 import orpheus.core.champions.Specification;
+import serialization.JsonUtil;
 
 /**
  * A Build is a collection of CharacterClass, 3 active abilities, and 3 passive 
@@ -76,7 +80,13 @@ public class Build implements Specification {
 
     @Override
     public JsonObject doToJson() {
-        var asJson = BuildJsonUtil.serializeJson(this);
+        var asJson = Json.createObjectBuilder()
+            .add("name", name)
+            .add("character class", className)
+            .add("actives", JsonUtil.toJsonArray(Arrays.asList(getActiveNames())))
+            .add("passives", JsonUtil.toJsonArray(Arrays.asList(getPassiveNames())))
+            .build();
+        
         return asJson;
     }
 
