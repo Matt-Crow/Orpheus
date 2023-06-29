@@ -77,7 +77,7 @@ public abstract class AbstractWSNewWorld extends Page{
         return box;
     }
     
-    public Optional<Specification> getSelectedBuild(){
+    public Optional<Specification> getSelectedSpecification(){
         return playerBuild.getSelected();
     }
     

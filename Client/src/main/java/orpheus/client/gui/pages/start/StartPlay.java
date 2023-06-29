@@ -2,18 +2,20 @@ package orpheus.client.gui.pages.start;
 
 import java.awt.BorderLayout;
 import java.io.File;
+import java.util.Arrays;
 
 import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import orpheus.client.ClientAppContext;
-import orpheus.client.gui.components.BuildSelect;
 import orpheus.client.gui.components.FileChooserUtil;
 import orpheus.client.gui.components.HubForm;
+import orpheus.client.gui.components.SpecificationSelector;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.worldselect.WSNewMulti;
 import orpheus.client.gui.pages.worldselect.WSSolo;
+import world.builds.Build;
 import world.builds.BuildJsonUtil;
 import orpheus.client.gui.pages.PageController;
 import orpheus.client.gui.pages.CustomizeBuildPage;
@@ -49,15 +51,17 @@ public class StartPlay extends Page{
         JPanel buildSection = cf.makePanel();
         buildSection.setLayout(new BorderLayout());
         buildSection.add(cf.makeLabel("Your Builds"), BorderLayout.PAGE_START);
-        BuildSelect bs = new BuildSelect(context);
+        var bs = new SpecificationSelector<Build>(cf, Arrays.asList(context.getDataSet().getAllBuilds()));
         buildSection.add(bs, BorderLayout.CENTER);
-        buildSection.add(cf.makeButton("Customize this build", ()->{
-            CustomizeBuildPage cb = new CustomizeBuildPage(
-                context,
-                host,
-                bs.getSelectedBuild()
-            );
-            getHost().switchToPage(cb);
+        buildSection.add(cf.makeButton("Customize this build", () -> {
+            var selected = bs.getSelected();
+            if (selected.isPresent()) {
+                host.switchToPage(new CustomizeBuildPage(
+                    context,
+                    host,
+                    selected.get()
+                ));
+            }
         }), BorderLayout.PAGE_END);
         
         add(buildSection, BorderLayout.LINE_END);

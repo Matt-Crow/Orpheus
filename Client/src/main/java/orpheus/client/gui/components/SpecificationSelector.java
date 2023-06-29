@@ -53,6 +53,8 @@ public class SpecificationSelector<T extends Specification> extends JComponent {
         }
         box.addItemListener((e) -> selectionChanged());
         add(box, BorderLayout.PAGE_END);
+
+        selectionChanged();
     }
 
     private void selectionChanged() {

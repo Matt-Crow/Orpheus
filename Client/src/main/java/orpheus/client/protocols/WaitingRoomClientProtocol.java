@@ -103,7 +103,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
     }
 
     private synchronized void receiveBuildRequest(ServerMessagePacket sm) throws IOException {
-        var selectedBuild = room.getSelectedBuild();
+        var selectedBuild = room.getSelectedSpecification();
         var json = selectedBuild.get().toJson();
         getServer().send(new Message(
                 json.toString(),

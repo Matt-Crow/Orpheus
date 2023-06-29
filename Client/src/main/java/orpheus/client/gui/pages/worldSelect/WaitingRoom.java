@@ -81,7 +81,7 @@ public class WaitingRoom extends Page {
         teamList.setText(newStr);
     }
     
-    public Optional<Specification> getSelectedBuild(){
+    public Optional<Specification> getSelectedSpecification(){
         return playerBuild.getSelected();
     }
     

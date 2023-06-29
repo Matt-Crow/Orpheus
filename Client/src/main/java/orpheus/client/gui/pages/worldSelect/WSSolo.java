@@ -42,7 +42,7 @@ public class WSSolo extends AbstractWSNewWorld{
         
         
         HumanPlayer player = new HumanPlayer(world, "local user");
-        var selected = getSelectedBuild().get();
+        var selected = getSelectedSpecification().get();
         player.applyBuild(getContext().getSpecificationResolver().resolve(selected));
         team1.addMember(player);
         
