@@ -14,7 +14,6 @@ import world.Tile;
 import world.World;
 import world.battle.DamageBacklog;
 import world.builds.actives.MeleeActive;
-import world.builds.actives.Range;
 import world.builds.characterClass.CharacterStatName;
 import world.events.termination.Terminable;
 import world.events.termination.TerminationListener;
@@ -79,9 +78,7 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
         knockbackMag = 0;
         knockbackDur = 0;
 
-        slash = new MeleeActive("Slash", 1, 5, Range.NONE, 3); 
-        slash.setParticleType(ParticleType.SHEAR);
-        slash.setUser(this);
+        slash = MeleeActive.makeBasicAttack(this);
         log = new DamageBacklog(this, minLifeSpan);
         path = null;
 

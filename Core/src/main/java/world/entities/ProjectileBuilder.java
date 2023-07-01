@@ -1,6 +1,5 @@
 package world.entities;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
@@ -92,7 +91,7 @@ public class ProjectileBuilder {
         explodes = Optional.of(new Explodes(active));
         return withUser(active.getUser())
             .withRange(active.getRange()) // todo allow AOE
-            .withParticles(new ParticleGenerator(Arrays.asList(active.getColors()), active.getParticleType()))
+            .withParticles(new ParticleGenerator(active.getColors(), active.getParticleType()))
             .onCollide(new ProjectileAttackBehavior(active));
     }
 

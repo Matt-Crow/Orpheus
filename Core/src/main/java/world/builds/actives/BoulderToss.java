@@ -12,7 +12,7 @@ import gui.graphics.CustomColors;
  */
 public class BoulderToss extends ElementalActive{
     public BoulderToss(){
-        super("Boulder Toss", 1, Range.SHORT, 2, Range.MEDIUM, 4);
+        super("Boulder Toss", Arc.NONE, Range.SHORT, 2, Range.MEDIUM, 4);
 		setParticleType(ParticleType.BURST);
         setColors(CustomColors.earthColors);
     }

@@ -5,6 +5,11 @@ import world.entities.AbstractPlayer;
 import world.entities.ParticleType;
 import world.entities.Projectile;
 import world.entities.ProjectileBuilder;
+
+import java.awt.Color;
+import java.util.Collection;
+import java.util.List;
+
 import gui.graphics.CustomColors;
 import world.Tile;
 import world.builds.characterClass.CharacterClass;
@@ -22,27 +27,23 @@ import world.builds.characterClass.CharacterStatName;
 public class ElementalActive extends AbstractActive {
 
     private final int arcLength;
+    private final Arc arcLength2;
     private final Range projectileRange;
     private final Range areaOfEffect;
     private final int projectileSpeed;
     private final int damage;
 
-    private final int baseArcLength;
     private final int baseProjectileSpeed;
     private final int baseDamage;
 
     private ParticleType particleType; // the type of particles this' projectiles emit @see Projectile
-    private CustomColors[] colors;
+    private List<Color> colors = List.of();
 
     private static int nextUseId = 0; // How many actives have been used thus far. Used to prevent double hitting
 
     /**
      * @param n the name of this active
-     *
-     * @param arc an integer from 1 to 5, denoting how wide of an arc of
-     * projectiles this will spawn upon trigger: 1: 45 2: 90 3: 135 4: 180 5:
-     * 360
-     *
+     * @param arc how wide of an arc of projectiles this will spawn upon trigger
      * @param range how far the projectiles will travel before terminating
      * @param speed 1 to 5. how fast the projectile moves
      * @param aoe 0 to 5. Upon terminating, if this has an aoe (not 0), the
@@ -52,21 +53,20 @@ public class ElementalActive extends AbstractActive {
      * @param dmg 0 to 5. Upon colliding with a player, this' projectiles will
      * inflict a total of (dmg * (5% of average character's HP)) damage.
      */
-    public ElementalActive(String n, int arc, Range range, int speed, Range aoe, int dmg) {
+    public ElementalActive(String n, Arc arc, Range range, int speed, Range aoe, int dmg) {
         super(n);
-
-        baseArcLength = util.Number.minMax(0, arc, 5);
+        this.arcLength2 = arc;
         baseProjectileSpeed = util.Number.minMax(1, speed, 5);
         baseDamage = util.Number.minMax(0, dmg, 5);
 
-        this.arcLength = (baseArcLength == 5) ? 360 : baseArcLength * 45;
+        this.arcLength = arc.getDegrees();
         projectileRange = range;
         projectileSpeed = Tile.TILE_SIZE * baseProjectileSpeed / Settings.FPS;
         areaOfEffect = aoe;
         damage = baseDamage * CharacterClass.BASE_HP / 20;
 
         particleType = ParticleType.NONE;
-        colors = new CustomColors[]{CustomColors.black};
+        colors = List.of(Color.BLACK);
     }
 
     /**
@@ -78,7 +78,7 @@ public class ElementalActive extends AbstractActive {
     public ElementalActive copy() {
         ElementalActive copy = new ElementalActive(
                 getName(),
-                getBaseArcLength(),
+                arcLength2,
                 projectileRange,
                 getBaseProjectileSpeed(),
                 areaOfEffect,
@@ -90,11 +90,15 @@ public class ElementalActive extends AbstractActive {
         return copy;
     }
 
-    public void setColors(CustomColors[] cs) {
-        colors = cs.clone();
+    public void setColors(Collection<Color> colors) {
+        this.colors = List.copyOf(colors);
     }
 
-    public CustomColors[] getColors() {
+    public void setColors(CustomColors[] cs) {
+        colors = List.of(cs);
+    }
+
+    public List<Color> getColors() {
         return colors;
     }
 
@@ -127,10 +131,6 @@ public class ElementalActive extends AbstractActive {
         return damage;
     }
 
-    public final int getBaseArcLength() {
-        return baseArcLength;
-    }
-
     public final int getBaseProjectileSpeed() {
         return baseProjectileSpeed;
     }
@@ -155,10 +155,11 @@ public class ElementalActive extends AbstractActive {
      *
      * @param arcDegrees the number of degrees in the arc
      */
-    protected void spawnArc(int arcDegrees) {
+    private void spawnArc() {
+        var arcDegrees = arcLength2.getDegrees();
         int start = getUser().getFacing().getDegrees() - arcDegrees / 2;
         // spawn projectiles every 15 degrees
-        for (int angleOffset = 0; angleOffset < arcDegrees; angleOffset += 15) {
+        for (int angleOffset = 0; angleOffset <= arcDegrees; angleOffset += 15) {
             spawnProjectile(start + angleOffset);
         }
     }
@@ -195,7 +196,7 @@ public class ElementalActive extends AbstractActive {
      * want any special custom effects.
      */
     protected void doUse() {
-        spawnArc(arcLength);
+        spawnArc();
     }
 
     @Override

@@ -1,6 +1,5 @@
 package world.entities;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 import orpheus.core.world.occupants.WorldOccupant;
@@ -83,7 +82,7 @@ public class Projectile extends WorldOccupant {
             momentum,
             from.getAOE(),
             from.getUser(),
-            new ParticleGenerator(Arrays.asList(from.getColors()), from.getParticleType()), 
+            new ParticleGenerator(from.getColors(), from.getParticleType()), 
             Optional.of(new ProjectileAttackBehavior(from)),
             Optional.empty()
         );

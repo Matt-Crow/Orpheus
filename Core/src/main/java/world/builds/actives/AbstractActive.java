@@ -1,5 +1,7 @@
 package world.builds.actives;
 
+import java.util.List;
+
 import orpheus.core.world.graph.Graphable;
 import world.builds.AbstractTriggerableAttribute;
 
@@ -40,12 +42,18 @@ public abstract class AbstractActive extends AbstractTriggerableAttribute implem
     public void update(){
         super.update();
     }
+
+    protected List<String> getUnavailabilityMessages() {
+        return (isOnCooldown())
+            ? List.of(String.format("On cooldown %3d", getFramesUntilUse()))
+            : List.of();
+    }
     
     @Override
     public abstract AbstractActive copy();
 
     @Override
     public orpheus.core.world.graph.Active toGraph() {
-        return new orpheus.core.world.graph.Active(getName(), getFramesUntilUse());
+        return new orpheus.core.world.graph.Active(getName(), getUnavailabilityMessages());
     }
 }

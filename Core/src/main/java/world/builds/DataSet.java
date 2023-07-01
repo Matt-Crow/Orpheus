@@ -34,7 +34,7 @@ public final class DataSet {
     
     private final CharacterClass DEFAULT_CHARACTER_CLASS = new CharacterClass("Default", CustomColors.rainbow, 3, 3, 3, 3);
     private final AbstractPassive DEFAULT_PASSIVE = new ThresholdPassive("Default", 2);
-    private final Build DEFAULT_BUILD = new Build("0x138", "Default", "RAINBOW OF DOOM", "Healing Rain", "Speed Test", "Cinder Strikes", "Escapist", "Cursed");
+    private final Build DEFAULT_BUILD = new Build("0x138", "Default", "RAINBOW OF DOOM", "Hammer Toss", "Speed Test", "Cinder Strikes", "Escapist", "Cursed");
     
     public DataSet(){        
         DEFAULT_PASSIVE.addStatus(new Resistance(2, 2));
@@ -136,43 +136,40 @@ public final class DataSet {
     }
 
     private void loadDefaultActives(){
-		var s = new MeleeActive("Slash", 1, 5, Range.NONE, 3);
-		s.setParticleType(ParticleType.SHEAR);
-        
 		ElementalActive bt = new BoulderToss();
         ElementalActive fc = new FlameCharge();
 		
-        ElementalActive eq = new ElementalActive("Earthquake", 1, Range.NONE, 2, Range.LONG, 1);
+        ElementalActive eq = new ElementalActive("Earthquake", Arc.CIRCULAR, Range.NONE, 2, Range.LONG, 1);
 		eq.setParticleType(ParticleType.BURST);
         eq.setColors(CustomColors.earthColors);
         eq.addStatus(new Stun(3, 1));
         
-		ElementalActive fof = new ElementalActive("Fields of Fire", 1, Range.NONE, 5, Range.MEDIUM, 1);
+		ElementalActive fof = new ElementalActive("Fields of Fire", Arc.CIRCULAR, Range.NONE, 5, Range.MEDIUM, 1);
 		fof.setParticleType(ParticleType.SHEAR);
         fof.setColors(CustomColors.fireColors);
         fof.addStatus(new Burn(2, 3));
 		
-		ElementalActive fb = new ElementalActive("Fireball", 2, Range.MEDIUM, 3, Range.MEDIUM, 5);
+		ElementalActive fb = new ElementalActive("Fireball", Arc.NARROW, Range.MEDIUM, 3, Range.MEDIUM, 5);
 		fb.setParticleType(ParticleType.BURST);
         fb.setColors(CustomColors.fireColors);
         
-		ElementalActive b = new ElementalActive("Boreus", 1, Range.LONG, 5, Range.NONE, 1);
+		ElementalActive b = new ElementalActive("Boreus", Arc.NONE, Range.LONG, 5, Range.NONE, 1);
 		b.setParticleType(ParticleType.BEAM);
         b.setColors(CustomColors.airColors);
         
-        ElementalActive z = new ElementalActive("Zephyrus", 1, Range.LONG, 5, Range.NONE, 1);
+        ElementalActive z = new ElementalActive("Zephyrus", Arc.NONE, Range.LONG, 5, Range.NONE, 1);
 		z.setParticleType(ParticleType.BEAM);
 		z.setColors(CustomColors.airColors);
         
-        ElementalActive wb = new ElementalActive("Waterbolt", 1, Range.MEDIUM, 3, Range.SHORT, 2);
+        ElementalActive wb = new ElementalActive("Waterbolt", Arc.NARROW, Range.MEDIUM, 3, Range.SHORT, 2);
 		wb.setParticleType(ParticleType.BEAM);
         wb.setColors(CustomColors.waterColors);
         
-        ElementalActive wp = new ElementalActive("Whirlpool", 1, Range.NONE, 4, Range.LONG, 3);
+        ElementalActive wp = new ElementalActive("Whirlpool", Arc.CIRCULAR, Range.NONE, 4, Range.LONG, 3);
         wp.setParticleType(ParticleType.SHEAR);
         wp.setColors(CustomColors.waterColors);
         
-		ElementalActive rod = new ElementalActive("RAINBOW OF DOOM", 4, Range.MEDIUM, 5, Range.LONG, 1);
+		ElementalActive rod = new ElementalActive("RAINBOW OF DOOM", Arc.WIDE, Range.MEDIUM, 5, Range.LONG, 1);
 		rod.setParticleType(ParticleType.BURST);
 		rod.setColors(CustomColors.rainbow);
 		
@@ -185,7 +182,7 @@ public final class DataSet {
         BoostActive br = new BoostActive("Burning Rage", new AbstractStatus[]{new Strength(3, 3), new Burn(3, 3)});
 		
 		addActives(new AbstractActive[]{
-			s,
+			MeleeActive.makeBasicAttack(),
 			bt,
             fc,
 			eq,
@@ -201,7 +198,8 @@ public final class DataSet {
 			st,
 			ss,
 			hr,
-			bs
+			bs,
+            new HammerToss()
 		});
     }
 

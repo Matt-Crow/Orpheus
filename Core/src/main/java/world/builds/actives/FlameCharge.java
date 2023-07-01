@@ -13,7 +13,7 @@ import world.statuses.Rush;
  */
 public class FlameCharge extends ElementalActive {
     public FlameCharge(){
-        super("Flame Charge", 1, Range.MELEE, 5, Range.NONE, 1);
+        super("Flame Charge", Arc.NONE, Range.MELEE, 5, Range.NONE, 1);
         setColors(CustomColors.fireColors);
         setParticleType(ParticleType.SHEAR);
     }

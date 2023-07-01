@@ -73,12 +73,12 @@ public class HeadsUpDisplay extends JComponent implements EndOfFrameListener {
         for (var i = 0; i < actives.size() && i < activeLabels.length; i++) {
             var active = actives.get(i);
             var label = activeLabels[i];
-            if (active.getCooldown() == 0) {
+            if (active.isAvailable()) {
                 label.setText(actives.get(i).getName());
                 label.setForeground(Color.BLACK);
                 label.setBackground(Color.YELLOW);
             } else {
-                label.setText(String.format("On cooldown: %3d", active.getCooldown()));
+                label.setText(String.join(", ", active.getUnavailabilityMessages()));
                 label.setForeground(Color.RED);
                 label.setBackground(Color.BLACK);
             }    

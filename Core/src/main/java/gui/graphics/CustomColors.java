@@ -17,7 +17,6 @@ public class CustomColors extends Color{
 	public static final CustomColors orange = new CustomColors(255, 100, 0);
 	public static final CustomColors yellow = new CustomColors(200, 200, 0);
 	public static final CustomColors green = new CustomColors(0, 200, 0);
-	//public static final Color darkGreen = new Color(0, 100, 0);
 	public static final CustomColors bluegreen = new CustomColors(0, 255, 200);
 	public static final CustomColors blue = new CustomColors(0, 0, 200);
 	public static final CustomColors purple = new CustomColors(150, 0, 200);
@@ -27,9 +26,9 @@ public class CustomColors extends Color{
 	public static final CustomColors brown = new CustomColors(255, 200, 200);
 	public static final CustomColors gold = new CustomColors(155, 155, 0);
 	public static final CustomColors silver = new CustomColors(200, 200, 200);
-	//pink
 	
 	public static final Collection<Color> FIRE = List.of(red, orange, black);
+	public static final Collection<Color> METAL = List.of(darkGray, gold, silver);
 
 	public static final CustomColors[] fireColors = {red, orange, black};
 	public static final CustomColors[] earthColors = {green, darkGrey, brown};
