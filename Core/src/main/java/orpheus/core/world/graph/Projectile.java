@@ -26,15 +26,13 @@ public class Projectile extends WorldOccupant {
     private static final int BURST_PARTICLES = 8;
 
     private final Direction facing;
-    private final Color color;
     private final List<? extends Color> particleColors;
     private final ParticleType particleType;
 
-    public Projectile(int x, int y, int radius, Direction facing, Color color, 
+    public Projectile(int x, int y, int radius, Direction facing,
         List<? extends Color> particleColors, ParticleType particleType) {
         super(x, y, radius);
         this.facing = facing;
-        this.color = color;
         this.particleColors = particleColors;
         this.particleType = particleType;
     }
@@ -88,7 +86,7 @@ public class Projectile extends WorldOccupant {
     public void draw(Graphics g) {
         if (Settings.DISABLEPARTICLES || particleType == ParticleType.NONE) {
             int r = getRadius();
-            g.setColor(color);
+            g.setColor(particleColors.get(0));
             g.fillOval(getX()-r, getY()-r, 2*r, 2*r);
         }
     }
@@ -101,7 +99,6 @@ public class Projectile extends WorldOccupant {
         }
         return Json.createObjectBuilder(super.toJson())
             .add("facing", facing.getDegrees())
-            .add("color", color.getRGB())
             .add("particleColors", array)
             .add("particleType", particleType.toString())
             .build();
@@ -119,7 +116,6 @@ public class Projectile extends WorldOccupant {
             json.getInt("y"),
             json.getInt("radius"),
             Direction.fromDegrees(json.getInt("facing")),
-            new Color(json.getInt("color")),
             particleColors,
             ParticleType.fromString(json.getString("particleType"))
         );

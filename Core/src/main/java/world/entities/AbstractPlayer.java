@@ -1,25 +1,25 @@
 package world.entities;
 
-import world.battle.DamageBacklog;
-import world.builds.actives.ElementalActive;
-import world.builds.characterClass.CharacterStatName;
-
 import java.awt.Color;
+import java.util.HashMap;
+import java.util.UUID;
+
 import controls.ai.Path;
 import controls.ai.PathInfo;
 import orpheus.core.world.graph.Player;
 import orpheus.core.world.occupants.WorldOccupant;
-import world.statuses.AbstractStatus;
-import world.statuses.StatusName;
+import util.Direction;
 import util.Settings;
+import world.Tile;
+import world.World;
+import world.battle.DamageBacklog;
+import world.builds.actives.MeleeActive;
+import world.builds.actives.Range;
+import world.builds.characterClass.CharacterStatName;
 import world.events.termination.Terminable;
 import world.events.termination.TerminationListener;
-import world.Tile;
-import java.util.HashMap;
-import java.util.UUID;
-
-import util.Direction;
-import world.World;
+import world.statuses.AbstractStatus;
+import world.statuses.StatusName;
 
 /**
  * The AbstractPlayer class essentially acts as a mobile entity with other,
@@ -50,7 +50,7 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
 
     private int lastHitById; //the useId of the last projectile that hit this player
 
-    private final ElementalActive slash;
+    private final MeleeActive slash;
     private final DamageBacklog log;
 
     private final HashMap<StatusName, AbstractStatus> stats = new HashMap<>();
@@ -79,7 +79,7 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
         knockbackMag = 0;
         knockbackDur = 0;
 
-        slash = new ElementalActive("Slash", 1, 1, 5, 0, 3); // todo maybe change
+        slash = new MeleeActive("Slash", 1, 5, Range.NONE, 3); 
         slash.setParticleType(ParticleType.SHEAR);
         slash.setUser(this);
         log = new DamageBacklog(this, minLifeSpan);

@@ -22,9 +22,6 @@ public abstract class AbstractPassive extends AbstractTriggerableAttribute{
 		return targetsUser;
 	}
     
-    
-	
-    
     @Override
     public void trigger(){
         

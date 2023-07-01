@@ -1,5 +1,7 @@
 package world.builds;
 
+import java.util.function.Consumer;
+
 import orpheus.core.utils.Prototype;
 import world.entities.AbstractPlayer;
 
@@ -13,6 +15,17 @@ public abstract class AbstractBuildAttribute implements Prototype {
 	
 	public AbstractBuildAttribute(String n){
         name = n;
+	}
+
+	/**
+	 * Calls a function on this passive's user, if the user is set
+	 * @param doThis the function to call on this passive's user
+	 */
+	protected void withUser(Consumer<AbstractPlayer> doThis) {
+		var user = getUser();
+		if (user != null) {
+			doThis.accept(user);
+		}
 	}
     
 	@Override

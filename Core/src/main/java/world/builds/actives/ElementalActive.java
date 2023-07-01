@@ -4,6 +4,7 @@ import util.Settings;
 import world.entities.AbstractPlayer;
 import world.entities.ParticleType;
 import world.entities.Projectile;
+import world.entities.ProjectileBuilder;
 import gui.graphics.CustomColors;
 import world.Tile;
 import world.builds.characterClass.CharacterClass;
@@ -21,14 +22,12 @@ import world.builds.characterClass.CharacterStatName;
 public class ElementalActive extends AbstractActive {
 
     private final int arcLength;
-    private final int projectileRange;
-    private final int areaOfEffect;
+    private final Range projectileRange;
+    private final Range areaOfEffect;
     private final int projectileSpeed;
     private final int damage;
 
     private final int baseArcLength;
-    private final int baseProjRange;
-    private final int baseAreaOfEffect;
     private final int baseProjectileSpeed;
     private final int baseDamage;
 
@@ -44,8 +43,7 @@ public class ElementalActive extends AbstractActive {
      * projectiles this will spawn upon trigger: 1: 45 2: 90 3: 135 4: 180 5:
      * 360
      *
-     * @param range 0 to 5. how far the projectiles will travel before
-     * terminating
+     * @param range how far the projectiles will travel before terminating
      * @param speed 1 to 5. how fast the projectile moves
      * @param aoe 0 to 5. Upon terminating, if this has an aoe (not 0), the
      * terminating projectile will explode into other projectiles, which will
@@ -54,23 +52,17 @@ public class ElementalActive extends AbstractActive {
      * @param dmg 0 to 5. Upon colliding with a player, this' projectiles will
      * inflict a total of (dmg * (5% of average character's HP)) damage.
      */
-    public ElementalActive(String n, int arc, int range, int speed, int aoe, int dmg) {
+    public ElementalActive(String n, int arc, Range range, int speed, Range aoe, int dmg) {
         super(n);
 
         baseArcLength = util.Number.minMax(0, arc, 5);
-        baseProjRange = util.Number.minMax(0, range, 5);
         baseProjectileSpeed = util.Number.minMax(1, speed, 5);
-        baseAreaOfEffect = util.Number.minMax(0, aoe, 5);
         baseDamage = util.Number.minMax(0, dmg, 5);
 
         this.arcLength = (baseArcLength == 5) ? 360 : baseArcLength * 45;
-        int rng = 0;
-        for (int i = 1; i <= baseProjRange; i++) {
-            rng += i;
-        }
-        projectileRange = rng * Tile.TILE_SIZE;
+        projectileRange = range;
         projectileSpeed = Tile.TILE_SIZE * baseProjectileSpeed / Settings.FPS;
-        areaOfEffect = baseAreaOfEffect * Tile.TILE_SIZE;
+        areaOfEffect = aoe;
         damage = baseDamage * CharacterClass.BASE_HP / 20;
 
         particleType = ParticleType.NONE;
@@ -87,9 +79,9 @@ public class ElementalActive extends AbstractActive {
         ElementalActive copy = new ElementalActive(
                 getName(),
                 getBaseArcLength(),
-                getBaseRange(),
+                projectileRange,
                 getBaseProjectileSpeed(),
-                getBaseAreaOfEffect(),
+                areaOfEffect,
                 getBaseDamage());
         copy.setParticleType(getParticleType());
         copy.setColors(getColors());
@@ -119,7 +111,7 @@ public class ElementalActive extends AbstractActive {
         return arcLength;
     }
 
-    public final int getRange() {
+    public Range getRange() {
         return projectileRange;
     }
 
@@ -127,7 +119,7 @@ public class ElementalActive extends AbstractActive {
         return projectileSpeed;
     }
 
-    public final int getAOE() {
+    public Range getAOE() {
         return areaOfEffect;
     }
 
@@ -139,16 +131,8 @@ public class ElementalActive extends AbstractActive {
         return baseArcLength;
     }
 
-    public final int getBaseRange() {
-        return baseProjRange;
-    }
-
     public final int getBaseProjectileSpeed() {
         return baseProjectileSpeed;
-    }
-
-    public final int getBaseAreaOfEffect() {
-        return areaOfEffect;
     }
 
     public final int getBaseDamage() {
@@ -227,8 +211,8 @@ public class ElementalActive extends AbstractActive {
         desc
                 .append(getName())
                 .append(": \n");
-        if (getRange() == 0) {
-            desc.append(String.format("The user generates an explosion with a %d unit radius", getAOE() / Tile.TILE_SIZE));
+        if (projectileRange == Range.NONE) {
+            desc.append(String.format("The user generates an explosion with a %d unit radius", areaOfEffect.getInTiles()));
         } else {
             desc.append("The user launches ");
             if (getArcLength() > 0) {
@@ -242,13 +226,13 @@ public class ElementalActive extends AbstractActive {
                 desc.append("a projectile, which travels ");
             }
             desc.append(String.format("for %d units, at %d units per second",
-                    getRange() / Tile.TILE_SIZE,
+                    projectileRange.getInTiles(),
                     getSpeed() * Settings.FPS / Tile.TILE_SIZE
             )
             );
 
-            if (getAOE() != 0) {
-                desc.append(String.format(" before exploding in a %d unit radius", getAOE() / Tile.TILE_SIZE));
+            if (areaOfEffect != Range.NONE) {
+                desc.append(String.format(" before exploding in a %d unit radius", areaOfEffect.getInTiles()));
             }
         }
 
@@ -259,14 +243,13 @@ public class ElementalActive extends AbstractActive {
     }
 
     public Projectile createProjectile() {
-        return Projectile.seed(
-            getUser().getWorld(),
-            nextUseId,
-            getUser().getX(),
-            getUser().getY(),
-            0,
-            projectileSpeed,
-            this
-        );
+        var p = new ProjectileBuilder()
+            .at(getUser())
+            .from(this)
+            .withUseId(nextUseId)
+            .facing(0)
+            .withMomentum(projectileSpeed)
+            .build();
+        return p;
     }
 }

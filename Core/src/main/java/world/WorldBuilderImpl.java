@@ -5,15 +5,16 @@ import java.awt.Color;
 import java.io.IOException;
 import world.battle.Team;
 import world.game.Game;
+import world.game.Onslaught;
 
 /**
  *
  * @author Matt Crow
  */
 public class WorldBuilderImpl implements WorldBuilder {
-    private Team players;
-    private Team ai;
-    private Game game;
+    private Team players = Team.ofPlayers();
+    private Team ai = Team.ofPlayers();
+    private Game game = new Onslaught(1);
     
     @Override
     public WorldBuilderImpl withPlayers(Team players){

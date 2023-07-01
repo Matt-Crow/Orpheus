@@ -1,29 +1,57 @@
 package world.entities;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import orpheus.core.world.occupants.WorldOccupant;
-import util.Settings;
 import world.World;
 import world.builds.actives.ElementalActive;
+import world.builds.actives.Range;
 
 public class Projectile extends WorldOccupant {
 
-    private final ElementalActive registeredAttack;
-    private double distanceTraveled;
-    private int range;
+    /**
+     * determines what kind of particles this emits
+     */
+    private final ParticleGenerator particles;
 
     /**
-     * whether this project can explode, spawning more projectiles
+     * determine how this will react upon colliding with a player
      */
-    private boolean canExplode;
+    private final Optional<ProjectileCollideBehavior> collideBehavior;
+
+    /**
+     * how far this will travel before terminating
+     */
+    private final Range range;
+
+    /**
+     * determines whether this explodes on termination
+     */
+    private final Optional<Explodes> explodes;
+
+    private double distanceTraveled;
 
     private final int useId; //used to prevent double hitting. May not be unique to a single projectile. See AbstractActive for more info
 
-    private Projectile(int useId, int x, int y, int degrees, int momentum, 
-        ElementalActive a, boolean canExplode) {
+
+    protected Projectile(
+            int useId, 
+            int x, 
+            int y, 
+            int degrees, 
+            int momentum, 
+            Range range,
+            AbstractPlayer user,
+            ParticleGenerator particles, 
+            Optional<ProjectileCollideBehavior> collideBehavior,
+            Optional<Explodes> explodes
+    ) {
         
-        super(a.getUser().getWorld());
+        super(user.getWorld());
+
+        this.particles = particles;
+
         setBaseSpeed(momentum);
         init();
         setX(x);
@@ -31,58 +59,34 @@ public class Projectile extends WorldOccupant {
         setFacing(degrees);
         this.useId = useId;
         distanceTraveled = 0;
-        setTeam(a.getUser().getTeam());
-        registeredAttack = a;
-        range = a.getRange();
+        setTeam(user.getTeam());
         setRadius(25);
         setMoving(true);
-        this.canExplode = canExplode;
-    }
 
-    private Projectile(World inWorld, int useId, int x, int y, int degrees, 
-        int momentum, ElementalActive a) {
-        
-        this(useId, x, y, degrees, momentum, a, false);
-    }
-
-    /**
-     * Creates a projectile that can explode into more projectiles
-     * @param inWorld
-     * @param useId
-     * @param x
-     * @param y
-     * @param angle
-     * @param momentum
-     * @param user
-     * @param from
-     * @return
-     */
-    public static Projectile seed(World inWorld, int useId, int x, int y, 
-        int angle, int momentum, ElementalActive from) {
-
-        var p = new Projectile(inWorld, useId, x, y, angle, momentum, from);
-        p.canExplode = from.getAOE() != 0;
-        return p;
+        this.range = range;
+        this.collideBehavior = collideBehavior;
+        this.explodes = explodes;
     }
 
     /**
      * Creates a projectile that has exploded from another projectile, and thus
      * can no longer explode.
-     * @param inWorld
-     * @param useId
-     * @param x
-     * @param y
-     * @param angle
-     * @param momentum
-     * @param user
-     * @param from
-     * @return
      */
     public static Projectile explosion(World inWorld, int useId, int x, int y, 
         int angle, int momentum, ElementalActive from) {
         
-        var p = new Projectile(useId, x, y, angle, momentum, from, false);
-        p.range = (int)from.getAOE();
+        var p = new Projectile(
+            useId, 
+            x, 
+            y, 
+            angle, 
+            momentum,
+            from.getAOE(),
+            from.getUser(),
+            new ParticleGenerator(Arrays.asList(from.getColors()), from.getParticleType()), 
+            Optional.of(new ProjectileAttackBehavior(from)),
+            Optional.empty()
+        );
 
         return p;
     }
@@ -96,7 +100,7 @@ public class Projectile extends WorldOccupant {
     }
 
     public void hit(AbstractPlayer p) {
-        registeredAttack.hit(this, p);
+        collideBehavior.ifPresent(b -> b.collidedWith(this, p));
         p.wasHitBy(this);
         getActionRegister().triggerOnHit(p);
         terminate();
@@ -121,7 +125,7 @@ public class Projectile extends WorldOccupant {
         super.update();
         distanceTraveled += getComputedSpeed();
 
-        if (distanceTraveled >= range && !isTerminating()) {
+        if (distanceTraveled >= range.getInPixels() && !isTerminating()) {
             terminate();
         }
     }
@@ -129,17 +133,7 @@ public class Projectile extends WorldOccupant {
     @Override
     public void terminate() {
         super.terminate();
-        if (canExplode) {
-            explode();
-        }
-    }
-
-    private void explode() {
-        World w = getWorld();
-        for (int i = 0; i < Settings.TICKSTOROTATE; i++) {
-            registeredAttack.getUser().spawn(Projectile.explosion(w, useId, getX(), getY(), 360 * i / Settings.TICKSTOROTATE, 5, registeredAttack));
-        }
-        canExplode = false;
+        explodes.ifPresent(e -> e.explode(this));
     }
 
     @Override
@@ -149,9 +143,8 @@ public class Projectile extends WorldOccupant {
             getY(),
             getRadius(),
             getFacing().copy(),
-            registeredAttack.getUser().getTeam().getColor(),
-            Arrays.stream(registeredAttack.getColors()).toList(),
-            registeredAttack.getParticleType()
+            particles.getColors(),
+            particles.getType()
         );
     }
 }

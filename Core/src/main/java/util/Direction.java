@@ -105,4 +105,17 @@ public class Direction {
 	public Direction copy() {
 		return Direction.fromDegrees(degrees);
 	}
+
+	public Direction rotatedBy(int offsetDegrees) {
+		return Direction.fromDegrees(degrees + offsetDegrees);
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof Direction) {
+			var asDir = (Direction)other;
+			return asDir.degrees == this.degrees;
+		}
+		return false;
+	}
 }

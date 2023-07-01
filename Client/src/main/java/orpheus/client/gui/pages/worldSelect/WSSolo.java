@@ -3,8 +3,6 @@ package orpheus.client.gui.pages.worldselect;
 import orpheus.client.gui.pages.PlayerControls;
 import world.battle.Team;
 import world.entities.HumanPlayer;
-import java.awt.Color;
-
 import orpheus.client.ClientAppContext;
 import orpheus.client.gui.pages.play.HeadsUpDisplay;
 import orpheus.client.gui.pages.play.LocalWorldSupplier;
@@ -27,13 +25,11 @@ public class WSSolo extends AbstractWSNewWorld{
     
     @Override
     public void start(){
-        Team team1 = new Team("Players", Color.green);
-        Team team2 = new Team("AI", Color.red);
-        
+        var players = Team.ofPlayers();        
         World world = new WorldBuilderImpl()
                 .withGame(createGame())
-                .withPlayers(team1)
-                .withAi(team2)
+                .withPlayers(players)
+                .withAi(Team.ofAi())
                 .build();
         
         var graph = new LocalWorldSupplier(world);
@@ -44,7 +40,7 @@ public class WSSolo extends AbstractWSNewWorld{
         HumanPlayer player = new HumanPlayer(world, "local user");
         var selected = getSelectedSpecification().get();
         player.applyBuild(getContext().getSpecificationResolver().resolve(selected));
-        team1.addMember(player);
+        players.addMember(player);
         
         // model must have teams set before WorldCanvas init, as WC relies on getting the player team
         WorldCanvas renderer = new WorldCanvas(

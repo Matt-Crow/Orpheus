@@ -1,6 +1,8 @@
 package gui.graphics;
 
 import java.awt.Color;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * The CustomColors class is used to store color patterns and create
@@ -27,6 +29,8 @@ public class CustomColors extends Color{
 	public static final CustomColors silver = new CustomColors(200, 200, 200);
 	//pink
 	
+	public static final Collection<Color> FIRE = List.of(red, orange, black);
+
 	public static final CustomColors[] fireColors = {red, orange, black};
 	public static final CustomColors[] earthColors = {green, darkGrey, brown};
 	public static final CustomColors[] airColors = {yellow, white, gold};

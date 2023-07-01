@@ -12,7 +12,7 @@ import gui.graphics.CustomColors;
  */
 public class BoulderToss extends ElementalActive{
     public BoulderToss(){
-        super("Boulder Toss", 1, 2, 2, 3, 4);
+        super("Boulder Toss", 1, Range.SHORT, 2, Range.MEDIUM, 4);
 		setParticleType(ParticleType.BURST);
         setColors(CustomColors.earthColors);
     }
@@ -20,7 +20,7 @@ public class BoulderToss extends ElementalActive{
     @Override
     public void hit(Projectile hittingProjectile, AbstractPlayer p){
         super.hit(hittingProjectile, p);
-        p.knockBack(getRange(), hittingProjectile.getFacing(), Settings.seconds(1));
+        p.knockBack(getRange().getInPixels(), hittingProjectile.getFacing(), Settings.seconds(1));
     }
     
     @Override

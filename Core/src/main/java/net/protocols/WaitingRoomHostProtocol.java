@@ -1,6 +1,5 @@
 package net.protocols;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.util.HashSet;
 
@@ -65,7 +64,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         super(runningServer);
         minigame = game;
         this.specificationResolver = specificationResolver;
-        playerTeam = new Team("Players", Color.GREEN);
+        playerTeam = Team.ofPlayers();
         awaitingBuilds = new HashSet<>();
     }
 
@@ -159,7 +158,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         world = worldBuilder
             .withGame(minigame)
             .withPlayers(playerTeam)
-            .withAi(new Team("AI", Color.red))
+            .withAi(Team.ofAi())
             .build();
     
         getServer().send(new Message(

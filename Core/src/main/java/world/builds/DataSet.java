@@ -32,15 +32,13 @@ public final class DataSet {
     private final PrototypeFactory<AbstractActive> actives = new PrototypeFactory<>();
     private final PrototypeFactory<AbstractPassive> passives = new PrototypeFactory<>();
     
-    private final AbstractActive DEFAULT_ACTIVE = new ElementalActive("Default", 3, 3, 3, 3, 3);
     private final CharacterClass DEFAULT_CHARACTER_CLASS = new CharacterClass("Default", CustomColors.rainbow, 3, 3, 3, 3);
     private final AbstractPassive DEFAULT_PASSIVE = new ThresholdPassive("Default", 2);
-    private final Build DEFAULT_BUILD = new Build("0x138", "Default", "RAINBOW OF DOOM", "Healing Rain", "Speed Test", "Burning Edge", "Escapist", "Cursed");
+    private final Build DEFAULT_BUILD = new Build("0x138", "Default", "RAINBOW OF DOOM", "Healing Rain", "Speed Test", "Cinder Strikes", "Escapist", "Cursed");
     
     public DataSet(){        
         DEFAULT_PASSIVE.addStatus(new Resistance(2, 2));
         
-        actives.add(DEFAULT_ACTIVE);
         passives.add(DEFAULT_PASSIVE);
         addCharacterClass(DEFAULT_CHARACTER_CLASS);
         addBuild(DEFAULT_BUILD);
@@ -138,43 +136,43 @@ public final class DataSet {
     }
 
     private void loadDefaultActives(){
-		ElementalActive s = new ElementalActive("Slash", 1, 1, 5, 0, 3);
+		var s = new MeleeActive("Slash", 1, 5, Range.NONE, 3);
 		s.setParticleType(ParticleType.SHEAR);
         
 		ElementalActive bt = new BoulderToss();
         ElementalActive fc = new FlameCharge();
 		
-        ElementalActive eq = new ElementalActive("Earthquake", 1, 0, 2, 5, 1);
+        ElementalActive eq = new ElementalActive("Earthquake", 1, Range.NONE, 2, Range.LONG, 1);
 		eq.setParticleType(ParticleType.BURST);
         eq.setColors(CustomColors.earthColors);
         eq.addStatus(new Stun(3, 1));
         
-		ElementalActive fof = new ElementalActive("Fields of Fire", 1, 0, 5, 3, 1);
+		ElementalActive fof = new ElementalActive("Fields of Fire", 1, Range.NONE, 5, Range.MEDIUM, 1);
 		fof.setParticleType(ParticleType.SHEAR);
         fof.setColors(CustomColors.fireColors);
         fof.addStatus(new Burn(2, 3));
 		
-		ElementalActive fb = new ElementalActive("Fireball", 2, 3, 3, 3, 5);
+		ElementalActive fb = new ElementalActive("Fireball", 2, Range.MEDIUM, 3, Range.MEDIUM, 5);
 		fb.setParticleType(ParticleType.BURST);
         fb.setColors(CustomColors.fireColors);
         
-		ElementalActive b = new ElementalActive("Boreus", 1, 5, 5, 0, 1);
+		ElementalActive b = new ElementalActive("Boreus", 1, Range.LONG, 5, Range.NONE, 1);
 		b.setParticleType(ParticleType.BEAM);
         b.setColors(CustomColors.airColors);
         
-        ElementalActive z = new ElementalActive("Zephyrus", 1, 5, 5, 0, 1);
+        ElementalActive z = new ElementalActive("Zephyrus", 1, Range.LONG, 5, Range.NONE, 1);
 		z.setParticleType(ParticleType.BEAM);
 		z.setColors(CustomColors.airColors);
         
-        ElementalActive wb = new ElementalActive("Waterbolt", 1, 3, 3, 1, 2);
+        ElementalActive wb = new ElementalActive("Waterbolt", 1, Range.MEDIUM, 3, Range.SHORT, 2);
 		wb.setParticleType(ParticleType.BEAM);
         wb.setColors(CustomColors.waterColors);
         
-        ElementalActive wp = new ElementalActive("Whirlpool", 1, 0, 4, 4, 3);
+        ElementalActive wp = new ElementalActive("Whirlpool", 1, Range.NONE, 4, Range.LONG, 3);
         wp.setParticleType(ParticleType.SHEAR);
         wp.setColors(CustomColors.waterColors);
         
-		ElementalActive rod = new ElementalActive("RAINBOW OF DOOM", 4, 3, 5, 5, 1);
+		ElementalActive rod = new ElementalActive("RAINBOW OF DOOM", 4, Range.MEDIUM, 5, Range.LONG, 1);
 		rod.setParticleType(ParticleType.BURST);
 		rod.setColors(CustomColors.rainbow);
 		
@@ -215,8 +213,6 @@ public final class DataSet {
         cu.addStatus(new Stun(3, 1));
 		
         // on hit
-        OnHitPassive be = new OnHitPassive("Burning Edge", false);
-        be.addStatus(new Burn(1, 1));
         OnHitPassive ch = new OnHitPassive("Crippling Hits", false);
         ch.addStatus(new Stun(1, 1));
         OnHitPassive lh = new OnHitPassive("Leechhealer", true);
@@ -239,27 +235,27 @@ public final class DataSet {
         
         
 		addPassives(new AbstractPassive[]{
-				lh,
-				m,
-				s,
-				t,
-				b,
-				d,
-				e,
-				re,
-                cu,
-                be,
-                ch
+            lh,
+            m,
+            s,
+            t,
+            b,
+            d,
+            e,
+            re,
+            cu,
+            ch,
+            new CinderStrikes()
 		});
     }
 
     private void loadDefaultBuilds(){
         builds.addAll(Arrays.asList(new Build[]{
             new Build("Default Earth", "Earth", "Boulder Toss", "Warrior's Stance", "Earthquake", "Toughness", "Retaliation", "Crippling Hits"),
-            new Build("Default Fire", "Fire", "Fireball", "Fields of Fire", "Burning Rage", "Escapist", "Burning Edge", "Bracing"),
+            new Build("Default Fire", "Fire", "Fireball", "Fields of Fire", "Burning Rage", "Escapist", "Cinder Strikes", "Bracing"),
             new Build("Default Water", "Water", "Waterbolt", "Whirlpool", "Healing Rain", "Sharpen", "Bracing", "Leechhealer"),
             new Build("Default Air", "Air", "Boreus", "Zephyrus", "Speed Test", "Momentum", "Sharpen", "Leechhealer"),
-            new Build("Flame Charge Fire", "Fire", "Flame Charge", "Earthquake", "Burning Rage", "Cursed", "Burning Edge", "Crippling Hits"),
+            new Build("Flame Charge Fire", "Fire", "Flame Charge", "Earthquake", "Burning Rage", "Cinder Strikes", "Momentum", "Crippling Hits"),
         }));
     } 
 }

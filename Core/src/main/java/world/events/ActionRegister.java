@@ -1,6 +1,7 @@
 package world.events;
 
 import orpheus.core.world.occupants.WorldOccupant;
+import world.builds.actives.MeleeActive;
 import world.entities.AbstractPlayer;
 /**
  * An ActionRegister is used to store OnHit- and OnUpdate-Listeners, and register them to an AbstractEntity.
@@ -11,6 +12,7 @@ public class ActionRegister {
 	private final EventListeners<OnHitEvent> onHitListeners = new EventListeners<>();
 	private final EventListeners<OnHitEvent> onBeHitListeners = new EventListeners<>();
 	private final EventListeners<OnUpdateEvent> onUpdateListeners = new EventListeners<>();
+	private final EventListeners<OnUseMeleeEvent> onUseMeleeListeners = new EventListeners<>();
 	
     /**
      * Stores Listeners for an AbstractEntity.
@@ -40,6 +42,10 @@ public class ActionRegister {
 		onUpdateListeners.add(listener);
 	}
 
+	public void addOnUseMelee(EventListener<OnUseMeleeEvent> listener) {
+		onUseMeleeListeners.add(listener);
+	}
+
 	public void triggerOnHit(AbstractPlayer hit){
 		OnHitEvent t = new OnHitEvent(registeredTo, hit);
 		onHitListeners.handle(t);
@@ -54,10 +60,16 @@ public class ActionRegister {
         OnUpdateEvent e = new OnUpdateEvent(registeredTo);
 		onUpdateListeners.handle(e);
 	}
+
+	public void triggerOnUseMelee(MeleeActive meleeAttack) {
+		var e = new OnUseMeleeEvent(registeredTo, meleeAttack);
+		onUseMeleeListeners.handle(e);
+	}
 	
 	public void reset(){
 		onHitListeners.clear();
 		onBeHitListeners.clear();
 		onUpdateListeners.clear();
+		onUseMeleeListeners.clear();
 	}
 }

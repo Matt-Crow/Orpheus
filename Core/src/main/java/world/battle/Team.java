@@ -48,6 +48,32 @@ public class Team implements Graphable {
         membersRem = new ArrayList<>();
     }
 
+    /**
+     * Creates a standard player team.
+     * @param players the players to add to the team.
+     * @return the team with the given players
+     */
+    public static Team ofPlayers(AbstractPlayer... players) {
+        var result = new Team("Players", Color.GREEN);
+        for (var player : players) {
+            result.addMember(player);
+        }
+        return result;
+    }
+
+    /**
+     * Creates a standard AI team.
+     * @param players the players to add to the team.
+     * @return the team with the given players
+     */
+    public static Team ofAi(AbstractPlayer... players) {
+        var result = new Team("AI", Color.RED);
+        for (var player : players) {
+            result.addMember(player);
+        }
+        return result;
+    }
+
     public String getName() {
         return name;
     }
