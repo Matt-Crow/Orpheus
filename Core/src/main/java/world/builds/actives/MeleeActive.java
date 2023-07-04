@@ -16,6 +16,11 @@ public class MeleeActive extends ElementalActive {
         result.setParticleType(ParticleType.SHEAR);
         return result;
     }
+
+    @Override
+    public MeleeActive copy() {
+        return new MeleeActive(getName(), getArc(), getBaseProjectileSpeed(), getAOE(), getBaseDamage());
+    }
     
     @Override
     protected void doUse() {

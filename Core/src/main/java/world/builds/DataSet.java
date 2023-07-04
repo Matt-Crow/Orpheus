@@ -8,6 +8,7 @@ import gui.graphics.CustomColors;
 import orpheus.core.champions.Champion;
 import orpheus.core.champions.ChampionSpecification;
 import orpheus.core.champions.Specification;
+import orpheus.core.champions.orpheus.OrpheusChampion;
 import orpheus.core.utils.PrototypeFactory;
 import world.builds.actives.*;
 import world.builds.characterClass.CharacterClass;
@@ -86,8 +87,8 @@ public final class DataSet {
      */
     public Collection<Specification> getAllSpecifications() {
         var result = new ArrayList<Specification>();
-        result.addAll(builds.getAll());
         result.addAll(championSpecifications.getAll());
+        result.addAll(builds.getAll());
         return result;
     }
 
@@ -124,6 +125,7 @@ public final class DataSet {
         loadDefaultActives();
         loadDefaultPassives();
         loadDefaultBuilds();
+        addChampion(new OrpheusChampion());
     }
 
     private void loadDefaultCharacterClasses(){

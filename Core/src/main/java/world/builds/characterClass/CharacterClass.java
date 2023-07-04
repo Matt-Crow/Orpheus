@@ -1,5 +1,6 @@
 package world.builds.characterClass;
 
+import java.awt.Color;
 import gui.graphics.CustomColors;
 import java.util.function.BiFunction;
 import util.Number;
@@ -12,7 +13,7 @@ import world.builds.AbstractBuildAttribute;
  * @author Matt
  */
 public class CharacterClass extends AbstractBuildAttribute{
-    private CustomColors[] colors;
+    private Color[] colors;
     public static final int BASE_HP = 2000;
 
     private final int maxHP;
@@ -25,7 +26,7 @@ public class CharacterClass extends AbstractBuildAttribute{
     private final int baseRed;
     private final int baseSpe;
     // initializers
-    public CharacterClass(String n, CustomColors[] cs, int HP, int dmg, int reduction, int speed){
+    public CharacterClass(String n, Color[] cs, int HP, int dmg, int reduction, int speed){
         super(n);
         colors = cs;
         
@@ -85,7 +86,7 @@ public class CharacterClass extends AbstractBuildAttribute{
     public void setColors(CustomColors[] cs){
         colors = cs;
     }
-    public CustomColors[] getColors(){
+    public Color[] getColors(){
         return colors;
     }
    

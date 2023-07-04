@@ -5,6 +5,7 @@ import java.util.Arrays;
 import orpheus.core.utils.Prototype;
 import world.builds.AssembledBuild;
 import world.builds.actives.AbstractActive;
+import world.builds.actives.MeleeActive;
 import world.builds.characterClass.CharacterClass;
 import world.builds.passives.AbstractPassive;
 
@@ -15,11 +16,12 @@ public class Champion extends AssembledBuild implements Prototype {
     
     public Champion(
             String name, 
-            CharacterClass characterClass, 
+            CharacterClass characterClass,
+            MeleeActive basicAttack, 
             AbstractActive[] actives,
             AbstractPassive[] passives
     ) {
-        super(name, characterClass, actives, passives);
+        super(name, characterClass, basicAttack, actives, passives);
     }
 
     public ChampionSpecification getSpecification() {
@@ -30,7 +32,8 @@ public class Champion extends AssembledBuild implements Prototype {
     public Champion copy() {
         return new Champion(
             getName(), 
-            getCharacterClass().copy(), 
+            getCharacterClass().copy(),
+            getBasicAttack().copy(),
             copy(getActives()), 
             copy(getPassives())
         );

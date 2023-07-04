@@ -116,6 +116,10 @@ public class ElementalActive extends AbstractActive {
         return arcLength;
     }
 
+    public Arc getArc() {
+        return arcLength2;
+    }
+
     public Range getRange() {
         return projectileRange;
     }
