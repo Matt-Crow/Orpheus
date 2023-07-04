@@ -87,10 +87,9 @@ public class WorldImpl implements World {
     private void checkForCollisions(Team t1, Team t2) {
         t1.forEach((e)->{
             map.checkForTileCollisions(e);
-            if(e instanceof Projectile){
-                t2.getMembersRem().forEach((p)->{
-                    ((Projectile) e).checkForCollisions(p);
-                });
+            if (e instanceof Projectile) {
+                var p = (Projectile)e;
+                t2.getMembersRem().forEach(p::hitIfColliding);
             }
         });
     }

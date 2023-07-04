@@ -6,7 +6,10 @@ import util.Number;
 import world.entities.AbstractPlayer;
 import util.Settings;
 
+import java.util.Optional;
 import java.util.function.UnaryOperator;
+
+import orpheus.core.utils.CastUtil;
 
 /**
  * The Stun status decreases an AbstractEntity's movement speed
@@ -40,7 +43,9 @@ public class Stun extends AbstractStatus implements EventListener<OnUpdateEvent>
 
     @Override
     public void handle(OnUpdateEvent e) {
-        e.getUpdated().multiplySpeedBy(1.0 - 0.25 * getIntensityLevel());
+        Optional<AbstractPlayer> updated = CastUtil.cast(e.getUpdated());
+        updated.orElseThrow(() -> new UnsupportedOperationException("Rush can only handle player updates"));
+        updated.get().multiplySpeedBy(1.0 - 0.25 * getIntensityLevel());
         use();
     }
 }

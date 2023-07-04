@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gui.graphics.CustomColors;
+import util.Direction;
 import world.entities.ParticleType;
 import world.entities.Projectile;
 import world.statuses.Stun;
@@ -52,8 +53,8 @@ public class HammerToss extends ElementalActive {
     }
 
     @Override
-    public Projectile createProjectile(int facingDegrees) {
-        var p = super.createProjectile(facingDegrees);
+    public Projectile createProjectile(Direction facing) {
+        var p = super.createProjectile(facing);
         p.addTerminationListener(t -> {
             if (t == p) {
                 traveling = false;

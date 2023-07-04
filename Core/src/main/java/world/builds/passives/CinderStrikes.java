@@ -45,7 +45,7 @@ public class CinderStrikes extends AbstractPassive implements EventListener<OnUs
         var p = new ProjectileBuilder()
             .withUseId(useId)
             .at(getUser())
-            .facing(getUser().getFacing().rotatedBy(offsetDegrees).getDegrees())
+            .facing(getUser().getFacing().rotatedBy(offsetDegrees))
             .withMomentum(15) // todo move medium or fast
             .withRange(Range.SHORT)
             .withUser(getUser())

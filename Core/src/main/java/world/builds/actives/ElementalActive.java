@@ -1,5 +1,6 @@
 package world.builds.actives;
 
+import util.Direction;
 import util.Settings;
 import world.entities.AbstractPlayer;
 import world.entities.ParticleType;
@@ -142,10 +143,10 @@ public class ElementalActive extends AbstractActive {
     /**
      * Creates a projectile at this' user's coordinates
      *
-     * @param facingDegrees the direction the new projectile will travel
+     * @param facing the direction the new projectile will travel
      */
-    protected void spawnProjectile(int facingDegrees) {
-        var p = createProjectile(facingDegrees);
+    protected void spawnProjectile(Direction facing) {
+        var p = createProjectile(facing);
         getUser().spawn(p);
     }
 
@@ -156,10 +157,10 @@ public class ElementalActive extends AbstractActive {
      */
     private void spawnArc() {
         var arcDegrees = arcLength2.getDegrees();
-        int start = getUser().getFacing().getDegrees() - arcDegrees / 2;
+        var start = getUser().getFacing().rotatedBy(-arcDegrees / 2);
         // spawn projectiles every 15 degrees
         for (int angleOffset = 0; angleOffset <= arcDegrees; angleOffset += 15) {
-            spawnProjectile(start + angleOffset);
+            spawnProjectile(start.rotatedBy(angleOffset));
         }
     }
 
@@ -243,12 +244,12 @@ public class ElementalActive extends AbstractActive {
     }
 
     // todo make private
-    public Projectile createProjectile(int facingDegrees) {
+    public Projectile createProjectile(Direction facing) {
         var builder = new ProjectileBuilder()
             .at(getUser())
             .from(this)
             .withUseId(nextUseId)
-            .facing(facingDegrees)
+            .facing(facing)
             .withMomentum(projectileSpeed);
         var updatedBuilder = withProjectileBuilder(builder);
         var p = updatedBuilder.build();

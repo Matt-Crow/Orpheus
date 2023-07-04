@@ -5,9 +5,6 @@ import world.events.termination.*;
 import java.util.Optional;
 
 import orpheus.core.utils.coordinates.Point;
-import orpheus.core.utils.coordinates.PointUpdater;
-import orpheus.core.utils.coordinates.VectorPointUpdater;
-import orpheus.core.utils.coordinates.PolarVector;
 import orpheus.core.world.graph.Graphable;
 import util.Coordinates;
 import util.Direction;
@@ -47,21 +44,6 @@ public abstract class WorldOccupant implements Graphable, Terminable {
      * The direction this entity is facing
      */
     private Direction facing = Direction.fromDegrees(0);
-
-    /**
-     * The unmodifies speed of this object
-     */
-    private double baseSpeed = 0.0;
-
-    /**
-     * How much this entity's movement should be multiplied by this frame
-     */
-    private double speedMultiplier = 1.0;
-
-    /**
-     * Whether this object is moving
-     */
-    private boolean moving = false;
 
     /**
      * Registers various game event listeners
@@ -146,6 +128,15 @@ public abstract class WorldOccupant implements Graphable, Terminable {
     }
 
     /**
+     * Sets this' coordinates to a copy of the given ones
+     * @param coordinates the coordinates to copy to this
+     */
+    public void setCoordinates(Point coordinates) {
+        setX((int)coordinates.getX());
+        setY((int)coordinates.getY());
+    }
+
+    /**
      * @return a reference to this' coordinates
      */
     public Point getCoordinates() {
@@ -167,41 +158,12 @@ public abstract class WorldOccupant implements Graphable, Terminable {
         facing.setDegrees(degrees);
     }
 
+    public void setFacing(Direction direction) {
+        setFacing(direction.getDegrees());
+    }
+
     public Direction getFacing() {
         return facing;
-    }
-
-    public void setBaseSpeed(double baseSpeed) {
-        if (baseSpeed < 0) {
-            throw new IllegalArgumentException("Speed must be non-negative");
-        }
-        this.baseSpeed = baseSpeed;
-    }
-
-    public double getBaseSpeed() {
-        return baseSpeed;
-    }
-
-    /**
-     * Applies a modifier to this entity's speed that will be removed at the end
-     * of the frame.
-     * @param multiplier the multipier to affect this entity's speed by - multiplicative
-     */
-    public void multiplySpeedBy(double multiplier) {
-        speedMultiplier *= multiplier;
-    }
-
-    /**
-     * @return the distance this will move on the next call to update
-     */
-    public double getComputedSpeed() {
-        return (moving) 
-            ? baseSpeed * speedMultiplier
-            : 0.0;
-    }
-
-    public void setMoving(boolean moving) {
-        this.moving = moving;
     }
 
     /**
@@ -262,8 +224,6 @@ public abstract class WorldOccupant implements Graphable, Terminable {
     public void init() {
         terminationListeners.clear();
         actReg.reset();
-        setMoving(false);
-        speedMultiplier = 1.0;
         terminating = false;
     }
 
@@ -278,16 +238,7 @@ public abstract class WorldOccupant implements Graphable, Terminable {
         }
     }
 
-    /**
-     * can be overridden, but subclasses should ensure they call
-     * super.updateMovement() in their implementation.
-     */
-    protected void updateMovement() {
-        var velocity = new PolarVector(getComputedSpeed(), facing);
-        PointUpdater updater = new VectorPointUpdater(velocity);
-        updater.update(coordinates);
-        speedMultiplier = 1.0;
-    }
+    protected abstract void updateMovement();
 
     @Override
     public void addTerminationListener(TerminationListener listen) {

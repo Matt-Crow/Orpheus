@@ -6,6 +6,9 @@ import java.util.UUID;
 
 import controls.ai.Path;
 import controls.ai.PathInfo;
+import orpheus.core.utils.coordinates.PointUpdater;
+import orpheus.core.utils.coordinates.PolarVector;
+import orpheus.core.utils.coordinates.VectorPointUpdater;
 import orpheus.core.world.graph.Player;
 import orpheus.core.world.occupants.WorldOccupant;
 import util.Direction;
@@ -35,6 +38,21 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
 
     private final String name;
     private Color color;
+
+    /**
+     * The unmodifies speed of this object
+     */
+    private double baseSpeed = 0.0;
+
+    /**
+     * How much this entity's movement should be multiplied by this frame
+     */
+    private double speedMultiplier = 1.0;
+
+    /**
+     * Whether this object is moving
+     */
+    private boolean moving = false;
 
     /*
      * (focusX, focusY) is a point that the entity is trying to reach
@@ -112,6 +130,43 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
 
     protected Color getColor() {
         return color;
+    }
+
+    public void setBaseSpeed(double baseSpeed) {
+        if (baseSpeed < 0) {
+            throw new IllegalArgumentException("Speed must be non-negative");
+        }
+        this.baseSpeed = baseSpeed;
+    }
+
+    public double getBaseSpeed() {
+        return baseSpeed;
+    }
+
+    /**
+     * Applies a modifier to this entity's speed that will be removed at the end
+     * of the frame.
+     * @param multiplier the multipier to affect this entity's speed by - multiplicative
+     */
+    public void multiplySpeedBy(double multiplier) {
+        speedMultiplier *= multiplier;
+    }
+
+    public void setMoving(boolean moving) {
+        this.moving = moving;
+    }
+
+    public boolean isMoving() {
+        return moving;
+    }
+
+    /**
+     * @return the distance this will move on the next call to update
+     */
+    public double getComputedSpeed() {
+        return (isMoving()) 
+            ? getBaseSpeed() * speedMultiplier
+            : 0.0;
     }
 
     protected HashMap<StatusName, AbstractStatus> getStatuses() {
@@ -222,6 +277,9 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
         slash.init();
         log.init();
 
+        speedMultiplier = 1.0;
+        setMoving(false);
+
         path = null;
         lastHitById = -1;
 
@@ -253,8 +311,19 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
                 knockbackDir = null;
             }
         } else {
-            super.updateMovement();
+            updateMovement2();
         }
+    }
+
+    /**
+     * can be overridden, but subclasses should ensure they call
+     * super.updateMovement() in their implementation.
+     */
+    protected void updateMovement2() {
+        var velocity = new PolarVector(getComputedSpeed(), getFacing());
+        PointUpdater updater = new VectorPointUpdater(velocity);
+        updater.update(getCoordinates());
+        speedMultiplier = 1.0;
     }
 
     @Override

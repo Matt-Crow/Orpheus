@@ -2,14 +2,10 @@ package world.entities;
 
 import java.util.Optional;
 
-import orpheus.core.utils.coordinates.PolarVector;
+import orpheus.core.utils.coordinates.Point;
 import orpheus.core.utils.coordinates.TerminablePointUpdater;
-import orpheus.core.utils.coordinates.TerminableVectorPointUpdater;
 import orpheus.core.world.occupants.WorldOccupant;
 import util.Direction;
-import world.World;
-import world.builds.actives.ElementalActive;
-import world.builds.actives.Range;
 
 public class Projectile extends WorldOccupant {
 
@@ -39,43 +35,10 @@ public class Projectile extends WorldOccupant {
      */
     private final int useId; 
 
-
-
     protected Projectile(
             int useId, 
-            int x, 
-            int y, 
-            int degrees, 
-            int momentum, 
-            Range range,
-            AbstractPlayer user,
-            ParticleGenerator particles, 
-            Optional<ProjectileCollideBehavior> collideBehavior,
-            Optional<Explodes> explodes
-    ) {
-        this(
-            useId, 
-            x, 
-            y, 
-            degrees, 
-            momentum,
-            new TerminableVectorPointUpdater(
-                new PolarVector(momentum, Direction.fromDegrees(degrees)), 
-                range.getInPixels()
-            ), 
-            user, 
-            particles, 
-            collideBehavior, 
-            explodes
-        );
-    }
-
-    protected Projectile(
-            int useId, 
-            int x, 
-            int y, 
-            int degrees, 
-            int momentum,
+            Point coordinates,
+            Direction facing,
             TerminablePointUpdater movement,
             AbstractPlayer user,
             ParticleGenerator particles, 
@@ -83,42 +46,16 @@ public class Projectile extends WorldOccupant {
             Optional<Explodes> explodes
     ) {
         super(user.getWorld());
-        setBaseSpeed(momentum);
         init();
-        setX(x);
-        setY(y);
-        setFacing(degrees);
+        setCoordinates(coordinates);
+        setFacing(facing); // still needed by BoulderToss
         setTeam(user.getTeam());
         setRadius(25);
-        setMoving(true);
         this.movement = movement;
         this.particles = particles;
         this.collideBehavior = collideBehavior;
         this.explodes = explodes;
         this.useId = useId;
-    }    
-
-    /**
-     * Creates a projectile that has exploded from another projectile, and thus
-     * can no longer explode.
-     */
-    public static Projectile explosion(World inWorld, int useId, int x, int y, 
-        int angle, int momentum, ElementalActive from) {
-        
-        var p = new Projectile(
-            useId, 
-            x, 
-            y, 
-            angle, 
-            momentum,
-            from.getAOE(),
-            from.getUser(),
-            new ParticleGenerator(from.getColors(), from.getParticleType()), 
-            Optional.of(new ProjectileAttackBehavior(from)),
-            Optional.empty()
-        );
-
-        return p;
     }
 
     /**
@@ -129,25 +66,21 @@ public class Projectile extends WorldOccupant {
         return useId;
     }
 
-    public void hit(AbstractPlayer p) {
+    /**
+     * Hits the given player if this is colliding with them
+     * @param p the player to check if this is colliding with
+     */
+    public void hitIfColliding(AbstractPlayer p) {
+        if (isCollidingWith(p) && p.getLastHitById() != useId) {
+            hit(p);
+        }
+    }
+
+    private void hit(AbstractPlayer p) {
         collideBehavior.ifPresent(b -> b.collidedWith(this, p));
         p.wasHitBy(this);
         getActionRegister().triggerOnHit(p);
         terminate();
-    }
-
-    public boolean checkForCollisions(AbstractPlayer p) {
-        boolean ret = super.isCollidingWith(p);
-        if (ret && p.getLastHitById() != useId) {
-            ret = true;
-            hit(p);
-        }
-        return ret;
-    }
-
-    @Override
-    public void init() {
-        super.init();
     }
 
     @Override
@@ -161,7 +94,7 @@ public class Projectile extends WorldOccupant {
     @Override
     protected void updateMovement() {
         // do not call super method
-        this.movement.update(getCoordinates());
+        movement.update(getCoordinates());
     }
 
     @Override

@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
+import orpheus.core.utils.coordinates.Point;
 import orpheus.core.utils.coordinates.PolarVector;
 import orpheus.core.utils.coordinates.TerminablePointUpdater;
 import orpheus.core.utils.coordinates.TerminableVectorPointUpdater;
@@ -15,10 +16,9 @@ import world.builds.actives.Range;
 
 public class ProjectileBuilder {
     
+    private Point coordinates = new Point();
     private Optional<Integer> useId = Optional.empty();
-    private Optional<Integer> x = Optional.empty();
-    private Optional<Integer> y = Optional.empty();
-    private Optional<Integer> degrees = Optional.empty();
+    private Optional<Direction> facing = Optional.empty();
     private Optional<Integer> momentum = Optional.empty();
     private Range range = Range.MEDIUM;
     private Optional<TerminablePointUpdater> movement = Optional.empty();
@@ -41,18 +41,17 @@ public class ProjectileBuilder {
      * @return the updated builder
      */
     public ProjectileBuilder at(WorldOccupant occupant) {
-        return at(occupant.getX(), occupant.getY())
-            .facing(occupant.getFacing().getDegrees());
+        return at(occupant.getCoordinates().copy()) // need to copy coordinates
+            .facing(occupant.getFacing());
     }
 
-    public ProjectileBuilder at(int x, int y) {
-        this.x = Optional.of(x);
-        this.y = Optional.of(y);
+    public ProjectileBuilder at(Point coordinates) {
+        this.coordinates = coordinates;
         return this;
     }
 
-    public ProjectileBuilder facing(int degrees) {
-        this.degrees = Optional.of(degrees);
+    public ProjectileBuilder facing(Direction facing) {
+        this.facing = Optional.of(facing.copy());
         return this;
     }
 
@@ -100,7 +99,15 @@ public class ProjectileBuilder {
     public ProjectileBuilder from(ElementalActive active) {
         explodes = Optional.of(new Explodes(active));
         return withUser(active.getUser())
-            .withRange(active.getRange()) // todo allow AOE
+            .withRange(active.getRange())
+            .withParticles(new ParticleGenerator(active.getColors(), active.getParticleType()))
+            .onCollide(new ProjectileAttackBehavior(active));
+    }
+
+    public ProjectileBuilder exploded(ElementalActive active) {
+        explodes = Optional.empty();
+        return withUser(active.getUser())
+            .withRange(active.getAOE())
             .withParticles(new ParticleGenerator(active.getColors(), active.getParticleType()))
             .onCollide(new ProjectileAttackBehavior(active));
     }
@@ -108,11 +115,9 @@ public class ProjectileBuilder {
     public Projectile build() {
         var p = new Projectile(
             useId.orElseThrow(required("useId")),
-            x.orElseThrow(required("x")),
-            y.orElseThrow(required("y")), 
-            degrees.orElseThrow(required("facing")), 
-            momentum.orElseThrow(required("momentum")), 
-            movement.orElse(new TerminableVectorPointUpdater(new PolarVector(momentum.get(), Direction.fromDegrees(degrees.get())), range.getInPixels())),
+            coordinates, 
+            facing.orElseThrow(required("facing")),
+            movement.orElse(new TerminableVectorPointUpdater(new PolarVector(momentum.get(), facing.get().copy()), range.getInPixels())),
             user.orElseThrow(required("user")),
             particles,
             collideBehavior,
