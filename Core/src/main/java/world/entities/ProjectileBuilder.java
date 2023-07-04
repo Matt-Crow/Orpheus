@@ -5,7 +5,11 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
+import orpheus.core.utils.coordinates.PolarVector;
+import orpheus.core.utils.coordinates.TerminablePointUpdater;
+import orpheus.core.utils.coordinates.TerminableVectorPointUpdater;
 import orpheus.core.world.occupants.WorldOccupant;
+import util.Direction;
 import world.builds.actives.ElementalActive;
 import world.builds.actives.Range;
 
@@ -17,6 +21,7 @@ public class ProjectileBuilder {
     private Optional<Integer> degrees = Optional.empty();
     private Optional<Integer> momentum = Optional.empty();
     private Range range = Range.MEDIUM;
+    private Optional<TerminablePointUpdater> movement = Optional.empty();
     private Optional<AbstractPlayer> user = Optional.empty();
     private ParticleGenerator particles = ParticleGenerator.NONE;
     private Optional<ProjectileCollideBehavior> collideBehavior = Optional.empty();
@@ -53,6 +58,11 @@ public class ProjectileBuilder {
 
     public ProjectileBuilder withMomentum(int momentum) {
         this.momentum = Optional.of(momentum);
+        return this;
+    }
+
+    public ProjectileBuilder withMovement(TerminablePointUpdater movement) {
+        this.movement = Optional.of(movement);
         return this;
     }
 
@@ -102,7 +112,7 @@ public class ProjectileBuilder {
             y.orElseThrow(required("y")), 
             degrees.orElseThrow(required("facing")), 
             momentum.orElseThrow(required("momentum")), 
-            range,
+            movement.orElse(new TerminableVectorPointUpdater(new PolarVector(momentum.get(), Direction.fromDegrees(degrees.get())), range.getInPixels())),
             user.orElseThrow(required("user")),
             particles,
             collideBehavior,

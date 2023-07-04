@@ -186,18 +186,17 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
             throw new RuntimeException(String.format("received second build from %s, expected only once", sender.getName()));
         }
         
-        var player = new HumanPlayer(
-            world, // world should not be null by now,
-            sender.getName(),
-            sender.getId()
-        );
-        awaitingBuilds.remove(sender);
-
         var deserializer = new SpecificationJsonDeserializer();
         var json = JsonUtil.fromString(sm.getMessage().getBodyText());
         var specification = deserializer.fromJson(json);
         var assembledBuild = specificationResolver.resolve(specification);
-        player.applyBuild(assembledBuild);
+        var player = new HumanPlayer(
+            world, // world should not be null by now,
+            sender.getName(),
+            sender.getId(),
+            assembledBuild
+        );
+        awaitingBuilds.remove(sender);
         playerTeam.addMember(player);
 
         checkIfReady();

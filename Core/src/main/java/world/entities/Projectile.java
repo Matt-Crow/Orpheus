@@ -2,12 +2,21 @@ package world.entities;
 
 import java.util.Optional;
 
+import orpheus.core.utils.coordinates.PolarVector;
+import orpheus.core.utils.coordinates.TerminablePointUpdater;
+import orpheus.core.utils.coordinates.TerminableVectorPointUpdater;
 import orpheus.core.world.occupants.WorldOccupant;
+import util.Direction;
 import world.World;
 import world.builds.actives.ElementalActive;
 import world.builds.actives.Range;
 
 public class Projectile extends WorldOccupant {
+
+    /**
+     * controls this thing's movement in the world - might pass down
+     */
+    private final TerminablePointUpdater movement;
 
     /**
      * determines what kind of particles this emits
@@ -20,18 +29,16 @@ public class Projectile extends WorldOccupant {
     private final Optional<ProjectileCollideBehavior> collideBehavior;
 
     /**
-     * how far this will travel before terminating
-     */
-    private final Range range;
-
-    /**
      * determines whether this explodes on termination
      */
     private final Optional<Explodes> explodes;
 
-    private double distanceTraveled;
+    /**
+     * Projectiles with the same useId cannot hit the same target.
+     * This prevents double-hitting.
+     */
+    private final int useId; 
 
-    private final int useId; //used to prevent double hitting. May not be unique to a single projectile. See AbstractActive for more info
 
 
     protected Projectile(
@@ -46,26 +53,50 @@ public class Projectile extends WorldOccupant {
             Optional<ProjectileCollideBehavior> collideBehavior,
             Optional<Explodes> explodes
     ) {
-        
+        this(
+            useId, 
+            x, 
+            y, 
+            degrees, 
+            momentum,
+            new TerminableVectorPointUpdater(
+                new PolarVector(momentum, Direction.fromDegrees(degrees)), 
+                range.getInPixels()
+            ), 
+            user, 
+            particles, 
+            collideBehavior, 
+            explodes
+        );
+    }
+
+    protected Projectile(
+            int useId, 
+            int x, 
+            int y, 
+            int degrees, 
+            int momentum,
+            TerminablePointUpdater movement,
+            AbstractPlayer user,
+            ParticleGenerator particles, 
+            Optional<ProjectileCollideBehavior> collideBehavior,
+            Optional<Explodes> explodes
+    ) {
         super(user.getWorld());
-
-        this.particles = particles;
-
         setBaseSpeed(momentum);
         init();
         setX(x);
         setY(y);
         setFacing(degrees);
-        this.useId = useId;
-        distanceTraveled = 0;
         setTeam(user.getTeam());
         setRadius(25);
         setMoving(true);
-
-        this.range = range;
+        this.movement = movement;
+        this.particles = particles;
         this.collideBehavior = collideBehavior;
         this.explodes = explodes;
-    }
+        this.useId = useId;
+    }    
 
     /**
      * Creates a projectile that has exploded from another projectile, and thus
@@ -122,11 +153,15 @@ public class Projectile extends WorldOccupant {
     @Override
     public void update() {
         super.update();
-        distanceTraveled += getComputedSpeed();
-
-        if (distanceTraveled >= range.getInPixels() && !isTerminating()) {
+        if (movement.isDone() && !isTerminating()) {
             terminate();
         }
+    }
+
+    @Override
+    protected void updateMovement() {
+        // do not call super method
+        this.movement.update(getCoordinates());
     }
 
     @Override

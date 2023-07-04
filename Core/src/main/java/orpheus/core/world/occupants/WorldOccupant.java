@@ -4,6 +4,10 @@ import world.events.termination.*;
 
 import java.util.Optional;
 
+import orpheus.core.utils.coordinates.Point;
+import orpheus.core.utils.coordinates.PointUpdater;
+import orpheus.core.utils.coordinates.VectorPointUpdater;
+import orpheus.core.utils.coordinates.PolarVector;
 import orpheus.core.world.graph.Graphable;
 import util.Coordinates;
 import util.Direction;
@@ -30,14 +34,9 @@ public abstract class WorldOccupant implements Graphable, Terminable {
     private Optional<Team> team = Optional.empty();
 
     /**
-     * The x-coordinate of this object in the world
+     * the mutable coordinates of this in the world
      */
-    private int x = 0;
-
-    /**
-     * The y-coordinate of this object in the world
-     */
-    private int y = 0;
+    private final Point coordinates = new Point();
 
     /**
      * The radius of this object, measured in pixels
@@ -131,19 +130,26 @@ public abstract class WorldOccupant implements Graphable, Terminable {
     }
 
     public void setX(int x) {
-        this.x = x;
+        coordinates.setX(x);
     }
 
     public int getX() {
-        return x;
+        return (int)coordinates.getX();
     }
 
     public void setY(int y) {
-        this.y = y;
+        coordinates.setY(y);
     }
 
     public int getY() {
-        return y;
+        return (int)coordinates.getY();
+    }
+
+    /**
+     * @return a reference to this' coordinates
+     */
+    public Point getCoordinates() {
+        return coordinates;
     }
 
     public void setRadius(int r) {
@@ -206,7 +212,12 @@ public abstract class WorldOccupant implements Graphable, Terminable {
     }
 
     public final void turnTo(int xCoord, int yCoord) {
-        facing = Direction.getDegreeByLengths(x, y, xCoord, yCoord);
+        facing = Direction.getDegreeByLengths(
+            (int)coordinates.getX(), 
+            (int)coordinates.getY(), 
+            xCoord, 
+            yCoord
+        );
     }
     
     /**
@@ -222,11 +233,12 @@ public abstract class WorldOccupant implements Graphable, Terminable {
     }
 
     public final boolean isWithin(int x, int y, int w, int h) {
-        return (x < this.x + radius //left
-                && x + w > this.x - radius //right
-                && y < this.y + radius //top
-                && y + h > this.y - radius //bottom
-                );
+        return (
+            x < getX() + radius //left
+            && x + w > getX() - radius //right
+            && y < getY() + radius //top
+            && y + h > getY() - radius //bottom
+        );
     }
 
     /**
@@ -271,9 +283,9 @@ public abstract class WorldOccupant implements Graphable, Terminable {
      * super.updateMovement() in their implementation.
      */
     protected void updateMovement() {
-        var s = getComputedSpeed();
-        x += s * facing.getXMod();
-        y += s * facing.getYMod();
+        var velocity = new PolarVector(getComputedSpeed(), facing);
+        PointUpdater updater = new VectorPointUpdater(velocity);
+        updater.update(coordinates);
         speedMultiplier = 1.0;
     }
 

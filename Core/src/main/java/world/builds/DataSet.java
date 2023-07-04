@@ -135,10 +135,7 @@ public final class DataSet {
         }));
     }
 
-    private void loadDefaultActives(){
-		ElementalActive bt = new BoulderToss();
-        ElementalActive fc = new FlameCharge();
-		
+    private void loadDefaultActives(){		
         ElementalActive eq = new ElementalActive("Earthquake", Arc.CIRCULAR, Range.NONE, 2, Range.LONG, 1);
 		eq.setParticleType(ParticleType.BURST);
         eq.setColors(CustomColors.earthColors);
@@ -182,9 +179,8 @@ public final class DataSet {
         BoostActive br = new BoostActive("Burning Rage", new AbstractStatus[]{new Strength(3, 3), new Burn(3, 3)});
 		
 		addActives(new AbstractActive[]{
-			MeleeActive.makeBasicAttack(),
-			bt,
-            fc,
+			new BoulderToss(),
+            new FlameCharge(),
 			eq,
 			fof,
 			fb,

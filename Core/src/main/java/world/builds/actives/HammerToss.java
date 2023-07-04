@@ -52,8 +52,8 @@ public class HammerToss extends ElementalActive {
     }
 
     @Override
-    public Projectile createProjectile() {
-        var p = super.createProjectile();
+    public Projectile createProjectile(int facingDegrees) {
+        var p = super.createProjectile(facingDegrees);
         p.addTerminationListener(t -> {
             if (t == p) {
                 traveling = false;

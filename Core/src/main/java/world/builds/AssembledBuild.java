@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import world.builds.actives.AbstractActive;
+import world.builds.actives.MeleeActive;
 import world.builds.characterClass.CharacterClass;
 import world.builds.passives.AbstractPassive;
 
@@ -15,6 +16,7 @@ public class AssembledBuild {
     private final CharacterClass characterClass;
     private final AbstractActive[] actives;
     private final AbstractPassive[] passives;
+    private final MeleeActive basicAttack;
 
     public AssembledBuild(
         String name,
@@ -22,8 +24,21 @@ public class AssembledBuild {
         AbstractActive[] actives,
         AbstractPassive[] passives
     ) {
+        this(name, characterClass, MeleeActive.makeBasicAttack(), actives, passives);
+    }
+
+    public AssembledBuild(
+        String name,
+        CharacterClass characterClass,
+        MeleeActive basicAttack,
+        AbstractActive[] actives,
+        AbstractPassive[] passives
+    ) {
         if (characterClass == null) {
             throw new IllegalArgumentException("characterClass must not be null");
+        }
+        if (basicAttack == null) {
+            throw new IllegalArgumentException("basicAttack must not be null");
         }
         if (Arrays.stream(actives).anyMatch((act) -> act == null)) {
             throw new IllegalArgumentException("cannot have null active");
@@ -33,6 +48,7 @@ public class AssembledBuild {
         }
         this.name = name;
         this.characterClass = characterClass;
+        this.basicAttack = basicAttack;
         this.actives = actives;
         this.passives = passives;
     }
@@ -43,6 +59,13 @@ public class AssembledBuild {
 
     public CharacterClass getCharacterClass() {
         return characterClass;
+    }
+
+    /**
+     * @return the default attack the player will use
+     */
+    public MeleeActive getBasicAttack() {
+        return basicAttack;
     }
 
     public AbstractActive[] getActives() {

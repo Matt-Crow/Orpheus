@@ -64,6 +64,13 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
     }
 
     public AbstractPlayer(World inWorld, String n, int minLifeSpan, UUID id) {
+        this(inWorld, n, minLifeSpan, id, MeleeActive.makeBasicAttack());
+    }
+
+    // migrating towards this
+    public AbstractPlayer(World inWorld, String n, int minLifeSpan, UUID id,
+        MeleeActive basicAttack
+    ) {
         super(inWorld);
         this.id = id;
         setBaseSpeed(Tile.TILE_SIZE * 5 / Settings.FPS);
@@ -78,13 +85,14 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
         knockbackMag = 0;
         knockbackDur = 0;
 
-        slash = MeleeActive.makeBasicAttack(this);
+        basicAttack.setUser(this);
+        slash = basicAttack;
         log = new DamageBacklog(this, minLifeSpan);
         path = null;
 
         lastHitById = -1;
 
-        setRadius(RADIUS);
+        setRadius(RADIUS);    
     }
 
     /**

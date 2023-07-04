@@ -145,8 +145,7 @@ public class ElementalActive extends AbstractActive {
      * @param facingDegrees the direction the new projectile will travel
      */
     protected void spawnProjectile(int facingDegrees) {
-        var p = createProjectile();
-        p.setFacing(facingDegrees);
+        var p = createProjectile(facingDegrees);
         getUser().spawn(p);
     }
 
@@ -243,14 +242,27 @@ public class ElementalActive extends AbstractActive {
         return desc.toString();
     }
 
-    public Projectile createProjectile() {
-        var p = new ProjectileBuilder()
+    // todo make private
+    public Projectile createProjectile(int facingDegrees) {
+        var builder = new ProjectileBuilder()
             .at(getUser())
             .from(this)
             .withUseId(nextUseId)
-            .facing(0)
-            .withMomentum(projectileSpeed)
-            .build();
+            .facing(facingDegrees)
+            .withMomentum(projectileSpeed);
+        var updatedBuilder = withProjectileBuilder(builder);
+        var p = updatedBuilder.build();
         return p;
+    }
+
+    /**
+     * Subclasses should override this method if they wish to modify the 
+     * projectile being built as part of an attack.
+     * 
+     * @param builder currently being used to build a projectile
+     * @return the updated builder
+     */
+    protected ProjectileBuilder withProjectileBuilder(ProjectileBuilder builder) {
+        return builder;
     }
 }

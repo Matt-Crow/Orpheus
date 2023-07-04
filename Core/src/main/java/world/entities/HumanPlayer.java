@@ -29,17 +29,18 @@ public class HumanPlayer extends AbstractPlayer {
 
     public static final int MIN_LIFE_SPAN = 10;
 
-    public HumanPlayer(World inWorld, String n) {
-        this(inWorld, n, UUID.randomUUID());
+    public HumanPlayer(World inWorld, String n, AssembledBuild build) {
+        this(inWorld, n, UUID.randomUUID(), build);
     }
 
-    public HumanPlayer(World inWorld, String n, UUID id) {
-        super(inWorld, n, MIN_LIFE_SPAN, id);
+    public HumanPlayer(World inWorld, String n, UUID id, AssembledBuild build) {
+        super(inWorld, n, MIN_LIFE_SPAN, id, build.getBasicAttack());
         c = null;
         actives = new AbstractActive[3];
         passives = new AbstractPassive[3];
         movingInCardinalDir = new HashMap<>();
         clearMovement();
+        applyBuild(build);
     }
 
     private void clearMovement() {
@@ -48,7 +49,7 @@ public class HumanPlayer extends AbstractPlayer {
         }
     }
 
-    public void applyBuild(AssembledBuild b) {
+    private void applyBuild(AssembledBuild b) {
         setClass(b.getCharacterClass().copy());
         setActives(Arrays.stream(b.getActives()).map((act) -> act.copy()).toArray((s) -> new AbstractActive[s]));
         setPassives(Arrays.stream(b.getPassives()).map((pas) -> pas.copy()).toArray((s) -> new AbstractPassive[s]));

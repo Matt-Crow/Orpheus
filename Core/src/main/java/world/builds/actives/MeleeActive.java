@@ -1,6 +1,5 @@
 package world.builds.actives;
 
-import world.entities.AbstractPlayer;
 import world.entities.ParticleType;
 
 public class MeleeActive extends ElementalActive {
@@ -9,15 +8,12 @@ public class MeleeActive extends ElementalActive {
         super(n, arc, Range.MELEE, speed, aoe, dmg);
     }
 
+    /**
+     * @return the default basic attack which all characters can use
+     */
     public static MeleeActive makeBasicAttack() {
         var result = new MeleeActive("Slash", Arc.NONE, 5, Range.NONE, 3);
         result.setParticleType(ParticleType.SHEAR);
-        return result;
-    }
-
-    public static MeleeActive makeBasicAttack(AbstractPlayer user) {
-        var result = makeBasicAttack();
-        result.setUser(user);
         return result;
     }
     
