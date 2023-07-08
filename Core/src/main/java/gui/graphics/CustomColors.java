@@ -13,31 +13,30 @@ import java.util.List;
  */
 public class CustomColors extends Color{
 	
-	public static final CustomColors red = new CustomColors(255, 55, 0);
-	public static final CustomColors orange = new CustomColors(255, 100, 0);
-	public static final CustomColors yellow = new CustomColors(200, 200, 0);
-	public static final CustomColors green = new CustomColors(0, 200, 0);
-	public static final CustomColors bluegreen = new CustomColors(0, 255, 200);
-	public static final CustomColors blue = new CustomColors(0, 0, 200);
-	public static final CustomColors purple = new CustomColors(150, 0, 200);
-	public static final CustomColors black = new CustomColors(0, 0, 0);
-	public static final CustomColors white = new CustomColors(255, 255, 255);
-	public static final CustomColors darkGrey = new CustomColors(200, 200, 200);
-	public static final CustomColors brown = new CustomColors(255, 200, 200);
-	public static final CustomColors gold = new CustomColors(155, 155, 0);
-	public static final CustomColors silver = new CustomColors(200, 200, 200);
+	public static final CustomColors RED = new CustomColors(255, 55, 0);
+	public static final CustomColors ORANGE = new CustomColors(255, 100, 0);
+	public static final CustomColors YELLOW = new CustomColors(200, 200, 0);
+	public static final CustomColors GREEN = new CustomColors(0, 200, 0);
+	public static final CustomColors BLUE_GREEN = new CustomColors(0, 255, 200);
+	public static final CustomColors BLUE = new CustomColors(0, 0, 200);
+	public static final CustomColors PURPLE = new CustomColors(150, 0, 200);
+	public static final CustomColors BLACK = new CustomColors(0, 0, 0);
+	public static final CustomColors WHITE = new CustomColors(255, 255, 255);
+	public static final CustomColors DARK_GREY = new CustomColors(200, 200, 200);
+	public static final CustomColors BROWN = new CustomColors(255, 200, 200);
+	public static final CustomColors GOLD = new CustomColors(155, 155, 0);
+	public static final CustomColors SILVER = new CustomColors(200, 200, 200);
 	
-	public static final Collection<Color> FIRE = List.of(red, orange, black);
-	public static final Collection<Color> METAL = List.of(darkGray, gold, silver);
+	public static final Collection<Color> FIRE = List.of(RED, ORANGE, BLACK);
+	public static final Collection<Color> METAL = List.of(darkGray, GOLD, SILVER);
 
-	public static final CustomColors[] fireColors = {red, orange, black};
-	public static final CustomColors[] earthColors = {green, darkGrey, brown};
-	public static final CustomColors[] airColors = {yellow, white, gold};
-	public static final CustomColors[] waterColors = {blue, bluegreen, white};
-	public static final CustomColors[] rainbow = {red, orange, yellow, green, blue, purple};
+	public static final CustomColors[] FIRE_COLORS = {RED, ORANGE, BLACK};
+	public static final CustomColors[] EARTH_COLORS = {GREEN, DARK_GREY, BROWN};
+	public static final CustomColors[] AIR_COLORS = {YELLOW, WHITE, GOLD};
+	public static final CustomColors[] WATER_COLORS = {BLUE, BLUE_GREEN, WHITE};
+	public static final CustomColors[] RAINBOW_COLORS = {RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE};
 	
-	public static final CustomColors[][] all = {fireColors, earthColors, airColors, waterColors, rainbow};
-	
+
 	public CustomColors(int r, int g, int b){
 		super(r, g, b);
 	}

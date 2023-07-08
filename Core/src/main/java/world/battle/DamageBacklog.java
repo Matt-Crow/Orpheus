@@ -54,6 +54,10 @@ public final class DamageBacklog {
 	public int getHP(){
 		return remHP;
 	}
+
+	public int getMaxHP() {
+		return maxHP;
+	}
     
     /**
      * 

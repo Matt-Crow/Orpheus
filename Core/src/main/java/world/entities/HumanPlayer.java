@@ -7,10 +7,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.Map.Entry;
+
+import orpheus.core.champions.Playable;
 import util.CardinalDirection;
 import util.Direction;
 import world.World;
-import world.builds.AssembledBuild;
 import world.builds.actives.AbstractActive;
 import world.builds.characterClass.CharacterClass;
 import world.builds.characterClass.CharacterStatName;
@@ -22,25 +23,26 @@ import world.builds.passives.AbstractPassive;
  */
 public class HumanPlayer extends AbstractPlayer {
 
-    private CharacterClass c;
+    private final Playable playingAs; // can later change to reference this instead of copying data from it
+    private CharacterClass characterClass; // cannot be final yet
     private final AbstractActive[] actives;
     private final AbstractPassive[] passives;
     private final HashMap<CardinalDirection, Boolean> movingInCardinalDir; // used for key controls 
 
     public static final int MIN_LIFE_SPAN = 10;
 
-    public HumanPlayer(World inWorld, String n, AssembledBuild build) {
-        this(inWorld, n, UUID.randomUUID(), build);
+    public HumanPlayer(World inWorld, String n, Playable playable) {
+        this(inWorld, n, UUID.randomUUID(), playable);
     }
 
-    public HumanPlayer(World inWorld, String n, UUID id, AssembledBuild build) {
-        super(inWorld, n, MIN_LIFE_SPAN, id, build.getBasicAttack());
-        c = null;
+    public HumanPlayer(World inWorld, String n, UUID id, Playable playable) {
+        super(inWorld, n, MIN_LIFE_SPAN, id, playable.getBasicAttack());
         actives = new AbstractActive[3];
         passives = new AbstractPassive[3];
         movingInCardinalDir = new HashMap<>();
+        playingAs = playable;
         clearMovement();
-        applyBuild(build);
+        playAs(playable);
     }
 
     private void clearMovement() {
@@ -49,35 +51,31 @@ public class HumanPlayer extends AbstractPlayer {
         }
     }
 
-    private void applyBuild(AssembledBuild b) {
-        setClass(b.getCharacterClass().copy());
-        setActives(Arrays.stream(b.getActives()).map((act) -> act.copy()).toArray((s) -> new AbstractActive[s]));
-        setPassives(Arrays.stream(b.getPassives()).map((pas) -> pas.copy()).toArray((s) -> new AbstractPassive[s]));
-        setBaseSpeed((int) (c.getSpeed() * (500.0 / Settings.FPS)));
+    /**
+     * Sets the playable thing this is playing as
+     * @param playingAs the playable to play as
+     */
+    private void playAs(Playable playingAs) {
+        setClass(playingAs.getCharacterClass());
+        setActives(playingAs.getActives().toArray(AbstractActive[]::new));
+        setPassives(playingAs.getPassives().toArray(AbstractPassive[]::new));
+        setBaseSpeed((int) (characterClass.getSpeed() * (500.0 / Settings.FPS)));
     }
 
-    public void setClass(CharacterClass characterClass) {
-        c = characterClass;
-        setColor(c.getColors()[0]);
-        c.setUser(this);
+    private void setClass(CharacterClass characterClass) {
+        this.characterClass = characterClass;
+        setColor(characterClass.getColor());
+        characterClass.setUser(this);
     }
 
-    public CharacterClass getCharacterClass() {
-        return c;
-    }
-
-    public void setActives(AbstractActive[] actives) {
+    private void setActives(AbstractActive[] actives) {
         for (int i = 0; i < 3; i++) {
             this.actives[i] = actives[i];
             this.actives[i].setUser(this);
         }
     }
 
-    public AbstractActive[] getActives() {
-        return actives;
-    }
-
-    public void setPassives(AbstractPassive[] passives) {
+    private void setPassives(AbstractPassive[] passives) {
         for (int i = 0; i < 3; i++) {
             this.passives[i] = passives[i];
             this.passives[i].setUser(this);
@@ -96,7 +94,7 @@ public class HumanPlayer extends AbstractPlayer {
 
     @Override
     public void playerInit() {
-        c.init();
+        characterClass.init();
         for (AbstractActive a : actives) {
             a.init();
         }
@@ -140,16 +138,16 @@ public class HumanPlayer extends AbstractPlayer {
         double ret = 0.0;
         switch (n) {
             case HP:
-                ret = c.getMaxHP();
+                ret = characterClass.getMaxHP();
                 break;
             case DMG:
-                ret = c.getOffMult();
+                ret = characterClass.getOffMult();
                 break;
             case REDUCTION:
-                ret = c.getDefMult();
+                ret = characterClass.getDefMult();
                 break;
             case SPEED:
-                ret = c.getSpeed();
+                ret = characterClass.getSpeed();
                 break;
         }
         return ret;
@@ -166,6 +164,7 @@ public class HumanPlayer extends AbstractPlayer {
             getStatuses().values().stream().map(AbstractStatus::toString).toList(),
             getTeam().getColor(),
             getColor(),
+            playingAs.toGraph(),
             Arrays.stream(actives).map(AbstractActive::toGraph).toList()
         );
     }

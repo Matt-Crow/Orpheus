@@ -1,7 +1,6 @@
 package world.builds.characterClass;
 
 import java.awt.Color;
-import gui.graphics.CustomColors;
 import java.util.function.BiFunction;
 import util.Number;
 import world.builds.AbstractBuildAttribute;
@@ -13,9 +12,7 @@ import world.builds.AbstractBuildAttribute;
  * @author Matt
  */
 public class CharacterClass extends AbstractBuildAttribute{
-    private Color[] colors;
-    public static final int BASE_HP = 2000;
-
+    private final Color color;
     private final int maxHP;
     private final double offenseMultiplier;
     private final double defenseMultiplier;
@@ -25,10 +22,13 @@ public class CharacterClass extends AbstractBuildAttribute{
     private final int baseDmg;
     private final int baseRed;
     private final int baseSpe;
-    // initializers
-    public CharacterClass(String n, Color[] cs, int HP, int dmg, int reduction, int speed){
-        super(n);
-        colors = cs;
+    
+    public static final int BASE_HP = 2000;
+
+    
+    public CharacterClass(String name, Color color, int HP, int dmg, int reduction, int speed){
+        super(name);
+        this.color = color;
         
         baseHp = Number.minMax(1, HP, 5);
         baseDmg = Number.minMax(1, dmg, 5);
@@ -48,7 +48,7 @@ public class CharacterClass extends AbstractBuildAttribute{
     public CharacterClass copy(){
         return new CharacterClass(
             getName(), 
-            getColors(), 
+            getColor(), 
             getBaseHP(),
             getBaseOffenseMultiplier(),
             getBaseDefenseMultiplier(),
@@ -83,11 +83,8 @@ public class CharacterClass extends AbstractBuildAttribute{
         return baseSpe;
     }
 
-    public void setColors(CustomColors[] cs){
-        colors = cs;
-    }
-    public Color[] getColors(){
-        return colors;
+    public Color getColor(){
+        return color;
     }
    
     @Override

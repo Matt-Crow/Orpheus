@@ -1,6 +1,7 @@
 package orpheus.core.champions;
 
-import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import orpheus.core.utils.Prototype;
 import world.builds.AssembledBuild;
@@ -12,16 +13,48 @@ import world.builds.passives.AbstractPassive;
 /**
  * Someone a user can play as, yet cannot customize.
  */
-public class Champion extends AssembledBuild implements Prototype {
+public abstract class Champion implements Playable, Prototype {
     
-    public Champion(
-            String name, 
-            CharacterClass characterClass,
-            MeleeActive basicAttack, 
-            AbstractActive[] actives,
-            AbstractPassive[] passives
-    ) {
-        super(name, characterClass, basicAttack, actives, passives);
+    /**
+     * Orpheus needs to compose instead of inherit, as 'this' must be passed to
+     * some of his ability's constructors.
+     */
+    private Optional<AssembledBuild> inner = Optional.empty();
+
+    public Champion() {
+        inner = Optional.empty();
+    }
+
+    public Champion(AssembledBuild inner) {
+        setInner(inner);
+    }
+
+    protected void setInner(AssembledBuild inner) {
+        this.inner = Optional.of(inner);
+    }
+
+    protected AssembledBuild getInner() {
+        return inner.get();
+    }
+
+    @Override
+    public CharacterClass getCharacterClass() {
+        return inner.get().getCharacterClass();
+    }
+
+    @Override
+    public MeleeActive getBasicAttack() {
+        return inner.get().getBasicAttack();
+    }
+
+    @Override
+    public List<AbstractActive> getActives() {
+        return inner.get().getActives();
+    }
+
+    @Override
+    public List<AbstractPassive> getPassives() {
+        return inner.get().getPassives();
     }
 
     public ChampionSpecification getSpecification() {
@@ -29,25 +62,5 @@ public class Champion extends AssembledBuild implements Prototype {
     }
     
     @Override
-    public Champion copy() {
-        return new Champion(
-            getName(), 
-            getCharacterClass().copy(),
-            getBasicAttack().copy(),
-            copy(getActives()), 
-            copy(getPassives())
-        );
-    }
-
-    private AbstractActive[] copy(AbstractActive[] original) {
-        return Arrays.stream(original)
-            .map((a) -> a.copy())
-            .toArray(AbstractActive[]::new);
-    }
-
-    private AbstractPassive[] copy(AbstractPassive[] original) {
-        return Arrays.stream(original)
-            .map((a) -> a.copy())
-            .toArray(AbstractPassive[]::new);
-    }
+    public abstract Champion copy();
 }

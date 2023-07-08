@@ -3,6 +3,7 @@ package orpheus.core.world.graph;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.json.Json;
@@ -19,15 +20,18 @@ public class Player extends WorldOccupant {
     private final List<String> statuses;
     private final Color teamColor;
     private final Color color;
+    private final Optional<GraphElement> playingAs;
     private final List<Active> actives;
 
     public Player(UUID id, int x, int y, int radius, int hp, 
         List<String> statuses, Color teamColor, Color color) {
-        this(id, x, y, radius, hp, statuses, teamColor, color, List.of());
+        this(id, x, y, radius, hp, statuses, teamColor, color, null, List.of());
     }
 
     public Player(UUID id, int x, int y, int radius, int hp, 
-        List<String> statuses, Color teamColor, Color color, List<Active> actives) {
+        List<String> statuses, Color teamColor, Color color, 
+        GraphElement playingAs, List<Active> actives
+    ) {
         
         super(x, y, radius);
         this.id = id;
@@ -35,6 +39,7 @@ public class Player extends WorldOccupant {
         this.statuses = statuses;
         this.teamColor = teamColor;
         this.color = color;
+        this.playingAs = (playingAs == null) ? Optional.empty() : Optional.of(playingAs);
         this.actives = actives;
     }
 
@@ -82,8 +87,13 @@ public class Player extends WorldOccupant {
             .add("statuses", JsonArrayHelper.fromStrings(statuses))
             .add("teamColor", teamColor.getRGB())
             .add("color", color.getRGB())
+            .add("playingAs", playingAsJson())
             .add("actives", JsonArrayHelper.fromGraphElements(actives))
             .build();
+    }
+
+    private JsonObject playingAsJson() {
+        return playingAs.map(p -> p.toJson()).orElse(JsonObject.EMPTY_JSON_OBJECT);
     }
 
     public static Player fromJson(JsonObject json) {
@@ -96,6 +106,7 @@ public class Player extends WorldOccupant {
             JsonArrayHelper.toStrings(json.getJsonArray("statuses")),
             new Color(json.getInt("teamColor")),
             new Color(json.getInt("color")),
+            null, // to do: deserialize playingAs
             JsonArrayHelper.toGraphElements(json.getJsonArray("actives"), Active::fromJson)
         );
     }

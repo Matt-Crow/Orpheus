@@ -33,7 +33,7 @@ public final class DataSet {
     private final PrototypeFactory<AbstractActive> actives = new PrototypeFactory<>();
     private final PrototypeFactory<AbstractPassive> passives = new PrototypeFactory<>();
     
-    private final CharacterClass DEFAULT_CHARACTER_CLASS = new CharacterClass("Default", CustomColors.rainbow, 3, 3, 3, 3);
+    private final CharacterClass DEFAULT_CHARACTER_CLASS = new CharacterClass("Default", CustomColors.WHITE, 3, 3, 3, 3);
     private final AbstractPassive DEFAULT_PASSIVE = new ThresholdPassive("Default", 2);
     private final Build DEFAULT_BUILD = new Build("0x138", "Default", "RAINBOW OF DOOM", "Hammer Toss", "Speed Test", "Cinder Strikes", "Escapist", "Cursed");
     
@@ -130,47 +130,47 @@ public final class DataSet {
 
     private void loadDefaultCharacterClasses(){
 		characterClasses.addAll(Arrays.asList(new CharacterClass[]{
-            new CharacterClass("Fire", CustomColors.fireColors, 1, 5, 4, 3),
-            new CharacterClass("Air", CustomColors.airColors, 2, 3, 1, 5),
-            new CharacterClass("Earth", CustomColors.earthColors, 4, 4, 4, 1),
-            new CharacterClass("Water", CustomColors.waterColors, 5, 1, 3, 3)
+            new CharacterClass("Fire", CustomColors.RED, 1, 5, 4, 3),
+            new CharacterClass("Air", CustomColors.YELLOW, 2, 3, 1, 5),
+            new CharacterClass("Earth", CustomColors.GREEN, 4, 4, 4, 1),
+            new CharacterClass("Water", CustomColors.BLUE, 5, 1, 3, 3)
         }));
     }
 
     private void loadDefaultActives(){		
         ElementalActive eq = new ElementalActive("Earthquake", Arc.CIRCULAR, Range.NONE, 2, Range.LONG, 1);
 		eq.setParticleType(ParticleType.BURST);
-        eq.setColors(CustomColors.earthColors);
+        eq.setColors(CustomColors.EARTH_COLORS);
         eq.addStatus(new Stun(3, 1));
         
 		ElementalActive fof = new ElementalActive("Fields of Fire", Arc.CIRCULAR, Range.NONE, 5, Range.MEDIUM, 1);
 		fof.setParticleType(ParticleType.SHEAR);
-        fof.setColors(CustomColors.fireColors);
+        fof.setColors(CustomColors.FIRE_COLORS);
         fof.addStatus(new Burn(2, 3));
 		
 		ElementalActive fb = new ElementalActive("Fireball", Arc.NARROW, Range.MEDIUM, 3, Range.MEDIUM, 5);
 		fb.setParticleType(ParticleType.BURST);
-        fb.setColors(CustomColors.fireColors);
+        fb.setColors(CustomColors.FIRE_COLORS);
         
 		ElementalActive b = new ElementalActive("Boreus", Arc.NONE, Range.LONG, 5, Range.NONE, 1);
 		b.setParticleType(ParticleType.BEAM);
-        b.setColors(CustomColors.airColors);
+        b.setColors(CustomColors.AIR_COLORS);
         
         ElementalActive z = new ElementalActive("Zephyrus", Arc.NONE, Range.LONG, 5, Range.NONE, 1);
 		z.setParticleType(ParticleType.BEAM);
-		z.setColors(CustomColors.airColors);
+		z.setColors(CustomColors.AIR_COLORS);
         
         ElementalActive wb = new ElementalActive("Waterbolt", Arc.NARROW, Range.MEDIUM, 3, Range.SHORT, 2);
 		wb.setParticleType(ParticleType.BEAM);
-        wb.setColors(CustomColors.waterColors);
+        wb.setColors(CustomColors.WATER_COLORS);
         
         ElementalActive wp = new ElementalActive("Whirlpool", Arc.CIRCULAR, Range.NONE, 4, Range.LONG, 3);
         wp.setParticleType(ParticleType.SHEAR);
-        wp.setColors(CustomColors.waterColors);
+        wp.setColors(CustomColors.WATER_COLORS);
         
 		ElementalActive rod = new ElementalActive("RAINBOW OF DOOM", Arc.WIDE, Range.MEDIUM, 5, Range.LONG, 1);
 		rod.setParticleType(ParticleType.BURST);
-		rod.setColors(CustomColors.rainbow);
+		rod.setColors(CustomColors.RAINBOW_COLORS);
 		
 		
 		BoostActive ws = new BoostActive("Warrior's Stance", new AbstractStatus[]{new Strength(1, 2), new Resistance(1, 2)});

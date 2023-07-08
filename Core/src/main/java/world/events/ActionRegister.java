@@ -13,6 +13,8 @@ public class ActionRegister {
 	private final EventListeners<OnHitEvent> onBeHitListeners = new EventListeners<>();
 	private final EventListeners<OnUpdateEvent> onUpdateListeners = new EventListeners<>();
 	private final EventListeners<OnUseMeleeEvent> onUseMeleeListeners = new EventListeners<>();
+	private final EventListeners<KillEvent> onKillListeners = new EventListeners<>();
+	private final EventListeners<DamageEvent> onTakeDamageListeners = new EventListeners<>();
 	
     /**
      * Stores Listeners for an AbstractEntity.
@@ -46,6 +48,14 @@ public class ActionRegister {
 		onUseMeleeListeners.add(listener);
 	}
 
+	public void addOnKill(EventListener<KillEvent> listener) {
+		onKillListeners.add(listener);
+	}
+
+	public void addOnTakeDamage(EventListener<DamageEvent> listener) {
+		onTakeDamageListeners.add(listener);
+	}
+
 	public void triggerOnHit(AbstractPlayer hit){
 		OnHitEvent t = new OnHitEvent(registeredTo, hit);
 		onHitListeners.handle(t);
@@ -65,11 +75,27 @@ public class ActionRegister {
 		var e = new OnUseMeleeEvent(registeredTo, meleeAttack);
 		onUseMeleeListeners.handle(e);
 	}
+
+	public void triggerOnKill(AbstractPlayer killed) {
+		var e = new KillEvent(killed);
+		onKillListeners.handle(e);
+	}
+
+	public void triggerOnTakeDamage(int damage) {
+		if (registeredTo instanceof AbstractPlayer) {
+			var maxHP = ((AbstractPlayer)registeredTo).getMaxHP();
+			var percent = ((double)damage) / maxHP;
+			var e = new DamageEvent(damage, percent);
+			onTakeDamageListeners.handle(e);
+		}
+	}
 	
 	public void reset(){
 		onHitListeners.clear();
 		onBeHitListeners.clear();
 		onUpdateListeners.clear();
 		onUseMeleeListeners.clear();
+		onKillListeners.clear();
+		onTakeDamageListeners.clear();
 	}
 }

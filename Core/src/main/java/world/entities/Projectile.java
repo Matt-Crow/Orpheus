@@ -10,6 +10,11 @@ import util.Direction;
 public class Projectile extends WorldOccupant {
 
     /**
+     * the player who spawned this projectile
+     */
+    private final AbstractPlayer spawnedBy;
+
+    /**
      * controls this thing's movement in the world - might pass down
      */
     private final TerminablePointUpdater movement;
@@ -51,6 +56,7 @@ public class Projectile extends WorldOccupant {
         setFacing(facing); // still needed by BoulderToss
         setTeam(user.getTeam());
         setRadius(25);
+        this.spawnedBy = user;
         this.movement = movement;
         this.particles = particles;
         this.collideBehavior = collideBehavior;
@@ -78,7 +84,7 @@ public class Projectile extends WorldOccupant {
 
     private void hit(AbstractPlayer p) {
         collideBehavior.ifPresent(b -> b.collidedWith(this, p));
-        p.wasHitBy(this);
+        p.wasHitBy(spawnedBy, this);
         getActionRegister().triggerOnHit(p);
         terminate();
     }

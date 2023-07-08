@@ -8,7 +8,6 @@ import world.builds.DataSet;
 import world.builds.actives.AbstractActive;
 import world.builds.actives.Arc;
 import world.builds.actives.ElementalActive;
-import world.builds.actives.MeleeActive;
 import world.builds.actives.Range;
 import world.builds.characterClass.CharacterClass;
 import world.builds.passives.AbstractPassive;
@@ -60,16 +59,7 @@ public class SpecificationResolverTester {
     public void givenChampionSpecification_whenChampionExists_doesNotThrowException() {
         var championSpecification = new ChampionSpecification("foo");
         var dataSet = new DataSet();
-        dataSet.addChampion(new Champion(
-            "foo", 
-            new CharacterClass("bar", null, 0, 0, 0, 0), 
-            MeleeActive.makeBasicAttack(),
-            new AbstractActive[] {
-
-            }, 
-            new AbstractPassive[] {
-                
-            }));
+        dataSet.addChampion(new ChampionImpl());
         var sut = new SpecificationResolver(dataSet);
 
         var result = sut.resolve(championSpecification);

@@ -1,8 +1,11 @@
 package world.builds;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
+import orpheus.core.champions.Playable;
+import orpheus.core.world.graph.GraphElement;
 import world.builds.actives.AbstractActive;
 import world.builds.actives.MeleeActive;
 import world.builds.characterClass.CharacterClass;
@@ -11,7 +14,7 @@ import world.builds.passives.AbstractPassive;
 /**
  * an AssembledBuild is a Build which has been loaded from a DataSet
  */
-public class AssembledBuild {
+public class AssembledBuild implements Playable {
     private final String name;
     private final CharacterClass characterClass;
     private final AbstractActive[] actives;
@@ -57,23 +60,28 @@ public class AssembledBuild {
         return name;
     }
 
+    @Override
     public CharacterClass getCharacterClass() {
         return characterClass;
     }
 
+    
     /**
      * @return the default attack the player will use
      */
+    @Override
     public MeleeActive getBasicAttack() {
         return basicAttack;
     }
 
-    public AbstractActive[] getActives() {
-        return actives;
+    @Override
+    public List<AbstractActive> getActives() {
+        return List.of(actives);
     }
 
-    public AbstractPassive[] getPassives() {
-        return passives;
+    @Override
+    public List<AbstractPassive> getPassives() {
+        return List.of(passives);
     }
 
     public String getDescription() {
@@ -105,5 +113,10 @@ public class AssembledBuild {
 
     private static String entab(String s){
         return Arrays.stream(s.split("\n")).collect(Collectors.joining("\n\t", "\t", ""));
+    }
+
+    @Override
+    public GraphElement toGraph() {
+        return null;
     }
 }

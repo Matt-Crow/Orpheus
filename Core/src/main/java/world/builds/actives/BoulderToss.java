@@ -14,7 +14,7 @@ public class BoulderToss extends ElementalActive{
     public BoulderToss(){
         super("Boulder Toss", Arc.NONE, Range.SHORT, 2, Range.MEDIUM, 4);
 		setParticleType(ParticleType.BURST);
-        setColors(CustomColors.earthColors);
+        setColors(CustomColors.EARTH_COLORS);
     }
     
     @Override

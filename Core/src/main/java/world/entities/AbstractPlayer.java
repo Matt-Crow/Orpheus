@@ -2,6 +2,7 @@ package world.entities;
 
 import java.awt.Color;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.UUID;
 
 import controls.ai.Path;
@@ -66,6 +67,11 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
     private int knockbackDur;
 
     private int lastHitById; //the useId of the last projectile that hit this player
+    
+    /**
+     * the last player who attacked this
+     */
+    private Optional<AbstractPlayer> lastAttackedBy = Optional.empty();
 
     private final MeleeActive slash;
     private final DamageBacklog log;
@@ -130,6 +136,10 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
 
     protected Color getColor() {
         return color;
+    }
+
+    public int getMaxHP() {
+        return log.getMaxHP();
     }
 
     public void setBaseSpeed(double baseSpeed) {
@@ -254,15 +264,17 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
 
     /**
      * Notifies this Player that a projectile has hit them.
-     *
-     * @param p
+     * @param player the player who hit this
+     * @param projectile the projectile which hit them
      */
-    public final void wasHitBy(Projectile p) {
-        lastHitById = p.getUseId();
+    public final void wasHitBy(AbstractPlayer player, Projectile projectile) {
+        lastHitById = projectile.getUseId();
+        lastAttackedBy = Optional.of(player);
     }
 
     public void logDamage(int dmg) {
         log.log(dmg);
+        getActionRegister().triggerOnTakeDamage(dmg);
     }
 
     public int getLastHitById() {
@@ -282,6 +294,7 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
 
         path = null;
         lastHitById = -1;
+        lastAttackedBy = Optional.empty();
 
         hasFocus = false;
         knockbackDir = null;
@@ -354,6 +367,7 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
     @Override
     public void terminate() {
         super.terminate();
+        lastAttackedBy.ifPresent((killer) -> killer.getActionRegister().triggerOnKill(this));
         getTeam().notifyTerminate(this);
     }
 

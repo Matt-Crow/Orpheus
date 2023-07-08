@@ -1,8 +1,8 @@
 package orpheus.core.champions.orpheus;
 
-import java.awt.Color;
 import gui.graphics.CustomColors;
 import orpheus.core.champions.Champion;
+import world.builds.AssembledBuild;
 import world.builds.actives.AbstractActive;
 import world.builds.actives.FlameCharge;
 import world.builds.actives.HammerToss;
@@ -12,32 +12,36 @@ import world.builds.characterClass.CharacterClass;
 import world.builds.passives.AbstractPassive;
 import world.builds.passives.CinderStrikes;
 import world.builds.passives.OnBeHitPassive;
-import world.builds.passives.ThresholdPassive;
 import world.statuses.Resistance;
-import world.statuses.Rush;
 import world.statuses.Strength;
 
 public class OrpheusChampion extends Champion {
     
+    /**
+     * Scrap metal the player has acquired during the game.
+     */
+    private int scrapMetal = 0;
+
+    private static final int MAX_SCRAP_METAL = 5;
+
+
     public OrpheusChampion() {
-        super(
-            "Orpheus", 
-            makeCharacterClass(), 
+        var tanking = new OnBeHitPassive("Tanking", true)
+            .withStatus(new Resistance(1, 1))
+            .withStatus(new Strength(1, 1));
+        var passives = new AbstractPassive[] {
+            new CinderStrikes(),
+            tanking,
+            new ScrapMetal(this)
+        };
+        var inner = new AssembledBuild(
+            getName(), 
+            new CharacterClass("Orpheus", CustomColors.GOLD, 3, 3, 4, 2), 
             new SweepingStrike(), 
             makeActives(), 
-            makePassives()
+            passives
         );
-    }
-
-    private static CharacterClass makeCharacterClass() {
-        return new CharacterClass(
-            "Orpheus", 
-            CustomColors.METAL.toArray(Color[]::new), 
-            3, 
-            3, 
-            4, 
-            2
-        );
+        setInner(inner);
     }
 
     private static AbstractActive[] makeActives() {
@@ -48,19 +52,33 @@ public class OrpheusChampion extends Champion {
         };
     }
 
-    private static AbstractPassive[] makePassives() {
-        var tanking = new OnBeHitPassive("Tanking", true)
-            .withStatus(new Resistance(1, 1))
-            .withStatus(new Strength(1, 1));
-        return new AbstractPassive[] {
-            new CinderStrikes(),
-            tanking,
-            new ThresholdPassive("Temp", 1).withStatus(new Rush(3, 1))// todo replace with Detritus
-        };
+    /**
+     * notifies Orpheus that he has gained another piece of scrap metal
+     */
+    protected void gainScrapMetal() {
+        scrapMetal++;
+        if (scrapMetal > MAX_SCRAP_METAL) {
+            scrapMetal = MAX_SCRAP_METAL;
+        }
+    }
+
+    @Override
+    public String getName() {
+        return "Orpheus";
     }
 
     @Override
     public OrpheusChampion copy() {
-        return new OrpheusChampion();
+        var result = new OrpheusChampion();
+        return result;
+    }
+
+    @Override
+    public orpheus.core.world.graph.Orpheus toGraph() {
+        return new orpheus.core.world.graph.Orpheus(
+            0,
+            0,
+            scrapMetal
+        );
     }
 }

@@ -24,7 +24,7 @@ public class SpecificationResolver {
         return dataSet.getChampionByName(specification.getName());
     }
     
-    public AssembledBuild resolve(Specification specification) {
+    public Playable resolve(Specification specification) {
         // for some reason, Java does not dispatch to the overloads
         if (specification instanceof Build) {
             return resolve((Build)specification);
