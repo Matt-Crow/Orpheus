@@ -8,10 +8,12 @@ import world.entities.AbstractPlayer;
  * @author Matt
  */
 public class AttackBehavior extends AbstractBehavior<AbstractPlayer> {
+    private final PlayerAI host;
     private final AbstractPlayer attackThisGuy;
     
-    public AttackBehavior(AbstractPlayer target, AbstractPlayer attackThisGuy) {
+    public AttackBehavior(PlayerAI host, AbstractPlayer target, AbstractPlayer attackThisGuy) {
         super(target);
+        this.host = host;
         this.attackThisGuy = attackThisGuy;
     }
 
@@ -21,12 +23,12 @@ public class AttackBehavior extends AbstractBehavior<AbstractPlayer> {
         AbstractBehavior<AbstractPlayer> newBehavior = this;
         
         if(attackThisGuy.isTerminating()){
-            newBehavior = new WanderBehavior(target);
+            newBehavior = new WanderBehavior(host, target);
         } else if(Coordinates.distanceBetween(target, attackThisGuy) >= 100){
             // out of range
-            newBehavior = new PursueBehavior(target, attackThisGuy);
+            newBehavior = new PursueBehavior(host, target, attackThisGuy);
         } else {
-            target.setFocus(attackThisGuy);
+            host.setFocus(attackThisGuy);
             target.useMeleeAttack();
             target.setMoving(false);
         }

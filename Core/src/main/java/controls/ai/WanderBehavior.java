@@ -11,10 +11,14 @@ import world.entities.AbstractPlayer;
  * @author Matt
  */
 public class WanderBehavior extends AbstractBehavior<AbstractPlayer>{
+    
+    private final PlayerAI host;
+
     private static final int DETECTIONRANGE = Tile.TILE_SIZE * 5;
 	
-    public WanderBehavior(AbstractPlayer target) {
+    public WanderBehavior(PlayerAI host, AbstractPlayer target) {
         super(target);
+        this.host = host;
         setToWander();
     }
     
@@ -29,7 +33,7 @@ public class WanderBehavior extends AbstractBehavior<AbstractPlayer>{
             y = target.getY() + Random.choose(-3, 3) * t;
             if(target.getWorld().getMap().isOpenTile(x, y)){
                 pathFound = true;
-                target.setPath(target.getWorld().getMap().findPath(
+                host.setPath(target.getWorld().getMap().findPath(
                     target.getX(), 
                     target.getY(), 
                     x, 
@@ -45,10 +49,13 @@ public class WanderBehavior extends AbstractBehavior<AbstractPlayer>{
         AbstractPlayer target = getTarget();
         target.setMoving(true);
         if(checkIfPlayerInSightRange()){
-            nextBehavior = new PursueBehavior(target, nearestEnemy());
-        } else if(target.getPath() == null || target.getPath().noneLeft()){
-            // wander some more
-            nextBehavior = new WanderBehavior(target);
+            nextBehavior = new PursueBehavior(host, target, nearestEnemy());
+        } else {
+            var path = host.getCurrentPath();
+            if (path.isEmpty() || path.get().noneLeft()) {
+                // wander some more
+                nextBehavior = new WanderBehavior(host, target);
+            }
         }
         return nextBehavior; // todo: make them occasionally transition behaviors
     }

@@ -51,9 +51,6 @@ public abstract class AbstractStatus implements Terminable {
 	public StatusName getStatusName(){
 		return code;
 	}
-	public String getName(){
-		return name;
-	}
 	public int getIntensityLevel(){
 		return level;
 	}
@@ -75,6 +72,26 @@ public abstract class AbstractStatus implements Terminable {
     
     public int getMaxUses(){
         return maxUses;
+    }
+
+    /**
+     * Checks to see if this status should replace the given other status when
+     * inflicted upon a player.
+     * 
+     * @param other a status the other player is inflicted with, or null
+     * @return whether this should replace the other status
+     */
+    public boolean isBetterThan(AbstractStatus other) {
+        if (other == null) {
+            return true; // anything is better than nothing
+        }
+        if (other.code != code) {
+            throw new IllegalArgumentException("can only compare two statuses of the same type");
+        }
+        var isMoreIntense = level > other.level;
+        var isNotWeaker = isMoreIntense || level == other.level;
+        var lastsLonger = usesLeft > other.usesLeft;
+        return isMoreIntense || (isNotWeaker && lastsLonger);
     }
     
     /**

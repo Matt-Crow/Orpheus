@@ -93,7 +93,9 @@ public class HumanPlayer extends AbstractPlayer {
     }
 
     @Override
-    public void playerInit() {
+    public void init() {
+        super.init();
+
         characterClass.init();
         for (AbstractActive a : actives) {
             a.init();
@@ -105,7 +107,9 @@ public class HumanPlayer extends AbstractPlayer {
     }
 
     @Override
-    public void playerUpdate() {
+    public void update() {
+        super.update();
+
         for (AbstractActive a : actives) {
             a.update();
         }
@@ -113,23 +117,21 @@ public class HumanPlayer extends AbstractPlayer {
             p.update();
         }
 
-        if (this.getPath() == null) { //prevent double movement
-            int dx = 0;
-            int dy = 0;
-            for (Entry<CardinalDirection, Boolean> dir : movingInCardinalDir.entrySet()) {
-                if (dir.getValue()) {
-                    dx += dir.getKey().getXMod();
-                    dy += dir.getKey().getYMod();
-                }
+        int dx = 0;
+        int dy = 0;
+        for (Entry<CardinalDirection, Boolean> dir : movingInCardinalDir.entrySet()) {
+            if (dir.getValue()) {
+                dx += dir.getKey().getXMod();
+                dy += dir.getKey().getYMod();
             }
+        }
 
-            if (dx != 0 || dy != 0) {
-                Direction newFacing = Direction.getDegreeByLengths(0, 0, dx, dy);
-                setFacing(newFacing.getDegrees());
-                setMoving(true);
-            } else {
-                setMoving(false);
-            }
+        if (dx != 0 || dy != 0) {
+            Direction newFacing = Direction.getDegreeByLengths(0, 0, dx, dy);
+            setFacing(newFacing.getDegrees());
+            setMoving(true);
+        } else {
+            setMoving(false);
         }
     }
 
@@ -161,7 +163,7 @@ public class HumanPlayer extends AbstractPlayer {
             getY(), 
             getRadius(),
             getLog().getHP(),
-            getStatuses().values().stream().map(AbstractStatus::toString).toList(),
+            getInflictedStatuses().stream().map(AbstractStatus::toString).toList(),
             getTeam().getColor(),
             getColor(),
             playingAs.toGraph(),

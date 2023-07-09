@@ -43,6 +43,12 @@ public class Point {
         addY(velocity.getVelocityY());
     }
 
+    public double distanceFrom(Point other) {
+        var dx = x - other.x;
+        var dy = y - other.y;
+        return Math.sqrt(dx*dx + dy*dy);
+    }
+
     public Point copy() {
         return new Point(getX(), getY());
     }

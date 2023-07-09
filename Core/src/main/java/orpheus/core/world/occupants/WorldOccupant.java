@@ -181,6 +181,10 @@ public abstract class WorldOccupant implements Graphable, Terminable {
             yCoord
         );
     }
+
+    public void turnTo(Point other) {
+        facing = Direction.getDegreeByLengths(coordinates, other);
+    }
     
     /**
      * Checks if this entity collides with another entity. Subclasses should

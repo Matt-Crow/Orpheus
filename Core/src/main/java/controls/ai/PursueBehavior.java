@@ -8,10 +8,13 @@ import world.entities.AbstractPlayer;
  * @author Matt
  */
 public class PursueBehavior extends AbstractBehavior<AbstractPlayer> {
+   
+    private final PlayerAI host;
     private final AbstractPlayer pursueThisGuy;
     
-    public PursueBehavior(AbstractPlayer target, AbstractPlayer pursueThisGuy) {
+    public PursueBehavior(PlayerAI host, AbstractPlayer target, AbstractPlayer pursueThisGuy) {
         super(target);
+        this.host = host;
         this.pursueThisGuy = pursueThisGuy;
     }
 
@@ -21,9 +24,9 @@ public class PursueBehavior extends AbstractBehavior<AbstractPlayer> {
         AbstractPlayer target = getTarget();
         // check if in range
 		if(Coordinates.distanceBetween(target, pursueThisGuy) <= 100){
-			newBehavior = new AttackBehavior(target, pursueThisGuy);
+			newBehavior = new AttackBehavior(host, target, pursueThisGuy);
 		} else {
-            target.setPath(target.getWorld().getMap().findPath(target, pursueThisGuy));
+            host.setPath(target.getWorld().getMap().findPath(target, pursueThisGuy));
         }
         return newBehavior;
     }

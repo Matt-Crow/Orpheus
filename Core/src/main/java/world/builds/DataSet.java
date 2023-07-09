@@ -173,7 +173,7 @@ public final class DataSet {
 		rod.setColors(CustomColors.RAINBOW_COLORS);
 		
 		
-		BoostActive ws = new BoostActive("Warrior's Stance", new AbstractStatus[]{new Strength(1, 2), new Resistance(1, 2)});
+		BoostActive ws = new BoostActive("Warrior's Stance", new AbstractStatus[]{new Strength(2, 2), new Resistance(2, 2)});
 		BoostActive st = new BoostActive("Speed Test", new AbstractStatus[]{new Rush(2, 3)});
 		BoostActive ss = new BoostActive("Shield Stance", new AbstractStatus[]{new Resistance(2, 3)});
 		BoostActive hr = new BoostActive("Healing Rain", new AbstractStatus[]{new Regeneration(2, 3)});

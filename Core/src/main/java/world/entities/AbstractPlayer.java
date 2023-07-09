@@ -1,14 +1,14 @@
 package world.entities;
 
 import java.awt.Color;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import controls.ai.Path;
-import controls.ai.PathInfo;
+import orpheus.core.utils.coordinates.Point;
 import orpheus.core.utils.coordinates.PointUpdater;
 import orpheus.core.utils.coordinates.PolarVector;
+import orpheus.core.utils.coordinates.TerminableVectorPointUpdater;
 import orpheus.core.utils.coordinates.VectorPointUpdater;
 import orpheus.core.world.graph.Player;
 import orpheus.core.world.occupants.WorldOccupant;
@@ -19,18 +19,15 @@ import world.World;
 import world.battle.DamageBacklog;
 import world.builds.actives.MeleeActive;
 import world.builds.characterClass.CharacterStatName;
-import world.events.termination.Terminable;
-import world.events.termination.TerminationListener;
 import world.statuses.AbstractStatus;
-import world.statuses.StatusName;
 
 /**
  * The AbstractPlayer class essentially acts as a mobile entity with other,
  * battle related capabilities.
  *
  * @author Matt Crow
- */                                                         // needs to listen for status termination
-public abstract class AbstractPlayer extends WorldOccupant implements TerminationListener {
+ */
+public abstract class AbstractPlayer extends WorldOccupant {
 
     /**
      * A unique identifier for this player
@@ -55,16 +52,7 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
      */
     private boolean moving = false;
 
-    /*
-     * (focusX, focusY) is a point that the entity is trying to reach
-     */
-    private int focusX;
-    private int focusY;
-    private boolean hasFocus;
-
-    private Direction knockbackDir;
-    private int knockbackMag;
-    private int knockbackDur;
+    private Optional<TerminableVectorPointUpdater> knockback = Optional.empty();
 
     private int lastHitById; //the useId of the last projectile that hit this player
     
@@ -76,22 +64,13 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
     private final MeleeActive slash;
     private final DamageBacklog log;
 
-    private final HashMap<StatusName, AbstractStatus> stats = new HashMap<>();
-    
-    //both players and AI need to find paths, given the current controls
-    private Path path;
+    /**
+     * the statuses this is currently inflicted with
+     */
+    private final InflictedStatuses statuses;
 
     public static final int RADIUS = 50;
 
-    public AbstractPlayer(World inWorld, String n, int minLifeSpan) {
-        this(inWorld, n, minLifeSpan, UUID.randomUUID());
-    }
-
-    public AbstractPlayer(World inWorld, String n, int minLifeSpan, UUID id) {
-        this(inWorld, n, minLifeSpan, id, MeleeActive.makeBasicAttack());
-    }
-
-    // migrating towards this
     public AbstractPlayer(World inWorld, String n, int minLifeSpan, UUID id,
         MeleeActive basicAttack
     ) {
@@ -101,18 +80,10 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
         name = n;
         color = Color.black;
 
-        focusX = 0;
-        focusY = 0;
-        hasFocus = false;
-
-        knockbackDir = null;
-        knockbackMag = 0;
-        knockbackDur = 0;
-
         basicAttack.setUser(this);
         slash = basicAttack;
         log = new DamageBacklog(this, minLifeSpan);
-        path = null;
+        statuses = new InflictedStatuses(this);
 
         lastHitById = -1;
 
@@ -179,81 +150,48 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
             : 0.0;
     }
 
-    protected HashMap<StatusName, AbstractStatus> getStatuses() {
-        return stats;
+    /**
+     * @return an immutable list of the statuses this is currently inflicted with
+     */
+    protected List<AbstractStatus> getInflictedStatuses() {
+        return statuses.toList();
     }
 
     public DamageBacklog getLog() {
         return log;
     }
 
-    //focus related methods
-    public final void setFocus(int xCoord, int yCoord) {
-        focusX = xCoord;
-        focusY = yCoord;
-        hasFocus = true;
+    /**
+     * Since players can only move a set minimum distance, they may not be able
+     * to move precisely to a given point. This checks if it would not be
+     * possible for them to move any closer to the given point.
+     * 
+     * @param point the point to check
+     * @return whether moving would cause this player to move away from point
+     */
+    public boolean isAsCloseAsPossibleTo(Point point) {
+        return getCoordinates().distanceFrom(point) < getBaseSpeed();
     }
 
-    public final void setFocus(WorldOccupant e) {
-        setFocus(e.getX(), e.getY());
-    }
-
-    public final void turnToFocus() {
-        turnTo(focusX, focusY);
-    }
-
-    public boolean withinFocus() {
-        // returns if has reached focal point
-        boolean withinX = Math.abs(getX() - focusX) < getBaseSpeed();
-        boolean withinY = Math.abs(getY() - focusY) < getBaseSpeed();
-        return withinX && withinY;
-    }
-
-    public void setPath(int x, int y) {
-        setPath(getWorld().getMap().findPath(getX(), getY(), x, y));
-    }
-
-    public void setPath(Path p) {
-        path = p;
-        if (!path.noneLeft()) {
-            PathInfo pi = path.get();
-            setFocus(pi.getEndX(), pi.getEndY());
-        }
-    }
-
-    public Path getPath() {
-        return path;
-    }
-
+    /**
+     * @param mag : the total distance this entity will be knocked back
+     * @param d : the direction this entity is knocked back
+     * @param dur : the number of frames this will be knocked back for
+    */
     public final void knockBack(int mag, Direction d, int dur) {
-        /**
-         * @param mag : the total distance this entity will be knocked back
-         * @param d : the direction this entity is knocked back
-         * @param dur : the number of frames this will be knocked back for
-         */
-        knockbackMag = mag / dur;
-        knockbackDir = d;
-        knockbackDur = dur;
+        var speed = ((double)mag) / dur;
+        var kb = new TerminableVectorPointUpdater(new PolarVector(speed, d), mag);
+        knockback = Optional.of(kb);
     }
 
-    public void inflict(AbstractStatus newStat) {
-        boolean found = stats.containsKey(newStat.getStatusName());
-        boolean shouldReplace = false;
-
-        if (found) {
-            AbstractStatus oldStat = stats.get(newStat.getStatusName());
-            if (oldStat.getIntensityLevel() < newStat.getIntensityLevel()) {
-                shouldReplace = true;
-            } else if (oldStat.getUsesLeft() < newStat.getUsesLeft()) {
-                shouldReplace = true;
-            }
-        }
-
-        if (shouldReplace || !found) {
-            stats.put(newStat.getStatusName(), newStat);
-            newStat.inflictOn(this);
-            newStat.addTerminationListener(this);
-        }
+    /**
+     * Inflicts this player with the given status, if they are not already 
+     * inflicted with a better instance.
+     * 
+     * @param status the status to inflict
+     */
+    public void inflict(AbstractStatus status) {
+        statuses.add(status);
     }
 
     public void useMeleeAttack() {
@@ -284,7 +222,7 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
     @Override
     public void init() {
         super.init();
-        stats.clear();
+        statuses.clear();
 
         slash.init();
         log.init();
@@ -292,39 +230,21 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
         speedMultiplier = 1.0;
         setMoving(false);
 
-        path = null;
         lastHitById = -1;
         lastAttackedBy = Optional.empty();
-
-        hasFocus = false;
-        knockbackDir = null;
-        knockbackMag = 0;
-        knockbackDur = 0;
-
-        playerInit();
+        knockback = Optional.empty();
     }
 
     @Override
     protected void updateMovement() {
-        if (hasFocus) {
-            if (withinFocus()) {
-                hasFocus = false;
-                setMoving(false);
-            } else {
-                turnToFocus();
-                setMoving(true);
-            }
-        }
-        if (knockbackDir != null) {
-            //cannot move if being knocked back
-            setX((int) (getX() + knockbackMag * knockbackDir.getXMod()));
-            setY((int) (getY() + knockbackMag * knockbackDir.getYMod()));
-            knockbackDur--;
-            if (knockbackDur == 0) {
-                knockbackDir = null;
+        if(knockback.isPresent()) { // cannot move while being knocked back
+            var kb = knockback.get();
+            kb.update(getCoordinates());
+            if (kb.isDone()) {
+                knockback = Optional.empty();
             }
         } else {
-            updateMovement2();
+            move();
         }
     }
 
@@ -332,7 +252,7 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
      * can be overridden, but subclasses should ensure they call
      * super.updateMovement() in their implementation.
      */
-    protected void updateMovement2() {
+    protected void move() {
         var velocity = new PolarVector(getComputedSpeed(), getFacing());
         PointUpdater updater = new VectorPointUpdater(velocity);
         updater.update(getCoordinates());
@@ -342,26 +262,10 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
     @Override
     public void update() {
         super.update();
-        if (path != null) {
-            //follow path
-            if (path.noneLeft()) {
-                path = null;
-            } else {
-                while (withinFocus() && !path.noneLeft()) {
-                    path.deque();
-                    if (!path.noneLeft()) {
-                        PathInfo p = path.get();
-                        setFocus(p.getEndX(), p.getEndY());
-                    }
-                }
-            }
-        }
         slash.update();
 
         getActionRegister().triggerOnUpdate();
         log.update();
-
-        playerUpdate();
     }
 
     @Override
@@ -371,25 +275,7 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
         getTeam().notifyTerminate(this);
     }
 
-    @Override
-    public void objectWasTerminated(Terminable terminable) {
-        if (terminable instanceof AbstractStatus) {
-            removeStatus((AbstractStatus)terminable);
-        }
-    }
-
-    private void removeStatus(AbstractStatus status) {
-        AbstractStatus old = stats.get(status.getStatusName()); // may be null
-        if (old == status) {
-            stats.remove(old.getStatusName());
-        }
-    }
-
     public abstract double getStatValue(CharacterStatName n);
-
-    public abstract void playerInit();
-
-    public abstract void playerUpdate();
 
     public orpheus.core.world.graph.Player toGraph() {
         return new Player(
@@ -398,7 +284,7 @@ public abstract class AbstractPlayer extends WorldOccupant implements Terminatio
             getY(), 
             getRadius(),
             getLog().getHP(),
-            stats.values().stream().map(AbstractStatus::toString).toList(),
+            statuses.toList().stream().map(AbstractStatus::toString).toList(),
             getTeam().getColor(),
             color
         );
