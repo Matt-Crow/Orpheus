@@ -30,7 +30,7 @@ import world.statuses.AbstractStatus;
  * The AbstractPlayer class essentially acts as a mobile entity with other,
  * battle related capabilities.
  * 
- * TODO merge AbstractPlayer and HumanPlayer into a new Player class
+ * TODO rename to Player class
  *
  * @author Matt Crow
  */
@@ -82,6 +82,7 @@ public class AbstractPlayer extends WorldOccupant {
     private final InflictedStatuses statuses;
 
     public static final int RADIUS = 50;
+    private static final int HUMAN_LIFE_SPAN = 10;
 
     public AbstractPlayer(World inWorld, Playable playingAs, String n, 
         int minLifeSpan, UUID id, MeleeActive basicAttack
@@ -89,9 +90,12 @@ public class AbstractPlayer extends WorldOccupant {
         super(inWorld);
         this.id = id;
         this.playingAs = playingAs;
-        setBaseSpeed(Tile.TILE_SIZE * 5 / Settings.FPS);
+        playingAs.setUser(this);
+
+        var characterClass = playingAs.getCharacterClass();
+        color = characterClass.getColor();
+        baseSpeed = (int) (characterClass.getSpeed() * (Tile.TILE_SIZE * 5 / Settings.FPS));
         name = n;
-        color = Color.black;
 
         basicAttack.setUser(this);
         slash = basicAttack;
@@ -100,7 +104,40 @@ public class AbstractPlayer extends WorldOccupant {
 
         lastHitById = -1;
 
-        setRadius(RADIUS);    
+        setRadius(RADIUS);  
+    }
+
+    /**
+     * Creates a new player which a human will control - previously known as 
+     * HumanPlayer.
+     * @param inWorld the world to spawn the player in
+     * @param name the player's name
+     * @param playingAs what the player will play as
+     * @return the new player
+     */
+    public static AbstractPlayer makeHuman(World inWorld, String name, Playable playingAs) {
+        return makeHuman(inWorld, name, playingAs, UUID.randomUUID());
+    }
+
+    /**
+     * Creates a new player which a human will control - previously known as 
+     * HumanPlayer.
+     * @param inWorld the world to spawn the player in
+     * @param name the player's name
+     * @param playingAs what the player will play as
+     * @param id the player's unique ID
+     * @return the new player
+     */
+    public static AbstractPlayer makeHuman(World inWorld, String name, Playable playingAs, UUID id) {
+        var result = new AbstractPlayer(
+            inWorld, 
+            playingAs, 
+            name, 
+            HUMAN_LIFE_SPAN, 
+            id, 
+            playingAs.getBasicAttack()
+        );
+        return result;
     }
 
     /**
@@ -128,31 +165,8 @@ public class AbstractPlayer extends WorldOccupant {
         return id;
     }
 
-    public final String getName() {
-        return name;
-    }
-
-    public final void setColor(Color c) {
-        color = c;
-    }
-
-    protected Color getColor() {
-        return color;
-    }
-
     public int getMaxHP() {
         return log.getMaxHP();
-    }
-
-    public void setBaseSpeed(double baseSpeed) {
-        if (baseSpeed < 0) {
-            throw new IllegalArgumentException("Speed must be non-negative");
-        }
-        this.baseSpeed = baseSpeed;
-    }
-
-    public double getBaseSpeed() {
-        return baseSpeed;
     }
 
     /**
@@ -168,16 +182,12 @@ public class AbstractPlayer extends WorldOccupant {
         this.moving = moving;
     }
 
-    public boolean isMoving() {
-        return moving;
-    }
-
     /**
      * @return the distance this will move on the next call to update
      */
     public double getComputedSpeed() {
-        return (isMoving()) 
-            ? getBaseSpeed() * speedMultiplier
+        return (moving) 
+            ? baseSpeed * speedMultiplier
             : 0.0;
     }
 
@@ -201,7 +211,7 @@ public class AbstractPlayer extends WorldOccupant {
      * @return whether moving would cause this player to move away from point
      */
     public boolean isAsCloseAsPossibleTo(Point point) {
-        return getCoordinates().distanceFrom(point) < getBaseSpeed();
+        return getCoordinates().distanceFrom(point) < baseSpeed;
     }
 
     /**
@@ -232,6 +242,20 @@ public class AbstractPlayer extends WorldOccupant {
     }
 
     /**
+     * Uses the active ability at the given index, if able.
+     * @param num the index of the active ability to use
+     */
+    public void useAttack(int num) {
+        var actives = playingAs.getActives();
+        if (actives.size() >= num) {
+            var attack = actives.get(num);
+            if (attack.canUse()) {
+                attack.trigger();
+            }
+        }        
+    }
+
+    /**
      * Notifies this Player that a projectile has hit them.
      * @param player the player who hit this
      * @param projectile the projectile which hit them
@@ -253,6 +277,7 @@ public class AbstractPlayer extends WorldOccupant {
     @Override
     public void init() {
         super.init();
+        playingAs.init();
         statuses.clear();
 
         slash.init();
@@ -293,7 +318,8 @@ public class AbstractPlayer extends WorldOccupant {
     @Override
     public void update() {
         super.update();
-        slash.update();
+        playingAs.update();
+        //slash.update(); avoid double-updating slash
 
         getActionRegister().triggerOnUpdate();
         log.update();
@@ -335,7 +361,9 @@ public class AbstractPlayer extends WorldOccupant {
             getLog().getHP(),
             statuses.toList().stream().map(AbstractStatus::toString).toList(),
             getTeam().getColor(),
-            color
+            color,
+            playingAs.toGraph(),
+            playingAs.getActives().stream().map(AbstractActive::toGraph).toList()
         );
     }
 }

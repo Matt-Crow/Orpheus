@@ -13,9 +13,11 @@ import controls.ai.PlayerAI;
 import orpheus.core.utils.timer.TimerTasks;
 import orpheus.core.world.graph.Graphable;
 import orpheus.core.world.occupants.WorldOccupant;
+import orpheus.core.world.occupants.players.CardinalDirectionPlayerController;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.UUID;
 
 import world.World;
@@ -34,6 +36,12 @@ public class Team implements Graphable {
     private Team enemyTeam;
 
     private final HashMap<UUID, AbstractPlayer> roster = new HashMap<>();
+
+    /**
+     * allows keyboard controls for a player's movement
+     */
+    private final HashMap<UUID, CardinalDirectionPlayerController> cardinalControllers = new HashMap<>();
+    
     private final ArrayList<AbstractPlayer> membersRem = new ArrayList<>();
 
     /**
@@ -97,6 +105,9 @@ public class Team implements Graphable {
     public void addMember(AbstractPlayer m) {
         roster.put(m.getId(), m);
         m.setTeam(this);
+        var manager = new CardinalDirectionPlayerController(m);
+        cardinalControllers.put(m.getId(), manager);
+        this.timerTasks.add(manager);
     }
 
     public void addAiMember(AbstractPlayer player) {
@@ -115,6 +126,20 @@ public class Team implements Graphable {
      */
     public AbstractPlayer getMemberById(UUID id) {
         return roster.get(id);
+    }
+
+    /**
+     * Returns the controller for the player on this team with the given ID, if
+     * such a player exists.
+     * @param id the ID of the player to retrieve the controller for
+     * @return an optional which may contain the controller
+     */
+    public Optional<CardinalDirectionPlayerController> getControllerById(UUID id) {
+        var found = cardinalControllers.get(id);
+        if (found == null || found.isDone()) {
+            return Optional.empty();
+        }
+        return Optional.of(found);
     }
     
     public void setWorld(World w){

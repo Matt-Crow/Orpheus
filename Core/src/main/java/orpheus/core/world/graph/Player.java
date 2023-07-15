@@ -20,13 +20,8 @@ public class Player extends WorldOccupant {
     private final List<String> statuses;
     private final Color teamColor;
     private final Color color;
-    private final Optional<GraphElement> playingAs;
+    private final Optional<GraphElement> playingAs; // can move away from optional once I deserialize playingAs
     private final List<Active> actives;
-
-    public Player(UUID id, int x, int y, int radius, int hp, 
-        List<String> statuses, Color teamColor, Color color) {
-        this(id, x, y, radius, hp, statuses, teamColor, color, null, List.of());
-    }
 
     public Player(UUID id, int x, int y, int radius, int hp, 
         List<String> statuses, Color teamColor, Color color, 

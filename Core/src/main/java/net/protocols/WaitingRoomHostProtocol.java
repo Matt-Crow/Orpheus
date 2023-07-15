@@ -20,7 +20,7 @@ import world.World;
 import world.WorldBuilder;
 import world.WorldBuilderImpl;
 import world.battle.Team;
-import world.entities.HumanPlayer;
+import world.entities.AbstractPlayer;
 import world.game.Game;
 
 /**
@@ -190,11 +190,11 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         var json = JsonUtil.fromString(sm.getMessage().getBodyText());
         var specification = deserializer.fromJson(json);
         var assembledBuild = specificationResolver.resolve(specification);
-        var player = new HumanPlayer(
+        var player = AbstractPlayer.makeHuman(
             world, // world should not be null by now,
             sender.getName(),
-            sender.getId(),
-            assembledBuild
+            assembledBuild,
+            sender.getId()
         );
         awaitingBuilds.remove(sender);
         playerTeam.addMember(player);

@@ -6,8 +6,8 @@ import world.entities.AbstractPlayer;
 import java.util.Optional;
 
 import orpheus.core.utils.coordinates.Point;
-import orpheus.core.utils.timer.TimerTask;
 import orpheus.core.world.occupants.WorldOccupant;
+import orpheus.core.world.occupants.players.PlayerController;
 import util.Settings;
 
 /**
@@ -21,7 +21,7 @@ import util.Settings;
  * 
  * @author Matt Crow
  */
-public class PlayerAI implements TimerTask {
+public class PlayerAI implements PlayerController {
 
     /**
      * the player this controls
@@ -128,15 +128,13 @@ public class PlayerAI implements TimerTask {
         currentBehavior = currentBehavior.update();
     }
 
+    @Override
+    public AbstractPlayer getControlled() {
+        return appliedTo;
+    }
 
     @Override
     public void tick() {
         update();
-    }
-
-
-    @Override
-    public boolean isDone() {
-        return appliedTo.isTerminating();
     }
 }

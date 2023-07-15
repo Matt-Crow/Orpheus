@@ -2,7 +2,7 @@ package orpheus.client.gui.pages.worldselect;
 
 import orpheus.client.gui.pages.PlayerControls;
 import world.battle.Team;
-import world.entities.HumanPlayer;
+import world.entities.AbstractPlayer;
 import orpheus.client.ClientAppContext;
 import orpheus.client.gui.pages.play.HeadsUpDisplay;
 import orpheus.client.gui.pages.play.LocalWorldSupplier;
@@ -39,7 +39,7 @@ public class WSSolo extends AbstractWSNewWorld{
         
         var selected = getSelectedSpecification().get();
         var assembledBuild = getContext().getSpecificationResolver().resolve(selected);
-        var player = new HumanPlayer(world, "local user", assembledBuild);
+        var player = AbstractPlayer.makeHuman(world, "local user", assembledBuild);
         players.addMember(player);
         
         // model must have teams set before WorldCanvas init, as WC relies on getting the player team
