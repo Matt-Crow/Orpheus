@@ -5,17 +5,16 @@ import java.util.Map.Entry;
 
 import util.CardinalDirection;
 import util.Direction;
-import world.entities.AbstractPlayer;
 
 /**
  * controls a player by moving them in cardinal directions
  */
 public class CardinalDirectionPlayerController implements PlayerController {
 
-    private final AbstractPlayer controlled;
+    private final Player controlled;
     private final HashMap<CardinalDirection, Boolean> movingInCardinalDir = new HashMap<>();
 
-    public CardinalDirectionPlayerController(AbstractPlayer managing) {
+    public CardinalDirectionPlayerController(Player managing) {
         this.controlled = managing;
         for (var direction : CardinalDirection.values()) {
             movingInCardinalDir.put(direction, false);
@@ -27,7 +26,7 @@ public class CardinalDirectionPlayerController implements PlayerController {
     }
 
     @Override
-    public AbstractPlayer getControlled() {
+    public Player getControlled() {
         return controlled;
     }
 

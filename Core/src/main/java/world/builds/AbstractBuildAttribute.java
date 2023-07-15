@@ -3,7 +3,7 @@ package world.builds;
 import java.util.function.Consumer;
 
 import orpheus.core.utils.Prototype;
-import world.entities.AbstractPlayer;
+import orpheus.core.world.occupants.players.Player;
 
 /**
  * A AbstractBuildAttribute is a choice players can make when customizing the 
@@ -11,7 +11,7 @@ import world.entities.AbstractPlayer;
  */
 public abstract class AbstractBuildAttribute implements Prototype {
     private final String name;
-	private AbstractPlayer user;
+	private Player user;
 	
 	public AbstractBuildAttribute(String n){
         name = n;
@@ -21,7 +21,7 @@ public abstract class AbstractBuildAttribute implements Prototype {
 	 * Calls a function on this passive's user, if the user is set
 	 * @param doThis the function to call on this passive's user
 	 */
-	protected void withUser(Consumer<AbstractPlayer> doThis) {
+	protected void withUser(Consumer<Player> doThis) {
 		var user = getUser();
 		if (user != null) {
 			doThis.accept(user);
@@ -33,11 +33,11 @@ public abstract class AbstractBuildAttribute implements Prototype {
 		return name;
 	}
     
-    public final void setUser(AbstractPlayer p){
+    public final void setUser(Player p){
 		user = p;
 	}
     
-	public final AbstractPlayer getUser(){
+	public final Player getUser(){
 		return user;
 	}
     

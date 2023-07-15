@@ -2,7 +2,6 @@ package world.builds.actives;
 
 import util.Direction;
 import util.Settings;
-import world.entities.AbstractPlayer;
 import world.entities.ParticleType;
 import world.entities.Projectile;
 import world.entities.ProjectileBuilder;
@@ -12,6 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 import gui.graphics.CustomColors;
+import orpheus.core.world.occupants.players.Player;
 import world.Tile;
 import world.builds.characterClass.CharacterClass;
 import world.builds.characterClass.CharacterStatName;
@@ -175,7 +175,7 @@ public class ElementalActive extends AbstractActive {
      * @param p
      * @return
      */
-    public int calcDmg(AbstractPlayer p) {
+    public int calcDmg(Player p) {
         return (int) (damage
                 * getUser().getStatValue(CharacterStatName.DMG)
                 / p.getStatValue(CharacterStatName.REDUCTION));
@@ -187,8 +187,8 @@ public class ElementalActive extends AbstractActive {
      * @param hittingProjectile the Projectile which hit p
      * @param p the AbstractPlayer who one of this Projectiles hit.
      */
-    public void hit(Projectile hittingProjectile, AbstractPlayer p) {
-        AbstractPlayer user = getUser();
+    public void hit(Projectile hittingProjectile, Player p) {
+        Player user = getUser();
         p.takeDamage(calcDmg(p));
         user.getActionRegister().triggerOnHit(p);
         p.getActionRegister().triggerOnHitReceived(user);

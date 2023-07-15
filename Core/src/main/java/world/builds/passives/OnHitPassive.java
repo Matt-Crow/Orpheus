@@ -1,8 +1,8 @@
 package world.builds.passives;
 
+import orpheus.core.world.occupants.players.Player;
 import world.events.EventListener;
 import world.events.OnHitEvent;
-import world.entities.AbstractPlayer;
 
 public class OnHitPassive extends AbstractPassive implements EventListener<OnHitEvent> {
 	/**
@@ -34,9 +34,9 @@ public class OnHitPassive extends AbstractPassive implements EventListener<OnHit
     @Override
     public void handle(OnHitEvent e) {
         if(getTargetsUser()){
-            applyEffect((AbstractPlayer)e.getHitter());
+            applyEffect((Player)e.getHitter());
         } else {
-            applyEffect((AbstractPlayer)e.getWasHit());
+            applyEffect((Player)e.getWasHit());
         }
         trigger();
     }

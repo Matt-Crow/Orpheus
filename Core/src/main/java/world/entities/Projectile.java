@@ -5,6 +5,7 @@ import java.util.Optional;
 import orpheus.core.utils.coordinates.Point;
 import orpheus.core.utils.coordinates.TerminablePointUpdater;
 import orpheus.core.world.occupants.WorldOccupant;
+import orpheus.core.world.occupants.players.Player;
 import util.Direction;
 
 public class Projectile extends WorldOccupant {
@@ -12,7 +13,7 @@ public class Projectile extends WorldOccupant {
     /**
      * the player who spawned this projectile
      */
-    private final AbstractPlayer spawnedBy;
+    private final Player spawnedBy;
 
     /**
      * controls this thing's movement in the world - might pass down
@@ -45,7 +46,7 @@ public class Projectile extends WorldOccupant {
             Point coordinates,
             Direction facing,
             TerminablePointUpdater movement,
-            AbstractPlayer user,
+            Player user,
             ParticleGenerator particles, 
             Optional<ProjectileCollideBehavior> collideBehavior,
             Optional<Explodes> explodes
@@ -76,13 +77,13 @@ public class Projectile extends WorldOccupant {
      * Hits the given player if this is colliding with them
      * @param p the player to check if this is colliding with
      */
-    public void hitIfColliding(AbstractPlayer p) {
+    public void hitIfColliding(Player p) {
         if (isCollidingWith(p) && p.getLastHitById() != useId) {
             hit(p);
         }
     }
 
-    private void hit(AbstractPlayer p) {
+    private void hit(Player p) {
         collideBehavior.ifPresent(b -> b.collidedWith(this, p));
         p.wasHitBy(spawnedBy, this);
         getActionRegister().triggerOnHit(p);

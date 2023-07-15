@@ -1,7 +1,7 @@
 package world.builds;
 
+import orpheus.core.world.occupants.players.Player;
 import util.Settings;
-import world.entities.AbstractPlayer;
 import world.statuses.AbstractStatus;
 import world.statuses.StatusTable;
 
@@ -108,7 +108,7 @@ public abstract class AbstractTriggerableAttribute extends AbstractBuildAttribut
      *
      * @param p
      */
-    public final void applyEffect(AbstractPlayer p) {
+    public final void applyEffect(Player p) {
         inflict.forEach((status) -> {
             p.inflict(status.copy());
         });

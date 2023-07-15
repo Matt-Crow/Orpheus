@@ -1,4 +1,4 @@
-package world.entities;
+package orpheus.core.world.occupants.players;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,9 +20,9 @@ public class InflictedStatuses {
     /**
      * the player this is attached to
      */
-    private final AbstractPlayer player;
+    private final Player player;
 
-    protected InflictedStatuses(AbstractPlayer player) {
+    protected InflictedStatuses(Player player) {
         nameToStatus = new HashMap<>();
         this.player = player;
     }

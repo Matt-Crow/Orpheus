@@ -1,16 +1,16 @@
 package world.events;
 
-import world.entities.AbstractPlayer;
+import orpheus.core.world.occupants.players.Player;
 
 public class KillEvent implements Event {
     
-    private final AbstractPlayer killed;
+    private final Player killed;
 
-    public KillEvent(AbstractPlayer killed) {
+    public KillEvent(Player killed) {
         this.killed = killed;
     }
 
-    public AbstractPlayer getKilled() {
+    public Player getKilled() {
         return killed;
     }
 }

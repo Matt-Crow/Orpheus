@@ -1,4 +1,4 @@
-package world.entities;
+package orpheus.core.world.occupants.players;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -9,7 +9,6 @@ import orpheus.core.utils.coordinates.PointUpdater;
 import orpheus.core.utils.coordinates.PolarVector;
 import orpheus.core.utils.coordinates.TerminableVectorPointUpdater;
 import orpheus.core.utils.coordinates.VectorPointUpdater;
-import orpheus.core.world.graph.Player;
 import orpheus.core.world.occupants.WorldOccupant;
 import util.Direction;
 import util.Settings;
@@ -21,17 +20,16 @@ import world.builds.actives.AbstractActive;
 import world.builds.characterClass.CharacterStatName;
 import world.builds.characterClass.DroneCharacterClass;
 import world.builds.passives.AbstractPassive;
+import world.entities.Projectile;
 import world.statuses.AbstractStatus;
 
 /**
  * The AbstractPlayer class essentially acts as a mobile entity with other,
  * battle related capabilities.
- * 
- * TODO rename to Player class
  *
  * @author Matt Crow
  */
-public class AbstractPlayer extends WorldOccupant {
+public class Player extends WorldOccupant {
 
     /**
      * A unique identifier for this player
@@ -71,7 +69,7 @@ public class AbstractPlayer extends WorldOccupant {
     /**
      * the last player who attacked this
      */
-    private Optional<AbstractPlayer> lastAttackedBy = Optional.empty();
+    private Optional<Player> lastAttackedBy = Optional.empty();
 
     /**
      * the useId of the last projectile that hit this player
@@ -79,7 +77,7 @@ public class AbstractPlayer extends WorldOccupant {
     private int lastHitById = -1;
 
 
-    public AbstractPlayer(World inWorld, UUID id, Playable playingAs, int minLifeSpan) {
+    public Player(World inWorld, UUID id, Playable playingAs, int minLifeSpan) {
         super(inWorld);
         setRadius(50);  
         this.id = id;
@@ -101,7 +99,7 @@ public class AbstractPlayer extends WorldOccupant {
      * @param playingAs what the player will play as
      * @return the new player
      */
-    public static AbstractPlayer makeHuman(World inWorld, Playable playingAs) {
+    public static Player makeHuman(World inWorld, Playable playingAs) {
         return makeHuman(inWorld, playingAs, UUID.randomUUID());
     }
 
@@ -114,8 +112,8 @@ public class AbstractPlayer extends WorldOccupant {
      * @param playingAs what the player will play as
      * @return the new player
      */
-    public static AbstractPlayer makeHuman(World inWorld, Playable playingAs, UUID id) {
-        var result = new AbstractPlayer(
+    public static Player makeHuman(World inWorld, Playable playingAs, UUID id) {
+        var result = new Player(
             inWorld,
             id,
             playingAs, 
@@ -131,14 +129,14 @@ public class AbstractPlayer extends WorldOccupant {
      * @param level how powerful the drone is - ranges from 1 to 5
      * @return the new drone
      */
-    public static AbstractPlayer makeDrone(World inWorld, int level) {
+    public static Player makeDrone(World inWorld, int level) {
         var playable = new AssembledBuild(
             "Drone", 
             new DroneCharacterClass(level), 
             new AbstractActive[0], 
             new AbstractPassive[0]
         );
-        var result = new AbstractPlayer(inWorld, UUID.randomUUID(), playable, level);
+        var result = new Player(inWorld, UUID.randomUUID(), playable, level);
         return result;
     }
 
@@ -230,7 +228,7 @@ public class AbstractPlayer extends WorldOccupant {
      * @param player the player who hit this
      * @param projectile the projectile which hit them
      */
-    public final void wasHitBy(AbstractPlayer player, Projectile projectile) {
+    public final void wasHitBy(Player player, Projectile projectile) {
         lastHitById = projectile.getUseId();
         lastAttackedBy = Optional.of(player);
     }
@@ -319,7 +317,7 @@ public class AbstractPlayer extends WorldOccupant {
     }
 
     public orpheus.core.world.graph.Player toGraph() {
-        return new Player(
+        return new orpheus.core.world.graph.Player(
             id,
             getX(), 
             getY(), 

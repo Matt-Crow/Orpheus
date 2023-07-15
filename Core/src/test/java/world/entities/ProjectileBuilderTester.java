@@ -3,6 +3,7 @@ package world.entities;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import orpheus.core.world.occupants.players.Player;
 import world.WorldBuilderImpl;
 import world.battle.Team;
 
@@ -14,7 +15,7 @@ public class ProjectileBuilderTester {
         var world = new WorldBuilderImpl()
             .withPlayers(t)
             .build();
-        var player = AbstractPlayer.makeDrone(world, 1);
+        var player = Player.makeDrone(world, 1);
         player.setX(42);
         player.setY(64);
         player.setFacing(123);

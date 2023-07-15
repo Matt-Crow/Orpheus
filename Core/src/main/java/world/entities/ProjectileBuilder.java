@@ -10,6 +10,7 @@ import orpheus.core.utils.coordinates.PolarVector;
 import orpheus.core.utils.coordinates.TerminablePointUpdater;
 import orpheus.core.utils.coordinates.TerminableVectorPointUpdater;
 import orpheus.core.world.occupants.WorldOccupant;
+import orpheus.core.world.occupants.players.Player;
 import util.Direction;
 import world.builds.actives.ElementalActive;
 import world.builds.actives.Range;
@@ -22,12 +23,12 @@ public class ProjectileBuilder {
     private Optional<Integer> momentum = Optional.empty();
     private Range range = Range.MEDIUM;
     private Optional<TerminablePointUpdater> movement = Optional.empty();
-    private Optional<AbstractPlayer> user = Optional.empty();
+    private Optional<Player> user = Optional.empty();
     private ParticleGenerator particles = ParticleGenerator.NONE;
     private Optional<ProjectileCollideBehavior> collideBehavior = Optional.empty();
     private Optional<Explodes> explodes = Optional.empty();
 
-    public ProjectileBuilder withUser(AbstractPlayer user) {
+    public ProjectileBuilder withUser(Player user) {
         this.user = Optional.of(user);
         return this;
     }

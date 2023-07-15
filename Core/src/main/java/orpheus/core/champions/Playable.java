@@ -3,11 +3,11 @@ package orpheus.core.champions;
 import java.util.List;
 
 import orpheus.core.world.graph.Graphable;
+import orpheus.core.world.occupants.players.Player;
 import world.builds.actives.AbstractActive;
 import world.builds.actives.MeleeActive;
 import world.builds.characterClass.CharacterClass;
 import world.builds.passives.AbstractPassive;
-import world.entities.AbstractPlayer;
 
 /**
  * A Playable is something players can play as.
@@ -22,7 +22,7 @@ public interface Playable extends Graphable {
 
     public List<AbstractPassive> getPassives();
 
-    public default void setUser(AbstractPlayer player) {
+    public default void setUser(Player player) {
         getCharacterClass().setUser(player);
         getBasicAttack().setUser(player);
         getActives().forEach(a -> a.setUser(player));

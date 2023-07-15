@@ -1,10 +1,10 @@
 package world.builds.actives;
 
 import util.Settings;
-import world.entities.AbstractPlayer;
 import world.entities.ParticleType;
 import world.entities.Projectile;
 import gui.graphics.CustomColors;
+import orpheus.core.world.occupants.players.Player;
 
 /**
  *
@@ -18,7 +18,7 @@ public class BoulderToss extends ElementalActive{
     }
     
     @Override
-    public void hit(Projectile hittingProjectile, AbstractPlayer p){
+    public void hit(Projectile hittingProjectile, Player p){
         super.hit(hittingProjectile, p);
         p.knockBack(getRange().getInPixels(), hittingProjectile.getFacing(), Settings.seconds(1));
     }

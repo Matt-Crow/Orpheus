@@ -1,12 +1,12 @@
 package controls.ai;
 
 import world.events.OnHitEvent;
-import world.entities.AbstractPlayer;
 
 import java.util.Optional;
 
 import orpheus.core.utils.coordinates.Point;
 import orpheus.core.world.occupants.WorldOccupant;
+import orpheus.core.world.occupants.players.Player;
 import orpheus.core.world.occupants.players.PlayerController;
 import util.Settings;
 
@@ -26,12 +26,12 @@ public class PlayerAI implements PlayerController {
     /**
      * the player this controls
      */
-	private final AbstractPlayer appliedTo;
+	private final Player appliedTo;
 
     /**
      * strategy design pattern - the current behavior applied to the player
      */
-    private AbstractBehavior<AbstractPlayer> currentBehavior = null;
+    private AbstractBehavior<Player> currentBehavior = null;
 
     /**
      * the path this is currently directing the player to move through
@@ -48,7 +48,7 @@ public class PlayerAI implements PlayerController {
      * Creates a new AI which controls the given player
      * @param p the player to control
      */
-	public PlayerAI(AbstractPlayer p){
+	public PlayerAI(Player p){
 		appliedTo = p;
         
         currentBehavior = null;
@@ -57,7 +57,7 @@ public class PlayerAI implements PlayerController {
         if(!Settings.DISABLEALLAI){
             currentBehavior = new WanderBehavior(this, appliedTo);
             appliedTo.getActionRegister().addOnBeHit((OnHitEvent e) -> {
-                currentBehavior = new PursueBehavior(this, appliedTo, (AbstractPlayer)e.getHitter());
+                currentBehavior = new PursueBehavior(this, appliedTo, (Player)e.getHitter());
             });
         }
     }
@@ -129,7 +129,7 @@ public class PlayerAI implements PlayerController {
     }
 
     @Override
-    public AbstractPlayer getControlled() {
+    public Player getControlled() {
         return appliedTo;
     }
 

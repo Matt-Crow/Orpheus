@@ -15,12 +15,12 @@ import orpheus.core.champions.SpecificationJsonDeserializer;
 import orpheus.core.champions.SpecificationResolver;
 import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
+import orpheus.core.world.occupants.players.Player;
 import serialization.JsonUtil;
 import world.World;
 import world.WorldBuilder;
 import world.WorldBuilderImpl;
 import world.battle.Team;
-import world.entities.AbstractPlayer;
 import world.game.Game;
 
 /**
@@ -190,7 +190,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         var json = JsonUtil.fromString(sm.getMessage().getBodyText());
         var specification = deserializer.fromJson(json);
         var assembledBuild = specificationResolver.resolve(specification);
-        var player = AbstractPlayer.makeHuman(
+        var player = Player.makeHuman(
             world, // world should not be null by now,
             assembledBuild,
             sender.getId()

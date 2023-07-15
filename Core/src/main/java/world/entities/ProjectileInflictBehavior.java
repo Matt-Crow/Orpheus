@@ -1,5 +1,6 @@
 package world.entities;
 
+import orpheus.core.world.occupants.players.Player;
 import world.statuses.AbstractStatus;
 
 public class ProjectileInflictBehavior implements ProjectileCollideBehavior {
@@ -11,7 +12,7 @@ public class ProjectileInflictBehavior implements ProjectileCollideBehavior {
     }
 
     @Override
-    public void collidedWith(Projectile projectile, AbstractPlayer target) {
+    public void collidedWith(Projectile projectile, Player target) {
         target.inflict(inflicts.copy());
     }
     

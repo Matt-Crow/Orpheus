@@ -1,8 +1,8 @@
 package world.game;
 
+import orpheus.core.world.occupants.players.Player;
 import world.World;
 import world.battle.Team;
-import world.entities.AbstractPlayer;
 
 /**
  * players are pitted against an AI team
@@ -59,7 +59,7 @@ public class Onslaught implements Game {
         */
         int waveSize = (int) Math.ceil(4 * Math.log(currentWave + 1));
         for(int i = 0; i < waveSize; i++){
-            var p = AbstractPlayer.makeDrone(host, currentWave);
+            var p = Player.makeDrone(host, currentWave);
             
             ai.addAiMember(p);
             ai.initPlayer(p, host);

@@ -3,8 +3,10 @@ package world.statuses;
 import world.events.EventListener;
 import world.events.OnUpdateEvent;
 import util.Settings;
-import world.entities.AbstractPlayer;
+
 import java.util.function.UnaryOperator;
+
+import orpheus.core.world.occupants.players.Player;
 import util.Number;
 
 /**
@@ -19,7 +21,7 @@ public class Resistance extends AbstractStatus implements EventListener<OnUpdate
     /**
      * 
      * @param lv 1-3. Slows damage by 25% per level.
- Example: at level 1, a AbstractPlayer's lifespan is increased from 5 seconds minimum to 6.25 seconds.
+ Example: at level 1, a Player's lifespan is increased from 5 seconds minimum to 6.25 seconds.
      * @param uses lasts for ((uses * 2) + 1) hits received.
      */
 	public Resistance(int lv, int uses){
@@ -27,7 +29,7 @@ public class Resistance extends AbstractStatus implements EventListener<OnUpdate
 	}
     
     @Override
-	public void inflictOn(AbstractPlayer p){
+	public void inflictOn(Player p){
 		p.getActionRegister().addOnUpdate(this);
 	}
     
@@ -43,7 +45,7 @@ public class Resistance extends AbstractStatus implements EventListener<OnUpdate
 
     @Override
     public void handle(OnUpdateEvent t) {
-        ((AbstractPlayer)t.getUpdated()).getDamage().applyFilter(1 - 0.25 * getIntensityLevel());
+        ((Player)t.getUpdated()).getDamage().applyFilter(1 - 0.25 * getIntensityLevel());
         use();
     }
 }

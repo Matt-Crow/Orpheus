@@ -1,9 +1,10 @@
 package world.statuses;
 
 import world.events.termination.*;
-import world.entities.AbstractPlayer;
 import util.Number;
 import java.util.function.UnaryOperator;
+
+import orpheus.core.world.occupants.players.Player;
 
 /**
  * AbstractStatus is the base class for all statuses in Orpheus.
@@ -12,7 +13,7 @@ import java.util.function.UnaryOperator;
  adding itself to that AbstractPlayer's ActionRegister as either an OnHitListener, or an OnUpdateListener
  * 
  * @see ActionRegister
- * @see AbstractPlayer#inflict(statuses.AbstractStatus) 
+ * @see Player#inflict(statuses.AbstractStatus) 
  */
 public abstract class AbstractStatus implements Terminable {
 	private final StatusName code; //the Enum of this status' name
@@ -157,9 +158,9 @@ public abstract class AbstractStatus implements Terminable {
      * Generally speaking, this will call p.getActionRegister().add . . .
      * <b>this method must call use() in order to update the number of uses left</b>
      * @param p the AbstractPlayer to target 
-     * @see AbstractPlayer
+     * @see Player
      */
-    public abstract void inflictOn(AbstractPlayer p);
+    public abstract void inflictOn(Player p);
     
     /**
      * Gives a brief description of the status

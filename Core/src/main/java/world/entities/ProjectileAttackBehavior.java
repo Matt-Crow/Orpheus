@@ -1,5 +1,6 @@
 package world.entities;
 
+import orpheus.core.world.occupants.players.Player;
 import world.builds.actives.ElementalActive;
 
 /**
@@ -15,7 +16,7 @@ public class ProjectileAttackBehavior implements ProjectileCollideBehavior {
     }
 
     @Override
-    public void collidedWith(Projectile projectile, AbstractPlayer target) {
+    public void collidedWith(Projectile projectile, Player target) {
         active.hit(projectile, target);
     }
 }
