@@ -237,8 +237,12 @@ public abstract class WorldOccupant implements Graphable, Terminable {
      */
     public void update() {
         if (!terminating) {
-            updateMovement();
+            /*
+                triggerOnUpdate must occur before updateMovement, otherwise, 
+                speed multipliers on players don't work
+            */
             actReg.triggerOnUpdate();
+            updateMovement();
         }
     }
 

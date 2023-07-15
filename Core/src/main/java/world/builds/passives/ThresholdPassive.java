@@ -43,7 +43,7 @@ public class ThresholdPassive extends AbstractPassive implements EventListener<O
     
     @Override
     public void handle(OnUpdateEvent e) {
-        if(((AbstractPlayer)e.getUpdated()).getLog().getHPPerc() <= threshold){
+        if(((AbstractPlayer)e.getUpdated()).getDamage().getHPPerc() <= threshold){
             applyEffect((AbstractPlayer)e.getUpdated());
             trigger();
         }

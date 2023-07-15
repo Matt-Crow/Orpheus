@@ -34,7 +34,7 @@ public class Burn  extends AbstractStatus implements EventListener<OnUpdateEvent
     
     @Override
     public void handle(OnUpdateEvent t) {
-        ((AbstractPlayer)t.getUpdated()).getLog().applyFilter(1 + 0.25 * getIntensityLevel());
+        ((AbstractPlayer)t.getUpdated()).getDamage().applyFilter(1 + 0.25 * getIntensityLevel());
         use();
     }
 }

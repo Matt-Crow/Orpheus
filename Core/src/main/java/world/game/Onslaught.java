@@ -47,7 +47,6 @@ public class Onslaught implements Game {
     
     private void spawnWave(){
         Team ai = host.getAi();
-        String teamName = ai.getName();
         ++currentWave;
         /*
         wave | size
@@ -60,8 +59,7 @@ public class Onslaught implements Game {
         */
         int waveSize = (int) Math.ceil(4 * Math.log(currentWave + 1));
         for(int i = 0; i < waveSize; i++){
-            var name = String.format("%s wave %d #%d", teamName, currentWave, i);
-            var p = AbstractPlayer.makeDrone(host, name, currentWave);
+            var p = AbstractPlayer.makeDrone(host, currentWave);
             
             ai.addAiMember(p);
             ai.initPlayer(p, host);

@@ -192,7 +192,6 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         var assembledBuild = specificationResolver.resolve(specification);
         var player = AbstractPlayer.makeHuman(
             world, // world should not be null by now,
-            sender.getName(),
             assembledBuild,
             sender.getId()
         );

@@ -189,7 +189,7 @@ public class ElementalActive extends AbstractActive {
      */
     public void hit(Projectile hittingProjectile, AbstractPlayer p) {
         AbstractPlayer user = getUser();
-        p.logDamage(calcDmg(p));
+        p.takeDamage(calcDmg(p));
         user.getActionRegister().triggerOnHit(p);
         p.getActionRegister().triggerOnHitReceived(user);
         applyEffect(p);

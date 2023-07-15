@@ -42,7 +42,7 @@ public class Regeneration extends AbstractStatus implements EventListener<OnUpda
     @Override
     public void handle(OnUpdateEvent e) {
         if(e.getUpdated() instanceof AbstractPlayer){
-            ((AbstractPlayer)e.getUpdated()).getLog().healPerc(2.5 * getIntensityLevel() / Settings.FPS);
+            ((AbstractPlayer)e.getUpdated()).getDamage().healPerc(2.5 * getIntensityLevel() / Settings.FPS);
         }
         use();
     }

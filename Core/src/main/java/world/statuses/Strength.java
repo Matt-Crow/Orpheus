@@ -44,7 +44,7 @@ public class Strength extends AbstractStatus implements EventListener<OnHitEvent
     public void handle(OnHitEvent e) {
         AbstractPlayer user = (AbstractPlayer)e.getHitter();
         AbstractPlayer target = (AbstractPlayer)e.getWasHit();
-        target.getLog().logPercentageDamage(3.5 * getIntensityLevel());
+        target.getDamage().logPercentageDamage(3.5 * getIntensityLevel());
 
         Direction angleBetween = Direction.getDegreeByLengths(user.getX(), user.getY(), target.getX(), target.getY());
         int magnitude = Tile.TILE_SIZE * getIntensityLevel();
