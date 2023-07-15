@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import orpheus.core.champions.Playable;
 import orpheus.core.utils.coordinates.Point;
 import orpheus.core.utils.coordinates.PointUpdater;
 import orpheus.core.utils.coordinates.PolarVector;
@@ -17,22 +18,33 @@ import util.Settings;
 import world.Tile;
 import world.World;
 import world.battle.DamageBacklog;
+import world.builds.AssembledBuild;
+import world.builds.actives.AbstractActive;
 import world.builds.actives.MeleeActive;
 import world.builds.characterClass.CharacterStatName;
+import world.builds.characterClass.DroneCharacterClass;
+import world.builds.passives.AbstractPassive;
 import world.statuses.AbstractStatus;
 
 /**
  * The AbstractPlayer class essentially acts as a mobile entity with other,
  * battle related capabilities.
+ * 
+ * TODO merge AbstractPlayer and HumanPlayer into a new Player class
  *
  * @author Matt Crow
  */
-public abstract class AbstractPlayer extends WorldOccupant {
+public class AbstractPlayer extends WorldOccupant {
 
     /**
      * A unique identifier for this player
      */
     private final UUID id; // can pull into HumanPlayer once Team is generic
+
+    /**
+     * the playable character this player is playing as
+     */
+    private final Playable playingAs;
 
     private final String name;
     private Color color;
@@ -71,11 +83,12 @@ public abstract class AbstractPlayer extends WorldOccupant {
 
     public static final int RADIUS = 50;
 
-    public AbstractPlayer(World inWorld, String n, int minLifeSpan, UUID id,
-        MeleeActive basicAttack
+    public AbstractPlayer(World inWorld, Playable playingAs, String n, 
+        int minLifeSpan, UUID id, MeleeActive basicAttack
     ) {
         super(inWorld);
         this.id = id;
+        this.playingAs = playingAs;
         setBaseSpeed(Tile.TILE_SIZE * 5 / Settings.FPS);
         name = n;
         color = Color.black;
@@ -88,6 +101,24 @@ public abstract class AbstractPlayer extends WorldOccupant {
         lastHitById = -1;
 
         setRadius(RADIUS);    
+    }
+
+    /**
+     * Creates a new drone player - previously known as AIPlayer
+     * @param inWorld the world to spawn the drone in
+     * @param name the drone's name
+     * @param level how powerful the drone is - ranges from 1 to 5
+     * @return the new drone
+     */
+    public static AbstractPlayer makeDrone(World inWorld, String name, int level) {
+        var playable = new AssembledBuild(
+            "Drone", 
+            new DroneCharacterClass(level), 
+            new AbstractActive[0], 
+            new AbstractPassive[0]
+        );
+        var result = new AbstractPlayer(inWorld, playable, name, level, UUID.randomUUID(), MeleeActive.makeBasicAttack());
+        return result;
     }
 
     /**
@@ -275,7 +306,25 @@ public abstract class AbstractPlayer extends WorldOccupant {
         getTeam().notifyTerminate(this);
     }
 
-    public abstract double getStatValue(CharacterStatName n);
+    public double getStatValue(CharacterStatName n) {
+        var characterClass = playingAs.getCharacterClass();
+        var result = 0.0;
+        switch (n) {
+            case HP:
+                result = characterClass.getMaxHP();
+                break;
+            case DMG:
+                result = characterClass.getOffMult();
+                break;
+            case REDUCTION:
+                result = characterClass.getDefMult();
+                break;
+            case SPEED:
+                result = characterClass.getSpeed();
+                break;
+        }
+        return result;
+    }
 
     public orpheus.core.world.graph.Player toGraph() {
         return new Player(

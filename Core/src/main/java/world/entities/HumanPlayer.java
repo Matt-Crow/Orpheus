@@ -1,21 +1,16 @@
 package world.entities;
 
-import util.Settings;
-import world.statuses.AbstractStatus;
-
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.UUID;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import orpheus.core.champions.Playable;
 import util.CardinalDirection;
 import util.Direction;
+import util.Settings;
 import world.World;
 import world.builds.actives.AbstractActive;
-import world.builds.characterClass.CharacterClass;
-import world.builds.characterClass.CharacterStatName;
-import world.builds.passives.AbstractPassive;
+import world.statuses.AbstractStatus;
 
 /**
  *
@@ -23,10 +18,8 @@ import world.builds.passives.AbstractPassive;
  */
 public class HumanPlayer extends AbstractPlayer {
 
-    private final Playable playingAs; // can later change to reference this instead of copying data from it
-    private CharacterClass characterClass; // cannot be final yet
-    private final AbstractActive[] actives;
-    private final AbstractPassive[] passives;
+    private final Playable playingAs2;
+
     private final HashMap<CardinalDirection, Boolean> movingInCardinalDir; // used for key controls 
 
     public static final int MIN_LIFE_SPAN = 10;
@@ -36,11 +29,9 @@ public class HumanPlayer extends AbstractPlayer {
     }
 
     public HumanPlayer(World inWorld, String n, UUID id, Playable playable) {
-        super(inWorld, n, MIN_LIFE_SPAN, id, playable.getBasicAttack());
-        actives = new AbstractActive[3];
-        passives = new AbstractPassive[3];
+        super(inWorld, playable, n, MIN_LIFE_SPAN, id, playable.getBasicAttack());
         movingInCardinalDir = new HashMap<>();
-        playingAs = playable;
+        playingAs2 = playable;
         clearMovement();
         playAs(playable);
     }
@@ -56,35 +47,17 @@ public class HumanPlayer extends AbstractPlayer {
      * @param playingAs the playable to play as
      */
     private void playAs(Playable playingAs) {
-        setClass(playingAs.getCharacterClass());
-        setActives(playingAs.getActives().toArray(AbstractActive[]::new));
-        setPassives(playingAs.getPassives().toArray(AbstractPassive[]::new));
+        playingAs.setUser(this);
+
+        var characterClass = playingAs.getCharacterClass();
+        setColor(characterClass.getColor());
         setBaseSpeed((int) (characterClass.getSpeed() * (500.0 / Settings.FPS)));
     }
 
-    private void setClass(CharacterClass characterClass) {
-        this.characterClass = characterClass;
-        setColor(characterClass.getColor());
-        characterClass.setUser(this);
-    }
-
-    private void setActives(AbstractActive[] actives) {
-        for (int i = 0; i < 3; i++) {
-            this.actives[i] = actives[i];
-            this.actives[i].setUser(this);
-        }
-    }
-
-    private void setPassives(AbstractPassive[] passives) {
-        for (int i = 0; i < 3; i++) {
-            this.passives[i] = passives[i];
-            this.passives[i].setUser(this);
-        }
-    }
-
     public void useAttack(int num) {
-        if (actives[num].canUse()) {
-            actives[num].trigger();
+        var attack = playingAs2.getActives().get(num);
+        if (attack.canUse()) {
+            attack.trigger();
         }
     }
 
@@ -95,27 +68,14 @@ public class HumanPlayer extends AbstractPlayer {
     @Override
     public void init() {
         super.init();
-
-        characterClass.init();
-        for (AbstractActive a : actives) {
-            a.init();
-        }
-        for (AbstractPassive p : passives) {
-            p.init();
-        }
+        playingAs2.init();
         clearMovement();
     }
 
     @Override
     public void update() {
         super.update();
-
-        for (AbstractActive a : actives) {
-            a.update();
-        }
-        for (AbstractPassive p : passives) {
-            p.update();
-        }
+        playingAs2.update();
 
         int dx = 0;
         int dy = 0;
@@ -136,26 +96,6 @@ public class HumanPlayer extends AbstractPlayer {
     }
 
     @Override
-    public double getStatValue(CharacterStatName n) {
-        double ret = 0.0;
-        switch (n) {
-            case HP:
-                ret = characterClass.getMaxHP();
-                break;
-            case DMG:
-                ret = characterClass.getOffMult();
-                break;
-            case REDUCTION:
-                ret = characterClass.getDefMult();
-                break;
-            case SPEED:
-                ret = characterClass.getSpeed();
-                break;
-        }
-        return ret;
-    }
-
-    @Override
     public orpheus.core.world.graph.Player toGraph() {
         return new orpheus.core.world.graph.Player(
             getId(),
@@ -166,8 +106,8 @@ public class HumanPlayer extends AbstractPlayer {
             getInflictedStatuses().stream().map(AbstractStatus::toString).toList(),
             getTeam().getColor(),
             getColor(),
-            playingAs.toGraph(),
-            Arrays.stream(actives).map(AbstractActive::toGraph).toList()
+            playingAs2.toGraph(),
+            playingAs2.getActives().stream().map(AbstractActive::toGraph).toList()
         );
     }
 }

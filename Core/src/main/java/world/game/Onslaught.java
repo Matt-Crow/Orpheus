@@ -2,7 +2,7 @@ package world.game;
 
 import world.World;
 import world.battle.Team;
-import world.entities.AIPlayer;
+import world.entities.AbstractPlayer;
 
 /**
  * players are pitted against an AI team
@@ -59,15 +59,11 @@ public class Onslaught implements Game {
           10    10
         */
         int waveSize = (int) Math.ceil(4 * Math.log(currentWave + 1));
-        AIPlayer p;
         for(int i = 0; i < waveSize; i++){
-            p = new AIPlayer(
-                host,
-                String.format("%s wave %d #%d", teamName, currentWave, i), 
-                currentWave
-            );
+            var name = String.format("%s wave %d #%d", teamName, currentWave, i);
+            var p = AbstractPlayer.makeDrone(host, name, currentWave);
             
-            ai.addMember(p);
+            ai.addAiMember(p);
             ai.initPlayer(p, host);
         }
     }

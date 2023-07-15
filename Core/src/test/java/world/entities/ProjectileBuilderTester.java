@@ -14,7 +14,7 @@ public class ProjectileBuilderTester {
         var world = new WorldBuilderImpl()
             .withPlayers(t)
             .build();
-        var player = new AIPlayer(world, "foo", 1);
+        var player = AbstractPlayer.makeDrone(world, "foo", 1);
         player.setX(42);
         player.setY(64);
         player.setFacing(123);

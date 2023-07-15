@@ -49,38 +49,24 @@ public class CharacterClass extends AbstractBuildAttribute{
         return new CharacterClass(
             getName(), 
             getColor(), 
-            getBaseHP(),
-            getBaseOffenseMultiplier(),
-            getBaseDefenseMultiplier(),
-            getBaseSpeed()
+            baseHp,
+            baseDmg,
+            baseRed,
+            baseSpe
         );
     }
     
-    public final int getMaxHP(){
+    public int getMaxHP(){
         return maxHP;
     }
-    public final double getOffMult(){
+    public double getOffMult(){
         return offenseMultiplier;
     }
-    public final double getDefMult(){
+    public double getDefMult(){
         return defenseMultiplier;
     }
-    public final double getSpeed(){
+    public double getSpeed(){
         return speed;
-    }
-    
-    
-    public final int getBaseHP(){
-        return baseHp;
-    }
-    public final int getBaseOffenseMultiplier(){
-        return baseDmg;
-    }
-    public final int getBaseDefenseMultiplier(){
-        return baseRed;
-    }
-    public final int getBaseSpeed(){
-        return baseSpe;
     }
 
     public Color getColor(){

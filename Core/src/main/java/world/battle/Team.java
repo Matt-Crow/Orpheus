@@ -6,10 +6,11 @@ import world.entities.AbstractPlayer;
 import world.entities.Projectile;
 import world.events.termination.Terminables;
 import util.Coordinates;
-import world.entities.AIPlayer;
 
 import java.util.function.Consumer;
 
+import controls.ai.PlayerAI;
+import orpheus.core.utils.timer.TimerTasks;
 import orpheus.core.world.graph.Graphable;
 import orpheus.core.world.occupants.WorldOccupant;
 
@@ -32,20 +33,24 @@ public class Team implements Graphable {
     private final Color color;
     private Team enemyTeam;
 
-    private final HashMap<UUID, AbstractPlayer> roster;
-    private final ArrayList<AbstractPlayer> membersRem;
+    private final HashMap<UUID, AbstractPlayer> roster = new HashMap<>();
+    private final ArrayList<AbstractPlayer> membersRem = new ArrayList<>();
 
     /**
      * the entities belonging to this team
      */
     private final Terminables<WorldOccupant> entities = new Terminables<>();
 
+    /**
+     * tasks which this team must run each timer tick
+     */
+    private final TimerTasks timerTasks = new TimerTasks();
+
+
     public Team(String n, Color c) {
         super();
         name = n;
         color = c;
-        roster = new HashMap<>();
-        membersRem = new ArrayList<>();
     }
 
     /**
@@ -70,6 +75,7 @@ public class Team implements Graphable {
         var result = new Team("AI", Color.RED);
         for (var player : players) {
             result.addMember(player);
+            result.timerTasks.add(new PlayerAI(player));
         }
         return result;
     }
@@ -93,6 +99,11 @@ public class Team implements Graphable {
         m.setTeam(this);
     }
 
+    public void addAiMember(AbstractPlayer player) {
+        addMember(player);
+        timerTasks.add(new PlayerAI(player));
+    }
+
     /**
      * Returns the AbstractPlayer on this team with the given ID, if one exists.
      * Note that this includes all members in the roster, not just players that
@@ -104,19 +115,6 @@ public class Team implements Graphable {
      */
     public AbstractPlayer getMemberById(UUID id) {
         return roster.get(id);
-    }
-
-    public static Team constructRandomTeam(World inWorld, String name, Color color, int size, int lv) {
-        Team t = new Team(name, color);
-        for (int teamSize = 0; teamSize < size; teamSize++) {
-            AbstractPlayer p = new AIPlayer(
-                    inWorld,
-                    String.format("%s member #%d", name, (teamSize + 1)),
-                    lv
-            );
-            t.addMember(p);
-        }
-        return t;
     }
     
     public void setWorld(World w){
@@ -201,33 +199,13 @@ public class Team implements Graphable {
         return membersRem;
     }
 
-    public int getRosterSize() {
-        return roster.size();
-    }
-
     /**
-     * Invokes a method on each member in the team note that this is EVERY
-     * member, NOT just members remaining
-     *
-     * @param f
+     * called each world update
      */
-    public final void forEachMember(Consumer<AbstractPlayer> f) {
-        f.getClass();
-        roster
-                .values()
-                .stream()
-                .forEach((AbstractPlayer p) -> f.accept(p));
-    }
-
     public void update() {
         entities.forEach((e) -> e.update());
         entities.update(); // these are separate things
-    }
-
-    public void print() {
-        entities.forEach((e) -> {
-            System.out.println(e.toString());
-        });
+        timerTasks.tick();
     }
 
     /**
