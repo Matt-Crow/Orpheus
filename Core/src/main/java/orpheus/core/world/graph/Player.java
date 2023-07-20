@@ -3,12 +3,13 @@ package orpheus.core.world.graph;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import javax.json.Json;
 import javax.json.JsonObject;
 
+import orpheus.core.world.graph.playables.Playable;
+import orpheus.core.world.graph.playables.PlayableJsonDeserializer;
 import orpheus.core.world.graph.utils.JsonArrayHelper;
 
 /**
@@ -20,12 +21,12 @@ public class Player extends WorldOccupant {
     private final List<String> statuses;
     private final Color teamColor;
     private final Color color;
-    private final Optional<GraphElement> playingAs; // can move away from optional once I deserialize playingAs
+    private final Playable playingAs;
     private final List<Active> actives;
 
     public Player(UUID id, int x, int y, int radius, int hp, 
         List<String> statuses, Color teamColor, Color color, 
-        GraphElement playingAs, List<Active> actives
+        Playable playingAs, List<Active> actives
     ) {
         
         super(x, y, radius);
@@ -34,7 +35,7 @@ public class Player extends WorldOccupant {
         this.statuses = statuses;
         this.teamColor = teamColor;
         this.color = color;
-        this.playingAs = (playingAs == null) ? Optional.empty() : Optional.of(playingAs);
+        this.playingAs = playingAs;
         this.actives = actives;
     }
 
@@ -72,6 +73,8 @@ public class Player extends WorldOccupant {
                 y + r + i * g.getFontMetrics().getHeight()
             );
         }
+
+        playingAs.drawAt(g, x, y);
     }
     
     @Override
@@ -82,13 +85,9 @@ public class Player extends WorldOccupant {
             .add("statuses", JsonArrayHelper.fromStrings(statuses))
             .add("teamColor", teamColor.getRGB())
             .add("color", color.getRGB())
-            .add("playingAs", playingAsJson())
+            .add("playingAs", playingAs.toJson())
             .add("actives", JsonArrayHelper.fromGraphElements(actives))
             .build();
-    }
-
-    private JsonObject playingAsJson() {
-        return playingAs.map(p -> p.toJson()).orElse(JsonObject.EMPTY_JSON_OBJECT);
     }
 
     public static Player fromJson(JsonObject json) {
@@ -101,7 +100,7 @@ public class Player extends WorldOccupant {
             JsonArrayHelper.toStrings(json.getJsonArray("statuses")),
             new Color(json.getInt("teamColor")),
             new Color(json.getInt("color")),
-            null, // to do: deserialize playingAs
+            PlayableJsonDeserializer.fromJson(json.getJsonObject("playingAs")),
             JsonArrayHelper.toGraphElements(json.getJsonArray("actives"), Active::fromJson)
         );
     }

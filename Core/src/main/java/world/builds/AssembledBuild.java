@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import orpheus.core.champions.Playable;
-import orpheus.core.world.graph.GraphElement;
 import world.builds.actives.AbstractActive;
 import world.builds.actives.MeleeActive;
 import world.builds.characterClass.CharacterClass;
@@ -116,7 +115,7 @@ public class AssembledBuild implements Playable {
     }
 
     @Override
-    public GraphElement toGraph() {
-        return null;
+    public orpheus.core.world.graph.playables.Playable toGraph() {
+        return new orpheus.core.world.graph.playables.AssembledBuild();
     }
 }

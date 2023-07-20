@@ -1,6 +1,5 @@
 package orpheus.core.champions;
 
-import orpheus.core.world.graph.GraphElement;
 import world.builds.AssembledBuild;
 import world.builds.actives.AbstractActive;
 import world.builds.actives.MeleeActive;
@@ -30,7 +29,7 @@ public class ChampionImpl extends Champion {
     }
 
     @Override
-    public GraphElement toGraph() {
+    public orpheus.core.world.graph.playables.Playable toGraph() {
         return null;
     }
     

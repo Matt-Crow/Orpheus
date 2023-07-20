@@ -42,4 +42,7 @@ public interface Playable extends Graphable {
         getActives().forEach(AbstractActive::update);
         getPassives().forEach(AbstractPassive::update);
     }
+
+    @Override
+    public orpheus.core.world.graph.playables.Playable toGraph();
 }

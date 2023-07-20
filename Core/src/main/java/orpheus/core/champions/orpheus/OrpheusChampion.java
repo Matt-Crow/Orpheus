@@ -22,6 +22,8 @@ public class OrpheusChampion extends Champion {
      */
     private int scrapMetal = 0;
 
+    private final ScrapMetal needThisUntilPlayablesUpdate;
+
     private static final int MAX_SCRAP_METAL = 5;
 
 
@@ -29,10 +31,11 @@ public class OrpheusChampion extends Champion {
         var tanking = new OnBeHitPassive("Tanking", true)
             .withStatus(new Resistance(1, 1))
             .withStatus(new Strength(1, 1));
+        needThisUntilPlayablesUpdate = new ScrapMetal(this);
         var passives = new AbstractPassive[] {
             new CinderStrikes(),
             tanking,
-            new ScrapMetal(this)
+            needThisUntilPlayablesUpdate
         };
         var inner = new AssembledBuild(
             getName(), 
@@ -76,9 +79,8 @@ public class OrpheusChampion extends Champion {
     @Override
     public orpheus.core.world.graph.Orpheus toGraph() {
         return new orpheus.core.world.graph.Orpheus(
-            0,
-            0,
-            scrapMetal
+            scrapMetal,
+            needThisUntilPlayablesUpdate.getAngleOffset()
         );
     }
 }

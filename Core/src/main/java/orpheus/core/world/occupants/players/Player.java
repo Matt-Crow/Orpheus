@@ -311,9 +311,11 @@ public class Player extends WorldOccupant {
 
     @Override
     public void terminate() {
-        super.terminate();
-        lastAttackedBy.ifPresent((killer) -> killer.getActionRegister().triggerOnKill(this));
-        getTeam().notifyTerminate(this);
+        if (!isTerminating()) { // avoid double-terminate bugs
+            super.terminate();
+            lastAttackedBy.ifPresent((killer) -> killer.getActionRegister().triggerOnKill(this));
+            getTeam().notifyTerminate(this);
+        }
     }
 
     public orpheus.core.world.graph.Player toGraph() {
