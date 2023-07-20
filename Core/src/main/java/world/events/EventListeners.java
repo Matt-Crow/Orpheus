@@ -39,6 +39,11 @@ public class EventListeners<T extends Event> implements EventListener<T> {
 
     @Override
     public void handle(T e) {
+
+        // resolve bug where next wave of listeners not immediately added
+        listeners.addAll(next); 
+        next.clear();
+
         for (EventListener<T> listener : listeners) {
             listener.handle(e);
             if ( // check if a terminable listener needs to be removed
@@ -48,6 +53,7 @@ public class EventListeners<T extends Event> implements EventListener<T> {
                 next.add(listener);
             }
         }
+
         listeners = next;
         next = new LinkedList<>();
     }
