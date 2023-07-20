@@ -40,8 +40,7 @@ public class OnBeHitPassive extends AbstractPassive implements EventListener<OnH
     }
     @Override
 	public String getDescription(){
-		String desc = getName() + ": \n";
-		desc += "When the user is struck by an enemy projectile, \n";
+		var desc = "When the user is struck by an enemy projectile, \n";
 		desc += "inflicts " + ((getTargetsUser()) ? "user" : "the attacker") + " with: \n";
 		desc += getInflict().getStatusString();
 		return desc;

@@ -43,8 +43,7 @@ public class OnHitPassive extends AbstractPassive implements EventListener<OnHit
 	
     @Override
 	public String getDescription(){
-		String desc = getName() + ": ";
-		desc += "When the user performs an attack that successfully hits an enemy, ";
+		var desc = "When the user performs an attack that successfully hits an enemy, ";
 		desc += "inflicts " + ((getTargetsUser()) ? "user" : "target") + " with: \n";
 		desc += getInflict().getStatusString();
 		return desc;

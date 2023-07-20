@@ -27,8 +27,7 @@ public class ThresholdPassive extends AbstractPassive implements EventListener<O
     
     @Override
 	public String getDescription(){
-		String desc = getName() + ": ";
-		desc += "When the user is at or below " + (int)threshold + "% ";
+		var desc = "When the user is at or below " + (int)threshold + "% ";
 		desc += "of their maximum HP, inflicts them with: \n";
 		desc += getInflict().getStatusString();
 		return desc;

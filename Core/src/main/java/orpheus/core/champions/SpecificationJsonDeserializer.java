@@ -16,7 +16,7 @@ public class SpecificationJsonDeserializer implements JsonDeserializer<Specifica
             case BUILD:
                 return buildDeserializer.fromJson(json);
             case CHAMPION:
-                return new ChampionSpecification(json.getString("name"));
+                return new ChampionSpecification(json.getString("name"), json.getString("description"));
             default:
                 throw new IllegalArgumentException(String.format("Unsupported type: %s", type));
         }

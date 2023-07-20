@@ -30,6 +30,10 @@ public final class StatusTable {
 	public final void add(AbstractStatus s){
 		statuses.put(s.getStatusName(), s.copy());
 	}
+
+    public boolean isEmpty() {
+        return statuses.isEmpty();
+    }
     
     public final void forEach(Consumer<AbstractStatus> f){
         statuses.values().forEach((s) -> {
@@ -50,8 +54,8 @@ public final class StatusTable {
         desc += statuses
             .values()
             .stream()
-            .map((status)->status.getDesc())
-            .collect(Collectors.joining("", "* ", "\n"));
+            .map((status) -> String.format("* %s\n", status.getDesc()))
+            .collect(Collectors.joining(""));
 		
         desc += "~~~~~~~~~~~~~~~~~\n";
 		return desc;

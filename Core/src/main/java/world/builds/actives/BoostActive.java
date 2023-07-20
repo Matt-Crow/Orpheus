@@ -22,8 +22,7 @@ public class BoostActive extends AbstractActive{
 	}
     @Override
 	public String getDescription(){
-		String desc = getName() + ": \n";
-		desc += "Upon use, inflicts the user with: \n";
+		var desc = "Upon use, inflicts the user with: \n";
 		desc += getInflict().getStatusString() + "\n";
 		return desc;
 	}

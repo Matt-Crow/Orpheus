@@ -87,8 +87,8 @@ public class CharacterClass extends AbstractBuildAttribute{
     public String getDescription(){
         return getName() + ": \n" 
                         + "(*) Maximum hit points: " + getMaxHP() + "\n"
-                        + "(*) Damage dealt modifier: " + (int)(getOffMult() * 100) + "%\n"
-                        + "(*) Damage taken modifier: " + (int)(getDefMult() * 100) + "%\n"
+                        + "(*) Damage dealt multiplier: " + (int)(getOffMult() * 100) + "%\n"
+                        + "(*) Damage taken divisor: " + (int)(getDefMult() * 100) + "%\n"
                         + "(*) Movement speed modifier: " + (int)(getSpeed() * 100) + "%\n";
     }
 }

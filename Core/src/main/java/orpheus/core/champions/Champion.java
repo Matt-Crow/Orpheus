@@ -58,7 +58,7 @@ public abstract class Champion implements Playable, Prototype {
     }
 
     public ChampionSpecification getSpecification() {
-        return new ChampionSpecification(getName());
+        return new ChampionSpecification(getName(), inner.get().getDescription());
     }
     
     @Override

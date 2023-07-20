@@ -94,7 +94,7 @@ public class AssembledBuild implements Playable {
             sb.append(
                 entab(
                     sep + '\n' +
-                    an.getDescription()
+                    an.getName() + ": " + an.getDescription()
                 )
             ).append("\n");
         }
@@ -103,7 +103,7 @@ public class AssembledBuild implements Playable {
             sb.append(
                 entab(
                     sep + '\n' +
-                    pn.getDescription()
+                    pn.getName() + ": " + pn.getDescription()
                 )
             ).append("\n");
         }

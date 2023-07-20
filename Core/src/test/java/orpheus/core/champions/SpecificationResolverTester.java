@@ -48,7 +48,7 @@ public class SpecificationResolverTester {
 
     @Test
     public void givenChampionSpecification_whenNoChampionExists_throwsException() {
-        var championSpecification = new ChampionSpecification("foo");
+        var championSpecification = new ChampionSpecification("foo", "bar");
         var dataSet = new DataSet();
         var sut = new SpecificationResolver(dataSet);
 
@@ -57,7 +57,7 @@ public class SpecificationResolverTester {
 
     @Test
     public void givenChampionSpecification_whenChampionExists_doesNotThrowException() {
-        var championSpecification = new ChampionSpecification("foo");
+        var championSpecification = new ChampionSpecification("foo", "bar");
         var dataSet = new DataSet();
         dataSet.addChampion(new ChampionImpl());
         var sut = new SpecificationResolver(dataSet);

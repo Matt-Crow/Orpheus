@@ -69,7 +69,6 @@ public class FlameCharge extends ElementalActive {
     @Override
     public String getDescription(){
         StringBuilder b = new StringBuilder();
-        b.append(getName()).append(": \n");
         b.append("The user gains a temporary speed boost, ");
         b.append("Dealing damage to enemies caught behind them as they charge.");
         return b.toString();

@@ -19,7 +19,7 @@ public class SpecificationJsonDeserializerTester {
 
     @Test
     public void givenSerializedChampion_afterDeserializing_toStringAreEqual() {
-        var champion = new ChampionSpecification("foo");
+        var champion = new ChampionSpecification("foo", "bar");
         var sut = new SpecificationJsonDeserializer();
 
         var result = sut.fromJson(champion.toJson());

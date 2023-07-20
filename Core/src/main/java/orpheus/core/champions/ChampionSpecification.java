@@ -15,10 +15,16 @@ public class ChampionSpecification implements Specification {
     private final String name;
 
     /**
+     * a brief description of this champion
+     */
+    private final String description;
+
+    /**
      * @param name unique identifier which designates which Champion is specified
      */
-    public ChampionSpecification(String name) {
+    public ChampionSpecification(String name, String description) {
         this.name = name;
+        this.description = description;
     }
 
     @Override
@@ -28,7 +34,7 @@ public class ChampionSpecification implements Specification {
 
     @Override
     public String getDescription() {
-        return toString();
+        return description;
     }
 
     @Override
@@ -40,6 +46,7 @@ public class ChampionSpecification implements Specification {
     public JsonObject doToJson() {
         var asJson = Json.createObjectBuilder()
             .add("name", name)
+            .add("description", description)
             .build();
         return asJson;
     }
@@ -51,6 +58,6 @@ public class ChampionSpecification implements Specification {
 
     @Override
     public ChampionSpecification copy() {
-        return new ChampionSpecification(name);
+        return new ChampionSpecification(name, description);
     }
 }

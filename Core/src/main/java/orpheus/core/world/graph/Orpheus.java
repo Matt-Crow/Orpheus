@@ -1,6 +1,5 @@
 package orpheus.core.world.graph;
 
-import java.awt.Color;
 import java.awt.Graphics;
 
 import javax.json.Json;
@@ -40,19 +39,13 @@ public class Orpheus implements Playable {
 
     @Override
     public void drawAt(Graphics g, int x, int y) {
-        var r = Tile.TILE_SIZE / 2;
-        g.setColor(new Color(155, 0, 0, 150));
-        g.fillOval(x - r/2, y - r/2, r, r);
-
-        g.setColor(Color.black);
-        g.drawString(Double.toString(offsetAngle), x, y);
-
+        
         if (scrapMetal == 0) {
             return;
         }
 
         var orbitRadius = Tile.TILE_SIZE;
-
+        var r = Tile.TILE_SIZE / 2;
         g.setColor(CustomColors.DARK_GREY);
         var angleBetween = 360.0 / scrapMetal;
         for (var i = 0; i < scrapMetal; i++) {

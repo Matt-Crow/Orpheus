@@ -213,9 +213,6 @@ public class ElementalActive extends AbstractActive {
     public String getDescription() {
         StringBuilder desc = new StringBuilder();
 
-        desc
-                .append(getName())
-                .append(": \n");
         if (projectileRange == Range.NONE) {
             desc.append(String.format("The user generates an explosion with a %d unit radius", areaOfEffect.getInTiles()));
         } else {
@@ -242,7 +239,11 @@ public class ElementalActive extends AbstractActive {
         }
 
         desc.append(String.format(" dealing %d damage to enemies it hits. \n", getDamage()));
-        desc.append(getInflict().getStatusString());
+
+        var statuses = getInflict();
+        if (!statuses.isEmpty()) {
+            desc.append(statuses.getStatusString());
+        }
 
         return desc.toString();
     }
