@@ -1,6 +1,8 @@
 package world.entities;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -25,7 +27,7 @@ public class ProjectileBuilder {
     private Optional<TerminablePointUpdater> movement = Optional.empty();
     private Optional<Player> user = Optional.empty();
     private ParticleGenerator particles = ParticleGenerator.NONE;
-    private Optional<ProjectileCollideBehavior> collideBehavior = Optional.empty();
+    private List<ProjectileCollideBehavior> collideBehaviors = new ArrayList<>();
     private Optional<Explodes> explodes = Optional.empty();
 
     public ProjectileBuilder withUser(Player user) {
@@ -81,7 +83,7 @@ public class ProjectileBuilder {
     }
 
     /**
-     * @return the builder, updated with a new use ID 
+     * @return the builder, updated with an empty list of players hit 
      */
     public ProjectileBuilder havingHitNoPlayersYet() {
         return havingHitThusFar(new HashSet<>());
@@ -92,8 +94,14 @@ public class ProjectileBuilder {
         return this;
     }
 
+    /**
+     * Adds the given behavior to the list of behaviors the built projectile
+     * will do upon colliding with a player.
+     * @param collideBehavior the behavior to add
+     * @return the builder, updated with the added collision behavior
+     */
     public ProjectileBuilder onCollide(ProjectileCollideBehavior collideBehavior) {
-        this.collideBehavior = Optional.of(collideBehavior);
+        collideBehaviors.add(collideBehavior);
         return this;
     }
 
@@ -121,7 +129,7 @@ public class ProjectileBuilder {
             movement.orElse(new TerminableVectorPointUpdater(new PolarVector(momentum, facing.get().copy()), range.getInPixels())),
             user.orElseThrow(required("user")),
             particles,
-            collideBehavior,
+            collideBehaviors,
             explodes
         );
         return p;

@@ -5,6 +5,7 @@ import util.Settings;
 import world.entities.ParticleType;
 import world.entities.Projectile;
 import world.entities.ProjectileBuilder;
+import world.entities.TerminateOnCollide;
 
 import java.awt.Color;
 import java.util.Collection;
@@ -40,8 +41,9 @@ public class ElementalActive extends AbstractActive {
 
     private ParticleType particleType; // the type of particles this' projectiles emit @see Projectile
     private List<Color> colors = List.of();
+    private boolean projectilesTerminateOnHit = false;
 
-    private static HashSet<Player> nextUseId = new HashSet<>(); // How many actives have been used thus far. Used to prevent double hitting
+    private static HashSet<Player> nextSetOfPlayersHit = new HashSet<>(); // How many actives have been used thus far. Used to prevent double hitting
 
     /**
      * @param n the name of this active
@@ -88,6 +90,9 @@ public class ElementalActive extends AbstractActive {
         copy.setParticleType(getParticleType());
         copy.setColors(getColors());
         copyInflictTo(copy);
+        if (projectilesTerminateOnHit) {
+            copy.andProjectilesTerminateOnHit();
+        }
 
         return copy;
     }
@@ -143,6 +148,16 @@ public class ElementalActive extends AbstractActive {
 
     public final int getBaseDamage() {
         return baseDamage;
+    }
+
+    /**
+     * Modifies this such that the projectiles it spawns terminate upon hitting
+     * a player.
+     * @return this, for chaining
+     */
+    public ElementalActive andProjectilesTerminateOnHit() {
+        projectilesTerminateOnHit = true;
+        return this;
     }
 
     /**
@@ -204,7 +219,7 @@ public class ElementalActive extends AbstractActive {
     @Override
     public final void use() {
         doUse();
-        nextUseId = new HashSet<>();
+        nextSetOfPlayersHit = new HashSet<>();
     }
 
     @Override
@@ -251,9 +266,12 @@ public class ElementalActive extends AbstractActive {
         var builder = new ProjectileBuilder()
             .at(getUser())
             .from(this)
-            .havingHitThusFar(nextUseId)
+            .havingHitThusFar(nextSetOfPlayersHit)
             .facing(facing)
             .withMomentum(projectileSpeed);
+        if (projectilesTerminateOnHit) {
+            builder = builder.onCollide(new TerminateOnCollide());
+        }
         var updatedBuilder = withProjectileBuilder(builder);
         var p = updatedBuilder.build();
         return p;

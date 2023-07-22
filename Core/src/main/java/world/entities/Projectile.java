@@ -1,6 +1,7 @@
 package world.entities;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 import orpheus.core.utils.coordinates.Point;
@@ -29,10 +30,12 @@ public class Projectile extends WorldOccupant {
     /**
      * determine how this will react upon colliding with a player
      */
-    private final Optional<ProjectileCollideBehavior> collideBehavior;
+    private final List<ProjectileCollideBehavior> collideBehavior;
 
     /**
-     * determines whether this explodes on termination
+     * Determines whether this explodes on termination.
+     * Note that this is not a collide behavior, as a projectile may explode
+     * either when it collides or when it reaches the limits of its range.
      */
     private final Optional<Explodes> explodes;
 
@@ -52,7 +55,7 @@ public class Projectile extends WorldOccupant {
             TerminablePointUpdater movement,
             Player user,
             ParticleGenerator particles, 
-            Optional<ProjectileCollideBehavior> collideBehavior,
+            List<ProjectileCollideBehavior> collideBehaviors,
             Optional<Explodes> explodes
     ) {
         super(user.getWorld());
@@ -64,7 +67,7 @@ public class Projectile extends WorldOccupant {
         this.spawnedBy = user;
         this.movement = movement;
         this.particles = particles;
-        this.collideBehavior = collideBehavior;
+        this.collideBehavior = collideBehaviors;
         this.explodes = explodes;
         this.hitThusFar = attackedPlayers;
     }
@@ -88,18 +91,17 @@ public class Projectile extends WorldOccupant {
     }
 
     private void hit(Player p) {
-        collideBehavior.ifPresent(b -> b.collidedWith(this, p));
+        collideBehavior.forEach(b -> b.collidedWith(this, p));
         p.wasHitBy(spawnedBy, this);
         hitThusFar.add(p);
         getActionRegister().triggerOnHit(p);
         spawnedBy.getActionRegister().triggerOnHit(p);
-        terminate();
     }
 
     @Override
     public void update() {
         super.update();
-        if (movement.isDone() && !isTerminating()) {
+        if (movement.isDone()) {
             terminate();
         }
     }
@@ -112,8 +114,10 @@ public class Projectile extends WorldOccupant {
 
     @Override
     public void terminate() {
-        super.terminate();
-        explodes.ifPresent(e -> e.explode(this));
+        if (!isTerminating()) {
+            super.terminate();
+            explodes.ifPresent(e -> e.explode(this));
+        }
     }
 
     @Override

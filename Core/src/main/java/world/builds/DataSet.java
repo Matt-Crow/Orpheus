@@ -148,7 +148,8 @@ public final class DataSet {
         fof.setColors(CustomColors.FIRE_COLORS);
         fof.addStatus(new Burn(2, 3));
 		
-		ElementalActive fb = new ElementalActive("Fireball", Arc.NARROW, Range.MEDIUM, 3, Range.MEDIUM, 5);
+		ElementalActive fb = new ElementalActive("Fireball", Arc.NARROW, Range.MEDIUM, 3, Range.MEDIUM, 5)
+            .andProjectilesTerminateOnHit();
 		fb.setParticleType(ParticleType.BURST);
         fb.setColors(CustomColors.FIRE_COLORS);
         
@@ -160,7 +161,8 @@ public final class DataSet {
 		z.setParticleType(ParticleType.BEAM);
 		z.setColors(CustomColors.AIR_COLORS);
         
-        ElementalActive wb = new ElementalActive("Waterbolt", Arc.NARROW, Range.MEDIUM, 3, Range.SHORT, 2);
+        ElementalActive wb = new ElementalActive("Waterbolt", Arc.NARROW, Range.MEDIUM, 3, Range.SHORT, 2)
+            .andProjectilesTerminateOnHit();
 		wb.setParticleType(ParticleType.BEAM);
         wb.setColors(CustomColors.WATER_COLORS);
         
@@ -168,7 +170,8 @@ public final class DataSet {
         wp.setParticleType(ParticleType.SHEAR);
         wp.setColors(CustomColors.WATER_COLORS);
         
-		ElementalActive rod = new ElementalActive("RAINBOW OF DOOM", Arc.WIDE, Range.MEDIUM, 5, Range.LONG, 1);
+		ElementalActive rod = new ElementalActive("RAINBOW OF DOOM", Arc.WIDE, Range.MEDIUM, 5, Range.LONG, 1)
+            .andProjectilesTerminateOnHit();
 		rod.setParticleType(ParticleType.BURST);
 		rod.setColors(CustomColors.RAINBOW_COLORS);
 		

@@ -28,6 +28,7 @@ public class HammerToss extends ElementalActive {
         setColors(CustomColors.METAL);
         setParticleType(ParticleType.BURST);
         addStatus(new Stun(1, 3));
+        andProjectilesTerminateOnHit();
     }
     
     @Override
