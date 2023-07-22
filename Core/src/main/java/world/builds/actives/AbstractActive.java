@@ -1,8 +1,13 @@
 package world.builds.actives;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import orpheus.core.world.graph.Graphable;
+import orpheus.core.world.occupants.players.attributes.requirements.ActivationRequirement;
+import orpheus.core.world.occupants.players.attributes.requirements.ActivationRequirements;
+import orpheus.core.world.occupants.players.attributes.requirements.CooldownRequirement;
+import util.Settings;
 import world.builds.AbstractTriggerableAttribute;
 
 /**
@@ -10,28 +15,41 @@ import world.builds.AbstractTriggerableAttribute;
  * @author Matt
  */
 public abstract class AbstractActive extends AbstractTriggerableAttribute implements Graphable{
+    
+    private final ActivationRequirements activationRequirements;
+    private final CooldownRequirement cooldown;
+    
     /**
      * @param n the name of this active
      */
-    public AbstractActive(String n){
+    public AbstractActive(String n, ActivationRequirement... activationRequirements){
         super(n);
+        cooldown = new CooldownRequirement(Settings.seconds(1));
 
-        setCooldownTime(1);
+        List<ActivationRequirement> reqs = new ArrayList<>();
+        reqs.add(cooldown);
+        reqs.addAll(List.of(activationRequirements));
+        this.activationRequirements = new ActivationRequirements(reqs);
     }
     
+    // required in case activation requirements need access to 'this'
+    protected void andRequires(ActivationRequirement requirement) {
+        activationRequirements.add(requirement);
+    }
+
     public boolean canUse(){
-        return getUser() != null && !isOnCooldown();
+        return getUser() != null && activationRequirements.areMet();
     }
     
     @Override
     public void init(){
-        //dummy init method
+        cooldown.init();
     }
     
     @Override
     public final void trigger(){
         if(canUse()){
-            setToCooldown();
+            cooldown.setToCooldown();
             use();
         }
     }
@@ -40,13 +58,11 @@ public abstract class AbstractActive extends AbstractTriggerableAttribute implem
     
     @Override
     public void update(){
-        super.update();
+        cooldown.update();
     }
 
     protected List<String> getUnavailabilityMessages() {
-        return (isOnCooldown())
-            ? List.of(String.format("On cooldown %3d", getFramesUntilUse()))
-            : List.of();
+        return activationRequirements.getUnavailabilityMessages();
     }
     
     @Override

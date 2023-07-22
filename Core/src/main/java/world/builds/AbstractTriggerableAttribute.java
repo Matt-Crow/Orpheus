@@ -1,7 +1,6 @@
 package world.builds;
 
 import orpheus.core.world.occupants.players.Player;
-import util.Settings;
 import world.statuses.AbstractStatus;
 import world.statuses.StatusTable;
 
@@ -13,53 +12,11 @@ import world.statuses.StatusTable;
  */
 public abstract class AbstractTriggerableAttribute extends AbstractBuildAttribute {
 
-    private int cooldownTime;          // frames between uses of this upgradable in battle
-    private int framesUntilUse;        // frames until this upgradable can be used in battle again
-
     private final StatusTable inflict;
 
     public AbstractTriggerableAttribute(String n) {
         super(n);
-
-        cooldownTime = 0;
-        framesUntilUse = 0;
-
         inflict = new StatusTable();
-    }
-
-    /**
-     * Sets the maximum frequency of how often this can be used. Each subclass
-     * must still deal with this in their own way.
-     *
-     * @param seconds the minimum number of seconds between each use of this.
-     */
-    public final void setCooldownTime(int seconds) {
-        cooldownTime = Settings.seconds(seconds);
-    }
-
-    /**
-     * Gets how long until this can be used again
-     *
-     * @return how many frames until this is considered "off cooldown"
-     */
-    public final int getFramesUntilUse() {
-        return framesUntilUse;
-    }
-
-    /**
-     * Notify this upgradable that it has been used.
-     */
-    public final void setToCooldown() {
-        framesUntilUse = cooldownTime;
-    }
-
-    /**
-     * Gets if this should be usable.
-     *
-     * @return whether or not this is "on cooldown"
-     */
-    public final boolean isOnCooldown() {
-        return framesUntilUse > 0;
     }
 
     /**
@@ -112,18 +69,6 @@ public abstract class AbstractTriggerableAttribute extends AbstractBuildAttribut
         inflict.forEach((status) -> {
             p.inflict(status.copy());
         });
-    }
-
-    @Override
-    public void init() {
-        framesUntilUse = 0;
-    }
-
-    @Override
-    public void update() {
-        if (framesUntilUse > 0) {
-            framesUntilUse -= 1;
-        }
     }
 
     /**

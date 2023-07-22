@@ -32,6 +32,11 @@ public abstract class AbstractPassive extends AbstractTriggerableAttribute{
 	public boolean getTargetsUser(){
 		return targetsUser;
 	}
+
+	@Override
+	public void init() {
+		
+	}
     
     @Override
     public void trigger(){
@@ -40,6 +45,6 @@ public abstract class AbstractPassive extends AbstractTriggerableAttribute{
     
     @Override
     public void update(){
-        super.update();
+        
     }
 }

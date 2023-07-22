@@ -1,9 +1,7 @@
 package world.builds.actives;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import gui.graphics.CustomColors;
+import orpheus.core.world.occupants.players.attributes.requirements.NotInUseRequirement;
 import util.Direction;
 import world.entities.ParticleType;
 import world.entities.Projectile;
@@ -11,10 +9,7 @@ import world.statuses.Stun;
 
 public class HammerToss extends ElementalActive {
 
-    /**
-     * whether the hammer is in mid-air, and thus is unavailable
-     */
-    private boolean traveling;
+    private final NotInUseRequirement midair;
 
     public HammerToss() {
         super(
@@ -29,6 +24,9 @@ public class HammerToss extends ElementalActive {
         setParticleType(ParticleType.BURST);
         addStatus(new Stun(1, 3));
         andProjectilesTerminateOnHit();
+
+        midair = new NotInUseRequirement("In midair");
+        andRequires(midair);
     }
     
     @Override
@@ -39,18 +37,13 @@ public class HammerToss extends ElementalActive {
     @Override
     public void init() {
         super.init();
-        traveling = false;
-    }
-
-    @Override
-    public boolean canUse() {
-        return super.canUse() && !traveling;
+        midair.doneUsing();
     }
 
     @Override
     protected void doUse() {
         super.doUse();
-        traveling = true;
+        midair.use();
     }
 
     @Override
@@ -58,7 +51,7 @@ public class HammerToss extends ElementalActive {
         var p = super.createProjectile(facing);
         p.addTerminationListener(t -> {
             if (t == p) {
-                traveling = false;
+                midair.doneUsing();
             }
         });
         return p;
@@ -67,14 +60,5 @@ public class HammerToss extends ElementalActive {
     @Override
     public String getDescription() {
         return "The user throws a mighty hammer at a distant enemy.";
-    }
-
-    @Override
-    protected List<String> getUnavailabilityMessages() {
-        var result = new ArrayList<>(super.getUnavailabilityMessages());
-        if (traveling) {
-            result.add("In midair");
-        }
-        return result;
     }
 }

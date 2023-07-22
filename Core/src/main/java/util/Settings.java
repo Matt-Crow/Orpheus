@@ -14,7 +14,7 @@ public class Settings {
 	public static int seconds(double sec){
 		return (int) (sec * FPS);
 	}
-	public static int framesToSeconds(int frames){
-		return frames / FPS;
+	public static double framesToSeconds(int frames){
+		return ((double)frames) / FPS;
 	}
 }

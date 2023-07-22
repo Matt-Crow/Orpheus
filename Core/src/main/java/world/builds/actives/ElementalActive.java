@@ -14,6 +14,7 @@ import java.util.List;
 
 import gui.graphics.CustomColors;
 import orpheus.core.world.occupants.players.Player;
+import orpheus.core.world.occupants.players.attributes.requirements.ActivationRequirement;
 import world.Tile;
 import world.builds.characterClass.CharacterClass;
 import world.builds.characterClass.CharacterStatName;
@@ -53,12 +54,13 @@ public class ElementalActive extends AbstractActive {
      * @param aoe 0 to 5. Upon terminating, if this has an aoe (not 0), the
      * terminating projectile will explode into other projectiles, which will
      * travel a distance calculated from this aoe.
-     *
      * @param dmg 0 to 5. Upon colliding with a player, this' projectiles will
      * inflict a total of (dmg * (5% of average character's HP)) damage.
+     * @param activationRequirements the conditions which must be met in order 
+     *  to use this
      */
-    public ElementalActive(String n, Arc arc, Range range, int speed, Range aoe, int dmg) {
-        super(n);
+    public ElementalActive(String n, Arc arc, Range range, int speed, Range aoe, int dmg, ActivationRequirement... activationRequirements) {
+        super(n, activationRequirements);
         this.arcLength2 = arc;
         baseProjectileSpeed = util.Number.minMax(1, speed, 5);
         baseDamage = util.Number.minMax(0, dmg, 5);
