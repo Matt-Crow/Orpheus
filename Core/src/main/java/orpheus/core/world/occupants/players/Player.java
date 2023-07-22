@@ -71,11 +71,6 @@ public class Player extends WorldOccupant {
      */
     private Optional<Player> lastAttackedBy = Optional.empty();
 
-    /**
-     * the useId of the last projectile that hit this player
-     */
-    private int lastHitById = -1;
-
 
     public Player(World inWorld, UUID id, Playable playingAs, int minLifeSpan) {
         super(inWorld);
@@ -229,15 +224,8 @@ public class Player extends WorldOccupant {
      * @param projectile the projectile which hit them
      */
     public final void wasHitBy(Player player, Projectile projectile) {
-        lastHitById = projectile.getUseId();
         lastAttackedBy = Optional.of(player);
-    }
-
-    /**
-     * @return the useId of the last projectile which hit this
-     */
-    public int getLastHitById() {
-        return lastHitById;
+        getActionRegister().triggerOnHitReceived(player);
     }
 
     /**
@@ -283,7 +271,6 @@ public class Player extends WorldOccupant {
         statuses.clear();
         knockback = Optional.empty();
         lastAttackedBy = Optional.empty();
-        lastHitById = -1;
     }
 
     @Override
@@ -331,5 +318,18 @@ public class Player extends WorldOccupant {
             playingAs.toGraph(),
             playingAs.getActives().stream().map(AbstractActive::toGraph).toList()
         );
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof Player) {
+            return ((Player)other).id == id;
+        }
+        return false;
     }
 }

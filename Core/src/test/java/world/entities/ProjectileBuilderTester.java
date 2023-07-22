@@ -22,7 +22,7 @@ public class ProjectileBuilderTester {
         t.addMember(player);
         
         var builder = new ProjectileBuilder()
-            .withNewUseId()
+            .havingHitNoPlayersYet()
             .withMomentum(71)
             .withUser(player);
         
@@ -32,5 +32,30 @@ public class ProjectileBuilderTester {
         Assertions.assertEquals(player.getX(), actual.getX());
         Assertions.assertEquals(player.getY(), actual.getY());
         Assertions.assertEquals(player.getFacing(), actual.getFacing());
+    }
+
+    @Test
+    public void doubleHitting_doesNotExist() {
+        var world = new WorldBuilderImpl()
+            .build();
+        
+        var player = Player.makeDrone(world, 1);
+        var spy = new HitListenerSpy();
+        player.getActionRegister().addOnBeHit(spy);
+        world.getPlayers().addMember(player);
+        
+        var attacker = Player.makeDrone(world, 1);
+        world.getAi().addMember(attacker);
+        var builder = new ProjectileBuilder()
+            .havingHitNoPlayersYet()
+            .withUser(attacker)
+            .at(player);
+        
+        var first = builder.build();
+        var second = builder.build();
+        first.hitIfColliding(player);
+        second.hitIfColliding(player);
+
+        Assertions.assertEquals(1, spy.getTimesCalled());
     }
 }

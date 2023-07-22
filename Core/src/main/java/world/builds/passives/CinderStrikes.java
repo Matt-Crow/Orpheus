@@ -1,8 +1,9 @@
 package world.builds.passives;
 
-import java.util.UUID;
+import java.util.HashSet;
 
 import gui.graphics.CustomColors;
+import orpheus.core.world.occupants.players.Player;
 import world.builds.actives.Range;
 import world.entities.ParticleGenerator;
 import world.entities.ParticleType;
@@ -35,15 +36,15 @@ public class CinderStrikes extends AbstractPassive implements EventListener<OnUs
 
     @Override
     public void handle(OnUseMeleeEvent e) {
-        var useId = UUID.randomUUID().hashCode();
-        spawnProjectile(useId, e, -15);
-        spawnProjectile(useId, e, 0);
-        spawnProjectile(useId, e, 15);
+        var hitThusFar = new HashSet<Player>();
+        spawnProjectile(hitThusFar, e, -15);
+        spawnProjectile(hitThusFar, e, 0);
+        spawnProjectile(hitThusFar, e, 15);
     }
 
-    private void spawnProjectile(int useId, OnUseMeleeEvent e, int offsetDegrees) {
+    private void spawnProjectile(HashSet<Player> hitThusFar, OnUseMeleeEvent e, int offsetDegrees) {
         var p = new ProjectileBuilder()
-            .withUseId(useId)
+            .havingHitThusFar(hitThusFar)
             .at(getUser())
             .facing(getUser().getFacing().rotatedBy(offsetDegrees))
             .withMomentum(15) // todo move medium or fast

@@ -25,7 +25,7 @@ public class Explodes {
         var builder = new ProjectileBuilder()
             .exploded(active)
             .at(projectile)
-            .withUseId(projectile.getUseId())
+            .havingHitThusFar(projectile.getPlayersHitThusFar())
             .withMomentum(5);
         for (int i = 0; i < Settings.TICKSTOROTATE; i++) {
             user.spawn(builder.facing(Direction.fromDegrees(360 * i / Settings.TICKSTOROTATE)).build());

@@ -1,8 +1,8 @@
 package world.entities;
 
+import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.function.Supplier;
 
 import orpheus.core.utils.coordinates.Point;
@@ -18,9 +18,9 @@ import world.builds.actives.Range;
 public class ProjectileBuilder {
     
     private Point coordinates = new Point();
-    private Optional<Integer> useId = Optional.empty();
+    private Optional<HashSet<Player>> hitThusFar = Optional.empty();
     private Optional<Direction> facing = Optional.empty();
-    private Optional<Integer> momentum = Optional.empty();
+    private int momentum = 0;
     private Range range = Range.MEDIUM;
     private Optional<TerminablePointUpdater> movement = Optional.empty();
     private Optional<Player> user = Optional.empty();
@@ -57,7 +57,7 @@ public class ProjectileBuilder {
     }
 
     public ProjectileBuilder withMomentum(int momentum) {
-        this.momentum = Optional.of(momentum);
+        this.momentum = momentum;
         return this;
     }
 
@@ -75,16 +75,16 @@ public class ProjectileBuilder {
      * @param useId a unique ID for the use active which generated this
      * @return the updated builder
      */
-    public ProjectileBuilder withUseId(int useId) {
-        this.useId = Optional.of(useId);
+    public ProjectileBuilder havingHitThusFar(HashSet<Player> useId) {
+        this.hitThusFar = Optional.of(useId);
         return this;
     }
 
     /**
      * @return the builder, updated with a new use ID 
      */
-    public ProjectileBuilder withNewUseId() {
-        return withUseId(UUID.randomUUID().hashCode());
+    public ProjectileBuilder havingHitNoPlayersYet() {
+        return havingHitThusFar(new HashSet<>());
     }
 
     public ProjectileBuilder withParticles(ParticleGenerator particles) {
@@ -115,10 +115,10 @@ public class ProjectileBuilder {
 
     public Projectile build() {
         var p = new Projectile(
-            useId.orElseThrow(required("useId")),
+            hitThusFar.orElseThrow(required("hitThusFar")),
             coordinates, 
             facing.orElseThrow(required("facing")),
-            movement.orElse(new TerminableVectorPointUpdater(new PolarVector(momentum.get(), facing.get().copy()), range.getInPixels())),
+            movement.orElse(new TerminableVectorPointUpdater(new PolarVector(momentum, facing.get().copy()), range.getInPixels())),
             user.orElseThrow(required("user")),
             particles,
             collideBehavior,

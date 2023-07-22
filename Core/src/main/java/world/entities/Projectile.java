@@ -1,5 +1,6 @@
 package world.entities;
 
+import java.util.HashSet;
 import java.util.Optional;
 
 import orpheus.core.utils.coordinates.Point;
@@ -36,13 +37,16 @@ public class Projectile extends WorldOccupant {
     private final Optional<Explodes> explodes;
 
     /**
-     * Projectiles with the same useId cannot hit the same target.
-     * This prevents double-hitting.
+     * The players who have already been hit by one of the projectiles spawned
+     * by the attack which spawned this one. Sibling projectiles share a 
+     * reference to the same hashset so if one collides with a player, its
+     * siblings will not be able to hit that player. This prevents 
+     * double-hitting.
      */
-    private final int useId; 
+    private final HashSet<Player> hitThusFar; 
 
     protected Projectile(
-            int useId, 
+            HashSet<Player> attackedPlayers, 
             Point coordinates,
             Direction facing,
             TerminablePointUpdater movement,
@@ -62,15 +66,15 @@ public class Projectile extends WorldOccupant {
         this.particles = particles;
         this.collideBehavior = collideBehavior;
         this.explodes = explodes;
-        this.useId = useId;
+        this.hitThusFar = attackedPlayers;
     }
 
     /**
      * Used to prevent double-hitting
-     * @return a unique identifier for the attack instance that spawned this
+     * @return a shared reference to the list of players hit thus far
      */
-    public int getUseId() {
-        return useId;
+    public HashSet<Player> getPlayersHitThusFar() {
+        return hitThusFar;
     }
 
     /**
@@ -78,7 +82,7 @@ public class Projectile extends WorldOccupant {
      * @param p the player to check if this is colliding with
      */
     public void hitIfColliding(Player p) {
-        if (isCollidingWith(p) && p.getLastHitById() != useId) {
+        if (!hitThusFar.contains(p) && isCollidingWith(p)) {
             hit(p);
         }
     }
@@ -86,7 +90,9 @@ public class Projectile extends WorldOccupant {
     private void hit(Player p) {
         collideBehavior.ifPresent(b -> b.collidedWith(this, p));
         p.wasHitBy(spawnedBy, this);
+        hitThusFar.add(p);
         getActionRegister().triggerOnHit(p);
+        spawnedBy.getActionRegister().triggerOnHit(p);
         terminate();
     }
 

@@ -8,6 +8,7 @@ import world.entities.ProjectileBuilder;
 
 import java.awt.Color;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import gui.graphics.CustomColors;
@@ -40,7 +41,7 @@ public class ElementalActive extends AbstractActive {
     private ParticleType particleType; // the type of particles this' projectiles emit @see Projectile
     private List<Color> colors = List.of();
 
-    private static int nextUseId = 0; // How many actives have been used thus far. Used to prevent double hitting
+    private static HashSet<Player> nextUseId = new HashSet<>(); // How many actives have been used thus far. Used to prevent double hitting
 
     /**
      * @param n the name of this active
@@ -188,10 +189,7 @@ public class ElementalActive extends AbstractActive {
      * @param p the AbstractPlayer who one of this Projectiles hit.
      */
     public void hit(Projectile hittingProjectile, Player p) {
-        Player user = getUser();
         p.takeDamage(calcDmg(p));
-        user.getActionRegister().triggerOnHit(p);
-        p.getActionRegister().triggerOnHitReceived(user);
         applyEffect(p);
     }
 
@@ -206,7 +204,7 @@ public class ElementalActive extends AbstractActive {
     @Override
     public final void use() {
         doUse();
-        nextUseId++;
+        nextUseId = new HashSet<>();
     }
 
     @Override
@@ -253,7 +251,7 @@ public class ElementalActive extends AbstractActive {
         var builder = new ProjectileBuilder()
             .at(getUser())
             .from(this)
-            .withUseId(nextUseId)
+            .havingHitThusFar(nextUseId)
             .facing(facing)
             .withMomentum(projectileSpeed);
         var updatedBuilder = withProjectileBuilder(builder);
