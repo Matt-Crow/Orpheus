@@ -52,6 +52,10 @@ public abstract class AbstractActive extends AbstractTriggerableAttribute implem
     protected void andRequires(ActivationRequirement requirement) {
         activationRequirements.add(requirement);
     }
+
+    protected List<ActivationRequirement> getActivationRequirements() {
+        return activationRequirements.toList();
+    }
     
     /**
      * uses this active, if it can be used right now

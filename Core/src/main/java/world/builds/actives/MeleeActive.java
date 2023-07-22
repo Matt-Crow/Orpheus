@@ -1,25 +1,32 @@
 package world.builds.actives;
 
+import gui.graphics.CustomColors;
+import world.entities.ParticleGenerator;
 import world.entities.ParticleType;
 
 public class MeleeActive extends ElementalActive {
 
-    public MeleeActive(String n, Arc arc, int speed, Range aoe, int dmg) {
-        super(n, arc, Range.MELEE, speed, aoe, dmg);
+    public MeleeActive(String n, Arc arc, Speed speed, Range aoe, Damage dmg, ParticleGenerator particleGenerator) {
+        super(n, arc, Range.MELEE, speed, aoe, dmg, particleGenerator);
     }
 
     /**
      * @return the default basic attack which all characters can use
      */
     public static MeleeActive makeBasicAttack() {
-        var result = new MeleeActive("Slash", Arc.NONE, 5, Range.NONE, 3);
-        result.setParticleType(ParticleType.SHEAR);
-        return result;
+        return new MeleeActive(
+            "Slash", 
+            Arc.NONE, 
+            Speed.FAST, 
+            Range.NONE, 
+            Damage.MEDIUM, 
+            new ParticleGenerator(CustomColors.METAL, ParticleType.SHEAR)
+        );
     }
 
     @Override
     public MeleeActive copy() {
-        return new MeleeActive(getName(), getArc(), getBaseProjectileSpeed(), getAOE(), getBaseDamage());
+        return new MeleeActive(getName(), getArc(), getSpeed(), getAOE(), getDamage(), getParticleGenerator());
     }
     
     @Override

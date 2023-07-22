@@ -5,6 +5,7 @@ import java.util.HashSet;
 import gui.graphics.CustomColors;
 import orpheus.core.world.occupants.players.Player;
 import world.builds.actives.Range;
+import world.builds.actives.Speed;
 import world.entities.ParticleGenerator;
 import world.entities.ParticleType;
 import world.entities.ProjectileBuilder;
@@ -47,7 +48,7 @@ public class CinderStrikes extends AbstractPassive implements EventListener<OnUs
             .havingHitThusFar(hitThusFar)
             .at(getUser())
             .facing(getUser().getFacing().rotatedBy(offsetDegrees))
-            .withMomentum(15) // todo move medium or fast
+            .withMomentum(Speed.MEDIUM)
             .withRange(Range.SHORT)
             .withUser(getUser())
             .withParticles(new ParticleGenerator(CustomColors.FIRE, ParticleType.SHEAR))

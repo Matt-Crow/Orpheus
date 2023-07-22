@@ -18,4 +18,6 @@ public interface ActivationRequirement {
      * @return perhaps a message detailing why the attribute cannot be triggered
      */
     public Optional<String> getUnavailabilityMessage();
+
+    public ActivationRequirement copy();
 }

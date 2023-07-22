@@ -7,11 +7,14 @@ import world.builds.Build;
 import world.builds.DataSet;
 import world.builds.actives.AbstractActive;
 import world.builds.actives.Arc;
+import world.builds.actives.Damage;
 import world.builds.actives.ElementalActive;
 import world.builds.actives.Range;
+import world.builds.actives.Speed;
 import world.builds.characterClass.CharacterClass;
 import world.builds.passives.AbstractPassive;
 import world.builds.passives.ThresholdPassive;
+import world.entities.ParticleGenerator;
 
 public class SpecificationResolverTester {
     
@@ -30,9 +33,9 @@ public class SpecificationResolverTester {
         var dataSet = new DataSet();
         dataSet.addCharacterClass(new CharacterClass("bar", null, 0, 0, 0, 0));
         dataSet.addActives(new AbstractActive[] {
-            new ElementalActive("a1", Arc.NONE, Range.NONE, 0, Range.NONE, 0),
-            new ElementalActive("a2", Arc.NONE, Range.NONE, 0, Range.NONE, 0),
-            new ElementalActive("a3", Arc.NONE, Range.NONE, 0, Range.NONE, 0)
+            new ElementalActive("a1", Arc.NONE, Range.NONE, Speed.IMMOBILE, Range.NONE, Damage.NONE, ParticleGenerator.NONE),
+            new ElementalActive("a2", Arc.NONE, Range.NONE, Speed.IMMOBILE, Range.NONE, Damage.NONE, ParticleGenerator.NONE),
+            new ElementalActive("a3", Arc.NONE, Range.NONE, Speed.IMMOBILE, Range.NONE, Damage.NONE, ParticleGenerator.NONE)
         });
         dataSet.addPassives(new AbstractPassive[] {
             new ThresholdPassive("p1", 0),

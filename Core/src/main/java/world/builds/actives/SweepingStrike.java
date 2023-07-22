@@ -3,15 +3,14 @@ package world.builds.actives;
 import gui.graphics.CustomColors;
 import orpheus.core.utils.coordinates.RotatingTerminalPointUpdater;
 import util.Settings;
+import world.entities.ParticleGenerator;
 import world.entities.ParticleType;
 import world.entities.ProjectileBuilder;
 
 public class SweepingStrike extends MeleeActive {
 
     public SweepingStrike() {
-        super("Sweeping Strike", Arc.NONE, 5, Range.NONE, 3);
-        setParticleType(ParticleType.BURST);
-        setColors(CustomColors.METAL);
+        super("Sweeping Strike", Arc.NONE, Speed.FAST, Range.NONE, Damage.MEDIUM, new ParticleGenerator(CustomColors.METAL, ParticleType.BURST));
     }
 
     @Override

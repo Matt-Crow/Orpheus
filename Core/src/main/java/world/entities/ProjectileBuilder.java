@@ -16,13 +16,14 @@ import orpheus.core.world.occupants.players.Player;
 import util.Direction;
 import world.builds.actives.ElementalActive;
 import world.builds.actives.Range;
+import world.builds.actives.Speed;
 
 public class ProjectileBuilder {
     
     private Point coordinates = new Point();
     private Optional<HashSet<Player>> hitThusFar = Optional.empty();
     private Optional<Direction> facing = Optional.empty();
-    private int momentum = 0;
+    private Speed momentum = Speed.IMMOBILE;
     private Range range = Range.MEDIUM;
     private Optional<TerminablePointUpdater> movement = Optional.empty();
     private Optional<Player> user = Optional.empty();
@@ -58,7 +59,7 @@ public class ProjectileBuilder {
         return this;
     }
 
-    public ProjectileBuilder withMomentum(int momentum) {
+    public ProjectileBuilder withMomentum(Speed momentum) {
         this.momentum = momentum;
         return this;
     }
@@ -109,7 +110,7 @@ public class ProjectileBuilder {
         explodes = Optional.of(new Explodes(active));
         return withUser(active.getUser())
             .withRange(active.getRange())
-            .withParticles(new ParticleGenerator(active.getColors(), active.getParticleType()))
+            .withParticles(active.getParticleGenerator())
             .onCollide(new ProjectileAttackBehavior(active));
     }
 
@@ -117,7 +118,7 @@ public class ProjectileBuilder {
         explodes = Optional.empty();
         return withUser(active.getUser())
             .withRange(active.getAOE())
-            .withParticles(new ParticleGenerator(active.getColors(), active.getParticleType()))
+            .withParticles(active.getParticleGenerator())
             .onCollide(new ProjectileAttackBehavior(active));
     }
 
@@ -126,7 +127,7 @@ public class ProjectileBuilder {
             hitThusFar.orElseThrow(required("hitThusFar")),
             coordinates, 
             facing.orElseThrow(required("facing")),
-            movement.orElse(new TerminableVectorPointUpdater(new PolarVector(momentum, facing.get().copy()), range.getInPixels())),
+            movement.orElse(new TerminableVectorPointUpdater(new PolarVector(momentum.getInPixelsPerFrame(), facing.get().copy()), range.getInPixels())),
             user.orElseThrow(required("user")),
             particles,
             collideBehaviors,

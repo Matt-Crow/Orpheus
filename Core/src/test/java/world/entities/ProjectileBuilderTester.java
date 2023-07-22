@@ -23,7 +23,6 @@ public class ProjectileBuilderTester {
         
         var builder = new ProjectileBuilder()
             .havingHitNoPlayersYet()
-            .withMomentum(71)
             .withUser(player);
         
         builder = builder.at(player);

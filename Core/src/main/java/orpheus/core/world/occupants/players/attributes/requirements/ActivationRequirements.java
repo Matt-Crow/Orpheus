@@ -15,6 +15,10 @@ public class ActivationRequirements {
         this.activationRequirements = activationRequirements;
     }
 
+    public List<ActivationRequirement> toList() {
+        return List.copyOf(activationRequirements);
+    }
+
     public void add(ActivationRequirement requirement) {
         activationRequirements.add(requirement);
     }

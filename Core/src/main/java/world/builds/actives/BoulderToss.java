@@ -1,6 +1,7 @@
 package world.builds.actives;
 
 import util.Settings;
+import world.entities.ParticleGenerator;
 import world.entities.ParticleType;
 import world.entities.Projectile;
 import gui.graphics.CustomColors;
@@ -12,9 +13,15 @@ import orpheus.core.world.occupants.players.Player;
  */
 public class BoulderToss extends ElementalActive{
     public BoulderToss(){
-        super("Boulder Toss", Arc.NONE, Range.SHORT, 2, Range.MEDIUM, 4);
-		setParticleType(ParticleType.BURST);
-        setColors(CustomColors.EARTH_COLORS);
+        super(
+            "Boulder Toss", 
+            Arc.NONE, 
+            Range.SHORT, 
+            Speed.SLOW, 
+            Range.MEDIUM, 
+            Damage.HIGH, 
+            new ParticleGenerator(CustomColors.EARTH, ParticleType.BURST)
+        );
     }
     
     @Override

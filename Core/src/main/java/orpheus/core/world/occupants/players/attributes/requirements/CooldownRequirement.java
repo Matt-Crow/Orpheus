@@ -42,4 +42,9 @@ public class CooldownRequirement implements ActivationRequirement {
             ? Optional.empty()
             : Optional.of(String.format("On cooldown %4.2fseconds", Settings.framesToSeconds(framesUntilUse)));
     }
+
+    @Override
+    public CooldownRequirement copy() {
+        return new CooldownRequirement(this.cooldownInFrames);
+    }
 }

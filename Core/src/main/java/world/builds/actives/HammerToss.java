@@ -2,7 +2,7 @@ package world.builds.actives;
 
 import gui.graphics.CustomColors;
 import orpheus.core.world.occupants.players.attributes.requirements.NotInUseRequirement;
-import util.Direction;
+import world.entities.ParticleGenerator;
 import world.entities.ParticleType;
 import world.entities.Projectile;
 import world.statuses.Stun;
@@ -16,12 +16,11 @@ public class HammerToss extends ElementalActive {
             "Hammer Toss", 
             Arc.NONE, 
             Range.LONG, 
-            10, // fast
+            Speed.FAST,
             Range.NONE, 
-            4 // moderate damage
+            Damage.MEDIUM,
+            new ParticleGenerator(CustomColors.METAL, ParticleType.BURST)
         );
-        setColors(CustomColors.METAL);
-        setParticleType(ParticleType.BURST);
         addStatus(new Stun(1, 3));
         andProjectilesTerminateOnHit();
 
@@ -47,14 +46,12 @@ public class HammerToss extends ElementalActive {
     }
 
     @Override
-    public Projectile createProjectile(Direction facing) {
-        var p = super.createProjectile(facing);
-        p.addTerminationListener(t -> {
-            if (t == p) {
+    public void modifyProjectile(Projectile projectile) {
+        projectile.addTerminationListener(t -> {
+            if (t == projectile) {
                 midair.doneUsing();
             }
         });
-        return p;
     }
 
     @Override

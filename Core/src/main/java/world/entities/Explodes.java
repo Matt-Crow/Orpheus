@@ -4,6 +4,7 @@ import util.Direction;
 import util.Settings;
 import world.builds.actives.ElementalActive;
 import world.builds.actives.Range;
+import world.builds.actives.Speed;
 
 public class Explodes {
     
@@ -26,7 +27,7 @@ public class Explodes {
             .exploded(active)
             .at(projectile)
             .havingHitThusFar(projectile.getPlayersHitThusFar())
-            .withMomentum(5);
+            .withMomentum(Speed.MEDIUM);
         for (int i = 0; i < Settings.TICKSTOROTATE; i++) {
             user.spawn(builder.facing(Direction.fromDegrees(360 * i / Settings.TICKSTOROTATE)).build());
         }

@@ -13,6 +13,7 @@ import orpheus.core.utils.PrototypeFactory;
 import world.builds.actives.*;
 import world.builds.characterClass.CharacterClass;
 import world.builds.passives.*;
+import world.entities.ParticleGenerator;
 import world.entities.ParticleType;
 import world.statuses.*;
 
@@ -138,42 +139,26 @@ public final class DataSet {
     }
 
     private void loadDefaultActives(){		
-        ElementalActive eq = new ElementalActive("Earthquake", Arc.CIRCULAR, Range.NONE, 2, Range.LONG, 1);
-		eq.setParticleType(ParticleType.BURST);
-        eq.setColors(CustomColors.EARTH_COLORS);
+        var eq = new ElementalActive("Earthquake", Arc.CIRCULAR, Range.NONE, Speed.SLOW, Range.LONG, Damage.LOW, new ParticleGenerator(CustomColors.EARTH, ParticleType.BURST));
         eq.addStatus(new Stun(3, 1));
         
-		ElementalActive fof = new ElementalActive("Fields of Fire", Arc.CIRCULAR, Range.NONE, 5, Range.MEDIUM, 1);
-		fof.setParticleType(ParticleType.SHEAR);
-        fof.setColors(CustomColors.FIRE_COLORS);
+		var fof = new ElementalActive("Fields of Fire", Arc.CIRCULAR, Range.NONE, Speed.FAST, Range.MEDIUM, Damage.LOW, new ParticleGenerator(CustomColors.FIRE, ParticleType.SHEAR));
         fof.addStatus(new Burn(2, 3));
 		
-		ElementalActive fb = new ElementalActive("Fireball", Arc.NARROW, Range.MEDIUM, 3, Range.MEDIUM, 5)
+		var fb = new ElementalActive("Fireball", Arc.NARROW, Range.MEDIUM, Speed.FAST, Range.MEDIUM, Damage.HIGH, new ParticleGenerator(CustomColors.FIRE, ParticleType.BURST))
             .andProjectilesTerminateOnHit();
-		fb.setParticleType(ParticleType.BURST);
-        fb.setColors(CustomColors.FIRE_COLORS);
         
-		ElementalActive b = new ElementalActive("Boreus", Arc.NONE, Range.LONG, 5, Range.NONE, 1);
-		b.setParticleType(ParticleType.BEAM);
-        b.setColors(CustomColors.AIR_COLORS);
+		var b = new ElementalActive("Boreus", Arc.NONE, Range.LONG, Speed.FAST, Range.NONE, Damage.LOW, new ParticleGenerator(CustomColors.AIR, ParticleType.BEAM));
         
-        ElementalActive z = new ElementalActive("Zephyrus", Arc.NONE, Range.LONG, 5, Range.NONE, 1);
-		z.setParticleType(ParticleType.BEAM);
-		z.setColors(CustomColors.AIR_COLORS);
+        var z = new ElementalActive("Zephyrus", Arc.NONE, Range.LONG, Speed.FAST, Range.NONE, Damage.LOW, new ParticleGenerator(CustomColors.AIR, ParticleType.BEAM));
         
-        ElementalActive wb = new ElementalActive("Waterbolt", Arc.NARROW, Range.MEDIUM, 3, Range.SHORT, 2)
+        var wb = new ElementalActive("Waterbolt", Arc.NARROW, Range.MEDIUM, Speed.MEDIUM, Range.SHORT, Damage.MEDIUM, new ParticleGenerator(CustomColors.WATER, ParticleType.BEAM))
             .andProjectilesTerminateOnHit();
-		wb.setParticleType(ParticleType.BEAM);
-        wb.setColors(CustomColors.WATER_COLORS);
         
-        ElementalActive wp = new ElementalActive("Whirlpool", Arc.CIRCULAR, Range.NONE, 4, Range.LONG, 3);
-        wp.setParticleType(ParticleType.SHEAR);
-        wp.setColors(CustomColors.WATER_COLORS);
+        var wp = new ElementalActive("Whirlpool", Arc.CIRCULAR, Range.NONE, Speed.FAST, Range.LONG, Damage.MEDIUM, new ParticleGenerator(CustomColors.WATER, ParticleType.BEAM));
         
-		ElementalActive rod = new ElementalActive("RAINBOW OF DOOM", Arc.WIDE, Range.MEDIUM, 5, Range.LONG, 1)
+		var rod = new ElementalActive("RAINBOW OF DOOM", Arc.WIDE, Range.MEDIUM, Speed.FAST, Range.LONG, Damage.LOW, new ParticleGenerator(CustomColors.RAINBOW, ParticleType.BURST))
             .andProjectilesTerminateOnHit();
-		rod.setParticleType(ParticleType.BURST);
-		rod.setColors(CustomColors.RAINBOW_COLORS);
 		
 		
 		BoostActive ws = new BoostActive("Warrior's Stance", new AbstractStatus[]{new Strength(2, 2), new Resistance(2, 2)});

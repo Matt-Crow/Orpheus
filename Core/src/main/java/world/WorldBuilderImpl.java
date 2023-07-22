@@ -52,7 +52,7 @@ public class WorldBuilderImpl implements WorldBuilder {
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-        Tile block = new Tile(0, 0, CustomColors.GRAY);
+        Tile block = new Tile(0, 0, CustomColors.DARK_GREY);
         block.setBlocking(true);
         defaultMap.addToTileSet(0, new Tile(0, 0, Color.BLUE));
         defaultMap.addToTileSet(1, block);

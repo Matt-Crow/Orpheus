@@ -29,5 +29,9 @@ public class NotInUseRequirement implements ActivationRequirement {
     public Optional<String> getUnavailabilityMessage() {
         return (inUse) ? Optional.of(unavailabilityMessage) : Optional.empty();
     }
-    
+
+    @Override
+    public ActivationRequirement copy() {
+        return new NotInUseRequirement(unavailabilityMessage);
+    }
 }

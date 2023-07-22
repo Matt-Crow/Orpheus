@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Instances of this class are immutable.
+ */
 public class ParticleGenerator {
     
     private final List<Color> colors;

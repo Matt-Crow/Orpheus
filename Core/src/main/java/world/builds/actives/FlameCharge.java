@@ -1,5 +1,6 @@
 package world.builds.actives;
 
+import world.entities.ParticleGenerator;
 import world.entities.ParticleType;
 import world.events.EventListener;
 import world.events.OnUpdateEvent;
@@ -13,9 +14,15 @@ import world.statuses.Rush;
  */
 public class FlameCharge extends ElementalActive {
     public FlameCharge(){
-        super("Flame Charge", Arc.NONE, Range.MELEE, 5, Range.NONE, 1);
-        setColors(CustomColors.FIRE_COLORS);
-        setParticleType(ParticleType.SHEAR);
+        super(
+            "Flame Charge", 
+            Arc.NONE, 
+            Range.MELEE, 
+            Speed.FAST, 
+            Range.NONE, 
+            Damage.LOW, 
+            new ParticleGenerator(CustomColors.FIRE, ParticleType.SHEAR)
+        );
     }
     
     @Override

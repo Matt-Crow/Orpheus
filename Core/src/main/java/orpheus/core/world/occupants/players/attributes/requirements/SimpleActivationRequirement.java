@@ -24,4 +24,8 @@ public class SimpleActivationRequirement implements ActivationRequirement {
     public Optional<String> getUnavailabilityMessage() {
         return unavailabilityMessage.get();
     }
+    @Override
+    public SimpleActivationRequirement copy() {
+        return new SimpleActivationRequirement(met, unavailabilityMessage); 
+    }
 }
