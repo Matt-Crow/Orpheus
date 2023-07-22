@@ -39,11 +39,6 @@ public abstract class AbstractPassive extends AbstractTriggerableAttribute{
 	}
     
     @Override
-    public void trigger(){
-        
-    }
-    
-    @Override
     public void update(){
         
     }

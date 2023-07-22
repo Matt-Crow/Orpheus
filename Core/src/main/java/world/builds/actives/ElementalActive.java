@@ -219,7 +219,7 @@ public class ElementalActive extends AbstractActive {
     }
 
     @Override
-    public final void use() {
+    protected final void use() {
         doUse();
         nextSetOfPlayersHit = new HashSet<>();
     }

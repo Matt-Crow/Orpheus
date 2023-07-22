@@ -36,7 +36,6 @@ public class OnBeHitPassive extends AbstractPassive implements EventListener<OnH
         } else {
             applyEffect((Player)e.getHitter());
         }
-        trigger();
     }
     @Override
 	public String getDescription(){

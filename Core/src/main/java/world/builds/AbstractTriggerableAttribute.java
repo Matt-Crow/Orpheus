@@ -14,8 +14,8 @@ public abstract class AbstractTriggerableAttribute extends AbstractBuildAttribut
 
     private final StatusTable inflict;
 
-    public AbstractTriggerableAttribute(String n) {
-        super(n);
+    public AbstractTriggerableAttribute(String name) {
+        super(name);
         inflict = new StatusTable();
     }
 
@@ -70,9 +70,4 @@ public abstract class AbstractTriggerableAttribute extends AbstractBuildAttribut
             p.inflict(status.copy());
         });
     }
-
-    /**
-     * This method should be invoked by subclasses
-     */
-    public abstract void trigger();
 }

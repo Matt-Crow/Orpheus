@@ -61,9 +61,7 @@ public class ScrapMetal extends AbstractPassive {
         });
     }
 
-    @Override
-    public void trigger() {
-        super.trigger();
+    private void trigger() {
         orpheus.ifPresent(OrpheusChampion::gainScrapMetal);
     }
 

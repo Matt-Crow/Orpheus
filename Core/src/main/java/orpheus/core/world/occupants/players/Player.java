@@ -240,11 +240,11 @@ public class Player extends WorldOccupant {
         return getCoordinates().distanceFrom(point) < baseSpeed;
     }
 
+    /**
+     * uses this player's melee attack, if it is available
+     */
     public void useMeleeAttack() {
-        var slash = playingAs.getBasicAttack();
-        if (slash.canUse()) {
-            slash.trigger();
-        }
+        playingAs.getBasicAttack().useIfAble();
     }
 
     /**
@@ -254,10 +254,7 @@ public class Player extends WorldOccupant {
     public void useAttack(int num) {
         var actives = playingAs.getActives();
         if (actives.size() >= num) {
-            var attack = actives.get(num);
-            if (attack.canUse()) {
-                attack.trigger();
-            }
+            actives.get(num).useIfAble();
         }        
     }
 

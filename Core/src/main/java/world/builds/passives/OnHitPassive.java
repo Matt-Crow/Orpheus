@@ -38,7 +38,6 @@ public class OnHitPassive extends AbstractPassive implements EventListener<OnHit
         } else {
             applyEffect((Player)e.getWasHit());
         }
-        trigger();
     }
 	
     @Override

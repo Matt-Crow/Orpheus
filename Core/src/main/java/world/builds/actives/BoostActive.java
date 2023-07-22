@@ -16,10 +16,12 @@ public class BoostActive extends AbstractActive{
 	public BoostActive copy(){        
         return new BoostActive(getName(), getInflict().copy());
 	}
+    
     @Override
-	public void use(){
+	protected void use(){
         applyEffect(getUser());
 	}
+
     @Override
 	public String getDescription(){
 		var desc = "Upon use, inflicts the user with: \n";
