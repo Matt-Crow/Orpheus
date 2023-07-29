@@ -72,6 +72,17 @@ public class Projectile extends WorldOccupant {
         this.hitThusFar = attackedPlayers;
     }
 
+    protected ParticleGenerator getParticleGenerator() {
+        return particles;
+    }
+
+    /**
+     * @return the player who spawned this projectile
+     */
+    protected Player getSpawner() {
+        return spawnedBy;
+    }
+
     /**
      * Used to prevent double-hitting
      * @return a shared reference to the list of players hit thus far
@@ -85,12 +96,16 @@ public class Projectile extends WorldOccupant {
      * @param p the player to check if this is colliding with
      */
     public void hitIfColliding(Player p) {
+        // still need to check if hit thus far,
+        // as although Attacks cannot hit the same player twice,
+        // other effects do not make that check
         if (!hitThusFar.contains(p) && isCollidingWith(p)) {
             hit(p);
         }
     }
 
     private void hit(Player p) {
+        // maybe some of these can be pulled into Attack?
         collideBehavior.forEach(b -> b.collidedWith(this, p));
         p.wasHitBy(spawnedBy, this);
         hitThusFar.add(p);

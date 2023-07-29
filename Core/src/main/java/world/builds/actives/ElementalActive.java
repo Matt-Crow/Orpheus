@@ -1,12 +1,16 @@
 package world.builds.actives;
 
 import util.Direction;
+import world.entities.Explodes;
 import world.entities.ParticleGenerator;
 import world.entities.Projectile;
+import world.entities.ProjectileAttackBehavior;
 import world.entities.ProjectileBuilder;
 import world.entities.TerminateOnCollide;
 
 import java.util.HashSet;
+import java.util.List;
+
 import orpheus.core.world.occupants.players.Player;
 import orpheus.core.world.occupants.players.attributes.requirements.ActivationRequirement;
 import world.builds.characterClass.CharacterClass;
@@ -152,9 +156,13 @@ public class ElementalActive extends AbstractActive {
      * @param facing the direction the new projectile will travel
      */
     protected final void spawnProjectile(Direction facing) {
+        var attack = makeAttack(); // todo maybe pass this down
+        var onCollide = new ProjectileAttackBehavior(attack);
         var builder = new ProjectileBuilder()
             .at(getUser())
             .from(this)
+            .onCollide(onCollide)
+            .andExploding(new Explodes(areaOfEffect, projectileSpeed, onCollide))
             .havingHitThusFar(nextSetOfPlayersHit)
             .facing(facing)
             .withMomentum(projectileSpeed);
@@ -186,18 +194,11 @@ public class ElementalActive extends AbstractActive {
 
     }
 
-    /**
-     * Invoked by Projectile upon colliding with a player
-     *
-     * @param hittingProjectile the Projectile which hit p
-     * @param p the AbstractPlayer who one of this Projectiles hit.
-     */
-    public void hit(Projectile hittingProjectile, Player p) {
-        var dmg = (int) (getComputedDamage()
-                * getUser().getStatValue(CharacterStatName.DMG)
-                / p.getStatValue(CharacterStatName.REDUCTION));
-        p.takeDamage(dmg);
-        applyEffect(p);
+    private Attack makeAttack() {
+        return new Attack(
+            getComputedDamage() * getUser().getStatValue(CharacterStatName.DMG), 
+            List.of(getInflict().getStatuses())
+        );
     }
 
     /**

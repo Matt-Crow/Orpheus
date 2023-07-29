@@ -6,7 +6,6 @@ import world.builds.AssembledBuild;
 import world.builds.actives.AbstractActive;
 import world.builds.actives.FlameCharge;
 import world.builds.actives.HammerToss;
-import world.builds.actives.MeleeActive;
 import world.builds.actives.SweepingStrike;
 import world.builds.characterClass.CharacterClass;
 import world.builds.passives.AbstractPassive;
@@ -41,18 +40,14 @@ public class OrpheusChampion extends Champion {
             getName(), 
             new CharacterClass("Orpheus", CustomColors.GOLD, 3, 3, 4, 2), 
             new SweepingStrike(), 
-            makeActives(), 
+            new AbstractActive[] {
+                new HammerToss(),
+                new FlameCharge(),
+                new Reforge(this)
+            }, 
             passives
         );
         setInner(inner);
-    }
-
-    private static AbstractActive[] makeActives() {
-        return new AbstractActive[] {
-            new HammerToss(),
-            new FlameCharge(),
-            MeleeActive.makeBasicAttack() // todo replace with Reforge
-        };
     }
 
     /**
@@ -63,6 +58,18 @@ public class OrpheusChampion extends Champion {
         if (scrapMetal > MAX_SCRAP_METAL) {
             scrapMetal = MAX_SCRAP_METAL;
         }
+    }
+
+    protected boolean hasScrapMetal() {
+        return 0 != scrapMetal;
+    }
+
+    protected int getScrapMetal() {
+        return scrapMetal;
+    }
+
+    protected void clearScrapMetal() {
+        scrapMetal = 0;
     }
 
     @Override

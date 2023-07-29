@@ -164,16 +164,8 @@ public class ProjectileBuilder {
 
     public ProjectileBuilder from(ElementalActive active) {
         return withUser(active.getUser())
-            .andExploding(new Explodes(active))
-            .withParticles(active.getParticleGenerator())
-            .onCollide(new ProjectileAttackBehavior(active));
-    }
-
-    public ProjectileBuilder exploded(ElementalActive active) {
-        explodes = Optional.empty();
-        return withUser(active.getUser())
-            .withParticles(active.getParticleGenerator())
-            .onCollide(new ProjectileAttackBehavior(active));
+            .withRange(active.getRange())
+            .withParticles(active.getParticleGenerator());
     }
 
     public Projectile build() {

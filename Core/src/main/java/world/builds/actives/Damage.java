@@ -1,10 +1,10 @@
 package world.builds.actives;
 
-public enum Damage {
-    NONE(0.0),
-    LOW(0.05),
-    MEDIUM(0.1),
-    HIGH(0.2);
+public class Damage {
+    public static final Damage NONE = new Damage(0.0);
+    public static final Damage LOW = new Damage(0.05);
+    public static final Damage MEDIUM = new Damage(0.1);
+    public static final Damage HIGH = new Damage(0.2);
 
     private final double percentage;
 
@@ -13,6 +13,10 @@ public enum Damage {
             throw new IllegalArgumentException("percentage should be between 0 and 1");
         }
         this.percentage = percentage;
+    }
+
+    public static Damage percent(double percentage) {
+        return new Damage(percentage);
     }
 
     /**

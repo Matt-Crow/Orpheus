@@ -2,34 +2,61 @@ package world.entities;
 
 import util.Direction;
 import util.Settings;
-import world.builds.actives.ElementalActive;
 import world.builds.actives.Range;
 import world.builds.actives.Speed;
 
 public class Explodes {
     
-    private final ElementalActive active;
+    /**
+     * the radius of the explosion this generates
+     */
+    private final Range areaOfEffect;
+
+    /**
+     * how fast the explosion spreads
+     */
+    private final Speed speed;
+
+    /**
+     * what should happen when the explosion hits an enemy
+     */
+    private final ProjectileCollideBehavior collideBehavior;
+
+    /**
+     * whether this has already exploded, and thus should not explode again
+     */
     private boolean exploded = false;
 
-    public Explodes(ElementalActive active) {
-        this.active = active;
+    public Explodes(Range areaOfEffect, Speed speed, ProjectileCollideBehavior behavior) {
+        this.areaOfEffect = areaOfEffect;
+        this.speed = speed;
+        this.collideBehavior = behavior;
     }
 
+    /**
+     * Explodes from the given projectile, if this has not yet exploded.
+     * @param projectile the projectile this exploded from
+     */
     protected synchronized void explode(Projectile projectile) {
-        if (!exploded && active.getAOE() != Range.NONE) {
+        if (!exploded && areaOfEffect != Range.NONE) {
             doExplode(projectile);
         }
     }
 
     private void doExplode(Projectile projectile) {       
-        var user = active.getUser();
+        var user = projectile.getSpawner();
         var builder = new ProjectileBuilder()
-            .exploded(active)
+            .withUser(user)
             .at(projectile)
+            .withParticles(projectile.getParticleGenerator())
             .havingHitThusFar(projectile.getPlayersHitThusFar())
-            .withMomentum(Speed.MEDIUM);
+            .withRange(areaOfEffect)
+            .withMomentum(speed)
+            .onCollide(collideBehavior);
+        
+        var arc = 360.0 / Settings.TICKSTOROTATE;
         for (int i = 0; i < Settings.TICKSTOROTATE; i++) {
-            user.spawn(builder.facing(Direction.fromDegrees(360 * i / Settings.TICKSTOROTATE)).build());
+            user.spawn(builder.facing(Direction.fromDegrees((int)(arc*i))).build());
         }
         exploded = true;
     }

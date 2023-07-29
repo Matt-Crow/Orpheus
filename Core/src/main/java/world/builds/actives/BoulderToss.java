@@ -1,11 +1,10 @@
 package world.builds.actives;
 
-import util.Settings;
+import world.entities.KnockbackBehavior;
 import world.entities.ParticleGenerator;
 import world.entities.ParticleType;
-import world.entities.Projectile;
+import world.entities.ProjectileBuilder;
 import gui.graphics.CustomColors;
-import orpheus.core.world.occupants.players.Player;
 
 /**
  *
@@ -24,10 +23,10 @@ public class BoulderToss extends ElementalActive{
         );
     }
     
+
     @Override
-    public void hit(Projectile hittingProjectile, Player p){
-        super.hit(hittingProjectile, p);
-        p.knockBack(getRange().getInPixels(), hittingProjectile.getFacing(), Settings.seconds(1));
+    protected ProjectileBuilder withProjectileBuilder(ProjectileBuilder builder) {
+        return builder.onCollide(new KnockbackBehavior(getRange()));
     }
     
     @Override

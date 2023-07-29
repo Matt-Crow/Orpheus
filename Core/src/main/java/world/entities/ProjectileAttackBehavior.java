@@ -1,7 +1,7 @@
 package world.entities;
 
 import orpheus.core.world.occupants.players.Player;
-import world.builds.actives.ElementalActive;
+import world.builds.actives.Attack;
 
 /**
  * Specifies that a projectile should resolve an attack upon colliding with a
@@ -9,14 +9,14 @@ import world.builds.actives.ElementalActive;
  */
 public class ProjectileAttackBehavior implements ProjectileCollideBehavior {
 
-    private final ElementalActive active;
+    private final Attack attack;
 
-    protected ProjectileAttackBehavior(ElementalActive active) {
-        this.active = active;
+    public ProjectileAttackBehavior(Attack attack) {
+        this.attack = attack;
     }
 
     @Override
     public void collidedWith(Projectile projectile, Player target) {
-        active.hit(projectile, target);
+        attack.resolveAgainst(target);
     }
 }
