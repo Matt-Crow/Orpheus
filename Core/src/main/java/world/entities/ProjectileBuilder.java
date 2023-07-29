@@ -31,6 +31,52 @@ public class ProjectileBuilder {
     private List<ProjectileCollideBehavior> collideBehaviors = new ArrayList<>();
     private Optional<Explodes> explodes = Optional.empty();
 
+
+    public ProjectileBuilder() {
+
+    }
+
+    private ProjectileBuilder(
+        Point coordinates, 
+        Optional<HashSet<Player>> hitThusFar,
+        Optional<Direction> facing,
+        Speed momentum,
+        Range range,
+        Optional<TerminablePointUpdater> movement,
+        Optional<Player> user,
+        ParticleGenerator particles,
+        List<ProjectileCollideBehavior> collideBehaviors,
+        Optional<Explodes> explodes
+    ) {
+        this();
+        this.coordinates = coordinates;
+        this.hitThusFar = hitThusFar;
+        this.facing = facing;
+        this.momentum = momentum;
+        this.range = range;
+        this.movement = movement;
+        this.user = user;
+        this.particles = particles;
+        this.collideBehaviors = collideBehaviors;
+        this.explodes = explodes;
+    }
+
+    public ProjectileBuilder copy() {
+        // some of these don't support deep copying, some don't need it
+        return new ProjectileBuilder(
+            coordinates.copy(), 
+            hitThusFar.map(HashSet::new), 
+            facing.map(Direction::copy), 
+            momentum, 
+            range, 
+            movement, 
+            user, 
+            particles, 
+            collideBehaviors.stream().toList(), 
+            explodes
+        );
+    }
+
     public ProjectileBuilder withUser(Player user) {
         this.user = Optional.of(user);
         return this;
@@ -106,10 +152,19 @@ public class ProjectileBuilder {
         return this;
     }
 
+    /**
+     * Specifies that the projectile will explode upon terminating
+     * @param explodes the explosion behavior to use upon terminating
+     * @return the builder, updated with the added explosion behavior
+     */
+    public ProjectileBuilder andExploding(Explodes explodes) {
+        this.explodes = Optional.of(explodes);
+        return this;
+    }
+
     public ProjectileBuilder from(ElementalActive active) {
-        explodes = Optional.of(new Explodes(active));
         return withUser(active.getUser())
-            .withRange(active.getRange())
+            .andExploding(new Explodes(active))
             .withParticles(active.getParticleGenerator())
             .onCollide(new ProjectileAttackBehavior(active));
     }
@@ -117,7 +172,6 @@ public class ProjectileBuilder {
     public ProjectileBuilder exploded(ElementalActive active) {
         explodes = Optional.empty();
         return withUser(active.getUser())
-            .withRange(active.getAOE())
             .withParticles(active.getParticleGenerator())
             .onCollide(new ProjectileAttackBehavior(active));
     }
