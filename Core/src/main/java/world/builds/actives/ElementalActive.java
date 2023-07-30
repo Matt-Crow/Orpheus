@@ -141,12 +141,20 @@ public class ElementalActive extends AbstractActive {
      * want any special custom effects.
      */
     protected void doUse() {
+        var attack = makeAttack();
         var arcDegrees = arc.getDegrees();
         var start = getUser().getFacing().rotatedBy(-arcDegrees / 2);
         // spawn projectiles every 15 degrees
         for (int angleOffset = 0; angleOffset <= arcDegrees; angleOffset += 15) {
-            spawnProjectile(start.rotatedBy(angleOffset));
+            spawnProjectile(attack, start.rotatedBy(angleOffset));
         }
+    }
+
+    protected Attack makeAttack() {
+        return new Attack(
+            getComputedDamage() * getUser().getStatValue(CharacterStatName.DMG), 
+            List.of(getInflict().getStatuses())
+        );
     }
 
     /**
@@ -155,8 +163,7 @@ public class ElementalActive extends AbstractActive {
      *
      * @param facing the direction the new projectile will travel
      */
-    protected final void spawnProjectile(Direction facing) {
-        var attack = makeAttack(); // todo maybe pass this down
+    protected final void spawnProjectile(Attack attack, Direction facing) {
         var onCollide = new ProjectileAttackBehavior(attack);
         var builder = new ProjectileBuilder()
             .at(getUser())
@@ -192,13 +199,6 @@ public class ElementalActive extends AbstractActive {
      */
     protected void modifyProjectile(Projectile projectile) {
 
-    }
-
-    private Attack makeAttack() {
-        return new Attack(
-            getComputedDamage() * getUser().getStatValue(CharacterStatName.DMG), 
-            List.of(getInflict().getStatuses())
-        );
     }
 
     /**

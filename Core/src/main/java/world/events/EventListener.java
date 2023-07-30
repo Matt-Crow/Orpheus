@@ -11,4 +11,12 @@ public interface EventListener<T extends Event> {
      * @param e the event emitted by a subject this is listening to
      */
     public void handle(T e);
+
+    /**
+     * @return whether this event listener is done, and thus should be removed
+     *  from the collection of event listeners
+     */
+    public default boolean isDone() {
+        return false;
+    }
 }

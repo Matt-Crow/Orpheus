@@ -44,17 +44,27 @@ public class EventListeners<T extends Event> implements EventListener<T> {
         listeners.addAll(next); 
         next.clear();
 
+        // this might be different from a filter, as handle could add stuff to next
         for (EventListener<T> listener : listeners) {
             listener.handle(e);
-            if ( // check if a terminable listener needs to be removed
-                !(listener instanceof Terminable)
-                || !((Terminable)listener).isTerminating()
-            ) {
+            if (isNotDone(listener)) {
                 next.add(listener);
             }
         }
 
         listeners = next;
         next = new LinkedList<>();
+    }
+
+    private boolean isNotDone(EventListener<T> listener) {
+        var isDone = listener.isDone();
+
+        // unfortunately, some of my old code relies on this instanceof
+        if (listener instanceof Terminable) {
+            var asTerminable = (Terminable)listener;
+            isDone = isDone || asTerminable.isTerminating();
+        }
+        
+        return !isDone;
     }
 }
