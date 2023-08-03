@@ -1,9 +1,10 @@
 package world.statuses;
 
 import world.events.termination.*;
-import world.entities.AbstractPlayer;
 import util.Number;
 import java.util.function.UnaryOperator;
+
+import orpheus.core.world.occupants.players.Player;
 
 /**
  * AbstractStatus is the base class for all statuses in Orpheus.
@@ -12,7 +13,7 @@ import java.util.function.UnaryOperator;
  adding itself to that AbstractPlayer's ActionRegister as either an OnHitListener, or an OnUpdateListener
  * 
  * @see ActionRegister
- * @see AbstractPlayer#inflict(statuses.AbstractStatus) 
+ * @see Player#inflict(statuses.AbstractStatus) 
  */
 public abstract class AbstractStatus implements Terminable {
 	private final StatusName code; //the Enum of this status' name
@@ -51,9 +52,6 @@ public abstract class AbstractStatus implements Terminable {
 	public StatusName getStatusName(){
 		return code;
 	}
-	public String getName(){
-		return name;
-	}
 	public int getIntensityLevel(){
 		return level;
 	}
@@ -75,6 +73,26 @@ public abstract class AbstractStatus implements Terminable {
     
     public int getMaxUses(){
         return maxUses;
+    }
+
+    /**
+     * Checks to see if this status should replace the given other status when
+     * inflicted upon a player.
+     * 
+     * @param other a status the other player is inflicted with, or null
+     * @return whether this should replace the other status
+     */
+    public boolean isBetterThan(AbstractStatus other) {
+        if (other == null) {
+            return true; // anything is better than nothing
+        }
+        if (other.code != code) {
+            throw new IllegalArgumentException("can only compare two statuses of the same type");
+        }
+        var isMoreIntense = level > other.level;
+        var isNotWeaker = isMoreIntense || level == other.level;
+        var lastsLonger = usesLeft > other.usesLeft;
+        return isMoreIntense || (isNotWeaker && lastsLonger);
     }
     
     /**
@@ -140,9 +158,9 @@ public abstract class AbstractStatus implements Terminable {
      * Generally speaking, this will call p.getActionRegister().add . . .
      * <b>this method must call use() in order to update the number of uses left</b>
      * @param p the AbstractPlayer to target 
-     * @see AbstractPlayer
+     * @see Player
      */
-    public abstract void inflictOn(AbstractPlayer p);
+    public abstract void inflictOn(Player p);
     
     /**
      * Gives a brief description of the status

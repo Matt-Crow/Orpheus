@@ -2,19 +2,23 @@ package world.battle;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import world.entities.AbstractPlayer;
+
 import world.entities.Projectile;
 import world.events.termination.Terminables;
 import util.Coordinates;
-import world.entities.AIPlayer;
 
 import java.util.function.Consumer;
 
+import controls.ai.PlayerAI;
+import orpheus.core.utils.timer.TimerTasks;
 import orpheus.core.world.graph.Graphable;
 import orpheus.core.world.occupants.WorldOccupant;
+import orpheus.core.world.occupants.players.CardinalDirectionPlayerController;
+import orpheus.core.world.occupants.players.Player;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.UUID;
 
 import world.World;
@@ -32,20 +36,57 @@ public class Team implements Graphable {
     private final Color color;
     private Team enemyTeam;
 
-    private final HashMap<UUID, AbstractPlayer> roster;
-    private final ArrayList<AbstractPlayer> membersRem;
+    private final HashMap<UUID, Player> roster = new HashMap<>();
+
+    /**
+     * allows keyboard controls for a player's movement
+     */
+    private final HashMap<UUID, CardinalDirectionPlayerController> cardinalControllers = new HashMap<>();
+    
+    private final ArrayList<Player> membersRem = new ArrayList<>();
 
     /**
      * the entities belonging to this team
      */
     private final Terminables<WorldOccupant> entities = new Terminables<>();
 
+    /**
+     * tasks which this team must run each timer tick
+     */
+    private final TimerTasks timerTasks = new TimerTasks();
+
+
     public Team(String n, Color c) {
         super();
         name = n;
         color = c;
-        roster = new HashMap<>();
-        membersRem = new ArrayList<>();
+    }
+
+    /**
+     * Creates a standard player team.
+     * @param players the players to add to the team.
+     * @return the team with the given players
+     */
+    public static Team ofPlayers(Player... players) {
+        var result = new Team("Players", Color.GREEN);
+        for (var player : players) {
+            result.addMember(player);
+        }
+        return result;
+    }
+
+    /**
+     * Creates a standard AI team.
+     * @param players the players to add to the team.
+     * @return the team with the given players
+     */
+    public static Team ofAi(Player... players) {
+        var result = new Team("AI", Color.RED);
+        for (var player : players) {
+            result.addMember(player);
+            result.timerTasks.add(new PlayerAI(player));
+        }
+        return result;
     }
 
     public String getName() {
@@ -62,9 +103,17 @@ public class Team implements Graphable {
      *
      * @param m
      */
-    public void addMember(AbstractPlayer m) {
+    public void addMember(Player m) {
         roster.put(m.getId(), m);
         m.setTeam(this);
+        var manager = new CardinalDirectionPlayerController(m);
+        cardinalControllers.put(m.getId(), manager);
+        this.timerTasks.add(manager);
+    }
+
+    public void addAiMember(Player player) {
+        addMember(player);
+        timerTasks.add(new PlayerAI(player));
     }
 
     /**
@@ -76,21 +125,22 @@ public class Team implements Graphable {
      * @return the player on this team with the given id, or null if one doesn't
      * exist
      */
-    public AbstractPlayer getMemberById(UUID id) {
+    public Player getMemberById(UUID id) {
         return roster.get(id);
     }
 
-    public static Team constructRandomTeam(World inWorld, String name, Color color, int size, int lv) {
-        Team t = new Team(name, color);
-        for (int teamSize = 0; teamSize < size; teamSize++) {
-            AbstractPlayer p = new AIPlayer(
-                    inWorld,
-                    String.format("%s member #%d", name, (teamSize + 1)),
-                    lv
-            );
-            t.addMember(p);
+    /**
+     * Returns the controller for the player on this team with the given ID, if
+     * such a player exists.
+     * @param id the ID of the player to retrieve the controller for
+     * @return an optional which may contain the controller
+     */
+    public Optional<CardinalDirectionPlayerController> getControllerById(UUID id) {
+        var found = cardinalControllers.get(id);
+        if (found == null || found.isDone()) {
+            return Optional.empty();
         }
-        return t;
+        return Optional.of(found);
     }
     
     public void setWorld(World w){
@@ -132,7 +182,7 @@ public class Team implements Graphable {
      * @param p the player to initialize
      * @param w the world to spawn the player into
      */
-    public void initPlayer(AbstractPlayer p, World w) {
+    public void initPlayer(Player p, World w) {
         w.spawn(p);
         p.setWorld(w);
         p.init();
@@ -152,13 +202,13 @@ public class Team implements Graphable {
         return membersRem.isEmpty();
     }
 
-    public AbstractPlayer nearestPlayerTo(int x, int y) {
+    public Player nearestPlayerTo(int x, int y) {
         if (membersRem.isEmpty()) {
             throw new IndexOutOfBoundsException("No players exist for team " + name);
         }
-        AbstractPlayer ret = membersRem.get(0);
+        Player ret = membersRem.get(0);
         int distance = (int) Coordinates.distanceBetween(ret.getX(), ret.getY(), x, y);
-        for (AbstractPlayer p : membersRem) {
+        for (Player p : membersRem) {
             if (p.isTerminating()) {
                 continue;
             }
@@ -171,37 +221,17 @@ public class Team implements Graphable {
         return ret;
     }
 
-    public final ArrayList<AbstractPlayer> getMembersRem() {
+    public final ArrayList<Player> getMembersRem() {
         return membersRem;
     }
 
-    public int getRosterSize() {
-        return roster.size();
-    }
-
     /**
-     * Invokes a method on each member in the team note that this is EVERY
-     * member, NOT just members remaining
-     *
-     * @param f
+     * called each world update
      */
-    public final void forEachMember(Consumer<AbstractPlayer> f) {
-        f.getClass();
-        roster
-                .values()
-                .stream()
-                .forEach((AbstractPlayer p) -> f.accept(p));
-    }
-
     public void update() {
         entities.forEach((e) -> e.update());
         entities.update(); // these are separate things
-    }
-
-    public void print() {
-        entities.forEach((e) -> {
-            System.out.println(e.toString());
-        });
+        timerTasks.tick();
     }
 
     /**
@@ -211,7 +241,7 @@ public class Team implements Graphable {
      *
      * @param p the AbstractPlayer who was removed from the game.
      */
-    public void notifyTerminate(AbstractPlayer p) {
+    public void notifyTerminate(Player p) {
         membersRem.remove(p);
     }
 

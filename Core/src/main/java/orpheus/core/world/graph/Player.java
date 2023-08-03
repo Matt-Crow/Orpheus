@@ -8,6 +8,8 @@ import java.util.UUID;
 import javax.json.Json;
 import javax.json.JsonObject;
 
+import orpheus.core.world.graph.playables.Playable;
+import orpheus.core.world.graph.playables.PlayableJsonDeserializer;
 import orpheus.core.world.graph.utils.JsonArrayHelper;
 
 /**
@@ -19,15 +21,13 @@ public class Player extends WorldOccupant {
     private final List<String> statuses;
     private final Color teamColor;
     private final Color color;
+    private final Playable playingAs;
     private final List<Active> actives;
 
     public Player(UUID id, int x, int y, int radius, int hp, 
-        List<String> statuses, Color teamColor, Color color) {
-        this(id, x, y, radius, hp, statuses, teamColor, color, List.of());
-    }
-
-    public Player(UUID id, int x, int y, int radius, int hp, 
-        List<String> statuses, Color teamColor, Color color, List<Active> actives) {
+        List<String> statuses, Color teamColor, Color color, 
+        Playable playingAs, List<Active> actives
+    ) {
         
         super(x, y, radius);
         this.id = id;
@@ -35,6 +35,7 @@ public class Player extends WorldOccupant {
         this.statuses = statuses;
         this.teamColor = teamColor;
         this.color = color;
+        this.playingAs = playingAs;
         this.actives = actives;
     }
 
@@ -72,6 +73,8 @@ public class Player extends WorldOccupant {
                 y + r + i * g.getFontMetrics().getHeight()
             );
         }
+
+        playingAs.drawAt(g, x, y);
     }
     
     @Override
@@ -82,6 +85,7 @@ public class Player extends WorldOccupant {
             .add("statuses", JsonArrayHelper.fromStrings(statuses))
             .add("teamColor", teamColor.getRGB())
             .add("color", color.getRGB())
+            .add("playingAs", playingAs.toJson())
             .add("actives", JsonArrayHelper.fromGraphElements(actives))
             .build();
     }
@@ -96,6 +100,7 @@ public class Player extends WorldOccupant {
             JsonArrayHelper.toStrings(json.getJsonArray("statuses")),
             new Color(json.getInt("teamColor")),
             new Color(json.getInt("color")),
+            PlayableJsonDeserializer.fromJson(json.getJsonObject("playingAs")),
             JsonArrayHelper.toGraphElements(json.getJsonArray("actives"), Active::fromJson)
         );
     }

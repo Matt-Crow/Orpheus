@@ -12,8 +12,8 @@ public abstract class AbstractBehavior<TargetType> {
     public AbstractBehavior(TargetType target){
         this.target = target;
     }
-    
-    protected final TargetType getTarget(){
+
+    protected TargetType getTarget(){
         return target;
     }
     

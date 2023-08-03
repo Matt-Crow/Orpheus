@@ -1,6 +1,7 @@
 package world.builds.passives;
 
 import world.builds.AbstractTriggerableAttribute;
+import world.statuses.AbstractStatus;
 
 public abstract class AbstractPassive extends AbstractTriggerableAttribute{
 	/**
@@ -14,6 +15,16 @@ public abstract class AbstractPassive extends AbstractTriggerableAttribute{
 		super(n);
 		targetsUser = b;
 	}
+
+	/**
+	 * Adds the given status to this
+	 * @param status the status to add
+	 * @return this
+	 */
+	public AbstractPassive withStatus(AbstractStatus status) {
+		addStatus(status);
+		return this;
+	}
     
     @Override
 	public abstract AbstractPassive copy();
@@ -21,17 +32,14 @@ public abstract class AbstractPassive extends AbstractTriggerableAttribute{
 	public boolean getTargetsUser(){
 		return targetsUser;
 	}
-    
-    
-	
-    
-    @Override
-    public void trigger(){
-        
-    }
+
+	@Override
+	public void init() {
+		
+	}
     
     @Override
     public void update(){
-        super.update();
+        
     }
 }

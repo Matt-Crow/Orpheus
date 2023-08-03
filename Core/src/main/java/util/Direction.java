@@ -1,5 +1,7 @@
 package util;
 
+import orpheus.core.utils.coordinates.Point;
+
 /**
  * The Direction class is used to 
  * get vectors that are used for
@@ -21,6 +23,10 @@ public class Direction {
 		return new Direction(degrees);
 	}
 	
+	public static Direction getDegreeByLengths(Point p1, Point p2) {
+		return getDegreeByLengths((int)p1.getX(), (int)p1.getY(), (int)p2.getX(), (int)p2.getY());
+	}
+
 	public static Direction getDegreeByLengths(int x1, int y1, int x2, int y2){
 		int x = x2 - x1;
 		int y = y2 - y1;
@@ -104,5 +110,18 @@ public class Direction {
 	 */
 	public Direction copy() {
 		return Direction.fromDegrees(degrees);
+	}
+
+	public Direction rotatedBy(int offsetDegrees) {
+		return Direction.fromDegrees(degrees + offsetDegrees);
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof Direction) {
+			var asDir = (Direction)other;
+			return asDir.degrees == this.degrees;
+		}
+		return false;
 	}
 }

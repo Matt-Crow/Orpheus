@@ -4,6 +4,7 @@ import world.events.termination.*;
 
 import java.util.Optional;
 
+import orpheus.core.utils.coordinates.Point;
 import orpheus.core.world.graph.Graphable;
 import util.Coordinates;
 import util.Direction;
@@ -30,14 +31,9 @@ public abstract class WorldOccupant implements Graphable, Terminable {
     private Optional<Team> team = Optional.empty();
 
     /**
-     * The x-coordinate of this object in the world
+     * the mutable coordinates of this in the world
      */
-    private int x = 0;
-
-    /**
-     * The y-coordinate of this object in the world
-     */
-    private int y = 0;
+    private final Point coordinates = new Point();
 
     /**
      * The radius of this object, measured in pixels
@@ -48,21 +44,6 @@ public abstract class WorldOccupant implements Graphable, Terminable {
      * The direction this entity is facing
      */
     private Direction facing = Direction.fromDegrees(0);
-
-    /**
-     * The unmodifies speed of this object
-     */
-    private double baseSpeed = 0.0;
-
-    /**
-     * How much this entity's movement should be multiplied by this frame
-     */
-    private double speedMultiplier = 1.0;
-
-    /**
-     * Whether this object is moving
-     */
-    private boolean moving = false;
 
     /**
      * Registers various game event listeners
@@ -131,19 +112,35 @@ public abstract class WorldOccupant implements Graphable, Terminable {
     }
 
     public void setX(int x) {
-        this.x = x;
+        coordinates.setX(x);
     }
 
     public int getX() {
-        return x;
+        return (int)coordinates.getX();
     }
 
     public void setY(int y) {
-        this.y = y;
+        coordinates.setY(y);
     }
 
     public int getY() {
-        return y;
+        return (int)coordinates.getY();
+    }
+
+    /**
+     * Sets this' coordinates to a copy of the given ones
+     * @param coordinates the coordinates to copy to this
+     */
+    public void setCoordinates(Point coordinates) {
+        setX((int)coordinates.getX());
+        setY((int)coordinates.getY());
+    }
+
+    /**
+     * @return a reference to this' coordinates
+     */
+    public Point getCoordinates() {
+        return coordinates;
     }
 
     public void setRadius(int r) {
@@ -161,41 +158,12 @@ public abstract class WorldOccupant implements Graphable, Terminable {
         facing.setDegrees(degrees);
     }
 
+    public void setFacing(Direction direction) {
+        setFacing(direction.getDegrees());
+    }
+
     public Direction getFacing() {
         return facing;
-    }
-
-    public void setBaseSpeed(double baseSpeed) {
-        if (baseSpeed < 0) {
-            throw new IllegalArgumentException("Speed must be non-negative");
-        }
-        this.baseSpeed = baseSpeed;
-    }
-
-    public double getBaseSpeed() {
-        return baseSpeed;
-    }
-
-    /**
-     * Applies a modifier to this entity's speed that will be removed at the end
-     * of the frame.
-     * @param multiplier the multipier to affect this entity's speed by - multiplicative
-     */
-    public void multiplySpeedBy(double multiplier) {
-        speedMultiplier *= multiplier;
-    }
-
-    /**
-     * @return the distance this will move on the next call to update
-     */
-    public double getComputedSpeed() {
-        return (moving) 
-            ? baseSpeed * speedMultiplier
-            : 0.0;
-    }
-
-    public void setMoving(boolean moving) {
-        this.moving = moving;
     }
 
     /**
@@ -206,7 +174,16 @@ public abstract class WorldOccupant implements Graphable, Terminable {
     }
 
     public final void turnTo(int xCoord, int yCoord) {
-        facing = Direction.getDegreeByLengths(x, y, xCoord, yCoord);
+        facing = Direction.getDegreeByLengths(
+            (int)coordinates.getX(), 
+            (int)coordinates.getY(), 
+            xCoord, 
+            yCoord
+        );
+    }
+
+    public void turnTo(Point other) {
+        facing = Direction.getDegreeByLengths(coordinates, other);
     }
     
     /**
@@ -222,11 +199,12 @@ public abstract class WorldOccupant implements Graphable, Terminable {
     }
 
     public final boolean isWithin(int x, int y, int w, int h) {
-        return (x < this.x + radius //left
-                && x + w > this.x - radius //right
-                && y < this.y + radius //top
-                && y + h > this.y - radius //bottom
-                );
+        return (
+            x < getX() + radius //left
+            && x + w > getX() - radius //right
+            && y < getY() + radius //top
+            && y + h > getY() - radius //bottom
+        );
     }
 
     /**
@@ -250,8 +228,6 @@ public abstract class WorldOccupant implements Graphable, Terminable {
     public void init() {
         terminationListeners.clear();
         actReg.reset();
-        setMoving(false);
-        speedMultiplier = 1.0;
         terminating = false;
     }
 
@@ -261,21 +237,16 @@ public abstract class WorldOccupant implements Graphable, Terminable {
      */
     public void update() {
         if (!terminating) {
-            updateMovement();
+            /*
+                triggerOnUpdate must occur before updateMovement, otherwise, 
+                speed multipliers on players don't work
+            */
             actReg.triggerOnUpdate();
+            updateMovement();
         }
     }
 
-    /**
-     * can be overridden, but subclasses should ensure they call
-     * super.updateMovement() in their implementation.
-     */
-    protected void updateMovement() {
-        var s = getComputedSpeed();
-        x += s * facing.getXMod();
-        y += s * facing.getYMod();
-        speedMultiplier = 1.0;
-    }
+    protected abstract void updateMovement();
 
     @Override
     public void addTerminationListener(TerminationListener listen) {

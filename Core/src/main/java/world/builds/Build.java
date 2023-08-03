@@ -1,11 +1,20 @@
 package world.builds;
 
+import java.util.Arrays;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+
+import orpheus.core.champions.BuildOrChampion;
+import orpheus.core.champions.Specification;
+import serialization.JsonUtil;
+
 /**
  * A Build is a collection of CharacterClass, 3 active abilities, and 3 passive 
  * abilities which are applied to Players at the beginning of a match
  * @author Matt
  */
-public class Build{	
+public class Build implements Specification {	
 	private final String name;
 	private final String className;
 	private final String[] activeNames;
@@ -31,9 +40,11 @@ public class Build{
         );
     }
     
+    @Override
 	public String getName(){
 		return name;
 	}
+
 	public String getClassName(){
 		return className;
 	}
@@ -44,6 +55,7 @@ public class Build{
 		return passiveNames;
 	}
 
+    @Override
     public String getDescription() {
         StringBuilder sb = new StringBuilder();
 
@@ -59,5 +71,27 @@ public class Build{
             sb.append(String.format("\t * %s\n", pas));
         }
         return sb.toString();
+    }
+
+    @Override
+    public BuildOrChampion getType() {
+        return BuildOrChampion.BUILD;
+    }
+
+    @Override
+    public JsonObject doToJson() {
+        var asJson = Json.createObjectBuilder()
+            .add("name", name)
+            .add("character class", className)
+            .add("actives", JsonUtil.toJsonArray(Arrays.asList(getActiveNames())))
+            .add("passives", JsonUtil.toJsonArray(Arrays.asList(getPassiveNames())))
+            .build();
+        
+        return asJson;
+    }
+
+    @Override
+    public String toString() {
+        return getDescription();
     }
 }

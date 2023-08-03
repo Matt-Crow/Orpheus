@@ -2,10 +2,11 @@ package world.statuses;
 
 import world.events.EventListener;
 import world.events.OnHitEvent;
-import world.entities.AbstractPlayer;
 import util.Settings;
 import world.Tile;
 import java.util.function.UnaryOperator;
+
+import orpheus.core.world.occupants.players.Player;
 import util.Direction;
 import util.Number;
 
@@ -26,7 +27,7 @@ public class Strength extends AbstractStatus implements EventListener<OnHitEvent
 	}
     
     @Override
-	public void inflictOn(AbstractPlayer p){
+	public void inflictOn(Player p){
 		p.getActionRegister().addOnHit(this);
 	}
     
@@ -42,9 +43,9 @@ public class Strength extends AbstractStatus implements EventListener<OnHitEvent
 
     @Override
     public void handle(OnHitEvent e) {
-        AbstractPlayer user = (AbstractPlayer)e.getHitter();
-        AbstractPlayer target = (AbstractPlayer)e.getWasHit();
-        target.getLog().logPercentageDamage(3.5 * getIntensityLevel());
+        Player user = (Player)e.getHitter();
+        Player target = (Player)e.getWasHit();
+        target.getDamage().logPercentageDamage(3.5 * getIntensityLevel());
 
         Direction angleBetween = Direction.getDegreeByLengths(user.getX(), user.getY(), target.getX(), target.getY());
         int magnitude = Tile.TILE_SIZE * getIntensityLevel();

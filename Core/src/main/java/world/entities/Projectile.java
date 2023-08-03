@@ -1,145 +1,138 @@
 package world.entities;
 
-import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 
+import orpheus.core.utils.coordinates.Point;
+import orpheus.core.utils.coordinates.TerminablePointUpdater;
 import orpheus.core.world.occupants.WorldOccupant;
-import util.Settings;
-import world.World;
-import world.builds.actives.ElementalActive;
+import orpheus.core.world.occupants.players.Player;
+import util.Direction;
 
 public class Projectile extends WorldOccupant {
 
-    private final ElementalActive registeredAttack;
-    private double distanceTraveled;
-    private int range;
+    /**
+     * the player who spawned this projectile
+     */
+    private final Player spawnedBy;
 
     /**
-     * whether this project can explode, spawning more projectiles
+     * controls this thing's movement in the world - might pass down
      */
-    private boolean canExplode;
+    private final TerminablePointUpdater movement;
 
-    private final int useId; //used to prevent double hitting. May not be unique to a single projectile. See AbstractActive for more info
+    /**
+     * determines what kind of particles this emits
+     */
+    private final ParticleGenerator particles;
 
-    private Projectile(int useId, int x, int y, int degrees, int momentum, 
-        ElementalActive a, boolean canExplode) {
-        
-        super(a.getUser().getWorld());
-        setBaseSpeed(momentum);
+    /**
+     * determine how this will react upon colliding with a player
+     */
+    private final List<ProjectileCollideBehavior> collideBehavior;
+
+    /**
+     * Determines whether this explodes on termination.
+     * Note that this is not a collide behavior, as a projectile may explode
+     * either when it collides or when it reaches the limits of its range.
+     */
+    private final Optional<Explodes> explodes;
+
+    /**
+     * The players who have already been hit by one of the projectiles spawned
+     * by the attack which spawned this one. Sibling projectiles share a 
+     * reference to the same hashset so if one collides with a player, its
+     * siblings will not be able to hit that player. This prevents 
+     * double-hitting.
+     */
+    private final HashSet<Player> hitThusFar; 
+
+    protected Projectile(
+            HashSet<Player> attackedPlayers, 
+            Point coordinates,
+            Direction facing,
+            TerminablePointUpdater movement,
+            Player user,
+            ParticleGenerator particles, 
+            List<ProjectileCollideBehavior> collideBehaviors,
+            Optional<Explodes> explodes
+    ) {
+        super(user.getWorld());
         init();
-        setX(x);
-        setY(y);
-        setFacing(degrees);
-        this.useId = useId;
-        distanceTraveled = 0;
-        setTeam(a.getUser().getTeam());
-        registeredAttack = a;
-        range = a.getRange();
+        setCoordinates(coordinates);
+        setFacing(facing); // still needed by BoulderToss
+        setTeam(user.getTeam());
         setRadius(25);
-        setMoving(true);
-        this.canExplode = canExplode;
+        this.spawnedBy = user;
+        this.movement = movement;
+        this.particles = particles;
+        this.collideBehavior = collideBehaviors;
+        this.explodes = explodes;
+        this.hitThusFar = attackedPlayers;
     }
 
-    private Projectile(World inWorld, int useId, int x, int y, int degrees, 
-        int momentum, ElementalActive a) {
-        
-        this(useId, x, y, degrees, momentum, a, false);
-    }
-
-    /**
-     * Creates a projectile that can explode into more projectiles
-     * @param inWorld
-     * @param useId
-     * @param x
-     * @param y
-     * @param angle
-     * @param momentum
-     * @param user
-     * @param from
-     * @return
-     */
-    public static Projectile seed(World inWorld, int useId, int x, int y, 
-        int angle, int momentum, ElementalActive from) {
-
-        var p = new Projectile(inWorld, useId, x, y, angle, momentum, from);
-        p.canExplode = from.getAOE() != 0;
-        return p;
+    protected ParticleGenerator getParticleGenerator() {
+        return particles;
     }
 
     /**
-     * Creates a projectile that has exploded from another projectile, and thus
-     * can no longer explode.
-     * @param inWorld
-     * @param useId
-     * @param x
-     * @param y
-     * @param angle
-     * @param momentum
-     * @param user
-     * @param from
-     * @return
+     * @return the player who spawned this projectile
      */
-    public static Projectile explosion(World inWorld, int useId, int x, int y, 
-        int angle, int momentum, ElementalActive from) {
-        
-        var p = new Projectile(useId, x, y, angle, momentum, from, false);
-        p.range = (int)from.getAOE();
-
-        return p;
+    protected Player getSpawner() {
+        return spawnedBy;
     }
 
     /**
      * Used to prevent double-hitting
-     * @return a unique identifier for the attack instance that spawned this
+     * @return a shared reference to the list of players hit thus far
      */
-    public int getUseId() {
-        return useId;
+    public HashSet<Player> getPlayersHitThusFar() {
+        return hitThusFar;
     }
 
-    public void hit(AbstractPlayer p) {
-        registeredAttack.hit(this, p);
-        p.wasHitBy(this);
-        getActionRegister().triggerOnHit(p);
-        terminate();
-    }
-
-    public boolean checkForCollisions(AbstractPlayer p) {
-        boolean ret = super.isCollidingWith(p);
-        if (ret && p.getLastHitById() != useId) {
-            ret = true;
+    /**
+     * Hits the given player if this is colliding with them
+     * @param p the player to check if this is colliding with
+     */
+    public void hitIfColliding(Player p) {
+        // still need to check if hit thus far,
+        // as although Attacks cannot hit the same player twice,
+        // other effects do not make that check
+        if (!hitThusFar.contains(p) && isCollidingWith(p)) {
             hit(p);
         }
-        return ret;
     }
 
-    @Override
-    public void init() {
-        super.init();
+    private void hit(Player p) {
+        // maybe some of these can be pulled into Attack?
+        collideBehavior.forEach(b -> b.collidedWith(this, p));
+        p.wasHitBy(spawnedBy, this);
+        hitThusFar.add(p);
+        getActionRegister().triggerOnHit(p);
+        spawnedBy.getActionRegister().triggerOnHit(p);
     }
 
     @Override
     public void update() {
         super.update();
-        distanceTraveled += getComputedSpeed();
-
-        if (distanceTraveled >= range && !isTerminating()) {
+        if (movement.isDone()) {
             terminate();
         }
     }
 
     @Override
-    public void terminate() {
-        super.terminate();
-        if (canExplode) {
-            explode();
-        }
+    protected void updateMovement() {
+        // do not call super method
+        movement.update(getCoordinates());
     }
 
-    private void explode() {
-        World w = getWorld();
-        for (int i = 0; i < Settings.TICKSTOROTATE; i++) {
-            registeredAttack.getUser().spawn(Projectile.explosion(w, useId, getX(), getY(), 360 * i / Settings.TICKSTOROTATE, 5, registeredAttack));
+    @Override
+    public void terminate() {
+        if (!isTerminating()) {
+            super.terminate();
+            explodes.ifPresent(e -> e.explode(this));
         }
-        canExplode = false;
     }
 
     @Override
@@ -149,9 +142,8 @@ public class Projectile extends WorldOccupant {
             getY(),
             getRadius(),
             getFacing().copy(),
-            registeredAttack.getUser().getTeam().getColor(),
-            Arrays.stream(registeredAttack.getColors()).toList(),
-            registeredAttack.getParticleType()
+            particles.getColors(),
+            particles.getType()
         );
     }
 }

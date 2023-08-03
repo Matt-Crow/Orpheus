@@ -3,11 +3,8 @@ package serialization;
 import javax.json.JsonObject;
 
 /**
- * Classes which implement this interface
- * must include a static method to 'undo' the process
- * of serializeJson: a way to convert a JsonObject to 
- * an object of the same type as the class it was serialized from
  * @author Matt Crow
+ * @see orpheus.core.json.JsonDeserializer
  */
 public interface JsonSerialable {
     /**

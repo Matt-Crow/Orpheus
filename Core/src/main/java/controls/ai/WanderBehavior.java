@@ -1,20 +1,24 @@
 package controls.ai;
 
 import world.Tile;
+import orpheus.core.world.occupants.players.Player;
 import util.Coordinates;
 import util.Random;
-import world.entities.AbstractPlayer;
 
 /**
  * Get this AbstractPlayer drunk, wander around randomly
  * 
  * @author Matt
  */
-public class WanderBehavior extends AbstractBehavior<AbstractPlayer>{
+public class WanderBehavior extends AbstractBehavior<Player>{
+    
+    private final PlayerAI host;
+
     private static final int DETECTIONRANGE = Tile.TILE_SIZE * 5;
 	
-    public WanderBehavior(AbstractPlayer target) {
+    public WanderBehavior(PlayerAI host, Player target) {
         super(target);
+        this.host = host;
         setToWander();
     }
     
@@ -22,14 +26,14 @@ public class WanderBehavior extends AbstractBehavior<AbstractPlayer>{
         int x;
         int y;
         int t = Tile.TILE_SIZE;
-        AbstractPlayer target = getTarget();
+        Player target = getTarget();
         boolean pathFound = false;
         for(int attempts = 0; !pathFound && attempts < 10; ++ attempts){
             x = target.getX() + Random.choose(-3, 3) * t;
             y = target.getY() + Random.choose(-3, 3) * t;
             if(target.getWorld().getMap().isOpenTile(x, y)){
                 pathFound = true;
-                target.setPath(target.getWorld().getMap().findPath(
+                host.setPath(target.getWorld().getMap().findPath(
                     target.getX(), 
                     target.getY(), 
                     x, 
@@ -40,15 +44,18 @@ public class WanderBehavior extends AbstractBehavior<AbstractPlayer>{
     }
 
     @Override
-    public AbstractBehavior<AbstractPlayer> update() {
-        AbstractBehavior<AbstractPlayer> nextBehavior = this;
-        AbstractPlayer target = getTarget();
+    public AbstractBehavior<Player> update() {
+        AbstractBehavior<Player> nextBehavior = this;
+        Player target = getTarget();
         target.setMoving(true);
         if(checkIfPlayerInSightRange()){
-            nextBehavior = new PursueBehavior(target, nearestEnemy());
-        } else if(target.getPath() == null || target.getPath().noneLeft()){
-            // wander some more
-            nextBehavior = new WanderBehavior(target);
+            nextBehavior = new PursueBehavior(host, target, nearestEnemy());
+        } else {
+            var path = host.getCurrentPath();
+            if (path.isEmpty() || path.get().noneLeft()) {
+                // wander some more
+                nextBehavior = new WanderBehavior(host, target);
+            }
         }
         return nextBehavior; // todo: make them occasionally transition behaviors
     }
@@ -56,12 +63,12 @@ public class WanderBehavior extends AbstractBehavior<AbstractPlayer>{
     // Maybe move these 2 to World
     
     private boolean checkIfPlayerInSightRange(){
-		AbstractPlayer nearest = nearestEnemy();
+		Player nearest = nearestEnemy();
 		return Coordinates.distanceBetween(getTarget(), nearest) <= DETECTIONRANGE;
 	}
 	
-	private AbstractPlayer nearestEnemy(){
-        AbstractPlayer target = getTarget();
+	private Player nearestEnemy(){
+        Player target = getTarget();
 		return target.getTeam().getEnemy().nearestPlayerTo(target.getX(), target.getY());
 	}
 }

@@ -1,80 +1,71 @@
 package world.builds.actives;
 
-import util.Settings;
-import world.entities.AbstractPlayer;
-import world.entities.ParticleType;
+import util.Direction;
+import world.entities.Explodes;
+import world.entities.ParticleGenerator;
 import world.entities.Projectile;
-import gui.graphics.CustomColors;
-import world.Tile;
+import world.entities.ProjectileAttackBehavior;
+import world.entities.ProjectileBuilder;
+import world.entities.TerminateOnCollide;
+
+import java.util.HashSet;
+import java.util.List;
+
+import orpheus.core.world.occupants.players.Player;
+import orpheus.core.world.occupants.players.attributes.requirements.ActivationRequirement;
 import world.builds.characterClass.CharacterClass;
 import world.builds.characterClass.CharacterStatName;
 
 /**
- * When extending this class, you will want to overide the following methods:
- * <ul>
- * <li>copy</li>
- * <li>doUse</li>
- * </ul>
- *
  * @author Matt Crow
  */
 public class ElementalActive extends AbstractActive {
 
-    private final int arcLength;
-    private final int projectileRange;
-    private final int areaOfEffect;
-    private final int projectileSpeed;
-    private final int damage;
-
-    private final int baseArcLength;
-    private final int baseProjRange;
-    private final int baseAreaOfEffect;
-    private final int baseProjectileSpeed;
-    private final int baseDamage;
-
-    private ParticleType particleType; // the type of particles this' projectiles emit @see Projectile
-    private CustomColors[] colors;
-
-    private static int nextUseId = 0; // How many actives have been used thus far. Used to prevent double hitting
+    private final Arc arc;
+    private final Range projectileRange;
+    private final Range areaOfEffect;
+    private final Speed projectileSpeed;
+    private final Damage damage;
 
     /**
-     * @param n the name of this active
-     *
-     * @param arc an integer from 1 to 5, denoting how wide of an arc of
-     * projectiles this will spawn upon trigger: 1: 45 2: 90 3: 135 4: 180 5:
-     * 360
-     *
-     * @param range 0 to 5. how far the projectiles will travel before
-     * terminating
-     * @param speed 1 to 5. how fast the projectile moves
-     * @param aoe 0 to 5. Upon terminating, if this has an aoe (not 0), the
-     * terminating projectile will explode into other projectiles, which will
-     * travel a distance calculated from this aoe.
-     *
-     * @param dmg 0 to 5. Upon colliding with a player, this' projectiles will
-     * inflict a total of (dmg * (5% of average character's HP)) damage.
+     * used by this active's projectiles to generate particles
      */
-    public ElementalActive(String n, int arc, int range, int speed, int aoe, int dmg) {
-        super(n);
+    private ParticleGenerator particleGenerator;
+    
+    private boolean projectilesTerminateOnHit = false;
 
-        baseArcLength = util.Number.minMax(0, arc, 5);
-        baseProjRange = util.Number.minMax(0, range, 5);
-        baseProjectileSpeed = util.Number.minMax(1, speed, 5);
-        baseAreaOfEffect = util.Number.minMax(0, aoe, 5);
-        baseDamage = util.Number.minMax(0, dmg, 5);
+    private static HashSet<Player> nextSetOfPlayersHit = new HashSet<>(); // How many actives have been used thus far. Used to prevent double hitting
 
-        this.arcLength = (baseArcLength == 5) ? 360 : baseArcLength * 45;
-        int rng = 0;
-        for (int i = 1; i <= baseProjRange; i++) {
-            rng += i;
-        }
-        projectileRange = rng * Tile.TILE_SIZE;
-        projectileSpeed = Tile.TILE_SIZE * baseProjectileSpeed / Settings.FPS;
-        areaOfEffect = baseAreaOfEffect * Tile.TILE_SIZE;
-        damage = baseDamage * CharacterClass.BASE_HP / 20;
-
-        particleType = ParticleType.NONE;
-        colors = new CustomColors[]{CustomColors.black};
+    /**
+     * @param name the name of this active
+     * @param arc how wide of an arc of projectiles this will spawn upon trigger
+     * @param range how far the projectiles will travel before terminating
+     * @param speed how fast the projectile moves
+     * @param aoe upon terminating, if this has an aoe, the terminating 
+     * projectile will explode into other projectiles, which will travel a 
+     * distance calculated from this aoe.
+     * @param dmg how much damage this active's projectiles will inflict
+     * @param particleGenerator used by projectiles to generate particles
+     * @param activationRequirements the conditions which must be met in order 
+     *  to use this
+     */
+    public ElementalActive(
+            String name, 
+            Arc arc, 
+            Range range, 
+            Speed speed, 
+            Range aoe, 
+            Damage dmg, 
+            ParticleGenerator particleGenerator,
+            ActivationRequirement... activationRequirements
+    ) {
+        super(name, activationRequirements);
+        this.arc = arc;
+        projectileRange = range;
+        projectileSpeed = speed;
+        areaOfEffect = aoe;
+        damage = dmg;
+        this.particleGenerator = particleGenerator;
     }
 
     /**
@@ -85,125 +76,64 @@ public class ElementalActive extends AbstractActive {
     @Override
     public ElementalActive copy() {
         ElementalActive copy = new ElementalActive(
-                getName(),
-                getBaseArcLength(),
-                getBaseRange(),
-                getBaseProjectileSpeed(),
-                getBaseAreaOfEffect(),
-                getBaseDamage());
-        copy.setParticleType(getParticleType());
-        copy.setColors(getColors());
+            getName(),
+            arc,
+            projectileRange,
+            projectileSpeed,
+            areaOfEffect,
+            damage,
+            particleGenerator,
+            getActivationRequirements().toArray(ActivationRequirement[]::new)
+        );
         copyInflictTo(copy);
+        if (projectilesTerminateOnHit) {
+            copy.andProjectilesTerminateOnHit();
+        }
 
         return copy;
     }
 
-    public void setColors(CustomColors[] cs) {
-        colors = cs.clone();
+    protected Arc getArc() {
+        return arc;
     }
 
-    public CustomColors[] getColors() {
-        return colors;
-    }
-
-    // particle methods
-    public void setParticleType(ParticleType t) {
-        particleType = t;
-    }
-
-    public ParticleType getParticleType() {
-        return particleType;
-    }
-
-    public final int getArcLength() {
-        return arcLength;
-    }
-
-    public final int getRange() {
-        return projectileRange;
-    }
-
-    public final int getSpeed() {
+    protected Speed getSpeed() {
         return projectileSpeed;
     }
 
-    public final int getAOE() {
+    public Range getRange() {
+        return projectileRange;
+    }
+
+    public Range getAOE() {
         return areaOfEffect;
     }
 
-    public final int getDamage() {
+    protected Damage getDamage() {
         return damage;
     }
 
-    public final int getBaseArcLength() {
-        return baseArcLength;
-    }
-
-    public final int getBaseRange() {
-        return baseProjRange;
-    }
-
-    public final int getBaseProjectileSpeed() {
-        return baseProjectileSpeed;
-    }
-
-    public final int getBaseAreaOfEffect() {
-        return areaOfEffect;
-    }
-
-    public final int getBaseDamage() {
-        return baseDamage;
+    /**
+     * @return the generator used to spawn particles for this
+     */
+    public ParticleGenerator getParticleGenerator() {
+        return particleGenerator;
     }
 
     /**
-     * Creates a projectile at this' user's coordinates
-     *
-     * @param facingDegrees the direction the new projectile will travel
+     * Modifies this such that the projectiles it spawns terminate upon hitting
+     * a player.
+     * @return this, for chaining
      */
-    protected void spawnProjectile(int facingDegrees) {
-        var p = createProjectile();
-        p.setFacing(facingDegrees);
-        getUser().spawn(p);
+    public ElementalActive andProjectilesTerminateOnHit() {
+        projectilesTerminateOnHit = true;
+        return this;
     }
 
-    /**
-     * Generates an arc of projectiles from this' user
-     *
-     * @param arcDegrees the number of degrees in the arc
-     */
-    protected void spawnArc(int arcDegrees) {
-        int start = getUser().getFacing().getDegrees() - arcDegrees / 2;
-        // spawn projectiles every 15 degrees
-        for (int angleOffset = 0; angleOffset < arcDegrees; angleOffset += 15) {
-            spawnProjectile(start + angleOffset);
-        }
-    }
-
-    /**
-     * Calculates the damage this should inflict on the given player upon
-     * hitting them.
-     *
-     * @param p
-     * @return
-     */
-    public int calcDmg(AbstractPlayer p) {
-        return (int) (damage
-                * getUser().getStatValue(CharacterStatName.DMG)
-                / p.getStatValue(CharacterStatName.REDUCTION));
-    }
-
-    /**
-     * Invoked by Projectile upon colliding with a player
-     *
-     * @param hittingProjectile the Projectile which hit p
-     * @param p the AbstractPlayer who one of this Projectiles hit.
-     */
-    public void hit(Projectile hittingProjectile, AbstractPlayer p) {
-        AbstractPlayer user = getUser();
-        p.logDamage(calcDmg(p));
-        user.getActionRegister().triggerOnHit(p);
-        p.getActionRegister().triggerOnHitReceived(user);
-        applyEffect(p);
+    @Override
+    protected final void use() {
+        doUse();
+        nextSetOfPlayersHit = new HashSet<>();
     }
 
     /**
@@ -211,62 +141,105 @@ public class ElementalActive extends AbstractActive {
      * want any special custom effects.
      */
     protected void doUse() {
-        spawnArc(arcLength);
+        var attack = makeAttack();
+        var arcDegrees = arc.getDegrees();
+        var start = getUser().getFacing().rotatedBy(-arcDegrees / 2);
+        // spawn projectiles every 15 degrees
+        for (int angleOffset = 0; angleOffset <= arcDegrees; angleOffset += 15) {
+            spawnProjectile(attack, start.rotatedBy(angleOffset));
+        }
     }
 
-    @Override
-    public final void use() {
-        doUse();
-        nextUseId++;
+    protected Attack makeAttack() {
+        return new Attack(
+            getComputedDamage() * getUser().getStatValue(CharacterStatName.DMG), 
+            List.of(getInflict().getStatuses())
+        );
+    }
+
+    /**
+     * Creates a projectile at this' user's coordinates.
+     * Subclasses can use withProjectileBuilder to modify this method's behavior
+     *
+     * @param facing the direction the new projectile will travel
+     */
+    protected final void spawnProjectile(Attack attack, Direction facing) {
+        var onCollide = new ProjectileAttackBehavior(attack);
+        var builder = new ProjectileBuilder()
+            .at(getUser())
+            .from(this)
+            .onCollide(onCollide)
+            .andExploding(new Explodes(areaOfEffect, projectileSpeed, onCollide))
+            .havingHitThusFar(nextSetOfPlayersHit)
+            .facing(facing)
+            .withMomentum(projectileSpeed);
+        if (projectilesTerminateOnHit) {
+            builder = builder.onCollide(new TerminateOnCollide());
+        }
+        var updatedBuilder = withProjectileBuilder(builder);
+        var p = updatedBuilder.build();
+        modifyProjectile(p);
+        getUser().spawn(p);
+    }
+
+    /**
+     * Subclasses should override this method if they wish to modify the 
+     * projectile being built as part of an attack.
+     * 
+     * @param builder currently being used to build a projectile
+     * @return the updated builder
+     */
+    protected ProjectileBuilder withProjectileBuilder(ProjectileBuilder builder) {
+        return builder;
+    }
+
+    /**
+     * Subclasses should override this method if they wish to modify the
+     * projectile after it has been built
+     */
+    protected void modifyProjectile(Projectile projectile) {
+
+    }
+
+    /**
+     * @return the amount of damage this inflicts on hit
+     */
+    private double getComputedDamage() {
+        return damage.getPercentage() * CharacterClass.BASE_HP;
     }
 
     @Override
     public String getDescription() {
         StringBuilder desc = new StringBuilder();
 
-        desc
-                .append(getName())
-                .append(": \n");
-        if (getRange() == 0) {
-            desc.append(String.format("The user generates an explosion with a %d unit radius", getAOE() / Tile.TILE_SIZE));
+        if (projectileRange == Range.NONE) {
+            desc.append(String.format("The user generates an explosion with a %d unit radius", areaOfEffect.getInTiles()));
         } else {
             desc.append("The user launches ");
-            if (getArcLength() > 0) {
-                desc.append(
-                        String.format(
-                                "projectiles in a %d degree arc, each traveling ",
-                                getArcLength()
-                        )
-                );
+            if (arc != Arc.NONE) {
+                desc.append(String.format(
+                    "projectiles in a %d degree arc, each traveling ",
+                    arc.getDegrees()
+                ));
             } else {
                 desc.append("a projectile, which travels ");
             }
-            desc.append(String.format("for %d units, at %d units per second",
-                    getRange() / Tile.TILE_SIZE,
-                    getSpeed() * Settings.FPS / Tile.TILE_SIZE
-            )
-            );
+            desc.append(String.format("for %d units, at %d tiles per second",
+                projectileRange.getInTiles(),
+                projectileSpeed.getInTilesPerSecond()
+            ));
 
-            if (getAOE() != 0) {
-                desc.append(String.format(" before exploding in a %d unit radius", getAOE() / Tile.TILE_SIZE));
+            if (areaOfEffect != Range.NONE) {
+                desc.append(String.format(" before exploding in a %d unit radius", areaOfEffect.getInTiles()));
             }
         }
+        desc.append(String.format(" dealing %3.2f damage to enemies it hits. \n", getComputedDamage()));
 
-        desc.append(String.format(" dealing %d damage to enemies it hits. \n", getDamage()));
-        desc.append(getInflict().getStatusString());
+        var statuses = getInflict();
+        if (!statuses.isEmpty()) {
+            desc.append(statuses.getStatusString());
+        }
 
         return desc.toString();
-    }
-
-    public Projectile createProjectile() {
-        return Projectile.seed(
-            getUser().getWorld(),
-            nextUseId,
-            getUser().getX(),
-            getUser().getY(),
-            0,
-            projectileSpeed,
-            this
-        );
     }
 }

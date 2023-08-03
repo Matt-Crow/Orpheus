@@ -3,8 +3,10 @@ package world.statuses;
 import world.events.EventListener;
 import world.events.OnUpdateEvent;
 import util.Settings;
-import world.entities.AbstractPlayer;
+
 import java.util.function.UnaryOperator;
+
+import orpheus.core.world.occupants.players.Player;
 
 /**
  *
@@ -18,7 +20,7 @@ public class Burn  extends AbstractStatus implements EventListener<OnUpdateEvent
     }
     
     @Override
-	public void inflictOn(AbstractPlayer p){
+	public void inflictOn(Player p){
 		p.getActionRegister().addOnUpdate(this);
 	}
     
@@ -34,7 +36,7 @@ public class Burn  extends AbstractStatus implements EventListener<OnUpdateEvent
     
     @Override
     public void handle(OnUpdateEvent t) {
-        ((AbstractPlayer)t.getUpdated()).getLog().applyFilter(1 + 0.25 * getIntensityLevel());
+        ((Player)t.getUpdated()).getDamage().applyFilter(1 + 0.25 * getIntensityLevel());
         use();
     }
 }

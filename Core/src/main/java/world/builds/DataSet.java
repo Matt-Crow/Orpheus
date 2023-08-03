@@ -1,13 +1,19 @@
 package world.builds;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.NoSuchElementException;
+import java.util.Collection;
 
 import gui.graphics.CustomColors;
+import orpheus.core.champions.Champion;
+import orpheus.core.champions.ChampionSpecification;
+import orpheus.core.champions.Specification;
+import orpheus.core.champions.orpheus.OrpheusChampion;
+import orpheus.core.utils.PrototypeFactory;
 import world.builds.actives.*;
 import world.builds.characterClass.CharacterClass;
 import world.builds.passives.*;
+import world.entities.ParticleGenerator;
 import world.entities.ParticleType;
 import world.statuses.*;
 
@@ -21,36 +27,91 @@ import world.statuses.*;
  * @author Matt Crow
  */
 public final class DataSet {
-    public final HashMap<String, AbstractActive> allActives;
-    public final HashMap<String, CharacterClass> allCharacterClasses;
-    public final HashMap<String, AbstractPassive> allPassives;
-    public final HashMap<String, Build> allBuilds;
+    private final PrototypeFactory<ChampionSpecification> championSpecifications = new PrototypeFactory<>();
+    private final PrototypeFactory<Champion> champions = new PrototypeFactory<>();
+    private final PrototypeFactory<Build> builds = new PrototypeFactory<>();
+    private final PrototypeFactory<CharacterClass> characterClasses = new PrototypeFactory<>();
+    private final PrototypeFactory<AbstractActive> actives = new PrototypeFactory<>();
+    private final PrototypeFactory<AbstractPassive> passives = new PrototypeFactory<>();
     
-    private final AbstractActive DEFAULT_ACTIVE = new ElementalActive("Default", 3, 3, 3, 3, 3);
-    private final CharacterClass DEFAULT_CHARACTER_CLASS = new CharacterClass("Default", CustomColors.rainbow, 3, 3, 3, 3);
+    private final CharacterClass DEFAULT_CHARACTER_CLASS = new CharacterClass("Default", CustomColors.WHITE, 3, 3, 3, 3);
     private final AbstractPassive DEFAULT_PASSIVE = new ThresholdPassive("Default", 2);
-    private final Build DEFAULT_BUILD = new Build("0x138", "Default", "RAINBOW OF DOOM", "Healing Rain", "Speed Test", "Burning Edge", "Escapist", "Cursed");
+    private final Build DEFAULT_BUILD = new Build("0x138", "Default", "RAINBOW OF DOOM", "Hammer Toss", "Speed Test", "Cinder Strikes", "Escapist", "Cursed");
     
-    public DataSet(){
-        allActives = new HashMap<>();
-        allCharacterClasses = new HashMap<>();
-        allPassives = new HashMap<>();
-        allBuilds = new HashMap<>();
-        
+    public DataSet(){        
         DEFAULT_PASSIVE.addStatus(new Resistance(2, 2));
         
-        addActive(DEFAULT_ACTIVE);
+        passives.add(DEFAULT_PASSIVE);
         addCharacterClass(DEFAULT_CHARACTER_CLASS);
-        addPassive(DEFAULT_PASSIVE);
         addBuild(DEFAULT_BUILD);
     }
 
-    public AssembledBuild getAssembledBuildByName(String name) {
-        return assemble(getBuildByName(name));
+    public void addChampion(Champion champion) {
+        championSpecifications.add(champion.getSpecification());
+        champions.add(champion);
     }
 
+    public void addBuild(Build b){
+		builds.add(b);
+	}
+
+    public void addCharacterClass(CharacterClass c){
+        characterClasses.add(c);
+    }
+
+    public void addActives(AbstractActive[] as){
+        actives.addAll(Arrays.asList(as));
+    }
+
+    public void addPassives(AbstractPassive[] ps){
+		passives.addAll(Arrays.asList(ps));
+	}
+
+    public Champion getChampionByName(String name) {
+        return champions.make(name);  
+    }
+
+    public CharacterClass getCharacterClassByName(String n){
+        return characterClasses.make(n);
+    }
+
+    public AbstractActive getActiveByName(String n){
+        return actives.make(n);
+    }
+    
+    public AbstractPassive getPassiveByName(String n){
+        return passives.make(n);
+	}
+
+    /**
+     * @return all specifications players can choose from
+     */
+    public Collection<Specification> getAllSpecifications() {
+        var result = new ArrayList<Specification>();
+        result.addAll(championSpecifications.getAll());
+        result.addAll(builds.getAll());
+        return result;
+    }
+
+    public Build[] getAllBuilds() {
+        // needs to be seperate from getAllSpecs since players can customize builds
+        return builds.getAll().toArray(Build[]::new);
+    }
+    
+    public CharacterClass[] getAllCharacterClasses(){
+        return characterClasses.getAll().toArray(CharacterClass[]::new);
+    }
+
+    public AbstractActive[] getAllActives(){
+        return actives.getAll().toArray(AbstractActive[]::new);
+    }
+
+    public AbstractPassive[] getAllPassives(){
+		return passives.getAll().toArray(AbstractPassive[]::new);
+	}
+
     public AssembledBuild assemble(Build b) {
-        AssembledBuild assembled = new AssembledBuild(
+        var assembled = new AssembledBuild(
             b.getName(), 
             getCharacterClassByName(b.getClassName()), 
             Arrays.stream(b.getActiveNames()).map(this::getActiveByName).toArray((s) -> new AbstractActive[s]),
@@ -58,180 +119,49 @@ public final class DataSet {
         );
 
         return assembled;
+    } 
+
+    public void loadDefaults(){
+        loadDefaultCharacterClasses();
+        loadDefaultActives();
+        loadDefaultPassives();
+        loadDefaultBuilds();
+        addChampion(new OrpheusChampion());
     }
-    
-    @SuppressWarnings("unchecked")
-    private <T extends AbstractBuildAttribute> void addToMap(T c, HashMap<String, T> map){
-        if(c == null){
-            throw new NullPointerException("Cannot add null to map");
-        }
-        if(map == null){
-            throw new NullPointerException("Cannot add customizable to null map");
-        }
-        
-        /*
-        unchecked cast to type T, but the copy method of AbstractBuildAttribute
-        should return the same type as the object it operates on
-        */
-        map.put(c.getName().toUpperCase(), (T)c.copy());
+
+    private void loadDefaultCharacterClasses(){
+		characterClasses.addAll(Arrays.asList(new CharacterClass[]{
+            new CharacterClass("Fire", CustomColors.RED, 1, 5, 4, 3),
+            new CharacterClass("Air", CustomColors.YELLOW, 2, 3, 1, 5),
+            new CharacterClass("Earth", CustomColors.GREEN, 4, 4, 4, 1),
+            new CharacterClass("Water", CustomColors.BLUE, 5, 1, 3, 3)
+        }));
     }
-    public void addActive(AbstractActive a){
-        addToMap(a, allActives);
-    }
-    public void addCharacterClass(CharacterClass c){
-        addToMap(c, allCharacterClasses);
-    }
-    public void addPassive(AbstractPassive p){
-		addToMap(p, allPassives);
-	}
-    //Build does not extends AbstractBuildAttribute, so I cannot trigger addToMap
-    public void addBuild(Build b){
-		if(b == null){
-            throw new NullPointerException();
-        }
-        allBuilds.put(b.getName().toUpperCase(), b);
-	}
-    
-    private <T extends AbstractBuildAttribute> void addAllToMap(T[] cs, HashMap<String, T> map){
-        if(cs == null){
-            throw new NullPointerException("Cannot add null to map");
-        }
-        if(map == null){
-            throw new NullPointerException("Cannot add customizables to null map");
-        }
-        for(T c : cs){
-            addToMap(c, map);
-        }
-    }
-    public void addActives(AbstractActive[] as){
-        addAllToMap(as, allActives);
-    }
-    public void addCharacterClasses(CharacterClass[] cs){
-        addAllToMap(cs, allCharacterClasses);
-    }
-    public void addPassives(AbstractPassive[] ps){
-		addAllToMap(ps, allPassives);
-	}
-    public void addBuilds(Build[] bs){
-        if(bs == null){
-            throw new NullPointerException("cannot add null builds");
-        }
-        for(Build b : bs){
-            addBuild(b);
-        }
-    }
-    
-    public AbstractBuildAttribute getByName(String n, HashMap<String, ? extends AbstractBuildAttribute> map){
-        if(!map.containsKey(n.toUpperCase())){
-            throw new NoSuchElementException("No customizable found with name " + n);
-        }
-        return map.get(n.toUpperCase()).copy();
-    }
-    public AbstractActive getActiveByName(String n){
-        return (AbstractActive)getByName(n, allActives);
-    }
-    public CharacterClass getCharacterClassByName(String n){
-        return (CharacterClass)getByName(n, allCharacterClasses);
-    }
-    public AbstractPassive getPassiveByName(String n){
-        return (AbstractPassive)getByName(n, allPassives);
-	}
-    public Build getBuildByName(String name){
-		if(!allBuilds.containsKey(name.toUpperCase())){
-            throw new NoSuchElementException("No build found with name " + name + ". Did you remember to call Build.addBuild(...)?");
-        }
-        return allBuilds.get(name.toUpperCase()).copy();
-	}
-    
-    public AbstractBuildAttribute[] getAll(HashMap<String, ? extends AbstractBuildAttribute> map){
-        return map.values().toArray(new AbstractBuildAttribute[map.size()]);
-    }
-    public AbstractActive[] getAllActives(){
-        return Arrays.copyOf(getAll(allActives), allActives.size(), AbstractActive[].class);
-    }
-    public CharacterClass[] getAllCharacterClasses(){
-        return Arrays.copyOf(getAll(allCharacterClasses), allCharacterClasses.size(), CharacterClass[].class);
-    }
-    public AbstractPassive[] getAllPassives(){
-		return Arrays.copyOf(getAll(allPassives), allPassives.size(), AbstractPassive[].class);
-	}
-    public Build[] getAllBuilds(){
-        return allBuilds.values().toArray(new Build[allBuilds.size()]);
-    }
-    
-    public String[] getAllNames(HashMap<String, ? extends AbstractBuildAttribute> map){
-        //key is capitalized, but we want regular casing, so we can't get this from the key set
-        return map.values().stream().map((AbstractBuildAttribute c)->c.getName()).toArray(String[]::new);
-    }
-    public String[] getAllActiveNames(){
-        return getAllNames(allActives);
-    }
-    public String[] getAllCharacterClassNames(){
-        return getAllNames(allCharacterClasses);
-    }
-    public String[] getAllPassivesNames(){
-		return getAllNames(allPassives);
-	}
-    public String[] getAllBuildNames(){
-		return allBuilds.values().stream().map((b)->b.getName()).toArray(String[]::new);
-	}
-    
-    public AbstractActive getDefaultActive(){
-        return DEFAULT_ACTIVE.copy();
-    }    
-    public CharacterClass getDefaultCharacterClass(){
-        return DEFAULT_CHARACTER_CLASS.copy();
-    }
-    public AbstractPassive getDefaultPassive(){
-        return DEFAULT_PASSIVE.copy();
-    }
-    public Build getDefaultBuild(){
-        return DEFAULT_BUILD.copy();
-    }
-    
-    public void loadDefaultActives(){
-		ElementalActive s = new ElementalActive("Slash", 1, 1, 5, 0, 3);
-		s.setParticleType(ParticleType.SHEAR);
-        
-		ElementalActive bt = new BoulderToss();
-        ElementalActive fc = new FlameCharge();
-		
-        ElementalActive eq = new ElementalActive("Earthquake", 1, 0, 2, 5, 1);
-		eq.setParticleType(ParticleType.BURST);
-        eq.setColors(CustomColors.earthColors);
+
+    private void loadDefaultActives(){		
+        var eq = new ElementalActive("Earthquake", Arc.CIRCULAR, Range.NONE, Speed.SLOW, Range.LONG, Damage.LOW, new ParticleGenerator(CustomColors.EARTH, ParticleType.BURST));
         eq.addStatus(new Stun(3, 1));
         
-		ElementalActive fof = new ElementalActive("Fields of Fire", 1, 0, 5, 3, 1);
-		fof.setParticleType(ParticleType.SHEAR);
-        fof.setColors(CustomColors.fireColors);
+		var fof = new ElementalActive("Fields of Fire", Arc.CIRCULAR, Range.NONE, Speed.FAST, Range.MEDIUM, Damage.LOW, new ParticleGenerator(CustomColors.FIRE, ParticleType.SHEAR));
         fof.addStatus(new Burn(2, 3));
 		
-		ElementalActive fb = new ElementalActive("Fireball", 2, 3, 3, 3, 5);
-		fb.setParticleType(ParticleType.BURST);
-        fb.setColors(CustomColors.fireColors);
+		var fb = new ElementalActive("Fireball", Arc.NARROW, Range.MEDIUM, Speed.FAST, Range.MEDIUM, Damage.HIGH, new ParticleGenerator(CustomColors.FIRE, ParticleType.BURST))
+            .andProjectilesTerminateOnHit();
         
-		ElementalActive b = new ElementalActive("Boreus", 1, 5, 5, 0, 1);
-		b.setParticleType(ParticleType.BEAM);
-        b.setColors(CustomColors.airColors);
+		var b = new ElementalActive("Boreus", Arc.NONE, Range.LONG, Speed.FAST, Range.NONE, Damage.LOW, new ParticleGenerator(CustomColors.AIR, ParticleType.BEAM));
         
-        ElementalActive z = new ElementalActive("Zephyrus", 1, 5, 5, 0, 1);
-		z.setParticleType(ParticleType.BEAM);
-		z.setColors(CustomColors.airColors);
+        var z = new ElementalActive("Zephyrus", Arc.NONE, Range.LONG, Speed.FAST, Range.NONE, Damage.LOW, new ParticleGenerator(CustomColors.AIR, ParticleType.BEAM));
         
-        ElementalActive wb = new ElementalActive("Waterbolt", 1, 3, 3, 1, 2);
-		wb.setParticleType(ParticleType.BEAM);
-        wb.setColors(CustomColors.waterColors);
+        var wb = new ElementalActive("Waterbolt", Arc.NARROW, Range.MEDIUM, Speed.MEDIUM, Range.SHORT, Damage.MEDIUM, new ParticleGenerator(CustomColors.WATER, ParticleType.BEAM))
+            .andProjectilesTerminateOnHit();
         
-        ElementalActive wp = new ElementalActive("Whirlpool", 1, 0, 4, 4, 3);
-        wp.setParticleType(ParticleType.SHEAR);
-        wp.setColors(CustomColors.waterColors);
+        var wp = new ElementalActive("Whirlpool", Arc.CIRCULAR, Range.NONE, Speed.FAST, Range.LONG, Damage.MEDIUM, new ParticleGenerator(CustomColors.WATER, ParticleType.BEAM));
         
-		ElementalActive rod = new ElementalActive("RAINBOW OF DOOM", 4, 3, 5, 5, 1);
-		rod.setParticleType(ParticleType.BURST);
-		rod.setColors(CustomColors.rainbow);
+		var rod = new ElementalActive("RAINBOW OF DOOM", Arc.WIDE, Range.MEDIUM, Speed.FAST, Range.LONG, Damage.LOW, new ParticleGenerator(CustomColors.RAINBOW, ParticleType.BURST))
+            .andProjectilesTerminateOnHit();
 		
 		
-		BoostActive ws = new BoostActive("Warrior's Stance", new AbstractStatus[]{new Strength(1, 2), new Resistance(1, 2)});
+		BoostActive ws = new BoostActive("Warrior's Stance", new AbstractStatus[]{new Strength(2, 2), new Resistance(2, 2)});
 		BoostActive st = new BoostActive("Speed Test", new AbstractStatus[]{new Rush(2, 3)});
 		BoostActive ss = new BoostActive("Shield Stance", new AbstractStatus[]{new Resistance(2, 3)});
 		BoostActive hr = new BoostActive("Healing Rain", new AbstractStatus[]{new Regeneration(2, 3)});
@@ -239,9 +169,8 @@ public final class DataSet {
         BoostActive br = new BoostActive("Burning Rage", new AbstractStatus[]{new Strength(3, 3), new Burn(3, 3)});
 		
 		addActives(new AbstractActive[]{
-			s,
-			bt,
-            fc,
+			new BoulderToss(),
+            new FlameCharge(),
 			eq,
 			fof,
 			fb,
@@ -255,27 +184,12 @@ public final class DataSet {
 			st,
 			ss,
 			hr,
-			bs
+			bs,
+            new HammerToss()
 		});
     }
-    
-    public void loadDefaultCharacterClasses(){
-        CharacterClass fire = new CharacterClass("Fire", CustomColors.fireColors, 1, 5, 4, 3);
-		CharacterClass air = new CharacterClass("Air", CustomColors.airColors, 2, 3, 1, 5);
-		CharacterClass earth = new CharacterClass("Earth", CustomColors.earthColors, 4, 4, 4, 1);
-		CharacterClass water = new CharacterClass("Water", CustomColors.waterColors, 5, 1, 3, 3);
-		
-		addCharacterClasses(
-            new CharacterClass[]{
-                fire,
-                air,
-                earth,
-                water
-            }
-        );
-    }
-    
-    public void loadDefaultPassives(){
+
+    private void loadDefaultPassives(){
         // on be hit
 		OnBeHitPassive t = new OnBeHitPassive("Toughness", true);
 		t.addStatus(new Resistance(1, 1));
@@ -283,8 +197,6 @@ public final class DataSet {
         cu.addStatus(new Stun(3, 1));
 		
         // on hit
-        OnHitPassive be = new OnHitPassive("Burning Edge", false);
-        be.addStatus(new Burn(1, 1));
         OnHitPassive ch = new OnHitPassive("Crippling Hits", false);
         ch.addStatus(new Stun(1, 1));
         OnHitPassive lh = new OnHitPassive("Leechhealer", true);
@@ -307,33 +219,27 @@ public final class DataSet {
         
         
 		addPassives(new AbstractPassive[]{
-				lh,
-				m,
-				s,
-				t,
-				b,
-				d,
-				e,
-				re,
-                cu,
-                be,
-                ch
+            lh,
+            m,
+            s,
+            t,
+            b,
+            d,
+            e,
+            re,
+            cu,
+            ch,
+            new CinderStrikes()
 		});
     }
-    public void loadDefaultBuilds(){
-        addBuilds(new Build[]{
+
+    private void loadDefaultBuilds(){
+        builds.addAll(Arrays.asList(new Build[]{
             new Build("Default Earth", "Earth", "Boulder Toss", "Warrior's Stance", "Earthquake", "Toughness", "Retaliation", "Crippling Hits"),
-            new Build("Default Fire", "Fire", "Fireball", "Fields of Fire", "Burning Rage", "Escapist", "Burning Edge", "Bracing"),
+            new Build("Default Fire", "Fire", "Fireball", "Fields of Fire", "Burning Rage", "Escapist", "Cinder Strikes", "Bracing"),
             new Build("Default Water", "Water", "Waterbolt", "Whirlpool", "Healing Rain", "Sharpen", "Bracing", "Leechhealer"),
             new Build("Default Air", "Air", "Boreus", "Zephyrus", "Speed Test", "Momentum", "Sharpen", "Leechhealer"),
-            new Build("Flame Charge Fire", "Fire", "Flame Charge", "Earthquake", "Burning Rage", "Cursed", "Burning Edge", "Crippling Hits"),
-        });
-    }
-    
-    public void loadDefaults(){
-        loadDefaultActives();
-        loadDefaultCharacterClasses();
-        loadDefaultPassives();
-        loadDefaultBuilds();
-    }
+            new Build("Flame Charge Fire", "Fire", "Flame Charge", "Earthquake", "Burning Rage", "Cinder Strikes", "Momentum", "Crippling Hits"),
+        }));
+    } 
 }

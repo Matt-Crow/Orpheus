@@ -1,59 +1,33 @@
 package gui.graphics;
 
 import java.awt.Color;
+import java.util.Collection;
+import java.util.List;
 
 /**
- * The CustomColors class is used to store color patterns and create
- * variants of colors that I want.
- * 
- * I may change this later to act only as a static class to store color combinations
+ * Commonly used colors
  * @author Matt Crow
  */
-public class CustomColors extends Color{
+public class CustomColors {
 	
-	public static final CustomColors red = new CustomColors(255, 55, 0);
-	public static final CustomColors orange = new CustomColors(255, 100, 0);
-	public static final CustomColors yellow = new CustomColors(200, 200, 0);
-	public static final CustomColors green = new CustomColors(0, 200, 0);
-	//public static final Color darkGreen = new Color(0, 100, 0);
-	public static final CustomColors bluegreen = new CustomColors(0, 255, 200);
-	public static final CustomColors blue = new CustomColors(0, 0, 200);
-	public static final CustomColors purple = new CustomColors(150, 0, 200);
-	public static final CustomColors black = new CustomColors(0, 0, 0);
-	public static final CustomColors white = new CustomColors(255, 255, 255);
-	public static final CustomColors darkGrey = new CustomColors(200, 200, 200);
-	public static final CustomColors brown = new CustomColors(255, 200, 200);
-	public static final CustomColors gold = new CustomColors(155, 155, 0);
-	public static final CustomColors silver = new CustomColors(200, 200, 200);
-	//pink
+	public static final Color RED = new Color(255, 55, 0);
+	public static final Color ORANGE = new Color(255, 100, 0);
+	public static final Color YELLOW = new Color(200, 200, 0);
+	public static final Color GREEN = new Color(0, 200, 0);
+	public static final Color BLUE_GREEN = new Color(0, 255, 200);
+	public static final Color BLUE = new Color(0, 0, 200);
+	public static final Color PURPLE = new Color(150, 0, 200);
+	public static final Color BLACK = new Color(0, 0, 0);
+	public static final Color WHITE = new Color(255, 255, 255);
+	public static final Color DARK_GREY = new Color(100, 100, 100);
+	public static final Color BROWN = new Color(255, 200, 200);
+	public static final Color GOLD = new Color(155, 155, 0);
+	public static final Color SILVER = new Color(200, 200, 200);
 	
-	public static final CustomColors[] fireColors = {red, orange, black};
-	public static final CustomColors[] earthColors = {green, darkGrey, brown};
-	public static final CustomColors[] airColors = {yellow, white, gold};
-	public static final CustomColors[] waterColors = {blue, bluegreen, white};
-	public static final CustomColors[] rainbow = {red, orange, yellow, green, blue, purple};
-	
-	public static final CustomColors[][] all = {fireColors, earthColors, airColors, waterColors, rainbow};
-	
-	public CustomColors(int r, int g, int b){
-		super(r, g, b);
-	}
-    
-    @Override
-	public String toString(){
-		return getRed() + ", " + getGreen() + ", " + getBlue();
-	}
-    
-    /**
-     * Converts a string to a color. Used in deserialization
-     * @param s a string, hopefully one with at least three integers, separated by commas
-     * @return 
-     */
-    public static CustomColors fromString(String s){
-        String[] split = s.split(", ");
-        int r = Integer.parseInt(split[0].trim());
-        int g = Integer.parseInt(split[1].trim());
-        int b = Integer.parseInt(split[2].trim());
-        return new CustomColors(r, g, b);
-    }
+	public static final Collection<Color> FIRE = List.of(RED, ORANGE, BLACK);
+	public static final Collection<Color> EARTH = List.of(GREEN, DARK_GREY, BROWN);
+	public static final Collection<Color> METAL = List.of(DARK_GREY, GOLD, SILVER);
+	public static final Collection<Color> AIR = List.of(YELLOW, WHITE, GOLD);
+	public static final Collection<Color> WATER = List.of(BLUE, BLUE_GREEN, WHITE);
+	public static final Collection<Color> RAINBOW = List.of(RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE);
 }

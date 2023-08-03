@@ -3,7 +3,6 @@ package world.statuses;
 import java.util.HashMap;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 // will probably phase out of future versions
 public final class StatusTable {
@@ -23,22 +22,18 @@ public final class StatusTable {
 		return ret;
 	}
     
-    public final void clear(){
-        statuses.clear();
-    }
-    
 	public final void add(AbstractStatus s){
 		statuses.put(s.getStatusName(), s.copy());
 	}
+
+    public boolean isEmpty() {
+        return statuses.isEmpty();
+    }
     
     public final void forEach(Consumer<AbstractStatus> f){
         statuses.values().forEach((s) -> {
             f.accept(s.copy());
         });
-    }
-    
-    public final Stream<AbstractStatus> stream(){
-        return statuses.values().stream();
     }
     
     public final AbstractStatus[] getStatuses(){
@@ -50,8 +45,8 @@ public final class StatusTable {
         desc += statuses
             .values()
             .stream()
-            .map((status)->status.getDesc())
-            .collect(Collectors.joining("", "* ", "\n"));
+            .map((status) -> String.format("* %s\n", status.getDesc()))
+            .collect(Collectors.joining(""));
 		
         desc += "~~~~~~~~~~~~~~~~~\n";
 		return desc;

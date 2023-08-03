@@ -5,15 +5,16 @@ import java.awt.Color;
 import java.io.IOException;
 import world.battle.Team;
 import world.game.Game;
+import world.game.Onslaught;
 
 /**
  *
  * @author Matt Crow
  */
 public class WorldBuilderImpl implements WorldBuilder {
-    private Team players;
-    private Team ai;
-    private Game game;
+    private Team players = Team.ofPlayers();
+    private Team ai = Team.ofPlayers();
+    private Game game = new Onslaught(1);
     
     @Override
     public WorldBuilderImpl withPlayers(Team players){
@@ -51,7 +52,7 @@ public class WorldBuilderImpl implements WorldBuilder {
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-        Tile block = new Tile(0, 0, CustomColors.GRAY);
+        Tile block = new Tile(0, 0, CustomColors.DARK_GREY);
         block.setBlocking(true);
         defaultMap.addToTileSet(0, new Tile(0, 0, Color.BLUE));
         defaultMap.addToTileSet(1, block);

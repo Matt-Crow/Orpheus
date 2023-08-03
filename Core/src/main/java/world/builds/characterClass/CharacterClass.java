@@ -1,6 +1,6 @@
 package world.builds.characterClass;
 
-import gui.graphics.CustomColors;
+import java.awt.Color;
 import java.util.function.BiFunction;
 import util.Number;
 import world.builds.AbstractBuildAttribute;
@@ -12,9 +12,7 @@ import world.builds.AbstractBuildAttribute;
  * @author Matt
  */
 public class CharacterClass extends AbstractBuildAttribute{
-    private CustomColors[] colors;
-    public static final int BASE_HP = 2000;
-
+    private final Color color;
     private final int maxHP;
     private final double offenseMultiplier;
     private final double defenseMultiplier;
@@ -24,10 +22,13 @@ public class CharacterClass extends AbstractBuildAttribute{
     private final int baseDmg;
     private final int baseRed;
     private final int baseSpe;
-    // initializers
-    public CharacterClass(String n, CustomColors[] cs, int HP, int dmg, int reduction, int speed){
-        super(n);
-        colors = cs;
+    
+    public static final int BASE_HP = 2000;
+
+    
+    public CharacterClass(String name, Color color, int HP, int dmg, int reduction, int speed){
+        super(name);
+        this.color = color;
         
         baseHp = Number.minMax(1, HP, 5);
         baseDmg = Number.minMax(1, dmg, 5);
@@ -47,46 +48,29 @@ public class CharacterClass extends AbstractBuildAttribute{
     public CharacterClass copy(){
         return new CharacterClass(
             getName(), 
-            getColors(), 
-            getBaseHP(),
-            getBaseOffenseMultiplier(),
-            getBaseDefenseMultiplier(),
-            getBaseSpeed()
+            getColor(), 
+            baseHp,
+            baseDmg,
+            baseRed,
+            baseSpe
         );
     }
     
-    public final int getMaxHP(){
+    public int getMaxHP(){
         return maxHP;
     }
-    public final double getOffMult(){
+    public double getOffMult(){
         return offenseMultiplier;
     }
-    public final double getDefMult(){
+    public double getDefMult(){
         return defenseMultiplier;
     }
-    public final double getSpeed(){
+    public double getSpeed(){
         return speed;
     }
-    
-    
-    public final int getBaseHP(){
-        return baseHp;
-    }
-    public final int getBaseOffenseMultiplier(){
-        return baseDmg;
-    }
-    public final int getBaseDefenseMultiplier(){
-        return baseRed;
-    }
-    public final int getBaseSpeed(){
-        return baseSpe;
-    }
 
-    public void setColors(CustomColors[] cs){
-        colors = cs;
-    }
-    public CustomColors[] getColors(){
-        return colors;
+    public Color getColor(){
+        return color;
     }
    
     @Override
@@ -103,8 +87,8 @@ public class CharacterClass extends AbstractBuildAttribute{
     public String getDescription(){
         return getName() + ": \n" 
                         + "(*) Maximum hit points: " + getMaxHP() + "\n"
-                        + "(*) Damage dealt modifier: " + (int)(getOffMult() * 100) + "%\n"
-                        + "(*) Damage taken modifier: " + (int)(getDefMult() * 100) + "%\n"
+                        + "(*) Damage dealt multiplier: " + (int)(getOffMult() * 100) + "%\n"
+                        + "(*) Damage taken divisor: " + (int)(getDefMult() * 100) + "%\n"
                         + "(*) Movement speed modifier: " + (int)(getSpeed() * 100) + "%\n";
     }
 }

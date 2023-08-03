@@ -1,5 +1,6 @@
 package orpheus.core;
 
+import orpheus.core.champions.SpecificationResolver;
 import util.Settings;
 import world.builds.DataSet;
 
@@ -18,6 +19,11 @@ public class AppContext {
     private final DataSet dataSet;
 
     /**
+     * resolves specifications to playable builds
+     */
+    private final SpecificationResolver specificationResolver;
+
+    /**
      * Ideally, only one instance of this class should be constructed, though it
      * it not required.
      * 
@@ -27,6 +33,7 @@ public class AppContext {
         this.settings = settings;
         dataSet = new DataSet();
         dataSet.loadDefaults();
+        specificationResolver = new SpecificationResolver(dataSet);
     }
 
     /**
@@ -41,5 +48,12 @@ public class AppContext {
      */
     public DataSet getDataSet() {
         return dataSet;
+    }
+
+    /**
+     * @return a resolver which can resolve any specification produced by the data set
+     */
+    public SpecificationResolver getSpecificationResolver() {
+        return specificationResolver;
     }
 }

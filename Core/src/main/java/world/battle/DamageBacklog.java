@@ -1,7 +1,7 @@
 package world.battle;
 
 import world.builds.characterClass.CharacterStatName;
-import world.entities.AbstractPlayer;
+import orpheus.core.world.occupants.players.Player;
 import util.Settings;
 
 /**
@@ -20,7 +20,7 @@ import util.Settings;
  * Every second, the AbstractPlayer regenerates 3% of their maximum HP.
  */
 public final class DamageBacklog {
-	private final AbstractPlayer registeredTo;
+	private final Player registeredTo;
     private int maxHP;
 	private int remHP;
 	private int timeSinceLastHeal; //number of frames since the user last regenerated health.
@@ -34,7 +34,7 @@ public final class DamageBacklog {
      * @param register the player this backlog is attached to.
      * @param minLifespan the minimum number of seconds this player can survive.
      */
-	public DamageBacklog(AbstractPlayer register, int minLifespan){
+	public DamageBacklog(Player register, int minLifespan){
 		registeredTo = register;
 		baseFilter = 1.0 / Settings.seconds(minLifespan);
 	}
@@ -53,6 +53,10 @@ public final class DamageBacklog {
      */
 	public int getHP(){
 		return remHP;
+	}
+
+	public int getMaxHP() {
+		return maxHP;
 	}
     
     /**

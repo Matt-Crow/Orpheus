@@ -6,7 +6,6 @@ import javax.json.Json;
 import javax.json.JsonObject;
 
 import util.CardinalDirection;
-import world.entities.HumanPlayer;
 import world.World;
 
 public class StartMoving implements Command {
@@ -21,10 +20,10 @@ public class StartMoving implements Command {
 
     @Override
     public void executeIn(World world) {
-        var player = world.getPlayers()
-            .getMemberById(playerId);
-        
-        ((HumanPlayer)player).setMovingInDir(direction, true);
+        world
+            .getPlayers()
+            .getControllerById(playerId)
+            .ifPresent(ctrl -> ctrl.setMovingInDir(direction, true));
     }
     
     @Override

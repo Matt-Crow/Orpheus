@@ -1,9 +1,9 @@
 package world.builds.actives;
 
-import util.Settings;
-import world.entities.AbstractPlayer;
+import world.entities.KnockbackBehavior;
+import world.entities.ParticleGenerator;
 import world.entities.ParticleType;
-import world.entities.Projectile;
+import world.entities.ProjectileBuilder;
 import gui.graphics.CustomColors;
 
 /**
@@ -12,15 +12,21 @@ import gui.graphics.CustomColors;
  */
 public class BoulderToss extends ElementalActive{
     public BoulderToss(){
-        super("Boulder Toss", 1, 2, 2, 3, 4);
-		setParticleType(ParticleType.BURST);
-        setColors(CustomColors.earthColors);
+        super(
+            "Boulder Toss", 
+            Arc.NONE, 
+            Range.SHORT, 
+            Speed.SLOW, 
+            Range.MEDIUM, 
+            Damage.HIGH, 
+            new ParticleGenerator(CustomColors.EARTH, ParticleType.BURST)
+        );
     }
     
+
     @Override
-    public void hit(Projectile hittingProjectile, AbstractPlayer p){
-        super.hit(hittingProjectile, p);
-        p.knockBack(getRange(), hittingProjectile.getFacing(), Settings.seconds(1));
+    protected ProjectileBuilder withProjectileBuilder(ProjectileBuilder builder) {
+        return builder.onCollide(new KnockbackBehavior(getRange()));
     }
     
     @Override

@@ -1,20 +1,24 @@
 package world.builds;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
+import orpheus.core.champions.Playable;
 import world.builds.actives.AbstractActive;
+import world.builds.actives.MeleeActive;
 import world.builds.characterClass.CharacterClass;
 import world.builds.passives.AbstractPassive;
 
 /**
  * an AssembledBuild is a Build which has been loaded from a DataSet
  */
-public class AssembledBuild {
+public class AssembledBuild implements Playable {
     private final String name;
     private final CharacterClass characterClass;
     private final AbstractActive[] actives;
     private final AbstractPassive[] passives;
+    private final MeleeActive basicAttack;
 
     public AssembledBuild(
         String name,
@@ -22,8 +26,21 @@ public class AssembledBuild {
         AbstractActive[] actives,
         AbstractPassive[] passives
     ) {
+        this(name, characterClass, MeleeActive.makeBasicAttack(), actives, passives);
+    }
+
+    public AssembledBuild(
+        String name,
+        CharacterClass characterClass,
+        MeleeActive basicAttack,
+        AbstractActive[] actives,
+        AbstractPassive[] passives
+    ) {
         if (characterClass == null) {
             throw new IllegalArgumentException("characterClass must not be null");
+        }
+        if (basicAttack == null) {
+            throw new IllegalArgumentException("basicAttack must not be null");
         }
         if (Arrays.stream(actives).anyMatch((act) -> act == null)) {
             throw new IllegalArgumentException("cannot have null active");
@@ -33,6 +50,7 @@ public class AssembledBuild {
         }
         this.name = name;
         this.characterClass = characterClass;
+        this.basicAttack = basicAttack;
         this.actives = actives;
         this.passives = passives;
     }
@@ -41,16 +59,28 @@ public class AssembledBuild {
         return name;
     }
 
+    @Override
     public CharacterClass getCharacterClass() {
         return characterClass;
     }
 
-    public AbstractActive[] getActives() {
-        return actives;
+    
+    /**
+     * @return the default attack the player will use
+     */
+    @Override
+    public MeleeActive getBasicAttack() {
+        return basicAttack;
     }
 
-    public AbstractPassive[] getPassives() {
-        return passives;
+    @Override
+    public List<AbstractActive> getActives() {
+        return List.of(actives);
+    }
+
+    @Override
+    public List<AbstractPassive> getPassives() {
+        return List.of(passives);
     }
 
     public String getDescription() {
@@ -64,7 +94,7 @@ public class AssembledBuild {
             sb.append(
                 entab(
                     sep + '\n' +
-                    an.getDescription()
+                    an.getName() + ": " + an.getDescription()
                 )
             ).append("\n");
         }
@@ -73,7 +103,7 @@ public class AssembledBuild {
             sb.append(
                 entab(
                     sep + '\n' +
-                    pn.getDescription()
+                    pn.getName() + ": " + pn.getDescription()
                 )
             ).append("\n");
         }
@@ -82,5 +112,10 @@ public class AssembledBuild {
 
     private static String entab(String s){
         return Arrays.stream(s.split("\n")).collect(Collectors.joining("\n\t", "\t", ""));
+    }
+
+    @Override
+    public orpheus.core.world.graph.playables.Playable toGraph() {
+        return new orpheus.core.world.graph.playables.AssembledBuild();
     }
 }

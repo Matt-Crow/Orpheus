@@ -2,7 +2,7 @@ package world.builds.passives;
 
 import world.events.EventListener;
 import world.events.OnUpdateEvent;
-import world.entities.AbstractPlayer;
+import orpheus.core.world.occupants.players.Player;
 import util.Number;
 
 /**
@@ -27,8 +27,7 @@ public class ThresholdPassive extends AbstractPassive implements EventListener<O
     
     @Override
 	public String getDescription(){
-		String desc = getName() + ": ";
-		desc += "When the user is at or below " + (int)threshold + "% ";
+		var desc = "When the user is at or below " + (int)threshold + "% ";
 		desc += "of their maximum HP, inflicts them with: \n";
 		desc += getInflict().getStatusString();
 		return desc;
@@ -43,9 +42,12 @@ public class ThresholdPassive extends AbstractPassive implements EventListener<O
     
     @Override
     public void handle(OnUpdateEvent e) {
-        if(((AbstractPlayer)e.getUpdated()).getLog().getHPPerc() <= threshold){
-            applyEffect((AbstractPlayer)e.getUpdated());
+        if(((Player)e.getUpdated()).getDamage().getHPPerc() <= threshold){
             trigger();
         }
+    }
+
+    public void trigger() {
+        applyEffect(getUser());
     }
 }

@@ -1,9 +1,9 @@
 package world.builds.actives;
 
+import world.entities.ParticleGenerator;
 import world.entities.ParticleType;
 import world.events.EventListener;
 import world.events.OnUpdateEvent;
-import world.events.termination.*;
 import gui.graphics.CustomColors;
 import world.statuses.Rush;
 
@@ -13,9 +13,15 @@ import world.statuses.Rush;
  */
 public class FlameCharge extends ElementalActive {
     public FlameCharge(){
-        super("Flame Charge", 1, 1, 5, 0, 1);
-        setColors(CustomColors.fireColors);
-        setParticleType(ParticleType.SHEAR);
+        super(
+            "Flame Charge", 
+            Arc.NONE, 
+            Range.MELEE, 
+            Speed.FAST, 
+            Range.NONE, 
+            Damage.LOW, 
+            new ParticleGenerator(CustomColors.FIRE, ParticleType.SHEAR)
+        );
     }
     
     @Override
@@ -25,11 +31,11 @@ public class FlameCharge extends ElementalActive {
     
     @Override
     protected final void doUse(){
+        var attack = makeAttack();
+
         Rush status = new Rush(2, 3);
         
-        // Need this to dual-implement these two interfaces. Probably a better way.
-        class TermUpdate implements EventListener<OnUpdateEvent>, Terminable {
-            private final TerminationListeners terminationListeners = new TerminationListeners();
+        class TermUpdate implements EventListener<OnUpdateEvent> {
             private int timeLeft;
 
             public TermUpdate(int time){
@@ -38,25 +44,12 @@ public class FlameCharge extends ElementalActive {
             
             @Override
             public void handle(OnUpdateEvent e) {
-                spawnProjectile(e.getUpdated().getFacing().getDegrees() + 180);
+                spawnProjectile(attack, e.getUpdated().getFacing().rotatedBy(180));
                 timeLeft--;
-                if(timeLeft <= 0){
-                    terminate();
-                }
             }
 
             @Override
-            public void addTerminationListener(TerminationListener listen) {
-                terminationListeners.add(listen);
-            }
-
-            @Override
-            public void terminate() {
-                terminationListeners.objectWasTerminated(this);
-            }
-
-            @Override
-            public boolean isTerminating() {
+            public boolean isDone() {
                 return timeLeft <= 0;
             }
             
@@ -69,9 +62,8 @@ public class FlameCharge extends ElementalActive {
     @Override
     public String getDescription(){
         StringBuilder b = new StringBuilder();
-        b.append(getName()).append(": \n");
         b.append("The user gains a temporary speed boost, ");
-        b.append("Dealing damage to enemies caught behind them as they charge.");
+        b.append("dealing damage to enemies caught behind them as they charge.");
         return b.toString();
     }
 }

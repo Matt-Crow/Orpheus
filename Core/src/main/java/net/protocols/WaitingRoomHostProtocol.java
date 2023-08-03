@@ -1,6 +1,5 @@
 package net.protocols;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.util.HashSet;
 
@@ -12,16 +11,16 @@ import net.AbstractNetworkClient;
 import net.OrpheusServer;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
+import orpheus.core.champions.SpecificationJsonDeserializer;
+import orpheus.core.champions.SpecificationResolver;
 import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
+import orpheus.core.world.occupants.players.Player;
 import serialization.JsonUtil;
 import world.World;
 import world.WorldBuilder;
 import world.WorldBuilderImpl;
 import world.battle.Team;
-import world.builds.BuildJsonUtil;
-import world.builds.DataSet;
-import world.entities.HumanPlayer;
 import world.game.Game;
 
 /**
@@ -37,11 +36,11 @@ import world.game.Game;
 public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {    
     
     private final Game minigame;
-    
+
     /**
-     * the data set this will use to assemble player builds
+     * resolves the specifications received from players as JSON
      */
-    private final DataSet dataSet;
+    private final SpecificationResolver specificationResolver;
 
     private final Team playerTeam;
     private World world; // may be null at some points
@@ -60,12 +59,12 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
     public WaitingRoomHostProtocol(
         OrpheusServer runningServer, 
         Game game,
-        DataSet dataSet
+        SpecificationResolver specificationResolver
     ){
         super(runningServer);
         minigame = game;
-        this.dataSet = dataSet;
-        playerTeam = new Team("Players", Color.GREEN);
+        this.specificationResolver = specificationResolver;
+        playerTeam = Team.ofPlayers();
         awaitingBuilds = new HashSet<>();
     }
 
@@ -159,7 +158,7 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         world = worldBuilder
             .withGame(minigame)
             .withPlayers(playerTeam)
-            .withAi(new Team("AI", Color.red))
+            .withAi(Team.ofAi())
             .build();
     
         getServer().send(new Message(
@@ -187,16 +186,16 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
             throw new RuntimeException(String.format("received second build from %s, expected only once", sender.getName()));
         }
         
-        var player = new HumanPlayer(
+        var deserializer = new SpecificationJsonDeserializer();
+        var json = JsonUtil.fromString(sm.getMessage().getBodyText());
+        var specification = deserializer.fromJson(json);
+        var assembledBuild = specificationResolver.resolve(specification);
+        var player = Player.makeHuman(
             world, // world should not be null by now,
-            sender.getName(),
+            assembledBuild,
             sender.getId()
         );
         awaitingBuilds.remove(sender);
-
-        var json = JsonUtil.fromString(sm.getMessage().getBodyText());
-        var build = BuildJsonUtil.deserializeJson(json);
-        player.applyBuild(dataSet.assemble(build));
         playerTeam.addMember(player);
 
         checkIfReady();

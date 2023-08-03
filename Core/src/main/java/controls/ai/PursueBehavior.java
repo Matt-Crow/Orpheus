@@ -1,29 +1,32 @@
 package controls.ai;
 
+import orpheus.core.world.occupants.players.Player;
 import util.Coordinates;
-import world.entities.AbstractPlayer;
 
 /**
  * target another player, pursuing them until they are terminated
  * @author Matt
  */
-public class PursueBehavior extends AbstractBehavior<AbstractPlayer> {
-    private final AbstractPlayer pursueThisGuy;
+public class PursueBehavior extends AbstractBehavior<Player> {
+   
+    private final PlayerAI host;
+    private final Player pursueThisGuy;
     
-    public PursueBehavior(AbstractPlayer target, AbstractPlayer pursueThisGuy) {
+    public PursueBehavior(PlayerAI host, Player target, Player pursueThisGuy) {
         super(target);
+        this.host = host;
         this.pursueThisGuy = pursueThisGuy;
     }
 
     @Override
-    public AbstractBehavior<AbstractPlayer> update() {
-        AbstractBehavior<AbstractPlayer> newBehavior = this;
-        AbstractPlayer target = getTarget();
+    public AbstractBehavior<Player> update() {
+        AbstractBehavior<Player> newBehavior = this;
+        Player target = getTarget();
         // check if in range
 		if(Coordinates.distanceBetween(target, pursueThisGuy) <= 100){
-			newBehavior = new AttackBehavior(target, pursueThisGuy);
+			newBehavior = new AttackBehavior(host, target, pursueThisGuy);
 		} else {
-            target.setPath(target.getWorld().getMap().findPath(target, pursueThisGuy));
+            host.setPath(target.getWorld().getMap().findPath(target, pursueThisGuy));
         }
         return newBehavior;
     }

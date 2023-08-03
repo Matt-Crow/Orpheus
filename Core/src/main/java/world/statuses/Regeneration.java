@@ -2,10 +2,11 @@ package world.statuses;
 
 import world.events.EventListener;
 import world.events.OnUpdateEvent;
-import world.entities.AbstractPlayer;
 import util.Number;
 import util.Settings;
 import java.util.function.UnaryOperator;
+
+import orpheus.core.world.occupants.players.Player;
 
 /**
  * Regeneration restores an AbstractEntity's hit points over time.
@@ -25,7 +26,7 @@ public class Regeneration extends AbstractStatus implements EventListener<OnUpda
 	}
     
     @Override
-	public void inflictOn(AbstractPlayer p){
+	public void inflictOn(Player p){
 		p.getActionRegister().addOnUpdate(this);
 	}
     
@@ -41,8 +42,8 @@ public class Regeneration extends AbstractStatus implements EventListener<OnUpda
 
     @Override
     public void handle(OnUpdateEvent e) {
-        if(e.getUpdated() instanceof AbstractPlayer){
-            ((AbstractPlayer)e.getUpdated()).getLog().healPerc(2.5 * getIntensityLevel() / Settings.FPS);
+        if(e.getUpdated() instanceof Player){
+            ((Player)e.getUpdated()).getDamage().healPerc(2.5 * getIntensityLevel() / Settings.FPS);
         }
         use();
     }
