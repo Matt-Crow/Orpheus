@@ -11,3 +11,6 @@ You can create and customize your own builds in the "customize" menu, or you can
 (*) Default Water is a sturdy wall with weak offensive abilities, but focuses on outlasting its opponents.
 (*) Default Fire is a powerful bomb of damage which attempts to inflict as much damage as possible before matching out due to its weak defenses.
 (*) Default Air is a rapid-fire build which focuses on speed over power or sturdiness. 
+
+I have also started adding Champions, playable characters who cannot be customized, but have abilities especially tailored to them.
+(*) Orpheus is slow to get started, but accumulates scrap metal with each foe he vanquishes. Build up a pool of up to 5 scrap metal, then unleash a powerful Reforge!
