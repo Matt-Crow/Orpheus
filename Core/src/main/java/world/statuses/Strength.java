@@ -22,7 +22,7 @@ public class Strength extends AbstractStatus implements EventListener<OnHitEvent
      * @param uses effect lasts for the next ((uses * 2) + 1) melee attacks the afflicted performs that hit an enemy.
      */
 	public Strength(int lv, int uses){
-		super(StatusName.STRENGTH, lv, uses, CALC);
+		super("strength", lv, uses, CALC);
 		// 3 - 7 uses of 3.5% to 10.5% extra damage logged and knocks back lv units
 	}
     

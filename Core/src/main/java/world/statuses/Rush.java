@@ -22,7 +22,7 @@ public class Rush extends AbstractStatus implements EventListener<OnUpdateEvent>
      * @param dur 1-3. Will last for (dur + 2) seconds.
      */
     public Rush(int lv, int dur){
-		super(StatusName.RUSH, lv, dur, CALC);
+		super("rush", lv, dur, CALC);
 		// 3 - 5 seconds of + 20% to 60% movement
 	}
     

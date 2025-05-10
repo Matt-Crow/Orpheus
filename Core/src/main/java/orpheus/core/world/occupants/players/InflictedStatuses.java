@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import world.statuses.AbstractStatus;
-import world.statuses.StatusName;
 
 /**
  * Keeps track of the statuses inflicted upon a player
@@ -15,7 +14,7 @@ public class InflictedStatuses {
      * maps status names to a status - only one instance of each status may be
      * inflicted at one time
      */
-    private final HashMap<StatusName, AbstractStatus> nameToStatus;
+    private final HashMap<String, AbstractStatus> nameToStatus;
 
     /**
      * the player this is attached to
@@ -40,7 +39,7 @@ public class InflictedStatuses {
      * users.
      */
     protected void add(AbstractStatus newStatus) {
-        var key = newStatus.getStatusName();
+        var key = newStatus.getName();
         var oldStatusOrNull = nameToStatus.get(key);
         if (newStatus.isBetterThan(oldStatusOrNull)) {
             nameToStatus.put(key, newStatus);

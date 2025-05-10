@@ -25,7 +25,7 @@ public class Resistance extends AbstractStatus implements EventListener<OnUpdate
      * @param uses lasts for ((uses * 2) + 1) hits received.
      */
 	public Resistance(int lv, int uses){
-		super(StatusName.RESISTANCE, lv, uses, CALC);
+		super("resistance", lv, uses, CALC);
 	}
     
     @Override

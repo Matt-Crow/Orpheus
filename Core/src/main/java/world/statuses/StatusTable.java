@@ -10,7 +10,7 @@ public final class StatusTable {
 	 * Used to store status data for actives and passives
 	 */
     
-	private final HashMap<StatusName, AbstractStatus> statuses;
+	private final HashMap<String, AbstractStatus> statuses;
     
 	public StatusTable(){
         statuses = new HashMap<>();
@@ -23,7 +23,7 @@ public final class StatusTable {
 	}
     
 	public final void add(AbstractStatus s){
-		statuses.put(s.getStatusName(), s.copy());
+		statuses.put(s.getName(), s.copy());
 	}
 
     public boolean isEmpty() {

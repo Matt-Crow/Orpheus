@@ -16,7 +16,7 @@ public class Burn  extends AbstractStatus implements EventListener<OnUpdateEvent
     private static final UnaryOperator<Integer> CALC = (i)->{return Settings.seconds(util.Number.minMax(1, i, 3) * 2 + 1);};
     
     public Burn(int lv, int uses){
-        super(StatusName.BURN, lv, uses, CALC);
+        super("burn", lv, uses, CALC);
     }
     
     @Override

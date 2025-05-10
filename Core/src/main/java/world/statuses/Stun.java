@@ -22,7 +22,7 @@ public class Stun extends AbstractStatus implements EventListener<OnUpdateEvent>
      * @param dur how many seconds the status will last, also 1-3
      */
 	public Stun(int lv, int dur){
-		super(StatusName.STUN, lv, dur, CALC);
+		super("stun", lv, dur, CALC);
 		// 1-3 seconds of -0.25 to -0.75 movement speed
 	}
     

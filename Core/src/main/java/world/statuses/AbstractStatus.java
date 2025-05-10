@@ -16,7 +16,6 @@ import orpheus.core.world.occupants.players.Player;
  * @see Player#inflict(statuses.AbstractStatus) 
  */
 public abstract class AbstractStatus implements Terminable {
-	private final StatusName code; //the Enum of this status' name
 	private final String name;
 	
     private final int useBase; //used for serialization
@@ -28,17 +27,15 @@ public abstract class AbstractStatus implements Terminable {
     private final TerminationListeners terminationListeners = new TerminationListeners();    
     
     /**
-     * 
-     * @param enumName the enum corresponding to this status. Used for serialization.
+     * @param name name of the status. Statuses of the same name overwrite each other when inflicted.
      * These next two use my standard 1-3 system, where 1 means "weak", 2 means "average", and 3 means "strong".
      * @param lv an integer (1 to 3) which designates how powerful the status is
      * @param use an integer (1 to 3) which designates how long the status lasts.
      * @param useCalc takes the use as a parameter, and produces the actual number of times the status can activate.
      * the class may need this more later
      */
-	public AbstractStatus(StatusName enumName, int lv, int use, UnaryOperator<Integer> useCalc){
-        code = enumName;
-		name = enumName.toString();
+	public AbstractStatus(String name, int lv, int use, UnaryOperator<Integer> useCalc){
+		this.name = name;
 		
         useBase = Number.minMax(1, use, 3);
         maxUses = useCalc.apply(useBase);
@@ -49,9 +46,13 @@ public abstract class AbstractStatus implements Terminable {
         hasTerminated = false;
 	}
 	
-	public StatusName getStatusName(){
-		return code;
-	}
+    /**
+     * @return the name of this status. Statuses with the same name overwrite each other
+     */
+    public String getName() {
+        return name;
+    }
+
 	public int getIntensityLevel(){
 		return level;
 	}
@@ -86,7 +87,7 @@ public abstract class AbstractStatus implements Terminable {
         if (other == null) {
             return true; // anything is better than nothing
         }
-        if (other.code != code) {
+        if (other.name != name) {
             throw new IllegalArgumentException("can only compare two statuses of the same type");
         }
         var isMoreIntense = level > other.level;
@@ -94,40 +95,6 @@ public abstract class AbstractStatus implements Terminable {
         var lastsLonger = usesLeft > other.usesLeft;
         return isMoreIntense || (isNotWeaker && lastsLonger);
     }
-    
-    /**
-     * 
-     * @param n
-     * @param intensity
-     * @param dur should be the useBase of the status, not its actual uses
-     * @return 
-     */
-    public static AbstractStatus decode(StatusName n, int intensity, int dur){
-		AbstractStatus ret = null;
-		switch(n){
-		case REGENERATION:
-			ret = new Regeneration(intensity, dur);
-			break;
-		case RESISTANCE:
-			ret = new Resistance(intensity, dur);
-			break;
-        case BURN:
-            ret = new Burn(intensity, dur);
-            break;
-		case RUSH:
-			ret = new Rush(intensity, dur);
-			break;
-		case STRENGTH:
-			ret = new Strength(intensity, dur);
-			break;
-		case STUN:
-			ret = new Stun(intensity, dur);
-			break;
-		default:
-			throw new NullPointerException("Status not found: " + n);	
-		}
-		return ret;
-	}
     
     @Override
     public void addTerminationListener(TerminationListener listen) {

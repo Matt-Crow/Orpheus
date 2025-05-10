@@ -20,7 +20,7 @@ public class Regeneration extends AbstractStatus implements EventListener<OnUpda
      * @param dur effect lasts for (dur + 2) seconds.
      */
 	public Regeneration(int lv, int dur){
-		super(StatusName.REGENERATION, lv, dur, CALC);
+		super("regeneration", lv, dur, CALC);
 		// 3 - 5 seconds of 1.5% - 4.5% healing each second
 		// balance later
 	}
