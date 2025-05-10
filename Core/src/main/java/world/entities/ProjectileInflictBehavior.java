@@ -13,7 +13,7 @@ public class ProjectileInflictBehavior implements ProjectileCollideBehavior {
 
     @Override
     public void collidedWith(Projectile projectile, Player target) {
-        target.inflict(inflicts.copy());
+        target.inflict(inflicts);
     }
     
 }

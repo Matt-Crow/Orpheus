@@ -203,7 +203,7 @@ public class Player extends WorldOccupant {
      * @param status the status to inflict
      */
     public void inflict(AbstractStatus status) {
-        statuses.add(status);
+        statuses.add(status.copy());
     }
 
     /**

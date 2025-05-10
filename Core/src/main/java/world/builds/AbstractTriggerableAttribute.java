@@ -67,7 +67,7 @@ public abstract class AbstractTriggerableAttribute extends AbstractBuildAttribut
      */
     public final void applyEffect(Player p) {
         inflict.forEach((status) -> {
-            p.inflict(status.copy());
+            p.inflict(status);
         });
     }
 }

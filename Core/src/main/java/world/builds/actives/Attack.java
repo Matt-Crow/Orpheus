@@ -56,10 +56,7 @@ public class Attack {
     private void doResolveAgainst(Player player) {
         var damage = baseDamage / player.getStatValue(CharacterStatName.REDUCTION);
         player.takeDamage((int)damage);
-        statuses
-            .stream()
-            .map(AbstractStatus::copy)
-            .forEach(player::inflict);
+        statuses.forEach(player::inflict);
         resolvedAgainst.add(player);
     }
 }
