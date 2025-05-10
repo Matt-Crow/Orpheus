@@ -15,4 +15,14 @@ public class EventListenersTester {
 
         Assertions.assertTrue(spy.hasBeenCalled());
     }
+
+    @Test
+    public void remove_doesNotHaveConcurrentModification() {
+        var sut = new EventListeners<ExampleEvent>();
+        var spy = new EventListenerSpy();
+        sut.add(spy);
+        sut.add(e -> sut.remove(spy));
+
+        sut.handle(new ExampleEvent());
+    }
 }

@@ -32,6 +32,11 @@ public class Strength extends AbstractStatus implements EventListener<OnHitEvent
 	}
     
     @Override
+    public void removeFrom(Player p) {
+        p.eventOnHit().remove(this);
+    }
+
+    @Override
 	public String getDesc(){
 		return "Strength, causing the inflicted's next " + getMaxUses() + " attacks to deal an extra " + (3.5 * getIntensityLevel()) + "% of the target's maximum HP and knock them back " + (3.5 * getIntensityLevel()) + " units";
 	}

@@ -30,6 +30,11 @@ public class Stun extends AbstractStatus implements EventListener<OnUpdateEvent>
 	public void inflictOn(Player p){
 		p.eventOnUpdate().add(this);
 	}
+
+    @Override
+    public void removeFrom(Player p) {
+        p.eventOnUpdate().remove(this);
+    }
     
     @Override
 	public String getDesc(){

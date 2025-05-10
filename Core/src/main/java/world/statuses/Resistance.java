@@ -32,6 +32,11 @@ public class Resistance extends AbstractStatus implements EventListener<OnUpdate
 	public void inflictOn(Player p){
 		p.eventOnUpdate().add(this);
 	}
+
+    @Override
+    public void removeFrom(Player p) {
+        p.eventOnUpdate().remove(this);
+    }
     
     @Override
 	public String getDesc(){

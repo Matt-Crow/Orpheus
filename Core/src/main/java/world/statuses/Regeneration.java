@@ -29,6 +29,11 @@ public class Regeneration extends AbstractStatus implements EventListener<OnUpda
 	public void inflictOn(Player p){
 		p.eventOnUpdate().add(this);
 	}
+
+    @Override
+    public void removeFrom(Player p) {
+        p.eventOnUpdate().remove(this);
+    }
     
     @Override
 	public String getDesc(){

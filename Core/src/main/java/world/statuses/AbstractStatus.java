@@ -128,6 +128,11 @@ public abstract class AbstractStatus implements Terminable {
      * @see Player
      */
     public abstract void inflictOn(Player p);
+
+    /**
+     * Undoes the effect of inflictOn 
+     */
+    public abstract void removeFrom(Player p);
     
     /**
      * Gives a brief description of the status

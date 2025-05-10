@@ -50,6 +50,10 @@ public class InflictedStatuses {
                     nameToStatus.remove(key);
                 }
             });
+
+            if (oldStatusOrNull != null) {
+                oldStatusOrNull.removeFrom(player);
+            }
         }
     }
 

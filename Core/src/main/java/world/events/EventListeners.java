@@ -28,6 +28,15 @@ public class EventListeners<T extends Event> implements EventListener<T> {
     public void add(EventListener<T> listener) {
         next.add(listener);
     }
+    
+    /**
+     * unregisters an event listener
+     * @param listener the listener to unregister
+     */
+    public void remove(EventListener<T> listener) {
+        listeners.remove(listener);
+        next.remove(listener);
+    }
 
     /**
      * unregisters all event listeners
