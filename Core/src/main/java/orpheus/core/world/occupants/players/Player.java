@@ -163,12 +163,11 @@ public class Player extends WorldOccupant {
     }
 
     /**
-     * Applies a modifier to this entity's speed that will be removed at the end
-     * of the frame.
-     * @param multiplier the multipier to affect this entity's speed by - multiplicative
+     * Applies a modifier to this entity's speed that will be removed at the end of the frame.
+     * @param multiplier the multipier to affect this entity's speed by - additive
      */
-    public void multiplySpeedBy(double multiplier) {
-        speedMultiplier *= multiplier;
+    public void addSpeedBoost(double multiplier) {
+        speedMultiplier += multiplier;
     }
 
     public void setMoving(boolean moving) {

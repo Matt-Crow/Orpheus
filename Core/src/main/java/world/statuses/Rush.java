@@ -45,7 +45,7 @@ public class Rush extends AbstractStatus implements EventListener<OnUpdateEvent>
     public void handle(OnUpdateEvent e) {
         Optional<Player> updated = CastUtil.cast(e.getUpdated());
         updated.orElseThrow(() -> new UnsupportedOperationException("Rush can only handle player updates"));
-        updated.get().multiplySpeedBy(1 + 0.5 * getIntensityLevel());
+        updated.get().addSpeedBoost(0.5 * getIntensityLevel());
         use();
     }
 }
