@@ -56,7 +56,7 @@ public class PlayerAI implements PlayerController {
         focus = Optional.empty();
         if(!Settings.DISABLEALLAI){
             currentBehavior = new WanderBehavior(this, appliedTo);
-            appliedTo.getActionRegister().addOnBeHit((OnHitEvent e) -> {
+            appliedTo.eventOnBeHit().add((OnHitEvent e) -> {
                 currentBehavior = new PursueBehavior(this, appliedTo, (Player)e.getHitter());
             });
         }

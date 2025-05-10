@@ -48,16 +48,18 @@ public class ScrapMetal extends AbstractPassive {
     public void init() {
         super.init();
         withUser(user -> {
-            var events = user.getActionRegister();
-            events.addOnKill((e) -> trigger());
-            events.addOnTakeDamage((e) -> {
-                if (e.getDamagePercent() > 0.2) {
-                    trigger();
-                }
-            });
-            events.addOnUpdate((e) -> {
-                angleOffset = (angleOffset + RATE) % 360;
-            });
+            user.eventOnKill()
+                .add(e -> trigger());
+            user.eventOnTakeDamage()
+                .add(e -> {
+                    if (e.getDamagePercent() > 0.2) {
+                        trigger();
+                    }
+                });
+            user.getActionRegister()
+                .addOnUpdate((e) -> {
+                    angleOffset = (angleOffset + RATE) % 360;
+                });
         });
     }
 

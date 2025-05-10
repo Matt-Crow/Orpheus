@@ -3,6 +3,7 @@ package world.builds.actives;
 import gui.graphics.CustomColors;
 import world.entities.ParticleGenerator;
 import world.entities.ParticleType;
+import world.events.OnUseMeleeEvent;
 
 public class MeleeActive extends ElementalActive {
 
@@ -32,6 +33,7 @@ public class MeleeActive extends ElementalActive {
     @Override
     protected void doUse() {
         super.doUse();
-        getUser().getActionRegister().triggerOnUseMelee(this);
+        var event = new OnUseMeleeEvent(getUser(), this);
+        getUser().eventOnUseMelee().handle(event);
     }
 }

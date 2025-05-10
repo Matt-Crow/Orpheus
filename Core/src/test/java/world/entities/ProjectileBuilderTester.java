@@ -40,7 +40,7 @@ public class ProjectileBuilderTester {
         
         var player = Player.makeDrone(world, 1);
         var spy = new HitListenerSpy();
-        player.getActionRegister().addOnBeHit(spy);
+        player.eventOnBeHit().add(spy);
         world.getPlayers().addMember(player);
         
         var attacker = Player.makeDrone(world, 1);

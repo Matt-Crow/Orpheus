@@ -22,7 +22,7 @@ public class CinderStrikes extends AbstractPassive implements EventListener<OnUs
 
     @Override
     public void init() {
-        withUser(u -> u.getActionRegister().addOnUseMelee(this));
+        withUser(u -> u.eventOnUseMelee().add(this));
     }
 
     @Override

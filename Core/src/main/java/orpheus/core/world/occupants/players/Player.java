@@ -21,6 +21,11 @@ import world.builds.characterClass.CharacterStatName;
 import world.builds.characterClass.DroneCharacterClass;
 import world.builds.passives.AbstractPassive;
 import world.entities.Projectile;
+import world.events.DamageEvent;
+import world.events.EventListeners;
+import world.events.KillEvent;
+import world.events.OnHitEvent;
+import world.events.OnUseMeleeEvent;
 import world.statuses.AbstractStatus;
 
 /**
@@ -71,6 +76,10 @@ public class Player extends WorldOccupant {
      */
     private Optional<Player> lastAttackedBy = Optional.empty();
 
+    private final EventListeners<OnHitEvent> onBeHitListeners = new EventListeners<>();
+	private final EventListeners<OnUseMeleeEvent> onUseMeleeListeners = new EventListeners<>();
+    private final EventListeners<KillEvent> onKillListeners = new EventListeners<>();
+	private final EventListeners<DamageEvent> onTakeDamageListeners = new EventListeners<>();
 
     public Player(World inWorld, UUID id, Playable playingAs, int minLifeSpan) {
         super(inWorld);
@@ -183,8 +192,32 @@ public class Player extends WorldOccupant {
             : 0.0;
     }
 
-    public int getMaxHP() {
-        return damage.getMaxHP();
+    /**
+     * @return the event listeners which fire whenever this is hit
+     */
+    public EventListeners<OnHitEvent> eventOnBeHit() {
+        return onBeHitListeners;
+    }
+
+    /**
+     * @return the event listeners which fire whenever this uses a melee attack
+     */
+    public EventListeners<OnUseMeleeEvent> eventOnUseMelee() {
+        return onUseMeleeListeners;
+    }
+
+    /**
+     * @return the event listeners which fire whenever this is killed
+     */
+    public EventListeners<KillEvent> eventOnKill() {
+        return onKillListeners;
+    }
+
+    /**
+     * @return the event listeners which fire whenever this takes damage
+     */
+    public EventListeners<DamageEvent> eventOnTakeDamage() {
+        return onTakeDamageListeners;
     }
 
     public DamageBacklog getDamage() {
@@ -193,7 +226,10 @@ public class Player extends WorldOccupant {
 
     public void takeDamage(int dmg) {
         damage.log(dmg);
-        getActionRegister().triggerOnTakeDamage(dmg);
+        var maxHP = damage.getMaxHP();
+        var percent = ((double)dmg) / maxHP;
+        var e = new DamageEvent(dmg, percent);
+		onTakeDamageListeners.handle(e);
     }
 
     /**
@@ -224,7 +260,8 @@ public class Player extends WorldOccupant {
      */
     public final void wasHitBy(Player player, Projectile projectile) {
         lastAttackedBy = Optional.of(player);
-        getActionRegister().triggerOnHitReceived(player);
+        OnHitEvent t = new OnHitEvent(player, this);
+		onBeHitListeners.handle(t);
     }
 
     /**
@@ -260,6 +297,13 @@ public class Player extends WorldOccupant {
     @Override
     public void init() {
         super.init();
+		
+        // must come before adding event listeners
+		onBeHitListeners.clear();
+		onUseMeleeListeners.clear();
+        onTakeDamageListeners.clear();
+		onKillListeners.clear();
+        
         playingAs.init();
         speedMultiplier = 1.0;
         setMoving(false);
@@ -296,7 +340,7 @@ public class Player extends WorldOccupant {
     public void terminate() {
         if (!isTerminating()) { // avoid double-terminate bugs
             super.terminate();
-            lastAttackedBy.ifPresent((killer) -> killer.getActionRegister().triggerOnKill(this));
+            lastAttackedBy.ifPresent((killer) -> killer.onKillListeners.handle(new KillEvent(this)));
             getTeam().notifyTerminate(this);
         }
     }
