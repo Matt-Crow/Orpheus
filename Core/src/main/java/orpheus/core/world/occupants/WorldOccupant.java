@@ -10,7 +10,9 @@ import util.Coordinates;
 import util.Direction;
 import world.World;
 import world.battle.Team;
-import world.events.ActionRegister;
+import world.events.EventListeners;
+import world.events.OnHitEvent;
+import world.events.OnUpdateEvent;
 
 /**
  * The AbstractEntity class is used as the base for anything that moves and
@@ -46,11 +48,6 @@ public abstract class WorldOccupant implements Graphable, Terminable {
     private Direction facing = Direction.fromDegrees(0);
 
     /**
-     * Registers various game event listeners
-     */
-    private final ActionRegister actReg;
-
-    /**
      * Whether this entity is in its terminating phase
      */
     private boolean terminating = false;
@@ -60,12 +57,15 @@ public abstract class WorldOccupant implements Graphable, Terminable {
      */
     private final TerminationListeners terminationListeners = new TerminationListeners();
 
+    private final EventListeners<OnHitEvent> onHitListeners = new EventListeners<>();
+	private final EventListeners<OnUpdateEvent> onUpdateListeners = new EventListeners<>();
+
     /**
      * Creates an entity that does not yet exist in a world. You must call 
      * setWorld before using this entity.
      */
     public WorldOccupant() {
-        actReg = new ActionRegister(this);
+        
     }
 
     /**
@@ -167,11 +167,18 @@ public abstract class WorldOccupant implements Graphable, Terminable {
     }
 
     /**
-     * @return the game event listeners attached to this entity
-     */
-    public ActionRegister getActionRegister() {
-        return actReg;
-    }
+	 * @return the event listeners which fire whenever this hits a player
+	 */
+	public EventListeners<OnHitEvent> eventOnHit() {
+		return onHitListeners;
+	}
+
+    /**
+	 * @return the event listeners which fire whenever this updates
+	 */
+	public EventListeners<OnUpdateEvent> eventOnUpdate() {
+		return onUpdateListeners;
+	}
 
     public final void turnTo(int xCoord, int yCoord) {
         facing = Direction.getDegreeByLengths(
@@ -227,7 +234,8 @@ public abstract class WorldOccupant implements Graphable, Terminable {
      */
     public void init() {
         terminationListeners.clear();
-        actReg.reset();
+		onHitListeners.clear();
+		onUpdateListeners.clear();
         terminating = false;
     }
 
@@ -241,7 +249,7 @@ public abstract class WorldOccupant implements Graphable, Terminable {
                 triggerOnUpdate must occur before updateMovement, otherwise, 
                 speed multipliers on players don't work
             */
-            actReg.triggerOnUpdate();
+            onUpdateListeners.handle(new OnUpdateEvent(this));
             updateMovement();
         }
     }

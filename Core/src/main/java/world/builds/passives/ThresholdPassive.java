@@ -36,7 +36,7 @@ public class ThresholdPassive extends AbstractPassive implements EventListener<O
     @Override
     public void init(){
         if(getUser() != null){
-            getUser().getActionRegister().addOnUpdate(this);
+            getUser().eventOnUpdate().add(this);
         }
     }
     

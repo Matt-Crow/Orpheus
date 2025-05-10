@@ -27,7 +27,7 @@ public class OnHitPassive extends AbstractPassive implements EventListener<OnHit
     public void init(){
         if(getUser() != null){
             //for when init is called by Customizers
-            getUser().getActionRegister().addOnHit(this);
+            getUser().eventOnHit().add(this);
         }
     }
     

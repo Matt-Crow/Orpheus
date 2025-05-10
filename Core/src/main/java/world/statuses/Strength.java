@@ -28,7 +28,7 @@ public class Strength extends AbstractStatus implements EventListener<OnHitEvent
     
     @Override
 	public void inflictOn(Player p){
-		p.getActionRegister().addOnHit(this);
+		p.eventOnHit().add(this);
 	}
     
     @Override

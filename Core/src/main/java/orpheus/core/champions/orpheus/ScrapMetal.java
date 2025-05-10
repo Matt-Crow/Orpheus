@@ -56,8 +56,7 @@ public class ScrapMetal extends AbstractPassive {
                         trigger();
                     }
                 });
-            user.getActionRegister()
-                .addOnUpdate((e) -> {
+            user.eventOnUpdate().add((e) -> {
                     angleOffset = (angleOffset + RATE) % 360;
                 });
         });

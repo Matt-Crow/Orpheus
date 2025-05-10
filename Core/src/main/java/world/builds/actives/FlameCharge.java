@@ -55,7 +55,7 @@ public class FlameCharge extends ElementalActive {
             
         }
         EventListener<OnUpdateEvent> listen = new TermUpdate(status.getUsesLeft());
-        getUser().getActionRegister().addOnUpdate(listen);
+        getUser().eventOnUpdate().add(listen);
         getUser().inflict(status);
     }
     

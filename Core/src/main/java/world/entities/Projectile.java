@@ -9,6 +9,7 @@ import orpheus.core.utils.coordinates.TerminablePointUpdater;
 import orpheus.core.world.occupants.WorldOccupant;
 import orpheus.core.world.occupants.players.Player;
 import util.Direction;
+import world.events.OnHitEvent;
 
 public class Projectile extends WorldOccupant {
 
@@ -109,8 +110,14 @@ public class Projectile extends WorldOccupant {
         collideBehavior.forEach(b -> b.collidedWith(this, p));
         p.wasHitBy(spawnedBy, this);
         hitThusFar.add(p);
-        getActionRegister().triggerOnHit(p);
-        spawnedBy.getActionRegister().triggerOnHit(p);
+
+        // projectile hit the player
+        eventOnHit()
+            .handle(new OnHitEvent(this, p));
+
+        // player hit the player
+        spawnedBy.eventOnHit()
+            .handle(new OnHitEvent(spawnedBy, p));
     }
 
     @Override

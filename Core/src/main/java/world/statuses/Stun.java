@@ -28,7 +28,7 @@ public class Stun extends AbstractStatus implements EventListener<OnUpdateEvent>
     
     @Override
 	public void inflictOn(Player p){
-		p.getActionRegister().addOnUpdate(this);
+		p.eventOnUpdate().add(this);
 	}
     
     @Override
