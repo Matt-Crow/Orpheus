@@ -6,6 +6,7 @@ import util.Number;
 import util.Settings;
 import java.util.function.UnaryOperator;
 
+import orpheus.core.utils.UndoableOperation;
 import orpheus.core.world.occupants.players.Player;
 
 /**
@@ -26,13 +27,8 @@ public class Regeneration extends AbstractStatus implements EventListener<OnUpda
 	}
     
     @Override
-	public void inflictOn(Player p){
-		p.eventOnUpdate().add(this);
-	}
-
-    @Override
-    public void removeFrom(Player p) {
-        p.eventOnUpdate().remove(this);
+    public UndoableOperation<Player> getInflictor() {
+        return makeEventBinder(p -> p.eventOnUpdate(), this);
     }
     
     @Override

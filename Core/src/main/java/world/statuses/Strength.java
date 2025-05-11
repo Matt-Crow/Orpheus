@@ -6,6 +6,7 @@ import util.Settings;
 import world.Tile;
 import java.util.function.UnaryOperator;
 
+import orpheus.core.utils.UndoableOperation;
 import orpheus.core.world.occupants.players.Player;
 import util.Direction;
 import util.Number;
@@ -25,15 +26,10 @@ public class Strength extends AbstractStatus implements EventListener<OnHitEvent
 		super("strength", lv, uses, CALC);
 		// 3 - 7 uses of 3.5% to 10.5% extra damage logged and knocks back lv units
 	}
-    
+
     @Override
-	public void inflictOn(Player p){
-		p.eventOnHit().add(this);
-	}
-    
-    @Override
-    public void removeFrom(Player p) {
-        p.eventOnHit().remove(this);
+    public UndoableOperation<Player> getInflictor() {
+        return makeEventBinder(p -> p.eventOnHit(), this);
     }
 
     @Override

@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 import orpheus.core.utils.CastUtil;
+import orpheus.core.utils.UndoableOperation;
 import orpheus.core.world.occupants.players.Player;
 
 /**
@@ -27,13 +28,8 @@ public class Stun extends AbstractStatus implements EventListener<OnUpdateEvent>
 	}
     
     @Override
-	public void inflictOn(Player p){
-		p.eventOnUpdate().add(this);
-	}
-
-    @Override
-    public void removeFrom(Player p) {
-        p.eventOnUpdate().remove(this);
+    public UndoableOperation<Player> getInflictor() {
+        return makeEventBinder(p -> p.eventOnUpdate(), this);
     }
     
     @Override

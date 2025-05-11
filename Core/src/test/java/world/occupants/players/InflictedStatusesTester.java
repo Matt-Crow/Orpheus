@@ -1,5 +1,6 @@
 package world.occupants.players;
 
+import orpheus.core.utils.UndoableOperation;
 import orpheus.core.world.occupants.WorldOccupant;
 import orpheus.core.world.occupants.players.Player;
 import world.Map;
@@ -93,13 +94,8 @@ public class InflictedStatusesTester {
         }
 
         @Override
-        public void inflictOn(Player p) {
-            p.eventOnUpdate().add(this);
-        }
-
-        @Override
-        public void removeFrom(Player p) {
-            p.eventOnUpdate().remove(this);
+        public UndoableOperation<Player> getInflictor() {
+            return makeEventBinder(p -> p.eventOnUpdate(), this);
         }
 
         @Override

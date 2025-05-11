@@ -1,9 +1,15 @@
 package world.statuses;
 
+import world.events.Event;
+import world.events.EventListener;
+import world.events.EventListeners;
 import world.events.termination.*;
 import util.Number;
+
+import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
+import orpheus.core.utils.UndoableOperation;
 import orpheus.core.world.occupants.players.Player;
 
 /**
@@ -120,19 +126,35 @@ public abstract class AbstractStatus implements Terminable {
             terminate();
         }
     }
-    
-    /**
-     * Generally speaking, this will call p.getActionRegister().add . . .
-     * <b>this method must call use() in order to update the number of uses left</b>
-     * @param p the AbstractPlayer to target 
-     * @see Player
-     */
-    public abstract void inflictOn(Player p);
 
     /**
-     * Undoes the effect of inflictOn 
+     * Implementors will likely want to use AbstractStatus::makeEventBinder
+     * @return an operation which can inflict and un-inflict this status on a player
      */
-    public abstract void removeFrom(Player p);
+    public abstract UndoableOperation<Player> getInflictor();
+
+    /**
+     * This is helpful as a return value for getInflictor.
+     * @param <T> the type of event to bind to
+     * @param getEvent maps a player to their event listeners for the event we're interested in
+     * @param listener the listener to add and remove from a player when they are inflicted or uninflicted with this status
+     * @return an operation which is a good implementation for getInflictor
+     */
+    protected <T extends Event> UndoableOperation<Player> makeEventBinder(Function<Player, EventListeners<T>> getEvent, EventListener<T> listener) {
+        var binder = new UndoableOperation<Player>() {
+
+            @Override
+            public void doOperation(Player operand) {
+                getEvent.apply(operand).add(listener);
+            }
+
+            @Override
+            public void undoOperation(Player operand) {
+                getEvent.apply(operand).remove(listener);
+            }
+        };
+        return binder;
+    }
     
     /**
      * Gives a brief description of the status

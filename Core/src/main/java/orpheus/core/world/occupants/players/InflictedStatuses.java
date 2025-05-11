@@ -43,7 +43,7 @@ public class InflictedStatuses {
         var oldStatusOrNull = nameToStatus.get(key);
         if (newStatus.isBetterThan(oldStatusOrNull)) {
             nameToStatus.put(key, newStatus);
-            newStatus.inflictOn(player);
+            newStatus.getInflictor().doOperation(player);
             newStatus.addTerminationListener(e -> {
                 // check if still inflicted
                 if (newStatus == nameToStatus.get(key)) {
@@ -52,7 +52,7 @@ public class InflictedStatuses {
             });
 
             if (oldStatusOrNull != null) {
-                oldStatusOrNull.removeFrom(player);
+                oldStatusOrNull.getInflictor().undoOperation(player);
             }
         }
     }
