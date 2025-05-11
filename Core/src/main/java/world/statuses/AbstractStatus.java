@@ -1,6 +1,5 @@
 package world.statuses;
 
-import world.events.Event;
 import world.events.EventListener;
 import world.events.EventListeners;
 import world.events.termination.*;
@@ -140,7 +139,7 @@ public abstract class AbstractStatus implements Terminable {
      * @param listener the listener to add and remove from a player when they are inflicted or uninflicted with this status
      * @return an operation which is a good implementation for getInflictor
      */
-    protected <T extends Event> UndoableOperation<Player> makeEventBinder(Function<Player, EventListeners<T>> getEvent, EventListener<T> listener) {
+    protected <T> UndoableOperation<Player> makeEventBinder(Function<Player, EventListeners<T>> getEvent, EventListener<T> listener) {
         var binder = new UndoableOperation<Player>() {
 
             @Override

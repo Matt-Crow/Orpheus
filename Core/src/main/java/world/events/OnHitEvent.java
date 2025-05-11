@@ -5,7 +5,7 @@ import orpheus.core.world.occupants.WorldOccupant;
 /**
  * Created whenever one AbstractEntity hits another.
  */
-public class OnHitEvent implements Event {
+public class OnHitEvent {
     private final WorldOccupant hitter;
     private final WorldOccupant wasHit;
     

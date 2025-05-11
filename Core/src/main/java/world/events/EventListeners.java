@@ -8,7 +8,7 @@ import world.events.termination.Terminable;
  * Maintains a list of instances of EventListener.
  * Composite design pattern
  */
-public class EventListeners<T extends Event> implements EventListener<T> {
+public class EventListeners<T> implements EventListener<T> {
     
     /**
      * the event listeners which this will forward events to

@@ -4,7 +4,7 @@ package world.events;
  * Denotes that a class listens for events in the application
  */
 @FunctionalInterface
-public interface EventListener<T extends Event> {
+public interface EventListener<T> {
     
     /**
      * called whenever a subject this is registered with emits an event

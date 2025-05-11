@@ -6,7 +6,7 @@ import world.builds.actives.MeleeActive;
 /**
  * fired whenever a WorldOccupant makes a melee attack
  */
-public class OnUseMeleeEvent implements Event {
+public class OnUseMeleeEvent {
     
     private final WorldOccupant user;
     private final MeleeActive used;

@@ -1,6 +1,6 @@
 package world.events;
 
-public class EventListenerSpy implements EventListener<ExampleEvent> {
+public class EventListenerSpy implements EventListener<Object> {
 
     private boolean called = false;
 
@@ -9,7 +9,7 @@ public class EventListenerSpy implements EventListener<ExampleEvent> {
     }
 
     @Override
-    public void handle(ExampleEvent e) {
+    public void handle(Object e) {
         called = true;
     }
 }

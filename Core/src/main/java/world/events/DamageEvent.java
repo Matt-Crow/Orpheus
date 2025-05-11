@@ -5,7 +5,7 @@ package world.events;
  * Keep in mind that the damage backlog causes a delay between when damage is
  * inflicted and applied, which explains this discrepency.
  */
-public class DamageEvent implements Event {
+public class DamageEvent {
     
     private final int damageInflicted;
     private final double damagePercent;

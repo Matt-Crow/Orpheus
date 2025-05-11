@@ -2,7 +2,7 @@ package world.events;
 
 import orpheus.core.world.occupants.players.Player;
 
-public class KillEvent implements Event {
+public class KillEvent {
     
     private final Player killed;
 
