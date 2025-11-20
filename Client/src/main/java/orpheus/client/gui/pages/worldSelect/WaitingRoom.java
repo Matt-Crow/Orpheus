@@ -59,11 +59,6 @@ public class WaitingRoom extends Page {
         backend = null;
     }
     
-    public WaitingRoom(ClientAppContext context, PageController host, WaitingRoomClientProtocol protocol){
-        this(context, host);
-        setBackEnd(protocol);
-    }
-    
     public final ChatBox getChat(){
         return chat;
     }
@@ -91,9 +86,5 @@ public class WaitingRoom extends Page {
     
     public void setBackEnd(WaitingRoomClientProtocol protocol){
         backend = protocol;
-    }
-
-    public WaitingRoomClientProtocol getBackEnd(){
-        return backend;
     }
 }

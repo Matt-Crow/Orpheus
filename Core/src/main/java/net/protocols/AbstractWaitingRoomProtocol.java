@@ -1,8 +1,6 @@
 package net.protocols;
 
 import java.util.HashSet;
-import java.util.stream.Collectors;
-
 import net.AbstractNetworkClient;
 import orpheus.core.users.User;
 
