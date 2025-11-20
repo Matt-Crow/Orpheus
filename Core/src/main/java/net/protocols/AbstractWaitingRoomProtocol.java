@@ -1,6 +1,8 @@
 package net.protocols;
 
 import java.util.HashSet;
+import java.util.stream.Collectors;
+
 import net.AbstractNetworkClient;
 import orpheus.core.users.User;
 
@@ -20,7 +22,8 @@ public abstract class AbstractWaitingRoomProtocol extends AbstractProtocol{
     }
     
     public final boolean containsUser(User u){
-        return teamProto.contains(u);
+        return teamProto.stream()
+            .anyMatch(alreadyJoined -> alreadyJoined.getId().equals(u.getId()));
     }
     
     public final boolean addToTeamProto(User u){
@@ -30,7 +33,7 @@ public abstract class AbstractWaitingRoomProtocol extends AbstractProtocol{
         }
         return shouldAdd;
     }
-    
+
     public final User[] getTeamProto(){
         return teamProto.toArray(new User[teamProto.size()]);
     }
