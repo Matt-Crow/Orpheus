@@ -66,6 +66,10 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         this.specificationResolver = specificationResolver;
         playerTeam = Team.ofPlayers();
         awaitingBuilds = new HashSet<>();
+
+        addHandler(ServerMessageType.PLAYER_JOINED, this::receiveJoin);
+        addHandler(ServerMessageType.START_WORLD, this::prepareToStart);
+        addHandler(ServerMessageType.PLAYER_DATA, this::receiveBuildInfo);
     }
 
     @Override
@@ -75,28 +79,6 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
             throw new UnsupportedOperationException("WaitingRoomHostProtocol must run on an OrpheusServer");
         }
         return (OrpheusServer)anc;
-    }
-    
-    @Override
-    public boolean receive(ServerMessagePacket sm) {
-        boolean handled = true;
-        
-        switch(sm.getMessage().getType()){
-            case PLAYER_JOINED:
-                receiveJoin(sm);
-                break;
-            case START_WORLD:
-                prepareToStart();
-                break;
-            case PLAYER_DATA:
-                receiveBuildInfo(sm);
-                break;
-            default:
-                handled = false;
-                break;
-        }
-        
-        return handled;
     }
     
     /**

@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
-import net.protocols.AbstractProtocol;
+import net.protocols.MessageHandler;
 import orpheus.core.net.chat.ChatMessage;
 import orpheus.core.net.chat.ChatProtocol;
 import orpheus.core.net.messages.Message;
@@ -18,7 +18,7 @@ import orpheus.core.net.messages.Message;
  */
 public abstract class AbstractNetworkClient {
     private volatile boolean isStarted;
-    private volatile AbstractProtocol protocol;
+    private volatile MessageHandler protocol;
 
     /**
      * handles chat messages received
@@ -42,12 +42,12 @@ public abstract class AbstractNetworkClient {
         return isStarted;
     }
     
-    public final void setProtocol(AbstractProtocol protocol){
+    public final void setProtocol(MessageHandler protocol){
         this.protocol = protocol;
         LinkedList<ServerMessagePacket> smps = new LinkedList<>();
         boolean wasHandled;
         for (ServerMessagePacket smp : cachedMessages) {
-            wasHandled = protocol.receive(smp);
+            wasHandled = protocol.handleMessage(smp);
             if (!wasHandled) {
                 // add back to queue if not received
                 smps.add(smp);
@@ -107,7 +107,7 @@ public abstract class AbstractNetworkClient {
         
         boolean handled = false;
         if(protocol != null){
-            handled = protocol.receive(sm);
+            handled = protocol.handleMessage(sm);
         }
         if (chatProtocol.isPresent() && sm.getMessage().getType() == ServerMessageType.CHAT){
             handled = true;

@@ -32,8 +32,6 @@ import serialization.JsonUtil;
  * If the de-serialization is successful, it takes the type of that message,
  * and gives it to the current protocols
  * 
- * @see net.protocols.AbstractProtocol
- * 
  * @author Matt Crow
  */
 public class OrpheusServer extends AbstractNetworkClient {

@@ -19,7 +19,6 @@ import orpheus.core.users.User;
 import orpheus.core.world.graph.World;
 import orpheus.core.world.graph.particles.Particles;
 
-import java.io.IOException;
 import java.io.StringReader;
 
 import javax.json.Json;
@@ -39,6 +38,10 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
     public WaitingRoomClientProtocol(OrpheusClient runningServer, WaitingRoom linkedRoom) {
         super(runningServer);
         this.room = linkedRoom;
+        addHandler(ServerMessageType.WAITING_ROOM_INIT, this::receiveInit);
+        addHandler(ServerMessageType.WAITING_ROOM_UPDATE, this::receiveUpdate);
+        addHandler(ServerMessageType.REQUEST_PLAYER_DATA, this::receiveBuildRequest);
+        addHandler(ServerMessageType.WORLD, this::receiveWorld);
     }
 
     @Override
@@ -48,34 +51,6 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
             throw new UnsupportedOperationException("WaitingRoomClientProtocol can only run on an OrpheusClient");
         }
         return (OrpheusClient)anc;
-    }
-
-    @Override
-    public boolean receive(ServerMessagePacket sm) {
-        boolean received = true;
-        switch (sm.getMessage().getType()) {
-            case WAITING_ROOM_INIT:
-                receiveInit(sm);
-                break;
-            case WAITING_ROOM_UPDATE:
-                receiveUpdate(sm);
-                break;
-            case REQUEST_PLAYER_DATA: {
-                try {
-                    receiveBuildRequest(sm);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-                break;
-            }
-            case WORLD:
-                receiveWorld(sm);
-                break;
-            default:
-                received = false;
-                break;
-        }
-        return received;
     }
 
     private void receiveInit(ServerMessagePacket sm) {
@@ -102,7 +77,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
         getServer().send(new Message("start", ServerMessageType.START_WORLD));
     }
 
-    private synchronized void receiveBuildRequest(ServerMessagePacket sm) throws IOException {
+    private synchronized void receiveBuildRequest(ServerMessagePacket sm) {
         var selectedBuild = room.getSelectedSpecification();
         var json = selectedBuild.get().toJson();
         getServer().send(new Message(

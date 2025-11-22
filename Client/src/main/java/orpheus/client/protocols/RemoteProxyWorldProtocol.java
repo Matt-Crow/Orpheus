@@ -2,7 +2,8 @@ package orpheus.client.protocols;
 
 import net.OrpheusClient;
 import net.messages.ServerMessagePacket;
-import net.protocols.AbstractProtocol;
+import net.messages.ServerMessageType;
+import net.protocols.MessageHandler;
 import orpheus.client.gui.pages.play.RemoteWorldSupplier;
 
 /**
@@ -11,31 +12,18 @@ import orpheus.client.gui.pages.play.RemoteWorldSupplier;
  * 
  * @author Matt Crow
  */
-public class RemoteProxyWorldProtocol extends AbstractProtocol{
+public class RemoteProxyWorldProtocol extends MessageHandler {
     private final RemoteWorldSupplier worldSupplier;
     
     public RemoteProxyWorldProtocol(OrpheusClient runningServer, RemoteWorldSupplier worldSupplier){
         super(runningServer);
         this.worldSupplier = worldSupplier;
+        addHandler(ServerMessageType.WORLD, this::receiveWorld);
     }
 
     private void receiveWorld(ServerMessagePacket sm) {
         var json = sm.getMessage().getBody();
         var world = orpheus.core.world.graph.World.fromJson(json);
         worldSupplier.setWorld(world);
-    }
-    
-    @Override
-    public boolean receive(ServerMessagePacket sm) {
-        boolean handled = true;
-        switch(sm.getMessage().getType()){
-            case WORLD:
-                receiveWorld(sm);
-                break;
-            default:
-                handled = false;
-                break;
-        }
-        return handled;
     }
 }

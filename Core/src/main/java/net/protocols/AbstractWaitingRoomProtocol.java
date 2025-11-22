@@ -8,7 +8,7 @@ import orpheus.core.users.User;
  *
  * @author Matt
  */
-public abstract class AbstractWaitingRoomProtocol extends AbstractProtocol{
+public abstract class AbstractWaitingRoomProtocol extends MessageHandler {
     /*
     Keeps track of which Users want to play.
     */

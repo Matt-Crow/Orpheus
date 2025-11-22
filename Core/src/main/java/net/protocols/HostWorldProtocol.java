@@ -2,6 +2,7 @@ package net.protocols;
 
 import net.OrpheusServer;
 import net.messages.ServerMessagePacket;
+import net.messages.ServerMessageType;
 import orpheus.core.commands.*;
 import orpheus.core.commands.executor.LocalExecutor;
 import world.World;
@@ -15,26 +16,13 @@ import world.World;
  * 
  * @author Matt Crow
  */
-public class HostWorldProtocol extends AbstractProtocol {
+public class HostWorldProtocol extends MessageHandler {
     private final LocalExecutor executor;
     
     public HostWorldProtocol(OrpheusServer runningServer, World forWorld){
         super(runningServer);
         executor = new LocalExecutor(forWorld);
-    }
-    
-    @Override
-    public boolean receive(ServerMessagePacket sm) {
-        boolean handled = true;
-        switch(sm.getMessage().getType()){
-            case CONTROL_PRESSED:
-                receiveControl(sm);
-                break;
-            default:
-                handled = false;
-                break;
-        }
-        return handled;
+        addHandler(ServerMessageType.CONTROL_PRESSED, this::receiveControl);
     }
     
     private void receiveControl(ServerMessagePacket sm){
