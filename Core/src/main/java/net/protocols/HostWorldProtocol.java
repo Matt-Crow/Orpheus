@@ -12,7 +12,7 @@ import world.World;
  * applying the controls to players in the host's world as though the 
  * client pressed keys on the host's computer.
  * 
- * Updating the world is currently handled by HostWorldUpdater
+ * Updating the world is currently handled by WorldUpdater
  * 
  * @author Matt Crow
  */

@@ -13,13 +13,13 @@ import util.Settings;
  * 
  * @author Matt Crow
  */
-public abstract class AbstractWorldUpdater {
+public class WorldUpdater {
     private final LinkedList<EndOfFrameListener> updateListeners;
     private final Timer updateTimer;
     private final boolean canPause;
     private boolean hasStarted;
     
-    public AbstractWorldUpdater(boolean canPause){
+    public WorldUpdater(boolean canPause){
         updateListeners = new LinkedList<>();
         updateTimer = new Timer(1000 / Settings.FPS, this::update);
         updateTimer.stop();
@@ -56,9 +56,6 @@ public abstract class AbstractWorldUpdater {
     }
     
     private void update(){
-        doUpdate();
         updateListeners.forEach((eofl)->eofl.frameEnded());
     }
-    
-    protected abstract void doUpdate();
 }

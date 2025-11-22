@@ -5,12 +5,12 @@ import world.battle.Team;
 import orpheus.client.ClientAppContext;
 import orpheus.client.gui.pages.play.HeadsUpDisplay;
 import orpheus.client.gui.pages.play.LocalWorldSupplier;
-import orpheus.client.gui.pages.play.SoloWorldUpdater;
 import orpheus.client.gui.pages.play.WorldCanvas;
 import orpheus.client.gui.pages.play.WorldPage;
 import orpheus.core.commands.executor.LocalExecutor;
 import orpheus.core.world.graph.particles.Particles;
 import orpheus.core.world.occupants.players.Player;
+import orpheus.core.world.updaters.WorldUpdater;
 import orpheus.client.gui.pages.PageController;
 import world.*;
 
@@ -27,14 +27,19 @@ public class WSSolo extends AbstractWSNewWorld{
     public void start(){
         var players = Team.ofPlayers();        
         World world = new WorldBuilderImpl()
-                .withGame(createGame())
-                .withPlayers(players)
-                .withAi(Team.ofAi())
-                .build();
+            .withGame(createGame())
+            .withPlayers(players)
+            .withAi(Team.ofAi())
+            .build();
         
         var graph = new LocalWorldSupplier(world);
         var particles = new Particles();
-        SoloWorldUpdater updater = new SoloWorldUpdater(graph, particles, world);
+        var updater = new WorldUpdater(true);
+        updater.addEndOfFrameListener(() -> {
+            world.update();
+            graph.get().spawnParticlesInto(particles);
+            particles.update();
+        });
         
         
         var selected = getSelectedSpecification().get();

@@ -3,8 +3,6 @@ package orpheus.client.protocols;
 import orpheus.client.gui.pages.PlayerControls;
 import orpheus.client.gui.pages.play.HeadsUpDisplay;
 import orpheus.client.gui.pages.play.RemoteWorldSupplier;
-import orpheus.client.gui.pages.play.RemoteWorldUpdater;
-
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 import net.messages.ServerMessagePacket;
@@ -18,6 +16,7 @@ import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
 import orpheus.core.world.graph.World;
 import orpheus.core.world.graph.particles.Particles;
+import orpheus.core.world.updaters.WorldUpdater;
 
 import java.io.StringReader;
 
@@ -122,9 +121,20 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
 
         canvas.start();
         
+
+        /**
+         * We now have the world,
+         * but the server does not update particles,
+         * so we have to update those ourself
+         */
+
         // todo also allow this to stop
-        var updater = new RemoteWorldUpdater(worldSupplier, particles);
+        var updater = new WorldUpdater(false);
         updater.addEndOfFrameListener(hud);
+        updater.addEndOfFrameListener(() -> {
+            worldSupplier.get().spawnParticlesInto(particles);
+            particles.update();
+        });
         updater.start();
     }
 }
