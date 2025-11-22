@@ -1,14 +1,11 @@
 package orpheus.client.gui.pages;
 
 import gui.graphics.CustomColors;
-import net.protocols.EndOfFrameListener;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.geom.AffineTransform;
-import java.util.LinkedList;
-
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
@@ -30,8 +27,6 @@ public class Canvas extends JPanel{
     private Graphics2D graphics;
     private AffineTransform initialTransform;
     
-    private final LinkedList<EndOfFrameListener> endOfFrameListeners;
-    
     /**
      * Creates a canvas, which keeps track of
      * translations and transformations
@@ -43,7 +38,6 @@ public class Canvas extends JPanel{
         zoom = 1.0;
         graphics = null;
         initialTransform = null;
-        endOfFrameListeners = new LinkedList<>();
         setBackground(CustomColors.BLACK);
         setFocusable(true);
     }
@@ -164,16 +158,6 @@ public class Canvas extends JPanel{
         System.out.printf("X translation: %d\n", translateX);
         System.out.printf("Y translation: %d\n", translateY);
         System.out.printf("Zoom: %f\n", zoom);
-    }
-    
-    public void addEndOfFrameListener(EndOfFrameListener f){
-        if(f == null){
-            throw new NullPointerException();
-        }
-        endOfFrameListeners.add(f);
-    }
-    public void endOfFrame(){
-        endOfFrameListeners.forEach(eofl -> eofl.frameEnded());
     }
     
     /**

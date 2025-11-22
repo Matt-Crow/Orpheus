@@ -8,9 +8,9 @@ import orpheus.client.gui.pages.play.LocalWorldSupplier;
 import orpheus.client.gui.pages.play.WorldCanvas;
 import orpheus.client.gui.pages.play.WorldPage;
 import orpheus.core.commands.executor.LocalExecutor;
+import orpheus.core.utils.timer.FrameTimer;
 import orpheus.core.world.graph.particles.Particles;
 import orpheus.core.world.occupants.players.Player;
-import orpheus.core.world.updaters.WorldUpdater;
 import orpheus.client.gui.pages.PageController;
 import world.*;
 
@@ -34,8 +34,7 @@ public class WSSolo extends AbstractWSNewWorld{
         
         var graph = new LocalWorldSupplier(world);
         var particles = new Particles();
-        var updater = new WorldUpdater(true);
-        updater.addEndOfFrameListener(() -> {
+        var updater = new FrameTimer(e -> {
             world.update();
             graph.get().spawnParticlesInto(particles);
             particles.update();
@@ -57,7 +56,7 @@ public class WSSolo extends AbstractWSNewWorld{
         world.init();
 
         var hud = new HeadsUpDisplay(graph, player.getId());
-        updater.addEndOfFrameListener(hud);
+        updater.addEndOfFrameListener(hud::frameEnded);
         
         WorldPage wp = new WorldPage(getContext(), getHost(), hud);
         wp.setCanvas(renderer);

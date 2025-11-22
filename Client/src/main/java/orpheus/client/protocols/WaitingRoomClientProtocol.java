@@ -14,10 +14,9 @@ import orpheus.client.gui.pages.worldselect.WaitingRoom;
 import orpheus.core.commands.executor.RemoteExecutor;
 import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
+import orpheus.core.utils.timer.FrameTimer;
 import orpheus.core.world.graph.World;
 import orpheus.core.world.graph.particles.Particles;
-import orpheus.core.world.updaters.WorldUpdater;
-
 import java.io.StringReader;
 
 import javax.json.Json;
@@ -129,9 +128,9 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
          */
 
         // todo also allow this to stop
-        var updater = new WorldUpdater(false);
-        updater.addEndOfFrameListener(hud);
-        updater.addEndOfFrameListener(() -> {
+        var updater = new FrameTimer();
+        updater.addEndOfFrameListener(hud::frameEnded);
+        updater.addEndOfFrameListener(e -> {
             worldSupplier.get().spawnParticlesInto(particles);
             particles.update();
         });

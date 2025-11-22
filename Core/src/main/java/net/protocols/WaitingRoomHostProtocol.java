@@ -14,8 +14,8 @@ import orpheus.core.champions.SpecificationJsonDeserializer;
 import orpheus.core.champions.SpecificationResolver;
 import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
+import orpheus.core.utils.timer.FrameTimer;
 import orpheus.core.world.occupants.players.Player;
-import orpheus.core.world.updaters.WorldUpdater;
 import serialization.JsonUtil;
 import world.World;
 import world.WorldBuilderImpl;
@@ -138,8 +138,8 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
         }
 
         var server = getServer();
-        var updater = new WorldUpdater(false);
-        updater.addEndOfFrameListener(() -> {
+        var updater = new FrameTimer();
+        updater.addEndOfFrameListener(e -> {
             world.update();
         
             server.send(new Message(
