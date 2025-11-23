@@ -35,7 +35,7 @@ public class WSNewMulti extends AbstractWSNewWorld{
             
             var user = context.getLoggedInUser();
             var client = sp.createClient(user, server.getSocketAddress());
-            var room = new WaitingRoom(context, getHost());
+            var room = new WaitingRoomPage(context, getHost());
             var clientProtocol = new WaitingRoomClientProtocol(client, room);
             room.setBackEnd(clientProtocol);
             client.setProtocol(clientProtocol);

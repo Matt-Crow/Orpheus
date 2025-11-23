@@ -30,11 +30,12 @@ import world.game.Game;
  * 3. After each Build has been received, launches the world and tells everyone about it. 
  * @author Matt Crow
  */
-public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {    
+public class WaitingRoomHostProtocol extends MessageHandler {    
     
     private final SpecificationResolver specificationResolver;
     private final Team playerTeam = Team.ofPlayers();
     private final HashSet<User> awaitingBuilds = new HashSet<>();
+    private final WaitingRoom waitingRoom = new WaitingRoom();
     private final World world;
     
     /**
@@ -72,27 +73,26 @@ public class WaitingRoomHostProtocol extends AbstractWaitingRoomProtocol {
     
     private synchronized void receiveJoin(ServerMessagePacket sm){
         
-        if(containsUser(sm.getSender())){
+        if(waitingRoom.containsUser(sm.getSender())){
             // already joined, so ignore the message
             return;
         }
 
         // tell everyone about the new guy
         User joiningUser = sm.getSender();
-        if(addToTeamProto(joiningUser)){
-            awaitingBuilds.add(joiningUser);
-            Message sm1 = new Message(
-                joiningUser.toJson().toString(),
-                ServerMessageType.WAITING_ROOM_UPDATE
-            );
-            getServer().send(sm1);
-        }
+        waitingRoom.addUser(joiningUser);
+        awaitingBuilds.add(joiningUser);
+        Message sm1 = new Message(
+            joiningUser.toJson().toString(),
+            ServerMessageType.WAITING_ROOM_UPDATE
+        );
+        getServer().send(sm1);
         
         // tell the new guy about everyone else
         JsonObjectBuilder initMsgBuild = Json.createObjectBuilder();
         initMsgBuild.add("type", "waiting room init");
         JsonArrayBuilder userListBuild = Json.createArrayBuilder();
-        for(User u : getTeamProto()){
+        for(User u : waitingRoom.getAllUsers()){
             userListBuild.add(u.toJson());
         }
         initMsgBuild.add("team", userListBuild.build());

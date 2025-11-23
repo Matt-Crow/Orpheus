@@ -12,7 +12,7 @@ import javax.swing.JTextField;
 
 import orpheus.client.ClientAppContext;
 import orpheus.client.gui.pages.PageController;
-import orpheus.client.gui.pages.worldselect.WaitingRoom;
+import orpheus.client.gui.pages.worldselect.WaitingRoomPage;
 import orpheus.client.protocols.ClientChatProtocol;
 import orpheus.client.protocols.WaitingRoomClientProtocol;
 import orpheus.core.net.SocketAddress;
@@ -110,7 +110,7 @@ public class HubForm extends JComponent {
         var user = context.getLoggedInUser();
 
         var client = new net.OrpheusClient(user, address);
-        var waitingRoomPage = new WaitingRoom(context, host);
+        var waitingRoomPage = new WaitingRoomPage(context, host);
         var protocol = new WaitingRoomClientProtocol(client, waitingRoomPage);
         waitingRoomPage.setBackEnd(protocol);
         client.setProtocol(protocol);

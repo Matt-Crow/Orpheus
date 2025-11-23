@@ -5,7 +5,7 @@ import orpheus.client.gui.components.ShowHideDecorator;
 import orpheus.client.gui.components.SpecificationSelector;
 
 import java.awt.BorderLayout;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import javax.swing.JTextArea;
@@ -16,6 +16,7 @@ import orpheus.client.gui.pages.PageController;
 import orpheus.client.gui.pages.start.StartPlay;
 import orpheus.client.protocols.WaitingRoomClientProtocol;
 import orpheus.core.champions.Specification;
+import orpheus.core.users.User;
 
 /**
  * WaitingRoom provides a "waiting room"
@@ -24,13 +25,13 @@ import orpheus.core.champions.Specification;
  * 
  * @author Matt Crow
  */
-public class WaitingRoom extends Page {
+public class WaitingRoomPage extends Page {
     private final JTextArea teamList;
     private final ChatBox chat;
     private final SpecificationSelector<Specification> playerBuild;
     private WaitingRoomClientProtocol backend;
     
-    public WaitingRoom(ClientAppContext context, PageController host){
+    public WaitingRoomPage(ClientAppContext context, PageController host){
         super(context, host);
         var cf = context.getComponentFactory();
         addBackButton(()-> new StartPlay(context, host));
@@ -67,10 +68,10 @@ public class WaitingRoom extends Page {
      * Updates the text of this' team displays
      * to match the proto-teams of the backend.
      */
-    public void updateTeamDisplays(){
+    public void updateTeamDisplays(List<User> users){
         String newStr = "Player Team: \n";
-        newStr = Arrays
-            .stream(backend.getTeamProto())
+        newStr = users
+            .stream()
             .map((use) -> "* " + use.getName() + "\n")
             .reduce(newStr, String::concat);
         teamList.setText(newStr);

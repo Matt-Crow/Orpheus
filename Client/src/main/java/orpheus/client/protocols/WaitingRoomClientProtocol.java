@@ -10,7 +10,7 @@ import net.messages.ServerMessageType;
 import serialization.JsonUtil;
 import orpheus.client.gui.pages.play.WorldCanvas;
 import orpheus.client.gui.pages.play.WorldPage;
-import orpheus.client.gui.pages.worldselect.WaitingRoom;
+import orpheus.client.gui.pages.worldselect.WaitingRoomPage;
 import orpheus.core.commands.executor.RemoteExecutor;
 import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
@@ -23,17 +23,19 @@ import javax.json.Json;
 
 import net.AbstractNetworkClient;
 import net.OrpheusClient;
-import net.protocols.AbstractWaitingRoomProtocol;
+import net.protocols.MessageHandler;
+import net.protocols.WaitingRoom;
 
 /**
  *
  * @author Matt
  */
-public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
+public class WaitingRoomClientProtocol extends MessageHandler {
 
-    private final WaitingRoom room;
+    private final WaitingRoomPage room;
+    private final WaitingRoom waitingRoom = new WaitingRoom();
 
-    public WaitingRoomClientProtocol(OrpheusClient runningServer, WaitingRoom linkedRoom) {
+    public WaitingRoomClientProtocol(OrpheusClient runningServer, WaitingRoomPage linkedRoom) {
         super(runningServer);
         this.room = linkedRoom;
         addHandler(ServerMessageType.WAITING_ROOM_INIT, this::receiveInit);
@@ -57,18 +59,18 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
         obj.getJsonArray("team").stream().forEach((jv) -> {
             if (jv.getValueType().equals(JsonValue.ValueType.OBJECT)) {
                 User u = User.fromJson((JsonObject) jv);
-                addToTeamProto(u);
+                waitingRoom.addUser(u);
             }
         });
-        room.updateTeamDisplays();
+        room.updateTeamDisplays(waitingRoom.getAllUsers());
     }
 
     private void receiveUpdate(ServerMessagePacket sm) {
         JsonObject json = Json.createReader(
             new StringReader(sm.getMessage().getBodyText())
         ).readObject();
-        addToTeamProto(User.fromJson(json));
-        room.updateTeamDisplays();
+        waitingRoom.addUser(User.fromJson(json));
+        room.updateTeamDisplays(waitingRoom.getAllUsers());
     }
 
     public final void requestStart() {
@@ -128,6 +130,7 @@ public class WaitingRoomClientProtocol extends AbstractWaitingRoomProtocol {
          */
 
         // todo also allow this to stop
+        // probably make protocols disposable, call that method when switching off of them
         var updater = new FrameTimer();
         updater.addEndOfFrameListener(hud::frameEnded);
         updater.addEndOfFrameListener(e -> {
