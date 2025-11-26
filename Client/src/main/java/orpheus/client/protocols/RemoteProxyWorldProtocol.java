@@ -5,7 +5,7 @@ import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import net.protocols.MessageHandler;
 import orpheus.client.gui.pages.play.HeadsUpDisplay;
-import orpheus.client.gui.pages.play.RemoteWorldSupplier;
+import orpheus.client.gui.pages.play.WorldGraphSupplier;
 import orpheus.core.utils.timer.FrameTimer;
 import orpheus.core.world.graph.particles.Particles;
 
@@ -16,12 +16,12 @@ import orpheus.core.world.graph.particles.Particles;
  * @author Matt Crow
  */
 public class RemoteProxyWorldProtocol extends MessageHandler {
-    private final RemoteWorldSupplier worldSupplier;
+    private final WorldGraphSupplier worldSupplier;
     private final FrameTimer updater;
 
     public RemoteProxyWorldProtocol(
         OrpheusClient runningServer, 
-        RemoteWorldSupplier worldSupplier,
+        WorldGraphSupplier worldSupplier,
         HeadsUpDisplay hud,
         Particles particles
     ){

@@ -4,8 +4,8 @@ import orpheus.client.gui.pages.PlayerControls;
 import world.battle.Team;
 import orpheus.client.ClientAppContext;
 import orpheus.client.gui.pages.play.HeadsUpDisplay;
-import orpheus.client.gui.pages.play.LocalWorldSupplier;
 import orpheus.client.gui.pages.play.WorldCanvas;
+import orpheus.client.gui.pages.play.WorldGraphSupplier;
 import orpheus.client.gui.pages.play.WorldPage;
 import orpheus.core.commands.executor.LocalExecutor;
 import orpheus.core.utils.timer.FrameTimer;
@@ -32,7 +32,7 @@ public class WSSolo extends AbstractWSNewWorld{
             .withAi(Team.ofAi())
             .build();
         
-        var graph = new LocalWorldSupplier(world);
+        var graph = WorldGraphSupplier.fromWorld(world);
         var particles = new Particles();
         var updater = new FrameTimer(e -> {
             world.update();

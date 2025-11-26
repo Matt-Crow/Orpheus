@@ -76,6 +76,13 @@ public class WorldPage extends Page {
             BorderLayout.PAGE_END
         );
     }
+
+    @Override
+    public void enteredPage() {
+        if (canvas != null) {
+            canvas.start();
+        }
+    }
     
     @Override
     public void leavingPage(){

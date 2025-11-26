@@ -2,13 +2,13 @@ package orpheus.client.protocols;
 
 import orpheus.client.gui.pages.PlayerControls;
 import orpheus.client.gui.pages.play.HeadsUpDisplay;
-import orpheus.client.gui.pages.play.RemoteWorldSupplier;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import serialization.JsonUtil;
 import orpheus.client.gui.pages.play.WorldCanvas;
+import orpheus.client.gui.pages.play.WorldGraphSupplier;
 import orpheus.client.gui.pages.play.WorldPage;
 import orpheus.client.gui.pages.worldselect.WaitingRoomPage;
 import orpheus.core.commands.executor.RemoteExecutor;
@@ -87,41 +87,31 @@ public class WaitingRoomClientProtocol extends MessageHandler {
         room.setInputEnabled(false);
     }
 
-    /**
-     * allows remote users to receive and de-serialize the AbstractWorld created
-     * by the host.
-     *
-     * this method is currently having problems, as the enemy team might not
-     * serialize, and it takes a couple seconds to load teams into the world
-     *
-     * @param sm
-     */
     private void receiveWorld(ServerMessagePacket sm) {
         var world = World.fromJson(sm.getMessage().getBody());
         var me = room.getContext().getLoggedInUser();
-        var worldSupplier = new RemoteWorldSupplier(world);
+        var worldSupplier = WorldGraphSupplier.fromGraph(world);
         var hud = new HeadsUpDisplay(worldSupplier, me.getId());
-        var p = new WorldPage(room.getContext(), room.getHost(), hud);
+        var newPage = new WorldPage(room.getContext(), room.getHost(), hud);
+        var server = getServer();
         var particles = new Particles();
         var canvas = new WorldCanvas(
             worldSupplier,
             particles,
-            new PlayerControls(me.getId(), new RemoteExecutor(getServer()))
+            new PlayerControls(me.getId(), new RemoteExecutor(server))
         );
-        p.setCanvas(canvas);
-
-        getServer().setChatProtocol(new ClientChatProtocol(me, getServer(), p.getChatBox()));
-
-        room.getHost().switchToPage(p);
-
-        RemoteProxyWorldProtocol protocol = new RemoteProxyWorldProtocol(
+        newPage.setCanvas(canvas);
+        
+        room.getHost().switchToPage(newPage);
+        
+        // configure the backend
+        var protocol = new RemoteProxyWorldProtocol(
             getServer(),
             worldSupplier,
             hud,
             particles
         );
-        getServer().setMessageHandler(Optional.of(protocol));
-
-        canvas.start();
+        server.setMessageHandler(Optional.of(protocol));
+        server.setChatProtocol(new ClientChatProtocol(me, server, newPage.getChatBox()));
     }
 }
