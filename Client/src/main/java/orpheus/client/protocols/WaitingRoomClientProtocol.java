@@ -6,7 +6,6 @@ import javax.json.JsonObject;
 import javax.json.JsonValue;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
-import serialization.JsonUtil;
 import orpheus.client.gui.pages.play.WorldCanvas;
 import orpheus.client.gui.pages.play.WorldGraphSupplier;
 import orpheus.client.gui.pages.play.WorldPage;
@@ -16,10 +15,7 @@ import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
 import orpheus.core.world.graph.World;
 import orpheus.core.world.graph.particles.Particles;
-import java.io.StringReader;
 import java.util.Optional;
-
-import javax.json.Json;
 
 import net.AbstractNetworkClient;
 import net.OrpheusClient;
@@ -27,8 +23,8 @@ import net.protocols.MessageHandler;
 import net.protocols.WaitingRoom;
 
 /**
- *
- * @author Matt
+ * Allows clients to handle messages from the server while in the waiting room.
+ * @author Matt Crow
  */
 public class WaitingRoomClientProtocol extends MessageHandler {
 
@@ -54,8 +50,7 @@ public class WaitingRoomClientProtocol extends MessageHandler {
     }
 
     private void receiveInit(ServerMessagePacket sm) {
-        JsonObject obj = JsonUtil.fromString(sm.getMessage().getBodyText());
-        JsonUtil.verify(obj, "team");
+        var obj = sm.getMessage().getBody();
         obj.getJsonArray("team").stream().forEach((jv) -> {
             if (jv.getValueType().equals(JsonValue.ValueType.OBJECT)) {
                 User u = User.fromJson((JsonObject) jv);
@@ -66,10 +61,7 @@ public class WaitingRoomClientProtocol extends MessageHandler {
     }
 
     private void receiveUpdate(ServerMessagePacket sm) {
-        JsonObject json = Json.createReader(
-            new StringReader(sm.getMessage().getBodyText())
-        ).readObject();
-        waitingRoom.addUser(User.fromJson(json));
+        waitingRoom.addUser(User.fromJson(sm.getMessage().getBody()));
         room.updateTeamDisplays(waitingRoom.getAllUsers());
     }
 
@@ -88,6 +80,7 @@ public class WaitingRoomClientProtocol extends MessageHandler {
     }
 
     private void receiveWorld(ServerMessagePacket sm) {
+        // Kind of a mess, see issue #64
         var world = World.fromJson(sm.getMessage().getBody());
         var me = room.getContext().getLoggedInUser();
         var worldSupplier = WorldGraphSupplier.fromGraph(world);
