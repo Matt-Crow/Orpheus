@@ -92,24 +92,29 @@ public class WaitingRoomClientProtocol extends MessageHandler {
         var me = room.getContext().getLoggedInUser();
         var worldSupplier = WorldGraphSupplier.fromGraph(world);
         var hud = new HeadsUpDisplay(worldSupplier, me.getId());
-        var newPage = new WorldPage(room.getContext(), room.getHost(), hud);
-        var server = getServer();
         var particles = new Particles();
+        var newPage = new WorldPage(
+            room.getContext(), 
+            room.getHost(), 
+            hud, 
+            worldSupplier,
+            particles
+        );
+        var server = getServer();
         var canvas = new WorldCanvas(
             worldSupplier,
             particles,
             new PlayerControls(me.getId(), new RemoteExecutor(server))
         );
         newPage.setCanvas(canvas);
+
         
         room.getHost().switchToPage(newPage);
         
         // configure the backend
         var protocol = new RemoteProxyWorldProtocol(
             getServer(),
-            worldSupplier,
-            hud,
-            particles
+            worldSupplier
         );
         server.setMessageHandler(Optional.of(protocol));
         server.setChatProtocol(new ClientChatProtocol(me, server, newPage.getChatBox()));

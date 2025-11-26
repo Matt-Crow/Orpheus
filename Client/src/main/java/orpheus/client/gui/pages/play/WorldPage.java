@@ -18,6 +18,8 @@ import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.PageController;
 import orpheus.client.gui.pages.PlayerControls;
 import orpheus.client.gui.pages.start.StartPlay;
+import orpheus.core.utils.timer.FrameTimer;
+import orpheus.core.world.graph.particles.Particles;
 
 /**
  * use the PageController to render the WorldPage,
@@ -29,6 +31,7 @@ import orpheus.client.gui.pages.start.StartPlay;
  */
 public class WorldPage extends Page {
     private final JPanel canvasArea;
+    private final FrameTimer updater;
     private WorldCanvas canvas;
 
     /**
@@ -36,8 +39,21 @@ public class WorldPage extends Page {
      */
     private final ChatBox chatBox;
     
-    public WorldPage(ClientAppContext context, PageController host, HeadsUpDisplay hud){
+    public WorldPage(
+        ClientAppContext context, 
+        PageController host, 
+        HeadsUpDisplay hud, 
+        WorldGraphSupplier worldGraphSupplier,
+        Particles particles
+    ){
         super(context, host);
+
+        this.updater = new FrameTimer();
+        updater.addEndOfFrameListener(hud::frameEnded);
+        updater.addEndOfFrameListener(e -> {
+            worldGraphSupplier.get().spawnParticlesInto(particles);
+            particles.update();
+        });
 
         var cf = context.getComponentFactory();
         
@@ -79,6 +95,7 @@ public class WorldPage extends Page {
 
     @Override
     public void enteredPage() {
+        updater.start();
         if (canvas != null) {
             canvas.start();
         }
@@ -86,6 +103,7 @@ public class WorldPage extends Page {
     
     @Override
     public void leavingPage(){
+        updater.stop();
         if(canvas != null){
             canvas.stop();
         }

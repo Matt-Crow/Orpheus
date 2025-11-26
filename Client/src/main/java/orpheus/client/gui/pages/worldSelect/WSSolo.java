@@ -34,12 +34,11 @@ public class WSSolo extends AbstractWSNewWorld{
         
         var graph = WorldGraphSupplier.fromWorld(world);
         var particles = new Particles();
-        var updater = new FrameTimer(e -> {
-            world.update();
-            graph.get().spawnParticlesInto(particles);
-            particles.update();
-        });
-        
+
+        // remember: use different FrameTimers to draw and update the world
+        // WorldPage handles the drawing part
+        // TODO allow this to stop
+        new FrameTimer(e -> world.update()).start();
         
         var selected = getSelectedSpecification().get();
         var assembledBuild = getContext().getSpecificationResolver().resolve(selected);
@@ -55,13 +54,15 @@ public class WSSolo extends AbstractWSNewWorld{
         
         world.init();
 
-        var hud = new HeadsUpDisplay(graph, player.getId());
-        updater.addEndOfFrameListener(hud::frameEnded);
-        
-        WorldPage wp = new WorldPage(getContext(), getHost(), hud);
+        WorldPage wp = new WorldPage(
+            getContext(), 
+            getHost(), 
+            new HeadsUpDisplay(graph, player.getId()), 
+            graph,
+            particles
+        );
         wp.setCanvas(renderer);
         getHost().switchToPage(wp);
         renderer.start();
-        updater.start();
     }
 }
