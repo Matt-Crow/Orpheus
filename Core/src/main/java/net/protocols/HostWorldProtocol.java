@@ -5,6 +5,8 @@ import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import orpheus.core.commands.*;
 import orpheus.core.commands.executor.LocalExecutor;
+import orpheus.core.net.messages.Message;
+import orpheus.core.utils.timer.FrameTimer;
 import world.World;
 
 /**
@@ -12,17 +14,26 @@ import world.World;
  * applying the controls to players in the host's world as though the 
  * client pressed keys on the host's computer.
  * 
- * Updating the world is currently handled by WorldUpdater
- * 
  * @author Matt Crow
  */
 public class HostWorldProtocol extends MessageHandler {
     private final LocalExecutor executor;
+    private final FrameTimer updater;
     
     public HostWorldProtocol(OrpheusServer runningServer, World forWorld){
         super(runningServer);
         executor = new LocalExecutor(forWorld);
         addHandler(ServerMessageType.CONTROL_PRESSED, this::receiveControl);
+
+        updater = new FrameTimer();
+        updater.addEndOfFrameListener(e -> {
+            forWorld.update();
+        
+            runningServer.send(new Message(
+                ServerMessageType.WORLD, 
+                forWorld.toGraph().toJson()
+            ));
+        });
     }
     
     private void receiveControl(ServerMessagePacket sm){
@@ -53,5 +64,13 @@ public class HostWorldProtocol extends MessageHandler {
                 throw new UnsupportedOperationException(String.format("Unrecognized command type: \"%s\"", json.getString("type")));
             }
         }
+    }
+
+    public void handleStart() {
+        updater.start();
+    }
+
+    public void handleStop() {
+        updater.stop();
     }
 }

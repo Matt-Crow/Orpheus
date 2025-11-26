@@ -3,6 +3,7 @@ package orpheus.client.gui.components;
 import java.awt.BorderLayout;
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.Optional;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -113,7 +114,7 @@ public class HubForm extends JComponent {
         var waitingRoomPage = new WaitingRoomPage(context, host);
         var protocol = new WaitingRoomClientProtocol(client, waitingRoomPage);
         waitingRoomPage.setBackEnd(protocol);
-        client.setProtocol(protocol);
+        client.setMessageHandler(Optional.of(protocol));
         client.setChatProtocol(new ClientChatProtocol(
             user,
             client, 

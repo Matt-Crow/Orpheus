@@ -1,6 +1,7 @@
 package orpheus.client.gui.pages.worldselect;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import net.ServerProvider;
 import net.protocols.WaitingRoomHostProtocol;
@@ -27,18 +28,18 @@ public class WSNewMulti extends AbstractWSNewWorld{
 
         try{
             var server = sp.createHost();
-            server.setProtocol(new WaitingRoomHostProtocol(
+            server.setMessageHandler(Optional.of(new WaitingRoomHostProtocol(
                 server,
                 createGame(),
                 context.getSpecificationResolver()
-            ));
+            )));
             
             var user = context.getLoggedInUser();
             var client = sp.createClient(user, server.getSocketAddress());
             var room = new WaitingRoomPage(context, getHost());
             var clientProtocol = new WaitingRoomClientProtocol(client, room);
             room.setBackEnd(clientProtocol);
-            client.setProtocol(clientProtocol);
+            client.setMessageHandler(Optional.of(clientProtocol));
             context.setClient(client);
 
             // set up chat protocol

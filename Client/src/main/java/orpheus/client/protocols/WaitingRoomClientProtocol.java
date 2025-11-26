@@ -18,6 +18,7 @@ import orpheus.core.utils.timer.FrameTimer;
 import orpheus.core.world.graph.World;
 import orpheus.core.world.graph.particles.Particles;
 import java.io.StringReader;
+import java.util.Optional;
 
 import javax.json.Json;
 
@@ -118,7 +119,7 @@ public class WaitingRoomClientProtocol extends MessageHandler {
             getServer(),
             worldSupplier
         );
-        getServer().setProtocol(protocol);
+        getServer().setMessageHandler(Optional.of(protocol));
 
         canvas.start();
         

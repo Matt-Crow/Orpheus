@@ -1,6 +1,7 @@
 package net.protocols;
 
 import java.util.HashSet;
+import java.util.Optional;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -14,7 +15,6 @@ import orpheus.core.champions.SpecificationJsonDeserializer;
 import orpheus.core.champions.SpecificationResolver;
 import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
-import orpheus.core.utils.timer.FrameTimer;
 import orpheus.core.world.occupants.players.Player;
 import serialization.JsonUtil;
 import world.World;
@@ -138,22 +138,11 @@ public class WaitingRoomHostProtocol extends MessageHandler {
         }
 
         var server = getServer();
-        var updater = new FrameTimer();
-        updater.addEndOfFrameListener(e -> {
-            world.update();
-        
-            server.send(new Message(
-                ServerMessageType.WORLD, 
-                world.toGraph().toJson()
-            ));
-        });
         
         world.init();
         
         var protocol = new HostWorldProtocol(server, world);
-        server.setProtocol(protocol);
+        server.setMessageHandler(Optional.of(protocol));
         server.send(new Message(ServerMessageType.WORLD, world.toGraph().toJson()));
-        
-        updater.start();
     }
 }

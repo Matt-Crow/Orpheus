@@ -17,43 +17,58 @@ import orpheus.core.net.messages.Message;
  * @author Matt Crow
  */
 public abstract class AbstractNetworkClient {
-    private volatile boolean isStarted;
-    private volatile MessageHandler protocol;
+    private volatile boolean isStarted = false;
+
+    /**
+     * Formerly known as a "protocol".
+     * Determines how to handle messages based on what "mode" this is in.
+     * For example, it doesn't make sense to handle player control messages when not playing a game.
+     */
+    private volatile Optional<MessageHandler> messageHandler = Optional.empty();
 
     /**
      * handles chat messages received
      */
-    private Optional<ChatProtocol> chatProtocol;
+    private Optional<ChatProtocol> chatProtocol = Optional.empty();
     
     /**
      * messages are cached if this does not yet have a way of handling them
      */
-    private LinkedList<ServerMessagePacket> cachedMessages;
-    
-    public AbstractNetworkClient(){
-        isStarted = false;
-        protocol = null;
-        chatProtocol = Optional.empty();
-        cachedMessages = new LinkedList<>();
-    }
+    private LinkedList<ServerMessagePacket> cachedMessages = new LinkedList<>();
     
     
     public final boolean isStarted(){
         return isStarted;
     }
     
-    public final void setProtocol(MessageHandler protocol){
-        this.protocol = protocol;
-        LinkedList<ServerMessagePacket> smps = new LinkedList<>();
-        boolean wasHandled;
-        for (ServerMessagePacket smp : cachedMessages) {
-            wasHandled = protocol.handleMessage(smp);
-            if (!wasHandled) {
-                // add back to queue if not received
-                smps.add(smp);
+    /**
+     * Sets the new strategy for handling non-chat messages.
+     * @param messageHandler the new strategy for handling messages
+     */
+    public final void setMessageHandler(Optional<MessageHandler> messageHandler) {
+        this.messageHandler.ifPresent(MessageHandler::handleStop);
+
+        this.messageHandler = messageHandler;
+
+        if (messageHandler.isEmpty()) {
+            return;
+        }
+
+        var unwrapped = messageHandler.get();
+        unwrapped.handleStart();
+
+        /**
+         * We may have received some messages before we could set the protocol to handle them.
+         * Look through our cached messages to see if this new strategy could have handled them.
+         */
+        var messagesWeStillCannotHandle = new LinkedList<ServerMessagePacket>();
+        for (var message : cachedMessages) {
+            var handled = unwrapped.handleMessage(message);
+            if (!handled) {
+                messagesWeStillCannotHandle.add(message);
             }
         }
-        cachedMessages = smps;
+        cachedMessages = messagesWeStillCannotHandle;
     }
     
     /**
@@ -79,15 +94,6 @@ public abstract class AbstractNetworkClient {
         cachedMessages.addAll(newCachedMessages);
     }
     
-    /*
-    Don't call this in start, in case the protocol is set before starting the
-    server
-    */
-    public final void clearProtocols(){
-        protocol = null;
-        //chatProtocol = null; don't do this!
-    }
-    
     public final void start() throws IOException {
         if(!isStarted){
             doStart();
@@ -105,10 +111,10 @@ public abstract class AbstractNetworkClient {
     public final void receiveMessage(ServerMessagePacket sm){
         doReceiveMessage(sm);
         
-        boolean handled = false;
-        if(protocol != null){
-            handled = protocol.handleMessage(sm);
-        }
+        boolean handled = messageHandler
+            .map(mh -> mh.handleMessage(sm))
+            .orElse(false);
+        
         if (chatProtocol.isPresent() && sm.getMessage().getType() == ServerMessageType.CHAT){
             handled = true;
             chatProtocol.get().receiveChatMessage(ChatMessage.fromJson(sm.getMessage().getBody()));

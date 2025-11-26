@@ -58,4 +58,18 @@ public class MessageHandler {
         }
         return false;
     }
+
+    /**
+     * Invoked by AbstractNetworkClient when it starts using this
+     */
+    public void handleStart() {
+
+    }
+
+    /**
+     * Invoked by AbstractNetworkClient when it stops using this
+     */
+    public void handleStop() {
+
+    }
 }

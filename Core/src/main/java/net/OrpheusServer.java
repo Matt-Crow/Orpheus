@@ -3,6 +3,8 @@ package net;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Optional;
+
 import net.connections.Connection;
 import net.connections.ConnectionListener;
 import net.connections.Connections;
@@ -72,8 +74,7 @@ public class OrpheusServer extends AbstractNetworkClient {
     protected final void doStart() throws IOException{
         log(String.format("Server initialized on %s", getSocketAddress()));
         clients.closeAll();
-        clearProtocols();
-        
+        setMessageHandler(Optional.empty());
         connectionHandler.startOrContinue();
     }
     
