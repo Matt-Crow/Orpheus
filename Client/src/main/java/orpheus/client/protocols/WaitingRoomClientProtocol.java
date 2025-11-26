@@ -14,7 +14,6 @@ import orpheus.client.gui.pages.worldselect.WaitingRoomPage;
 import orpheus.core.commands.executor.RemoteExecutor;
 import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
-import orpheus.core.utils.timer.FrameTimer;
 import orpheus.core.world.graph.World;
 import orpheus.core.world.graph.particles.Particles;
 import java.io.StringReader;
@@ -117,27 +116,12 @@ public class WaitingRoomClientProtocol extends MessageHandler {
 
         RemoteProxyWorldProtocol protocol = new RemoteProxyWorldProtocol(
             getServer(),
-            worldSupplier
+            worldSupplier,
+            hud,
+            particles
         );
         getServer().setMessageHandler(Optional.of(protocol));
 
         canvas.start();
-        
-
-        /**
-         * We now have the world,
-         * but the server does not update particles,
-         * so we have to update those ourself
-         */
-
-        // todo also allow this to stop
-        // probably make protocols disposable, call that method when switching off of them
-        var updater = new FrameTimer();
-        updater.addEndOfFrameListener(hud::frameEnded);
-        updater.addEndOfFrameListener(e -> {
-            worldSupplier.get().spawnParticlesInto(particles);
-            particles.update();
-        });
-        updater.start();
     }
 }

@@ -66,10 +66,12 @@ public class HostWorldProtocol extends MessageHandler {
         }
     }
 
+    @Override
     public void handleStart() {
         updater.start();
     }
 
+    @Override
     public void handleStop() {
         updater.stop();
     }
