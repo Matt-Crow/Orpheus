@@ -12,7 +12,7 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 /**
- *
+ * Represents a connection to either a client or a server running Orpheus
  * @author Matt Crow
  */
 public class Connection {

@@ -54,18 +54,12 @@ public class Connections {
         }
     }
     
-    public final void disconnectFrom(User client){
-        if(userToSocket.containsKey(client)){
-            disconnectFrom(userToSocket.get(client));
-            userToSocket.remove(client);
-        }
-    }
-    
     public final void closeAll(){
         // avoid concurrent modification exception
         User[] all = userToSocket.keySet().toArray(new User[connections.size()]);
         for(User s : all){
-            disconnectFrom(s);
+            disconnectFrom(userToSocket.get(s));
+            userToSocket.remove(s);
         }
     }
     
