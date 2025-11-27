@@ -1,6 +1,7 @@
 package orpheus.core.net.protocols;
 
 import java.io.IOException;
+import java.net.Socket;
 import java.util.function.Consumer;
 
 import org.junit.jupiter.api.Assertions;
@@ -17,7 +18,7 @@ public class MessageHandlerTester {
     @Test
     public void receive_givenNoConfiguration_returnsFalse() {
         var sut = new MessageHandler(new NetworkClientMock());
-        var actual = sut.handleMessage(new ServerMessagePacket(null, new Message(ServerMessageType.CHAT)));
+        var actual = sut.handleMessage(new ServerMessagePacket(new Message(ServerMessageType.CHAT)));
         Assertions.assertFalse(actual);
     }
 
@@ -27,7 +28,7 @@ public class MessageHandlerTester {
         var callChecker = new CallChecker();
         sut.addHandler(ServerMessageType.CHAT, callChecker);
 
-        var actual = sut.handleMessage(new ServerMessagePacket(null, new Message(ServerMessageType.CHAT)));
+        var actual = sut.handleMessage(new ServerMessagePacket(new Message(ServerMessageType.CHAT)));
     
         Assertions.assertTrue(actual);
         Assertions.assertTrue(callChecker.wasCalled());
@@ -39,7 +40,7 @@ public class MessageHandlerTester {
         var callChecker = new CallChecker();
         sut.addHandler(ServerMessageType.PLAYER_JOINED, callChecker);
 
-        var actual = sut.handleMessage(new ServerMessagePacket(null, new Message(ServerMessageType.CHAT)));
+        var actual = sut.handleMessage(new ServerMessagePacket(new Message(ServerMessageType.CHAT)));
     
         Assertions.assertFalse(actual);
         Assertions.assertFalse(callChecker.wasCalled());
@@ -59,7 +60,7 @@ class NetworkClientMock extends AbstractNetworkClient {
     }
 
     @Override
-    protected void doReceiveMessage(ServerMessagePacket sm) {
+    protected void doReceiveMessage(Socket ip, ServerMessagePacket sm) {
     
     }
 

@@ -44,7 +44,7 @@ public class Connection {
         // This works, so I guess toJsonString excapes newlines or something?
         Message deser = Message.deserializeJson(fromClient.readLine());
         
-        return new ServerMessagePacket(clientSocket, deser);
+        return new ServerMessagePacket(deser);
     }
     
     public void close(){

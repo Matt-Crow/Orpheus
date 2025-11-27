@@ -175,23 +175,22 @@ public class OrpheusServer extends AbstractNetworkClient {
     }
 
     @Override
-    protected final void doReceiveMessage(ServerMessagePacket sm) {
-        if (clients.isConnectedTo(sm.getSendingSocket())) {
-            sm.setSender(clients.getConnectionTo(sm.getSendingSocket()).getRemoteUser());
+    protected final void doReceiveMessage(Socket ip, ServerMessagePacket sm) {
+        if (clients.isConnectedTo(ip)) {
+            sm.setSender(clients.getConnectionTo(ip).getRemoteUser());
         } else {
-            log("I don't recognize " + sm.getSendingSocket());
+            log("I don't recognize " + ip);
         }
 
         // handle joining / leaving
         if (sm.getMessage().getType() == ServerMessageType.PLAYER_JOINED) {
-            receiveJoin(sm);
+            receiveJoin(ip, sm);
         } else if (sm.getMessage().getType() == ServerMessageType.PLAYER_LEFT) {
-            clients.disconnectFrom(sm.getSendingSocket());
+            clients.disconnectFrom(ip);
         }
     }
 
-    private void receiveJoin(ServerMessagePacket sm) {
-        Socket ip = sm.getSendingSocket(); // needs this, as the remote user is not yet set
+    private void receiveJoin(Socket ip, ServerMessagePacket sm) {
         boolean isConnected = clients.isConnectedTo(ip);
         if (isConnected && clients.getConnectionTo(ip).getRemoteUser() != null) {
             log("already connected");
@@ -199,11 +198,11 @@ public class OrpheusServer extends AbstractNetworkClient {
             // connected to IP, but no user data set yet
             User sender = User.fromJson(JsonUtil.fromString(sm.getMessage().getBodyText()));
             sm.setSender(sender);
-            clients.setUser(sender, sm.getSendingSocket());
+            clients.setUser(sender, ip);
         } else {
             // not connected, no user data
             try {
-                connect(sm.getSendingSocket());
+                connect(ip);
                 User sender = User.fromJson(JsonUtil.fromString(sm.getMessage().getBodyText()));
                 sm.setSender(sender);
                 clients.getConnectionTo(ip).setRemoteUser(sender);

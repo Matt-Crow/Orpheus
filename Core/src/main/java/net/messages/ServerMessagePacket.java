@@ -1,7 +1,5 @@
 package net.messages;
 
-import java.net.Socket;
-
 import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
 
@@ -15,7 +13,6 @@ import orpheus.core.users.User;
  * @author Matt Crow
  */
 public class ServerMessagePacket {
-    private final Socket sendingSocket;
     private User fromUser;
     private final Message containedMessage;
     /**
@@ -24,17 +21,12 @@ public class ServerMessagePacket {
      * @param sendingSocket the Socket this message was received from
      * @param packetContents the message contained herein
      */
-    public ServerMessagePacket(Socket sendingSocket, Message packetContents){
-        this.sendingSocket = sendingSocket;
+    public ServerMessagePacket(Message packetContents){
         containedMessage = packetContents;
     }
     
     public final Message getMessage(){
         return containedMessage;
-    }
-    
-    public final Socket getSendingSocket(){
-        return sendingSocket;
     }
     
     /**
@@ -51,9 +43,7 @@ public class ServerMessagePacket {
     @Override
     public String toString(){
         return String.format(
-            "ServerMessagePacket from %s:%d (%s):\n%s\nEND OF MESSAGE", 
-            sendingSocket.getInetAddress().toString(), 
-            sendingSocket.getPort(), 
+            "ServerMessagePacket from %s:\n%s\nEND OF MESSAGE", 
             (fromUser == null) ? "Unknown LocalUser" : fromUser.getName(), 
             containedMessage.toString()
         );

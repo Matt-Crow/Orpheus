@@ -2,8 +2,9 @@ package net.messages;
 
 import java.io.EOFException;
 import java.io.IOException;
+import java.net.Socket;
 import java.net.SocketException;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 import net.connections.Connection;
 
 /**
@@ -14,10 +15,10 @@ import net.connections.Connection;
  */
 public class MessageListener {
     private final Connection listeningTo;
-    private final Consumer<ServerMessagePacket> messageConsumer;
+    private final BiConsumer<Socket, ServerMessagePacket> messageConsumer;
     private volatile boolean isListening;
     
-    public MessageListener(Connection listeningTo, Consumer<ServerMessagePacket> messageConsumer){
+    public MessageListener(Connection listeningTo, BiConsumer<Socket, ServerMessagePacket> messageConsumer){
         this.listeningTo = listeningTo;
         this.messageConsumer = messageConsumer;
         isListening = false;
@@ -60,7 +61,7 @@ public class MessageListener {
         if(type == ServerMessageType.SERVER_SHUTDOWN || type == ServerMessageType.PLAYER_LEFT){
             isListening = false;
         } else {
-            messageConsumer.accept(fromClient);
+            messageConsumer.accept(listeningTo.getClientSocket(), fromClient);
         }
     }
 }

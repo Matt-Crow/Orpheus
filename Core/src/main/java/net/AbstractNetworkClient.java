@@ -1,6 +1,7 @@
 package net;
 
 import java.io.IOException;
+import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -96,8 +97,8 @@ public abstract class AbstractNetworkClient {
         }
     }
     
-    public final void receiveMessage(ServerMessagePacket sm){
-        doReceiveMessage(sm);
+    public final void receiveMessage(Socket ip, ServerMessagePacket sm){
+        doReceiveMessage(ip, sm);
         
         boolean handled = messageHandler
             .map(mh -> mh.handleMessage(sm))
@@ -117,6 +118,6 @@ public abstract class AbstractNetworkClient {
     
     protected abstract void doStart() throws IOException;
     protected abstract void doStop() throws IOException;
-    protected abstract void doReceiveMessage(ServerMessagePacket sm);
+    protected abstract void doReceiveMessage(Socket ip, ServerMessagePacket sm);
     public abstract void send(Message sm);
 }
