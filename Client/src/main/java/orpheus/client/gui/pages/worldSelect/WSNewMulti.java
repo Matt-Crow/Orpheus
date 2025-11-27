@@ -3,7 +3,8 @@ package orpheus.client.gui.pages.worldselect;
 import java.io.IOException;
 import java.util.Optional;
 
-import net.ServerProvider;
+import net.OrpheusClient;
+import net.OrpheusServer;
 import net.protocols.WaitingRoomHostProtocol;
 import orpheus.client.ClientAppContext;
 import orpheus.client.gui.pages.PageController;
@@ -24,10 +25,9 @@ public class WSNewMulti extends AbstractWSNewWorld{
         var context = getContext();
         context.showLoginWindow(); // ask annonymous users to log in
 
-        var sp = new ServerProvider();
-
         try{
-            var server = sp.createHost();
+            var server = new OrpheusServer();
+            server.start();
             server.setMessageHandler(Optional.of(new WaitingRoomHostProtocol(
                 server,
                 createGame(),
@@ -35,7 +35,8 @@ public class WSNewMulti extends AbstractWSNewWorld{
             )));
             
             var user = context.getLoggedInUser();
-            var client = sp.createClient(user, server.getSocketAddress());
+            var client = new OrpheusClient(user, server.getSocketAddress());
+            client.start();
             var room = new WaitingRoomPage(context, getHost());
             var clientProtocol = new WaitingRoomClientProtocol(client, room);
             room.setBackEnd(clientProtocol);
