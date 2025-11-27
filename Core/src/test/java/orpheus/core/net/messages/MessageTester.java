@@ -13,7 +13,7 @@ public class MessageTester {
     @Test
     public void givenAMessage_afterSerializingWithSender_canDeserialize() {
         var aUser = new User("Foo");
-        var aType = ServerMessageType.NEW_WAITING_ROOM;
+        var aType = ServerMessageType.CHAT;
         var aBody = Json.createObjectBuilder().build();
         var aMessage = new Message(aType, aBody, aUser);
 
@@ -27,7 +27,7 @@ public class MessageTester {
 
     @Test
     public void givenAMessage_afterSerializingWithoutSender_canDeserialize() {
-        var aType = ServerMessageType.NEW_WAITING_ROOM;
+        var aType = ServerMessageType.CHAT;
         var aBody = Json.createObjectBuilder().build();
         var aMessage = new Message(aType, aBody);
 

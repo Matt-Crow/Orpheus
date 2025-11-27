@@ -1,24 +1,12 @@
 package orpheus.server;
 
-import java.io.IOException;
-
-import net.messages.ServerMessageType;
-import orpheus.core.net.OrpheusClient;
-import orpheus.core.net.SocketAddress;
-import orpheus.core.net.messages.Message;
-import orpheus.server.protocols.HubProtocol;
-
 public class Main {
-    
-    public static void main(String[] args) throws IOException {
-        var server = OrpheusServer.create();
-        System.out.printf("Started server on %s...\n", server.getConnectionString());
-        server.setProtocol(new HubProtocol());
-
-        var client = OrpheusClient.create(new SocketAddress(server.getIpAddress(), server.getPort()));
-        client.send(new Message(ServerMessageType.LIST_WAITING_ROOMS));
-        client.send(new Message(ServerMessageType.NEW_WAITING_ROOM));
+    /**
+     * Eventually, I may implement an orpheus server which hosts games like a traditional server,
+     * instead of my current method where players host their own server from their client.
+     * @param args command line arguments
+     */
+    public static void main(String[] args) {
         
-        //server.shutDown();
     }
 }

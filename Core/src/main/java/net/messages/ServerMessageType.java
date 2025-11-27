@@ -28,20 +28,6 @@ public enum ServerMessageType {
      * world graph. The server should not respond to this message.
      */
     WORLD("world"),
-    
-    /**
-     * When received by the server, it will respond with a list of available 
-     * waiting rooms. When received by a client, they should decode the waiting
-     * rooms listed within.
-     */
-    LIST_WAITING_ROOMS("list waiting rooms"),
-
-    /**
-     * When received by the server, it will respond with the port of a new 
-     * waiting room. When received by a client, they should connect to the port
-     * contained in the message.
-     */
-    NEW_WAITING_ROOM("new waiting room"),
 
     /**
      * Indicates the socket this was received from is about to close, and 
