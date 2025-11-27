@@ -57,6 +57,12 @@ public class WorldCanvas extends Canvas {
         registerKey(KeyEvent.VK_X, true, () -> zoomOut());
         registerKey(KeyEvent.VK_P, true, () -> togglePause());
         setZoom(0.5);
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                requestFocusInWindow();
+            }
+        });
 
         pc.registerControlsTo(this);
 

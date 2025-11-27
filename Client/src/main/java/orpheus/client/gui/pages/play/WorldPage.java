@@ -3,8 +3,7 @@ package orpheus.client.gui.pages.play;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.util.UUID;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -18,6 +17,7 @@ import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.PageController;
 import orpheus.client.gui.pages.PlayerControls;
 import orpheus.client.gui.pages.start.StartPlay;
+import orpheus.core.commands.executor.Executor;
 import orpheus.core.utils.timer.FrameTimer;
 import orpheus.core.world.graph.particles.Particles;
 
@@ -42,13 +42,16 @@ public class WorldPage extends Page {
     public WorldPage(
         ClientAppContext context, 
         PageController host, 
-        HeadsUpDisplay hud, 
         WorldGraphSupplier worldGraphSupplier,
-        Particles particles
+        UUID playerId,
+        Executor commandExecutor
     ){
         super(context, host);
 
-        this.updater = new FrameTimer();
+        var hud = new HeadsUpDisplay(worldGraphSupplier, playerId);
+        var particles = new Particles();
+
+        updater = new FrameTimer();
         updater.addEndOfFrameListener(hud::frameEnded);
         updater.addEndOfFrameListener(e -> {
             worldGraphSupplier.get().spawnParticlesInto(particles);
@@ -60,12 +63,16 @@ public class WorldPage extends Page {
         addBackButton(()-> new StartPlay(context, host));        
         setLayout(new BorderLayout());
         
+        // set up the canvas area at the center of the page
         canvasArea = new JPanel();
         canvasArea.setLayout(new BorderLayout());
         canvasArea.setFocusable(false);
         add(canvasArea, BorderLayout.CENTER);
 
+        canvas = new WorldCanvas(worldGraphSupplier, particles, new PlayerControls(playerId, commandExecutor));
+        canvasArea.add(canvas, BorderLayout.CENTER);
         canvasArea.add(hud, BorderLayout.PAGE_END);
+        SwingUtilities.invokeLater(canvas::requestFocusInWindow);
         
         //other area
         JPanel otherArea = new JPanel();
@@ -96,17 +103,13 @@ public class WorldPage extends Page {
     @Override
     public void enteredPage() {
         updater.start();
-        if (canvas != null) {
-            canvas.start();
-        }
+        canvas.start();
     }
     
     @Override
     public void leavingPage(){
         updater.stop();
-        if(canvas != null){
-            canvas.stop();
-        }
+        canvas.stop();
     }
 
     /**
@@ -115,21 +118,5 @@ public class WorldPage extends Page {
      */
     public ChatBox getChatBox() {
         return chatBox;
-    }
-    
-    public WorldPage setCanvas(WorldCanvas w){
-        canvas = w;
-        canvasArea.add(w, BorderLayout.CENTER);
-        w.addMouseListener(new MouseAdapter(){
-            @Override
-            public void mouseClicked(MouseEvent e){
-                w.requestFocusInWindow();
-            }
-        });
-        
-        SwingUtilities.invokeLater(()->w.requestFocusInWindow());
-        revalidate();
-        repaint();
-        return this;
     }
 }

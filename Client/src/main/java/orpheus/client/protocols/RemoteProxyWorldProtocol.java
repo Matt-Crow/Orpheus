@@ -5,6 +5,9 @@ import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import net.protocols.MessageHandler;
 import orpheus.client.gui.pages.play.WorldGraphSupplier;
+import orpheus.core.commands.Command;
+import orpheus.core.commands.executor.Executor;
+import orpheus.core.net.messages.Message;
 
 /**
  * The RemoteProxyProtocol is used by clients to receive serialized 
@@ -12,7 +15,7 @@ import orpheus.client.gui.pages.play.WorldGraphSupplier;
  * 
  * @author Matt Crow
  */
-public class RemoteProxyWorldProtocol extends MessageHandler {
+public class RemoteProxyWorldProtocol extends MessageHandler implements Executor {
     private final WorldGraphSupplier worldSupplier;
 
     public RemoteProxyWorldProtocol(
@@ -28,5 +31,10 @@ public class RemoteProxyWorldProtocol extends MessageHandler {
         var json = sm.getMessage().getBody();
         var world = orpheus.core.world.graph.World.fromJson(json);
         worldSupplier.setWorld(world);
+    }
+
+    @Override
+    public void execute(Command command) {
+        getServer().send(new Message(ServerMessageType.CONTROL_PRESSED, command.toJson()));
     }
 }

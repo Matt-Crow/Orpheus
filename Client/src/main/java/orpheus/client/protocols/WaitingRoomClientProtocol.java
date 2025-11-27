@@ -1,21 +1,16 @@
 package orpheus.client.protocols;
 
-import orpheus.client.gui.pages.PlayerControls;
-import orpheus.client.gui.pages.play.HeadsUpDisplay;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import serialization.JsonUtil;
-import orpheus.client.gui.pages.play.WorldCanvas;
 import orpheus.client.gui.pages.play.WorldGraphSupplier;
 import orpheus.client.gui.pages.play.WorldPage;
 import orpheus.client.gui.pages.worldselect.WaitingRoomPage;
-import orpheus.core.commands.executor.RemoteExecutor;
 import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
 import orpheus.core.world.graph.World;
-import orpheus.core.world.graph.particles.Particles;
 import java.io.StringReader;
 import java.util.Optional;
 
@@ -32,12 +27,12 @@ import net.protocols.WaitingRoom;
  */
 public class WaitingRoomClientProtocol extends MessageHandler {
 
-    private final WaitingRoomPage room;
+    private final WaitingRoomPage frontEnd;
     private final WaitingRoom waitingRoom = new WaitingRoom();
 
-    public WaitingRoomClientProtocol(OrpheusClient runningServer, WaitingRoomPage linkedRoom) {
+    public WaitingRoomClientProtocol(OrpheusClient runningServer, WaitingRoomPage frontEnd) {
         super(runningServer);
-        this.room = linkedRoom;
+        this.frontEnd = frontEnd;
         addHandler(ServerMessageType.WAITING_ROOM_INIT, this::receiveInit);
         addHandler(ServerMessageType.WAITING_ROOM_UPDATE, this::receiveUpdate);
         addHandler(ServerMessageType.REQUEST_PLAYER_DATA, this::receiveBuildRequest);
@@ -62,7 +57,7 @@ public class WaitingRoomClientProtocol extends MessageHandler {
                 waitingRoom.addUser(u);
             }
         });
-        room.updateTeamDisplays(waitingRoom.getAllUsers());
+        frontEnd.updateTeamDisplays(waitingRoom.getAllUsers());
     }
 
     private void receiveUpdate(ServerMessagePacket sm) {
@@ -70,7 +65,7 @@ public class WaitingRoomClientProtocol extends MessageHandler {
             new StringReader(sm.getMessage().getBodyText())
         ).readObject();
         waitingRoom.addUser(User.fromJson(json));
-        room.updateTeamDisplays(waitingRoom.getAllUsers());
+        frontEnd.updateTeamDisplays(waitingRoom.getAllUsers());
     }
 
     public final void requestStart() {
@@ -78,45 +73,37 @@ public class WaitingRoomClientProtocol extends MessageHandler {
     }
 
     private synchronized void receiveBuildRequest(ServerMessagePacket sm) {
-        var selectedBuild = room.getSelectedSpecification();
+        var selectedBuild = frontEnd.getSelectedSpecification();
         var json = selectedBuild.get().toJson();
         getServer().send(new Message(
                 json.toString(),
                 ServerMessageType.PLAYER_DATA
         ));
-        room.setInputEnabled(false);
+        frontEnd.setInputEnabled(false);
     }
 
     private void receiveWorld(ServerMessagePacket sm) {
-        var world = World.fromJson(sm.getMessage().getBody());
-        var me = room.getContext().getLoggedInUser();
-        var worldSupplier = WorldGraphSupplier.fromGraph(world);
-        var hud = new HeadsUpDisplay(worldSupplier, me.getId());
-        var particles = new Particles();
-        var newPage = new WorldPage(
-            room.getContext(), 
-            room.getHost(), 
-            hud, 
-            worldSupplier,
-            particles
-        );
         var client = getServer();
-        var canvas = new WorldCanvas(
-            worldSupplier,
-            particles,
-            new PlayerControls(me.getId(), new RemoteExecutor(client))
-        );
-        newPage.setCanvas(canvas);
 
-        
-        room.getHost().switchToPage(newPage);
-        
+        // set up the model
+        var world = World.fromJson(sm.getMessage().getBody());
+        var worldSupplier = WorldGraphSupplier.fromGraph(world);
+        var me = frontEnd.getContext().getLoggedInUser();
+
         // configure the backend
-        var protocol = new RemoteProxyWorldProtocol(
-            getServer(),
-            worldSupplier
-        );
+        var protocol = new RemoteProxyWorldProtocol(client, worldSupplier);
         client.setMessageHandler(Optional.of(protocol));
+
+        // set up the new page
+        var newPage = new WorldPage(
+            frontEnd.getContext(), 
+            frontEnd.getHost(), 
+            worldSupplier,
+            me.getId(),
+            protocol
+        );
         newPage.getChatBox().handleChatMessagesFor(client);
+
+        frontEnd.getHost().switchToPage(newPage);
     }
 }
