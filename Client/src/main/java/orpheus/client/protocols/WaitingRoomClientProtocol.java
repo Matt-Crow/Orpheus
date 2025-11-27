@@ -100,11 +100,11 @@ public class WaitingRoomClientProtocol extends MessageHandler {
             worldSupplier,
             particles
         );
-        var server = getServer();
+        var client = getServer();
         var canvas = new WorldCanvas(
             worldSupplier,
             particles,
-            new PlayerControls(me.getId(), new RemoteExecutor(server))
+            new PlayerControls(me.getId(), new RemoteExecutor(client))
         );
         newPage.setCanvas(canvas);
 
@@ -116,7 +116,7 @@ public class WaitingRoomClientProtocol extends MessageHandler {
             getServer(),
             worldSupplier
         );
-        server.setMessageHandler(Optional.of(protocol));
-        server.setChatProtocol(new ClientChatProtocol(me, server, newPage.getChatBox()));
+        client.setMessageHandler(Optional.of(protocol));
+        newPage.getChatBox().handleChatMessagesFor(client);
     }
 }

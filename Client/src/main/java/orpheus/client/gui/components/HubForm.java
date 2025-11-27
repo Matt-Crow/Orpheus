@@ -14,7 +14,6 @@ import javax.swing.JTextField;
 import orpheus.client.ClientAppContext;
 import orpheus.client.gui.pages.PageController;
 import orpheus.client.gui.pages.worldselect.WaitingRoomPage;
-import orpheus.client.protocols.ClientChatProtocol;
 import orpheus.client.protocols.WaitingRoomClientProtocol;
 import orpheus.core.net.SocketAddress;
 
@@ -115,11 +114,8 @@ public class HubForm extends JComponent {
         var protocol = new WaitingRoomClientProtocol(client, waitingRoomPage);
         waitingRoomPage.setBackEnd(protocol);
         client.setMessageHandler(Optional.of(protocol));
-        client.setChatProtocol(new ClientChatProtocol(
-            user,
-            client, 
-            waitingRoomPage.getChat()
-        ));
+        waitingRoomPage.getChat().handleChatMessagesFor(client);
+        
         client.start();
         host.switchToPage(waitingRoomPage);
     }

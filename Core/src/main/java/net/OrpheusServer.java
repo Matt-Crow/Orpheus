@@ -11,8 +11,8 @@ import net.connections.Connections;
 import net.messages.MessageListener;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
-import net.protocols.ServerChatProtocol;
 import orpheus.core.net.SocketAddress;
+import orpheus.core.net.chat.ChatMessage;
 import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
 import serialization.JsonUtil;
@@ -61,7 +61,12 @@ public class OrpheusServer extends AbstractNetworkClient {
         clients = new Connections();
         connectionHandler = new ConnectionListener(server, clients, this::setUpMessageListener);
 
-        this.setChatProtocol(new ServerChatProtocol(this));
+        setChatMessageHandler(this::broadcastChatMessage);
+    }
+
+    private final void broadcastChatMessage(ChatMessage chatMessage) {
+        var sendMe = new Message(ServerMessageType.CHAT, chatMessage.toJson());
+        sendToAllExcept(sendMe, chatMessage.getSender());
     }
         
     /**

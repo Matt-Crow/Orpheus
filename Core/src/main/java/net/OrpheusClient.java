@@ -7,6 +7,7 @@ import net.messages.MessageListener;
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import orpheus.core.net.SocketAddress;
+import orpheus.core.net.chat.ChatMessage;
 import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
 
@@ -63,5 +64,16 @@ public class OrpheusClient extends AbstractNetworkClient {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    /**
+     * Sends a chat message to the server so it can broadcast it to other players.
+     * @param message the message to send
+     */
+    public void sendChatMessage(String message) {
+        send(new Message(
+            ServerMessageType.CHAT, 
+            new ChatMessage(user, message).toJson())
+        );
     }
 }

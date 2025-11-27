@@ -8,7 +8,6 @@ import net.OrpheusServer;
 import net.protocols.WaitingRoomHostProtocol;
 import orpheus.client.ClientAppContext;
 import orpheus.client.gui.pages.PageController;
-import orpheus.client.protocols.ClientChatProtocol;
 import orpheus.client.protocols.WaitingRoomClientProtocol;
 
 /**
@@ -42,12 +41,8 @@ public class WSNewMulti extends AbstractWSNewWorld{
             room.setBackEnd(clientProtocol);
             client.setMessageHandler(Optional.of(clientProtocol));
             context.setClient(client);
-
-            // set up chat protocol
-            var chat = room.getChat();
-            client.setChatProtocol(new ClientChatProtocol(user, client, chat));
-
-            chat.output(String.format(
+            room.getChat().handleChatMessagesFor(client);
+            room.getChat().output(String.format(
                 "Server started on %s", 
                 server.getSocketAddress().toString()
             ));

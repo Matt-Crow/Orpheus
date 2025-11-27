@@ -3,12 +3,12 @@ package net;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import net.protocols.MessageHandler;
 import orpheus.core.net.chat.ChatMessage;
-import orpheus.core.net.chat.ChatProtocol;
 import orpheus.core.net.messages.Message;
 
 /**
@@ -26,10 +26,7 @@ public abstract class AbstractNetworkClient {
      */
     private volatile Optional<MessageHandler> messageHandler = Optional.empty();
 
-    /**
-     * handles chat messages received
-     */
-    private Optional<ChatProtocol> chatProtocol = Optional.empty();
+    private Optional<Consumer<ChatMessage>> chatMessageHandler = Optional.empty();
     
     /**
      * messages are cached if this does not yet have a way of handling them
@@ -71,21 +68,12 @@ public abstract class AbstractNetworkClient {
         cachedMessages = messagesWeStillCannotHandle;
     }
     
-    /**
-     * Sets the separate protocol to receive chat 
-     * messages. This way, I can't have multiple
-     * regular protocols, but chat also can't interfere
-     * with the other protocol!
-     * 
-     * @param chatProtocol the ChatProtocol to handle chat messages
-     * received by this server.
-     */
-    public void setChatProtocol(ChatProtocol chatProtocol){
-        this.chatProtocol = Optional.of(chatProtocol);
+    public void setChatMessageHandler(Consumer<ChatMessage> chatMessageHandler){
+        this.chatMessageHandler = Optional.of(chatMessageHandler);
         var newCachedMessages = new LinkedList<ServerMessagePacket>();
         cachedMessages.forEach((ServerMessagePacket sm)->{
             if (sm.getMessage().getType() == ServerMessageType.CHAT) {
-                chatProtocol.receiveChatMessage(ChatMessage.fromJson(sm.getMessage().getBody()));
+                chatMessageHandler.accept(ChatMessage.fromJson(sm.getMessage().getBody()));
             } else {
                 newCachedMessages.add(sm);
             }
@@ -115,9 +103,9 @@ public abstract class AbstractNetworkClient {
             .map(mh -> mh.handleMessage(sm))
             .orElse(false);
         
-        if (chatProtocol.isPresent() && sm.getMessage().getType() == ServerMessageType.CHAT){
+        if (sm.getMessage().getType() == ServerMessageType.CHAT && chatMessageHandler.isPresent()){
             handled = true;
-            chatProtocol.get().receiveChatMessage(ChatMessage.fromJson(sm.getMessage().getBody()));
+            chatMessageHandler.get().accept(ChatMessage.fromJson(sm.getMessage().getBody()));
         }
         
         if(!handled){
