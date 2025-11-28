@@ -7,9 +7,9 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import net.messages.ServerMessageType;
-import net.protocols.MessageHandler;
 import orpheus.core.net.chat.ChatMessage;
 import orpheus.core.net.messages.Message;
+import orpheus.core.net.protocols.MessageHandler;
 
 /**
  * This class represents either a client or server in a multiplayer Orpheus game.

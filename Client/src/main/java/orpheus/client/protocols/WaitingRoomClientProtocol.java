@@ -9,15 +9,13 @@ import orpheus.client.gui.pages.play.WorldPage;
 import orpheus.client.gui.pages.worldselect.WaitingRoomPage;
 import orpheus.core.net.OrpheusClient;
 import orpheus.core.net.messages.Message;
+import orpheus.core.net.protocols.*;
 import orpheus.core.users.User;
 import orpheus.core.world.graph.World;
 import java.io.StringReader;
 import java.util.Optional;
 
 import javax.json.Json;
-
-import net.protocols.MessageHandler;
-import net.protocols.WaitingRoom;
 
 /**
  *

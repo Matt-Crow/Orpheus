@@ -1,12 +1,12 @@
 package orpheus.client.protocols;
 
 import net.messages.ServerMessageType;
-import net.protocols.MessageHandler;
 import orpheus.client.gui.pages.play.WorldGraphSupplier;
 import orpheus.core.commands.Command;
 import orpheus.core.commands.executor.Executor;
 import orpheus.core.net.OrpheusClient;
 import orpheus.core.net.messages.Message;
+import orpheus.core.net.protocols.MessageHandler;
 
 /**
  * The RemoteProxyProtocol is used by clients to receive serialized 

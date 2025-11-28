@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import net.messages.ServerMessageType;
-import net.protocols.MessageHandler;
 import orpheus.core.net.messages.Message;
 
 public class MessageHandlerTester {

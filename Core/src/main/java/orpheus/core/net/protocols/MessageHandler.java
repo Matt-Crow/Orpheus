@@ -1,4 +1,4 @@
-package net.protocols;
+package orpheus.core.net.protocols;
 
 import java.util.HashMap;
 import java.util.function.Consumer;

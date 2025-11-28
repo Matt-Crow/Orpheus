@@ -1,4 +1,4 @@
-package net.protocols;
+package orpheus.core.net.protocols;
 
 import net.messages.ServerMessageType;
 import orpheus.core.commands.*;
