@@ -1,4 +1,4 @@
-package net.connections;
+package orpheus.core.net;
 
 import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
@@ -76,11 +76,6 @@ public class Connection {
     
     public final Socket getClientSocket(){
         return clientSocket;
-    }
-    
-    public void displayData(){
-        System.out.print(clientSocket.getInetAddress().getHostAddress() + ": ");
-        System.out.println((remoteUser == null) ? "---" : remoteUser.getName());
     }
     
     @Override

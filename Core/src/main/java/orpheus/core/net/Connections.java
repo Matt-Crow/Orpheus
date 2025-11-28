@@ -1,4 +1,4 @@
-package net.connections;
+package orpheus.core.net;
 
 import java.io.IOException;
 import java.net.Socket;

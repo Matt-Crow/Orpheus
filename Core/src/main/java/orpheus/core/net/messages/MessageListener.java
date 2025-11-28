@@ -5,7 +5,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.function.BiConsumer;
-import net.connections.Connection;
+
+import orpheus.core.net.Connection;
 
 /**
  * This class listens for messages sent through a connection, forwarding them to

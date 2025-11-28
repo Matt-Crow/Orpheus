@@ -2,7 +2,7 @@ package orpheus.core.net;
 
 import java.io.IOException;
 import java.net.Socket;
-import net.connections.Connection;
+
 import orpheus.core.net.chat.ChatMessage;
 import orpheus.core.net.messages.*;
 import orpheus.core.users.User;
