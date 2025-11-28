@@ -37,21 +37,25 @@ public class Connection {
     private final BufferedWriter to;
 
     /**
-     * repeatedly calls this object's receive method in another thread
-     */
-    private final MessageListenerThread thread;
-
-    /**
      * notifies these upon receiving a message
      */
     private final List<BiConsumer<Connection, Message>> messageListeners;
+
+    private final Thread listenerThread;
+
+    /**
+     * whether this should continue listening for messages
+     */
+    private boolean listening = true;
+
 
     private Connection(Socket other, BufferedReader from, BufferedWriter to) {
         this.other = other;
         this.from = from;
         this.to = to;
         messageListeners = new ArrayList<>();
-        thread = new MessageListenerThread(this, this::notifyListeners);
+        listenerThread = new Thread(this::listen, String.format("Orpheus Connection to %s:%d", other.getInetAddress(), other.getPort()));
+        listenerThread.start();
     }
 
     /**
@@ -65,6 +69,23 @@ public class Connection {
         var to = new BufferedWriter(new OutputStreamWriter(other.getOutputStream()));
         var connection = new Connection(other, from, to);
         return connection;
+    }
+
+    private void listen() {
+        try {
+            while (listening) {
+                var message = receive();
+                notifyListeners(message);
+            }
+        } catch(IOException ex) {
+            // sadly, it doesn't look like there's a better way of handling this
+            if (ex.getMessage().equals("Stream closed")) {
+                //System.out.println("stream closed: stopping");
+                listening = false;
+            } else {
+                throw new RuntimeException(ex);
+            }
+        }
     }
 
     /**
@@ -96,10 +117,11 @@ public class Connection {
 
     public void close() throws IOException {
         send(new Message(ServerMessageType.CLOSE_CONNECTION));
-        thread.stop();
+        listening = false;
         from.close();
         to.close();
         other.close();
+        listenerThread.interrupt();
     }
 
     private void notifyListeners(Message message) {
