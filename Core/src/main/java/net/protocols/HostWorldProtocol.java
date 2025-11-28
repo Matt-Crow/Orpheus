@@ -1,9 +1,9 @@
 package net.protocols;
 
-import net.OrpheusServer;
 import net.messages.ServerMessageType;
 import orpheus.core.commands.*;
 import orpheus.core.commands.executor.LocalExecutor;
+import orpheus.core.net.OrpheusServer;
 import orpheus.core.net.messages.Message;
 import orpheus.core.utils.timer.FrameTimer;
 import world.World;

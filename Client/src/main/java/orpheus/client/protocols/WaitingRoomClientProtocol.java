@@ -7,6 +7,7 @@ import serialization.JsonUtil;
 import orpheus.client.gui.pages.play.WorldGraphSupplier;
 import orpheus.client.gui.pages.play.WorldPage;
 import orpheus.client.gui.pages.worldselect.WaitingRoomPage;
+import orpheus.core.net.OrpheusClient;
 import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
 import orpheus.core.world.graph.World;
@@ -15,7 +16,6 @@ import java.util.Optional;
 
 import javax.json.Json;
 
-import net.OrpheusClient;
 import net.protocols.MessageHandler;
 import net.protocols.WaitingRoom;
 

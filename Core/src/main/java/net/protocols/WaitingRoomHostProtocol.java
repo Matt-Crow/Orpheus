@@ -7,10 +7,10 @@ import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 
-import net.OrpheusServer;
 import net.messages.ServerMessageType;
 import orpheus.core.champions.SpecificationJsonDeserializer;
 import orpheus.core.champions.SpecificationResolver;
+import orpheus.core.net.OrpheusServer;
 import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
 import orpheus.core.world.occupants.players.Player;

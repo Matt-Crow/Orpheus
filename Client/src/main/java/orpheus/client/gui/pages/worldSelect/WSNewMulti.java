@@ -3,12 +3,11 @@ package orpheus.client.gui.pages.worldselect;
 import java.io.IOException;
 import java.util.Optional;
 
-import net.OrpheusClient;
-import net.OrpheusServer;
 import net.protocols.WaitingRoomHostProtocol;
 import orpheus.client.ClientAppContext;
 import orpheus.client.gui.pages.PageController;
 import orpheus.client.protocols.WaitingRoomClientProtocol;
+import orpheus.core.net.*;
 
 /**
  *

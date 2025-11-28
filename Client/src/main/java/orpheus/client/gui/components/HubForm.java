@@ -15,7 +15,7 @@ import orpheus.client.ClientAppContext;
 import orpheus.client.gui.pages.PageController;
 import orpheus.client.gui.pages.worldselect.WaitingRoomPage;
 import orpheus.client.protocols.WaitingRoomClientProtocol;
-import orpheus.core.net.SocketAddress;
+import orpheus.core.net.*;
 
 /**
  * A component which allows users to specify the IP address of a hub to connect
@@ -109,7 +109,7 @@ public class HubForm extends JComponent {
         context.showLoginWindow(); // ask annonymous users to log in
         var user = context.getLoggedInUser();
 
-        var client = new net.OrpheusClient(user, address);
+        var client = new OrpheusClient(user, address);
         var waitingRoomPage = new WaitingRoomPage(context, host);
         var protocol = new WaitingRoomClientProtocol(client, waitingRoomPage);
         waitingRoomPage.setBackEnd(protocol);

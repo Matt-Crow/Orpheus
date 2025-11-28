@@ -1,11 +1,10 @@
-package net;
+package orpheus.core.net;
 
 import java.io.IOException;
 import java.net.Socket;
 import net.connections.Connection;
 import net.messages.MessageListener;
 import net.messages.ServerMessageType;
-import orpheus.core.net.SocketAddress;
 import orpheus.core.net.chat.ChatMessage;
 import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;

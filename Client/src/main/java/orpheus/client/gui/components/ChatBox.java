@@ -9,8 +9,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import net.OrpheusClient;
 import orpheus.client.ClientAppContext;
+import orpheus.core.net.OrpheusClient;
 import orpheus.core.net.chat.ChatMessage;
 import orpheus.core.utils.EventEmitter;
 
