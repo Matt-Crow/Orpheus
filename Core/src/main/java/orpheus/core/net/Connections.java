@@ -2,7 +2,7 @@ package orpheus.core.net;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.HashMap;
+import java.util.ArrayList;
 
 import orpheus.core.users.User;
 
@@ -12,72 +12,82 @@ import orpheus.core.users.User;
  * @author Matt Crow
  */
 public class Connections {
-    private final HashMap<User, Socket> userToSocket;
-    private final HashMap<Socket, Connection> connections;
+    private final ArrayList<Connection> connections = new ArrayList<>();
     
-    public Connections(){
-        userToSocket = new HashMap<>();
-        connections = new HashMap<>();
-    }
     
     public final boolean isConnectedTo(User client){
-        return userToSocket.containsKey(client);
+        var result = connections.stream()
+            .anyMatch(c -> client.equals(c.getRemoteUser()));
+        return result;
+    }
+
+    public final boolean isConnectedTo(Connection connection) {
+        return connections.contains(connection);
     }
     
+    // TODO encapsulate dependency on Socket
     public final boolean isConnectedTo(Socket client){
-        return connections.containsKey(client);
+        var result = connections.stream()
+        .anyMatch(c -> c.getClientSocket().equals(client));
+        return result;
     }
     
+    // TODO encapsulate dependency on Socket
     public final void connectTo(Socket client) throws IOException{
         if(isConnectedTo(client)){
-            connections.get(client).close();
+            getConnectionTo(client).close();
         }
-        connections.put(client, new Connection(client));
+        connections.add(new Connection(client));
     }
     
+    // TODO encapsulate dependency on Socket
     public final void disconnectFrom(Socket client){
-        if(connections.containsKey(client)){
-            Connection c = connections.get(client);
-            c.close();
-            // may need to fire disconnection listeners
-            connections.remove(client);
-            
-            // remove entry from user table
-            User u = userToSocket.entrySet().stream().filter((e)->{
-                return e.getValue().equals(client);
-            }).map((e)->e.getKey()).findFirst().orElse(null);
-            
-            if(u != null){
-                userToSocket.remove(u);
-            }
+        if (isConnectedTo(client)) {
+            disconnectFrom(getConnectionTo(client));
         }
+    }
+
+    public final void disconnectFrom(Connection connection) {
+        if (!isConnectedTo(connection)) {
+            return;
+        }
+
+        connection.close();
+        connections.remove(connection);
+
+        // may need to fire disconnection listeners
     }
     
     public final void closeAll(){
         // avoid concurrent modification exception
-        User[] all = userToSocket.keySet().toArray(new User[connections.size()]);
-        for(User s : all){
-            disconnectFrom(userToSocket.get(s));
-            userToSocket.remove(s);
+        var shallowCopy = new ArrayList<Connection>(connections);
+        for (var connection : shallowCopy) {
+            disconnectFrom(connection);
         }
     }
     
     public final Connection getConnectionTo(Socket client){
-        return connections.get(client);
+        return connections.stream()
+            .filter(c -> client.equals(c.getClientSocket()))
+            .findFirst()
+            .get();
     }
     
     public final Connection getConnectionTo(User user){
-        return connections.get(userToSocket.get(user));
+        return connections.stream()
+            .filter(c -> user.equals(c.getRemoteUser()))
+            .findFirst()
+            .get();
     }
     
     public final void broadcast(Message sm) throws IOException{
-        for(Connection conn : connections.values()){
+        for(Connection conn : connections){
             conn.writeServerMessage(sm);
         }
     }
 
     public void sendToAllExcept(Message message, User user) throws IOException {
-        for (var conn : connections.values()) {
+        for (var conn : connections) {
             if (!conn.getRemoteUser().equals(user)) {
                 conn.writeServerMessage(message);
             }
@@ -88,14 +98,12 @@ public class Connections {
     public String toString(){
         StringBuilder sb = new StringBuilder();
         sb.append("Connections:");
-        connections.forEach((sock, conn)->{
-            sb.append(String.format("\n* %s", conn.toString()));
-        });
+        connections.forEach(conn -> sb.append(String.format("\n* %s", conn.toString())));
         return sb.toString();
     }
 
+    // TODO encapsulate dependency on Socket
     public void setUser(User sender, Socket sendingSocket) {
-        userToSocket.put(sender, sendingSocket);
         getConnectionTo(sendingSocket).setRemoteUser(sender);
     }
 }
