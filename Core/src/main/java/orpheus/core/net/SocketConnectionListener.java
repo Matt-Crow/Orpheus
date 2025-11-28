@@ -50,7 +50,8 @@ public class SocketConnectionListener {
                     client.getPort()
                 ));
 
-                server.connectTo(client);
+                var connection = new Connection(client);
+                server.connectTo(connection);
             } catch (SocketTimeoutException ste) {
                 // this is not an error, it just means no client has attempted to connect
             } catch (IOException ex) {

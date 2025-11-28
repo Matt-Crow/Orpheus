@@ -42,7 +42,7 @@ public class OrpheusClient extends AbstractNetworkClient {
     }
 
     @Override
-    protected void doReceiveMessage(Socket ip, Message sm) {
+    protected void doReceiveMessage(Connection connection, Message sm) {
         if(sm.getType() == ServerMessageType.SERVER_SHUTDOWN){
             toServer.close();
         }

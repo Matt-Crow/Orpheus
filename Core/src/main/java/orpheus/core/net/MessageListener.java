@@ -2,7 +2,6 @@ package orpheus.core.net;
 
 import java.io.EOFException;
 import java.io.IOException;
-import java.net.Socket;
 import java.net.SocketException;
 import java.util.function.BiConsumer;
 
@@ -14,10 +13,10 @@ import java.util.function.BiConsumer;
  */
 public class MessageListener {
     private final Connection listeningTo;
-    private final BiConsumer<Socket, Message> messageConsumer;
+    private final BiConsumer<Connection, Message> messageConsumer;
     private volatile boolean isListening;
     
-    public MessageListener(Connection listeningTo, BiConsumer<Socket, Message> messageConsumer){
+    public MessageListener(Connection listeningTo, BiConsumer<Connection, Message> messageConsumer){
         this.listeningTo = listeningTo;
         this.messageConsumer = messageConsumer;
         isListening = false;
@@ -60,7 +59,7 @@ public class MessageListener {
         if(type == ServerMessageType.SERVER_SHUTDOWN || type == ServerMessageType.PLAYER_LEFT){
             isListening = false;
         } else {
-            messageConsumer.accept(listeningTo.getClientSocket(), fromClient);
+            messageConsumer.accept(listeningTo, fromClient);
         }
     }
 }

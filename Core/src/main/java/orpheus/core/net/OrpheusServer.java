@@ -1,7 +1,6 @@
 package orpheus.core.net;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -48,12 +47,6 @@ public class OrpheusServer extends AbstractNetworkClient {
         return isRunning;
     }
 
-    // TODO encapsulate dependency on Socket
-    public void connectTo(Socket socket) throws IOException {
-        clients.connectTo(socket);
-        setUpMessageListener(clients.getConnectionTo(socket));
-    }
-
     private final void broadcastChatMessage(ChatMessage chatMessage) {
         var sendMe = new Message(ServerMessageType.CHAT, chatMessage.toJson());
         sendToAllExcept(sendMe, chatMessage.getSender());
@@ -66,12 +59,6 @@ public class OrpheusServer extends AbstractNetworkClient {
         }
         send(new Message(ServerMessageType.SERVER_SHUTDOWN));
         isRunning = false;
-    }
-
-    private void setUpMessageListener(Connection conn) {
-        log("Opening message listener thread...");
-        new MessageListener(conn, this::receiveMessage).startListening();
-        log(clients);
     }
 
     @Override
@@ -107,40 +94,27 @@ public class OrpheusServer extends AbstractNetworkClient {
     }
 
     @Override
-    protected final void doReceiveMessage(Socket ip, Message sm) {
+    protected final void doReceiveMessage(Connection connection, Message sm) {
         // handle joining / leaving
         if (sm.getType() == ServerMessageType.PLAYER_JOINED) {
-            receiveJoin(ip, sm);
+            receiveJoin(connection, sm);
         } else if (sm.getType() == ServerMessageType.PLAYER_LEFT) {
-            clients.disconnectFrom(ip);
+            clients.disconnectFrom(connection);
         }
     }
 
-    private void receiveJoin(Socket ip, Message sm) {
-        boolean isConnected = clients.isConnectedTo(ip);
-        if (isConnected && clients.getConnectionTo(ip).getRemoteUser() != null) {
-            log("already connected");
-        } else if (isConnected) {
-            // connected to IP, but no user data set yet
-            User sender = User.fromJson(JsonUtil.fromString(sm.getBodyText()));
-            clients.setUser(sender, ip);
-        } else {
-            // not connected, no user data
-            try {
-                connect(ip);
-                User sender = User.fromJson(JsonUtil.fromString(sm.getBodyText()));
-                clients.getConnectionTo(ip).setRemoteUser(sender);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
+    private void receiveJoin(Connection connection, Message sm) {
+        User sender = User.fromJson(JsonUtil.fromString(sm.getBodyText()));
+        connection.setRemoteUser(sender);
         log(clients);
     }
 
-    private synchronized void connect(Socket sock) throws IOException {
-        if (!clients.isConnectedTo(sock)) {
-            clients.connectTo(sock);
-        }
+    public void connectTo(Connection connection) {
+        clients.connectTo(connection);
+        
+        log("Opening message listener thread...");
+        new MessageListener(connection, this::receiveMessage).startListening();
+        log(clients);
     }
 
     // make this save to a file later

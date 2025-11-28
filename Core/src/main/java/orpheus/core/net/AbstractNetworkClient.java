@@ -1,6 +1,5 @@
 package orpheus.core.net;
 
-import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -72,8 +71,8 @@ public abstract class AbstractNetworkClient {
         cachedMessages.addAll(newCachedMessages);
     }
     
-    public final void receiveMessage(Socket ip, Message sm){
-        doReceiveMessage(ip, sm);
+    public final void receiveMessage(Connection connection, Message sm){
+        doReceiveMessage(connection, sm);
         
         boolean handled = messageHandler
             .map(mh -> mh.handleMessage(sm))
@@ -91,6 +90,6 @@ public abstract class AbstractNetworkClient {
     }
     
     
-    protected abstract void doReceiveMessage(Socket ip, Message sm);
+    protected abstract void doReceiveMessage(Connection connection, Message sm);
     public abstract void send(Message sm);
 }

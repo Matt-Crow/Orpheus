@@ -1,7 +1,6 @@
 package orpheus.core.net;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.util.ArrayList;
 
 import orpheus.core.users.User;
@@ -21,32 +20,16 @@ public class Connections {
         return result;
     }
 
-    public final boolean isConnectedTo(Connection connection) {
+    private final boolean isConnectedTo(Connection connection) {
         return connections.contains(connection);
     }
     
-    // TODO encapsulate dependency on Socket
-    public final boolean isConnectedTo(Socket client){
-        var result = connections.stream()
-        .anyMatch(c -> c.getClientSocket().equals(client));
-        return result;
-    }
-    
-    // TODO encapsulate dependency on Socket
-    public final void connectTo(Socket client) throws IOException{
-        if(isConnectedTo(client)){
-            getConnectionTo(client).close();
-        }
-        connections.add(new Connection(client));
-    }
-    
-    // TODO encapsulate dependency on Socket
-    public final void disconnectFrom(Socket client){
-        if (isConnectedTo(client)) {
-            disconnectFrom(getConnectionTo(client));
+    public final void connectTo(Connection connection) {
+        if (!isConnectedTo(connection)) {
+            connections.add(connection);
         }
     }
-
+    
     public final void disconnectFrom(Connection connection) {
         if (!isConnectedTo(connection)) {
             return;
@@ -64,13 +47,6 @@ public class Connections {
         for (var connection : shallowCopy) {
             disconnectFrom(connection);
         }
-    }
-    
-    public final Connection getConnectionTo(Socket client){
-        return connections.stream()
-            .filter(c -> client.equals(c.getClientSocket()))
-            .findFirst()
-            .get();
     }
     
     public final Connection getConnectionTo(User user){
@@ -100,10 +76,5 @@ public class Connections {
         sb.append("Connections:");
         connections.forEach(conn -> sb.append(String.format("\n* %s", conn.toString())));
         return sb.toString();
-    }
-
-    // TODO encapsulate dependency on Socket
-    public void setUser(User sender, Socket sendingSocket) {
-        getConnectionTo(sendingSocket).setRemoteUser(sender);
     }
 }
