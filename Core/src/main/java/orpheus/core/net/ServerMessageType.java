@@ -27,13 +27,7 @@ public enum ServerMessageType {
      * When received by the client, it will deserialize the message body into a
      * world graph. The server should not respond to this message.
      */
-    WORLD("world"),
-
-    /**
-     * Indicates the socket this was received from is about to close, and 
-     * should therefore stop being used.
-     */
-    CLOSE_CONNECTION("close connection");
+    WORLD("world");
     
     private final String name;
     

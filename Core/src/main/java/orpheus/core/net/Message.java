@@ -148,22 +148,18 @@ public class Message implements JsonSerialable {
     }
     
     /**
-     * De-serializes an object, then converts it to a ServerMessage
+     * De-serializes a JSON string, then converts it to a ServerMessage
      * @param obj the JsonObject to de-serialize
      * @return the ServerMessage encoded a json object
      * @throws JsonException if the JsonObject is not a ServerMessage
      */
-    public static Message deserializeJson(JsonObject obj){
+    public static Message deserializeJson(String s){
+        JsonObject obj = Json.createReader(new StringReader(s)).readObject();
         var type = ServerMessageType.fromString(obj.getString("type"));
         var body = obj.getJsonObject("body");
         return (obj.containsKey("sender"))
             ? new Message(type, body, User.fromJson(obj.getJsonObject("sender")))
             : new Message(type, body);
-    }
-    
-    public static Message deserializeJson(String s){
-        JsonObject obj = Json.createReader(new StringReader(s)).readObject();
-        return deserializeJson(obj);
     }
 
     @Override
