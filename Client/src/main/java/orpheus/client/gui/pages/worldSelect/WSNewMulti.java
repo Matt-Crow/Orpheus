@@ -23,18 +23,18 @@ public class WSNewMulti extends AbstractWSNewWorld{
         var context = getContext();
         context.showLoginWindow(); // ask annonymous users to log in
 
+        var server = new OrpheusServer();
+        server.setMessageHandler(Optional.of(new WaitingRoomHostProtocol(
+            server,
+            createGame(),
+            context.getSpecificationResolver()
+        )));
+        
+        var user = context.getLoggedInUser();
         try{
-            var server = new OrpheusServer();
-            server.start();
-            server.setMessageHandler(Optional.of(new WaitingRoomHostProtocol(
-                server,
-                createGame(),
-                context.getSpecificationResolver()
-            )));
+            var socketConnectionListener = SocketConnectionListener.forServer(server);
+            var client = new OrpheusClient(user, socketConnectionListener.getSocketAddress());
             
-            var user = context.getLoggedInUser();
-            var client = new OrpheusClient(user, server.getSocketAddress());
-            client.start();
             var room = new WaitingRoomPage(context, getHost());
             var clientProtocol = new WaitingRoomClientProtocol(client, room);
             room.setBackEnd(clientProtocol);
@@ -42,7 +42,7 @@ public class WSNewMulti extends AbstractWSNewWorld{
             room.getChat().handleChatMessagesFor(client);
             room.getChat().output(String.format(
                 "Server started on %s", 
-                server.getSocketAddress().toString()
+                socketConnectionListener.getSocketAddress().toString()
             ));
             getHost().switchToPage(room);
         } catch (IOException ex) {

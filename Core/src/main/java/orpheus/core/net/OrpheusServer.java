@@ -1,9 +1,7 @@
 package orpheus.core.net;
 
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,30 +30,28 @@ import serialization.JsonUtil;
  */
 public class OrpheusServer extends AbstractNetworkClient {
     private final UUID uuid = UUID.randomUUID();
-    private final ServerSocket server;
     private final Connections clients;
-    private Optional<Thread> connectionListenerThread = Optional.empty();
+    private boolean isRunning = false;
 
-    /*
-     * The amount of time a call to server.accept() will block for
-     */
-    private static final int CONNECTION_TIME_OUT = 3000; // 3 seconds
-
-    /**
-     * Creates an OrpheusServer.
-     * Note that this does not actually start the server,
-     * you need to call start() for that.
-     * 
-     * @throws java.io.IOException
-     */
-    public OrpheusServer() throws IOException {
+    public OrpheusServer() {
         super();
-        // setting the port to 0 means "use any available port"
-        server = new ServerSocket(0);
-        server.setSoTimeout(CONNECTION_TIME_OUT);
 
         clients = new Connections();
         setChatMessageHandler(this::broadcastChatMessage);
+
+        clients.closeAll();
+        setMessageHandler(Optional.empty());
+        isRunning = true;
+    }
+
+    public boolean isRunning() {
+        return isRunning;
+    }
+
+    // TODO encapsulate dependency on Socket
+    public void connectTo(Socket socket) throws IOException {
+        clients.connectTo(socket);
+        setUpMessageListener(clients.getConnectionTo(socket));
     }
 
     private final void broadcastChatMessage(ChatMessage chatMessage) {
@@ -63,69 +59,13 @@ public class OrpheusServer extends AbstractNetworkClient {
         sendToAllExcept(sendMe, chatMessage.getSender());
     }
 
-    /**
-     * Clears all receivers and connections from this,
-     * then restarts the connection listener.
-     * 
-     * @throws java.io.IOException
-     */
-    @Override
-    protected final void doStart() throws IOException {
-        log(String.format("Server initialized on %s", getSocketAddress()));
-        clients.closeAll();
-        setMessageHandler(Optional.empty());
-        if (connectionListenerThread.isEmpty()) {
-            var t = new Thread(this::listenForNewConnections, String.format("Orpheus server %s is listening for connections", uuid));
-            connectionListenerThread = Optional.of(t);
-            t.start();
+    // TODO call this somewhere
+    protected final void doStop() {
+        if (!isRunning) {
+            return;
         }
-    }
-
-    private void listenForNewConnections() {
-        while (true) {
-            try {
-                while (isStarted()) { // runs until accept times out
-                    var client = server.accept();
-                    log(String.format(
-                        "Connecting to %s:%d%n", 
-                        client.getInetAddress().getHostAddress(),
-                        client.getPort()
-                    ));
-                    clients.connectTo(client);
-                    setUpMessageListener(clients.getConnectionTo(client));
-                }
-            } catch (SocketTimeoutException ex1) {
-                // this is not an error, it just means no client has attempted to connect
-            } catch (IOException ex) {
-                log(ex);
-            }
-        }
-    }
-
-    @Override
-    protected final void doStop() throws IOException {
-        send(new Message(
-                "server shutting down",
-                ServerMessageType.SERVER_SHUTDOWN));
-
-        server.close();
-        connectionListenerThread.ifPresent(Thread::interrupt);
-        connectionListenerThread = Optional.empty();
-    }
-
-    /**
-     * @return the socket address this server is listening for connections on
-     */
-    public SocketAddress getSocketAddress() {
-        return new SocketAddress(getIpAddress(), getPort());
-    }
-
-    private String getIpAddress() {
-        return server.getInetAddress().getHostAddress();
-    }
-
-    private int getPort() {
-        return server.getLocalPort();
+        send(new Message(ServerMessageType.SERVER_SHUTDOWN));
+        isRunning = false;
     }
 
     private void setUpMessageListener(Connection conn) {
@@ -218,32 +158,5 @@ public class OrpheusServer extends AbstractNetworkClient {
         sb.append(String.format("Orpheus Server %s\n", uuid));
         sb.append(clients.toString());
         return sb.toString();
-    }
-
-    // yay! this works!
-    public static void main(String[] args) throws Exception {
-        OrpheusServer os = new OrpheusServer();
-        System.out.println(os.clients);
-        os.start();
-
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    Connection conn = new Connection(new Socket(os.getIpAddress(), os.getPort()));
-                    Thread.sleep(1000);
-                    conn.writeServerMessage(new Message("bye", ServerMessageType.PLAYER_LEFT));
-                    conn.close();
-                    System.out.println("Bye");
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }.start();
-        Thread.sleep(5000);
-        System.out.println(os.clients);
-        os.stop();
     }
 }

@@ -1,6 +1,5 @@
 package orpheus.core.net;
 
-import java.io.IOException;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Optional;
@@ -14,7 +13,6 @@ import orpheus.core.net.protocols.MessageHandler;
  * @author Matt Crow
  */
 public abstract class AbstractNetworkClient {
-    private volatile boolean isStarted = false;
 
     /**
      * Formerly known as a "protocol".
@@ -29,11 +27,6 @@ public abstract class AbstractNetworkClient {
      * messages are cached if this does not yet have a way of handling them
      */
     private LinkedList<Message> cachedMessages = new LinkedList<>();
-    
-    
-    public final boolean isStarted(){
-        return isStarted;
-    }
     
     /**
      * Sets the new strategy for handling non-chat messages.
@@ -79,20 +72,6 @@ public abstract class AbstractNetworkClient {
         cachedMessages.addAll(newCachedMessages);
     }
     
-    public final void start() throws IOException {
-        if(!isStarted){
-            doStart();
-            isStarted = true;
-        }
-    }
-    
-    public final void stop() throws IOException {
-        if(isStarted){
-            doStop();
-            isStarted = false;
-        }
-    }
-    
     public final void receiveMessage(Socket ip, Message sm){
         doReceiveMessage(ip, sm);
         
@@ -112,8 +91,6 @@ public abstract class AbstractNetworkClient {
     }
     
     
-    protected abstract void doStart() throws IOException;
-    protected abstract void doStop() throws IOException;
     protected abstract void doReceiveMessage(Socket ip, Message sm);
     public abstract void send(Message sm);
 }

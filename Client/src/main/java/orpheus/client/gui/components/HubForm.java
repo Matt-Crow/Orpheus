@@ -116,7 +116,6 @@ public class HubForm extends JComponent {
         client.setMessageHandler(Optional.of(protocol));
         waitingRoomPage.getChat().handleChatMessagesFor(client);
         
-        client.start();
         host.switchToPage(waitingRoomPage);
     }
 }
