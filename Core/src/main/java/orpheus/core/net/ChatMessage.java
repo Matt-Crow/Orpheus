@@ -1,4 +1,4 @@
-package orpheus.core.net.chat;
+package orpheus.core.net;
 
 import javax.json.Json;
 import javax.json.JsonObject;

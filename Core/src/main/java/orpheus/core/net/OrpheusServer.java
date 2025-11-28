@@ -7,8 +7,6 @@ import java.net.SocketTimeoutException;
 import java.util.Optional;
 import java.util.UUID;
 
-import orpheus.core.net.chat.ChatMessage;
-import orpheus.core.net.messages.*;
 import orpheus.core.users.User;
 import serialization.JsonUtil;
 

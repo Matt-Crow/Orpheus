@@ -1,12 +1,10 @@
-package orpheus.core.net.messages;
+package orpheus.core.net;
 
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.function.BiConsumer;
-
-import orpheus.core.net.Connection;
 
 /**
  * This class listens for messages sent through a connection, forwarding them to

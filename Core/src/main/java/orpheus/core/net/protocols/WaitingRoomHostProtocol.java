@@ -9,8 +9,7 @@ import javax.json.JsonObjectBuilder;
 
 import orpheus.core.champions.SpecificationJsonDeserializer;
 import orpheus.core.champions.SpecificationResolver;
-import orpheus.core.net.OrpheusServer;
-import orpheus.core.net.messages.*;
+import orpheus.core.net.*;
 import orpheus.core.users.User;
 import orpheus.core.world.occupants.players.Player;
 import serialization.JsonUtil;

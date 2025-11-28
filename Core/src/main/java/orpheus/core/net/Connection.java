@@ -1,6 +1,5 @@
 package orpheus.core.net;
 
-import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
 
 import java.io.BufferedReader;

@@ -3,8 +3,7 @@ package orpheus.client.protocols;
 import orpheus.client.gui.pages.play.WorldGraphSupplier;
 import orpheus.core.commands.Command;
 import orpheus.core.commands.executor.Executor;
-import orpheus.core.net.OrpheusClient;
-import orpheus.core.net.messages.*;
+import orpheus.core.net.*;
 import orpheus.core.net.protocols.MessageHandler;
 
 /**

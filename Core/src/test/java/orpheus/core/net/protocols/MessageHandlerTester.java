@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import orpheus.core.net.messages.*;
+import orpheus.core.net.*;
 
 public class MessageHandlerTester {
     

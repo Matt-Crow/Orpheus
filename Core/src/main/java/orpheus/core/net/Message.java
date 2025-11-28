@@ -1,4 +1,4 @@
-package orpheus.core.net.messages;
+package orpheus.core.net;
 
 import java.io.StringReader;
 import java.io.StringWriter;

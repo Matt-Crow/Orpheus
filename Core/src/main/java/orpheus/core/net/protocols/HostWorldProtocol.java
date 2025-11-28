@@ -2,8 +2,7 @@ package orpheus.core.net.protocols;
 
 import orpheus.core.commands.*;
 import orpheus.core.commands.executor.LocalExecutor;
-import orpheus.core.net.OrpheusServer;
-import orpheus.core.net.messages.*;
+import orpheus.core.net.*;
 import orpheus.core.utils.timer.FrameTimer;
 import world.World;
 
