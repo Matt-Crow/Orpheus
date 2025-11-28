@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import javax.swing.JOptionPane;
 
-import net.AbstractNetworkClient;
 import orpheus.client.gui.components.ComponentFactory;
 import orpheus.core.AppContext;
 import orpheus.core.users.User;
@@ -19,11 +18,6 @@ public class ClientAppContext extends AppContext {
      * the currently logged in user
      */
     private Optional<User> user = Optional.empty();
-
-    /**
-     * Connected to server
-     */
-    private Optional<AbstractNetworkClient> client = Optional.empty();
 
     /**
      * used to produce components for the GUI
@@ -69,13 +63,5 @@ public class ClientAppContext extends AppContext {
      */
     public User getLoggedInUser() {
         return user.get();
-    }
-
-    public void setClient(AbstractNetworkClient client) {
-        this.client = Optional.of(client);
-    }
-
-    public Optional<AbstractNetworkClient> getclient() {
-        return client;
     }
 }

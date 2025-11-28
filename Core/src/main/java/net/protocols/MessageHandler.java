@@ -3,7 +3,6 @@ package net.protocols;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-import net.AbstractNetworkClient;
 import net.messages.ServerMessageType;
 import orpheus.core.net.messages.Message;
 
@@ -11,17 +10,7 @@ import orpheus.core.net.messages.Message;
  * Handles messages from a remote server or client.
  */
 public class MessageHandler {
-
-    private final AbstractNetworkClient server;
     private final HashMap<ServerMessageType, Consumer<Message>> handlers = new HashMap<>();
-
-    public MessageHandler(AbstractNetworkClient runningServer) {
-        server = runningServer;
-    }
-
-    protected AbstractNetworkClient getServer(){
-        return server;
-    }
 
     /**
      * Adds a handler for a specific message type.

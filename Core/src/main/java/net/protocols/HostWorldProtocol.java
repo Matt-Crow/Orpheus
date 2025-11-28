@@ -20,7 +20,6 @@ public class HostWorldProtocol extends MessageHandler {
     private final FrameTimer updater;
     
     public HostWorldProtocol(OrpheusServer runningServer, World forWorld){
-        super(runningServer);
         executor = new LocalExecutor(forWorld);
         addHandler(ServerMessageType.CONTROL_PRESSED, this::receiveControl);
 

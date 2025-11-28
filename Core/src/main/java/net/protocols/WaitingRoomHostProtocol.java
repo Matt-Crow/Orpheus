@@ -7,7 +7,6 @@ import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 
-import net.AbstractNetworkClient;
 import net.OrpheusServer;
 import net.messages.ServerMessageType;
 import orpheus.core.champions.SpecificationJsonDeserializer;
@@ -30,7 +29,7 @@ import world.game.Game;
  * @author Matt Crow
  */
 public class WaitingRoomHostProtocol extends MessageHandler {    
-    
+    private final OrpheusServer server;
     private final SpecificationResolver specificationResolver;
     private final Team playerTeam = Team.ofPlayers();
     private final HashSet<User> awaitingBuilds = new HashSet<>();
@@ -47,7 +46,7 @@ public class WaitingRoomHostProtocol extends MessageHandler {
         Game game,
         SpecificationResolver specificationResolver
     ){
-        super(runningServer);
+        server = runningServer;
         this.specificationResolver = specificationResolver;
         
         world = new WorldBuilderImpl()
@@ -59,15 +58,6 @@ public class WaitingRoomHostProtocol extends MessageHandler {
         addHandler(ServerMessageType.PLAYER_JOINED, this::receiveJoin);
         addHandler(ServerMessageType.START_WORLD, this::prepareToStart);
         addHandler(ServerMessageType.PLAYER_DATA, this::receiveBuildInfo);
-    }
-
-    @Override
-    public OrpheusServer getServer(){
-        AbstractNetworkClient anc = super.getServer();
-        if(!(anc instanceof OrpheusServer)){
-            throw new UnsupportedOperationException("WaitingRoomHostProtocol must run on an OrpheusServer");
-        }
-        return (OrpheusServer)anc;
     }
     
     private synchronized void receiveJoin(Message sm){
@@ -84,7 +74,7 @@ public class WaitingRoomHostProtocol extends MessageHandler {
             joiningUser.toJson().toString(),
             ServerMessageType.WAITING_ROOM_UPDATE
         );
-        getServer().send(sm1);
+        server.send(sm1);
         
         // tell the new guy about everyone else
         JsonObjectBuilder initMsgBuild = Json.createObjectBuilder();
@@ -99,11 +89,11 @@ public class WaitingRoomHostProtocol extends MessageHandler {
             initMsgBuild.build().toString(),
             ServerMessageType.WAITING_ROOM_INIT
         );
-        getServer().send(initMsg, joiningUser);
+        server.send(initMsg, joiningUser);
     }
     
     public final void prepareToStart(){
-        getServer().send(new Message(ServerMessageType.REQUEST_PLAYER_DATA));
+        server.send(new Message(ServerMessageType.REQUEST_PLAYER_DATA));
     }
     
     private synchronized void receiveBuildInfo(Message sm){
@@ -134,8 +124,6 @@ public class WaitingRoomHostProtocol extends MessageHandler {
             return;
         }
 
-        var server = getServer();
-        
         world.init();
         
         var protocol = new HostWorldProtocol(server, world);

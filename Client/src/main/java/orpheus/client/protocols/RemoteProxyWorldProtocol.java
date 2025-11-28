@@ -15,13 +15,14 @@ import orpheus.core.net.messages.Message;
  * @author Matt Crow
  */
 public class RemoteProxyWorldProtocol extends MessageHandler implements Executor {
+    private final OrpheusClient client;
     private final WorldGraphSupplier worldSupplier;
 
     public RemoteProxyWorldProtocol(
         OrpheusClient runningServer, 
         WorldGraphSupplier worldSupplier
     ){
-        super(runningServer);
+        client = runningServer;
         this.worldSupplier = worldSupplier;
         addHandler(ServerMessageType.WORLD, this::receiveWorld);
     }
@@ -34,6 +35,6 @@ public class RemoteProxyWorldProtocol extends MessageHandler implements Executor
 
     @Override
     public void execute(Command command) {
-        getServer().send(new Message(ServerMessageType.CONTROL_PRESSED, command.toJson()));
+        client.send(new Message(ServerMessageType.CONTROL_PRESSED, command.toJson()));
     }
 }

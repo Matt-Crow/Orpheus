@@ -40,7 +40,6 @@ public class WSNewMulti extends AbstractWSNewWorld{
             var clientProtocol = new WaitingRoomClientProtocol(client, room);
             room.setBackEnd(clientProtocol);
             client.setMessageHandler(Optional.of(clientProtocol));
-            context.setClient(client);
             room.getChat().handleChatMessagesFor(client);
             room.getChat().output(String.format(
                 "Server started on %s", 
