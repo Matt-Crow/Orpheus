@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import net.AbstractNetworkClient;
-import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import net.protocols.MessageHandler;
 import orpheus.core.net.messages.Message;
@@ -18,7 +17,7 @@ public class MessageHandlerTester {
     @Test
     public void receive_givenNoConfiguration_returnsFalse() {
         var sut = new MessageHandler(new NetworkClientMock());
-        var actual = sut.handleMessage(new ServerMessagePacket(new Message(ServerMessageType.CHAT)));
+        var actual = sut.handleMessage(new Message(ServerMessageType.CHAT));
         Assertions.assertFalse(actual);
     }
 
@@ -28,7 +27,7 @@ public class MessageHandlerTester {
         var callChecker = new CallChecker();
         sut.addHandler(ServerMessageType.CHAT, callChecker);
 
-        var actual = sut.handleMessage(new ServerMessagePacket(new Message(ServerMessageType.CHAT)));
+        var actual = sut.handleMessage(new Message(ServerMessageType.CHAT));
     
         Assertions.assertTrue(actual);
         Assertions.assertTrue(callChecker.wasCalled());
@@ -40,7 +39,7 @@ public class MessageHandlerTester {
         var callChecker = new CallChecker();
         sut.addHandler(ServerMessageType.PLAYER_JOINED, callChecker);
 
-        var actual = sut.handleMessage(new ServerMessagePacket(new Message(ServerMessageType.CHAT)));
+        var actual = sut.handleMessage(new Message(ServerMessageType.CHAT));
     
         Assertions.assertFalse(actual);
         Assertions.assertFalse(callChecker.wasCalled());
@@ -60,7 +59,7 @@ class NetworkClientMock extends AbstractNetworkClient {
     }
 
     @Override
-    protected void doReceiveMessage(Socket ip, ServerMessagePacket sm) {
+    protected void doReceiveMessage(Socket ip, Message sm) {
     
     }
 
@@ -70,7 +69,7 @@ class NetworkClientMock extends AbstractNetworkClient {
     }
 }
 
-class CallChecker implements Consumer<ServerMessagePacket> {
+class CallChecker implements Consumer<Message> {
     private int timesCalled = 0;
 
     public boolean wasCalled() {
@@ -78,7 +77,7 @@ class CallChecker implements Consumer<ServerMessagePacket> {
     }
 
     @Override
-    public void accept(ServerMessagePacket t) {
+    public void accept(Message t) {
         timesCalled++;
     }
 }

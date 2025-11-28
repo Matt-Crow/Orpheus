@@ -9,7 +9,6 @@ import javax.json.JsonObjectBuilder;
 
 import net.AbstractNetworkClient;
 import net.OrpheusServer;
-import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import orpheus.core.champions.SpecificationJsonDeserializer;
 import orpheus.core.champions.SpecificationResolver;
@@ -71,8 +70,8 @@ public class WaitingRoomHostProtocol extends MessageHandler {
         return (OrpheusServer)anc;
     }
     
-    private synchronized void receiveJoin(ServerMessagePacket sm){
-        var joiningUser = sm.getMessage().getSender().get();
+    private synchronized void receiveJoin(Message sm){
+        var joiningUser = sm.getSender().get();
         if(waitingRoom.containsUser(joiningUser)){
             // already joined, so ignore the message
             return;
@@ -107,9 +106,9 @@ public class WaitingRoomHostProtocol extends MessageHandler {
         getServer().send(new Message(ServerMessageType.REQUEST_PLAYER_DATA));
     }
     
-    private synchronized void receiveBuildInfo(ServerMessagePacket sm){
+    private synchronized void receiveBuildInfo(Message sm){
         // synchronized avoids duplicate player IDs
-        User sender = sm.getMessage().getSender().get();
+        User sender = sm.getSender().get();
 
         if (!awaitingBuilds.contains(sender)) {
             // we don't need their build, so ignore it
@@ -117,7 +116,7 @@ public class WaitingRoomHostProtocol extends MessageHandler {
         }
         
         var deserializer = new SpecificationJsonDeserializer();
-        var json = JsonUtil.fromString(sm.getMessage().getBodyText());
+        var json = JsonUtil.fromString(sm.getBodyText());
         var specification = deserializer.fromJson(json);
         var assembledBuild = specificationResolver.resolve(specification);
         var player = Player.makeHuman(

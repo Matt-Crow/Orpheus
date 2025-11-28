@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.function.BiConsumer;
 import net.connections.Connection;
+import orpheus.core.net.messages.Message;
 
 /**
  * This class listens for messages sent through a connection, forwarding them to
@@ -15,10 +16,10 @@ import net.connections.Connection;
  */
 public class MessageListener {
     private final Connection listeningTo;
-    private final BiConsumer<Socket, ServerMessagePacket> messageConsumer;
+    private final BiConsumer<Socket, Message> messageConsumer;
     private volatile boolean isListening;
     
-    public MessageListener(Connection listeningTo, BiConsumer<Socket, ServerMessagePacket> messageConsumer){
+    public MessageListener(Connection listeningTo, BiConsumer<Socket, Message> messageConsumer){
         this.listeningTo = listeningTo;
         this.messageConsumer = messageConsumer;
         isListening = false;
@@ -56,8 +57,8 @@ public class MessageListener {
     }
     
     private void read() throws IOException {
-        ServerMessagePacket fromClient = listeningTo.readServerMessage();
-        ServerMessageType type = fromClient.getMessage().getType();
+        var fromClient = listeningTo.readServerMessage();
+        ServerMessageType type = fromClient.getType();
         if(type == ServerMessageType.SERVER_SHUTDOWN || type == ServerMessageType.PLAYER_LEFT){
             isListening = false;
         } else {

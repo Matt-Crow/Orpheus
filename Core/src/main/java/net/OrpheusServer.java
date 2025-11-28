@@ -10,7 +10,6 @@ import java.util.UUID;
 import net.connections.Connection;
 import net.connections.Connections;
 import net.messages.MessageListener;
-import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import orpheus.core.net.SocketAddress;
 import orpheus.core.net.chat.ChatMessage;
@@ -175,28 +174,28 @@ public class OrpheusServer extends AbstractNetworkClient {
     }
 
     @Override
-    protected final void doReceiveMessage(Socket ip, ServerMessagePacket sm) {
+    protected final void doReceiveMessage(Socket ip, Message sm) {
         // handle joining / leaving
-        if (sm.getMessage().getType() == ServerMessageType.PLAYER_JOINED) {
+        if (sm.getType() == ServerMessageType.PLAYER_JOINED) {
             receiveJoin(ip, sm);
-        } else if (sm.getMessage().getType() == ServerMessageType.PLAYER_LEFT) {
+        } else if (sm.getType() == ServerMessageType.PLAYER_LEFT) {
             clients.disconnectFrom(ip);
         }
     }
 
-    private void receiveJoin(Socket ip, ServerMessagePacket sm) {
+    private void receiveJoin(Socket ip, Message sm) {
         boolean isConnected = clients.isConnectedTo(ip);
         if (isConnected && clients.getConnectionTo(ip).getRemoteUser() != null) {
             log("already connected");
         } else if (isConnected) {
             // connected to IP, but no user data set yet
-            User sender = User.fromJson(JsonUtil.fromString(sm.getMessage().getBodyText()));
+            User sender = User.fromJson(JsonUtil.fromString(sm.getBodyText()));
             clients.setUser(sender, ip);
         } else {
             // not connected, no user data
             try {
                 connect(ip);
-                User sender = User.fromJson(JsonUtil.fromString(sm.getMessage().getBodyText()));
+                User sender = User.fromJson(JsonUtil.fromString(sm.getBodyText()));
                 clients.getConnectionTo(ip).setRemoteUser(sender);
             } catch (IOException ex) {
                 ex.printStackTrace();

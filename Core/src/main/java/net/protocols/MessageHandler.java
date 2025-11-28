@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 
 import net.AbstractNetworkClient;
-import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
+import orpheus.core.net.messages.Message;
 
 /**
  * Handles messages from a remote server or client.
@@ -13,7 +13,7 @@ import net.messages.ServerMessageType;
 public class MessageHandler {
 
     private final AbstractNetworkClient server;
-    private final HashMap<ServerMessageType, Consumer<ServerMessagePacket>> handlers = new HashMap<>();
+    private final HashMap<ServerMessageType, Consumer<Message>> handlers = new HashMap<>();
 
     public MessageHandler(AbstractNetworkClient runningServer) {
         server = runningServer;
@@ -29,7 +29,7 @@ public class MessageHandler {
      * @param handler how to handle messages of the given type
      * @return this, for chaining
      */
-    public final MessageHandler addHandler(ServerMessageType type, Consumer<ServerMessagePacket> handler) {
+    public final MessageHandler addHandler(ServerMessageType type, Consumer<Message> handler) {
         handlers.put(type, handler);
         return this;
     }
@@ -45,15 +45,15 @@ public class MessageHandler {
     }
 
     /**
-     * @param smp the message received by the server
+     * @param message the message received by the server
      * @return true iff this handled the packet
      */
-    public final boolean handleMessage(ServerMessagePacket smp) {
-        var type = smp.getMessage().getType();
+    public final boolean handleMessage(Message message) {
+        var type = message.getType();
         if (handlers.containsKey(type)) {
             handlers
                 .get(type)
-                .accept(smp);
+                .accept(message);
             return true;
         }
         return false;

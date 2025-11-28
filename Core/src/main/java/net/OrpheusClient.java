@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.Socket;
 import net.connections.Connection;
 import net.messages.MessageListener;
-import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import orpheus.core.net.SocketAddress;
 import orpheus.core.net.chat.ChatMessage;
@@ -51,8 +50,8 @@ public class OrpheusClient extends AbstractNetworkClient {
     }
 
     @Override
-    protected void doReceiveMessage(Socket ip, ServerMessagePacket sm) {
-        if(sm.getMessage().getType() == ServerMessageType.SERVER_SHUTDOWN){
+    protected void doReceiveMessage(Socket ip, Message sm) {
+        if(sm.getType() == ServerMessageType.SERVER_SHUTDOWN){
             toServer.close();
         }
     }

@@ -1,6 +1,5 @@
 package net.connections;
 
-import net.messages.ServerMessagePacket;
 import orpheus.core.net.messages.Message;
 import orpheus.core.users.User;
 
@@ -40,11 +39,11 @@ public class Connection {
     }
     
     // blocks until the client writes something
-    public final ServerMessagePacket readServerMessage() throws IOException{
+    public final Message readServerMessage() throws IOException{
         // This works, so I guess toJsonString excapes newlines or something?
         Message deser = Message.deserializeJson(fromClient.readLine());
         
-        return new ServerMessagePacket(deser);
+        return deser;
     }
     
     public void close(){

@@ -1,7 +1,6 @@
 package orpheus.client.protocols;
 
 import net.OrpheusClient;
-import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import net.protocols.MessageHandler;
 import orpheus.client.gui.pages.play.WorldGraphSupplier;
@@ -27,8 +26,8 @@ public class RemoteProxyWorldProtocol extends MessageHandler implements Executor
         addHandler(ServerMessageType.WORLD, this::receiveWorld);
     }
 
-    private void receiveWorld(ServerMessagePacket sm) {
-        var json = sm.getMessage().getBody();
+    private void receiveWorld(Message sm) {
+        var json = sm.getBody();
         var world = orpheus.core.world.graph.World.fromJson(json);
         worldSupplier.setWorld(world);
     }

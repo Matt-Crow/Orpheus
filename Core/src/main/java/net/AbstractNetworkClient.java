@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import net.protocols.MessageHandler;
 import orpheus.core.net.chat.ChatMessage;
@@ -32,7 +31,7 @@ public abstract class AbstractNetworkClient {
     /**
      * messages are cached if this does not yet have a way of handling them
      */
-    private LinkedList<ServerMessagePacket> cachedMessages = new LinkedList<>();
+    private LinkedList<Message> cachedMessages = new LinkedList<>();
     
     
     public final boolean isStarted(){
@@ -59,7 +58,7 @@ public abstract class AbstractNetworkClient {
          * We may have received some messages before we could set the protocol to handle them.
          * Look through our cached messages to see if this new strategy could have handled them.
          */
-        var messagesWeStillCannotHandle = new LinkedList<ServerMessagePacket>();
+        var messagesWeStillCannotHandle = new LinkedList<Message>();
         for (var message : cachedMessages) {
             var handled = unwrapped.handleMessage(message);
             if (!handled) {
@@ -71,10 +70,10 @@ public abstract class AbstractNetworkClient {
     
     public void setChatMessageHandler(Consumer<ChatMessage> chatMessageHandler){
         this.chatMessageHandler = Optional.of(chatMessageHandler);
-        var newCachedMessages = new LinkedList<ServerMessagePacket>();
-        cachedMessages.forEach((ServerMessagePacket sm)->{
-            if (sm.getMessage().getType() == ServerMessageType.CHAT) {
-                chatMessageHandler.accept(ChatMessage.fromJson(sm.getMessage().getBody()));
+        var newCachedMessages = new LinkedList<Message>();
+        cachedMessages.forEach((Message sm)->{
+            if (sm.getType() == ServerMessageType.CHAT) {
+                chatMessageHandler.accept(ChatMessage.fromJson(sm.getBody()));
             } else {
                 newCachedMessages.add(sm);
             }
@@ -97,20 +96,20 @@ public abstract class AbstractNetworkClient {
         }
     }
     
-    public final void receiveMessage(Socket ip, ServerMessagePacket sm){
+    public final void receiveMessage(Socket ip, Message sm){
         doReceiveMessage(ip, sm);
         
         boolean handled = messageHandler
             .map(mh -> mh.handleMessage(sm))
             .orElse(false);
         
-        if (sm.getMessage().getType() == ServerMessageType.CHAT && chatMessageHandler.isPresent()){
+        if (sm.getType() == ServerMessageType.CHAT && chatMessageHandler.isPresent()){
             handled = true;
-            chatMessageHandler.get().accept(ChatMessage.fromJson(sm.getMessage().getBody()));
+            chatMessageHandler.get().accept(ChatMessage.fromJson(sm.getBody()));
         }
         
         if(!handled){
-            System.err.printf("Couldn't handle message with type %s\n", sm.getMessage().getType().toString());
+            System.err.printf("Couldn't handle message with type %s\n", sm.getType().toString());
             cachedMessages.add(sm);
         }
     }
@@ -118,6 +117,6 @@ public abstract class AbstractNetworkClient {
     
     protected abstract void doStart() throws IOException;
     protected abstract void doStop() throws IOException;
-    protected abstract void doReceiveMessage(Socket ip, ServerMessagePacket sm);
+    protected abstract void doReceiveMessage(Socket ip, Message sm);
     public abstract void send(Message sm);
 }

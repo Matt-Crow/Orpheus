@@ -16,11 +16,7 @@ import serialization.JsonSerialable;
 
 /**
  * The ServerMessage class is used to store data sent
- * between computers. Servers send these to their clients
- * as JSON, which gets deserialized as a ServerMessagePacket
- * when received by a Connection.
- * 
- * Basically, send as a ServerMessage, receive as a ServerMessagePacket
+ * between computers.
  * 
  * @author Matt Crow
  */

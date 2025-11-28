@@ -1,7 +1,6 @@
 package net.protocols;
 
 import net.OrpheusServer;
-import net.messages.ServerMessagePacket;
 import net.messages.ServerMessageType;
 import orpheus.core.commands.*;
 import orpheus.core.commands.executor.LocalExecutor;
@@ -36,8 +35,8 @@ public class HostWorldProtocol extends MessageHandler {
         });
     }
     
-    private void receiveControl(ServerMessagePacket sm){
-        var json = sm.getMessage().getBody();
+    private void receiveControl(Message sm){
+        var json = sm.getBody();
 
         switch (json.getString("type")) {
             case "StartMoving": {
