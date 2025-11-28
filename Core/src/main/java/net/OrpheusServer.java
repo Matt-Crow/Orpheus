@@ -176,12 +176,6 @@ public class OrpheusServer extends AbstractNetworkClient {
 
     @Override
     protected final void doReceiveMessage(Socket ip, ServerMessagePacket sm) {
-        if (clients.isConnectedTo(ip)) {
-            sm.setSender(clients.getConnectionTo(ip).getRemoteUser());
-        } else {
-            log("I don't recognize " + ip);
-        }
-
         // handle joining / leaving
         if (sm.getMessage().getType() == ServerMessageType.PLAYER_JOINED) {
             receiveJoin(ip, sm);
@@ -197,14 +191,12 @@ public class OrpheusServer extends AbstractNetworkClient {
         } else if (isConnected) {
             // connected to IP, but no user data set yet
             User sender = User.fromJson(JsonUtil.fromString(sm.getMessage().getBodyText()));
-            sm.setSender(sender);
             clients.setUser(sender, ip);
         } else {
             // not connected, no user data
             try {
                 connect(ip);
                 User sender = User.fromJson(JsonUtil.fromString(sm.getMessage().getBodyText()));
-                sm.setSender(sender);
                 clients.getConnectionTo(ip).setRemoteUser(sender);
             } catch (IOException ex) {
                 ex.printStackTrace();

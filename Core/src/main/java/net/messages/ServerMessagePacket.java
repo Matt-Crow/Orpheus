@@ -1,7 +1,6 @@
 package net.messages;
 
 import orpheus.core.net.messages.Message;
-import orpheus.core.users.User;
 
 /**
  * The ServerMessagePacket class is used to add information
@@ -13,7 +12,6 @@ import orpheus.core.users.User;
  * @author Matt Crow
  */
 public class ServerMessagePacket {
-    private User fromUser;
     private final Message containedMessage;
     /**
      * 
@@ -28,24 +26,9 @@ public class ServerMessagePacket {
     public final Message getMessage(){
         return containedMessage;
     }
-    
-    /**
-     * Called by OrpheusServer to associate a logged-in LocalUser with this message.
-     * @param u the user to associate this message with
-     */
-    public final void setSender(User u){
-        fromUser = u;
-    }
-    public final User getSender(){
-        return fromUser;
-    }
-    
+
     @Override
     public String toString(){
-        return String.format(
-            "ServerMessagePacket from %s:\n%s\nEND OF MESSAGE", 
-            (fromUser == null) ? "Unknown LocalUser" : fromUser.getName(), 
-            containedMessage.toString()
-        );
+        return containedMessage.toString();
     }
 }

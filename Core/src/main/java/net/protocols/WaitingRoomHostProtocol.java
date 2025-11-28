@@ -72,14 +72,13 @@ public class WaitingRoomHostProtocol extends MessageHandler {
     }
     
     private synchronized void receiveJoin(ServerMessagePacket sm){
-        
-        if(waitingRoom.containsUser(sm.getSender())){
+        var joiningUser = sm.getMessage().getSender().get();
+        if(waitingRoom.containsUser(joiningUser)){
             // already joined, so ignore the message
             return;
         }
 
         // tell everyone about the new guy
-        User joiningUser = sm.getSender();
         waitingRoom.addUser(joiningUser);
         awaitingBuilds.add(joiningUser);
         Message sm1 = new Message(
@@ -101,7 +100,7 @@ public class WaitingRoomHostProtocol extends MessageHandler {
             initMsgBuild.build().toString(),
             ServerMessageType.WAITING_ROOM_INIT
         );
-        getServer().send(initMsg, sm.getSender());
+        getServer().send(initMsg, joiningUser);
     }
     
     public final void prepareToStart(){
@@ -110,8 +109,7 @@ public class WaitingRoomHostProtocol extends MessageHandler {
     
     private synchronized void receiveBuildInfo(ServerMessagePacket sm){
         // synchronized avoids duplicate player IDs
-        
-        User sender = sm.getSender();
+        User sender = sm.getMessage().getSender().get();
 
         if (!awaitingBuilds.contains(sender)) {
             // we don't need their build, so ignore it

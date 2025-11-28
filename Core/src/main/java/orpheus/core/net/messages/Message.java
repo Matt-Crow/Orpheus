@@ -54,21 +54,6 @@ public class Message implements JsonSerialable {
     }
 
     /**
-     * @param type the type of message this is
-     * @param bodyText the text content of the message body
-     * @param sender the user who sent this message
-     */
-    public Message(ServerMessageType type, String bodyText, User sender) {
-        this(
-            type,
-            Json.createObjectBuilder()
-                .add("text", bodyText)
-                .build(),
-            sender
-        );
-    }
-
-    /**
      * Creates a ServerMessage with an anonymous sender.
      * @param type the type of this message
      * @param body the JSON contents of the message body
@@ -77,24 +62,6 @@ public class Message implements JsonSerialable {
         this.sender = Optional.empty();
         this.type = type;
         this.body = body;
-    }
-
-    /**
-     * Creates a ServerMessage with an anonymous sender.
-     * @param type the type of this message
-     * @param bodyText the text contents of the message body
-     */
-    public Message(ServerMessageType type, String bodyText) {
-        this(type, Json.createObjectBuilder().add("text", bodyText).build());
-    }
-
-    /**
-     * Creates a message with no body
-     * @param type the type of message this is
-     * @param sender the user who sent this message
-     */
-    public Message(ServerMessageType type, User sender) {
-        this(type, JsonObject.EMPTY_JSON_OBJECT, sender);
     }
 
     /**
@@ -119,6 +86,15 @@ public class Message implements JsonSerialable {
             .add("text", bodyText)
             .build();
         type = messageType;
+    }
+
+    /**
+     * Creates a copy of this message with the given user as the sender
+     * @param me the new sender
+     * @return a copy of this message, but with the new sender
+     */
+    public Message withSentBy(User me) {
+        return new Message(type, body, me);
     }
     
     /**

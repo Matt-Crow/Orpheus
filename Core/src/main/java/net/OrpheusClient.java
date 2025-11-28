@@ -60,7 +60,7 @@ public class OrpheusClient extends AbstractNetworkClient {
     @Override
     public final void send(Message sm) {
         try {
-            toServer.writeServerMessage(sm);
+            toServer.writeServerMessage(sm.withSentBy(user));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
