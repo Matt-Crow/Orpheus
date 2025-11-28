@@ -5,7 +5,6 @@ import javax.json.Json;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import net.messages.ServerMessageType;
 import orpheus.core.users.User;
 
 public class MessageTester {

@@ -10,7 +10,6 @@ import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.stream.JsonGenerator;
 
-import net.messages.ServerMessageType;
 import orpheus.core.users.User;
 import serialization.JsonSerialable;
 

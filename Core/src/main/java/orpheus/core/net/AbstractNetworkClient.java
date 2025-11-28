@@ -6,9 +6,8 @@ import java.util.LinkedList;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import net.messages.ServerMessageType;
 import orpheus.core.net.chat.ChatMessage;
-import orpheus.core.net.messages.Message;
+import orpheus.core.net.messages.*;
 import orpheus.core.net.protocols.MessageHandler;
 
 /**

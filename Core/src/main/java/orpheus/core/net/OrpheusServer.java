@@ -9,10 +9,8 @@ import java.util.UUID;
 
 import net.connections.Connection;
 import net.connections.Connections;
-import net.messages.MessageListener;
-import net.messages.ServerMessageType;
 import orpheus.core.net.chat.ChatMessage;
-import orpheus.core.net.messages.Message;
+import orpheus.core.net.messages.*;
 import orpheus.core.users.User;
 import serialization.JsonUtil;
 

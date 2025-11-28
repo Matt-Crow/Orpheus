@@ -3,8 +3,7 @@ package orpheus.core.net.protocols;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-import net.messages.ServerMessageType;
-import orpheus.core.net.messages.Message;
+import orpheus.core.net.messages.*;
 
 /**
  * Handles messages from a remote server or client.

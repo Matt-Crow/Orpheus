@@ -1,4 +1,4 @@
-package net.messages;
+package orpheus.core.net.messages;
 
 import java.util.Arrays;
 

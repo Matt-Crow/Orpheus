@@ -13,8 +13,7 @@ import java.util.function.BiConsumer;
 
 import javax.json.Json;
 
-import net.messages.ServerMessageType;
-import orpheus.core.net.messages.Message;
+import orpheus.core.net.messages.*;
 
 /**
  * a connection between an OrpheusServer & OrpheusClient
