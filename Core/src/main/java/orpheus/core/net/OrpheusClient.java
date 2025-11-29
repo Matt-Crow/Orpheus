@@ -15,8 +15,8 @@ public class OrpheusClient extends AbstractNetworkClient {
     public OrpheusClient(User user, Connection toServer) {
         this.user = user;
         this.toServer = toServer;
-        MessageListener listener = new MessageListener(toServer, this::receiveMessage);
-        listener.startListening();
+        toServer.addMessageReceivedListener(mre -> this.receiveMessage(mre.getConnection(), mre.getMessage()));
+        
         send(new Message(
             user.toJson().toString(), 
             ServerMessageType.PLAYER_JOINED

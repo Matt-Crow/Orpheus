@@ -2,12 +2,14 @@ package orpheus.core.net;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
  * A connection to either a client or a server running Orpheus on another process
@@ -16,11 +18,16 @@ public class SocketConnection extends Connection {
     private final Socket clientSocket;    
     private final BufferedReader fromClient;
     private final BufferedWriter toClient;
+    private volatile boolean isListening = true;
+
 
     private SocketConnection(Socket s, OutputStream os, InputStream is){
         clientSocket = s;
         toClient = new BufferedWriter(new OutputStreamWriter(os));
         fromClient = new BufferedReader(new InputStreamReader(is));
+        
+        //do I need to store this somewhere?
+        new Thread(this::pollForMessages).start();
     }
 
     /**
@@ -43,6 +50,28 @@ public class SocketConnection extends Connection {
     public static Connection forSocket(Socket socket) throws IOException {
         return new SocketConnection(socket, socket.getOutputStream(), socket.getInputStream());
     }
+    
+    private void pollForMessages(){
+        while(isListening){
+            try {
+                // poll from the socket
+                var line = fromClient.readLine();
+                var message = Message.deserializeJson(line);
+                var type = message.getType();
+                if (type == ServerMessageType.SERVER_SHUTDOWN || type == ServerMessageType.PLAYER_LEFT){
+                    isListening = false;
+                } else {
+                    receiveMessage(message);
+                }
+            } catch(EOFException connectionDone){
+                isListening = false;
+            } catch (SocketException sock){
+                isListening = false;
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
 
     @Override
     public final void writeServerMessage(Message sm) throws IOException{        
@@ -50,12 +79,6 @@ public class SocketConnection extends Connection {
         toClient.write(sm.toJsonString());
         toClient.write('\n');
         toClient.flush();
-    }
-
-    @Override
-    public final Message readServerMessage() throws IOException{
-        // This works, so I guess toJsonString excapes newlines or something?
-        return Message.deserializeJson(fromClient.readLine());
     }
 
     public void close(){

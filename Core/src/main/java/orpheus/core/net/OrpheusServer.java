@@ -111,9 +111,7 @@ public class OrpheusServer extends AbstractNetworkClient {
 
     public void connectTo(Connection connection) {
         clients.connectTo(connection);
-        
-        log("Opening message listener thread...");
-        new MessageListener(connection, this::receiveMessage).startListening();
+        connection.addMessageReceivedListener(mre -> this.receiveMessage(mre.getConnection(), mre.getMessage()));
         log(clients);
     }
 
