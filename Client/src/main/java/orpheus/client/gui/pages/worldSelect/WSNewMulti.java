@@ -33,7 +33,7 @@ public class WSNewMulti extends AbstractWSNewWorld{
         var user = context.getLoggedInUser();
         try{
             var socketConnectionListener = SocketConnectionListener.forServer(server);
-            var client = new OrpheusClient(user, Connection.forRemote(socketConnectionListener.getSocketAddress()));
+            var client = new OrpheusClient(user, SocketConnection.forRemote(socketConnectionListener.getSocketAddress()));
             
             var room = new WaitingRoomPage(context, getHost());
             var clientProtocol = new WaitingRoomClientProtocol(client, room);

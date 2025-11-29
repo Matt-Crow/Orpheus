@@ -109,7 +109,7 @@ public class HubForm extends JComponent {
         context.showLoginWindow(); // ask annonymous users to log in
         var user = context.getLoggedInUser();
 
-        var client = new OrpheusClient(user, Connection.forRemote(address));
+        var client = new OrpheusClient(user, SocketConnection.forRemote(address));
         var waitingRoomPage = new WaitingRoomPage(context, host);
         var protocol = new WaitingRoomClientProtocol(client, waitingRoomPage);
         waitingRoomPage.setBackEnd(protocol);
