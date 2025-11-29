@@ -1,7 +1,6 @@
 package orpheus.core.net;
 
 import java.io.IOException;
-import java.net.Socket;
 import orpheus.core.users.User;
 
 /**
@@ -10,20 +9,12 @@ import orpheus.core.users.User;
  */
 public class OrpheusClient extends AbstractNetworkClient {
     private final User user;
-    private final String hostIp;
-    private final int hostPort;
-    
-    private Connection toServer;
+    private final Connection toServer;
 
-    public OrpheusClient(User user, SocketAddress connectTo) throws IOException {
-        super();
+
+    public OrpheusClient(User user, Connection toServer) {
         this.user = user;
-        this.hostIp = connectTo.getAddress();
-        this.hostPort = connectTo.getPort();
-
-        // TODO encapsulate dependency on Socket
-        Socket client = new Socket(hostIp, hostPort);
-        toServer = new Connection(client);
+        this.toServer = toServer;
         MessageListener listener = new MessageListener(toServer, this::receiveMessage);
         listener.startListening();
         send(new Message(

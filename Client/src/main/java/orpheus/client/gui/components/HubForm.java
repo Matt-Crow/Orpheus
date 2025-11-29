@@ -68,7 +68,7 @@ public class HubForm extends JComponent {
 
         var addressRow = cf.makePanel();
         addressRow.add(cf.makeLabel("IP Address"));
-        addressInput = new JTextField("xxx.yyy.zzz.ttt");
+        addressInput = new JTextField("0.0.0.0");
         addressInput.setColumns(20);
         addressRow.add(addressInput);
         center.add(addressRow);
@@ -97,7 +97,7 @@ public class HubForm extends JComponent {
         var socketAddress = new SocketAddress(address, portNumber);
 
         try {
-            doOldConnection(socketAddress);
+            connectToRemoteServer(socketAddress);
         } catch (IOException ex) {
             messages.append("Failed to connect to server: \n");
             messages.append(ex.getMessage() + '\n');
@@ -105,11 +105,11 @@ public class HubForm extends JComponent {
         messages.append("Connected!\n");
     }
 
-    private void doOldConnection(SocketAddress address) throws IOException {
+    private void connectToRemoteServer(SocketAddress address) throws IOException {
         context.showLoginWindow(); // ask annonymous users to log in
         var user = context.getLoggedInUser();
 
-        var client = new OrpheusClient(user, address);
+        var client = new OrpheusClient(user, Connection.forRemote(address));
         var waitingRoomPage = new WaitingRoomPage(context, host);
         var protocol = new WaitingRoomClientProtocol(client, waitingRoomPage);
         waitingRoomPage.setBackEnd(protocol);

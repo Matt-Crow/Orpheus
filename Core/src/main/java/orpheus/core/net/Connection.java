@@ -5,7 +5,9 @@ import orpheus.core.users.User;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
@@ -24,10 +26,31 @@ public class Connection {
     private final BufferedReader fromClient;
     private final BufferedWriter toClient;
     
-    public Connection(Socket s) throws IOException{
+    private Connection(Socket s, OutputStream os, InputStream is){
         clientSocket = s;
-        toClient = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-        fromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        toClient = new BufferedWriter(new OutputStreamWriter(os));
+        fromClient = new BufferedReader(new InputStreamReader(is));
+    }
+
+    /**
+     * Attempts to establish a Connection to the given remote address
+     * @param socketAddress the address to connect to
+     * @return a connection to the given address
+     * @throws IOException if any exceptions occur when connection to the given address
+     */
+    public static Connection forRemote(SocketAddress socketAddress) throws IOException {
+        var socket = new Socket(socketAddress.getAddress(), socketAddress.getPort());
+        return Connection.forSocket(socket);
+    }
+
+    /**
+     * Attempts to establish a Connection with the given Socket
+     * @param socket the Socket to connect to
+     * @return a Connection around the given Socket
+     * @throws IOException if any exceptions occur when establishing the connection
+     */
+    public static Connection forSocket(Socket socket) throws IOException {
+        return new Connection(socket, socket.getOutputStream(), socket.getInputStream());
     }
     
     public final void writeServerMessage(Message sm) throws IOException{        
@@ -71,10 +94,6 @@ public class Connection {
     }
     public User getRemoteUser(){
         return remoteUser;
-    }
-    
-    public final Socket getClientSocket(){
-        return clientSocket;
     }
     
     @Override

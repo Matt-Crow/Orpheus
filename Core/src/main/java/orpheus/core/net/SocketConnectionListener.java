@@ -44,13 +44,12 @@ public class SocketConnectionListener {
         while (server.isRunning()) {
             try {
                 var client = serverSocket.accept();
-                
                 log("Received connection to %s:%d".formatted(
                     client.getInetAddress().getHostAddress(),
                     client.getPort()
                 ));
 
-                var connection = new Connection(client);
+                var connection = Connection.forSocket(client);
                 server.connectTo(connection);
             } catch (SocketTimeoutException ste) {
                 // this is not an error, it just means no client has attempted to connect
