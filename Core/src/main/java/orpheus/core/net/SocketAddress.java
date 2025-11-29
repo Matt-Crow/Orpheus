@@ -2,15 +2,10 @@ package orpheus.core.net;
 
 import java.util.Objects;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-
-import serialization.JsonSerialable;
-
 /**
  * a wrapper for IP address & port
  */
-public class SocketAddress implements JsonSerialable {
+public class SocketAddress {
     private final String address;
     private final int port;
 
@@ -44,17 +39,5 @@ public class SocketAddress implements JsonSerialable {
             return asAddr.address.equals(address) && asAddr.port == port;
         }
         return false;
-    }
-
-    @Override
-    public JsonObject toJson() {
-        return Json.createObjectBuilder()
-            .add("address", address)
-            .add("port", port)
-            .build();
-    }
-
-    public static SocketAddress fromJson(JsonObject json) {
-        return new SocketAddress(json.getString("address"), json.getInt("port"));
     }
 }

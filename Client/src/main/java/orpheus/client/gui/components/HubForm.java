@@ -3,6 +3,7 @@ package orpheus.client.gui.components;
 import java.awt.BorderLayout;
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.Optional;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -12,10 +13,9 @@ import javax.swing.JTextField;
 
 import orpheus.client.ClientAppContext;
 import orpheus.client.gui.pages.PageController;
-import orpheus.client.gui.pages.worldselect.WaitingRoom;
-import orpheus.client.protocols.ClientChatProtocol;
+import orpheus.client.gui.pages.worldselect.WaitingRoomPage;
 import orpheus.client.protocols.WaitingRoomClientProtocol;
-import orpheus.core.net.SocketAddress;
+import orpheus.core.net.*;
 
 /**
  * A component which allows users to specify the IP address of a hub to connect
@@ -68,7 +68,7 @@ public class HubForm extends JComponent {
 
         var addressRow = cf.makePanel();
         addressRow.add(cf.makeLabel("IP Address"));
-        addressInput = new JTextField("xxx.yyy.zzz.ttt");
+        addressInput = new JTextField("0.0.0.0");
         addressInput.setColumns(20);
         addressRow.add(addressInput);
         center.add(addressRow);
@@ -97,7 +97,7 @@ public class HubForm extends JComponent {
         var socketAddress = new SocketAddress(address, portNumber);
 
         try {
-            doOldConnection(socketAddress);
+            connectToRemoteServer(socketAddress);
         } catch (IOException ex) {
             messages.append("Failed to connect to server: \n");
             messages.append(ex.getMessage() + '\n');
@@ -105,21 +105,17 @@ public class HubForm extends JComponent {
         messages.append("Connected!\n");
     }
 
-    private void doOldConnection(SocketAddress address) throws IOException {
+    private void connectToRemoteServer(SocketAddress address) throws IOException {
         context.showLoginWindow(); // ask annonymous users to log in
         var user = context.getLoggedInUser();
 
-        var client = new net.OrpheusClient(user, address);
-        var waitingRoomPage = new WaitingRoom(context, host);
+        var client = new OrpheusClient(user, SocketConnection.forRemote(address));
+        var waitingRoomPage = new WaitingRoomPage(context, host);
         var protocol = new WaitingRoomClientProtocol(client, waitingRoomPage);
         waitingRoomPage.setBackEnd(protocol);
-        client.setProtocol(protocol);
-        client.setChatProtocol(new ClientChatProtocol(
-            user,
-            client, 
-            waitingRoomPage.getChat()
-        ));
-        client.start();
+        client.setMessageHandler(Optional.of(protocol));
+        waitingRoomPage.getChat().handleChatMessagesFor(client);
+        
         host.switchToPage(waitingRoomPage);
     }
 }

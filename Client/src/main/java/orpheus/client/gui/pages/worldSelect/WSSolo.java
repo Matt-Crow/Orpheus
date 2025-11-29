@@ -1,15 +1,11 @@
 package orpheus.client.gui.pages.worldselect;
 
-import orpheus.client.gui.pages.PlayerControls;
 import world.battle.Team;
 import orpheus.client.ClientAppContext;
-import orpheus.client.gui.pages.play.HeadsUpDisplay;
-import orpheus.client.gui.pages.play.LocalWorldSupplier;
-import orpheus.client.gui.pages.play.SoloWorldUpdater;
-import orpheus.client.gui.pages.play.WorldCanvas;
+import orpheus.client.gui.pages.play.WorldGraphSupplier;
 import orpheus.client.gui.pages.play.WorldPage;
 import orpheus.core.commands.executor.LocalExecutor;
-import orpheus.core.world.graph.particles.Particles;
+import orpheus.core.utils.timer.FrameTimer;
 import orpheus.core.world.occupants.players.Player;
 import orpheus.client.gui.pages.PageController;
 import world.*;
@@ -27,37 +23,29 @@ public class WSSolo extends AbstractWSNewWorld{
     public void start(){
         var players = Team.ofPlayers();        
         World world = new WorldBuilderImpl()
-                .withGame(createGame())
-                .withPlayers(players)
-                .withAi(Team.ofAi())
-                .build();
+            .withGame(createGame())
+            .withPlayers(players)
+            .withAi(Team.ofAi())
+            .build();
         
-        var graph = new LocalWorldSupplier(world);
-        var particles = new Particles();
-        SoloWorldUpdater updater = new SoloWorldUpdater(graph, particles, world);
-        
+        // remember: use different FrameTimers to draw and update the world
+        // WorldPage handles the drawing part
+        // #65 allow this to stop
+        new FrameTimer(e -> world.update()).start();
         
         var selected = getSelectedSpecification().get();
         var assembledBuild = getContext().getSpecificationResolver().resolve(selected);
-        var player = Player.makeHuman(world, assembledBuild);
-        players.addMember(player);
-        
-        // model must have teams set before WorldCanvas init, as WC relies on getting the player team
-        WorldCanvas renderer = new WorldCanvas(
-            graph,
-            particles,
-            new PlayerControls(player.getId(), new LocalExecutor(world))
-        );
-        
+        var me = Player.makeHuman(world, assembledBuild);
+        players.addMember(me);
         world.init();
 
-        var hud = new HeadsUpDisplay(graph, player.getId());
-        updater.addEndOfFrameListener(hud);
-        
-        WorldPage wp = new WorldPage(getContext(), getHost(), hud);
-        wp.setCanvas(renderer);
+        WorldPage wp = new WorldPage(
+            getContext(), 
+            getHost(), 
+            WorldGraphSupplier.fromWorld(world),
+            me.getId(),
+            new LocalExecutor(world)
+        );
         getHost().switchToPage(wp);
-        renderer.start();
-        updater.start();
     }
 }

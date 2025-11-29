@@ -1,77 +1,61 @@
 package orpheus.core.net;
 
 import java.io.IOException;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.Optional;
-
-import orpheus.core.net.connections.Connection;
-import orpheus.core.net.messages.Message;
+import orpheus.core.users.User;
 
 /**
- * connects to a remote OrpheusServer to exchange messages
+ *
+ * @author Matt Crow
  */
-public class OrpheusClient {
+public class OrpheusClient extends AbstractNetworkClient {
+    private final User user;
+    private final Connection toServer;
+
+
+    public OrpheusClient(User user, Connection toServer) {
+        this.user = user;
+        this.toServer = toServer;
+        toServer.addMessageReceivedListener(mre -> this.receiveMessage(mre.getConnection(), mre.getMessage()));
+        
+        send(new Message(
+            user.toJson().toString(), 
+            ServerMessageType.PLAYER_JOINED
+        ));
+    }
     
-    /**
-     * the connection to the OrpheusServer
-     */
-    private final Connection connection;
-
-    /**
-     * the protocol this uses to handle messages
-     */
-    private Optional<ClientProtocol> protocol;
-
-    private OrpheusClient(Connection connection) {
-        this.connection = connection;
-        protocol = Optional.empty();
-        connection.addMessageListener(this::handleMessage);
+    // #65 need something to call this
+    protected void doStop() throws IOException {
+        send(new Message(
+            "bye",
+            ServerMessageType.PLAYER_LEFT
+        ));
+        toServer.close();
     }
 
-    /**
-     * Creates a new client for a server hosted on the given IP address and port
-     * @param address the socket address of the host server
-     * @return a new client, ready to communicate with the server
-     * @throws UnknownHostException if an invalid host is given
-     * @throws IOException on any IO problems
-     */
-    public static OrpheusClient create(SocketAddress address) throws UnknownHostException, IOException {
-        var socket = new Socket(address.getAddress(), address.getPort());
-        var connection = Connection.connect(socket);
-        var client = new OrpheusClient(connection);
-        return client;
-    }
-
-    /**
-     * sets the new protocol to use
-     * @param protocol the new protocol to use
-     */
-    public void setProtocol(ClientProtocol protocol) {
-        this.protocol = Optional.of(protocol);
-    }
-
-    /**
-     * sends a message to the server
-     * @param message the message to send
-     * @throws IOException if an error occurs while sending to the server
-     */
-    public void send(Message message) throws IOException {
-        connection.send(message);
-    }
-
-    /**
-     * closes the connection to the server
-     * @throws IOException
-     */
-    public void disconnect() throws IOException {
-        connection.close();
-    }
-
-    private void handleMessage(Connection from, Message message) {
-        System.out.printf("Client received %s", message.toString());
-        if (protocol.isPresent()) {
-            protocol.get().receive(this, from, message);
+    @Override
+    protected void doReceiveMessage(Connection connection, Message sm) {
+        if(sm.getType() == ServerMessageType.SERVER_SHUTDOWN){
+            toServer.close();
         }
+    }
+
+    @Override
+    public final void send(Message sm) {
+        try {
+            toServer.writeServerMessage(sm.withSentBy(user));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Sends a chat message to the server so it can broadcast it to other players.
+     * @param message the message to send
+     */
+    public void sendChatMessage(String message) {
+        send(new Message(
+            ServerMessageType.CHAT, 
+            new ChatMessage(user, message).toJson())
+        );
     }
 }

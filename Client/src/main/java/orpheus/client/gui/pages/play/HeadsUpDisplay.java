@@ -1,6 +1,6 @@
 package orpheus.client.gui.pages.play;
 
-import net.protocols.EndOfFrameListener;
+import orpheus.core.utils.timer.EndOfFrameEvent;
 
 import java.awt.FlowLayout;
 import java.util.UUID;
@@ -13,7 +13,7 @@ import javax.swing.JLabel;
  *
  * @author Matt Crow
  */
-public class HeadsUpDisplay extends JComponent implements EndOfFrameListener {
+public class HeadsUpDisplay extends JComponent {
     
     /**
      * supplied player details
@@ -56,8 +56,7 @@ public class HeadsUpDisplay extends JComponent implements EndOfFrameListener {
         this.playerId = playerId;
     }
 
-    @Override
-    public void frameEnded() {
+    public void frameEnded(EndOfFrameEvent e) {
         var maybePlayer = graph.get()
             .getPlayers()
             .getMemberById(playerId);

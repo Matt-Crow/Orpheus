@@ -64,6 +64,11 @@ public class User implements JsonSerialable {
     }
 
     @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    @Override
     public JsonObject toJson(){
         return Json.createObjectBuilder()
             .add("name", name)

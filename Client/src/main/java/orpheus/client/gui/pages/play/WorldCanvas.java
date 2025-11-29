@@ -1,13 +1,12 @@
 package orpheus.client.gui.pages.play;
 
-import util.Settings;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.*;
 import java.util.UUID;
 
-import javax.swing.*;
 import orpheus.client.gui.pages.PlayerControls;
+import orpheus.core.utils.timer.FrameTimer;
 import orpheus.core.world.graph.particles.Particles;
 
 import java.awt.Graphics2D;
@@ -33,7 +32,7 @@ public class WorldCanvas extends Canvas {
     /**
      * handles repainting - but not updating - the world
      */
-    private final Timer repaintTimer;
+    private final FrameTimer repaintTimer;
 
     /**
      * The ID of the player to center the camera on
@@ -52,17 +51,18 @@ public class WorldCanvas extends Canvas {
         this.particles = particles;
 
         paused = false;
-        repaintTimer = new Timer(1000 / Settings.FPS, (ActionEvent e) -> {
-            endOfFrame();
-            repaint();
-        });
-        repaintTimer.setRepeats(true);
-        repaintTimer.stop();
+        repaintTimer = new FrameTimer(e -> repaint());
 
         registerKey(KeyEvent.VK_Z, true, () -> zoomIn());
         registerKey(KeyEvent.VK_X, true, () -> zoomOut());
         registerKey(KeyEvent.VK_P, true, () -> togglePause());
         setZoom(0.5);
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                requestFocusInWindow();
+            }
+        });
 
         pc.registerControlsTo(this);
 
