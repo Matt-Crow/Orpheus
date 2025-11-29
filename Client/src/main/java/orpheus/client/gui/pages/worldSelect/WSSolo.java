@@ -30,7 +30,7 @@ public class WSSolo extends AbstractWSNewWorld{
         
         // remember: use different FrameTimers to draw and update the world
         // WorldPage handles the drawing part
-        // TODO allow this to stop
+        // #65 allow this to stop
         new FrameTimer(e -> world.update()).start();
         
         var selected = getSelectedSpecification().get();

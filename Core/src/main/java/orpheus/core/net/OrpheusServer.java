@@ -52,7 +52,7 @@ public class OrpheusServer extends AbstractNetworkClient {
         sendToAllExcept(sendMe, chatMessage.getSender());
     }
 
-    // TODO call this somewhere
+    // #65 need something to call this
     protected final void doStop() {
         if (!isRunning) {
             return;
@@ -83,7 +83,7 @@ public class OrpheusServer extends AbstractNetworkClient {
         if (clients.isConnectedTo(recipient)) {
             try {
                 clients.getConnectionTo(recipient).writeServerMessage(sm);
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
             success = true;

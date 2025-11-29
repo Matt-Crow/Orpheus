@@ -74,11 +74,14 @@ public class SocketConnection extends Connection {
     }
 
     @Override
-    public final void writeServerMessage(Message sm) throws IOException{        
-        // do I need to make sure the JsonString contains no newlines?
-        toClient.write(sm.toJsonString());
-        toClient.write('\n');
-        toClient.flush();
+    public final void writeServerMessage(Message sm) {        
+        try {
+            toClient.write(sm.toJsonString());
+            toClient.write('\n');
+            toClient.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void close(){

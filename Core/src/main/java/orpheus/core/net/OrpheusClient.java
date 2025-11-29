@@ -23,7 +23,7 @@ public class OrpheusClient extends AbstractNetworkClient {
         ));
     }
     
-    // TODO call this somewhere
+    // #65 need something to call this
     protected void doStop() throws IOException {
         send(new Message(
             "bye",
@@ -43,7 +43,7 @@ public class OrpheusClient extends AbstractNetworkClient {
     public final void send(Message sm) {
         try {
             toServer.writeServerMessage(sm.withSentBy(user));
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }

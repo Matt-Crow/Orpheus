@@ -3,14 +3,12 @@ package orpheus.core.net;
 import orpheus.core.users.User;
 import orpheus.core.utils.EventEmitter;
 
-import java.io.IOException;
 import java.util.function.Consumer;
 
 /**
  * Represents a connection to either a client or a server running Orpheus
  * @author Matt Crow
  */
-// TODO add local connection subclass
 public abstract class Connection {
     private User remoteUser;
     private final EventEmitter<MessageReceivedEvent> eventMessageReceived = new EventEmitter<>();
@@ -45,9 +43,7 @@ public abstract class Connection {
         eventMessageReceived.emitEvent(new MessageReceivedEvent(this, message));
     }
     
-    // TODO don't throw IOException
-    public abstract void writeServerMessage(Message sm) throws IOException;
+    public abstract void writeServerMessage(Message sm);
     
-    // TODO not needed for local connection?
     public abstract void close();
 }
