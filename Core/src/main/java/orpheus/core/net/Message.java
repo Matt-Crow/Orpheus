@@ -11,7 +11,6 @@ import javax.json.JsonObject;
 import javax.json.stream.JsonGenerator;
 
 import orpheus.core.users.User;
-import serialization.JsonSerialable;
 
 /**
  * The ServerMessage class is used to store data sent
@@ -19,7 +18,7 @@ import serialization.JsonSerialable;
  * 
  * @author Matt Crow
  */
-public class Message implements JsonSerialable {
+public class Message {
 
     /**
      * the user who sent the message
@@ -131,7 +130,6 @@ public class Message implements JsonSerialable {
      * 
      * @return a JSON representation of this. 
      */
-    @Override
     public JsonObject toJson() {
         var builder = Json.createObjectBuilder();
         if (sender.isPresent()) {

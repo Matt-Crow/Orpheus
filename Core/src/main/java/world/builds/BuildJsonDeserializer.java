@@ -2,12 +2,9 @@ package world.builds;
 
 import javax.json.JsonObject;
 
-import orpheus.core.json.JsonDeserializer;
 import serialization.JsonUtil;
 
-public class BuildJsonDeserializer implements JsonDeserializer<Build> {
-
-    @Override
+public class BuildJsonDeserializer {
     public Build fromJson(JsonObject json) {
         var actives = JsonUtil.toList(json.getJsonArray("actives"));
         var passives = JsonUtil.toList(json.getJsonArray("passives"));

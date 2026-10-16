@@ -4,9 +4,8 @@ import javax.json.Json;
 import javax.json.JsonObject;
 
 import orpheus.core.users.User;
-import serialization.JsonSerialable;
 
-public class ChatMessage implements JsonSerialable {
+public class ChatMessage {
 
     /**
      * the user who sent this chat message
@@ -41,7 +40,6 @@ public class ChatMessage implements JsonSerialable {
         return message;
     }
 
-    @Override
     public JsonObject toJson() {
         return Json.createObjectBuilder()
             .add("sender", sender.toJson())

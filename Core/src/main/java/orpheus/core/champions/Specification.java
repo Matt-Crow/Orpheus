@@ -4,12 +4,11 @@ import javax.json.Json;
 import javax.json.JsonObject;
 
 import orpheus.core.utils.Prototype;
-import serialization.JsonSerialable;
 
 /**
  * Used by players to specify which Build or Champion they want to play as.
  */
-public interface Specification extends JsonSerialable, Prototype {
+public interface Specification extends Prototype {
     
     /**
      * @return a unique identifier for this
@@ -35,7 +34,6 @@ public interface Specification extends JsonSerialable, Prototype {
      */
     public JsonObject doToJson();
 
-    @Override
     public default JsonObject toJson() {
         var asJson = Json.createObjectBuilder(doToJson())
             .add("type", getType().toString())

@@ -5,12 +5,10 @@ import java.util.UUID;
 import javax.json.Json;
 import javax.json.JsonObject;
 
-import serialization.JsonSerialable;
-
 /**
  * a user that also tracks their remote player ID
  */
-public class User implements JsonSerialable {
+public class User {
 
     /**
      * The display name for this user - may not be unique
@@ -68,7 +66,6 @@ public class User implements JsonSerialable {
         return id.hashCode();
     }
 
-    @Override
     public JsonObject toJson(){
         return Json.createObjectBuilder()
             .add("name", name)

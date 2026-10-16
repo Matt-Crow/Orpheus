@@ -2,14 +2,12 @@ package orpheus.core.champions;
 
 import javax.json.JsonObject;
 
-import orpheus.core.json.JsonDeserializer;
 import world.builds.BuildJsonDeserializer;
 
-public class SpecificationJsonDeserializer implements JsonDeserializer<Specification> {
+public class SpecificationJsonDeserializer {
 
     private final BuildJsonDeserializer buildDeserializer = new BuildJsonDeserializer();
 
-    @Override
     public Specification fromJson(JsonObject json) {
         var type = BuildOrChampion.fromString(json.getString("type"));
         switch (type) {
