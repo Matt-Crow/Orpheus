@@ -6,7 +6,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 
 import orpheus.core.users.User;
-import orpheus.core.world.graph.utils.JsonArrayHelper;
+import orpheus.core.utils.OrpheusJsonHelper;
 
 public class WaitingRoomInitMessage {
     private final List<User> users;
@@ -20,13 +20,16 @@ public class WaitingRoomInitMessage {
     }
 
     public JsonObject toJson() {
+        var userJsons = users.stream()
+            .map(User::toJson)
+            .toList();
         return Json.createObjectBuilder()
-            .add("team", JsonArrayHelper.toJsonArray(users, (u, jab) -> jab.add(u.toJson())))
+            .add("team", OrpheusJsonHelper.toJsonArrayOfObjects(userJsons))
             .build();
     }
 
     public static WaitingRoomInitMessage fromJson(JsonObject json) {
-        var users = JsonArrayHelper.toList(json.getJsonArray("team"), (ja, i) -> User.fromJson(ja.getJsonObject(i)));
+        var users = OrpheusJsonHelper.toListOfObjects(json.getJsonArray("team"), User::fromJson);
         return new WaitingRoomInitMessage(users);
     }
 }

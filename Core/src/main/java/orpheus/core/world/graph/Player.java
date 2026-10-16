@@ -8,8 +8,8 @@ import java.util.UUID;
 import javax.json.Json;
 import javax.json.JsonObject;
 
+import orpheus.core.utils.OrpheusJsonHelper;
 import orpheus.core.world.graph.playables.Playable;
-import orpheus.core.world.graph.utils.JsonArrayHelper;
 
 /**
  * renders and serializes a Player
@@ -78,14 +78,17 @@ public class Player extends WorldOccupant {
     
     @Override
     public JsonObject toJson() {
+        var activeJsons = actives.stream()
+            .map(Active::toJson)
+            .toList();
         return Json.createObjectBuilder(super.toJson())
             .add("id", id.toString())
             .add("hp", hp)
-            .add("statuses", JsonArrayHelper.fromStrings(statuses))
+            .add("statuses", OrpheusJsonHelper.toJsonArrayOfStrings(statuses))
             .add("teamColor", teamColor.getRGB())
             .add("color", color.getRGB())
             .add("playingAs", playingAs.toJson())
-            .add("actives", JsonArrayHelper.fromGraphElements(actives))
+            .add("actives", OrpheusJsonHelper.toJsonArrayOfObjects(activeJsons))
             .build();
     }
 
@@ -96,11 +99,11 @@ public class Player extends WorldOccupant {
             json.getInt("y"),
             json.getInt("radius"),
             json.getInt("hp"),
-            JsonArrayHelper.toStrings(json.getJsonArray("statuses")),
+            OrpheusJsonHelper.toListOfStrings(json.getJsonArray("statuses")),
             new Color(json.getInt("teamColor")),
             new Color(json.getInt("color")),
             Playable.fromJson(json.getJsonObject("playingAs")),
-            JsonArrayHelper.toGraphElements(json.getJsonArray("actives"), Active::fromJson)
+            OrpheusJsonHelper.toListOfObjects(json.getJsonArray("actives"), Active::fromJson)
         );
     }
 }
