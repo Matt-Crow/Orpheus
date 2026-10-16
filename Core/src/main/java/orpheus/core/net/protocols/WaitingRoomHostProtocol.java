@@ -3,10 +3,6 @@ package orpheus.core.net.protocols;
 import java.util.HashSet;
 import java.util.Optional;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObjectBuilder;
-
 import orpheus.core.champions.Specification;
 import orpheus.core.champions.SpecificationResolver;
 import orpheus.core.net.*;
@@ -75,16 +71,9 @@ public class WaitingRoomHostProtocol extends MessageHandler {
         server.send(sm1);
         
         // tell the new guy about everyone else
-        JsonObjectBuilder initMsgBuild = Json.createObjectBuilder();
-        initMsgBuild.add("type", "waiting room init");
-        JsonArrayBuilder userListBuild = Json.createArrayBuilder();
-        for(User u : waitingRoom.getAllUsers()){
-            userListBuild.add(u.toJson());
-        }
-        initMsgBuild.add("team", userListBuild.build());
-        
+        var payload = new WaitingRoomInitMessage(waitingRoom.getAllUsers());
         Message initMsg = new Message(
-            initMsgBuild.build().toString(),
+            payload.toJson().toString(),
             ServerMessageType.WAITING_ROOM_INIT
         );
         server.send(initMsg, joiningUser);

@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.io.File;
 import java.util.Arrays;
 
-import javax.json.JsonObject;
 import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -83,9 +82,9 @@ public class StartPlay extends Page{
      * @param dataSet the data set to load new builds into
      */
     private void loadFileInto(File f, DataSet dataSet){
-        for(JsonObject obj : JsonUtil.readFromFile(f)){
-            dataSet.addBuild(Build.fromJson(obj));
-        }
+        Arrays.stream(JsonUtil.readFromFile(f))
+            .map(Build::fromJson)
+            .forEach(dataSet::addBuild);
     }
     
     private void showExportBuildsDialog(){
@@ -97,9 +96,9 @@ public class StartPlay extends Page{
     }
 
     private void saveAllToFile(DataSet dataSet, File f){
-        JsonObject[] objs = Arrays.stream(dataSet.getAllBuilds())
+        var objs = Arrays.stream(dataSet.getAllBuilds())
             .map(Build::toJson)
-            .toArray(JsonObject[]::new);
-        JsonUtil.writeToFile(objs, f);  
+            .toList();
+        JsonUtil.writeToFile(objs, f);
     }
 }

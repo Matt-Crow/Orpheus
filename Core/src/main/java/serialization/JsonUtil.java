@@ -42,7 +42,7 @@ public class JsonUtil {
         return objs.toArray(new JsonObject[objs.size()]);
     }
     
-    public static void writeToFile(JsonObject[] objs, File file){
+    public static void writeToFile(List<JsonObject> objs, File file){
         try{
             FileWriter write = new FileWriter(file);
             for(JsonObject obj : objs){

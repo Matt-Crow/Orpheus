@@ -1,8 +1,5 @@
 package orpheus.client.protocols;
 
-import javax.json.JsonObject;
-import javax.json.JsonValue;
-
 import serialization.JsonUtil;
 import orpheus.client.gui.pages.play.WorldGraphSupplier;
 import orpheus.client.gui.pages.play.WorldPage;
@@ -11,10 +8,7 @@ import orpheus.core.net.*;
 import orpheus.core.net.protocols.*;
 import orpheus.core.users.User;
 import orpheus.core.world.graph.World;
-import java.io.StringReader;
 import java.util.Optional;
-
-import javax.json.Json;
 
 /**
  *
@@ -35,21 +29,14 @@ public class WaitingRoomClientProtocol extends MessageHandler {
     }
 
     private void receiveInit(Message sm) {
-        JsonObject obj = JsonUtil.fromString(sm.getBodyText());
-        JsonUtil.verify(obj, "team");
-        obj.getJsonArray("team").stream().forEach((jv) -> {
-            if (jv.getValueType().equals(JsonValue.ValueType.OBJECT)) {
-                User u = User.fromJson((JsonObject) jv);
-                waitingRoom.addUser(u);
-            }
-        });
+        var obj = JsonUtil.fromString(sm.getBodyText());
+        var waitingRoomInitMessage = WaitingRoomInitMessage.fromJson(obj);
+        waitingRoomInitMessage.getUsers().forEach(waitingRoom::addUser);
         frontEnd.updateTeamDisplays(waitingRoom.getAllUsers());
     }
 
     private void receiveUpdate(Message sm) {
-        JsonObject json = Json.createReader(
-            new StringReader(sm.getBodyText())
-        ).readObject();
+        var json = JsonUtil.fromString(sm.getBodyText());
         waitingRoom.addUser(User.fromJson(json));
         frontEnd.updateTeamDisplays(waitingRoom.getAllUsers());
     }
