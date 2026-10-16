@@ -151,7 +151,7 @@ public class Message {
      * @return the ServerMessage encoded a json object
      * @throws JsonException if the JsonObject is not a ServerMessage
      */
-    public static Message deserializeJson(String s){
+    public static Message fromJson(String s){
         JsonObject obj = Json.createReader(new StringReader(s)).readObject();
         var type = ServerMessageType.fromString(obj.getString("type"));
         var body = obj.getJsonObject("body");

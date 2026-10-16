@@ -9,7 +9,6 @@ import javax.json.Json;
 import javax.json.JsonObject;
 
 import orpheus.core.world.graph.playables.Playable;
-import orpheus.core.world.graph.playables.PlayableJsonDeserializer;
 import orpheus.core.world.graph.utils.JsonArrayHelper;
 
 /**
@@ -100,7 +99,7 @@ public class Player extends WorldOccupant {
             JsonArrayHelper.toStrings(json.getJsonArray("statuses")),
             new Color(json.getInt("teamColor")),
             new Color(json.getInt("color")),
-            PlayableJsonDeserializer.fromJson(json.getJsonObject("playingAs")),
+            Playable.fromJson(json.getJsonObject("playingAs")),
             JsonArrayHelper.toGraphElements(json.getJsonArray("actives"), Active::fromJson)
         );
     }

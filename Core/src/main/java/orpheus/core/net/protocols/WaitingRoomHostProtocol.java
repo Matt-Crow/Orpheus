@@ -7,7 +7,7 @@ import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 
-import orpheus.core.champions.SpecificationJsonDeserializer;
+import orpheus.core.champions.Specification;
 import orpheus.core.champions.SpecificationResolver;
 import orpheus.core.net.*;
 import orpheus.core.users.User;
@@ -103,9 +103,8 @@ public class WaitingRoomHostProtocol extends MessageHandler {
             return;
         }
         
-        var deserializer = new SpecificationJsonDeserializer();
         var json = JsonUtil.fromString(sm.getBodyText());
-        var specification = deserializer.fromJson(json);
+        var specification = Specification.fromJson(json);
         var assembledBuild = specificationResolver.resolve(specification);
         var player = Player.makeHuman(
             world,

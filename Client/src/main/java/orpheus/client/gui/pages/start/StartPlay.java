@@ -18,7 +18,6 @@ import orpheus.client.gui.pages.worldselect.WSNewMulti;
 import orpheus.client.gui.pages.worldselect.WSSolo;
 import serialization.JsonUtil;
 import world.builds.Build;
-import world.builds.BuildJsonDeserializer;
 import world.builds.DataSet;
 import orpheus.client.gui.pages.PageController;
 import orpheus.client.gui.pages.CustomizeBuildPage;
@@ -84,9 +83,8 @@ public class StartPlay extends Page{
      * @param dataSet the data set to load new builds into
      */
     private void loadFileInto(File f, DataSet dataSet){
-        var buildDeserializer = new BuildJsonDeserializer();
         for(JsonObject obj : JsonUtil.readFromFile(f)){
-            dataSet.addBuild(buildDeserializer.fromJson(obj));
+            dataSet.addBuild(Build.fromJson(obj));
         }
     }
     

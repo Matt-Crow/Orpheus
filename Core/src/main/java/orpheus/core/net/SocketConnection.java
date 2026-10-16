@@ -56,7 +56,7 @@ public class SocketConnection extends Connection {
             try {
                 // poll from the socket
                 var line = fromClient.readLine();
-                var message = Message.deserializeJson(line);
+                var message = Message.fromJson(line);
                 var type = message.getType();
                 if (type == ServerMessageType.SERVER_SHUTDOWN || type == ServerMessageType.PLAYER_LEFT){
                     isListening = false;

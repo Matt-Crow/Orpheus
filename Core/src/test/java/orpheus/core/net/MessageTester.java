@@ -17,7 +17,7 @@ public class MessageTester {
         var aMessage = new Message(aType, aBody, aUser);
 
         var afterSerializing = aMessage.toJsonString();
-        var deserialized = Message.deserializeJson(afterSerializing);
+        var deserialized = Message.fromJson(afterSerializing);
 
         Assertions.assertEquals(aUser, deserialized.getSender().get());
         Assertions.assertEquals(aType, deserialized.getType());
@@ -31,7 +31,7 @@ public class MessageTester {
         var aMessage = new Message(aType, aBody);
 
         var afterSerializing = aMessage.toJsonString();
-        var deserialized = Message.deserializeJson(afterSerializing);
+        var deserialized = Message.fromJson(afterSerializing);
 
         Assertions.assertTrue(deserialized.getSender().isEmpty());
         Assertions.assertEquals(aType, deserialized.getType());
