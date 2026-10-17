@@ -1,12 +1,12 @@
 package orpheus.client.protocols;
 
-import serialization.JsonUtil;
 import orpheus.client.gui.pages.play.WorldGraphSupplier;
 import orpheus.client.gui.pages.play.WorldPage;
 import orpheus.client.gui.pages.worldselect.WaitingRoomPage;
 import orpheus.core.net.*;
 import orpheus.core.net.protocols.*;
 import orpheus.core.users.User;
+import orpheus.core.utils.OrpheusJsonHelper;
 import orpheus.core.world.graph.World;
 import java.util.Optional;
 
@@ -29,14 +29,14 @@ public class WaitingRoomClientProtocol extends MessageHandler {
     }
 
     private void receiveInit(Message sm) {
-        var obj = JsonUtil.fromString(sm.getBodyText());
+        var obj = OrpheusJsonHelper.fromString(sm.getBodyText());
         var waitingRoomInitMessage = WaitingRoomInitMessage.fromJson(obj);
         waitingRoomInitMessage.getUsers().forEach(waitingRoom::addUser);
         frontEnd.updateTeamDisplays(waitingRoom.getAllUsers());
     }
 
     private void receiveUpdate(Message sm) {
-        var json = JsonUtil.fromString(sm.getBodyText());
+        var json = OrpheusJsonHelper.fromString(sm.getBodyText());
         waitingRoom.addUser(User.fromJson(json));
         frontEnd.updateTeamDisplays(waitingRoom.getAllUsers());
     }

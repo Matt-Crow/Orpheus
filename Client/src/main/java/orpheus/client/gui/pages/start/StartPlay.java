@@ -3,6 +3,7 @@ package orpheus.client.gui.pages.start;
 import java.awt.BorderLayout;
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
@@ -15,9 +16,8 @@ import orpheus.client.gui.components.SpecificationSelector;
 import orpheus.client.gui.pages.Page;
 import orpheus.client.gui.pages.worldselect.WSNewMulti;
 import orpheus.client.gui.pages.worldselect.WSSolo;
-import serialization.JsonUtil;
+import orpheus.core.utils.OrpheusJsonHelper;
 import world.builds.Build;
-import world.builds.DataSet;
 import orpheus.client.gui.pages.PageController;
 import orpheus.client.gui.pages.CustomizeBuildPage;
 
@@ -71,34 +71,35 @@ public class StartPlay extends Page{
     
     private void showImportBuildsDialog(){
         FileChooserUtil.chooseJsonFile("Choose the build file", (f)->{
-            loadFileInto(f, getContext().getDataSet());
+            var dataSet = getContext().getDataSet();
+            try {
+                BuildSaveFile
+                    .fromJson(OrpheusJsonHelper.readFile(f))
+                    .getBuilds()
+                    .stream()
+                    .forEach(dataSet::addBuild);
+                JOptionPane.showMessageDialog(this, "Builds imported successfully");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "An error occurred when importing builds", "Build import error", JOptionPane.ERROR_MESSAGE);
+            }
         });
-    }
-
-    /**
-     * adds all builds from the given file into the given data set, overriding
-     * any existing ones with the same names, without deleting any existing ones
-     * @param f the file to read
-     * @param dataSet the data set to load new builds into
-     */
-    private void loadFileInto(File f, DataSet dataSet){
-        Arrays.stream(JsonUtil.readFromFile(f))
-            .map(Build::fromJson)
-            .forEach(dataSet::addBuild);
     }
     
     private void showExportBuildsDialog(){
-        FileChooserUtil.chooseDir("Choose a direcory to save builds to", (f)->{
+        FileChooserUtil.chooseDir("Choose a direcory to save builds to", (dir)->{
             String name = JOptionPane.showInputDialog("Enter a name for this export:");
-            File buildFile = new File(f.getAbsolutePath() + "/" + name);
-            saveAllToFile(getContext().getDataSet(), buildFile);
+            File f = new File(dir.getAbsolutePath() + "/" + name);
+            try {
+                var dataSet = getContext().getDataSet();
+                var builds = List.of(dataSet.getAllBuilds());
+                var buildSaveFile = new BuildSaveFile(builds);
+                OrpheusJsonHelper.writeFile(f, buildSaveFile.toJson());
+                JOptionPane.showMessageDialog(this, "Builds saved successfully");
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "An error occurred when saving builds", "Build save error", JOptionPane.ERROR_MESSAGE);
+            }
         });
-    }
-
-    private void saveAllToFile(DataSet dataSet, File f){
-        var objs = Arrays.stream(dataSet.getAllBuilds())
-            .map(Build::toJson)
-            .toList();
-        JsonUtil.writeToFile(objs, f);
     }
 }

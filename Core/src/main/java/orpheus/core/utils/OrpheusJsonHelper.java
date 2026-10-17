@@ -1,5 +1,9 @@
 package orpheus.core.utils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -13,6 +17,12 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 
 public class OrpheusJsonHelper {
+    public static JsonObject fromString(String s) {
+        var json = Json.createReader(new StringReader(s))
+            .readObject();
+        return json;
+    }
+
     public static JsonArray toJsonArrayOfStrings(List<String> items) {
         return toJsonArray(items, (item, jab) -> jab.add(item));
     }
@@ -43,5 +53,18 @@ public class OrpheusJsonHelper {
             items.add(mapper.apply(array, i));
         }
         return items;
+    }
+
+    public static JsonObject readFile(File file) throws Exception {
+        try (var stream = new FileInputStream(file)) {
+            var json = Json.createReader(stream).readObject();
+            return json;
+        }
+    }
+
+    public static void writeFile(File file, JsonObject json) throws Exception {
+        try (var stream = new FileOutputStream(file)) {
+            Json.createWriter(stream).writeObject(json);
+        }
     }
 }

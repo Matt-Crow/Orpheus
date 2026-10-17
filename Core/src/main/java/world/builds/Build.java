@@ -7,7 +7,7 @@ import javax.json.JsonObject;
 
 import orpheus.core.champions.BuildOrChampion;
 import orpheus.core.champions.Specification;
-import serialization.JsonUtil;
+import orpheus.core.utils.OrpheusJsonHelper;
 
 /**
  * A Build is a collection of CharacterClass, 3 active abilities, and 3 passive 
@@ -83,16 +83,16 @@ public class Build implements Specification {
         var asJson = Json.createObjectBuilder()
             .add("name", name)
             .add("character class", className)
-            .add("actives", JsonUtil.toJsonArray(Arrays.asList(getActiveNames())))
-            .add("passives", JsonUtil.toJsonArray(Arrays.asList(getPassiveNames())))
+            .add("actives", OrpheusJsonHelper.toJsonArrayOfStrings(Arrays.asList(getActiveNames())))
+            .add("passives", OrpheusJsonHelper.toJsonArrayOfStrings(Arrays.asList(getPassiveNames())))
             .build();
         
         return asJson;
     }
 
     public static Build fromJson(JsonObject json) {
-        var actives = JsonUtil.toList(json.getJsonArray("actives"));
-        var passives = JsonUtil.toList(json.getJsonArray("passives"));
+        var actives = OrpheusJsonHelper.toListOfStrings(json.getJsonArray("actives"));
+        var passives = OrpheusJsonHelper.toListOfStrings(json.getJsonArray("passives"));
         return new Build(
             json.getString("name"), 
             json.getString("character class"),

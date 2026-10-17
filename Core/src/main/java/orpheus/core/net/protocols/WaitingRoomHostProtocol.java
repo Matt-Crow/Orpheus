@@ -7,8 +7,8 @@ import orpheus.core.champions.Specification;
 import orpheus.core.champions.SpecificationResolver;
 import orpheus.core.net.*;
 import orpheus.core.users.User;
+import orpheus.core.utils.OrpheusJsonHelper;
 import orpheus.core.world.occupants.players.Player;
-import serialization.JsonUtil;
 import world.World;
 import world.WorldBuilderImpl;
 import world.battle.Team;
@@ -92,7 +92,7 @@ public class WaitingRoomHostProtocol extends MessageHandler {
             return;
         }
         
-        var json = JsonUtil.fromString(sm.getBodyText());
+        var json = OrpheusJsonHelper.fromString(sm.getBodyText());
         var specification = Specification.fromJson(json);
         var assembledBuild = specificationResolver.resolve(specification);
         var player = Player.makeHuman(

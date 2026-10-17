@@ -6,7 +6,7 @@ import java.util.List;
 import javax.json.Json;
 import javax.json.JsonObject;
 
-import serialization.JsonUtil;
+import orpheus.core.utils.OrpheusJsonHelper;
 
 public class Active implements GraphElement {
 
@@ -43,14 +43,14 @@ public class Active implements GraphElement {
     public JsonObject toJson() {
         return Json.createObjectBuilder()
             .add("name", name)
-            .add("unavailabilityMessages", JsonUtil.toJsonArray(unavailabilityMessages))
+            .add("unavailabilityMessages", OrpheusJsonHelper.toJsonArrayOfStrings(unavailabilityMessages))
             .build();
     }
 
     public static Active fromJson(JsonObject json) {
         return new Active(
             json.getString("name"),
-            JsonUtil.toList(json.getJsonArray("unavailabilityMessages"))
+            OrpheusJsonHelper.toListOfStrings(json.getJsonArray("unavailabilityMessages"))
         );
     }
 }

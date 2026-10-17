@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import orpheus.core.users.User;
-import serialization.JsonUtil;
+import orpheus.core.utils.OrpheusJsonHelper;
 
 /**
  * OrpheusServer is a somewhat deceptive title, as this is
@@ -104,7 +104,7 @@ public class OrpheusServer extends AbstractNetworkClient {
     }
 
     private void receiveJoin(Connection connection, Message sm) {
-        User sender = User.fromJson(JsonUtil.fromString(sm.getBodyText()));
+        User sender = User.fromJson(OrpheusJsonHelper.fromString(sm.getBodyText()));
         connection.setRemoteUser(sender);
         log(clients);
     }
